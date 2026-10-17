@@ -21,6 +21,7 @@ import { registerRegistryHelpers, registerRollSource, registerPoolOption, regist
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./common/pool-rule.js";
 import { registerDoseHooks, registerDoseSocket, registerForcedDoseHooks } from "./common/doses.js";
+import { registerExpiryCleanup } from "./common/expiry.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -194,6 +195,7 @@ Hooks.once('init', async function() {
   registerPoolRule();
   registerDoseHooks();
   registerForcedDoseHooks();
+  registerExpiryCleanup();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;

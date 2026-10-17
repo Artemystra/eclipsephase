@@ -30,6 +30,23 @@ function breakdownEntry(name, modifier) {
 }
 
 /**
+ * What the doses left out of a roll contribute to the actor's total, so the remainder line does
+ * not bring them back.
+ * @param {Actor} actor - The actor
+ * @param {Set<String>} exclude - Drug names left out
+ * @returns {Number} Their combined modifier
+ */
+function excludedTotal(actor, exclude) {
+  if (!exclude.size) return 0;
+  let total = 0;
+  for (const effect of actor?.allApplicableEffects?.() ?? []) {
+    if (!effect.active || !exclude.has(effect.name) || effect.getFlag?.("eclipsephase", "dose") === undefined) continue;
+    for (const change of effect.changes ?? []) if (change.key === GLOBAL_MOD_KEY) total += modifierValue(change.value);
+  }
+  return total;
+}
+
+/**
  * Every modifier to all actions currently on the actor. The running doses of drugs and toxins are
  * summed into one line labelled intoxicated, with the drugs it is made of as its comment, one per
  * line; any other effect keeps a line of its own, so the label never claims a drug where there is
@@ -37,14 +54,17 @@ function breakdownEntry(name, modifier) {
  * Whatever part of the actor's total no active effect explains - a value a module wrote straight
  * into the field - is listed once more under a general label, so the sum always matches.
  * @param {Actor} actor - The actor
+ * @param {Object} [options] - exclude: drug names whose penalty a ticked roll option replaces
  * @returns {Object[]} label, modifier and, for the intoxicated line, comment; without zero entries
  */
-export function globalModifiers(actor) {
+export function globalModifiers(actor, { exclude = new Set() } = {}) {
   const doses = new Map();
   const others = new Map();
   for (const effect of actor?.allApplicableEffects?.() ?? []) {
     if (!effect.active) continue;
-    const bucket = effect.getFlag?.("eclipsephase", "dose") !== undefined ? doses : others;
+    const isDose = effect.getFlag?.("eclipsephase", "dose") !== undefined;
+    if (isDose && exclude.has(effect.name)) continue;
+    const bucket = isDose ? doses : others;
     for (const change of effect.changes ?? []) {
       if (change.key !== GLOBAL_MOD_KEY) continue;
       bucket.set(effect.name, (bucket.get(effect.name) ?? 0) + modifierValue(change.value));
@@ -63,7 +83,7 @@ export function globalModifiers(actor) {
   for (const [label, modifier] of others) if (modifier) sources.push({ label, modifier });
 
   const counted = sources.reduce((sum, entry) => sum + entry.modifier, 0);
-  const total = modifierValue(actor?.system?.mods?.globalMod);
+  const total = modifierValue(actor?.system?.mods?.globalMod) - excludedTotal(actor, exclude);
   if (total !== counted) sources.push({ label: FALLBACK_LABEL, modifier: total - counted });
   return sources;
 }

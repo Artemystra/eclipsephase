@@ -31,7 +31,18 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "trust",
+        "label": "ep2e.item.drug.rollOptions.oxytocinaTrust",
+        "value": -30,
+        "appliesTo": [
+          "wil",
+          "kinesics"
+        ]
+      }
+    ]
   },
   "ownership": {
     "default": 0,

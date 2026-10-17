@@ -388,3 +388,72 @@ describe("the roll dialog", () => {
     expect(seen).toEqual(0);
   });
 });
+
+describe("drug options in the roll dialog", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * The roller under a dose of CR Gas: -20 to all actions, and -30 on sight-based Perceive that
+   * replaces it when ticked.
+   * @returns {Object} The prepared actor
+   */
+  function gassedRoller() {
+    const actor = makeRoller();
+    actor.effects.push(new ActiveEffect({
+      _id: "crgas1", name: "CR Gas", duration: { value: 1, units: "hours" },
+      changes: [{ key: "system.mods.globalMod", value: "-20", type: "add" }],
+      flags: { eclipsephase: { dose: { name: "CR Gas", rollOptions: [{ id: "sight", label: "ep2e.item.drug.rollOptions.crgasSight", value: -30, appliesTo: ["perceive"], replacesGlobal: true }] } } }
+    }, { parent: actor }));
+    actor.prepareData();
+    return actor;
+  }
+
+  /**
+   * Rolls a check while recording what the dialog was rendered with.
+   * @param {Object} actor - The roller
+   * @param {Object} dataset - The check's dataset
+   * @param {Object} answer - What the dialog answers
+   * @returns {Promise<Object>} The dialog data and the posted card
+   */
+  async function rollRecording(actor, dataset, answer) {
+    let dialogData = null;
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      if (String(template).includes("test-dialog")) dialogData = data;
+      return realRender(template, data);
+    };
+    seedDialogs(answer);
+    seedRolls([42]);
+    try {
+      await RollCheck(dataset, actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return { dialogData, card: global.__ep.createdMessages[0] };
+  }
+
+  test("a Perceive check offers the option, a Guns check does not", async () => {
+    const actor = gassedRoller();
+
+    const perceive = await rollRecording(actor, skillDataset({ key: "perceive", name: "Perceive" }), { cancelled: true });
+    const guns = await rollRecording(actor, skillDataset({ key: "guns", name: "Guns" }), { cancelled: true });
+
+    expect(perceive.dialogData.doseOptions.map(entry => entry.field)).toEqual(["doseOption-crgas1-sight"]);
+    expect(guns.dialogData.doseOptions).toEqual([]);
+  });
+
+  test("ticked, it lands on the roll in place of the drug's own -20", async () => {
+    const { card } = await rollRecording(gassedRoller(), skillDataset({ key: "perceive", name: "Perceive" }), plainDialogAnswer({ "doseOption-crgas1-sight": true }));
+
+    expect(card.content).toContain("ep2e.item.drug.rollOptions.crgasSight");
+    expect(card.content).toContain("-30");
+    expect(card.content).not.toContain("ep2e.roll.announce.intoxicated");
+  });
+
+  test("left unticked, the drug's -20 stays and the option adds nothing", async () => {
+    const { card } = await rollRecording(gassedRoller(), skillDataset({ key: "perceive", name: "Perceive" }), plainDialogAnswer());
+
+    expect(card.content).toContain("ep2e.roll.announce.intoxicated");
+    expect(card.content).not.toContain("ep2e.item.drug.rollOptions.crgasSight");
+  });
+});

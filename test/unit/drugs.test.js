@@ -563,3 +563,30 @@ describe("drug or toxin", () => {
     }
   });
 });
+
+describe("the conditional options authored from the book", () => {
+  const EN = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../lang/en.json"), "utf8"));
+  const CHECK_KEYS = ["athletics", "deceive", "fray", "free fall", "guns", "infiltrate", "infosec", "interface", "kinesics", "melee",
+    "perceive", "persuade", "program", "provoke", "psi", "research", "survival", "cog", "int", "ref", "sav", "som", "wil", "know"];
+
+  test("exactly the drugs whose effect depends on the situation carry options", () => {
+    const withOptions = packDrugs().filter(drug => drug.system.rollOptions?.length).map(drug => drug.name).sort();
+    expect(withOptions).toEqual(["Aggro", "Blab", "Buzz", "CR Gas", "Flight", "Hither", "Juice", "Neem", "Orbital Hash", "Oxytocin-A", "Randomizer", "Stiff", "Tongzhi"]);
+  });
+
+  test("every option has an id, a translated label, a number and checks that exist", () => {
+    for (const drug of packDrugs()) {
+      for (const option of drug.system.rollOptions ?? []) {
+        const label = option.label.split(".").reduce((node, step) => node?.[step], EN);
+        expect({ drug: drug.name, id: typeof option.id, label: typeof label, value: typeof option.value })
+          .toEqual({ drug: drug.name, id: "string", label: "string", value: "number" });
+        for (const key of option.appliesTo ?? []) expect({ drug: drug.name, key, known: CHECK_KEYS.includes(key) }).toEqual({ drug: drug.name, key, known: true });
+      }
+    }
+  });
+
+  test("CR Gas's sight-based Perceive replaces its -20 to all actions with the book's -30", () => {
+    const crGas = packDrugs().find(drug => drug.name === "CR Gas");
+    expect(crGas.system.rollOptions).toEqual([expect.objectContaining({ value: -30, appliesTo: ["perceive"], replacesGlobal: true })]);
+  });
+});

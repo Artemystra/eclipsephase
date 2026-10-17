@@ -31,7 +31,18 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "suggestion",
+        "label": "ep2e.item.drug.rollOptions.buzzSuggestion",
+        "value": -30,
+        "appliesTo": [
+          "sav",
+          "wil"
+        ]
+      }
+    ]
   },
   "ownership": {
     "default": 0,

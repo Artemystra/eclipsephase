@@ -1,8 +1,6 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
-import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
-import { deleteRunOutTempEffects } from "../common/general-sheet-functions.js"
-import { endRunOutDoses } from "../common/doses.js";
+import { endAllChiPushes } from "../rolls/psi.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 import { globalModifiers } from "../common/global-mod.js";
 
@@ -44,7 +42,9 @@ export default class EPactor extends Actor {
    * Called by Foundry on every client whenever the remaining duration of one of this actor's
    * tracked effects changed - because world time moved, or a combat turn passed. Re-broadcast as a
    * system hook so anything watching timed effects has one place to listen instead of reaching
-   * into core's effect registry.
+   * into core's effect registry. Run-out system effects are not removed here: Foundry marks them
+   * expired right after calling this, without waiting, and removing them now raced that update.
+   * The clean-up waits for the mark instead (see registerExpiryCleanup).
    * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
    * @param {String} event - What triggered the refresh, e.g. "updateWorldTime" or "turnStart"
    * @param {Object} [context] - Foundry's contextual data for that event
@@ -52,10 +52,6 @@ export default class EPactor extends Actor {
    */
   async onUpdateEffectDurations(effects, event, context) {
     Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
-    if (!game.users.activeGM?.isSelf) return;
-    await endExpiredChiPushes(this, effects);
-    await deleteRunOutTempEffects(this, effects);
-    await endRunOutDoses(this, effects);
   }
 
   /**

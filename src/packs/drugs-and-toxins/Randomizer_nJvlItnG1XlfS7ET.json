@@ -31,7 +31,21 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "social",
+        "label": "ep2e.item.drug.rollOptions.randomizerSocial",
+        "value": 10,
+        "appliesTo": [
+          "deceive",
+          "kinesics",
+          "persuade",
+          "provoke"
+        ],
+        "random": true
+      }
+    ]
   },
   "ownership": {
     "default": 0,

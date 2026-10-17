@@ -5,6 +5,7 @@ import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 import { globalModifiers } from "../common/global-mod.js";
+import { doseRollOptions, chosenRollOptions, optionValue, replacedDrugs } from "../common/dose-options.js";
 
 /*
  * Path constants for dialog templates
@@ -652,6 +653,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options[entry] = values[entry] || false
     }
 
+    const doseChoices = chosenRollOptions(doseRollOptions(actorWhole, dataset), values)
+    options.doseChoices = await Promise.all(doseChoices.map(async entry => ({ ...entry, value: await optionValue(entry.option) })))
+
     // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
     // renders it disabled). The value is force-applied here too since favorDifficultyModifier can
     // legitimately be 0 (Moderate), which the `|| false` fallback above would otherwise wipe.
@@ -776,6 +780,8 @@ if (traits) {
 }
 
 const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
+const doseOptions = doseRollOptions(actorWhole, dataset);
+rollData.names.push(...doseOptions.map(entry => entry.field));
 
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
     specName,
@@ -789,6 +795,7 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     rollData,
     dataset,
     poolOptions,
+    doseOptions,
     rollContext
 });
 
@@ -1221,8 +1228,11 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     }
 
     if (rolledFrom !== "vehicleSkill"){
-        for (const { label, modifier, comment } of globalModifiers(actorWhole))
+        const exclude = replacedDrugs(options.doseChoices ?? [])
+        for (const { label, modifier, comment } of globalModifiers(actorWhole, { exclude }))
             task.addModifier(new TaskRollModifier(label, modifier, comment))
+        for (const choice of options.doseChoices ?? [])
+            task.addModifier(new TaskRollModifier(choice.drug, choice.value, choice.option.label))
     }
 
     if (rolledFrom === "integration"){

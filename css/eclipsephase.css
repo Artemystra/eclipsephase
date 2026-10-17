@@ -2284,6 +2284,11 @@ h3.subheaderBlank {
   border-bottom: solid var(--complementary1) 3px;
 }
 
+/* Drug options in the roll dialog, underlined in the negative colour the dose cards use. */
+.flexrow.subheader.colorNegative{
+  border-bottom: solid var(--negative) 3px;
+}
+
 .listBackground {
   padding: 5px 0.5em 5px 0.5em;
   min-height: 40px;
@@ -4008,9 +4013,9 @@ li:has(.ep-system-notice) .message-header {
   cursor: default;
 }
 
-/* A GM picking who receives an offered dose: the canvas shows a red syringe until the click. */
+/* A GM picking who receives an offered dose: the canvas shows a syringe in the negative colour (--negative, #db2a2a) until the click. */
 body.ep-dose-targeting #board {
-  cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g transform='rotate(45 16 16)' fill='%23d62828' stroke='white' stroke-width='1.5' stroke-linejoin='round'><rect x='12.5' y='0.8' width='7' height='2'/><rect x='15' y='2.8' width='2' height='3'/><rect x='10.5' y='5.8' width='11' height='2.4'/><rect x='12.5' y='8.2' width='7' height='13' rx='1'/><path d='M15.2 21.2 L16 30.5 L16.8 21.2 Z'/></g></svg>") 6 26, crosshair !important;
+  cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g transform='rotate(45 16 16)' fill='%23db2a2a' stroke='white' stroke-width='1.5' stroke-linejoin='round'><rect x='12.5' y='0.8' width='7' height='2'/><rect x='15' y='2.8' width='2' height='3'/><rect x='10.5' y='5.8' width='11' height='2.4'/><rect x='12.5' y='8.2' width='7' height='13' rx='1'/><path d='M15.2 21.2 L16 30.5 L16.8 21.2 Z'/></g></svg>") 6 26, crosshair !important;
 }
 
 /* Chat card buttons stacked one above the other: secondaries in the dark ground, the primary last

@@ -169,7 +169,7 @@ function doseRows(system, outcome) {
 async function postDoseCard(actor, item, outcome, renewed) {
   await postDrugCard(actor, {
     icon: "fa-syringe",
-    color: "--positive",
+    color: "--negative",
     headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
     rows: doseRows(item.system, outcome)
   });
@@ -288,7 +288,7 @@ export async function offerDose(actor, item, { forced = false } = {}) {
 
   const card = {
     icon: "fa-syringe",
-    color: "--positive",
+    color: "--negative",
     headline: game.i18n.format(forced ? "ep2e.chat.dose.forced" : "ep2e.chat.dose.offered", { name: item.name }),
     rows: doseRows(item.system, outcome)
   };

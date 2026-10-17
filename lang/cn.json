@@ -1125,6 +1125,22 @@
         }
       },
       "drug": {
+        "rollOptions": {
+          "aggroIntimidate": "用挑衅恐吓或激怒",
+          "aggroOtherSocial": "其他社交检定",
+          "blabInterrogation": "抵抗审讯",
+          "buzzSuggestion": "抵抗暗示",
+          "crgasSight": "依靠视觉的感知",
+          "flightFear": "对抗恐吓或恐惧",
+          "hitherSeduce": "用挑衅引诱",
+          "juiceFear": "对抗恐惧或操纵",
+          "neemRecall": "回忆",
+          "orbitalhashMemory": "知识技能或回忆",
+          "oxytocinaTrust": "涉及信任时",
+          "randomizerSocial": "社交检定，随机决定",
+          "stiffResist": "对抗说服或挑衅",
+          "tongzhiShared": "在共同兴趣上说服"
+        },
         "takeDose": "服用一剂",
         "dosesLeft": "剩余剂量",
         "onset": {
@@ -1249,6 +1265,7 @@
     },
     "roll": {
       "dialog": {
+        "underTheInfluence": "药效作用中",
         "generalModHeadline": "一般调整值",
         "attackerHeadline": "攻击者调整值",
         "defenderHeadline": "防御者调整值s",

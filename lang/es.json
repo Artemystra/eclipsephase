@@ -1126,6 +1126,22 @@
         }
       },
       "drug": {
+        "rollOptions": {
+          "aggroIntimidate": "Provocar para intimidar o pinchar",
+          "aggroOtherSocial": "otras pruebas sociales",
+          "blabInterrogation": "resistir un interrogatorio",
+          "buzzSuggestion": "resistir la sugestión",
+          "crgasSight": "Percibir basado en la vista",
+          "flightFear": "contra intimidación o miedo",
+          "hitherSeduce": "Provocar para seducir",
+          "juiceFear": "contra miedo o manipulación",
+          "neemRecall": "recordar",
+          "orbitalhashMemory": "habilidades de Saber o recordar",
+          "oxytocinaTrust": "cuando importa la confianza",
+          "randomizerSocial": "pruebas sociales, al azar",
+          "stiffResist": "contra Persuadir o Provocar",
+          "tongzhiShared": "Persuadir sobre intereses comunes"
+        },
         "takeDose": "Tomar una dosis",
         "dosesLeft": "Dosis restantes",
         "onset": {
@@ -1242,6 +1258,7 @@
     },
     "roll": {
       "dialog": {
+        "underTheInfluence": "Bajo los efectos",
         "generalModHeadline": "General Modifiers",
         "attackerHeadline": "Attacker Modifiers",
         "defenderHeadline": "Defender Modifiers",

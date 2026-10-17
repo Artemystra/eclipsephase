@@ -1,4 +1,5 @@
 import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, forceDose, registerForcedDoseHooks, deliverForcedDose } from "../../module/common/doses.js";
+import { registerExpiryCleanup, cleanUpExpired } from "../../module/common/expiry.js";
 import { selectDoseRecipient } from "../../module/common/general-sheet-functions.js";
 import { registerPoolRule } from "../../module/common/pool-rule.js";
 import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
@@ -308,19 +309,67 @@ describe("a dose running out", () => {
     expect(actor.effects.find(effect => effect.id === other.id)).toBeDefined();
   });
 
-  test("the actor's own duration hook removes it, but only on the active GM's client", async () => {
+  test("Foundry marking the dose expired removes it, on the client that marked it", async () => {
+    registerExpiryCleanup();
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+
+    await doseOn(actor).update({ "duration.expired": true });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(doseOn(actor)).toBeUndefined();
+  });
+
+  test("a mark made on somebody else's client is theirs to clean up", async () => {
+    registerExpiryCleanup();
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+    const dose = doseOn(actor);
+    dose.duration.expired = true;
+
+    Hooks.callAll("updateActiveEffect", dose, { duration: { expired: true } }, {}, "somebody-else");
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(doseOn(actor)).toBeDefined();
+  });
+
+  test("a world actor's expired dose leaves no inactive copy behind on its unlinked tokens", async () => {
+    const world = carrying();
+    await takeDose(world, world.items.get("kick1"));
+    const dose = doseOn(world);
+    const copy = makeActor({ type: "character", effects: [{ _id: dose.id, name: "Kick", duration: { value: 8, units: "hours", expired: true }, flags: { eclipsephase: { dose: { name: "Kick" } } } }] });
+    world.getDependentTokens = () => [{ actor: copy }];
+    dose.duration.expired = true;
+
+    await cleanUpExpired(dose);
+
+    expect(doseOn(world)).toBeUndefined();
+    expect(copy.effects).toHaveLength(0);
+  });
+
+  test("a token copy still running is left alone", async () => {
+    const world = carrying();
+    await takeDose(world, world.items.get("kick1"));
+    const dose = doseOn(world);
+    const copy = makeActor({ type: "character", effects: [{ _id: dose.id, name: "Kick", duration: { value: 8, units: "hours" }, flags: { eclipsephase: { dose: { name: "Kick" } } } }] });
+    world.getDependentTokens = () => [{ actor: copy }];
+    dose.duration.expired = true;
+
+    await cleanUpExpired(dose);
+
+    expect(copy.effects).toHaveLength(1);
+  });
+
+  test("the duration hook itself no longer deletes, so it cannot race Foundry's own expiry update", async () => {
     const actor = carrying();
     await takeDose(actor, actor.items.get("kick1"));
     const dose = doseOn(actor);
     dose.duration.remaining = 0;
-
-    game.users.activeGM = { isSelf: false };
-    await actor.onUpdateEffectDurations([dose], "updateWorldTime", {});
-    expect(doseOn(actor)).toBeDefined();
-
     game.users.activeGM = { isSelf: true };
+
     await actor.onUpdateEffectDurations([dose], "updateWorldTime", {});
-    expect(doseOn(actor)).toBeUndefined();
+
+    expect(doseOn(actor)).toBeDefined();
   });
 });
 

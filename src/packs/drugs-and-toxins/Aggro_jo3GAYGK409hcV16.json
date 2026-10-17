@@ -31,7 +31,27 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "intimidate",
+        "label": "ep2e.item.drug.rollOptions.aggroIntimidate",
+        "value": 20,
+        "appliesTo": [
+          "provoke"
+        ]
+      },
+      {
+        "id": "otherSocial",
+        "label": "ep2e.item.drug.rollOptions.aggroOtherSocial",
+        "value": -20,
+        "appliesTo": [
+          "deceive",
+          "kinesics",
+          "persuade"
+        ]
+      }
+    ]
   },
   "ownership": {
     "default": 0,

@@ -169,6 +169,19 @@
     </div>
     {{/if}}
 {{/if}}
+{{#if doseOptions.length}}
+<div class="contentBoxMargin">
+    <div class="flexrow subheader colorNegative">
+        <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.underTheInfluence"}}</h3>
+    </div>
+    {{#each doseOptions as |entry|}}
+    <div class="form-group listBackgroundMain">
+        <input type="checkbox" class="sheet" name="{{entry.field}}" id="{{entry.field}}">
+        <label class="resource-label" for="{{entry.field}}">{{entry.drug}}: {{localize entry.option.label}} ({{entry.shown}})</label>
+    </div>
+    {{/each}}
+</div>
+{{/if}}
 {{#if (and actorWhole.system.additionalSystems.isJamming (ne rolledFrom "integration") (ne rolledFrom "vehicleSkill"))}}
 <div class="contentBoxMargin">
     <div class="flexrow subheader colorV2">

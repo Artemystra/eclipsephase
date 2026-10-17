@@ -31,7 +31,17 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "seduce",
+        "label": "ep2e.item.drug.rollOptions.hitherSeduce",
+        "value": 10,
+        "appliesTo": [
+          "provoke"
+        ]
+      }
+    ]
   },
   "ownership": {
     "default": 0,

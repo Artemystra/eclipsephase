@@ -31,7 +31,17 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "recall",
+        "label": "ep2e.item.drug.rollOptions.neemRecall",
+        "value": 20,
+        "appliesTo": [
+          "cog"
+        ]
+      }
+    ]
   },
   "ownership": {
     "default": 0,
