@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
-import { endAllChiPushes } from "../rolls/psi.js"
+import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
+import { deleteRunOutTempEffects } from "../common/general-sheet-functions.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 
 const gammaAutoPushInFlight = new Set();
@@ -36,6 +37,24 @@ export default class EPactor extends Actor {
   // The actor types this class prepares data for. Everything else, including a type a module
   // contributes, is left to whoever owns it.
   static MANAGED_TYPES = ["character", "npc", "goon"]
+
+  /**
+   * Called by Foundry on every client whenever the remaining duration of one of this actor's
+   * tracked effects changed - because world time moved, or a combat turn passed. Re-broadcast as a
+   * system hook so anything watching timed effects has one place to listen instead of reaching
+   * into core's effect registry.
+   * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
+   * @param {String} event - What triggered the refresh, e.g. "updateWorldTime" or "turnStart"
+   * @param {Object} [context] - Foundry's contextual data for that event
+   * @returns {Promise<void>} Resolves once listeners have run
+   */
+  async onUpdateEffectDurations(effects, event, context) {
+    Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
+    if (!game.users.activeGM?.isSelf) return;
+    await endExpiredChiPushes(this, effects);
+    await deleteRunOutTempEffects(this, effects);
+  }
+
   /**
    * Augment the basic actor data with additional dynamic data.
    */
@@ -739,7 +758,7 @@ export default class EPactor extends Actor {
     }
 
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
-      actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "appeal" : actorModel.additionalSystems.sleeving.integrationIssues.appeal, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
+      actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
     }
 
     Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);

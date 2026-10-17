@@ -110,6 +110,7 @@ from a listener.
 | `eclipsephase.prepareItemData` | In `EPitem.prepareData()`, as its last statement | `(item, itemModel)` | Override fully-derived item fields |
 | `eclipsephase.effectSuppression` | In `effects.js`, while deciding whether an ActiveEffect is suppressed | `(item, actor, result)` - set `result.suppressed` | Add a suppression rule for a module's own item types |
 | `eclipsephase.prepareActorSheetContext` | In `EPactorSheet._prepareContext()`, as its last statement | `(sheet, context)` | Add to the sheet's render context |
+| `eclipsephase.effectDurations` | In `EPactor.onUpdateEffectDurations()`, whenever a tracked effect's remaining duration changed | `(actorWhole, effects, event, context)` | React to a timed effect running down or expiring |
 | `eclipsephase.postRest` | In the rest handler, right before the actor update is written | `(actorWhole, restType, updates)` - mutate `updates` | Add fields to a rest's update payload |
 | `eclipsephase.ready` | In the system's own `ready` hook | `(game.eclipsephase)` | Register a module once the API is in place |
 

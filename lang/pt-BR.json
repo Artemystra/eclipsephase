@@ -1,5 +1,9 @@
 {
   "SETTINGS": {
+    "rechargeAutoReset": {
+      "name": "Redefinir recargas diariamente",
+      "hint": "Quando o relógio do mundo passa da meia-noite, cada personagem recupera suas recargas curtas e longas. Desative para redefini-las manualmente."
+    },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -10,6 +14,16 @@
     "effectPanel": {
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
+    },
+    "timeFormat": {
+      "name": "Formato de hora",
+      "hint": "Como o Painel de Tempo mostra a hora do dia. Horas usa um relógio de 24 horas, Beats usa o Swatch Internet Time, em que um dia tem 1000 beats.",
+      "hours": "Horas e minutos",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "Mostrar o Painel de Tempo aos jogadores",
+      "hint": "Permite que os jogadores abram o Painel de Tempo e vejam o dia e a hora atuais. Eles recebem o mesmo painel sem nenhum controle."
     },
     "editAll": {
       "name": "No edit restrictions",
@@ -29,7 +43,7 @@
     },
     "restReset": {
       "name": "Reset Temporary Bonuses",
-      "hint": "If activated ANY rest (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long rests reset them."
+      "hint": "If activated ANY recharge (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long recharges reset them."
     },
     "showDamageOptions": {
       "name": "Default Show Damage Dialog",
@@ -52,8 +66,7 @@
     "Actor": {
       "character": "Personagem do Jogador",
       "npc": "Personagem Não Jogador",
-      "goon": "Ameaça",
-      "shop": "Loja"
+      "goon": "Ameaça"
     },
     "Item": {
       "gear": "Equipamento",
@@ -301,7 +314,7 @@
         "rezSpent": "Spent"
       },
       "rest": {
-        "label": "Rest",
+        "label": "Recharge",
         "jammedLabel": "Sem recarga durante o jamming"
       }
     },
@@ -452,8 +465,8 @@
       },
       "restingMenu": {
         "headline": "Recuperar Paradas",
-        "shortRest": "Descanso Curto:",
-        "longRest": "Descanso Longo:",
+        "shortRest": "Recarga Curta:",
+        "longRest": "Recarga Longa:",
         "labelInsight": "Inspiração",
         "labelVigor": "Vigor",
         "labelMoxie": "Manha",
@@ -464,16 +477,16 @@
           "distributionDone": "Pronto! Não restam pontos de parada"
         },
         "restInfo": {
-          "headline": "Descanso",
+          "headline": "Recarga",
           "subheadline1": "Geral",
-          "copy1": "Você precisa usar uma ação 'descanso' para recuperar as paradas. Escolha o tipo de descanso que você deseja usar clicando na caixa de seleção ao lado. Você tem 1 descanso longo e 2 descansos curtos por ciclo de 24 horas de tempo de jogo.",
-          "subheadline2": "Descanso Curto",
-          "copy2": "Um descanso curto leva cerca de 10 minutos para o transumano comum e exige que ele não faça nada além de descansar, conversar e repousar. Isso exige biomods. Toscos levam até 1 hora.<p/><label class='resource-value'>Um descanso curto recupera 1d6 pontos de parada</label>",
-          "subheadline3": "Descanso Longo",
-          "copy3": "Uma pessoa com biomods leva cerca de 4 horas para um longo descanso. Isso exige que eles não façam nada além de descansar, conversar e repousar. Toscos precisam de 8 horas para isso.<p/><label class='resource-value'>Um descanso longo recupera todos os seus pontos de parada</label>"
+          "copy1": "Você precisa usar uma ação 'recarga' para recuperar as paradas. Escolha o tipo de recarga que você deseja usar clicando na caixa de seleção ao lado. Você tem 1 recarga longo e 2 recargas curtos por ciclo de 24 horas de tempo de jogo.",
+          "subheadline2": "Recarga Curta",
+          "copy2": "Um recarga curto leva cerca de 10 minutos para o transumano comum e exige que ele não faça nada além de descansar, conversar e repousar. Isso exige biomods. Toscos levam até 1 hora.<p/><label class='resource-value'>Um recarga curto recupera 1d6 pontos de parada</label>",
+          "subheadline3": "Recarga Longa",
+          "copy3": "Uma pessoa com biomods leva cerca de 4 horas para um longo recarga. Isso exige que eles não façam nada além de descansar, conversar e repousar. Toscos precisam de 8 horas para isso.<p/><label class='resource-value'>Um recarga longo recupera todos os seus pontos de parada</label>"
         },
         "button": {
-          "resetRest": "Reiniciar Descansos",
+          "resetRest": "Redefinir Recargas",
           "distribute": "Distribuir"
         }
       },
@@ -564,7 +577,7 @@
         "inputSubheadline": "Dados necessários",
         "chatHeadline": "Usou uma Parada",
         "chatEffect": "Efeito Recebido:",
-        "considerResting": "Considere usar uma ação de 'descanso'",
+        "considerResting": "Considere usar uma ação de 'recarga'",
         "numberWounds": "Ferimentos para Ignorar",
         "numberTrauma": "Traumas para Ignorar",
         "repSize": "Tamanho do Favor",
@@ -1455,7 +1468,7 @@
           "noPsiTooltip": "Sem Psi enquanto faz jamming"
         },
         "psi": {
-          "chiPushActive": "Ativo por {minutes} minuto(s), ou até seu próximo descanso.",
+          "chiPushActive": "Ativo por {minutes} minuto(s), ou até seu próximo recarga.",
           "pushingSleight": "Empurrando {name}",
           "pushedSleightFeedback": "Truque Empurrado",
           "pushedLabel": "Empurrado",
@@ -1477,8 +1490,8 @@
           "adaptability": "Adaptability"
         },
         "rest": {
-          "short": "Eu usei um<p/><strong>Descanso Curto<p/></strong>para recuperar alguns pontos de parada<p/>",
-          "long": "Eu usei o meu<p/><strong>Descanso Longo<p/></strong>para recuperar todas as paradas<p/>"
+          "short": "Levei <strong>{time}</strong><p/>para uma <strong>recarga curta</strong><p/>para recuperar alguns pontos de reserva<p/>",
+          "long": "Levei {time} para uma recarga longa para recuperar todas as reservas"
         },
         "spendRez": {
           "spent": "You overspent your rez. <br> Spent:",
@@ -1766,6 +1779,53 @@
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
         }
+      }
+    },
+    "recharge": {
+      "duration": {
+        "shortBiomods": "10 minutos",
+        "shortFlat": "1 hora",
+        "longBiomods": "4 horas",
+        "longFlat": "8 horas"
+      }
+    },
+    "time": {
+      "title": "Tempo",
+      "day": "Dia",
+      "year": "Ano",
+      "timeOfDay": "Hora do dia",
+      "advance": "Deixar o tempo passar",
+      "setDay": "Definir dia",
+      "custom": "Personalizado",
+      "customHint": "Minutos",
+      "effects": "Efeitos ativos",
+      "noEffects": "Nada está ativo no momento",
+      "endNow": "Encerrar",
+      "remaining": "Restante",
+      "owner": "Personagem",
+      "toggleFormat": "Alternar entre horas e beats",
+      "hoursTooltip": "cerca de {hours} h",
+      "dayTooltip": "1 dia",
+      "minutesTooltip": "cerca de {minutes} min",
+      "beatsInfo": {
+        "title": "Beats",
+        "tip": "O que são beats?",
+        "copy": "<p>Beats são o Swatch Internet Time, inventado pela relojoaria suíça em 1998. A ideia era um único horário para todo o planeta, sem fuso nenhum - nunca pegou.</p><p>Um beat tem 1 minuto e 26,4 segundos, e um dia tem exatamente 1000 deles, escritos com um @ na frente.</p><p>Num sistema solar em que dois habitats nunca compartilham o mesmo amanhecer, isso acaba sendo bem útil: cada estação mantém seu próprio ciclo de dia e noite e ainda assim pode nomear o mesmo instante que as outras.</p>"
+      },
+      "moreInfo": "Mais informações",
+      "close": "Fechar",
+      "autoReset": "Redefinir a cada dia",
+      "restoreRest": "Redefinir recargas",
+      "restRestored": "Recargas redefinidas.",
+      "advanceSteps": {
+        "min10": "+10 min",
+        "hour1": "+1 hora",
+        "hour4": "+4 horas",
+        "hour8": "+8 horas",
+        "day1": "+1 dia",
+        "day3": "+3 dias",
+        "day7": "+7 dias",
+        "beats": "{beats} beats"
       }
     },
     "migration": {

@@ -1,4 +1,5 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
+import EPactor from "../../actor/EPactor.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
 import { _ep25_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
 import { getStrainFamily, listStrainFamilies, hasStrainFamily } from "../../rolls/strain-families.js";
@@ -102,7 +103,9 @@ Hooks.on("quenchReady", quench => {
       });
 
       it("MANAGED_TYPES guard: a type the system does not manage is left alone", async function () {
-        await withTempActor({ type: "shop" }, actor => {
+        const foreignType = (game.documentTypes?.Actor ?? []).find(type => type !== "base" && !EPactor.MANAGED_TYPES.includes(type));
+        if (!foreignType) return this.skip();
+        await withTempActor({ type: foreignType }, actor => {
           assert.notStrictEqual(actor.prototypeToken.displayBars, CONST.TOKEN_DISPLAY_MODES.HOVER);
           assert.notOk(actor.getFlag("eclipsephase", "defaultMorphAdded"));
           assert.notOk(actor.system.pools, "the character pipeline should not have run");

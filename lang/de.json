@@ -1,5 +1,9 @@
 {
   "SETTINGS": {
+    "rechargeAutoReset": {
+      "name": "Aufladungen täglich zurücksetzen",
+      "hint": "Sobald die Weltzeit Mitternacht überschreitet, bekommt jeder Charakter seine kurzen und langen Aufladungen zurück. Deaktivieren, um sie stattdessen von Hand zurückzusetzen."
+    },
     "ammoRules": {
       "name": "Munitionsregeln",
       "hint": "Entscheidet wie Munitionsitems in Spielerinventaren beim nachladen behandelt werden. Standard: Munitionsitems sind unendlich und werden niemals reduziert/gelöscht. Überleben: Nachladen löscht/reduziert die entsprechenden Munitionsitems. Nur Granaten: Nur Spezialmunition (z.B. Granaten/Drogen) werden beim nachladen reduziert/gelöscht.",
@@ -11,9 +15,19 @@
       "name": "Active Effect Tab",
       "hint": "Aktiviert Active Effect Tabs für Spielleiter:innen"
     },
+    "timeFormat": {
+      "name": "Zeitformat",
+      "hint": "Wie das Zeit-Panel die Tageszeit anzeigt. Stunden nutzt eine 24-Stunden-Uhr, Beats die Swatch Internet Time, bei der ein Tag 1000 Beats hat.",
+      "hours": "Stunden und Minuten",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "Zeit-Panel für Spieler anzeigen",
+      "hint": "Erlaubt Spielern, das Zeit-Panel zu öffnen und Tag und Uhrzeit zu sehen. Sie bekommen dasselbe Panel ohne die Bedienelemente."
+    },
     "editAll": {
       "name": "Keine Editiereinschränkungen",
-      "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Rast mit ein."
+      "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Aufladung mit ein."
     },
     "gmMenu": {
       "name": "SL Menü",
@@ -29,7 +43,7 @@
     },
     "restReset": {
       "name": "Temporäre Bonus zurücksetzen",
-      "hint": "Setzt alle temporären Bonus (wie Wunden ignorieren) zurück sobald IRGENDEINE Rast-Aktion (kurz ODER lang) vorgenommen wird. Temporäre Effekte bleiben bis zu einer langen Rast erhalten, wenn dies deaktiviert wurde."
+      "hint": "Setzt alle temporären Bonus (wie Wunden ignorieren) zurück sobald IRGENDEINE Aufladungs-Aktion (kurz ODER lang) vorgenommen wird. Temporäre Effekte bleiben bis zu einer langen Aufladung erhalten, wenn dies deaktiviert wurde."
     },
     "showDamageOptions": {
       "name": "Schadensdialoge zeigen",
@@ -52,8 +66,7 @@
     "Actor": {
       "character": "Spielercharakter",
       "npc": "Nichtspielercharakter",
-      "goon": "Bedrohung",
-      "shop": "Shop"
+      "goon": "Bedrohung"
     },
     "Item": {
       "gear": "Spezialausrüstung",
@@ -309,7 +322,7 @@
       },
       "rest": {
         "label": "Rast",
-        "jammedLabel": "Kein Rasten während des Jammens"
+        "jammedLabel": "Kein Aufladungen während des Jammens"
       }
     },
     "token": {
@@ -459,8 +472,8 @@
       },
       "restingMenu": {
         "headline": "Pools wiederherstellen",
-        "shortRest": "Kurze Rast:",
-        "longRest": "Lange Rast:",
+        "shortRest": "Kurze Aufladung:",
+        "longRest": "Lange Aufladung:",
         "labelInsight": "Insight",
         "labelVigor": "Vigor",
         "labelMoxie": "Moxie",
@@ -471,16 +484,16 @@
           "distributionDone": "Alle Punkte verteilt. Los geht's!"
         },
         "restInfo": {
-          "headline": "Ausruhen",
+          "headline": "Aufladen",
           "subheadline1": "Allgemein",
-          "copy1": "Du musst eine 'Rast'-Aktion nutzen, um Pools wieder aufzufüllen. Um den Typ der Rast zu wählen, klicke auf die zugehörige Checkbox. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Rast zur Verfügung.",
-          "subheadline2": "Kurze Rast",
-          "copy2": "Ein durchschnittlicher Transhumaner braucht etwa 10 Minuten für eine kurze Rast in der er nichts anderes tun kann als sprechen oder sich hinzulegen, um herunterzukommen. Dies benötigt Biomods, während Flats etwa eine Stunde rasten müssen.<p/><label class='resource-value'>Eine kurze Rast stellt 1W6 Poolpunkte wieder her</label>",
-          "subheadline3": "Lange Rast",
-          "copy3": "Eine Person mit Biomods braucht 4 Stunden für eine lange Rast in der sie nichts tun kann ausser sich hinzulegen, zu sprechen während sie herunter kommt. Flats brauchen 8 Stunden um den gleichen Effekt zu erreichen.<p/><label class='resource-value'>Eine lange Rast stellt alle Poolpunkte wieder her.</label>"
+          "copy1": "Du musst eine 'Aufladung'-Aktion nutzen, um Pools wieder aufzufüllen. Um den Typ der Aufladung zu wählen, klicke auf die zugehörige Checkbox. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Aufladung zur Verfügung.",
+          "subheadline2": "Kurze Aufladung",
+          "copy2": "Ein durchschnittlicher Transhumaner braucht etwa 10 Minuten für eine kurze Aufladung in der er nichts anderes tun kann als sprechen oder sich hinzulegen, um herunterzukommen. Dies benötigt Biomods, während Flats etwa eine Stunde aufladen müssen.<p/><label class='resource-value'>Eine kurze Aufladung stellt 1W6 Poolpunkte wieder her</label>",
+          "subheadline3": "Lange Aufladung",
+          "copy3": "Eine Person mit Biomods braucht 4 Stunden für eine lange Aufladung in der sie nichts tun kann ausser sich hinzulegen, zu sprechen während sie herunter kommt. Flats brauchen 8 Stunden um den gleichen Effekt zu erreichen.<p/><label class='resource-value'>Eine lange Aufladung stellt alle Poolpunkte wieder her.</label>"
         },
         "button": {
-          "resetRest": "Rast Zurücksetzen",
+          "resetRest": "Aufladungen zurücksetzen",
           "distribute": "Verteilen"
         }
       },
@@ -571,7 +584,7 @@
         "inputSubheadline": "Eingabe Nötig",
         "chatHeadline": "Nutzt einen Pool",
         "chatEffect": "Erhaltener Effekt:",
-        "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
+        "considerResting": "Du kannst ihn mit einer 'Aufladen'-Aktion wieder füllen",
         "numberWounds": "Anzahl Wunden zu ignorieren",
         "numberTrauma": "Anzahl Trauma zu ignorieren",
         "repSize": "Größe des Gefallens",
@@ -1477,7 +1490,7 @@
           "noPsiTooltip": "Kein Psi während des Jammens"
         },
         "psi": {
-          "chiPushActive": "Aktiv für {minutes} Minute(n), oder bis zur nächsten Rast.",
+          "chiPushActive": "Aktiv für {minutes} Minute(n), oder bis zur nächsten Aufladung.",
           "pushingSleight": "Pushe {name}",
           "pushedSleightFeedback": "Gepushte Fertigkeit",
           "pushedLabel": "Gepusht",
@@ -1499,8 +1512,8 @@
           "adaptability": "Adaptability"
         },
         "rest": {
-          "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
-          "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"
+          "short": "Ich habe <strong>{time}</strong><p/>für eine <strong>kurze Aufladung</strong><p/>gebraucht, um Poolpunkte zurückzugewinnen<p/>",
+          "long": "Ich habe {time} für eine lange Aufladung gebraucht, um alle Pools zurückzugewinnen"
         },
         "spendRez": {
           "spent": "Zuviel Rez verteilt. <br> Ausgegeben:",
@@ -1796,6 +1809,53 @@
           "touchOnly": "Dieser Nahkampfangriff erfordert lediglich eine Berührung. Du erhältst einen Bonus von +20 auf den Trefferwurf, aber es wird kein Schaden verursacht. Wenn du zusätzlich Schaden verursachen möchtest, würfle einen normalen Angriffswurf ohne jeden Bonus.",
           "twoHanded": "Diese Waffe erfordert zwei Hände (oder eine äquivalente greifende Gliedmaße), um verwendet zu werden. Bei einhändiger Nutzung gilt ein Malus von -20 auf den Angriff."
         }
+      }
+    },
+    "recharge": {
+      "duration": {
+        "shortBiomods": "10 Minuten",
+        "shortFlat": "1 Stunde",
+        "longBiomods": "4 Stunden",
+        "longFlat": "8 Stunden"
+      }
+    },
+    "time": {
+      "title": "Zeit",
+      "day": "Tag",
+      "year": "Jahr",
+      "timeOfDay": "Tageszeit",
+      "advance": "Zeit vergehen lassen",
+      "setDay": "Tag setzen",
+      "custom": "Eigene",
+      "customHint": "Minuten",
+      "effects": "Laufende Effekte",
+      "noEffects": "Aktuell läuft nichts",
+      "endNow": "Beenden",
+      "remaining": "Verbleibend",
+      "owner": "Charakter",
+      "toggleFormat": "Zwischen Stunden und Beats wechseln",
+      "hoursTooltip": "etwa {hours} Std",
+      "dayTooltip": "1 Tag",
+      "minutesTooltip": "etwa {minutes} Min",
+      "beatsInfo": {
+        "title": "Beats",
+        "tip": "Was sind Beats?",
+        "copy": "<p>Beats sind die Swatch Internet Time, 1998 vom Schweizer Uhrenhersteller erfunden. Die Idee war eine einzige Zeit fuer den ganzen Planeten, ganz ohne Zeitzonen - durchgesetzt hat sie sich nie.</p><p>Ein Beat sind 1 Minute und 26,4 Sekunden, ein Tag besteht aus genau 1000 davon, geschrieben mit einem @ davor.</p><p>In einem Sonnensystem, in dem keine zwei Habitate denselben Sonnenaufgang teilen, ist das ausgesprochen praktisch: Jede Station behaelt ihren eigenen Tag-Nacht-Rhythmus und kann trotzdem denselben Moment benennen wie alle anderen.</p>"
+      },
+      "moreInfo": "Mehr Informationen",
+      "close": "Schließen",
+      "autoReset": "Täglich zurücksetzen",
+      "restoreRest": "Erholungen zurücksetzen",
+      "restRestored": "Erholungs-Kontingente zurückgesetzt.",
+      "advanceSteps": {
+        "min10": "+10 Min",
+        "hour1": "+1 Stunde",
+        "hour4": "+4 Stunden",
+        "hour8": "+8 Stunden",
+        "day1": "+1 Tag",
+        "day3": "+3 Tage",
+        "day7": "+7 Tage",
+        "beats": "{beats} Beats"
       }
     },
     "migration": {

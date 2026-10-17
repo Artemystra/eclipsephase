@@ -1,5 +1,9 @@
 {
   "SETTINGS": {
+    "rechargeAutoReset": {
+      "name": "每天重置充能",
+      "hint": "当世界时钟越过午夜时，每个角色都会恢复其短充能与长充能。关闭此项则改为手动重置。"
+    },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -10,6 +14,16 @@
     "effectPanel": {
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
+    },
+    "timeFormat": {
+      "name": "时间格式",
+      "hint": "时间面板如何显示一天中的时间。小时使用 24 小时制，Beats 使用斯沃琪网络时间，一天为 1000 beats。",
+      "hours": "小时与分钟",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "向玩家显示时间面板",
+      "hint": "允许玩家打开时间面板并查看当前的天数与时间。他们看到的面板相同，但没有任何操作按钮。"
     },
     "editAll": {
       "name": "No edit restrictions",
@@ -52,8 +66,7 @@
     "Actor": {
       "character": "玩家角色",
       "npc": "NPC",
-      "goon": "威胁",
-      "shop": "商店"
+      "goon": "威胁"
     },
     "Item": {
       "gear": "装备",
@@ -451,8 +464,8 @@
       },
       "restingMenu": {
         "headline": "填充能力池",
-        "shortRest": "短填充:",
-        "longRest": "长填充:",
+        "shortRest": "短充能:",
+        "longRest": "长充能:",
         "labelInsight": "洞察",
         "labelVigor": "活力",
         "labelMoxie": "人格",
@@ -463,16 +476,16 @@
           "distributionDone": "准备完成！没有剩余点数"
         },
         "restInfo": {
-          "headline": "休息",
+          "headline": "充能",
           "subheadline1": "常规",
-          "copy1": "你需要使用一个“休息”动作来填充能力池。选择你要使用的填充类型并点击其后的勾选框。游戏内的每个24小时，你都拥有1次长填充和2次短填充。",
-          "subheadline2": "短填充",
-          "copy2": "短填充会花费普通超人类大概10分钟时间，且在这段时间内他只能进行休息、说话、和其他轻度活动。这需要基础生物模块。自然人需要花费1个小时。.<p/><label class='resource-value'>一次短填充可以恢复1d6点能力点</label>",
-          "subheadline3": "长填充",
-          "copy3": "拥有基础生物模块的刃可以花费大约4小时进行长填充。他在这段时间内只能进行休息、说话、和其他轻度活动。自然人需要花费8个小时才能达成同样的效果。<p/><label class='resource-value'>长填充可以恢复所有能力点</label>"
+          "copy1": "你需要使用一个“充能”动作来充能能力池。选择你要使用的充能类型并点击其后的勾选框。游戏内的每个24小时，你都拥有1次长充能和2次短充能。",
+          "subheadline2": "短充能",
+          "copy2": "短充能会花费普通超人类大概10分钟时间，且在这段时间内他只能进行充能、说话、和其他轻度活动。这需要基础生物模块。自然人需要花费1个小时。.<p/><label class='resource-value'>一次短充能可以恢复1d6点能力点</label>",
+          "subheadline3": "长充能",
+          "copy3": "拥有基础生物模块的刃可以花费大约4小时进行长充能。他在这段时间内只能进行充能、说话、和其他轻度活动。自然人需要花费8个小时才能达成同样的效果。<p/><label class='resource-value'>长充能可以恢复所有能力点</label>"
         },
         "button": {
-          "resetRest": "重置填充",
+          "resetRest": "重置充能",
           "distribute": "分配"
         }
       },
@@ -563,7 +576,7 @@
         "inputSubheadline": "需要输入",
         "chatHeadline": "消耗能力池",
         "chatEffect": "获得效果：",
-        "considerResting": "考虑使用“休息”动作",
+        "considerResting": "考虑使用“充能”动作",
         "numberWounds": "忽视的损伤数",
         "numberTrauma": "忽视的创伤数",
         "repSize": "支援等级",
@@ -1448,7 +1461,7 @@
           "noPsiTooltip": "干扰状态下无法使用灵能"
         },
         "psi": {
-          "chiPushActive": "持续{minutes}分钟，或直到下次休息为止。",
+          "chiPushActive": "持续{minutes}分钟，或直到下次充能为止。",
           "pushingSleight": "正在推送{name}",
           "pushedSleightFeedback": "被推送的灵术",
           "pushedLabel": "已推送",
@@ -1470,8 +1483,8 @@
           "adaptability": "Adaptability"
         },
         "rest": {
-          "short": "我使用一次<p/><strong>短填充<p/></strong>恢复了部分能力池<p/>",
-          "long": "我使用我的<p/><strong>长填充<p/></strong>恢复了全部能力池<p/>"
+          "short": "我花了 <strong>{time}</strong><p/>进行一次<strong>短充能</strong><p/>以恢复部分资源点<p/>",
+          "long": "我花了 {time} 进行一次长充能以恢复全部资源池"
         },
         "spendRez": {
           "spent": "You overspent your rez. <br> Spent:",
@@ -1759,6 +1772,53 @@
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
         }
+      }
+    },
+    "recharge": {
+      "duration": {
+        "shortBiomods": "10 分钟",
+        "shortFlat": "1 小时",
+        "longBiomods": "4 小时",
+        "longFlat": "8 小时"
+      }
+    },
+    "time": {
+      "title": "时间",
+      "day": "天",
+      "year": "年",
+      "timeOfDay": "当前时间",
+      "advance": "让时间流逝",
+      "setDay": "设置天数",
+      "custom": "自定义",
+      "customHint": "分钟",
+      "effects": "进行中的效果",
+      "noEffects": "目前没有任何效果在进行",
+      "endNow": "结束",
+      "remaining": "剩余",
+      "owner": "角色",
+      "toggleFormat": "在小时与 Beats 之间切换",
+      "hoursTooltip": "约 {hours} 小时",
+      "dayTooltip": "1 天",
+      "minutesTooltip": "约 {minutes} 分钟",
+      "beatsInfo": {
+        "title": "Beats",
+        "tip": "什么是 Beats？",
+        "copy": "<p>Beats 即斯沃琪网络时间，由这家瑞士钟表商于 1998 年提出。其构想是让整个星球只用一种时间，完全取消时区——但从未真正流行起来。</p><p>一个 beat 为 1 分 26.4 秒，一天正好是 1000 个，书写时在前面加上 @。</p><p>在没有任何两个居住地共享同一次日出的太阳系中，这反而相当实用：每个空间站都可以保留自己的昼夜循环，同时仍能与他人指称同一时刻。</p>"
+      },
+      "moreInfo": "更多信息",
+      "close": "关闭",
+      "autoReset": "每天自动重置",
+      "restoreRest": "重置恢复次数",
+      "restRestored": "恢复次数已重置。",
+      "advanceSteps": {
+        "min10": "+10 分钟",
+        "hour1": "+1 小时",
+        "hour4": "+4 小时",
+        "hour8": "+8 小时",
+        "day1": "+1 天",
+        "day3": "+3 天",
+        "day7": "+7 天",
+        "beats": "{beats} Beats"
       }
     },
     "migration": {

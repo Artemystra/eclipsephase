@@ -1,3 +1,4 @@
+import { durationRunOut } from "./time.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
@@ -102,21 +103,29 @@ export function registerEffectHandlers(html, callerobj) {
  * @param {String} tempEffMode - The mode of the temporary effect
  * @param {Array} changes - An array with all changes in objects => {key, mode, value}
  * @param {String} effKey - a flag to localize temporary effects easily later on 
+ * @param {Number} [hours] - How long the effect lasts on the world clock, left out for one that only ends on an event
  * @param {*} tempEffVal - The value of the temporary effect
  * @returns 
  */
-export async function tempEffectCreation(actor, tempEffLabel, tempEffIcon, effChanges, effKey){
-    return actor.createEmbeddedDocuments('ActiveEffect', [{
+export async function tempEffectCreation(actor, tempEffLabel, tempEffIcon, effChanges, effKey, hours){
+    const effectData = {
       name: tempEffLabel,
       label: tempEffLabel,
       icon: tempEffIcon,
       changes: effChanges,
+      // A duration would otherwise put an icon on the token, which this system does not want.
+      showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER,
       flags: {
         eclipsephase: {
           effectKey: effKey
         }
       }
-    }]);
+    };
+
+    // expiry null so the hours run down on the world clock rather than on a combat turn.
+    if (hours) effectData.duration = { value: hours, units: "hours", expiry: null };
+
+    return actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
 }
 
 /**
@@ -134,6 +143,22 @@ export async function tempEffectDeletion(actor, scope, key, values) {
   if (effectsToDelete.length > 0) {
     await actor.deleteEmbeddedDocuments("ActiveEffect", effectsToDelete);
   }
+}
+
+/**
+ * Deletes the system's own temporary effects once their time has run out. Foundry only marks an
+ * expired effect, so without this a spent Ignore Wound would linger on the sheet after it stopped
+ * applying. The other half of the RAW rule - ending at the next recharge - is handled where
+ * recharges are taken.
+ * @param {Actor} actor - The actor whose effects were refreshed
+ * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
+ * @returns {Promise<void>} Resolves once the spent effects are gone
+ */
+export async function deleteRunOutTempEffects(actor, effects) {
+  const spent = effects.filter(effect =>
+    effect.getFlag?.("eclipsephase", "effectKey") !== undefined && durationRunOut(effect));
+
+  if (spent.length) await actor.deleteEmbeddedDocuments("ActiveEffect", spent.map(effect => effect.id));
 }
 
 /**

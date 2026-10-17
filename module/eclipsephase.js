@@ -4,6 +4,8 @@ import * as EPchat from "./rolls/chat.js";
 import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
+import EPtimePanel from './apps/time-panel.js';
+import { resetRechargesForNewDay } from './common/recharge.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
 import  { eclipsephase } from "./config.js";
@@ -90,6 +92,37 @@ async function registerSystemSettings() {
     default: false
   });
 
+  game.settings.register("eclipsephase", "timeFormat", {
+    config: true,
+    scope: "client",
+    name: "SETTINGS.timeFormat.name",
+    hint: 'SETTINGS.timeFormat.hint',
+    type: String,
+    choices: {
+      hours: "SETTINGS.timeFormat.hours",
+      beats: "SETTINGS.timeFormat.beats"
+    },
+    default: "hours"
+  });
+
+  game.settings.register("eclipsephase", "rechargeAutoReset", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.rechargeAutoReset.name",
+    hint: 'SETTINGS.rechargeAutoReset.hint',
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register("eclipsephase", "timePanelPlayers", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.timePanelPlayers.name",
+    hint: 'SETTINGS.timePanelPlayers.hint',
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register("eclipsephase", "editAll", {
     config: true,
     scope: "world",
@@ -147,6 +180,10 @@ Hooks.once('init', async function() {
     formula: "1d6 + @initiative.value",
     decimals: 0
   };
+
+  // An action turn is roughly three seconds (Core), so a combat round advances the world clock by
+  // that much - which is what lets a duration counted in turns expire during a fight.
+  CONFIG.time.roundTime = 3;
 
   // Define custom Entity classes
   CONFIG.Actor.documentClass = EPactor;
@@ -206,7 +243,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
     "systems/eclipsephase/templates/item/partials/movement-grid.hbs",
-    "systems/eclipsephase/templates/item/partials/aspect-damage-fields.hbs"
+    "systems/eclipsephase/templates/item/partials/aspect-damage-fields.hbs",
+    "systems/eclipsephase/templates/apps/time-panel.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -811,6 +849,46 @@ Hooks.on("renderChatLog", (app,html,data) => {
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
+
+// The time panel's own control button, which players get too when the world allows it. Appended as
+// a proper menu entry rather than hung off another control, which a player may not have at all.
+Hooks.on('renderSceneControls', (app, html) => {
+  if (!game.user.isGM && !game.settings.get("eclipsephase", "timePanelPlayers")) return;
+
+  const root = html instanceof HTMLElement ? html : html[0] ?? html;
+  if (root.querySelector('.ep-time-panel-button')) return;
+
+  const menu = root.querySelector('[data-application-part="layers"] menu') ?? root.querySelector('menu');
+  if (!menu) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("control", "ui-control", "layer", "icon", "fa-regular", "fa-clock", "ep-time-panel-button");
+  button.setAttribute("role", "tab");
+  button.dataset.tooltip = game.i18n.localize('ep2e.time.title');
+  button.setAttribute("aria-label", game.i18n.localize('ep2e.time.title'));
+  button.addEventListener("click", () => EPtimePanel.open());
+
+  const entry = document.createElement("li");
+  entry.appendChild(button);
+  menu.appendChild(entry);
+});
+
+// Everything that changes what the panel shows: the clock itself, and effects coming and going.
+for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected"]) {
+  Hooks.on(hook, () => EPtimePanel.refresh());
+}
+
+// A new campaign day hands every character its recharges back.
+Hooks.on("updateWorldTime", () => resetRechargesForNewDay());
+
+// The sidebar tray changes how much room is left, so the panel re-parks beside it.
+Hooks.on("collapseSidebar", () => EPtimePanel.reposition());
+
+Hooks.once("ready", () => {
+  window.addEventListener("resize", () => EPtimePanel.reposition());
+  if (game.user.isGM || game.settings.get("eclipsephase", "timePanelPlayers")) EPtimePanel.open();
+});
 
 // #token-hud's own bar1/bar2 rows live inside .col.middle, which core pads with a fixed, non-scaling
 // "+100px / top:-50px" (see #token-hud .col in foundry2.css) - a flat constant, not a percentage of

@@ -95,3 +95,31 @@ describe("postRest", () => {
     expect(global.__ep.notifications.error.join(" ")).toContain("broken rest listener");
   });
 });
+
+describe("a recharge reports how long it took", () => {
+  beforeEach(() => resetWorld());
+
+  /**
+   * The text of every chat message a recharge produced.
+   * @returns {String} The messages, flattened
+   */
+  function posted() {
+    return global.__ep.createdMessages.map(message => JSON.stringify(message)).join(" ");
+  }
+
+  test("a short recharge names a timeframe on its card", async () => {
+    await rest(makeRester(), "short");
+    expect(posted()).toMatch(/ep2e\.recharge\.duration\.short(Biomods|Flat)/);
+  });
+
+  test("a long recharge names its own timeframe", async () => {
+    await rest(makeRester(), "long");
+    expect(posted()).toMatch(/ep2e\.recharge\.duration\.long(Biomods|Flat)/);
+  });
+
+  test("the timeframe reaches the card through the announcement's time slot", async () => {
+    await rest(makeRester(), "short");
+    expect(posted()).toContain("ep2e.roll.announce.rest.short");
+    expect(posted()).toContain("time");
+  });
+});

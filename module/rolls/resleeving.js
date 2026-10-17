@@ -6,6 +6,20 @@ import { tempEffectCreation, listSelection, tempEffectDeletion } from "../common
  * After the tests Damage & Active Effects are automatically generated.
  * @param {Object} data - uses the data.currentTarget.actorid to identify the actor to be asked for a SOM/WIL roll
  */
+const INTEGRATION_PREFIX = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.";
+
+/**
+ * How long a failed Integration Test hampers the character. RAW: a day, plus a day per superior
+ * failure, which the result code already distinguishes.
+ * @param {Number} integrationResult - The result code of the Integration Test
+ * @returns {Object} The label naming the span and the number of days it lasts
+ */
+export function integrationPenalty(integrationResult) {
+  if (integrationResult === 2) return { label: INTEGRATION_PREFIX + "oneDay", days: 1 };
+  if (integrationResult === 1) return { label: INTEGRATION_PREFIX + "twoDay", days: 2 };
+  return { label: INTEGRATION_PREFIX + "threeDay", days: 3 };
+}
+
 export async function sleevingTest (data) {
     const btndata = data.currentTarget.dataset
     const actorWhole = game.actors.get(btndata.actorid)
@@ -145,26 +159,19 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
     //Checks if the final integration test result is a failure
     if (integrationResult <= 2 || integrationResult === 6 || integrationResult === 8){
 
-        let effectMultiplier
-        
-        if(integrationResult < 1 || integrationResult === 6 || integrationResult === 8) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.threeDay";
-
-        if(integrationResult === 1) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.twoDay";
-
-        if(integrationResult === 2) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.oneDay";
+        const { label: effectMultiplier, days } = integrationPenalty(integrationResult);
 
         let effectName = game.i18n.localize("ep2e.morph.sleeving.announce.result.effectIntegrationIssues.title") + ": " + game.i18n.localize(effectMultiplier);
         let effectIcon = "systems/eclipsephase/resources/icons/substract.png";
         let changes = [
             {"key" : "system.additionalSystems.sleeving.integrationIssues.title", "mode" : 2, "value" : effectName}, 
             {"key" : "system.additionalSystems.sleeving.integrationIssues.value", "mode" : 2, "value" : -10}, 
-            {"key" : "system.additionalSystems.sleeving.integrationIssues.appeal", "mode" : 2, "value" : true}, 
             {"key" : "system.additionalSystems.sleeving.integrationIssues.identifier", "mode" : 2, "value" : "integrationIssues"}
         ]
 
         await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", ["integrationIssues"]);
 
-        await tempEffectCreation(actorWhole, effectName, effectIcon, changes, "integrationIssues");
+        await tempEffectCreation(actorWhole, effectName, effectIcon, changes, "integrationIssues", days * 24);
 
         message = {
             "type": "defaultDamage",

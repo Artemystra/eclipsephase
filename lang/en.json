@@ -1,5 +1,9 @@
 {
   "SETTINGS": {
+    "rechargeAutoReset": {
+      "name": "Reset Recharges Daily",
+      "hint": "When the world clock passes midnight, every character gets their short and long recharges back. Switch this off to clear them by hand instead."
+    },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -10,6 +14,16 @@
     "effectPanel": {
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
+    },
+    "timeFormat": {
+      "name": "Time Format",
+      "hint": "How the Time Panel shows the time of day. Hours uses a 24-hour clock, Beats uses Swatch Internet Time, where a day is 1000 beats.",
+      "hours": "Hours and minutes",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "Show the Time Panel to players",
+      "hint": "Lets players open the Time Panel and see the current day and time. They get the same panel without any of the controls."
     },
     "editAll": {
       "name": "No edit restrictions",
@@ -29,7 +43,7 @@
     },
     "restReset": {
       "name": "Reset Temporary Bonuses",
-      "hint": "If activated ANY rest (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long rests reset them."
+      "hint": "If activated ANY recharge (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long recharges reset them."
     },
     "showDamageOptions": {
       "name": "Default Show Damage Dialog",
@@ -52,8 +66,7 @@
     "Actor": {
       "character": "Player Character",
       "npc": "Non-Player Character",
-      "goon": "Threat",
-      "shop": "Shop"
+      "goon": "Threat"
     },
     "Item": {
       "gear": "Gear",
@@ -319,7 +332,7 @@
         "rezSpent": "Spent"
       },
       "rest": {
-        "label": "Rest",
+        "label": "Recharge",
         "jammedLabel": "No recharge while jamming"
       }
     },
@@ -470,8 +483,8 @@
       },
       "restingMenu": {
         "headline": "Recover Pools",
-        "shortRest": "Short Rest:",
-        "longRest": "Long Rest:",
+        "shortRest": "Short Recharge:",
+        "longRest": "Long Recharge:",
         "labelInsight": "Insight",
         "labelVigor": "Vigor",
         "labelMoxie": "Moxie",
@@ -482,16 +495,16 @@
           "distributionDone": "Ready to go! No pool points left"
         },
         "restInfo": {
-          "headline": "Resting",
+          "headline": "Recharging",
           "subheadline1": "General",
-          "copy1": "You need to use a 'rest' action in order to recover pools. Choose the type of rest you want to use by clicking the checkbox next to it. You have 1 long and 2 short rest during the cycle of 24 in-game hours.",
-          "subheadline2": "Short Rest",
-          "copy2": "A short rest takes the common transhuman being approximately 10 minutes and requires them to do nothing else than rest, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short rest recovers 1d6 pool points</label>",
-          "subheadline3": "Long Rest",
-          "copy3": "A person with biomods takes about 4 hours for a long rest. This requires them to do nothing else than rest, talk and just come down. Flats need 8 hours to achieve the same.<p/><label class='resource-value'>A long rest recovers all your pool points</label>"
+          "copy1": "You need to use a 'recharge' action in order to recover pools. Choose the type of recharge you want to use by clicking the checkbox next to it. You have 1 long and 2 short recharges during the cycle of 24 in-game hours.",
+          "subheadline2": "Short Recharge",
+          "copy2": "A short recharge takes the common transhuman being approximately 10 minutes and requires them to do nothing else than recharge, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short recharge recovers 1d6 pool points</label>",
+          "subheadline3": "Long Recharge",
+          "copy3": "A person with biomods takes about 4 hours for a long recharge. This requires them to do nothing else than recharge, talk and just come down. Flats need 8 hours to achieve the same.<p/><label class='resource-value'>A long recharge recovers all your pool points</label>"
         },
         "button": {
-          "resetRest": "Reset Rest",
+          "resetRest": "Reset Recharges",
           "distribute": "Distribute"
         }
       },
@@ -582,7 +595,7 @@
         "inputSubheadline": "Input Needed",
         "chatHeadline": "Used a Pool",
         "chatEffect": "Received Effect:",
-        "considerResting": "Consider using a 'rest'-action",
+        "considerResting": "Consider using a 'recharge'-action",
         "numberWounds": "Wounds to Ignore",
         "numberTrauma": "Trauma to Ignore",
         "repSize": "Size of Favor",
@@ -1504,7 +1517,7 @@
           "noPsiTooltip": "No Psi while jamming"
         },
         "psi": {
-          "chiPushActive": "Active for {minutes} minute(s), or until your next rest.",
+          "chiPushActive": "Active for {minutes} minute(s), or until your next recharge.",
           "pushingSleight": "Pushing {name}",
           "pushedSleightFeedback": "Pushed Sleight",
           "pushedLabel": "Pushed",
@@ -1526,8 +1539,8 @@
           "adaptability": "Adaptability"
         },
         "rest": {
-          "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
-          "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+          "short": "I took <strong>{time}</strong><p/>for a <strong>Short Recharge</strong><p/>to recover some pool points<p/>",
+          "long": "I took {time} for a Long Recharge to recover all pools"
         },
         "spendRez": {
           "spent": "You overspent your rez. <br> Spent:",
@@ -1824,6 +1837,53 @@
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
         }
+      }
+    },
+    "recharge": {
+      "duration": {
+        "shortBiomods": "10 minutes",
+        "shortFlat": "1 hour",
+        "longBiomods": "4 hours",
+        "longFlat": "8 hours"
+      }
+    },
+    "time": {
+      "title": "Time",
+      "day": "Day",
+      "year": "Year",
+      "timeOfDay": "Time of Day",
+      "advance": "Let time pass",
+      "setDay": "Set day",
+      "custom": "Custom",
+      "customHint": "Minutes",
+      "effects": "Running effects",
+      "noEffects": "Nothing is running right now",
+      "endNow": "End now",
+      "remaining": "Remaining",
+      "owner": "Character",
+      "toggleFormat": "Switch hours and beats",
+      "hoursTooltip": "about {hours} h",
+      "dayTooltip": "1 day",
+      "minutesTooltip": "about {minutes} min",
+      "beatsInfo": {
+        "title": "Beats",
+        "tip": "What are Beats?",
+        "copy": "<p>Beats are Swatch Internet Time, invented by the Swiss watchmaker in 1998. The idea was one single time for the whole planet, with no time zones at all - it never caught on.</p><p>One beat is 1 minute and 26.4 seconds, and a day is exactly 1000 of them, written with an @ in front.</p><p>In a solar system where no two habitats share a sunrise, that turns out to be rather useful: every station can keep its own day and night cycle and still name the same moment as everyone else.</p>"
+      },
+      "moreInfo": "More information",
+      "close": "Close",
+      "autoReset": "Auto reset each day",
+      "restoreRest": "Reset recharges",
+      "restRestored": "Recharge allowances reset.",
+      "advanceSteps": {
+        "min10": "+10 Min",
+        "hour1": "+1 Hour",
+        "hour4": "+4 Hours",
+        "hour8": "+8 Hours",
+        "day1": "+1 Day",
+        "day3": "+3 Days",
+        "day7": "+7 Days",
+        "beats": "{beats} Beats"
       }
     },
     "migration": {

@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
+import { registerCommonHandlers,tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
@@ -1390,16 +1390,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
-    html.querySelectorAll(".deleteEffect").forEach(element => {
-      element.addEventListener("click", async f => {
-        const dataset = f.currentTarget.dataset;
-        const actorWhole = actor;
-        const target = dataset.target;
-
-        await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", [target]);
-      });
-    });
-
   };
 
   _activPoolListeners(html, actor, brewStatus) {
@@ -1503,7 +1493,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (newPoolValue >= 0) {
           let changes = [{ "key": effectTarget, "mode": effectMode, "value": effectVal * poolChange }];
           if (inputType === "woundIgnore" || inputType === "traumaIgnore") {
-            await tempEffectCreation(actor, effectLabel, effectIcon, changes, inputType);
+            // RAW: ignoring a wound or a trauma lasts 24 hours or until the next recharge,
+            // whichever comes first. The recharge half is handled where recharges are taken.
+            await tempEffectCreation(actor, effectLabel, effectIcon, changes, inputType, 24);
           }
     
           let dialogData = { type: dialogType, poolName: poolName, subtitle: subtitle, copy: copy, number: poolChange };

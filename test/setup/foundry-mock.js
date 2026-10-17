@@ -3,6 +3,9 @@ const path = require("path");
 
 const SYSTEM_ROOT = path.resolve(__dirname, "..", "..");
 
+// Read from the manifest rather than pinned here, so a version bump cannot leave the mock behind.
+const SYSTEM_VERSION = JSON.parse(fs.readFileSync(path.join(SYSTEM_ROOT, "system.json"), "utf8")).version;
+
 /**
  * Foundry's utils.getType: distinguishes null, Array, Set and plain objects.
  * @param {*} value - Any value
@@ -303,6 +306,22 @@ class MockDocument {
     return this;
   }
 
+  // Foundry keeps ActiveEffects as embedded documents on both Actors and Items. Only that
+  // collection is modelled here, which is all the system creates and deletes at runtime.
+  async createEmbeddedDocuments(documentName, dataArray = []) {
+    if (documentName !== "ActiveEffect") return [];
+    const created = dataArray.map(data => new MockActiveEffect(data, { parent: this }));
+    this.effects.push(...created);
+    return created;
+  }
+
+  async deleteEmbeddedDocuments(documentName, ids = []) {
+    if (documentName !== "ActiveEffect") return [];
+    const removed = this.effects.filter(effect => ids.includes(effect.id));
+    this.effects = this.effects.filter(effect => !ids.includes(effect.id));
+    return removed;
+  }
+
   toObject() {
     return deepClone(this._source);
   }
@@ -336,6 +355,11 @@ class MockActiveEffect {
     this.disabled = data.disabled ?? false;
     this.transfer = data.transfer ?? true;
     this.statuses = data.statuses ?? [];
+    this.duration = { value: null, units: "seconds", expiry: null, expired: false, ...(data.duration ?? {}) };
+    this.start = data.start ? deepClone(data.start) : null;
+    this.showIcon = data.showIcon ?? global.CONST.ACTIVE_EFFECT_SHOW_ICON.CONDITIONAL;
+    this.description = data.description ?? "";
+    this.flags = deepClone(data.flags ?? {});
     const changes = data.system?.changes ?? data.changes ?? [];
     const Model = getEffectDataModel();
     this.system = new Model({ changes: deepClone(changes) }, { parent: this });
@@ -345,8 +369,22 @@ class MockActiveEffect {
     return this.system.changes;
   }
 
+  // Foundry's own helper, which fills every field of the start stamp rather than just the time.
+  static getEffectStart() {
+    return { time: global.game.time.worldTime, combat: null, combatant: null, initiative: null, round: null, turn: null };
+  }
+
   get isSuppressed() {
     return this.system.isSuppressed === true;
+  }
+
+  // Foundry: an effect is temporary when it names an expiry event or carries a finite duration.
+  get isTemporary() {
+    return !!this.duration.expiry || Number.isFinite(this.duration.value);
+  }
+
+  getFlag(scope, key) {
+    return this.flags?.[scope]?.[key];
   }
 
   get active() {
@@ -709,6 +747,9 @@ function resetMock() {
   hookCalls.length = 0;
   hookHandlers.clear();
   uuidRegistry.clear();
+  global.game.time.worldTime = 0;
+  global.game.user.isGM = true;
+  global.game.user.character = null;
   global.game.messages.clear();
   global.game.actors.clear();
   global.game.items.clear();
@@ -828,6 +869,7 @@ global.CONST = {
   TOKEN_DISPLAY_MODES: { HOVER: 20, NONE: 0 },
   TOKEN_DISPOSITIONS: { NEUTRAL: 0, FRIENDLY: 1, HOSTILE: -1 },
   ACTIVE_EFFECT_MODES: { ADD: 2, OVERRIDE: 5 },
+  ACTIVE_EFFECT_SHOW_ICON: { NEVER: 0, CONDITIONAL: 1, ALWAYS: 2 },
   DOCUMENT_OWNERSHIP_LEVELS: { NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: 3 }
 };
 
@@ -862,7 +904,12 @@ global.ui = {
 };
 
 global.game = {
-  system: { id: "eclipsephase", version: "2.5" },
+  system: { id: "eclipsephase", version: SYSTEM_VERSION },
+  time: {
+    worldTime: 0,
+    async advance(seconds) { this.worldTime += Number(seconds) || 0; return this.worldTime; },
+    async set(seconds) { this.worldTime = Number(seconds) || 0; return this.worldTime; }
+  },
   model: buildModel(),
   settings: {
     get: (namespace, key) => settingValues.get(`${namespace}.${key}`),
