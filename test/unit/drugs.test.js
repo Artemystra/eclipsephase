@@ -614,3 +614,25 @@ describe("a wear-off stress written as text", () => {
     expect(normaliseDrugSystem({ ...current, wearOff: { d10: 1, d6: 0, bonus: 0 } })).toBeNull();
   });
 });
+
+describe("the checks a drug calls for, authored from the book", () => {
+  test("exactly the six drugs with a check carry one, at the book's aptitude, modifier and failure", () => {
+    const checks = packDrugs().filter(drug => drug.system.useCheck?.aptitude)
+      .map(drug => [drug.name, drug.system.useCheck.aptitude, drug.system.useCheck.modifier, drug.system.useCheck.failure]).sort();
+    expect(checks).toEqual([
+      ["BTX2", "som", 0, "immobilized"],
+      ["Flight", "wil", 0, "stress"],
+      ["Inhibitor", "wil", -20, "blocksPsi"],
+      ["Nervex", "som", 0, "incapacitated"],
+      ["Neuropath", "wil", 0, "incapacitated"],
+      ["Twitch", "som", 0, "incapacitated"]
+    ]);
+  });
+});
+
+describe("Randomizer", () => {
+  test("applies on its own on every social test, as the book's 'at any given time' says", () => {
+    const randomizer = packDrugs().find(drug => drug.name === "Randomizer");
+    expect(randomizer.system.rollOptions).toEqual([expect.objectContaining({ random: true, automatic: true })]);
+  });
+});

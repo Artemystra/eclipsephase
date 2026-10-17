@@ -42,7 +42,22 @@
           "wil"
         ]
       }
-    ]
+    ],
+    "useCheck": {
+      "aptitude": "wil",
+      "modifier": 0,
+      "failure": "stress",
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "stress": {
+        "d10": 1,
+        "d6": 0,
+        "bonus": 0
+      },
+      "successPsiPenalty": 0
+    }
   },
   "ownership": {
     "default": 0,

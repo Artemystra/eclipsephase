@@ -3,8 +3,9 @@ import { durationRunOut } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
 import { consumeDose, gmList, diceFormula } from "./general-sheet-functions.js";
 import { RollCheck, TASK_RESULT, rollToChat, WEAPON_DAMAGE_OUTPUT } from "../rolls/dice.js";
+import { postUseCheckCard, markCheckCardRolled } from "./dose-checks.js";
 
-const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
+export const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
 const DOSE_SOCKET = "system.eclipsephase";
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
@@ -83,6 +84,9 @@ export function doseEffectData(item) {
           onset: doseOnset(system),
           wearOff: diceFormula(system.wearOff),
           rollOptions: Array.isArray(system.rollOptions) ? system.rollOptions : [],
+          useCheck: system.useCheck?.aptitude ? foundry.utils.deepClone(system.useCheck) : null,
+          checkOutcome: null,
+          psiPenalty: 0,
           blocksPsi: system.blocksPsi === true
         }
       }
@@ -123,16 +127,18 @@ function durationLabel(span) {
  * @param {Object} card - icon, color (a CSS variable), headline, rows of {label, value}, and any
  *   further template data such as a wear-off roll button
  * @param {Object} [flags] - Flags stored on the message
+ * @param {String[]} [whisper] - Who sees the card, instead of the default
  * @returns {Promise<ChatMessage>} The posted card
  */
-async function postDrugCard(actor, { icon, color, headline, rows = [], ...extra }, flags = {}) {
+export async function postDrugCard(actor, { icon, color, headline, rows = [], ...extra }, flags = {}, whisper = null) {
   const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { icon, color, headline, rows, ...extra });
+  const recipients = whisper ?? (actor.type === "character" ? null : gmList());
 
   return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
     flags,
-    ...(actor.type === "character" ? {} : { whisper: gmList() })
+    ...(recipients ? { whisper: recipients } : {})
   });
 }
 
@@ -140,7 +146,8 @@ async function postDrugCard(actor, { icon, color, headline, rows = [], ...extra 
  * The rows a dose card lists: the form, how soon it takes hold, how long it lasts and what is left
  * of the pack once this dose is out of it.
  * @param {Object} system - The drug's system data, as it is after the dose was spent
- * @param {Object} outcome - What consumeDose reported
+ * @param {Object|null} outcome - What consumeDose reported; without one, nothing is said about the
+ *   pack
  * @returns {Object[]} label and value per row; a row without a label reads as a note
  */
 function doseRows(system, outcome) {
@@ -153,6 +160,7 @@ function doseRows(system, outcome) {
   const rows = [{ label: game.i18n.localize("ep2e.chat.dose.form"), value: form }];
   if (onsetKey) rows.push({ label: game.i18n.localize("ep2e.chat.dose.onset"), value: game.i18n.localize(onsetKey) });
   rows.push({ label: game.i18n.localize("ep2e.chat.dose.duration"), value: durationLabel(system.duration) });
+  if (!outcome) return rows;
   rows.push(outcome.emptied
     ? { label: "", value: game.i18n.localize("ep2e.chat.dose.lastDose") }
     : { label: game.i18n.localize("ep2e.item.drug.dosesLeft"), value: dosesRemaining(system) });
@@ -199,7 +207,8 @@ export async function postWearOffCard(actor, effect) {
   };
   const flags = sv ? { eclipsephase: { wearOff: { actorUuid: actor.uuid, sv, name, card, rolled: false } } } : {};
 
-  await postDrugCard(actor, { ...card, wearOffRoll: !!sv, actorUuid: actor.uuid }, flags);
+  const button = sv ? { action: "rollWearOff", label: game.i18n.localize("ep2e.chat.dose.rollWearOff") } : null;
+  await postDrugCard(actor, { ...card, button, actorUuid: actor.uuid }, flags);
 }
 
 /**
@@ -269,7 +278,9 @@ export function registerDoseHooks() {
 /**
  * Puts a dose's effect on an actor, or - when the same drug is already running there - restarts
  * that effect's clock instead of stacking a second one. The clock starts now, not when the effect
- * data was read, so a dose handed over later still runs its full span.
+ * data was read, so a dose handed over later still runs its full span. A renewal takes the new
+ * dose's data - its changes, options, check and duration as the pack now has them - and clears
+ * the outcome of the drug's check, since every dose calls for it again.
  * @param {Actor} actor - The actor receiving the dose
  * @param {Object} data - The dose's effect data, as doseEffectData built it
  * @returns {Promise<Object>} The effect now running and whether it was a renewal
@@ -277,7 +288,12 @@ export function registerDoseHooks() {
 async function putDoseOn(actor, data) {
   const running = activeDoseFor(actor, data.flags?.eclipsephase?.dose?.name ?? data.name);
   if (running) {
-    await running.update({ start: ActiveEffect.getEffectStart(), "duration.expired": false });
+    await running.update({
+      start: ActiveEffect.getEffectStart(),
+      duration: { ...data.duration, expired: false },
+      "system.changes": data.system?.changes ?? [],
+      "flags.eclipsephase.dose": foundry.utils.deepClone(data.flags?.eclipsephase?.dose ?? {})
+    });
     return { effect: running, renewed: true };
   }
   const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [{ ...data, start: ActiveEffect.getEffectStart() }]);
@@ -315,13 +331,15 @@ export async function takeDose(actor, item) {
 
   const { effect, renewed } = await putDoseOn(actor, data);
   await postDoseCard(actor, item, outcome, renewed);
+  await postUseCheckCard(actor, effect);
   return { ...outcome, refused: false, effect };
 }
 
 /**
- * Offers one dose of a drug to somebody else: spends it from the giver's pack and posts a public
- * card whose "use on me" button hands it to whoever claims it first. The card carries everything
- * the dose needs, since the last dose takes the drug itself off the giver's sheet.
+ * Offers one dose of a drug to somebody else: posts a public card whose buttons hand it to whoever
+ * claims it first. Nothing leaves the pack yet - the dose is spent when somebody actually gets it.
+ * The card carries the dose's effect data, read now, so the effect does not depend on the drug
+ * still being on the sheet.
  * @param {Actor} actor - The actor handing the dose over
  * @param {Item} item - The drug
  * @param {Object} [options] - forced: the dose got into an unwilling target through a melee hit
@@ -333,33 +351,33 @@ export async function offerDose(actor, item, { forced = false } = {}) {
     return { offered: false, message: null };
   }
 
-  const data = doseEffectData(item);
-  const drugType = item.system.drugType ?? "";
-  const outcome = await consumeDose(actor, item);
-  if (!outcome.taken) {
+  if (dosesRemaining(item.system) < 1) {
     ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: item.name }));
     return { offered: false, message: null };
   }
 
+  const data = doseEffectData(item);
+  const drugType = item.system.drugType ?? "";
   const card = {
     icon: "fa-syringe",
     color: "--negative",
     headline: game.i18n.format(forced ? "ep2e.chat.dose.forced" : "ep2e.chat.dose.offered", { name: item.name }),
-    rows: doseRows(item.system, outcome)
+    rows: doseRows(item.system, null)
   };
-  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...card, offer: true });
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...card, offer: true, forced, actorUuid: actor.uuid });
   const message = await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
-    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null } } }
+    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null, forced, giverUuid: actor.uuid, itemId: item.id } } }
   });
   return { offered: true, message };
 }
 
 /**
  * Hands an offered dose to an actor: refuses a card already used and a body the drug cannot act
- * on, puts the dose on the actor and turns the card into a record of who took it, with no button
- * left for anyone else. The used-card refusal only matters when two people click before the card
+ * on, spends the dose from the giver's pack - refusing when that pack is gone or empty by now -
+ * puts it on the actor and turns the card into a record of who took it, with no button left for
+ * anyone else. The used-card refusal only matters when two people click before the card
  * has re-rendered. Runs where the card may be changed - the GM's client - so two people
  * claiming at once cannot both get it.
  * @param {ChatMessage} message - The offer card
@@ -374,10 +392,16 @@ export async function claimDose(message, actor) {
   const substrate = doseSubstrate(actor, { system: { drugType: offer.drugType } });
   if (!substrate.allowed) return { claimed: false, reasonKey: substrate.reasonKey };
 
-  await putDoseOn(actor, offer.data);
+  const giver = offer.giverUuid ? await fromUuid(offer.giverUuid) : null;
+  const pack = giver?.items?.get?.(offer.itemId);
+  const spent = pack ? await consumeDose(giver, pack) : { taken: false };
+  if (!spent.taken) return { claimed: false, reasonKey: "ep2e.actorSheet.warnings.offerPackEmpty" };
+
+  const { effect } = await putDoseOn(actor, offer.data);
   const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
   const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...offer.card, footnote, offer: false });
   await message.update({ content, "flags.eclipsephase.doseOffer.usedBy": actor.name });
+  await postUseCheckCard(actor, effect);
   return { claimed: true, reasonKey: null };
 }
 
@@ -410,6 +434,7 @@ export async function requestDoseClaim(messageId, { selection = false } = {}) {
     ui.notifications.warn(game.i18n.localize(key));
     return;
   }
+  if (!selection && actor.uuid === message.getFlag("eclipsephase", "doseOffer").giverUuid) return;
 
   if (game.user.isGM) {
     const result = await claimDose(message, actor);
@@ -517,6 +542,11 @@ export function registerDoseSocket() {
       const actor = await fromUuid(payload.actorUuid);
       const result = await claimDose(message, actor);
       if (result.reasonKey) game.socket.emit(DOSE_SOCKET, { action: "claimDoseRefused", userId: payload.userId, reasonKey: result.reasonKey });
+      return;
+    }
+    if (payload?.action === "markDoseCheckRolled") {
+      if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
+      await markCheckCardRolled(game.messages.get(payload.messageId));
       return;
     }
     if (payload?.action === "rollWearOff") {

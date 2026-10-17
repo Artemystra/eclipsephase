@@ -54,13 +54,23 @@ export function doseRollOptions(actor, dataset) {
 }
 
 /**
- * The options the dialog came back with ticked.
+ * The options the dialog came back with ticked, plus those that apply on their own whenever they
+ * fit - Randomizer's coin flip on every social test - which the dialog never offers.
  * @param {Object[]} offered - What doseRollOptions offered
  * @param {Object} values - The dialog's answer, by field name
- * @returns {Object[]} The offered entries that were ticked
+ * @returns {Object[]} The entries that apply to this roll
  */
 export function chosenRollOptions(offered, values = {}) {
-  return offered.filter(entry => values[entry.field] === true || values[entry.field] === "true");
+  return offered.filter(entry => entry.option.automatic || values[entry.field] === true || values[entry.field] === "true");
+}
+
+/**
+ * The options the roll dialog shows as checkboxes: every offered one that does not apply on its own.
+ * @param {Object[]} offered - What doseRollOptions offered
+ * @returns {Object[]} The entries to show
+ */
+export function tickableRollOptions(offered) {
+  return offered.filter(entry => !entry.option.automatic);
 }
 
 /**

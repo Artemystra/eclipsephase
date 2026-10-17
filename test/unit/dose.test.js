@@ -373,6 +373,21 @@ describe("a dose running out", () => {
   });
 });
 
+describe("a second dose of a drug already running", () => {
+  test("brings the data of the pack it comes from, not the first dose's", async () => {
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+    const option = { id: "new", label: "x", value: 10, automatic: true };
+    await actor.items.get("kick1").update({ "system.rollOptions": [option] });
+
+    await takeDose(actor, actor.items.get("kick1"));
+
+    const doses = actor.effects.filter(effect => effect.getFlag("eclipsephase", "dose"));
+    expect(doses).toHaveLength(1);
+    expect(doses[0].getFlag("eclipsephase", "dose").rollOptions).toEqual([option]);
+  });
+});
+
 describe("an ammunition pack", () => {
   test("cannot be taken: nothing is spent, no effect starts, the player is told why", async () => {
     const actor = carrying({ isAmmo: true });
@@ -605,12 +620,38 @@ describe("giving a dose to someone else", () => {
     return { giver, message };
   }
 
-  test("the dose comes out of the giver's pack and onto nobody yet", async () => {
+  test("offering takes nothing from the pack yet; the dose is spent when somebody gets it", async () => {
     const { giver, message } = await offered();
 
-    expect(giver.items.get("kick1").system.usagesUsed).toEqual(1);
+    expect(giver.items.get("kick1").system.usagesUsed).toEqual(0);
     expect(doseOn(giver)).toBeUndefined();
     expect(message.getFlag("eclipsephase", "doseOffer")).toMatchObject({ name: "Kick", usedBy: null });
+
+    await claimDose(message, claimant());
+
+    expect(giver.items.get("kick1").system.usagesUsed).toEqual(1);
+  });
+
+  test("a claim refused for the body costs the giver nothing", async () => {
+    const { giver, message } = await offered();
+
+    await claimDose(message, claimant("Synthie", "synth"));
+
+    expect(giver.items.get("kick1").system.usagesUsed).toEqual(0);
+  });
+
+  test("two offers for the last dose: the second claim finds the pack empty and is refused", async () => {
+    const giver = carrying({ usagesUsed: 4 });
+    const first = (await offerDose(giver, giver.items.get("kick1"))).message;
+    const second = (await offerDose(giver, giver.items.get("kick1"))).message;
+
+    await claimDose(first, claimant("Dinah"));
+    const late = claimant("Velkora");
+    const result = await claimDose(second, late);
+
+    expect(result).toEqual({ claimed: false, reasonKey: "ep2e.actorSheet.warnings.offerPackEmpty" });
+    expect(doseOn(late)).toBeUndefined();
+    expect(second.getFlag("eclipsephase", "doseOffer").usedBy).toBeNull();
   });
 
   test("the offer is public, even from an NPC, so the person it is for can click it", async () => {
@@ -826,7 +867,7 @@ describe("forcing a dose on an unwilling target", () => {
     expect(createdMessages[0].flags.eclipsephase.roll.doseAttempt).toEqual({ actorUuid: actor.uuid, itemId: "kick1", delivered: false });
   });
 
-  test("a hit spends the dose and posts its card, worded as forced", async () => {
+  test("a hit posts the dose's card, worded as forced, and spends nothing until it is placed", async () => {
     const actor = attacker();
     seedRolls([5]);
 
@@ -835,7 +876,7 @@ describe("forcing a dose on an unwilling target", () => {
 
     expect(offers()).toHaveLength(1);
     expect(offers()[0].content).toContain("ep2e.chat.dose.forced");
-    expect(actor.items.get("kick1").system.usagesUsed).toEqual(1);
+    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
   });
 
   test("a miss spends nothing and posts no card", async () => {
@@ -862,7 +903,7 @@ describe("forcing a dose on an unwilling target", () => {
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(offers()).toHaveLength(1);
-    expect(actor.items.get("kick1").system.usagesUsed).toEqual(1);
+    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
   });
 
   test("a pool spend that leaves it a miss delivers nothing", async () => {

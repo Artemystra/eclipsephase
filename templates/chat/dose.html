@@ -18,18 +18,18 @@
   <p style="font-size: 11px; color: var(--inactive); margin: -10px 0 10px 0;">{{footnote}}</p>
   {{/if}}
 
-  {{#if wearOffRoll}}
+  {{#if button}}
   <div class="chatControls ep-chat-stack">
-    <button type="button" class="chatButton rollWearOff ownerOnlyControl ep-chat-primary" data-action="rollWearOff" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.dose.rollWearOff"}}</button>
+    <button type="button" class="chatButton {{button.action}} ownerOnlyControl ep-chat-primary" data-action="{{button.action}}" data-actor-uuid="{{actorUuid}}">{{button.label}}</button>
   </div>
   {{/if}}
 
   {{#if offer}}
   <div class="chatControls ep-chat-stack">
-    <button type="button" class="chatButton useDose playerOnlyControl" data-action="useDose">{{localize "ep2e.chat.dose.useOnMe"}}</button>
+    <button type="button" class="chatButton useDose playerOnlyControl notForOwnerControl" data-action="useDose" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.dose.useOnMe"}}</button>
     <button type="button" class="chatButton useDose gmOnlyControl ep-chat-secondary" data-action="useDose" data-selection="true">{{localize "ep2e.chat.dose.useOnSelection"}}</button>
     <button type="button" class="chatButton pickDoseNpc gmOnlyControl ep-chat-secondary" data-action="pickDoseNpc">{{localize "ep2e.chat.dose.chooseNpc"}}</button>
-    <button type="button" class="chatButton pickDoseTarget gmOnlyControl ep-chat-primary" data-action="pickDoseTarget">{{localize "ep2e.chat.dose.chooseTarget"}}</button>
+    <button type="button" class="chatButton pickDoseTarget {{#if forced}}ownerOnlyControl{{else}}gmOnlyControl{{/if}} ep-chat-primary" data-action="pickDoseTarget" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.dose.chooseTarget"}}</button>
   </div>
   {{/if}}
 </div>

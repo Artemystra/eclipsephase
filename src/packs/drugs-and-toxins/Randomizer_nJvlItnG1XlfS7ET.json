@@ -43,7 +43,8 @@
           "persuade",
           "provoke"
         ],
-        "random": true
+        "random": true,
+        "automatic": true
       }
     ]
   },

@@ -5,7 +5,8 @@ import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 import { globalModifiers } from "../common/global-mod.js";
-import { doseRollOptions, chosenRollOptions, optionValue, replacedDrugs } from "../common/dose-options.js";
+import { doseRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../common/dose-options.js";
+import { drugPsiPenalties } from "../common/dose-state.js";
 
 /*
  * Path constants for dialog templates
@@ -780,7 +781,7 @@ if (traits) {
 }
 
 const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
-const doseOptions = doseRollOptions(actorWhole, dataset);
+const doseOptions = tickableRollOptions(doseRollOptions(actorWhole, dataset));
 rollData.names.push(...doseOptions.map(entry => entry.field));
 
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
@@ -917,6 +918,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         const strainFamily = psi.actorStrainFamily(actorWhole)
         if(strainSubstrate(actorWhole, strainFamily).penalised)
             task.addModifier(new TaskRollModifier(getStrainFamily(strainFamily).mismatchKey, -30))
+        for (const { name, modifier } of drugPsiPenalties(actorWhole))
+            task.addModifier(new TaskRollModifier(name, modifier))
     }
 
 

@@ -2627,20 +2627,47 @@ function _ep27_drugRepairs(item) {
 const _ep27_DRUG_PACK = "eclipsephase.drugs-and-toxins";
 
 /**
- * The blueprint effects of every drug in the system's own compendium that carries any, keyed by
- * the drug's name. Ids and stats are dropped so each copy is created as a fresh effect.
- * @returns {Promise<Map<String, Object[]>>} Drug name to effect data
+ * What every drug in the system's own compendium carries that a drug dragged before 2.7 lacks:
+ * its blueprint effects, its conditional roll options, its wear-off stress and the check it calls
+ * for, keyed by the drug's name. Effect ids and stats are dropped so each copy is created fresh.
+ * @returns {Promise<Map<String, Object>>} Drug name to { effects, rollOptions, wearOff, useCheck }
  */
 async function _ep27_drugBlueprints() {
-  const blueprints = new Map();
+  const catalogue = new Map();
   const pack = game.packs.get(_ep27_DRUG_PACK);
-  if (!pack) return blueprints;
+  if (!pack) return catalogue;
 
   for (const drug of await pack.getDocuments()) {
-    const effects = (drug.toObject().effects ?? []).map(({ _id, _stats, _key, ...effect }) => effect);
-    if (effects.length) blueprints.set(drug.name, effects);
+    const source = drug.toObject();
+    catalogue.set(drug.name, {
+      effects: (source.effects ?? []).map(({ _id, _stats, _key, ...effect }) => effect),
+      rollOptions: source.system?.rollOptions ?? [],
+      wearOff: source.system?.wearOff ?? null,
+      useCheck: source.system?.useCheck ?? null
+    });
   }
-  return blueprints;
+  return catalogue;
+}
+
+/**
+ * The 2.7 data a drug is missing compared with its compendium namesake: roll options when it has
+ * none, a wear-off stress when it has no dice, a check when it calls for none. Only empty fields
+ * are filled, so a drug somebody gave values of their own keeps them.
+ * @param {Item} item - The drug item, read with its repairs applied
+ * @param {Map<String, Object>} catalogue - What _ep27_drugBlueprints read
+ * @returns {Object|null} The system changes to apply, or null when nothing is missing
+ */
+function _ep27_missingDrugData(item, catalogue) {
+  const known = catalogue.get(item.name);
+  if (!known) return null;
+  const system = item.system ?? {};
+  const update = {};
+  const hasDice = value => !!(Number(value?.d10) || Number(value?.d6) || Number(value?.bonus));
+
+  if (!(system.rollOptions?.length) && known.rollOptions.length) update.rollOptions = foundry.utils.deepClone(known.rollOptions);
+  if (!hasDice(system.wearOff) && hasDice(known.wearOff)) update.wearOff = foundry.utils.deepClone(known.wearOff);
+  if (!system.useCheck?.aptitude && known.useCheck?.aptitude) update.useCheck = foundry.utils.deepClone(known.useCheck);
+  return Object.keys(update).length ? update : null;
 }
 
 /**
@@ -2653,7 +2680,8 @@ async function _ep27_drugBlueprints() {
  */
 function _ep27_missingBlueprints(item, blueprints) {
   if (Array.from(item.effects ?? []).length) return null;
-  return blueprints.get(item.name) ?? null;
+  const effects = blueprints.get(item.name)?.effects;
+  return effects?.length ? effects : null;
 }
 
 /**
@@ -2664,7 +2692,7 @@ function _ep27_missingBlueprints(item, blueprints) {
 export async function migrationPre27Needed() {
   const blueprints = await _ep27_drugBlueprints();
   const needs = item => item.type === "drug"
-    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null);
+    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null);
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
@@ -2692,6 +2720,13 @@ export async function migrationPre27(startMigration) {
 
     const missing = _ep27_missingBlueprints(item, blueprints);
     if (missing) await item.createEmbeddedDocuments("ActiveEffect", foundry.utils.deepClone(missing));
+
+    const data = _ep27_missingDrugData(item, blueprints);
+    if (data) {
+      const update = {};
+      for (const [key, value] of Object.entries(data)) update[`system.${key}`] = value;
+      await item.update(update);
+    }
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => item.type === "drug",

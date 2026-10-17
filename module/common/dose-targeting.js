@@ -1,4 +1,6 @@
 import { claimDose } from "./doses.js";
+
+const DOSE_SOCKET = "system.eclipsephase";
 import { selectFromSearchableList } from "./general-sheet-functions.js";
 
 // While the GM picks who receives an offered dose, the canvas shows a syringe cursor.
@@ -73,17 +75,21 @@ async function pickNpc() {
 }
 
 /**
- * Hands an offered dose to a target the GM picks: a token on the canvas, or an NPC from the list.
- * Only a GM can do this, and the claim runs on their client, where the card may be changed.
+ * Hands an offered dose to a target picked on the card: a token on the canvas, or an NPC from the
+ * list. The GM can do both. A dose forced on an unwilling target in a fight also lets the
+ * attacker's own players pick on the canvas; their pick is sent to the active GM, whose client
+ * makes the claim, since only it may change the card and another actor.
  * @param {String} messageId - The offer card's id
  * @param {String} mode - "canvas" or "npc"
  * @param {Object} [pickers] - Replacements for the two pickers, for tests
  * @returns {Promise<Object>} What claimDose reported, or cancelled
  */
 export async function chooseDoseTarget(messageId, mode, pickers = {}) {
-  if (!game.user.isGM) return { claimed: false, cancelled: true };
   const message = game.messages.get(messageId);
-  if (!message?.getFlag?.("eclipsephase", "doseOffer")) return { claimed: false, cancelled: true };
+  const offer = message?.getFlag?.("eclipsephase", "doseOffer");
+  if (!offer) return { claimed: false, cancelled: true };
+  const attacker = !game.user.isGM && offer.forced && mode === "canvas" && fromUuidSync(offer.giverUuid ?? "")?.isOwner;
+  if (!game.user.isGM && !attacker) return { claimed: false, cancelled: true };
 
   let actor = null;
   if (mode === "canvas") {
@@ -99,6 +105,15 @@ export async function chooseDoseTarget(messageId, mode, pickers = {}) {
     actor = await (pickers.npc ?? pickNpc)();
   }
   if (!actor) return { claimed: false, cancelled: true };
+
+  if (!game.user.isGM) {
+    if (!game.users.activeGM) {
+      ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseNeedsGM"));
+      return { claimed: false, cancelled: true };
+    }
+    game.socket.emit(DOSE_SOCKET, { action: "claimDose", messageId, actorUuid: actor.uuid, userId: game.user.id });
+    return { claimed: false, sent: true };
+  }
 
   const result = await claimDose(message, actor);
   if (result.reasonKey) ui.notifications.warn(game.i18n.localize(result.reasonKey));

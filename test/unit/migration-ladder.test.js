@@ -314,3 +314,78 @@ describe("the whole ladder on an old world", () => {
     expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
   });
 });
+
+describe("the 2.7 backfill of what C added", () => {
+  const CURRENT = { duration: { value: 1, units: "hours" }, usagesUsed: 0, usagesMax: 5, category: "toxin" };
+  const JUICE_OPTION = { id: "fear", label: "ep2e.item.drug.rollOptions.juiceFear", value: 30, appliesTo: ["sav", "wil"] };
+  const TWITCH_CHECK = { aptitude: "som", modifier: 0, failure: "incapacitated", duration: { value: 10, units: "minutes" }, stress: { d10: 0, d6: 0, bonus: 0 }, successPsiPenalty: 0 };
+  const KICK_STRESS = { d10: 1, d6: 0, bonus: 2 };
+
+  /**
+   * Registers a compendium carrying a drug with options, one with a check and one with stress.
+   * @returns {void}
+   */
+  function catalogue() {
+    game.packs.set("eclipsephase.drugs-and-toxins", {
+      metadata: { type: "Item", package: "eclipsephase" },
+      getDocuments: async () => [
+        { name: "Juice", type: "drug", system: { ...CURRENT, rollOptions: [JUICE_OPTION] } },
+        { name: "Twitch", type: "drug", system: { ...CURRENT, useCheck: TWITCH_CHECK } },
+        { name: "Psi-Kick", type: "drug", system: { ...CURRENT, wearOff: KICK_STRESS } }
+      ].map(data => new CONFIG.Item.documentClass(data))
+    });
+  }
+
+  /**
+   * Puts a world item into the world for the length of one test.
+   * @param {Object} data - The item source data
+   * @returns {Item} The item, already registered
+   */
+  function worldItem(data) {
+    const item = new CONFIG.Item.documentClass(data);
+    game.items.set(item.id, item);
+    return item;
+  }
+
+  beforeEach(() => catalogue());
+  afterEach(() => {
+    game.packs.delete("eclipsephase.drugs-and-toxins");
+    game.items.clear();
+    game.actors.clear();
+  });
+
+  test("a world whose drugs only lack the new data is still offered the notice", async () => {
+    worldItem({ name: "Juice", type: "drug", system: CURRENT });
+
+    const rendered = await runLadderFrom("2.5");
+
+    expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.27");
+  });
+
+  test("drugs on a sheet get their namesake's options, check and stress", async () => {
+    const actor = makeActor({
+      type: "character",
+      items: [
+        { _id: "juice1", name: "Juice", type: "drug", system: CURRENT },
+        { _id: "twitch1", name: "Twitch", type: "drug", system: CURRENT },
+        { _id: "kick1", name: "Psi-Kick", type: "drug", system: { ...CURRENT, wearOff: { sv: "" } } }
+      ]
+    });
+
+    await runLadderFrom("2.5");
+
+    expect(actor.items.get("juice1").system.rollOptions).toEqual([JUICE_OPTION]);
+    expect(actor.items.get("twitch1").system.useCheck).toEqual(TWITCH_CHECK);
+    expect(actor.items.get("kick1").system.wearOff).toEqual(KICK_STRESS);
+  });
+
+  test("a drug that already carries values of its own keeps them", async () => {
+    const own = { id: "mine", label: "Homebrew", value: 5, appliesTo: [] };
+    const drug = worldItem({ name: "Juice", type: "drug", system: { ...CURRENT, rollOptions: [own], wearOff: { d10: 0, d6: 2, bonus: 0 } } });
+
+    await runLadderFrom("2.5");
+
+    expect(drug.system.rollOptions).toEqual([own]);
+    expect(drug.system.wearOff).toEqual({ d10: 0, d6: 2, bonus: 0 });
+  });
+});

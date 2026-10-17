@@ -77,7 +77,22 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "useCheck": {
+      "aptitude": "wil",
+      "modifier": 0,
+      "failure": "incapacitated",
+      "duration": {
+        "value": 8,
+        "units": "hours"
+      },
+      "stress": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "successPsiPenalty": 0
+    }
   },
   "ownership": {
     "default": 0,

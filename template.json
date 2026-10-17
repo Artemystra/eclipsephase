@@ -1201,6 +1201,21 @@
         "d6": 0,
         "bonus": 0
       },
+      "useCheck": {
+        "aptitude": "",
+        "modifier": 0,
+        "failure": "",
+        "duration": {
+          "value": null,
+          "units": ""
+        },
+        "stress": {
+          "d10": 0,
+          "d6": 0,
+          "bonus": 0
+        },
+        "successPsiPenalty": 0
+      },
       "rollOptions": [],
       "blocksPsi": false,
       "displayCategory": "consumable",

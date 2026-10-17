@@ -21,6 +21,17 @@ Object {
   "chat": Object {
     "readRollContext": [Function],
   },
+  "drugs": Object {
+    "activeDoseFor": [Function],
+    "doseEffectData": [Function],
+    "doseSubstrate": [Function],
+    "drugBlockingPsi": [Function],
+    "drugPsiPenalties": [Function],
+    "forceDose": [Function],
+    "offerDose": [Function],
+    "runningDoses": [Function],
+    "takeDose": [Function],
+  },
   "migration": Object {
     "createProgressDialog": [Function],
     "forEachActor": [Function],

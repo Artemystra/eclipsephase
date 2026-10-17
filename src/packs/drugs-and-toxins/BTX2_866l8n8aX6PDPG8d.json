@@ -31,7 +31,22 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "useCheck": {
+      "aptitude": "som",
+      "modifier": 0,
+      "failure": "immobilized",
+      "duration": {
+        "value": 1,
+        "units": "hours"
+      },
+      "stress": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "successPsiPenalty": 0
+    }
   },
   "ownership": {
     "default": 0,

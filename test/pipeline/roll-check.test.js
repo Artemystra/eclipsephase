@@ -457,3 +457,31 @@ describe("drug options in the roll dialog", () => {
     expect(card.content).not.toContain("ep2e.item.drug.rollOptions.crgasSight");
   });
 });
+
+describe("a drug option that applies on its own", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  test("Randomizer lands on a social test without being ticked, and is not offered in the dialog", async () => {
+    const actor = makeRoller();
+    actor.effects.push(new ActiveEffect({
+      _id: "rnd1", name: "Randomizer", duration: { value: 1, units: "hours" },
+      flags: { eclipsephase: { dose: { name: "Randomizer", rollOptions: [{ id: "social", label: "ep2e.item.drug.rollOptions.randomizerSocial", value: 10, random: true, automatic: true, appliesTo: ["persuade"] }] } } }
+    }, { parent: actor }));
+    let dialogData = null;
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      if (String(template).includes("test-dialog")) dialogData = data;
+      return realRender(template, data);
+    };
+    seedDialogs(plainDialogAnswer());
+    seedRolls([2, 42]);
+    try {
+      await RollCheck(skillDataset({ key: "persuade", name: "Persuade" }), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+
+    expect(dialogData.doseOptions).toEqual([]);
+    expect(global.__ep.createdMessages[0].content).toContain("ep2e.item.drug.rollOptions.randomizerSocial");
+  });
+});

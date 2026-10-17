@@ -570,11 +570,11 @@ Hooks.on("quenchReady", quench => {
     }
 
     describe("forcing a dose on an unwilling target", function () {
-      it("a hit posts the dose card and takes the dose out of the pack", async function () {
+      it("a hit posts the dose card, and the dose stays in the pack until it is placed", async function () {
         await attackWithFace(5, async (actor, drug, attack, before) => {
           await waitUntil(() => newOffers(before).length === 1);
           assert.strictEqual(newOffers(before).length, 1);
-          assert.strictEqual(drug.system.usagesUsed, 1);
+          assert.strictEqual(drug.system.usagesUsed, 0);
           assert.isTrue(attack.getFlag("eclipsephase", "roll").doseAttempt.delivered);
         });
       });
@@ -594,7 +594,7 @@ Hooks.on("quenchReady", quench => {
           await spendPoolOn(attack);
           await waitUntil(() => newOffers(before).length === 1);
           assert.strictEqual(newOffers(before).length, 1);
-          assert.strictEqual(drug.system.usagesUsed, 1);
+          assert.strictEqual(drug.system.usagesUsed, 0);
         });
       });
 
@@ -604,7 +604,7 @@ Hooks.on("quenchReady", quench => {
           await spendPoolOn(attack);
           await new Promise(resolve => setTimeout(resolve, 300));
           assert.strictEqual(newOffers(before).length, 1);
-          assert.strictEqual(drug.system.usagesUsed, 1);
+          assert.strictEqual(drug.system.usagesUsed, 0);
         });
       });
     });

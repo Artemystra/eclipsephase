@@ -1,4 +1,4 @@
-import { checkKeys, doseRollOptions, chosenRollOptions, optionValue, replacedDrugs } from "../../module/common/dose-options.js";
+import { checkKeys, doseRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../../module/common/dose-options.js";
 import { globalModifiers } from "../../module/common/global-mod.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
 
@@ -87,5 +87,18 @@ describe("an option that replaces its drug's penalty to all actions", () => {
 
     expect(replacedDrugs(chosen).size).toEqual(0);
     expect(globalModifiers(actor, { exclude: replacedDrugs(chosen) })[0].modifier).toEqual(-20);
+  });
+});
+
+describe("an option that applies on its own", () => {
+  const RANDOMIZER = { _id: "rnd1", name: "Randomizer", duration: { value: 1, units: "hours" }, flags: { eclipsephase: { dose: { name: "Randomizer", rollOptions: [{ id: "social", label: "x", value: 10, random: true, automatic: true, appliesTo: ["persuade"] }] } } } };
+
+  test("is never shown as a checkbox, but always applies when it fits", () => {
+    const actor = makeActor({ type: "character", effects: [RANDOMIZER] });
+    const offered = doseRollOptions(actor, { key: "persuade" });
+
+    expect(tickableRollOptions(offered)).toEqual([]);
+    expect(chosenRollOptions(offered, {}).map(entry => entry.drug)).toEqual(["Randomizer"]);
+    expect(doseRollOptions(actor, { key: "guns" })).toEqual([]);
   });
 });

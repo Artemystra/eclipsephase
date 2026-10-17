@@ -39,6 +39,8 @@ import {
   registerTaskResultText
 } from "./registry.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
+import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData } from "../common/doses.js";
+import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../common/dose-state.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -135,7 +137,23 @@ export const registry = {
 };
 
 /**
+ * Taking, giving and forcing a dose of a drug, and reading the doses running on an actor.
+ * @since 2.7
+ */
+export const drugs = {
+  takeDose,
+  offerDose,
+  forceDose,
+  activeDoseFor,
+  doseSubstrate,
+  doseEffectData,
+  runningDoses,
+  drugBlockingPsi,
+  drugPsiPenalties
+};
+
+/**
  * The full game.eclipsephase.api surface, grouped by area.
  * @since 2.5
  */
-export const api = { rolls, actors, ui, chat, migration, registry };
+export const api = { rolls, actors, ui, chat, migration, registry, drugs };

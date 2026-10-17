@@ -4,6 +4,7 @@ import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
+import { requestUseCheck } from "../common/dose-checks.js";
 import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
@@ -50,6 +51,10 @@ export async function ownerVision(html){
     for(const control of html.querySelectorAll(".ownerOnlyControl")){
         const actor = fromUuidSync(control.dataset.actorUuid ?? "")
         if(!actor?.isOwner) control.classList.add("noShow")
+    }
+    for(const control of html.querySelectorAll(".notForOwnerControl")){
+        const actor = fromUuidSync(control.dataset.actorUuid ?? "")
+        if(actor?.isOwner) control.classList.add("noShow")
     }
 }
 
@@ -107,6 +112,13 @@ export async function addChatListeners(html) {
     if (useDose) {
       const messageId = useDose.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestDoseClaim(messageId, { selection: useDose.dataset.selection === "true" });
+      return;
+    }
+
+    const rollDoseCheck = event.target.closest("button.rollDoseCheck");
+    if (rollDoseCheck) {
+      const messageId = rollDoseCheck.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestUseCheck(messageId);
       return;
     }
 

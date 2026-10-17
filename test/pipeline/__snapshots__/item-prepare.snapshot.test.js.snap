@@ -29,6 +29,21 @@ Object {
   "updated": "",
   "usagesMax": 5,
   "usagesUsed": 0,
+  "useCheck": Object {
+    "aptitude": "",
+    "duration": Object {
+      "units": "",
+      "value": null,
+    },
+    "failure": "",
+    "modifier": 0,
+    "stress": Object {
+      "bonus": 0,
+      "d10": 0,
+      "d6": 0,
+    },
+    "successPsiPenalty": 0,
+  },
   "wearOff": Object {
     "bonus": 0,
     "d10": 0,
