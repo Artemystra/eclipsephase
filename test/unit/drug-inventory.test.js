@@ -1,5 +1,5 @@
 import { makeActor, makeActorFromFixture, resetWorld, seedDialogs } from "../setup/factories.js";
-import { mergeOrCreateItem, emptiesStack, stackDeletion, selectDrugVector, consumeDose, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
+import { mergeOrCreateItem, emptiesStack, stackDeletion, selectDrugVector, chooseDrugForm, consumeDose, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
 import { DOSES_PER_PACK, VECTORS, dosesRemaining } from "../../module/common/drugs.js";
 
 /**
@@ -304,6 +304,35 @@ describe("stacking a drug by the form it was bought in", () => {
 
     expect(actor.items.filter(i => i.type === "ammo")).toHaveLength(1);
     expect(actor.items.get("ammo1").system.quantity).toEqual(15);
+  });
+});
+
+describe("settling the form on the incoming data", () => {
+  const grin = () => ({ name: "Grin", type: "drug", system: { injection: true, oral: true, isAmmo: false } });
+
+  test("the chosen form is the only one left, and the ammunition answer is kept", async () => {
+    const data = grin();
+    seedDialogs({ selection: "injection", extraOption: true });
+
+    expect(await chooseDrugForm(data)).toBe(true);
+    expect(data.system).toMatchObject({ injection: true, oral: false, isAmmo: true });
+  });
+
+  test("cancelling leaves the data alone and says so", async () => {
+    const data = grin();
+    seedDialogs({ cancelled: true });
+
+    expect(await chooseDrugForm(data)).toBe(false);
+    expect(data.system).toMatchObject({ injection: true, oral: true });
+  });
+
+  test("a pill with one form, and anything that is not a drug, pass through unasked", async () => {
+    const pill = { name: "Grin", type: "drug", system: { oral: true } };
+    const gear = { name: "Rope", type: "gear", system: {} };
+
+    expect(await chooseDrugForm(pill)).toBe(true);
+    expect(await chooseDrugForm(gear)).toBe(true);
+    expect(pill.system.oral).toBe(true);
   });
 });
 

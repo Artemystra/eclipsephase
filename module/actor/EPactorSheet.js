@@ -4,7 +4,7 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
-import { drugVector, drugVectors, needsVectorChoice, offersAmmoChoice, isAmmoPack, dosesRemaining, VECTOR_KEYS } from "../common/drugs.js";
+import { drugVector, isAmmoPack, dosesRemaining } from "../common/drugs.js";
 import { takeDose, offerDose, forceDose } from "../common/doses.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
@@ -1229,12 +1229,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     }
 
-    if (itemData.type === "drug" && (needsVectorChoice(itemModel) || offersAmmoChoice(itemModel))) {
-      const chosen = await SHEET.selectDrugVector(itemData.name, drugVectors(itemModel));
-      if (chosen.cancelled || !chosen.vector) return null;
-      for (const key of VECTOR_KEYS) itemModel[key] = key === chosen.vector;
-      itemModel.isAmmo = chosen.isAmmo === true;
-    }
+    if (!(await SHEET.chooseDrugForm(itemData))) return null;
 
     itemModel.updated = game.system.version;
 

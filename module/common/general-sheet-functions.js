@@ -1,5 +1,5 @@
 import { durationRunOut } from "./time.js";
-import { sameDrugForm, afterDose, AMMO_VECTOR_KEYS } from "./drugs.js";
+import { sameDrugForm, afterDose, AMMO_VECTOR_KEYS, VECTOR_KEYS, drugVectors, needsVectorChoice, offersAmmoChoice } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
@@ -937,6 +937,25 @@ export function itemToggle(html, item) {
     const vector = result?.selection ?? null;
     return { vector, isAmmo: result?.extraOption === true && AMMO_VECTOR_KEYS.includes(vector) };
   }
+
+/**
+ * Settles the form a drug is acquired in, on its data before it is created: asks when the drug
+ * still offers several forms or could be an ammunition pack, then keeps only the chosen form.
+ * Anything that is not a drug, and a drug with nothing left to settle, passes through unasked.
+ * @param {Object} itemData - The incoming item's source data, changed in place
+ * @returns {Promise<Boolean>} False when the choice was cancelled
+ */
+export async function chooseDrugForm(itemData) {
+  if (itemData?.type !== "drug") return true;
+  const system = itemData.system ?? {};
+  if (!needsVectorChoice(system) && !offersAmmoChoice(system)) return true;
+
+  const chosen = await selectDrugVector(itemData.name, drugVectors(system));
+  if (chosen.cancelled || !chosen.vector) return false;
+  for (const key of VECTOR_KEYS) system[key] = key === chosen.vector;
+  system.isAmmo = chosen.isAmmo === true;
+  return true;
+}
 
 /**
  * Asks who a dose is for: the actor themselves, a willing target the dose is offered to through a

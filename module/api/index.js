@@ -18,8 +18,11 @@ import {
   readRollContext,
   transferItemBetweenActors,
   tempEffectCreation,
-  tempEffectDeletion
+  tempEffectDeletion,
+  mergeOrCreateItem,
+  chooseDrugForm
 } from "../common/general-sheet-functions.js";
+import { needsVectorChoice, drugVector, isAmmoPack } from "../common/drugs.js";
 import { requestGMItemTransfer, slideToggleVisibility } from "../common/general-helper-functions.js";
 import { epCreateProgressDialog, forEachActor, forEachItem, postNotice } from "../common/migration.js";
 import {
@@ -76,6 +79,7 @@ export const actors = {
   applyStandardEnhancements,
   applyFrame,
   transferItemBetweenActors,
+  mergeOrCreateItem,
   requestGMItemTransfer,
   tempEffectCreation,
   tempEffectDeletion
@@ -147,6 +151,10 @@ export const drugs = {
   activeDoseFor,
   doseSubstrate,
   doseEffectData,
+  chooseDrugForm,
+  needsVectorChoice,
+  drugVector,
+  isAmmoPack,
   runningDoses,
   drugBlockingPsi,
   drugPsiPenalties

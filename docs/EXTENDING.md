@@ -41,7 +41,7 @@ api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, useP
             // applySuccessTierBonus
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
             // sleevedNervousSystem, CYBERBRAIN_MARKER, transferItemBetweenActors,
-            // requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
+            // mergeOrCreateItem, requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
             // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
@@ -50,7 +50,8 @@ api.chat    // readRollContext(element)
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
 api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData,
-              // runningDoses, drugBlockingPsi, drugPsiPenalties
+              // chooseDrugForm, needsVectorChoice, drugVector, isAmmoPack, runningDoses,
+              // drugBlockingPsi, drugPsiPenalties
 ```
 
 `api.drugs` is described in "Drugs and doses" below.
@@ -389,6 +390,10 @@ await drugs.offerDose(actor, item);       // { offered, message } - a card anyon
 await drugs.forceDose(actor, item);       // a melee attack; the dose goes in on a hit
 drugs.activeDoseFor(actor, "Kick");       // the running dose, or null
 drugs.doseSubstrate(actor, item);         // { allowed, reasonKey }
+await drugs.chooseDrugForm(itemData);     // false when cancelled; keeps only the chosen form
+drugs.needsVectorChoice(item.system);     // true while a drug still offers several forms
+drugs.drugVector(item.system);            // { key, label, onset } of its one form, or null
+drugs.isAmmoPack(item.system);            // true for a pack that loads into a weapon
 drugs.runningDoses(actor);                // the dose flag of every active dose
 drugs.drugBlockingPsi(actor);             // the drug's name, or null
 drugs.drugPsiPenalties(actor);            // [{ name, modifier }]
@@ -397,6 +402,12 @@ drugs.drugPsiPenalties(actor);            // [{ name, modifier }]
 `takeDose`, `offerDose` and `forceDose` behave exactly like the sheet's controls: they refuse an
 ammunition pack, an empty pack or a body the drug cannot act on with a notification, spend the
 dose and post the cards. An offered or forced dose is only spent once someone claims it.
+
+A pack holds one form. A sheet that lets someone acquire a drug - an actor sheet, a shop - calls
+`chooseDrugForm(itemData)` on the incoming data before creating it: it asks for the form and
+whether the pack is ammunition, and does nothing for anything else. `api.actors.mergeOrCreateItem(actor,
+itemData)` then adds it to a matching stack - same type and name, and for a drug the same form -
+or creates it.
 
 ## Chat message context
 
