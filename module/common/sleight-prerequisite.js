@@ -16,12 +16,47 @@ function otherFamilies(family) {
   return listStrainFamilies().filter(entry => entry.id !== family);
 }
 
-async function findTrait(trait) {
+/**
+ * The tier trait a sleight needs and the actor lacks - Psi I for a chi sleight, Psi II for a gamma
+ * one; an actor with the higher tier needs nothing.
+ * @param {Actor} actor - The actor
+ * @param {Object} itemData - The sleight's data
+ * @returns {Object|null} trait ({name, pack}) and the tier-1 trait the actor owns, or null when none is needed
+ */
+export function neededTierTrait(actor, itemData) {
+  const traits = getStrainFamily(itemData.system?.strainFamily ?? "psi").tierTraits;
+  const ownedTrait = (name) => actor.items.find(i => i.type === "traits" && i.name === name);
+  const tier1Owned = traits[1] && ownedTrait(traits[1].name);
+  const tier2Owned = traits[2] && ownedTrait(traits[2].name);
+  const tier = requiredTier(itemData.system?.psiType);
+  if (tier2Owned || (tier === 1 && tier1Owned)) return null;
+  return traits[tier] ? { trait: traits[tier], tier1Owned: tier1Owned ?? null } : null;
+}
+
+/**
+ * Whether the actor carries a tier trait of a strain family other than the given one - Ki for a
+ * psi sleight.
+ * @param {Actor} actor - The actor
+ * @param {String} family - The sleight's strain family
+ * @returns {Boolean} True when a trait of another family is owned
+ */
+export function ownsOtherFamily(actor, family = "psi") {
+  return otherFamilies(family)
+    .flatMap(entry => Object.values(entry.tierTraits))
+    .some(trait => actor.items.find(i => i.type === "traits" && i.name === trait.name));
+}
+
+/**
+ * The compendium document of a tier trait.
+ * @param {Object} trait - {name, pack}
+ * @returns {Promise<Item|null>} The trait, or null when the compendium lacks it
+ */
+export async function findTrait(trait) {
   const pack = game.packs.get(trait.pack);
   if (!pack) return null;
   const index = await pack.getIndex();
   const entry = index.find(i => i.name === trait.name);
-  return entry ? fromUuid(entry.uuid) : null;
+  return entry ? pack.getDocument(entry._id) : null;
 }
 
 /**
@@ -52,13 +87,9 @@ export async function checkSleightPrerequisite(actor, itemData) {
     return false;
   }
 
-  const tier1Owned = traits[1] && ownedTrait(traits[1].name);
-  const tier2Owned = traits[2] && ownedTrait(traits[2].name);
-  const tier = requiredTier(itemData.system?.psiType);
-  if (tier2Owned || (tier === 1 && tier1Owned)) return true;
-
-  const targetTrait = traits[tier];
-  if (!targetTrait) return true;
+  const needed = neededTierTrait(actor, itemData);
+  if (!needed) return true;
+  const { trait: targetTrait, tier1Owned } = needed;
   const targetName = targetTrait.name;
   const { confirm } = await confirmation(
     game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),

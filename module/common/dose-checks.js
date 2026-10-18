@@ -1,5 +1,5 @@
 import { RollCheck, TaskRollModifier, TASK_RESULT } from "../rolls/dice.js";
-import { postDrugCard, DOSE_CARD } from "./doses.js";
+import { postDrugCard, DOSE_CARD, rollDrugHarm } from "./doses.js";
 import { diceFormula } from "./general-sheet-functions.js";
 
 // Some drugs call for a check the moment they take hold (Core p.330-335): Inhibitor's WIL -20,
@@ -25,6 +25,18 @@ function checkLabel(useCheck) {
   const modifier = Number(useCheck.modifier) || 0;
   const shown = modifier ? ` (${modifier > 0 ? "+" : ""}${modifier})` : "";
   return game.i18n.format("ep2e.chat.dose.checkLabel", { aptitude: String(useCheck.aptitude).toUpperCase() }) + shown;
+}
+
+/**
+ * The harm a failed check does and how much, for the roll card to carry: stress to the mind or
+ * damage to the body, both rolled from the check's single dice field.
+ * @param {Object} useCheck - The drug's check
+ * @returns {Object} harm ("stress", "damage" or null) and formula
+ */
+function harmOf(useCheck) {
+  const formula = diceFormula(useCheck?.stress);
+  const harm = ["stress", "damage"].includes(useCheck?.failure) && formula ? useCheck.failure : null;
+  return { harm, formula: harm ? formula : "" };
 }
 
 /**
@@ -112,7 +124,7 @@ export async function requestUseCheck(messageId, systemOptions = {}) {
     key: `system.aptitudes.${aptitude}.value`,
     apttype: aptitude,
     rollvalue: actor.system.aptitudes?.[aptitude]?.roll ?? 0,
-    contextFlags: { doseCheck: { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0 } }
+    contextFlags: { doseCheck: { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck) } }
   };
   return RollCheck(dataset, actor.system, actor, systemOptions, null, "skill");
 }
@@ -129,21 +141,24 @@ async function checkedDose(check) {
 }
 
 /**
- * The condition a failed check leaves: a timed effect showing its status on the token -
- * Paralyzed for incapacitated, Restrained for immobilized - running for the drug's own span or,
- * without one, for as long as the dose does.
- * @param {Object} dose - The dose flag
+ * The condition a dose leaves: an effect showing its status on the token - Paralyzed for
+ * incapacitated, Restrained for immobilized - running for the given span or, without one, for as
+ * long as the dose does. Removed together with the dose. Its icon always shows: Foundry would hide
+ * it on a condition without a span of its own.
+ * @param {String} drugName - The drug's name, for the condition's own name
  * @param {ActiveEffect} effect - The running dose
- * @param {Object} condition - The CONDITIONS entry
+ * @param {String} key - The CONDITIONS key
+ * @param {Object} [span] - {value, units}; none means as long as the dose
  * @returns {Object} The ActiveEffect data
  */
-function incapacitationData(dose, effect, condition = CONDITIONS.incapacitated) {
-  const span = dose.useCheck.duration;
+export function conditionData(drugName, effect, key, span) {
+  const condition = CONDITIONS[key] ?? CONDITIONS.incapacitated;
   const timed = Number.isFinite(span?.value) && span.value > 0 && !!span.units;
   return {
-    name: game.i18n.format(condition.nameKey, { name: dose.name }),
+    name: game.i18n.format(condition.nameKey, { name: drugName }),
     img: condition.img,
     statuses: [condition.status],
+    showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS,
     duration: timed ? { value: span.value, units: span.units, expiry: null } : { value: null, expiry: null },
     start: ActiveEffect.getEffectStart(),
     flags: { eclipsephase: { effectKey: INCAPACITATED_KEY, incapacitatedBy: effect.id } }
@@ -160,15 +175,12 @@ function incapacitationData(dose, effect, condition = CONDITIONS.incapacitated) 
 async function applyFailure(actor, effect, dose) {
   const failure = dose.useCheck.failure;
   if (CONDITIONS[failure]) {
-    await actor.createEmbeddedDocuments("ActiveEffect", [incapacitationData(dose, effect, CONDITIONS[failure])]);
+    await actor.createEmbeddedDocuments("ActiveEffect", [conditionData(dose.name, effect, failure, dose.useCheck.duration)]);
     await postOutcomeCard(actor, CONDITIONS[failure].outcomeKey, dose.name);
   }
   else if (failure === "blocksPsi") {
     await effect.update({ "flags.eclipsephase.dose.blocksPsi": true, "flags.eclipsephase.dose.psiPenalty": 0 });
     await postOutcomeCard(actor, "ep2e.chat.dose.outcomePsiBlocked", dose.name);
-  }
-  else if (failure === "stress") {
-    await postPanicCard(actor, dose);
   }
 }
 
@@ -231,22 +243,40 @@ function postOutcomeCard(actor, key, name) {
 }
 
 /**
- * The card a failed check against panic leaves: its stress, rolled from the card the way a drug's
- * wear-off stress is.
- * @param {Actor} actor - The actor
- * @param {Object} dose - The dose flag
- * @returns {Promise<ChatMessage>} The card
+ * Rolls the harm a failed check does - Flight's stress, or a drug's damage - once per check card.
+ * The card is marked first, so a second click or a pool spend afterwards cannot roll it again.
+ * @param {ChatMessage} message - The check's roll card
+ * @returns {Promise<Number|null>} What was taken, or null when nothing was rolled
  */
-async function postPanicCard(actor, dose) {
-  const sv = diceFormula(dose.useCheck.stress);
-  const card = {
-    icon: "fa-syringe",
-    color: "--negative",
-    headline: game.i18n.format("ep2e.chat.dose.outcomePanic", { name: dose.name }),
-    rows: [{ label: game.i18n.localize("ep2e.chat.dose.wearOffSv"), value: sv }]
-  };
-  return postDrugCard(actor, { ...card, button: { action: "rollWearOff", label: game.i18n.localize("ep2e.chat.dose.rollWearOff") }, actorUuid: actor.uuid },
-    { eclipsephase: { wearOff: { actorUuid: actor.uuid, sv, name: dose.name, card, rolled: false } } });
+export async function rollDoseHarm(message) {
+  const check = message?.getFlag?.("eclipsephase", "roll")?.doseCheck;
+  if (!check?.harm || message.getFlag("eclipsephase", "doseHarm")?.rolled) return null;
+  const actor = await fromUuid(check.actorUuid);
+  if (!actor) return null;
+
+  await message.update({ "flags.eclipsephase.doseHarm.rolled": true });
+  const copy = game.i18n.format(check.harm === "damage" ? "ep2e.chat.dose.damageFlavor" : "ep2e.chat.dose.panicFlavor", { name: check.name });
+  return rollDrugHarm(actor, { formula: check.formula, target: check.harm === "damage" ? "physical" : "mental", copy });
+}
+
+/**
+ * Answers a click on a check card's harm button: rolled at once where the card may be changed,
+ * otherwise sent to the active GM.
+ * @param {String} messageId - The check's roll card
+ * @returns {Promise<void>} Resolves once rolled or sent
+ */
+export async function requestDoseHarm(messageId) {
+  const message = game.messages.get(messageId);
+  if (!message) return;
+  if (message.isOwner || game.user.isGM) {
+    await rollDoseHarm(message);
+    return;
+  }
+  if (!game.users.activeGM) {
+    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseNeedsGM"));
+    return;
+  }
+  game.socket.emit("system.eclipsephase", { action: "rollDoseHarm", messageId });
 }
 
 /**
@@ -260,12 +290,20 @@ export function registerUseCheckHooks() {
     const check = context?.flags?.doseCheck;
     if (check?.modifier) context.modifiers.push(new TaskRollModifier(check.name, check.modifier));
   });
-  Hooks.on("eclipsephase.postRoll", context => {
+  Hooks.on("eclipsephase.postRoll", async context => {
     const check = context?.flags?.doseCheck;
-    if (check) settleUseCheck(check, HITS.includes(context.outputData?.alternatives?.originalResult));
+    if (!check) return;
+    const passed = HITS.includes(context.outputData?.alternatives?.originalResult);
+    await settleUseCheck(check, passed);
+    if (!passed && check.harm && !context.outputData?.alternatives?.options?.available) await rollDoseHarm(context.message);
   });
-  Hooks.on("eclipsephase.poolResult", ({ context, newResult }) => {
-    if (context?.doseCheck && HITS.includes(newResult)) settleUseCheck(context.doseCheck, true);
+  Hooks.on("eclipsephase.poolResult", async ({ context, newResult }) => {
+    if (!context?.doseCheck) return;
+    if (HITS.includes(newResult)) {
+      await settleUseCheck(context.doseCheck, true);
+      await game.messages.get(context.messageId)?.update?.({ "flags.eclipsephase.doseHarm.rolled": true });
+    }
+    else if (context.doseCheck.harm) await rollDoseHarm(game.messages.get(context.messageId));
   });
   Hooks.on("deleteActiveEffect", (effect, options, userId) => {
     if (userId !== game.user.id || effect.getFlag?.("eclipsephase", "dose") === undefined) return;

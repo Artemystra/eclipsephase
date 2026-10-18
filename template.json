@@ -1218,6 +1218,19 @@
       },
       "rollOptions": [],
       "blocksPsi": false,
+      "overTime": {
+        "damage": {
+          "d10": 0,
+          "d6": 0,
+          "bonus": 0
+        },
+        "interval": "turn",
+        "ticks": null,
+        "modifier": 0,
+        "incapacitates": false
+      },
+      "healingAddition": "",
+      "grants": [],
       "displayCategory": "consumable",
       "slotType": "consumable"
     },

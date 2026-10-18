@@ -1163,7 +1163,7 @@
             "hours": "Horas",
             "days": "Dias"
           },
-          "usagesMax": "Doses",
+          "usagesMax": "Doses usadas",
           "isAmmo": "Pacote de munição",
           "wearOffSv": "Estresse ao passar o efeito (SV)",
           "usagesTip": "Usadas / Max",
@@ -1187,6 +1187,52 @@
             "nano": "Nano",
             "electronic": "Eletrônica"
           }
+        },
+        "mechanics": {
+          "tab": "Mecânica",
+          "none": "Nenhum",
+          "checkHeadline": "Teste ao tomar",
+          "aptitude": "Aptidão",
+          "modifier": "Modificador",
+          "failure": "Em caso de falha",
+          "lasts": "Duração",
+          "successPsi": "Penalidade psi no sucesso",
+          "failures": {
+            "incapacitated": "Incapacitado",
+            "immobilized": "Imobilizado",
+            "blocksPsi": "Psi bloqueado",
+            "stress": "Estresse (VE)",
+            "damage": "Dano (VD)"
+          },
+          "overTimeHeadline": "Efeitos ao longo do tempo",
+          "damage": "Dano por tique",
+          "interval": "A cada",
+          "ticks": "Tiques",
+          "ticksTip": "Deixe vazio enquanto a dose durar",
+          "intervals": {
+            "turn": "Turno de ação",
+            "hour": "Hora"
+          },
+          "growingModifier": "Modificador crescente",
+          "growingModifierTip": "Somado a todas as ações a cada intervalo, p. ex. -5 por hora",
+          "incapacitates": "Incapacita ao atingir DUR",
+          "incapacitatesTip": "Incapacitado quando o modificador crescente atinge a Durabilidade do alvo",
+          "healing": "Diálogo de cura",
+          "healingTip": "Enquanto uma dose durar, o diálogo de cura começa com este adicional",
+          "harm": "Dano",
+          "grantsHeadline": "Traços temporários",
+          "grantPack": "Compêndio",
+          "grantFolder": "Pasta",
+          "grantItem": "Item",
+          "random": "Aleatório",
+          "connectorAnd": "E",
+          "connectorOr": "OU",
+          "connectorTip": "OU inicia um novo pacote; um dos pacotes é sorteado com chances iguais",
+          "grantDescription": "Editar título e descrição",
+          "grantDescriptionHint": "Escrito acima da descrição do item.",
+          "grantTitlePlaceholder": "Título adicional (opcional)",
+          "grantDescriptionPlaceholder": "Descrição adicional (opcional)",
+          "grantTitleHint": "Aparece entre parênteses após o nome do item."
         }
       },
       "additionalSkill": {
@@ -1722,7 +1768,6 @@
         "untilEnded": "Ate ser encerrada",
         "lastDose": "Essa foi a ultima dose.",
         "usedBy": "Usada por {name}",
-        "outcomePanic": "<strong>{name}</strong> me causa um ataque de pânico",
         "outcomePsiBlocked": "<strong>{name}</strong> bloqueia meu psi",
         "outcomeIncapacitated": "<strong>{name}</strong> me deixa incapacitado",
         "outcomeImmobilized": "<strong>{name}</strong> me deixa imobilizado",
@@ -1743,7 +1788,12 @@
         "wearOffSv": "Estresse ao passar o efeito (SV)",
         "rollWearOff": "Rolar estresse",
         "wearOffFlavor": "Estresse ao passar o efeito: {name}",
-        "app": "App"
+        "app": "App",
+        "overTimeFlavor": "{name} ({count}x)",
+        "rollDamage": "Rolar dano",
+        "damageFlavor": "{name} fere o corpo",
+        "panicFlavor": "Estresse de pânico: {name}",
+        "granted": "{name} concede: {items}"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

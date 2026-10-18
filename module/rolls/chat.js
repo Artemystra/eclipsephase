@@ -4,7 +4,7 @@ import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
-import { requestUseCheck } from "../common/dose-checks.js";
+import { requestUseCheck, requestDoseHarm } from "../common/dose-checks.js";
 import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
@@ -20,6 +20,18 @@ export async function GMvision(html){
     }
     const hidden = GMvision ? ".playerOnlyControl" : ".gmOnlyControl";
     for (const control of html.querySelectorAll(hidden)) control.classList.add("noShow");
+}
+
+/**
+ * Hides a check card's harm button once the harm was rolled, or once a pool spend turned the
+ * check into a pass.
+ * @param {ChatMessage} message - The rendered message
+ * @param {HTMLElement} html - Its markup
+ * @returns {void}
+ */
+export function doseHarmVision(message, html) {
+  if (!message?.getFlag?.("eclipsephase", "doseHarm")?.rolled) return;
+  for (const button of html.querySelectorAll("button.doseHarm")) button.closest(".chatControls")?.classList.add("noShow");
 }
 
 /**
@@ -119,6 +131,13 @@ export async function addChatListeners(html) {
     if (rollDoseCheck) {
       const messageId = rollDoseCheck.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestUseCheck(messageId);
+      return;
+    }
+
+    const doseHarm = event.target.closest("button.doseHarm");
+    if (doseHarm) {
+      const messageId = doseHarm.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestDoseHarm(messageId);
       return;
     }
 

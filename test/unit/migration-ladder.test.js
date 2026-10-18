@@ -320,6 +320,7 @@ describe("the 2.7 backfill of what C added", () => {
   const JUICE_OPTION = { id: "fear", label: "ep2e.item.drug.rollOptions.juiceFear", value: 30, appliesTo: ["sav", "wil"] };
   const TWITCH_CHECK = { aptitude: "som", modifier: 0, failure: "incapacitated", duration: { value: 10, units: "minutes" }, stress: { d10: 0, d6: 0, bonus: 0 }, successPsiPenalty: 0 };
   const KICK_STRESS = { d10: 1, d6: 0, bonus: 2 };
+  const NECROSIS_TICKS = { damage: { d10: 0, d6: 1, bonus: 0 }, interval: "turn", ticks: null, modifier: 0, incapacitates: false };
 
   /**
    * Registers a compendium carrying a drug with options, one with a check and one with stress.
@@ -331,7 +332,9 @@ describe("the 2.7 backfill of what C added", () => {
       getDocuments: async () => [
         { name: "Juice", type: "drug", system: { ...CURRENT, rollOptions: [JUICE_OPTION] } },
         { name: "Twitch", type: "drug", system: { ...CURRENT, useCheck: TWITCH_CHECK } },
-        { name: "Psi-Kick", type: "drug", system: { ...CURRENT, wearOff: KICK_STRESS } }
+        { name: "Psi-Kick", type: "drug", system: { ...CURRENT, wearOff: KICK_STRESS } },
+        { name: "Necrosis", type: "drug", system: { ...CURRENT, overTime: NECROSIS_TICKS } },
+        { name: "Meds", type: "drug", system: { ...CURRENT, healingAddition: "meds" } }
       ].map(data => new CONFIG.Item.documentClass(data))
     });
   }
@@ -377,6 +380,21 @@ describe("the 2.7 backfill of what C added", () => {
     expect(actor.items.get("juice1").system.rollOptions).toEqual([JUICE_OPTION]);
     expect(actor.items.get("twitch1").system.useCheck).toEqual(TWITCH_CHECK);
     expect(actor.items.get("kick1").system.wearOff).toEqual(KICK_STRESS);
+  });
+
+  test("drugs on a sheet get their namesake's effects over time and healing addition", async () => {
+    const actor = makeActor({
+      type: "character",
+      items: [
+        { _id: "necro1", name: "Necrosis", type: "drug", system: CURRENT },
+        { _id: "meds1", name: "Meds", type: "drug", system: CURRENT }
+      ]
+    });
+
+    await runLadderFrom("2.5");
+
+    expect(actor.items.get("necro1").system.overTime).toEqual(NECROSIS_TICKS);
+    expect(actor.items.get("meds1").system.healingAddition).toEqual("meds");
   });
 
   test("a drug that already carries values of its own keeps them", async () => {

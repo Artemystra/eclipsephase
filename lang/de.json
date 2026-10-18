@@ -1184,7 +1184,7 @@
             "hours": "Stunden",
             "days": "Tage"
           },
-          "usagesMax": "Dosen",
+          "usagesMax": "Dosen verbraucht",
           "isAmmo": "Munitionspack",
           "wearOffSv": "Stress beim Nachlassen (SV)",
           "usagesTip": "Benutzt / Max",
@@ -1208,6 +1208,52 @@
             "nano": "Nano",
             "electronic": "Elektronisch"
           }
+        },
+        "mechanics": {
+          "tab": "Mechanik",
+          "none": "Keine",
+          "checkHeadline": "Check beim Nehmen",
+          "aptitude": "Attribut",
+          "modifier": "Modifikator",
+          "failure": "Bei Misserfolg",
+          "lasts": "Dauer",
+          "successPsi": "Psi-Abzug bei Erfolg",
+          "failures": {
+            "incapacitated": "Handlungsunfähig",
+            "immobilized": "Bewegungsunfähig",
+            "blocksPsi": "Psi blockiert",
+            "stress": "Stress (SV)",
+            "damage": "Schaden (DV)"
+          },
+          "overTimeHeadline": "Wirkung über Zeit",
+          "damage": "Schaden pro Tick",
+          "interval": "Alle",
+          "ticks": "Ticks",
+          "ticksTip": "Leer lassen: solange die Dosis wirkt",
+          "intervals": {
+            "turn": "Aktionsrunde",
+            "hour": "Stunde"
+          },
+          "growingModifier": "Wachsender Modifikator",
+          "growingModifierTip": "Kommt jedes Intervall auf alle Aktionen dazu, z. B. -5 pro Stunde",
+          "incapacitates": "Lähmt bei DUR",
+          "incapacitatesTip": "Handlungsunfähig, sobald der wachsende Modifikator die Durability des Ziels erreicht",
+          "healing": "Heilungsdialog",
+          "healingTip": "Solange eine Dosis wirkt, startet der Heilungsdialog mit dieser Ergänzung",
+          "harm": "Schaden",
+          "grantsHeadline": "Temporäre Traits",
+          "grantPack": "Kompendium",
+          "grantFolder": "Ordner",
+          "grantItem": "Item",
+          "random": "Zufällig",
+          "connectorAnd": "UND",
+          "connectorOr": "ODER",
+          "connectorTip": "ODER beginnt ein neues Paket; eines der Pakete wird mit gleicher Wahrscheinlichkeit erwürfelt",
+          "grantDescription": "Titel und Beschreibung bearbeiten",
+          "grantDescriptionHint": "Steht über der Beschreibung des Items.",
+          "grantTitlePlaceholder": "Zusätzlicher Titel (optional)",
+          "grantDescriptionPlaceholder": "Zusätzliche Beschreibung (optional)",
+          "grantTitleHint": "Steht in Klammern hinter dem Namen des Items."
         }
       },
       "additionalSkill": {
@@ -1752,7 +1798,6 @@
         "untilEnded": "Bis zum Beenden",
         "lastDose": "Das war die letzte Dosis.",
         "usedBy": "Genommen von {name}",
-        "outcomePanic": "<strong>{name}</strong> löst bei mir eine Panikattacke aus",
         "outcomePsiBlocked": "<strong>{name}</strong> blockiert mein Psi",
         "outcomeIncapacitated": "<strong>{name}</strong> macht mich handlungsunfähig",
         "outcomeImmobilized": "<strong>{name}</strong> macht mich bewegungsunfähig",
@@ -1773,7 +1818,12 @@
         "wearOffSv": "Stress beim Nachlassen (SV)",
         "rollWearOff": "Stress würfeln",
         "wearOffFlavor": "Stress beim Nachlassen: {name}",
-        "app": "App"
+        "app": "App",
+        "overTimeFlavor": "{name} ({count}x)",
+        "rollDamage": "Schaden würfeln",
+        "damageFlavor": "{name} schadet dem Körper",
+        "panicFlavor": "Panik-Stress: {name}",
+        "granted": "{name} verleiht: {items}"
       },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",

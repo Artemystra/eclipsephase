@@ -1,4 +1,4 @@
-import { postUseCheckCard, requestUseCheck, settleUseCheck, registerUseCheckHooks } from "../../module/common/dose-checks.js";
+import { postUseCheckCard, requestUseCheck, settleUseCheck, registerUseCheckHooks, rollDoseHarm } from "../../module/common/dose-checks.js";
 import { takeDose } from "../../module/common/doses.js";
 import { drugBlockingPsi, drugPsiPenalties } from "../../module/common/dose-state.js";
 import { strainSubstrate } from "../../module/common/body-markers.js";
@@ -21,7 +21,7 @@ function carrying(name, useCheck) {
     type: "character",
     system: { activeMorph: "morph1", aptitudes: { som: { value: 15 }, wil: { value: 15 } } },
     items: [
-      { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+      { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } },
       { _id: "drug1", name, type: "drug", system: { active: true, drugType: "biochem", inhalation: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 1, units: "hours" }, useCheck: { ...BASE_CHECK, ...useCheck } } }
     ]
   });
@@ -182,15 +182,88 @@ describe("what a failed check costs", () => {
     expect(strainSubstrate(actor, "psi")).toMatchObject({ blocked: true, reasonKey: "ep2e.roll.announce.psi.blockedByDrug" });
   });
 
-  test("Flight: a panic card whose stress is rolled from it, as a wear-off stress is", async () => {
+  test("Flight: with no pool to spend, the panic's stress is rolled at once, on the mind", async () => {
     const actor = carrying("Flight", FLIGHT);
+    await takeDose(actor, actor.items.get("drug1"));
 
-    await takeAndRoll(actor, 95);
+    seedRolls([95, 6]);
+    await requestUseCheck(checkCard().id, SKIP_DIALOG);
+    await until(() => (actor.system.health.mental.value ?? 0) > 0);
 
-    await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomePanic")));
-    const panic = createdMessages.find(message => message.content?.includes("ep2e.chat.dose.outcomePanic"));
-    expect(panic.getFlag("eclipsephase", "wearOff")).toMatchObject({ sv: "1d10", rolled: false });
-    expect(panic.content).toContain("rollWearOff");
+    expect(actor.system.health.mental.value).toEqual(6);
+    expect(createdMessages.some(message => message.getFlag?.("eclipsephase", "wearOff"))).toBe(false);
+  });
+});
+
+describe("a check whose failure harms the body", () => {
+  const CAUSTIC = { aptitude: "som", failure: "damage", stress: { d10: 1, d6: 0, bonus: 2 } };
+  const FAILED = { originalResult: TASK_RESULT.FAILURE_ONE };
+
+  /**
+   * A check's roll card for the actor's running dose, as RollCheck leaves it.
+   * @param {Actor} actor - The dosed actor
+   * @returns {Promise<Object>} The card
+   */
+  async function rollCard(actor) {
+    const doseCheck = { actorUuid: actor.uuid, effectId: doseOn(actor).id, name: "Caustic", modifier: 0, harm: "damage", formula: "1d10+2" };
+    return ChatMessage.create({ flags: { eclipsephase: { roll: { doseCheck } } } });
+  }
+
+  test("with no pool to spend, the damage is rolled at once and lands on the body", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+
+    seedRolls([95, 7]);
+    await requestUseCheck(checkCard().id, SKIP_DIALOG);
+    await until(() => actor.system.health.physical.value > 0);
+
+    expect(actor.system.health.physical.value).toEqual(7);
+    expect(actor.system.health.mental.value ?? 0).toEqual(0);
+  });
+
+  test("with pool left, nothing is rolled until the card's button is pressed", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+    const card = await rollCard(actor);
+
+    Hooks.callAll("eclipsephase.postRoll", { flags: card.getFlag("eclipsephase", "roll"), outputData: { alternatives: { ...FAILED, options: { available: true } } }, message: card });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(actor.system.health.physical.value).toEqual(0);
+    expect(card.getFlag("eclipsephase", "doseHarm")).toBeUndefined();
+  });
+
+  test("the card offers the button only for a failed check that does harm", async () => {
+    const render = data => foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/task-result.html", data);
+    const doseCheck = { harm: "damage" };
+
+    expect(await render({ resultClass: "fail", rollContext: { doseCheck }, actor: { id: "a1" } })).toContain("doseHarm");
+    expect(await render({ resultClass: "success", rollContext: { doseCheck }, actor: { id: "a1" } })).not.toContain("doseHarm");
+    expect(await render({ resultClass: "fail", rollContext: { doseCheck: { harm: null } }, actor: { id: "a1" } })).not.toContain("doseHarm");
+  });
+
+  test("the harm is rolled once, however often the button is pressed", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+    const card = await rollCard(actor);
+    seedRolls([7, 9]);
+
+    await rollDoseHarm(card);
+
+    expect(await rollDoseHarm(card)).toBeNull();
+    expect(actor.system.health.physical.value).toEqual(7);
+  });
+
+  test("a pool spend that turns the check into a pass closes the button without harm", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+    const card = await rollCard(actor);
+
+    Hooks.callAll("eclipsephase.poolResult", { context: { ...card.getFlag("eclipsephase", "roll"), messageId: card.id }, newResult: TASK_RESULT.SUCCESS });
+    await until(() => card.getFlag("eclipsephase", "doseHarm")?.rolled);
+
+    expect(card.getFlag("eclipsephase", "doseHarm")).toEqual({ rolled: true });
+    expect(actor.system.health.physical.value).toEqual(0);
   });
 });
 

@@ -4032,3 +4032,67 @@ body.ep-dose-targeting #board {
 .chatControls.ep-chat-stack .ep-chat-primary {
   margin-top: 5px;
 }
+
+/* The flat part of a damage roll, set beside its dice. */
+.eclipsephase.dicetray .diecontainerSmall.bonus{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 10px;
+  background-color: var(--pitchBorder);
+  border-radius: 6px;
+}
+
+/* The die images carry transparent margins of their own (d10 about 6px, d6 about 10px at this
+   size), so the bonus keeps one such margin to sit as far from the dice as they sit apart. */
+.eclipsephase.dicetray .diecontainerSmall.tens + .diecontainerSmall.bonus{
+  margin-left: 6px;
+}
+
+.eclipsephase.dicetray .diecontainerSmall.sixes + .diecontainerSmall.bonus{
+  margin-left: 10px;
+}
+
+/* A drug's Temporary Traits rows: And/Or toggle, three pickers, the description button. */
+.eclipsephase .grant-rows {
+  margin-top: 10px;
+}
+
+.eclipsephase .grant-row {
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.eclipsephase .grant-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.eclipsephase .grant-row .grant-connector-slot {
+  flex: 0 0 44px;
+}
+
+.eclipsephase .grant-row .grant-button-slot {
+  flex: 0 0 20px;
+  text-align: center;
+}
+
+.eclipsephase .grant-row .grant-connector {
+  width: 44px;
+  height: 22px;
+  padding: 0;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.eclipsephase .grant-row .grant-connector.grant-or {
+  color: var(--negative);
+}
+
+.eclipsephase .grant-row .grant-description.grant-has-description i {
+  color: var(--highlight);
+}

@@ -88,7 +88,20 @@
         ],
         "replacesGlobal": true
       }
-    ]
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 1,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": 1,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

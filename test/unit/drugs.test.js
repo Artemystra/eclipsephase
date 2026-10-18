@@ -630,6 +630,40 @@ describe("the checks a drug calls for, authored from the book", () => {
   });
 });
 
+describe("the effects over time authored from the book", () => {
+  test("exactly the four toxins that keep working carry them, with the errata's BTX2", () => {
+    const authored = packDrugs()
+      .filter(drug => ["d10", "d6", "bonus"].some(die => Number(drug.system.overTime?.damage?.[die])) || Number(drug.system.overTime?.modifier))
+      .map(drug => [drug.name, drug.system.overTime.damage, drug.system.overTime.interval, drug.system.overTime.ticks, drug.system.overTime.modifier, drug.system.overTime.incapacitates])
+      .sort();
+    expect(authored).toEqual([
+      ["BTX2", { d10: 2, d6: 0, bonus: 10 }, "turn", 3, 0, false],
+      ["CR Gas", { d10: 0, d6: 1, bonus: 0 }, "turn", 1, 0, false],
+      ["Disruptor", { d10: 0, d6: 0, bonus: 0 }, "hour", null, -5, true],
+      ["Necrosis", { d10: 0, d6: 1, bonus: 0 }, "turn", null, 0, false]
+    ]);
+  });
+
+  test("Meds is the drug that starts the healing dialog on its addition", () => {
+    const presets = packDrugs().filter(drug => drug.system.healingAddition).map(drug => [drug.name, drug.system.healingAddition]);
+    expect(presets).toEqual([["Meds", "meds"]]);
+  });
+});
+
+describe("the temporary traits authored from the book", () => {
+  test("the drugs that lend a trait or a sleight name ones their compendium really holds", () => {
+    const packItems = name => new Set(fs.readdirSync(path.join(PACK_DIR, "..", name)).filter(file => file.endsWith(".json"))
+      .map(file => JSON.parse(fs.readFileSync(path.join(PACK_DIR, "..", name, file), "utf8"))._id));
+    const lent = packDrugs().filter(drug => drug.system.grants?.length);
+    const unknown = lent.flatMap(drug => drug.system.grants
+      .filter(row => !packItems(row.pack.replace("eclipsephase.", "")).has(row.item === "random" ? row.folder : row.item))
+      .map(row => `${drug.name}: ${row.item}`));
+
+    expect(lent.map(drug => drug.name).sort()).toEqual(["Blab", "Fokus", "Hither", "Juice", "MRDR", "Persona", "Psi-Kick", "Psi-Opener", "Schizo", "Stiff", "TGS", "Tongzhi"]);
+    expect(unknown).toEqual([]);
+  });
+});
+
 describe("Randomizer", () => {
   test("applies on its own on every social test, as the book's 'at any given time' says", () => {
     const randomizer = packDrugs().find(drug => drug.name === "Randomizer");

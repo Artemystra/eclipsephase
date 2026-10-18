@@ -23,6 +23,8 @@ import { registerPoolRule } from "./common/pool-rule.js";
 import { registerDoseHooks, registerDoseSocket, registerForcedDoseHooks } from "./common/doses.js";
 import { registerExpiryCleanup } from "./common/expiry.js";
 import { registerUseCheckHooks } from "./common/dose-checks.js";
+import { registerOverTimeHooks } from "./common/dose-over-time.js";
+import { registerGrantHooks } from "./common/dose-grants.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -198,6 +200,8 @@ Hooks.once('init', async function() {
   registerForcedDoseHooks();
   registerExpiryCleanup();
   registerUseCheckHooks();
+  registerOverTimeHooks();
+  registerGrantHooks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;
@@ -872,6 +876,7 @@ Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.GMvision(html, data);
   EPchat.ownerVision(html, data);
   EPchat.playerVision(html, data);
+  EPchat.doseHarmVision(message, html);
 });
 
 //Renders the ChatLog according to given visibility options

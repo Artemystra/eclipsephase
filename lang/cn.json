@@ -1162,7 +1162,7 @@
             "hours": "小时",
             "days": "天"
           },
-          "usagesMax": "剂量",
+          "usagesMax": "已用剂量",
           "isAmmo": "弹药包",
           "wearOffSv": "药效消退压力 (SV)",
           "usagesTip": "已用 / 上限",
@@ -1186,6 +1186,52 @@
             "nano": "纳米",
             "electronic": "电子"
           }
+        },
+        "mechanics": {
+          "tab": "机制",
+          "none": "无",
+          "checkHeadline": "服用时检定",
+          "aptitude": "属性",
+          "modifier": "修正值",
+          "failure": "失败时",
+          "lasts": "持续",
+          "successPsi": "成功时灵能减值",
+          "failures": {
+            "incapacitated": "失能",
+            "immobilized": "无法移动",
+            "blocksPsi": "灵能被封锁",
+            "stress": "压力 (SV)",
+            "damage": "伤害 (DV)"
+          },
+          "overTimeHeadline": "持续效果",
+          "damage": "每跳伤害",
+          "interval": "每",
+          "ticks": "跳数",
+          "ticksTip": "留空：剂量持续期间一直生效",
+          "intervals": {
+            "turn": "行动回合",
+            "hour": "小时"
+          },
+          "growingModifier": "递增修正",
+          "growingModifierTip": "每个间隔叠加到所有行动上，例如每小时 -5",
+          "incapacitates": "达到 DUR 时失能",
+          "incapacitatesTip": "递增修正达到目标的耐久度时失能",
+          "healing": "治疗对话框",
+          "healingTip": "剂量生效期间，治疗对话框默认选中此附加项",
+          "harm": "伤害",
+          "grantsHeadline": "临时特质",
+          "grantPack": "合集",
+          "grantFolder": "文件夹",
+          "grantItem": "物品",
+          "random": "随机",
+          "connectorAnd": "且",
+          "connectorOr": "或",
+          "connectorTip": "“或”开始一个新的组合；从各组合中等概率随机抽取一个",
+          "grantDescription": "编辑标题和描述",
+          "grantDescriptionHint": "写在物品自身描述的上方。",
+          "grantTitlePlaceholder": "附加标题（可选）",
+          "grantDescriptionPlaceholder": "附加描述（可选）",
+          "grantTitleHint": "显示在物品名称后的括号中。"
         }
       },
       "additionalSkill": {
@@ -1715,7 +1761,6 @@
         "untilEnded": "直到手动结束",
         "lastDose": "这是最后一剂。",
         "usedBy": "已由 {name} 使用",
-        "outcomePanic": "<strong>{name}</strong> 让我陷入惊恐发作",
         "outcomePsiBlocked": "<strong>{name}</strong> 封锁了我的灵能",
         "outcomeIncapacitated": "<strong>{name}</strong> 使我失去行动能力",
         "outcomeImmobilized": "<strong>{name}</strong> 使我无法移动",
@@ -1736,7 +1781,12 @@
         "wearOffSv": "药效消退压力 (SV)",
         "rollWearOff": "掷压力",
         "wearOffFlavor": "药效消退压力：{name}",
-        "app": "应用"
+        "app": "应用",
+        "overTimeFlavor": "{name}（{count}次）",
+        "rollDamage": "投掷伤害",
+        "damageFlavor": "{name} 伤害了身体",
+        "panicFlavor": "恐慌压力：{name}",
+        "granted": "{name} 赋予：{items}"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

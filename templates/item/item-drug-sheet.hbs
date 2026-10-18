@@ -57,9 +57,9 @@
                         </td>
                         <td>
                             <div class="flexrow flex-group-center" data-tooltip="{{localize 'ep2e.item.drug.table.usagesTip'}}">
-                                <input class="input-small alignCenter" type="number" name="system.usagesUsed" min="0" value="{{item.system.usagesUsed}}"/>
+                                <input onFocus="this.select()" class="input-small alignCenter" type="number" name="system.usagesUsed" min="0" value="{{item.system.usagesUsed}}"/>
                                 <span class="resource-value">/</span>
-                                <input class="input-small alignCenter" type="number" name="system.usagesMax" min="1" value="{{item.system.usagesMax}}"/>
+                                <input onFocus="this.select()" class="input-small alignCenter" type="number" name="system.usagesMax" min="1" value="{{item.system.usagesMax}}"/>
                             </div>
                         </td>
                         <td>
@@ -84,7 +84,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <input class="input-large alignCenter" type="number" name="system.duration.value" min="1" value="{{item.system.duration.value}}"/>
+                            <input onFocus="this.select()" class="input-large alignCenter" type="number" name="system.duration.value" min="1" value="{{item.system.duration.value}}"/>
                         </td>
                         <td>
                             <select name="system.duration.units" data-type="String">
@@ -94,11 +94,11 @@
                         <td>
                             <div class="flexrow alignCenter" style="justify-content: center; gap: 4px;">
                                 <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
-                                <input class="input-xs" type="number" name="system.wearOff.d10" value="{{item.system.wearOff.d10}}" placeholder="0"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.wearOff.d10" value="{{item.system.wearOff.d10}}" placeholder="0"/>
                                 <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
-                                <input class="input-xs" type="number" name="system.wearOff.d6" value="{{item.system.wearOff.d6}}" placeholder="0"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.wearOff.d6" value="{{item.system.wearOff.d6}}" placeholder="0"/>
                                 <i class="fas fa-plus awesomeIcon"></i>
-                                <input class="input-xs" type="number" name="system.wearOff.bonus" value="{{item.system.wearOff.bonus}}" placeholder="0"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.wearOff.bonus" value="{{item.system.wearOff.bonus}}" placeholder="0"/>
                             </div>
                         </td>
                     </tr>
@@ -115,7 +115,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <input class="input-large alignCenter" type="text" name="system.addictionMod" value="{{item.system.addictionMod}}" placeholder="-10"/>
+                            <input onFocus="this.select()" class="input-large alignCenter" type="text" name="system.addictionMod" value="{{item.system.addictionMod}}" placeholder="-10"/>
                         </td>
                         <td>
                             <select name="system.addictionType" data-type="String">
@@ -183,6 +183,166 @@
             {{else}}
                 {{{htmlDescription}}}
             {{/if}}
+        </div>
+
+        <div class="tab {{#if (eq tabGroups.primary 'mechanics')}}active{{/if}}" data-group="primary" data-tab="mechanics">
+
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">{{localize "ep2e.item.drug.mechanics.checkHeadline"}}</h3>
+            </div>
+            <div class="flexrow flex-group-center">
+                <table style="width: 100%; flex: 0 0 100%;">
+                    <tr>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.aptitude"}}</label></td>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.modifier"}}</label></td>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.failure"}}</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="system.useCheck.aptitude" data-type="String">
+                                {{selectOptions config.drugCheckAptitudes selected=item.system.useCheck.aptitude localize=true}}
+                            </select>
+                        </td>
+                        <td>
+                            <input onFocus="this.select()" class="input-large alignCenter" type="number" name="system.useCheck.modifier" value="{{item.system.useCheck.modifier}}" placeholder="0"/>
+                        </td>
+                        <td>
+                            <select name="system.useCheck.failure" data-type="String">
+                                {{selectOptions config.drugCheckFailures selected=item.system.useCheck.failure localize=true}}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <table style="width: 100%; flex: 0 0 100%;">
+                    <tr>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.lasts"}}</label></td>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.harm"}}</label></td>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.successPsi"}}</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flexrow alignCenter" style="justify-content: center; gap: 4px;">
+                                <input onFocus="this.select()" class="input-xs alignCenter" type="number" name="system.useCheck.duration.value" min="1" value="{{item.system.useCheck.duration.value}}"/>
+                                <select name="system.useCheck.duration.units" data-type="String">
+                                    {{selectOptions config.drugDurationUnits selected=item.system.useCheck.duration.units localize=true}}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flexrow alignCenter" style="justify-content: center; gap: 4px;">
+                                <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.useCheck.stress.d10" value="{{item.system.useCheck.stress.d10}}" placeholder="0"/>
+                                <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.useCheck.stress.d6" value="{{item.system.useCheck.stress.d6}}" placeholder="0"/>
+                                <i class="fas fa-plus awesomeIcon"></i>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.useCheck.stress.bonus" value="{{item.system.useCheck.stress.bonus}}" placeholder="0"/>
+                            </div>
+                        </td>
+                        <td>
+                            <input onFocus="this.select()" class="input-large alignCenter" type="number" name="system.useCheck.successPsiPenalty" value="{{item.system.useCheck.successPsiPenalty}}" placeholder="0"/>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <div class="flexrow subheader" style="margin-top: 10px;">
+                <h3 class="subheader dialog">{{localize "ep2e.item.drug.mechanics.overTimeHeadline"}}</h3>
+            </div>
+            <div class="flexrow flex-group-center">
+                <table style="width: 100%; flex: 0 0 100%;">
+                    <tr>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.damage"}}</label></td>
+                        <td><label class="resource-label">{{localize "ep2e.item.drug.mechanics.interval"}}</label></td>
+                        <td><label class="resource-label" data-tooltip="{{localize 'ep2e.item.drug.mechanics.ticksTip'}}">{{localize "ep2e.item.drug.mechanics.ticks"}}</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flexrow alignCenter" style="justify-content: center; gap: 4px;">
+                                <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.overTime.damage.d10" value="{{item.system.overTime.damage.d10}}" placeholder="0"/>
+                                <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.overTime.damage.d6" value="{{item.system.overTime.damage.d6}}" placeholder="0"/>
+                                <i class="fas fa-plus awesomeIcon"></i>
+                                <input onFocus="this.select()" class="input-xs" type="number" name="system.overTime.damage.bonus" value="{{item.system.overTime.damage.bonus}}" placeholder="0"/>
+                            </div>
+                        </td>
+                        <td>
+                            <select name="system.overTime.interval" data-type="String">
+                                {{selectOptions config.drugOverTimeIntervals selected=item.system.overTime.interval localize=true}}
+                            </select>
+                        </td>
+                        <td>
+                            <input onFocus="this.select()" class="input-large alignCenter" type="number" name="system.overTime.ticks" min="1" value="{{item.system.overTime.ticks}}" data-tooltip="{{localize 'ep2e.item.drug.mechanics.ticksTip'}}"/>
+                        </td>
+                    </tr>
+                </table>
+                <table style="width: 100%; flex: 0 0 100%;">
+                    <tr>
+                        <td><label class="resource-label" data-tooltip="{{localize 'ep2e.item.drug.mechanics.growingModifierTip'}}">{{localize "ep2e.item.drug.mechanics.growingModifier"}}</label></td>
+                        <td><label class="resource-label" data-tooltip="{{localize 'ep2e.item.drug.mechanics.incapacitatesTip'}}">{{localize "ep2e.item.drug.mechanics.incapacitates"}}</label></td>
+                        <td><label class="resource-label" data-tooltip="{{localize 'ep2e.item.drug.mechanics.healingTip'}}">{{localize "ep2e.item.drug.mechanics.healing"}}</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input onFocus="this.select()" class="input-large alignCenter" type="number" name="system.overTime.modifier" value="{{item.system.overTime.modifier}}" placeholder="0"/>
+                        </td>
+                        <td>
+                            <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.overTime.incapacitates" {{checked item.system.overTime.incapacitates}}/>
+                        </td>
+                        <td>
+                            <select name="system.healingAddition" data-type="String">
+                                {{selectOptions config.drugHealingAdditions selected=item.system.healingAddition localize=true}}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="flexrow subheader" style="margin-top: 10px;">
+                <h3 class="subheader dialog">{{localize "ep2e.item.drug.mechanics.grantsHeadline"}}</h3>
+            </div>
+            <div class="grant-rows">
+                <div class="flexrow grant-row grant-row-labels">
+                    <span class="grant-connector-slot"></span>
+                    <label class="resource-label">{{localize "ep2e.item.drug.mechanics.grantPack"}}</label>
+                    <label class="resource-label">{{localize "ep2e.item.drug.mechanics.grantFolder"}}</label>
+                    <label class="resource-label">{{localize "ep2e.item.drug.mechanics.grantItem"}}</label>
+                    <span class="grant-button-slot"></span>
+                </div>
+                {{#each grantRows as |row|}}
+                <div class="flexrow grant-row" data-grant-index="{{row.index}}">
+                    <span class="grant-connector-slot">
+                        {{#unless row.first}}
+                        <button type="button" class="grant-connector{{#if row.or}} grant-or{{/if}}" data-tooltip="{{localize 'ep2e.item.drug.mechanics.connectorTip'}}">{{#if row.or}}{{localize "ep2e.item.drug.mechanics.connectorOr"}}{{else}}{{localize "ep2e.item.drug.mechanics.connectorAnd"}}{{/if}}</button>
+                        {{/unless}}
+                    </span>
+                    <select class="grant-pack">
+                        <option value="">{{localize "ep2e.item.drug.mechanics.none"}}</option>
+                        {{#each row.packOptions as |option|}}
+                        <option value="{{option.value}}"{{#if option.selected}} selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                    <select class="grant-folder"{{#unless row.hasFolders}} disabled{{/unless}}>
+                        <option value="">{{localize "ep2e.item.drug.mechanics.none"}}</option>
+                        {{#each row.folderOptions as |option|}}
+                        <option value="{{option.value}}"{{#if option.selected}} selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                    <select class="grant-item"{{#if row.open}} disabled{{/if}}>
+                        <option value="random"{{#if row.random}} selected{{/if}}>{{localize "ep2e.item.drug.mechanics.random"}}</option>
+                        {{#each row.itemOptions as |option|}}
+                        <option value="{{option.value}}"{{#if option.selected}} selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                    <span class="grant-button-slot">
+                        {{#unless row.open}}
+                        <a class="grant-description{{#if row.hasText}} grant-has-description{{/if}}" data-tooltip="{{localize 'ep2e.item.drug.mechanics.grantDescription'}}"><i class="fas fa-pen-to-square awesomeIcon"></i></a>
+                        {{/unless}}
+                    </span>
+                </div>
+                {{/each}}
+            </div>
         </div>
 
         <div class="tab {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects">

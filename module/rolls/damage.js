@@ -3,6 +3,7 @@ import { damageValueCalc } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.js";
 import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
+import { drugHealingAddition } from "../common/dose-state.js";
 
 export async function prepareWeapon(data, result, preparedContext) {
   const context = preparedContext ?? readRollContext(data.currentTarget);
@@ -408,7 +409,7 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
 
   if (message.totalDamage > 0) {
     if (healType === "partial") {
-      healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount);
+      healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount, drugHealingAddition(actor));
 
       if (healFormula.cancelled) {
         return;
@@ -623,7 +624,7 @@ async function barDown(bar, overBar, oldBarValue, oldOverBarValue, barValue, ove
 
 //Special Dialogs
 
-async function healingDialog(dialog, type, dialogType, enhancements, enhancementsCount) {
+async function healingDialog(dialog, type, dialogType, enhancements, enhancementsCount, presetAddition = "") {
   const dialogName = game.i18n.localize("ep2e.skills.pool.dialogHeadline");
   const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
   const confirmButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
@@ -632,7 +633,8 @@ async function healingDialog(dialog, type, dialogType, enhancements, enhancement
     type,
     dialogType,
     enhancements,
-    enhancementsCount
+    enhancementsCount,
+    presetAddition
   });
 
   const result = await foundry.applications.api.DialogV2.wait({

@@ -26,6 +26,15 @@ export function drugBlockingPsi(actor) {
 }
 
 /**
+ * The healing addition a running dose stands for - Meds - which the healing dialog starts on.
+ * @param {Actor} actor - The actor
+ * @returns {String} The addition's key, or "" when no dose stands for one
+ */
+export function drugHealingAddition(actor) {
+  return runningDoses(actor).find(dose => dose.healingAddition)?.healingAddition ?? "";
+}
+
+/**
  * The penalties running doses put on Psi Tests - Inhibitor's -30 after a passed WIL Check.
  * @param {Actor} actor - The actor
  * @returns {Object[]} name and modifier per drug

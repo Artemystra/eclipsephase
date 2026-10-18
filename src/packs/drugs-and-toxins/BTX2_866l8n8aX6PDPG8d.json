@@ -11,7 +11,7 @@
   "_id": "866l8n8aX6PDPG8d",
   "system": {
     "additionalSystems": {},
-    "description": "DV 2d10 +3 for 3 turns, SOM Check or immobilized for 1 hour",
+    "description": "DV 2d10 + 10 for 3 turns, SOM Check or immobilized for 1 hour",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",
@@ -46,7 +46,20 @@
         "bonus": 0
       },
       "successPsiPenalty": 0
-    }
+    },
+    "overTime": {
+      "damage": {
+        "d10": 2,
+        "d6": 0,
+        "bonus": 10
+      },
+      "interval": "turn",
+      "ticks": 3,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

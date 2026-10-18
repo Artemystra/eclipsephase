@@ -155,9 +155,18 @@ function registerSystemPacks() {
       ? new global.CONFIG.Actor.documentClass(doc)
       : new global.CONFIG.Item.documentClass(doc);
     const type = sources()[0]?._key?.startsWith("!actors!") ? "Actor" : "Item";
+    const folders = fs.readdirSync(dir)
+      .filter(file => file.endsWith(".json"))
+      .map(file => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")))
+      .filter(doc => doc._key?.startsWith("!folders!"))
+      .map(doc => ({ id: doc._id, name: doc.name, folder: doc.folder ?? null }));
     global.game.packs.set(`eclipsephase.${name}`, {
       collection: `eclipsephase.${name}`,
+      documentName: type,
+      title: name,
       metadata: { package: "eclipsephase", name, type },
+      folders,
+      getIndex: async () => sources().map(doc => ({ _id: doc._id, name: doc.name, type: doc.type, folder: doc.folder ?? null })),
       getDocument: async id => {
         const doc = sources().find(entry => entry._id === id);
         return doc ? build(doc) : null;

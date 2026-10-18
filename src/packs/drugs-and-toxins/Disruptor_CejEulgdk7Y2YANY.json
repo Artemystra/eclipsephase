@@ -31,7 +31,20 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "hour",
+      "ticks": null,
+      "modifier": -5,
+      "incapacitates": true
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

@@ -1441,5 +1441,21 @@ function breakdown(roll){
             i++
         }
     }
+    diceBreakdown.bonus = flatBonus(roll)
     return diceBreakdown
+}
+
+/**
+ * The flat part of a roll - the +10 of 2d10 + 10 - signed as the dice tray shows it beside the dice.
+ * @param {Roll} roll - An evaluated roll
+ * @returns {String} e.g. "+10" or "-2", empty when the roll has none
+ */
+export function flatBonus(roll) {
+    let sign = 1
+    let bonus = 0
+    for (const term of roll?.terms ?? []) {
+        if (typeof term.operator === "string") sign = term.operator === "-" ? -1 : 1
+        else if (typeof term.number === "number" && term.faces === undefined) bonus += sign * term.number
+    }
+    return bonus ? `${bonus > 0 ? "+" : ""}${bonus}` : ""
 }

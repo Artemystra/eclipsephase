@@ -1200,7 +1200,7 @@
             "hours": "Hours",
             "days": "Days"
           },
-          "usagesMax": "Doses",
+          "usagesMax": "Doses Used",
           "isAmmo": "Ammunition pack",
           "wearOffSv": "Wear-off stress (SV)",
           "usagesTip": "Used / Max",
@@ -1224,6 +1224,52 @@
             "nano": "Nano",
             "electronic": "Electronic"
           }
+        },
+        "mechanics": {
+          "tab": "Mechanics",
+          "none": "None",
+          "checkHeadline": "Check on Taking",
+          "aptitude": "Aptitude",
+          "modifier": "Modifier",
+          "failure": "On Failure",
+          "lasts": "Lasts",
+          "successPsi": "Psi Penalty on Success",
+          "failures": {
+            "incapacitated": "Incapacitated",
+            "immobilized": "Immobilized",
+            "blocksPsi": "Psi Blocked",
+            "stress": "Stress (SV)",
+            "damage": "Damage (DV)"
+          },
+          "overTimeHeadline": "Effects over Time",
+          "damage": "Damage per Tick",
+          "interval": "Every",
+          "ticks": "Ticks",
+          "ticksTip": "Leave empty for as long as the dose runs",
+          "intervals": {
+            "turn": "Action Turn",
+            "hour": "Hour"
+          },
+          "growingModifier": "Growing Modifier",
+          "growingModifierTip": "Added to all actions every interval, e.g. -5 per hour",
+          "incapacitates": "Incapacitates at DUR",
+          "incapacitatesTip": "Incapacitated once the growing modifier reaches the target's Durability",
+          "healing": "Healing Dialog",
+          "healingTip": "While a dose runs, the healing dialog starts on this addition",
+          "harm": "Damage",
+          "grantsHeadline": "Temporary Traits",
+          "grantPack": "Compendium",
+          "grantFolder": "Folder",
+          "grantItem": "Item",
+          "random": "Random",
+          "connectorAnd": "AND",
+          "connectorOr": "OR",
+          "connectorTip": "OR starts a new package; one package is rolled at even odds",
+          "grantDescription": "Edit Title and Description",
+          "grantDescriptionHint": "Written above the item's own description.",
+          "grantTitlePlaceholder": "Additional title (optional)",
+          "grantDescriptionPlaceholder": "Additional description (optional)",
+          "grantTitleHint": "Shown in brackets after the item's name."
         }
       },
       "additionalSkill": {
@@ -1779,7 +1825,6 @@
         "untilEnded": "Until ended",
         "lastDose": "That was the last dose.",
         "usedBy": "Used by {name}",
-        "outcomePanic": "<strong>{name}</strong> sends me into a panic attack",
         "outcomePsiBlocked": "<strong>{name}</strong> blocks my psi",
         "outcomeIncapacitated": "<strong>{name}</strong> leaves me incapacitated",
         "outcomeImmobilized": "<strong>{name}</strong> leaves me immobilized",
@@ -1800,7 +1845,12 @@
         "wearOffSv": "Wear-off stress (SV)",
         "rollWearOff": "Roll stress",
         "wearOffFlavor": "Wear-off stress: {name}",
-        "app": "App"
+        "app": "App",
+        "overTimeFlavor": "{name} ({count}x)",
+        "rollDamage": "Roll damage",
+        "damageFlavor": "{name} harms the body",
+        "panicFlavor": "Panic stress: {name}",
+        "granted": "{name} grants: {items}"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

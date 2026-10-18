@@ -88,6 +88,28 @@
           "wil"
         ]
       }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": [
+      {
+        "pack": "eclipsephase.traits",
+        "folder": "",
+        "item": "v1dQPAvEdhZKLnMA",
+        "title": "Logorrhea",
+        "description": "",
+        "or": false
+      }
     ]
   },
   "ownership": {

@@ -2643,7 +2643,10 @@ async function _ep27_drugBlueprints() {
       effects: (source.effects ?? []).map(({ _id, _stats, _key, ...effect }) => effect),
       rollOptions: source.system?.rollOptions ?? [],
       wearOff: source.system?.wearOff ?? null,
-      useCheck: source.system?.useCheck ?? null
+      useCheck: source.system?.useCheck ?? null,
+      overTime: source.system?.overTime ?? null,
+      healingAddition: source.system?.healingAddition ?? "",
+      grants: source.system?.grants ?? []
     });
   }
   return catalogue;
@@ -2651,8 +2654,10 @@ async function _ep27_drugBlueprints() {
 
 /**
  * The 2.7 data a drug is missing compared with its compendium namesake: roll options when it has
- * none, a wear-off stress when it has no dice, a check when it calls for none. Only empty fields
- * are filled, so a drug somebody gave values of their own keeps them.
+ * none, a wear-off stress when it has no dice, a check when it calls for none, effects over time
+ * when it has neither tick damage nor a growing modifier, a healing addition when it names none,
+ * temporary traits when it grants none.
+ * Only empty fields are filled, so a drug somebody gave values of their own keeps them.
  * @param {Item} item - The drug item, read with its repairs applied
  * @param {Map<String, Object>} catalogue - What _ep27_drugBlueprints read
  * @returns {Object|null} The system changes to apply, or null when nothing is missing
@@ -2667,6 +2672,10 @@ function _ep27_missingDrugData(item, catalogue) {
   if (!(system.rollOptions?.length) && known.rollOptions.length) update.rollOptions = foundry.utils.deepClone(known.rollOptions);
   if (!hasDice(system.wearOff) && hasDice(known.wearOff)) update.wearOff = foundry.utils.deepClone(known.wearOff);
   if (!system.useCheck?.aptitude && known.useCheck?.aptitude) update.useCheck = foundry.utils.deepClone(known.useCheck);
+  const overTime = value => hasDice(value?.damage) || !!Number(value?.modifier);
+  if (!overTime(system.overTime) && overTime(known.overTime)) update.overTime = foundry.utils.deepClone(known.overTime);
+  if (!system.healingAddition && known.healingAddition) update.healingAddition = known.healingAddition;
+  if (!(system.grants?.length) && known.grants?.length) update.grants = foundry.utils.deepClone(known.grants);
   return Object.keys(update).length ? update : null;
 }
 
