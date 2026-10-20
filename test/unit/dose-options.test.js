@@ -1,5 +1,5 @@
-import { checkKeys, doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../../module/common/dose-options.js";
-import { globalModifiers } from "../../module/common/global-mod.js";
+import { checkKeys, doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../../module/rolls/modifiers.js";
+import { globalModifiers } from "../../module/rolls/modifiers.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
 
 const CR_GAS = {

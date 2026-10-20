@@ -3,6 +3,18 @@ const SECONDS_PER_HOUR = 3600;
 const SECONDS_PER_DAY = 86400;
 const DAYS_PER_YEAR = 365;
 
+// Seconds in one of each duration unit an effect or a drug records.
+export const SECONDS_PER = { seconds: 1, minutes: SECONDS_PER_MINUTE, hours: SECONDS_PER_HOUR, days: SECONDS_PER_DAY };
+
+/**
+ * Whether a span of { value, units } is a real duration rather than "until ended".
+ * @param {Object} span - The span
+ * @returns {Boolean} True for a positive value with units
+ */
+export function isTimedSpan(span) {
+  return Number.isFinite(span?.value) && span.value > 0 && !!span.units;
+}
+
 // Swatch Internet Time: one day is 1000 beats. Beats are derived by integer maths over the day
 // rather than through a 86.4-second constant, which loses exactness at the half-day mark.
 const BEATS_PER_DAY = 1000;

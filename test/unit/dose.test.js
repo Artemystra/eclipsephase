@@ -1,6 +1,6 @@
 import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, forceDose, registerForcedDoseHooks, deliverForcedDose, rollWearOffStress, requestWearOffRoll } from "../../module/common/doses.js";
 import { registerExpiryCleanup, cleanUpExpired } from "../../module/common/expiry.js";
-import { selectDoseRecipient } from "../../module/common/general-sheet-functions.js";
+import { selectDoseRecipient } from "../../module/common/drugs.js";
 import { registerPoolRule } from "../../module/common/pool-rule.js";
 import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
@@ -737,9 +737,10 @@ describe("clicking use on me", () => {
 
   beforeEach(() => {
     emitted = [];
-    socketHandler = null;
+    const listeners = [];
+    socketHandler = async payload => { for (const listener of listeners) await listener(payload); };
     game.socket.emit = (name, payload) => emitted.push(payload);
-    game.socket.on = (name, fn) => { socketHandler = fn; };
+    game.socket.on = (name, fn) => { listeners.push(fn); };
     registerDoseSocket();
   });
 

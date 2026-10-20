@@ -1,40 +1,9 @@
-import { durationRunOut } from "./time.js";
-import { sameDrugForm, afterDose, AMMO_VECTOR_KEYS, VECTOR_KEYS, drugVectors, needsVectorChoice, offersAmmoChoice } from "./drugs.js";
+import { durationRunOut, isTimedSpan } from "./time.js";
+import { sameDrugForm } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
 import { getRollSource } from "../api/registry.js";
-
-/**
- * Foundry VTTs item creation & deletion functions
- * @param {Object} html - The HTML object to which the event listeners are added
- * @param {*} callerobj 
- * @param {*} caller 
- */
-export function registerItemHandlers(html,callerobj,caller){
-      // Add Inventory Item
-      html.find('.item-create').click(caller._onItemCreate.bind(this));
-
-      // Update Inventory Item
-      html.find('.item-edit').click(ev => {
-        const li = $(ev.currentTarget).parents(".item");
-        const item = callerobj.items.get(li.data("itemId"));
-        item.sheet.render(true);
-      });
-
-          // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      callerobj.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
-      li.slideUp(200, () => this.render(false));
-    });
-}
-
-export function createDroplist(html, callerobj){
-  html.find('name="droplist"')(ev => {
-  })
-  
-}
 
 /**
  * Foundry VTTs active effect creation & deletion functions
@@ -155,11 +124,45 @@ export async function tempEffectDeletion(actor, scope, key, values) {
  * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
  * @returns {Promise<void>} Resolves once the spent effects are gone
  */
-export async function deleteRunOutTempEffects(actor, effects) {
-  const spent = effects.filter(effect =>
-    effect.getFlag?.("eclipsephase", "effectKey") !== undefined && durationRunOut(effect));
+export function deleteRunOutTempEffects(actor, effects) {
+  return deleteRunOutEffects(actor, effects, "effectKey");
+}
 
+/**
+ * Deletes the effects carrying one of the system's flags whose duration has run out.
+ * @param {Actor} actor - The actor the effects are on
+ * @param {ActiveEffect[]} effects - The effects to look through
+ * @param {String} flag - The flag that marks them, e.g. "dose"
+ * @returns {Promise<void>} Resolves once they are gone
+ */
+export async function deleteRunOutEffects(actor, effects, flag) {
+  const spent = effects.filter(effect => effect.getFlag?.("eclipsephase", flag) !== undefined && durationRunOut(effect));
   if (spent.length) await actor.deleteEmbeddedDocuments("ActiveEffect", spent.map(effect => effect.id));
+}
+
+/**
+ * The data of an effect that runs on the world clock: started now, ending after its span - or
+ * running until ended when it has none - and marked with the system's flags.
+ * @param {Object} options - name, img, span ({value, units}), flags (under eclipsephase), and
+ *   optionally changes, statuses, showIcon, description, origin
+ * @returns {Object} The ActiveEffect data
+ */
+export function timedEffectData({ name, img, span, flags = {}, changes = [], statuses = [], showIcon = CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER, description = "", origin = null }) {
+  return {
+    name,
+    img,
+    origin,
+    description,
+    disabled: false,
+    transfer: false,
+    changes,
+    system: { changes },
+    statuses,
+    duration: isTimedSpan(span) ? { value: span.value, units: span.units, expiry: null } : { value: null, expiry: null },
+    start: ActiveEffect.getEffectStart(),
+    showIcon,
+    flags: { eclipsephase: flags }
+  };
 }
 
 /**
@@ -195,7 +198,6 @@ export function registerCommonHandlers(html, callerobj) {
   });
 
   //Toggle chat sections
-
 
   //Auto-close parent item
   html.querySelectorAll(".autoClose").forEach(element => {
@@ -277,36 +279,6 @@ export function registerCommonHandlers(html, callerobj) {
 }
 
 /**
- * Create special & know skills
- * @param {Object} event - The event starting the function (default: click)
- * @param {Object} callerobj - The object the function is called from (default: actor)
- * @returns 
- */
-export function itemCreate(event,callerobj){
-      event.preventDefault();
-      const header = event.currentTarget;
-      const type = header.dataset.type;
-      const data = duplicate(header.dataset);
-      const name = `New ${type.capitalize()}`;
-      const itemData = {
-        name: name,
-        type: type,
-        data: data
-      };
-      delete itemData.data["type"];
-      if (itemData.type === "specialSkill" || itemData.type === "knowSkill") {
-        itemData.name = "New Skill";
-      }
-      return callerobj.createEmbeddedDocuments("Item", [itemData]);
-}
-
-/**
- * Deletes a given number of items from the actor's inventory
- * @param {Object} actor - The actor object the items are deleted from
- * @param {String} itemID - The ID of the item to be deleted
- * @param {Number} itemQuantity - The quantity of the items to be deleted
- */
-/**
  * Whether an inline quantity edit has emptied a stack, which takes the item off the sheet rather
  * than leaving a row holding nothing. Only the types carried as a stack are removed this way.
  * Clearing the field counts the same as typing a nought, since both leave the stack at nothing.
@@ -321,24 +293,6 @@ export function emptiesStack(item, field, value){
   if (value === null || value === undefined) return false;
   const quantity = Number(value);
   return Number.isFinite(quantity) && quantity <= 0;
-}
-
-/**
- * Takes one dose out of a drug the actor is carrying: the open pack gives one up, an emptied pack
- * hands over to the next, and the last dose takes the drug off the sheet. A drug with nothing left
- * is reported back untouched rather than being removed.
- * @param {Object} actor - The actor carrying the drug
- * @param {Object} item - The drug item
- * @returns {Promise<Object>} The outcome, per afterDose
- */
-export async function consumeDose(actor, item){
-  const outcome = afterDose(item.system);
-  if (!outcome.taken) return outcome;
-
-  if (outcome.emptied) await actor.deleteEmbeddedDocuments("Item", [item.id]);
-  else await item.update({ "system.quantity": outcome.quantity, "system.usagesUsed": outcome.usagesUsed });
-
-  return outcome;
 }
 
 /**
@@ -894,94 +848,6 @@ export function itemToggle(html, item) {
   }
 
 /**
- * Asks which form a drug was bought in and whether the pack is ammunition. The chosen form is the
- * only one kept on the pack and decides how a dose is taken and how soon it takes hold. The
- * ammunition box is only open while a form that can be loaded into a weapon is picked.
- * @param {String} itemName - The drug's name, shown above the choice
- * @param {Object[]} vectors - The VECTORS entries the drug offers
- * @returns {Promise<Object>} The chosen vector key and whether it is an ammunition pack, or cancelled
- */
-  export async function selectDrugVector(itemName, vectors) {
-    const options = vectors.map(vector => ({
-      id: vector.key,
-      label: vector.label,
-      description: vector.onset
-    }));
-    const ammoCapable = vectors.some(vector => AMMO_VECTOR_KEYS.includes(vector.key));
-
-    const renderHook = (event, dialog) => {
-      const root = dialog.element;
-      const box = root.querySelector('input[name="ExtraOption"]');
-      if (!box) return;
-      const sync = () => {
-        const picked = root.querySelector('input[name="ItemSelect"]:checked')?.value;
-        box.disabled = !AMMO_VECTOR_KEYS.includes(picked);
-        if (box.disabled) box.checked = false;
-      };
-      root.querySelectorAll('input[name="ItemSelect"]').forEach(radio => radio.addEventListener("change", sync));
-      sync();
-    };
-
-    const result = await listSelection(
-      options,
-      "standardSelectionList",
-      320,
-      "ep2e.dialog.selectDrugVector.header",
-      itemName,
-      "ep2e.dialog.selectDrugVector.copy",
-      ammoCapable ? renderHook : undefined,
-      ammoCapable ? { checkbox: { label: "ep2e.dialog.selectDrugVector.asAmmo" } } : {}
-    );
-
-    if (result?.cancelled) return { cancelled: true };
-    const vector = result?.selection ?? null;
-    return { vector, isAmmo: result?.extraOption === true && AMMO_VECTOR_KEYS.includes(vector) };
-  }
-
-/**
- * Settles the form a drug is acquired in, on its data before it is created: asks when the drug
- * still offers several forms or could be an ammunition pack, then keeps only the chosen form.
- * Anything that is not a drug, and a drug with nothing left to settle, passes through unasked.
- * @param {Object} itemData - The incoming item's source data, changed in place
- * @returns {Promise<Boolean>} False when the choice was cancelled
- */
-export async function chooseDrugForm(itemData) {
-  if (itemData?.type !== "drug") return true;
-  const system = itemData.system ?? {};
-  if (!needsVectorChoice(system) && !offersAmmoChoice(system)) return true;
-
-  const chosen = await selectDrugVector(itemData.name, drugVectors(system));
-  if (chosen.cancelled || !chosen.vector) return false;
-  for (const key of VECTOR_KEYS) system[key] = key === chosen.vector;
-  system.isAmmo = chosen.isAmmo === true;
-  return true;
-}
-
-/**
- * Asks who a dose is for: the actor themselves, a willing target the dose is offered to through a
- * card in the chat, or an unwilling one it has to be forced on with a melee attack first. A
- * shift-click skips this and takes the dose at once.
- * @param {String} itemName - The drug's name, shown above the choice
- * @returns {Promise<String|null>} "self", "other", "unwilling", or null when cancelled
- */
-  export async function selectDoseRecipient(itemName) {
-    const result = await listSelection(
-      [
-        { id: "self", label: "ep2e.dialog.doseRecipient.self" },
-        { id: "other", label: "ep2e.dialog.doseRecipient.other", description: "ep2e.dialog.doseRecipient.otherHint" },
-        { id: "unwilling", label: "ep2e.dialog.doseRecipient.unwilling", description: "ep2e.dialog.doseRecipient.unwillingHint" }
-      ],
-      "standardSelectionList",
-      320,
-      "ep2e.dialog.doseRecipient.header",
-      itemName,
-      "ep2e.dialog.doseRecipient.copy"
-    );
-    if (result?.cancelled) return null;
-    return result?.selection ?? null;
-  }
-
-/**
  * Asks for one entry out of a list long enough to need a filter: a search field above a list that
  * narrows as the user types. Enter takes the first entry still shown.
  * @param {Object[]} entries - id and label per entry
@@ -1012,6 +878,75 @@ export async function chooseDrugForm(itemData) {
     if (result?.cancelled) return null;
     return result?.selection || null;
   }
+
+/**
+ * The token under a point on the canvas, the topmost one where several overlap. Tokens the user
+ * cannot see are skipped.
+ * @param {Object} point - Canvas coordinates
+ * @param {Object[]} tokens - The canvas tokens, in draw order
+ * @returns {Object|null} The token, or null over empty canvas
+ */
+export function tokenAt(point, tokens) {
+  const hits = tokens.filter(token => token.isVisible !== false && token.bounds?.contains(point.x, point.y));
+  return hits.at(-1) ?? null;
+}
+
+/**
+ * Lets the user click a token on the canvas. The cursor changes until the click; a click on empty
+ * canvas, a right-click or Escape cancels. The click is kept from the canvas itself, so picking a
+ * target does not also select or deselect tokens.
+ * @param {Object} [options] - bodyClass: the class that sets the cursor while picking
+ * @returns {Promise<Object|null>} The token clicked, or null when cancelled
+ */
+export function pickTokenOnCanvas({ bodyClass = "ep-targeting" } = {}) {
+  const board = document.getElementById("board");
+  if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
+
+  return new Promise(resolve => {
+    const finish = token => {
+      board.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("keydown", onKey, true);
+      document.body.classList.remove(bodyClass);
+      resolve(token);
+    };
+    const onPointer = event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (event.button !== 0) return finish(null);
+      const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+      finish(tokenAt(point, canvas.tokens.placeables));
+    };
+    const onKey = event => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      finish(null);
+    };
+
+    document.body.classList.add(bodyClass);
+    board.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("keydown", onKey, true);
+  });
+}
+
+/**
+ * The actor of the token the user has selected on the canvas.
+ * @returns {Actor|null} The actor, or null when nothing is selected
+ */
+export function selectedTokenActor() {
+  return globalThis.canvas?.tokens?.controlled?.[0]?.actor ?? null;
+}
+
+/**
+ * Lets the user pick one actor from a list they can filter by typing.
+ * @param {Actor[]} actors - The actors on offer
+ * @param {String} header - The dialog's title key
+ * @param {String} copy - The dialog's copy key
+ * @returns {Promise<Actor|null>} The actor, or null when cancelled
+ */
+export async function pickActorFromList(actors, header, copy) {
+  const id = await selectFromSearchableList(actors.map(actor => ({ id: actor.id, label: actor.name })), header, copy);
+  return id ? actors.find(actor => actor.id === id) ?? null : null;
+}
 
   function listSelectionOutcome(form) {
     let returnValue;
@@ -1167,42 +1102,6 @@ export async function chooseDrugForm(itemData) {
     }, 2000);
   }
 
-
-
-/**
- * A powerful constructor of joined rolls for the chat.
- * Use this in case you need to make a series of rolls and want to display them into
- * one singular chat message.
- * @param {Array} rollsArray - The array of rolls to be displayed
- * @param {Object} messageData - Object with the chat message data
- * @param {*} param2 
- * @returns - An object to be displayed in the chat
- */
-async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create=true}={}) {
-  for ( const roll of rollsArray ) {
-      if ( !roll._evaluated ) await roll.evaluate();
-  }
-
-  // Prepare chat data
-  messageData = foundry.utils.mergeObject({
-      user: game.user.id,
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      sound: CONFIG.sounds.dice
-  }, messageData);
-  messageData.rolls = rollsArray;
-
-  // Either create the message or just return the chat data
-  const cls = getDocumentClass("ChatMessage");
-  const msg = new cls(messageData);
-
-  // Either create or return the data
-  if ( create ) return cls.create(msg.toObject(), { rollMode });
-  else {
-      if ( rollMode ) msg.applyRollMode(rollMode);
-      return msg.toObject();
-  }
-}
-
   export async function rollFromSheet (actorWhole, dataset, rolledFrom, weaponID, systemOptions){
     if(dataset.type === 'skill') {
       
@@ -1257,6 +1156,83 @@ export function gmList(){
   let activeGMs = gmList.filter(user => user.active)
   let gmIDs = activeGMs.map(user => user._id)
   return gmIDs
+}
+
+/**
+ * The users a card only an actor's owners act on is whispered to: its owners and every GM.
+ * @param {Actor} actor - The actor
+ * @returns {String[]} User ids
+ */
+export function ownersAndGMs(actor) {
+  return game.users.filter(user => user.isGM || actor.testUserPermission?.(user, "OWNER")).map(user => user.id);
+}
+
+// The system's notice card: an icon, a headline, an optional box of rows, an optional button.
+export const CARD_TEMPLATE = "systems/eclipsephase/templates/chat/dose.html";
+
+/**
+ * Posts a notice card about an actor: an icon, a headline and an optional box of labelled rows, a
+ * row without a label reading as a note. A character's card is public; anyone else's goes to the
+ * GMs, as the reload card does.
+ * @param {Actor} actor - The actor the card is about
+ * @param {Object} card - icon, color (a CSS variable), headline, rows of {label, value}, and any
+ *   further template data such as a button
+ * @param {Object} [flags] - Flags stored on the message
+ * @param {String[]} [whisper] - Who sees the card, instead of the default
+ * @returns {Promise<ChatMessage>} The posted card
+ */
+export async function postCard(actor, { icon, color, headline, rows = [], ...extra }, flags = {}, whisper = null) {
+  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { icon, color, headline, rows, ...extra });
+  const recipients = whisper ?? actorAudience(actor);
+  return ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    flags,
+    ...(recipients ? { whisper: recipients } : {})
+  });
+}
+
+/**
+ * Who sees a card about an actor: everyone for a player character, the GMs for anyone else.
+ * @param {Actor} actor - The actor
+ * @returns {String[]|null} User ids, or null for a public card
+ */
+export function actorAudience(actor) {
+  return actor?.type === "character" ? null : gmList();
+}
+
+/**
+ * A compendium item found by its name.
+ * @param {String} packId - The compendium, e.g. "eclipsephase.traits"
+ * @param {String} name - The item's name
+ * @returns {Promise<Item|null>} The item, or null when the compendium lacks it
+ */
+export async function findCompendiumItem(packId, name) {
+  const pack = game.packs.get(packId);
+  const entry = pack ? (await pack.getIndex()).find(item => item.name === name) : null;
+  return entry ? pack.getDocument(entry._id) : null;
+}
+
+/**
+ * A compendium item's data, ready to put on a sheet: without its id and folder.
+ * @param {Item} document - The compendium item
+ * @returns {Object} The item data
+ */
+export function cloneCompendiumItem(document) {
+  const data = document.toObject();
+  delete data._id;
+  delete data.folder;
+  return data;
+}
+
+/**
+ * Text made safe to put into markup.
+ * @param {*} value - The text
+ * @returns {String} The escaped text
+ */
+export function escapeText(value) {
+  const text = String(value ?? "");
+  return foundry.utils.escapeHTML?.(text) ?? text.replace(/[&<>"']/g, character => `&#${character.charCodeAt(0)};`);
 }
 
 /**

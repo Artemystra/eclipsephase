@@ -1,3 +1,5 @@
+import { escapeText } from "./general-sheet-functions.js";
+
 // Ware whose bonus applies to a special skill - Fractal Digits to Hardware, Skinflex to Exotic
 // Skill: Disguise. Special skills are named freely ("HW: Robotics"), so the player says once, per
 // ware, which of their special skills are meant; the choice is kept on the ware's options.
@@ -54,14 +56,13 @@ export async function applySkillPicks(item, picks) {
  */
 function setupContent(actor, item) {
   const skills = Array.from(actor.items ?? []).filter(entry => entry.type === "specialSkill").map(entry => entry.name).sort();
-  const escape = value => foundry.utils.escapeHTML?.(value) ?? value;
   const sections = item.system.rollOptions.filter(option => option.specialSkill).map(option => {
     const chosen = new Set(option.specialSkills ?? []);
     const boxes = skills.map((name, index) => {
-      const id = `ware-skill-${escape(option.id)}-${index}`;
-      return `<div class="form-group"><input type="checkbox" class="sheet" id="${id}" name="${escape(option.id)}" value="${escape(name)}"${chosen.has(name) ? " checked" : ""}/><label class="resource-label" for="${id}">${escape(name)}</label></div>`;
+      const id = `ware-skill-${escapeText(option.id)}-${index}`;
+      return `<div class="form-group"><input type="checkbox" class="sheet" id="${id}" name="${escapeText(option.id)}" value="${escapeText(name)}"${chosen.has(name) ? " checked" : ""}/><label class="resource-label" for="${id}">${escapeText(name)}</label></div>`;
     }).join("");
-    return `<p class="hint">${game.i18n.format(`ep2e.dialog.wareSkills.kind.${option.specialSkill}`, { ware: escape(item.name), bonus: game.i18n.localize(option.label) })}</p>${boxes}`;
+    return `<p class="hint">${game.i18n.format(`ep2e.dialog.wareSkills.kind.${option.specialSkill}`, { ware: escapeText(item.name), bonus: game.i18n.localize(option.label) })}</p>${boxes}`;
   });
   const element = document.createElement("div");
   element.innerHTML = skills.length ? sections.join("") : `<p>${game.i18n.localize("ep2e.dialog.wareSkills.noSkills")}</p>`;

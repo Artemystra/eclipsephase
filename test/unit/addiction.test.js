@@ -1,5 +1,4 @@
-import { takeDose, offerDose, claimDose } from "../../module/common/doses.js";
-import { drugAddiction, logDose, doseCounts, demandWillpower, requestAddictionCheck, becomeAddicted, registerAddictionHooks } from "../../module/common/addiction.js";
+import { takeDose, offerDose, claimDose, drugAddiction, logDose, doseCounts, demandWillpower, requestAddictionCheck, becomeAddicted, registerAddictionHooks } from "../../module/common/doses.js";
 import { makeActor, resetWorld, registerSystemPacks, seedRolls } from "../setup/factories.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
 

@@ -1,7 +1,6 @@
-import { takeDose } from "../../module/common/doses.js";
-import { settleOverTime, damageTicksDue, combinedDamage, tickBreakdowns, registerOverTimeHooks } from "../../module/common/dose-over-time.js";
-import { drugHealingAddition } from "../../module/common/dose-state.js";
-import { globalModifiers } from "../../module/common/global-mod.js";
+import { takeDose, settleOverTime, damageTicksDue, combinedDamage, tickBreakdowns, registerOverTimeHooks } from "../../module/common/doses.js";
+import { drugHealingAddition } from "../../module/rolls/modifiers.js";
+import { globalModifiers } from "../../module/rolls/modifiers.js";
 import { flatBonus } from "../../module/rolls/dice.js";
 import { JSDOM } from "jsdom";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";

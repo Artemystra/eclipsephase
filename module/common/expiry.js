@@ -2,7 +2,7 @@ import { endExpiredChiPushes } from "../rolls/psi.js";
 import { deleteRunOutTempEffects } from "./general-sheet-functions.js";
 import { endRunOutDoses } from "./doses.js";
 import { owningActor } from "./pool-rule.js";
-import { durationRunOut } from "./time.js";
+import { durationRunOut, TEMP_EFFECT_FLAGS } from "./time.js";
 
 /**
  * Takes a system effect off once Foundry has marked it expired: a chi push ends, a temporary
@@ -30,7 +30,7 @@ export async function cleanUpExpired(effect) {
  */
 export async function sweepTokenCopies(actor, effect) {
   if (actor.isToken || typeof actor.getDependentTokens !== "function") return;
-  const systemEffect = ["dose", "effectKey", "chiPushBoost"].some(flag => effect.getFlag?.("eclipsephase", flag) !== undefined);
+  const systemEffect = TEMP_EFFECT_FLAGS.some(flag => effect.getFlag?.("eclipsephase", flag) !== undefined);
   if (!systemEffect) return;
 
   await new Promise(resolve => setTimeout(resolve, 0));

@@ -1,5 +1,4 @@
-import { takeDose } from "../../module/common/doses.js";
-import { grantPackages, folderTree, rowCandidates, resolveGrant, alreadyHas, placeGrant, grantTemporaryItems, registerGrantHooks, RANDOM } from "../../module/common/dose-grants.js";
+import { takeDose, registerDoseHooks, grantPackages, folderTree, rowCandidates, resolveGrant, alreadyHas, placeGrant, grantTemporaryItems, registerGrantHooks, RANDOM } from "../../module/common/doses.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
 import { JSDOM } from "jsdom";
 import { makeActor, resetWorld, registerSystemPacks } from "../setup/factories.js";
@@ -233,6 +232,7 @@ describe("the life of a grant", () => {
   test("the active GM grants as the dose takes hold, and the grant goes when the dose ends", async () => {
     game.users.activeGM = { isSelf: true };
     registerGrantHooks();
+    registerDoseHooks();
     const actor = carrying([row({ item: ENHANCED_BEHAVIOR_II, title: "Obsessive" })]);
 
     const dose = await dosed(actor);

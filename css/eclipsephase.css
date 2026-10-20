@@ -4160,3 +4160,9 @@ body.ep-dose-targeting #board {
   color: var(--negative);
   font-weight: bold;
 }
+
+/* Picking a token on the canvas from a chat card: a crosshair until the click. A feature may set
+   its own cursor class instead, as an offered dose does with its syringe. */
+body.ep-targeting #board {
+  cursor: crosshair !important;
+}

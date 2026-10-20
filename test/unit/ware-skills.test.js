@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import { needsSkillSetup, applySkillPicks, pickSpecialSkills, postWareSetupCard, setupFromCard, wareAwaitingSetup } from "../../module/common/ware-skills.js";
-import { wareRollOptions } from "../../module/common/dose-options.js";
+import { wareRollOptions } from "../../module/rolls/modifiers.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;

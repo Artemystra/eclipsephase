@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
 import { endAllChiPushes } from "../rolls/psi.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
-import { globalModifiers } from "../common/global-mod.js";
+import { globalModifiers } from "../rolls/modifiers.js";
 
 const gammaAutoPushInFlight = new Set();
 

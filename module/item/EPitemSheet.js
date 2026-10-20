@@ -1,6 +1,5 @@
-import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
-import { folderTree, rowCandidates, RANDOM } from "../common/dose-grants.js";
-import { learnedBy } from "../common/dose-defense.js";
+import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText } from "../common/general-sheet-functions.js";
+import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
 import { hasSkillOptions, pickSpecialSkills } from "../common/ware-skills.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -308,14 +307,13 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
    * @returns {Promise<Object|null>} title and description, or null when cancelled
    */
   async _editGrantText(row = {}) {
-    const escape = value => foundry.utils.escapeHTML?.(value ?? "") ?? (value ?? "");
     const M = "ep2e.item.drug.mechanics.";
     const content = `<div class="form-group">
-        <input type="text" name="grantTitle" onFocus="this.select()" value="${escape(row.title)}" placeholder="${game.i18n.localize(M + "grantTitlePlaceholder")}" style="min-width: 100%;"/>
+        <input type="text" name="grantTitle" onFocus="this.select()" value="${escapeText(row.title)}" placeholder="${game.i18n.localize(M + "grantTitlePlaceholder")}" style="min-width: 100%;"/>
       </div>
       <p class="hint">${game.i18n.localize(M + "grantTitleHint")}</p>
       <div class="form-group">
-        <textarea name="grantDescription" rows="5" placeholder="${game.i18n.localize(M + "grantDescriptionPlaceholder")}" style="min-width: 100%;">${escape(row.description)}</textarea>
+        <textarea name="grantDescription" rows="5" placeholder="${game.i18n.localize(M + "grantDescriptionPlaceholder")}" style="min-width: 100%;">${escapeText(row.description)}</textarea>
       </div>
       <p class="hint">${game.i18n.localize(M + "grantDescriptionHint")}</p>`;
     const element = document.createElement("div");

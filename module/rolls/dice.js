@@ -4,9 +4,7 @@ import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/
 import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
-import { globalModifiers } from "../common/global-mod.js";
-import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../common/dose-options.js";
-import { drugPsiPenalties } from "../common/dose-state.js";
+import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
 
 /*
  * Path constants for dialog templates
@@ -36,6 +34,28 @@ export const TASK_RESULT = {
     CRITICAL_SUCCESS: 7,
     AUTOFAIL : 8,
     AUTOSUCCESS : 9
+}
+
+const HITS = [TASK_RESULT.SUCCESS, TASK_RESULT.SUCCESS_ONE, TASK_RESULT.SUCCESS_TWO, TASK_RESULT.CRITICAL_SUCCESS, TASK_RESULT.AUTOSUCCESS]
+
+/**
+ * Whether a task result is a success of any degree: an ordinary one, a critical one or an
+ * automatic one.
+ * @param {Number} result - The task result tier
+ * @returns {Boolean} True for a success
+ */
+export function isHit(result) {
+    return HITS.includes(result)
+}
+
+/**
+ * A number with its sign, the way modifiers are shown: +10, -20, 0.
+ * @param {Number|String} value - The number
+ * @returns {String} The signed number
+ */
+export function signed(value) {
+    const number = Number(value) || 0
+    return number > 0 ? `+${number}` : String(number)
 }
 
 export const HOMEBREW_TASK_RESULT_TEXT = {
@@ -1459,5 +1479,5 @@ export function flatBonus(roll) {
         if (typeof term.operator === "string") sign = term.operator === "-" ? -1 : 1
         else if (typeof term.number === "number" && term.faces === undefined) bonus += sign * term.number
     }
-    return bonus ? `${bonus > 0 ? "+" : ""}${bonus}` : ""
+    return bonus ? signed(bonus) : ""
 }

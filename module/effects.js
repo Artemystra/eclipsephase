@@ -1,4 +1,4 @@
-import { strainSubstrate } from "./common/body-markers.js";
+import { strainSubstrate, boundToActiveBody } from "./common/body-markers.js";
 
 const EP2eActiveEffectBaseDataModel =
   foundry.data?.ActiveEffectTypeDataModel ??
@@ -54,30 +54,7 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
 
     // --- Case A: Traits / Ware are morph-bound
     // (only suppress when item is boundTo a different active morph)
-    if (t === "traits" || t === "ware") {
-
-      //NPCs & Threats morph mods will never be suppressed
-      if(actor.type !== "character") return false;
-
-      const boundTo = item.system?.boundTo;
-      if (!boundTo) return false; // not morph-bound => never suppressed by morph switching
-
-      const activeMorph = actor.system?.activeMorph;
-      if (!activeMorph) return false;
-
-      // While jamming, the ego is sleeved into the remote body instead of its own morph:
-      // ware/traits bound to the original morph must be suppressed just like any other resleeve,
-      // while anything bound to the jammed vehicle itself (if ever supported) stays active.
-      // Some ware (e.g. Drone Rig) is specifically meant to keep working while jamming, so it
-      // opts out of the jam-suppression and is only ever checked against the sleeved morph.
-      const activeJam = actor.system?.activeJam;
-      const staysActiveWhileJamming = !!item.system?.additionalSystems?.staysActiveWhileJamming;
-      const activeBody = (activeJam && !staysActiveWhileJamming) ? activeJam : activeMorph;
-
-      const suppressed = boundTo !== activeBody;
-      // console.debug("[EP2e] morph suppression", { item: item.name, boundTo, activeBody, suppressed });
-      return suppressed;
-    }
+    if (t === "traits" || t === "ware") return !boundToActiveBody(actor, item);
 
     if (isEffectBlueprint(item)) return true;
 

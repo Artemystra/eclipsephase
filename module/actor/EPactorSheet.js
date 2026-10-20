@@ -4,7 +4,7 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
-import { drugVector, isAmmoPack, dosesRemaining } from "../common/drugs.js";
+import { drugVector, isAmmoPack, dosesRemaining, chooseDrugForm, selectDoseRecipient } from "../common/drugs.js";
 import { takeDose, offerDose, forceDose } from "../common/doses.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
@@ -1230,7 +1230,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     }
 
-    if (!(await SHEET.chooseDrugForm(itemData))) return null;
+    if (!(await chooseDrugForm(itemData))) return null;
 
     itemModel.updated = game.system.version;
 
@@ -1594,7 +1594,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!item) return;
         if (ev.shiftKey) return takeDose(actor, item);
 
-        const recipient = await SHEET.selectDoseRecipient(item.name);
+        const recipient = await selectDoseRecipient(item.name);
         if (recipient === "self") await takeDose(actor, item);
         else if (recipient === "other") await offerDose(actor, item);
         else if (recipient === "unwilling") await forceDose(actor, item);

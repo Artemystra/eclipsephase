@@ -1,6 +1,5 @@
-import { postUseCheckCard, requestUseCheck, settleUseCheck, registerUseCheckHooks, rollDoseHarm } from "../../module/common/dose-checks.js";
-import { takeDose } from "../../module/common/doses.js";
-import { drugBlockingPsi, drugPsiPenalties } from "../../module/common/dose-state.js";
+import { postUseCheckCard, requestUseCheck, settleUseCheck, registerUseCheckHooks, rollDoseHarm, takeDose, registerDoseHooks } from "../../module/common/doses.js";
+import { drugBlockingPsi, drugPsiPenalties } from "../../module/rolls/modifiers.js";
 import { strainSubstrate } from "../../module/common/body-markers.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
@@ -162,6 +161,7 @@ describe("what a failed check costs", () => {
   });
 
   test("an incapacitation without a span of its own lasts as long as the dose, and goes with it", async () => {
+    registerDoseHooks();
     const actor = carrying("Nervex", { aptitude: "som", failure: "incapacitated" });
     await takeAndRoll(actor, 95);
     const incapacitated = actor.effects.find(effect => effect.getFlag("eclipsephase", "incapacitatedBy"));

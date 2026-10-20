@@ -1,4 +1,4 @@
-import { drugBlockingPsi } from "../common/dose-state.js";
+import { drugBlockingPsi } from "./modifiers.js";
 const strainFamilies = new Map();
 
 const MISSING_FAMILY_KEY = "ep2e.roll.announce.strainFamilyMissing";

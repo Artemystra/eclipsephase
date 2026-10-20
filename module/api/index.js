@@ -15,14 +15,18 @@ import {
   addMinimizeSupport,
   registerCommonHandlers,
   itemTypeFilterPills,
+  selectFromSearchableList,
+  tokenAt,
+  pickTokenOnCanvas,
+  selectedTokenActor,
+  pickActorFromList,
   readRollContext,
   transferItemBetweenActors,
   tempEffectCreation,
   tempEffectDeletion,
-  mergeOrCreateItem,
-  chooseDrugForm
+  mergeOrCreateItem
 } from "../common/general-sheet-functions.js";
-import { needsVectorChoice, drugVector, isAmmoPack } from "../common/drugs.js";
+import { needsVectorChoice, drugVector, isAmmoPack, chooseDrugForm } from "../common/drugs.js";
 import { requestGMItemTransfer, slideToggleVisibility } from "../common/general-helper-functions.js";
 import { epCreateProgressDialog, forEachActor, forEachItem, postNotice } from "../common/migration.js";
 import {
@@ -43,7 +47,7 @@ import {
 } from "./registry.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData } from "../common/doses.js";
-import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../common/dose-state.js";
+import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -99,7 +103,12 @@ export const ui = {
   addMinimizeSupport,
   registerCommonHandlers,
   itemTypeFilterPills,
-  slideToggleVisibility
+  slideToggleVisibility,
+  selectFromSearchableList,
+  tokenAt,
+  pickTokenOnCanvas,
+  selectedTokenActor,
+  pickActorFromList
 };
 
 /**

@@ -1,6 +1,6 @@
 import { makeActor, makeActorFromFixture, resetWorld, seedDialogs } from "../setup/factories.js";
-import { mergeOrCreateItem, emptiesStack, stackDeletion, selectDrugVector, chooseDrugForm, consumeDose, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
-import { DOSES_PER_PACK, VECTORS, dosesRemaining } from "../../module/common/drugs.js";
+import { mergeOrCreateItem, emptiesStack, stackDeletion, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
+import { DOSES_PER_PACK, VECTORS, dosesRemaining, selectDrugVector, chooseDrugForm, consumeDose } from "../../module/common/drugs.js";
 
 /**
  * A drug item as the compendium authors one: one pack, a full set of doses, at hand.

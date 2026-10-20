@@ -1,9 +1,9 @@
 import { weaponPreparation } from "../common/weapon-functions.js";
 import { damageValueCalc } from "../common/general-sheet-functions.js";
-import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.js";
+import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
 import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
-import { drugHealingAddition } from "../common/dose-state.js";
+import { drugHealingAddition } from "./modifiers.js";
 
 export async function prepareWeapon(data, result, preparedContext) {
   const context = preparedContext ?? readRollContext(data.currentTarget);
@@ -58,16 +58,6 @@ export async function prepareWeapon(data, result, preparedContext) {
 
     await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
   }
-}
-
-/**
- * Whether a task result is a hit and therefore rolls damage: any degree of ordinary success, a
- * critical success or an auto-success. Nothing deals damage on a miss.
- * @param {Number} rollResult - The task result tier
- * @returns - True when damage should be rolled
- */
-function isHit(rollResult) {
-  return (rollResult > 2 && rollResult < 6) || rollResult === 7 || rollResult === 9;
 }
 
 /**

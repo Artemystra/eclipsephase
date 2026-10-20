@@ -1,3 +1,5 @@
+import { listSelection } from "./general-sheet-functions.js";
+
 // RAW sells drugs by the pack: one Complexity buys five doses. A drug item is therefore a number
 // of packs (quantity) each holding this many doses, of which `usages` are left in the open one.
 export const DOSES_PER_PACK = 5;
@@ -320,4 +322,110 @@ export function normaliseDrugSystem(system) {
   if (typeof category === "string" && category && !DRUG_CATEGORIES.includes(category)) update.category = drugCategory(category);
 
   return Object.keys(update).length ? update : null;
+}
+
+/**
+ * Takes one dose out of a drug the actor is carrying: the open pack gives one up, an emptied pack
+ * hands over to the next, and the last dose takes the drug off the sheet. A drug with nothing left
+ * is reported back untouched rather than being removed.
+ * @param {Object} actor - The actor carrying the drug
+ * @param {Object} item - The drug item
+ * @returns {Promise<Object>} The outcome, per afterDose
+ */
+export async function consumeDose(actor, item) {
+  const outcome = afterDose(item.system);
+  if (!outcome.taken) return outcome;
+
+  if (outcome.emptied) await actor.deleteEmbeddedDocuments("Item", [item.id]);
+  else await item.update({ "system.quantity": outcome.quantity, "system.usagesUsed": outcome.usagesUsed });
+
+  return outcome;
+}
+
+/**
+ * Asks which form a drug was bought in and whether the pack is ammunition. The chosen form is the
+ * only one kept on the pack and decides how a dose is taken and how soon it takes hold. The
+ * ammunition box is only open while a form that can be loaded into a weapon is picked.
+ * @param {String} itemName - The drug's name, shown above the choice
+ * @param {Object[]} vectors - The VECTORS entries the drug offers
+ * @returns {Promise<Object>} The chosen vector key and whether it is an ammunition pack, or cancelled
+ */
+export async function selectDrugVector(itemName, vectors) {
+  const options = vectors.map(vector => ({
+    id: vector.key,
+    label: vector.label,
+    description: vector.onset
+  }));
+  const ammoCapable = vectors.some(vector => AMMO_VECTOR_KEYS.includes(vector.key));
+
+  const renderHook = (event, dialog) => {
+    const root = dialog.element;
+    const box = root.querySelector('input[name="ExtraOption"]');
+    if (!box) return;
+    const sync = () => {
+      const picked = root.querySelector('input[name="ItemSelect"]:checked')?.value;
+      box.disabled = !AMMO_VECTOR_KEYS.includes(picked);
+      if (box.disabled) box.checked = false;
+    };
+    root.querySelectorAll('input[name="ItemSelect"]').forEach(radio => radio.addEventListener("change", sync));
+    sync();
+  };
+
+  const result = await listSelection(
+    options,
+    "standardSelectionList",
+    320,
+    "ep2e.dialog.selectDrugVector.header",
+    itemName,
+    "ep2e.dialog.selectDrugVector.copy",
+    ammoCapable ? renderHook : undefined,
+    ammoCapable ? { checkbox: { label: "ep2e.dialog.selectDrugVector.asAmmo" } } : {}
+  );
+
+  if (result?.cancelled) return { cancelled: true };
+  const vector = result?.selection ?? null;
+  return { vector, isAmmo: result?.extraOption === true && AMMO_VECTOR_KEYS.includes(vector) };
+}
+
+/**
+ * Settles the form a drug is acquired in, on its data before it is created: asks when the drug
+ * still offers several forms or could be an ammunition pack, then keeps only the chosen form.
+ * Anything that is not a drug, and a drug with nothing left to settle, passes through unasked.
+ * @param {Object} itemData - The incoming item's source data, changed in place
+ * @returns {Promise<Boolean>} False when the choice was cancelled
+ */
+export async function chooseDrugForm(itemData) {
+  if (itemData?.type !== "drug") return true;
+  const system = itemData.system ?? {};
+  if (!needsVectorChoice(system) && !offersAmmoChoice(system)) return true;
+
+  const chosen = await selectDrugVector(itemData.name, drugVectors(system));
+  if (chosen.cancelled || !chosen.vector) return false;
+  for (const key of VECTOR_KEYS) system[key] = key === chosen.vector;
+  system.isAmmo = chosen.isAmmo === true;
+  return true;
+}
+
+/**
+ * Asks who a dose is for: the actor themselves, a willing target the dose is offered to through a
+ * card in the chat, or an unwilling one it has to be forced on with a melee attack first. A
+ * shift-click skips this and takes the dose at once.
+ * @param {String} itemName - The drug's name, shown above the choice
+ * @returns {Promise<String|null>} "self", "other", "unwilling", or null when cancelled
+ */
+export async function selectDoseRecipient(itemName) {
+  const result = await listSelection(
+    [
+      { id: "self", label: "ep2e.dialog.doseRecipient.self" },
+      { id: "other", label: "ep2e.dialog.doseRecipient.other", description: "ep2e.dialog.doseRecipient.otherHint" },
+      { id: "unwilling", label: "ep2e.dialog.doseRecipient.unwilling", description: "ep2e.dialog.doseRecipient.unwillingHint" }
+    ],
+    "standardSelectionList",
+    320,
+    "ep2e.dialog.doseRecipient.header",
+    itemName,
+    "ep2e.dialog.doseRecipient.copy"
+  );
+  if (result?.cancelled) return null;
+  return result?.selection ?? null;
 }

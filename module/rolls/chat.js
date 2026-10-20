@@ -3,12 +3,8 @@ import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
-import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
-import { requestUseCheck, requestDoseHarm } from "../common/dose-checks.js";
-import { requestFilterCheck } from "../common/dose-defense.js";
+import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "../common/ware-skills.js";
-import { demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/addiction.js";
-import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
  * Hides GM info from players

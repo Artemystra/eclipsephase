@@ -21,6 +21,24 @@ export function bodyBindingKey(actor, bodyId){
 }
 
 /**
+ * Whether a body-bound item - ware, a trait - works in the body the actor acts through: bound to
+ * the sleeved morph, or to the jammed body unless it is meant to keep working while jamming. An
+ * NPC's or goon's items always work, and so does an item bound to no body at all.
+ * @param {Actor} actor - The actor
+ * @param {Item} item - The item
+ * @returns {Boolean} True while it works
+ */
+export function boundToActiveBody(actor, item) {
+  if (actor?.type !== "character") return true;
+  const boundTo = item.system?.boundTo;
+  const activeMorph = actor.system?.activeMorph;
+  if (!boundTo || !activeMorph) return true;
+  const activeJam = actor.system?.activeJam;
+  const keepsJamming = !!item.system?.additionalSystems?.staysActiveWhileJamming;
+  return boundTo === (activeJam && !keepsJamming ? activeJam : activeMorph);
+}
+
+/**
  * Whether any Ware bound to one body carries a marker ActiveEffect. Markers are read raw off the
  * effect's changes and are never applied, so they stay disabled on the Ware item.
  * @param {Actor} actor - The actor owning both the body and the Ware

@@ -74,10 +74,15 @@ Object {
     "confirmation": [Function],
     "itemTypeFilterPills": [Function],
     "moreInfo": [Function],
+    "pickActorFromList": [Function],
+    "pickTokenOnCanvas": [Function],
     "registerCommonHandlers": [Function],
     "selectBody": [Function],
+    "selectFromSearchableList": [Function],
+    "selectedTokenActor": [Function],
     "slideToggleVisibility": [Function],
     "systemMessage": [Function],
+    "tokenAt": [Function],
   },
 }
 `;

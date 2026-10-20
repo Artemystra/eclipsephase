@@ -1,4 +1,4 @@
-import { modifierValue, globalModifiers, GLOBAL_MOD_KEY } from "../../module/common/global-mod.js";
+import { modifierValue, globalModifiers, GLOBAL_MOD_KEY } from "../../module/rolls/modifiers.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 /**

@@ -1,4 +1,4 @@
-import { confirmation } from "./general-sheet-functions.js";
+import { confirmation, findCompendiumItem } from "./general-sheet-functions.js";
 import { getStrainFamily, listStrainFamilies } from "../rolls/strain-families.js";
 
 function requiredTier(psiType) {
@@ -51,12 +51,8 @@ export function ownsOtherFamily(actor, family = "psi") {
  * @param {Object} trait - {name, pack}
  * @returns {Promise<Item|null>} The trait, or null when the compendium lacks it
  */
-export async function findTrait(trait) {
-  const pack = game.packs.get(trait.pack);
-  if (!pack) return null;
-  const index = await pack.getIndex();
-  const entry = index.find(i => i.name === trait.name);
-  return entry ? pack.getDocument(entry._id) : null;
+export function findTrait(trait) {
+  return findCompendiumItem(trait.pack, trait.name);
 }
 
 /**

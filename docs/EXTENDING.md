@@ -45,7 +45,8 @@ api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervou
             // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
-            // itemTypeFilterPills, slideToggleVisibility
+            // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
+            // tokenAt, pickTokenOnCanvas, selectedTokenActor, pickActorFromList
 api.chat    // readRollContext(element)
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
@@ -55,6 +56,13 @@ api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, d
 ```
 
 `api.drugs` is described in "Drugs and doses" below.
+
+`api.ui.pickTokenOnCanvas({ bodyClass })` lets the user click a token on the canvas - for a chat
+card that asks for a target afterwards - and resolves to the token, or `null` when cancelled
+(empty canvas, right-click or Escape). `bodyClass` is put on `document.body` while picking, to set
+the cursor; the default `ep-targeting` shows a crosshair. `selectedTokenActor()` is the actor of
+the user's selected token, and `pickActorFromList(actors, header, copy)` asks for one actor from
+a list the user can filter by typing.
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
 what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/`postRoll` below.
@@ -307,6 +315,10 @@ The fields that decide what a dose does:
 | `rollOptions` | Conditional modifiers, see below |
 | `useCheck` | A check when the dose takes hold, see below |
 | `blocksPsi` | The dose blocks psi outright |
+| `overTime` | Effects over time, see below |
+| `healingAddition` | A dice formula added to healing rolls on Meds while the dose runs, e.g. `"1d10"` |
+| `grants` | Items lent for as long as the dose runs, see below |
+| `addictionType`, `addictionMod` | `"mental"`, `"physical"`, `"both"` or `""`/`"none"`, and the WIL Check's modifier as text, e.g. `"-20"` |
 
 The drug's own ActiveEffects are blueprints: they never apply from the item. A dose copies their
 `changes` onto the actor. Use them for flat modifiers that always hold - Kick's bonus to the Vigor pool - and
@@ -352,6 +364,38 @@ on the actor for `duration` (no value: as long as the dose runs) and removes it 
 `successPsiPenalty` is a modifier on psi tests after a passed check. A pool spend that turns a
 failure into a pass undoes the failure. An empty `aptitude` means no check.
 
+Effects over time tick on the world clock while the dose runs:
+
+```json
+{
+  "damage": { "d10": 1, "d6": 0, "bonus": 0 },
+  "interval": "turn",
+  "ticks": null,
+  "modifier": -10,
+  "incapacitates": false
+}
+```
+
+`interval` is `"turn"` or `"hour"`. Every tick deals `damage`, each tick measured against the Wound
+Threshold on its own. `ticks` caps the number of ticks; no value means every tick the dose lasts.
+`modifier` is added once more on every tick as a penalty to all actions; with `incapacitates` the
+target is incapacitated once that penalty reaches their Durability.
+
+A grant row lends one item from a compendium:
+
+```json
+{ "pack": "eclipsephase.traits", "folder": "", "item": "random", "title": "", "description": "", "or": false }
+```
+
+`item` is a document id, or `"random"` for any item in `folder` (or the whole pack) the actor
+does not own yet. `title` is added in brackets after the item's name, `description` above its
+own. A row with `or: true` starts a new package; one package is picked at random, and all its rows
+are lent. Lent items carry `flags.eclipsephase.grantedBy` with the dose's id and go with it.
+
+Toxins always meet the body's defensive ware (Toxin Filters, Digestive Symbiotes, Medichines,
+Nanophages, Immunizers); a drug taken willingly asks first. A halved dose runs half as long and
+does half its effect, rounded up.
+
 ### The dose effect
 
 A dose is an ActiveEffect on the actor with `transfer: false`, `showIcon` never, an explicit
@@ -369,7 +413,14 @@ and it carries the drug's state in `flags.eclipsephase.dose`:
   useCheck,            // as authored, or null
   checkOutcome,        // null, "passed" or "failed"
   psiPenalty,          // set by a passed check
-  blocksPsi            // from the drug, or from a failed check
+  blocksPsi,           // from the drug, or from a failed check
+  overTime,            // as authored, or null
+  overTimeState,       // { ticks, steps } dealt so far
+  healingAddition,     // as authored
+  grants,              // as authored
+  addiction,           // { type, modifier }, or null
+  defense,             // { halved, by, checkBonus } when ware halved it
+  filteredOut          // true once a filter's check kept it out
 }
 ```
 
@@ -377,7 +428,8 @@ A drug does not stack with itself: a second dose of a drug already running - in 
 the running dose instead of adding another. The renewal restarts the clock, takes the new pack's
 data and asks for the check again. The name is what makes two packs the same drug.
 
-When a dose runs out, the system deletes it and the active GM's client posts the wear-off card.
+When a dose runs out, the system deletes it, and the client that deletes it posts the wear-off card
+and removes what the dose left behind: its conditions and its lent items.
 Listen to `deleteActiveEffect` and check for the `dose` flag to react to a dose ending; listen to
 `eclipsephase.effectDurations` to watch it run down.
 
