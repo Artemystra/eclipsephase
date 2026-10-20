@@ -18,6 +18,13 @@
   <p style="font-size: 11px; color: var(--inactive); margin: -10px 0 10px 0;">{{footnote}}</p>
   {{/if}}
 
+  {{#if addiction}}
+  <div class="chatControls dose-addiction gmOnlyControl">
+    <button type="button" class="chatButton demandWillpower ep-chat-secondary" data-action="demandWillpower" data-actor-uuid="{{addiction.actorUuid}}" data-drug="{{addiction.name}}">{{localize "ep2e.chat.dose.demandWillpower"}}</button>
+    <a class="doseHistory" data-actor-uuid="{{addiction.actorUuid}}" data-drug="{{addiction.name}}" data-tooltip="{{localize 'ep2e.chat.dose.doseHistoryTip'}}"><i class="fa-regular fa-circle-info awesomeIcon"></i></a>
+  </div>
+  {{/if}}
+
   {{#if button}}
   <div class="chatControls ep-chat-stack">
     <button type="button" class="chatButton {{button.action}} ownerOnlyControl ep-chat-primary" data-action="{{button.action}}" data-actor-uuid="{{actorUuid}}">{{button.label}}</button>

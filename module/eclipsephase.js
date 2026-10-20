@@ -27,6 +27,7 @@ import { registerOverTimeHooks } from "./common/dose-over-time.js";
 import { registerGrantHooks } from "./common/dose-grants.js";
 import { registerDefenseHooks } from "./common/dose-defense.js";
 import { postWareSetupCard } from "./common/ware-skills.js";
+import { registerAddictionHooks } from "./common/addiction.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -205,6 +206,7 @@ Hooks.once('init', async function() {
   registerOverTimeHooks();
   registerGrantHooks();
   registerDefenseHooks();
+  registerAddictionHooks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;

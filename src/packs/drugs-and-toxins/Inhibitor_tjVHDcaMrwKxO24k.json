@@ -74,7 +74,7 @@
       "units": "hours"
     },
     "addictionMod": "+20",
-    "addictionType": "none",
+    "addictionType": "mental",
     "quantity": 1,
     "usagesUsed": 0,
     "usagesMax": 5,

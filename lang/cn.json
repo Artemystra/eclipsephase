@@ -1804,6 +1804,10 @@
           "disguise": "{ware}（{bonus}）有助于异类技能：伪装。请勾选属于伪装的特殊技能："
         },
         "noSkills": "该角色还没有特殊技能。你可以稍后在植入物的表单中设置。"
+      },
+      "doseHistory": {
+        "header": "服药记录",
+        "copy": "{actor} 在<strong class=\"dose-history-highlight\">过去 24 小时</strong>内服用 <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} 次</strong>，<strong class=\"dose-history-highlight\">过去 7 天</strong>内 <strong class=\"dose-history-highlight\">{week} 次</strong>。"
       }
     },
     "chat": {
@@ -1858,7 +1862,18 @@
         "becameImmune": "我的免疫器使我对 <strong>{name}</strong> 免疫",
         "immunizerTest": "我的免疫器分析 <strong>{name}</strong>（医学：药理学 {target}）",
         "immunizerSuccess": "从此免疫",
-        "immunizerFailure": "这次未能学会"
+        "immunizerFailure": "这次未能学会",
+        "demandWillpower": "要求意志检定",
+        "doseHistoryTip": "最近服用此药物的次数",
+        "addictionCheckNeeded": "<strong>{name}</strong>：抵抗成瘾（意志检定 {modifier}）",
+        "rollAddictionCheck": "投掷意志检定（{modifier}）",
+        "addictionModifier": "成瘾修正（{name}）",
+        "addictedEgo": "我的自我对 <strong>{name}</strong> 上瘾了",
+        "addictedBody": "我的身体对 <strong>{name}</strong> 上瘾了",
+        "addictedBoth": "我的自我和身体都对 <strong>{name}</strong> 上瘾了",
+        "addictionRaisedEgo": "我的自我对 <strong>{name}</strong> 的成瘾升至 {level} 级",
+        "addictionRaisedBody": "我的身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
+        "addictionRaisedBoth": "我的自我和身体对 <strong>{name}</strong> 的成瘾升至 {level} 级"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

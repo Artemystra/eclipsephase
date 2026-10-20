@@ -2647,7 +2647,9 @@ async function _ep27_drugBlueprints() {
       useCheck: source.system?.useCheck ?? null,
       overTime: source.system?.overTime ?? null,
       healingAddition: source.system?.healingAddition ?? "",
-      grants: source.system?.grants ?? []
+      grants: source.system?.grants ?? [],
+      addictionType: source.system?.addictionType ?? "",
+      addictionMod: source.system?.addictionMod ?? null
     });
   }
   return catalogue;
@@ -2657,7 +2659,7 @@ async function _ep27_drugBlueprints() {
  * The 2.7 data a drug is missing compared with its compendium namesake: roll options when it has
  * none, a wear-off stress when it has no dice, a check when it calls for none, effects over time
  * when it has neither tick damage nor a growing modifier, a healing addition when it names none,
- * temporary traits when it grants none.
+ * temporary traits when it grants none, an addiction type when it records none.
  * Only empty fields are filled, so a drug somebody gave values of their own keeps them.
  * @param {Item} item - The drug item, read with its repairs applied
  * @param {Map<String, Object>} catalogue - What _ep27_drugBlueprints read
@@ -2677,6 +2679,11 @@ function _ep27_missingDrugData(item, catalogue) {
   if (!overTime(system.overTime) && overTime(known.overTime)) update.overTime = foundry.utils.deepClone(known.overTime);
   if (!system.healingAddition && known.healingAddition) update.healingAddition = known.healingAddition;
   if (!(system.grants?.length) && known.grants?.length) update.grants = foundry.utils.deepClone(known.grants);
+  const addictive = type => ["physical", "mental", "both"].includes(type);
+  if (!addictive(system.addictionType) && addictive(known.addictionType)) {
+    update.addictionType = known.addictionType;
+    if (system.addictionMod === null || system.addictionMod === undefined || system.addictionMod === "" || system.addictionMod === "-") update.addictionMod = known.addictionMod;
+  }
   return Object.keys(update).length ? update : null;
 }
 

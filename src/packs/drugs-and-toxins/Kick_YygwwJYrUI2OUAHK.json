@@ -74,7 +74,7 @@
       "units": "hours"
     },
     "addictionMod": "-10",
-    "addictionType": "none",
+    "addictionType": "physical",
     "quantity": 1,
     "usagesUsed": 0,
     "usagesMax": 5,

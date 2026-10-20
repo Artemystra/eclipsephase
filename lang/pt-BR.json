@@ -1811,6 +1811,10 @@
           "disguise": "{ware} ({bonus}) ajuda com Perícia exótica: Disfarce. Marque suas perícias especiais de disfarce:"
         },
         "noSkills": "Este personagem ainda não tem perícias especiais. Você pode configurar isso depois na ficha do implante."
+      },
+      "doseHistory": {
+        "header": "Histórico de doses",
+        "copy": "{actor} tomou <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} vezes</strong> nas <strong class=\"dose-history-highlight\">últimas 24 horas</strong> e <strong class=\"dose-history-highlight\">{week} vezes</strong> nos <strong class=\"dose-history-highlight\">últimos 7 dias</strong>."
       }
     },
     "chat": {
@@ -1865,7 +1869,18 @@
         "becameImmune": "Meus imunizadores me tornam imune a <strong>{name}</strong>",
         "immunizerTest": "Meus imunizadores analisam <strong>{name}</strong> (Medicina: Farmacologia {target})",
         "immunizerSuccess": "Imune a partir de agora",
-        "immunizerFailure": "Não aprendido desta vez"
+        "immunizerFailure": "Não aprendido desta vez",
+        "demandWillpower": "Exigir força de vontade",
+        "doseHistoryTip": "Quantas vezes esta droga foi tomada recentemente",
+        "addictionCheckNeeded": "<strong>{name}</strong>: resistir ao vício (teste de VON {modifier})",
+        "rollAddictionCheck": "Rolar teste de VON ({modifier})",
+        "addictionModifier": "Modificador de vício ({name})",
+        "addictedEgo": "Meu ego está viciado em <strong>{name}</strong>",
+        "addictedBody": "Meu corpo está viciado em <strong>{name}</strong>",
+        "addictedBoth": "Meu ego e meu corpo estão viciados em <strong>{name}</strong>",
+        "addictionRaisedEgo": "O vício do meu ego em <strong>{name}</strong> sobe para o nível {level}",
+        "addictionRaisedBody": "O vício do meu corpo em <strong>{name}</strong> sobe para o nível {level}",
+        "addictionRaisedBoth": "O vício do meu ego e do meu corpo em <strong>{name}</strong> sobe para o nível {level}"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

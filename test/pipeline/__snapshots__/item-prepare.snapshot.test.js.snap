@@ -4,7 +4,7 @@ exports[`EPitem.prepareData derives stable data for a drug straight out of the c
 Object {
   "active": true,
   "addictionMod": "-10",
-  "addictionType": "none",
+  "addictionType": "physical",
   "additionalSystems": Object {},
   "blocksPsi": false,
   "category": "drug",

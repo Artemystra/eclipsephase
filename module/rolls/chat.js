@@ -7,6 +7,7 @@ import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
 import { requestUseCheck, requestDoseHarm } from "../common/dose-checks.js";
 import { requestFilterCheck } from "../common/dose-defense.js";
 import { setupFromCard } from "../common/ware-skills.js";
+import { demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/addiction.js";
 import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
@@ -133,6 +134,25 @@ export async function addChatListeners(html) {
     if (rollDoseCheck) {
       const messageId = rollDoseCheck.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestUseCheck(messageId);
+      return;
+    }
+
+    const willpower = event.target.closest("button.demandWillpower");
+    if (willpower) {
+      demandWillpower(willpower.dataset.actorUuid, willpower.dataset.drug);
+      return;
+    }
+
+    const doseHistory = event.target.closest("a.doseHistory");
+    if (doseHistory) {
+      showDoseHistory(doseHistory.dataset.actorUuid, doseHistory.dataset.drug);
+      return;
+    }
+
+    const addictionCheck = event.target.closest("button.rollAddictionCheck");
+    if (addictionCheck) {
+      const messageId = addictionCheck.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestAddictionCheck(messageId);
       return;
     }
 

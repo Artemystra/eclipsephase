@@ -1841,6 +1841,10 @@
           "disguise": "{ware} ({bonus}) hilft bei Exotic Skill: Disguise. Kreuze deine Spezialfertigkeiten an, die Verkleidung sind:"
         },
         "noSkills": "Dieser Charakter hat noch keine Spezialfertigkeiten. Du kannst das später auf dem Sheet der Ware einstellen."
+      },
+      "doseHistory": {
+        "header": "Dosis-Verlauf",
+        "copy": "{actor} hat <strong>{name}</strong> in den <strong class=\"dose-history-highlight\">letzten 24 Stunden {day}-mal</strong> und in den <strong class=\"dose-history-highlight\">letzten 7 Tagen {week}-mal</strong> genommen."
       }
     },
     "chat": {
@@ -1895,7 +1899,18 @@
         "becameImmune": "Meine Immunisierer machen mich immun gegen <strong>{name}</strong>",
         "immunizerTest": "Meine Immunisierer prüfen <strong>{name}</strong> (Medizin: Pharmakologie {target})",
         "immunizerSuccess": "Ab jetzt immun",
-        "immunizerFailure": "Diesmal nicht gelernt"
+        "immunizerFailure": "Diesmal nicht gelernt",
+        "demandWillpower": "Willenskraft verlangen",
+        "doseHistoryTip": "Wie oft diese Droge zuletzt genommen wurde",
+        "addictionCheckNeeded": "<strong>{name}</strong>: nicht süchtig werden (WIL-Check {modifier})",
+        "rollAddictionCheck": "WIL-Check würfeln ({modifier})",
+        "addictionModifier": "Suchtmodifikator ({name})",
+        "addictedEgo": "Mein Ego ist süchtig nach <strong>{name}</strong>",
+        "addictedBody": "Mein Körper ist süchtig nach <strong>{name}</strong>",
+        "addictedBoth": "Mein Ego und mein Körper sind süchtig nach <strong>{name}</strong>",
+        "addictionRaisedEgo": "Die Sucht meines Egos nach <strong>{name}</strong> steigt auf Stufe {level}",
+        "addictionRaisedBody": "Die Sucht meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
+        "addictionRaisedBoth": "Die Sucht meines Egos und meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}"
       },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",

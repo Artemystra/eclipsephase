@@ -693,6 +693,19 @@ describe("the situational bonuses ware brings, authored from the book", () => {
   });
 });
 
+describe("the addictions authored from the book", () => {
+  test("every drug the book's tables give an addiction type carries it, physical or mental", () => {
+    const addictive = packDrugs().filter(drug => ["physical", "mental", "both"].includes(drug.system.addictionType));
+    const byName = Object.fromEntries(addictive.map(drug => [drug.name, [drug.system.addictionType, drug.system.addictionMod]]));
+
+    expect(addictive.length).toBeGreaterThanOrEqual(24);
+    expect(byName.Kick).toEqual(["physical", "-10"]);
+    expect(byName.Juice).toEqual(["mental", "-20"]);
+    expect(byName.Fokus).toEqual(["mental", "-"]);
+    expect(byName.Inhibitor).toEqual(["mental", "+20"]);
+  });
+});
+
 describe("Randomizer", () => {
   test("applies on its own on every social test, as the book's 'at any given time' says", () => {
     const randomizer = packDrugs().find(drug => drug.name === "Randomizer");

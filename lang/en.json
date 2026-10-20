@@ -1868,6 +1868,10 @@
           "disguise": "{ware} ({bonus}) helps with Exotic Skill: Disguise. Tick your special skills that are disguise skills:"
         },
         "noSkills": "This character has no special skills yet. You can set this later on the ware's sheet."
+      },
+      "doseHistory": {
+        "header": "Dose History",
+        "copy": "{actor} took <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} times</strong> in the <strong class=\"dose-history-highlight\">last 24 hours</strong> and <strong class=\"dose-history-highlight\">{week} times</strong> in the <strong class=\"dose-history-highlight\">last 7 days</strong>."
       }
     },
     "chat": {
@@ -1922,7 +1926,18 @@
         "becameImmune": "My Immunizers make me immune to <strong>{name}</strong>",
         "immunizerTest": "My Immunizers test <strong>{name}</strong> (Medicine: Pharmacology {target})",
         "immunizerSuccess": "Immune from now on",
-        "immunizerFailure": "Not learned this time"
+        "immunizerFailure": "Not learned this time",
+        "demandWillpower": "Demand Willpower",
+        "doseHistoryTip": "How often this drug was taken recently",
+        "addictionCheckNeeded": "<strong>{name}</strong>: resist getting hooked (WIL Check {modifier})",
+        "rollAddictionCheck": "Roll WIL Check ({modifier})",
+        "addictionModifier": "Addiction modifier ({name})",
+        "addictedEgo": "My ego is addicted to <strong>{name}</strong>",
+        "addictedBody": "My body is addicted to <strong>{name}</strong>",
+        "addictedBoth": "My ego and my body are addicted to <strong>{name}</strong>",
+        "addictionRaisedEgo": "My ego's addiction to <strong>{name}</strong> grows to level {level}",
+        "addictionRaisedBody": "My body's addiction to <strong>{name}</strong> grows to level {level}",
+        "addictionRaisedBoth": "My ego's and my body's addiction to <strong>{name}</strong> grows to level {level}"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

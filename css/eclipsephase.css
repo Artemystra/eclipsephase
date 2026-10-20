@@ -4144,3 +4144,19 @@ body.ep-dose-targeting #board {
   white-space: normal;
   padding: 4px 8px;
 }
+
+/* The GM's addiction controls on a dose card: the WIL Check button and the dose history beside it. */
+.chatControls.dose-addiction {
+  align-items: center;
+}
+
+.chatControls.dose-addiction .doseHistory {
+  flex: 0 0 20px;
+  text-align: center;
+}
+
+/* The counts and time spans in a dose history, made to stand out. */
+.dose-history-highlight {
+  color: var(--negative);
+  font-weight: bold;
+}

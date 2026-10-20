@@ -334,7 +334,8 @@ describe("the 2.7 backfill of what C added", () => {
         { name: "Twitch", type: "drug", system: { ...CURRENT, useCheck: TWITCH_CHECK } },
         { name: "Psi-Kick", type: "drug", system: { ...CURRENT, wearOff: KICK_STRESS } },
         { name: "Necrosis", type: "drug", system: { ...CURRENT, overTime: NECROSIS_TICKS } },
-        { name: "Meds", type: "drug", system: { ...CURRENT, healingAddition: "meds" } }
+        { name: "Meds", type: "drug", system: { ...CURRENT, healingAddition: "meds" } },
+        { name: "Kick", type: "drug", system: { ...CURRENT, addictionType: "physical", addictionMod: "-10" } }
       ].map(data => new CONFIG.Item.documentClass(data))
     });
   }
@@ -414,6 +415,14 @@ describe("the 2.7 backfill of what C added", () => {
 
     expect(actor.items.get("gp1").system.rollOptions).toEqual(climb);
     expect(actor.items.get("gp2").system.rollOptions).toEqual(own);
+  });
+
+  test("a drug on a sheet that records no addiction gets its namesake's type and modifier", async () => {
+    const actor = makeActor({ type: "character", items: [{ _id: "kick1", name: "Kick", type: "drug", system: { ...CURRENT, addictionType: "none", addictionMod: "-" } }] });
+
+    await runLadderFrom("2.5");
+
+    expect(actor.items.get("kick1").system).toMatchObject({ addictionType: "physical", addictionMod: "-10" });
   });
 
   test("a drug that already carries values of its own keeps them", async () => {

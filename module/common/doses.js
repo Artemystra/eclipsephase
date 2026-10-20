@@ -4,6 +4,7 @@ import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./b
 import { consumeDose, gmList, diceFormula } from "./general-sheet-functions.js";
 import { RollCheck, TASK_RESULT, rollToChat, WEAPON_DAMAGE_OUTPUT } from "../rolls/dice.js";
 import { postUseCheckCard, markCheckCardRolled, rollDoseHarm } from "./dose-checks.js";
+import { drugAddiction, logDose, addictionControls, markAddictionCardRolled } from "./addiction.js";
 import { doseDefense, defenseApplies, defendedDoseData, defendedFormula, postFilterCheckCard, wareNames, markFilterCardRolled, rollImmunizers, WARE } from "./dose-defense.js";
 
 export const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
@@ -92,7 +93,8 @@ export function doseEffectData(item) {
           overTime: system.overTime ? foundry.utils.deepClone(system.overTime) : null,
           overTimeState: { ticks: 0, steps: 0 },
           healingAddition: system.healingAddition ?? "",
-          grants: Array.isArray(system.grants) ? foundry.utils.deepClone(system.grants) : []
+          grants: Array.isArray(system.grants) ? foundry.utils.deepClone(system.grants) : [],
+          addiction: drugAddiction(system)
         }
       }
     }
@@ -187,7 +189,8 @@ async function postDoseCard(actor, item, outcome, renewed) {
     icon: "fa-syringe",
     color: "--negative",
     headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
-    rows: doseRows(item.system, outcome)
+    rows: doseRows(item.system, outcome),
+    addiction: addictionControls(actor, { name: item.name, addiction: drugAddiction(item.system) })
   });
 }
 
@@ -395,6 +398,7 @@ export async function applyDose(actor, data, wanted) {
  *   pending and nullified
  */
 async function letDoseIn(actor, defended) {
+  await logDose(actor, defended.name);
   if (!defended.data) {
     await postNullifiedCard(actor, defended.name, defended.defense);
     return { effect: null, nullified: true, pending: false };
@@ -506,7 +510,8 @@ export async function claimDose(message, actor) {
 
   const defended = await defendDose(actor, offer.data, { willing: !offer.forced, ask: false });
   const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
-  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...offer.card, footnote, offer: false });
+  const addiction = addictionControls(actor, offer.data?.flags?.eclipsephase?.dose);
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...offer.card, footnote, offer: false, addiction });
   await message.update({ content, "flags.eclipsephase.doseOffer.usedBy": actor.name });
   await letDoseIn(actor, { ...defended, name: offer.name });
   return { claimed: true, reasonKey: null };
@@ -659,6 +664,11 @@ export function registerDoseSocket() {
     if (payload?.action === "rollWearOff") {
       if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
       await rollWearOffStress(game.messages.get(payload.messageId));
+      return;
+    }
+    if (payload?.action === "markAddictionRolled") {
+      if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
+      await markAddictionCardRolled(game.messages.get(payload.messageId));
       return;
     }
     if (payload?.action === "markFilterRolled") {
