@@ -1309,6 +1309,10 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "已习得的免疫",
+          "forget": "遗忘"
         }
       }
     },
@@ -1749,6 +1753,12 @@
         "standardDescription": "添加此身体强化槽中列出的所有插件、特征与负面特征。",
         "flatLabel": "空载",
         "flatDescription": "按原样添加身体，不包含任何列出的插件。"
+      },
+      "doseDefense": {
+        "header": "防御植入物",
+        "copy": "你的{ware}会削弱{name}。药物以完整效果还是减弱效果生效？",
+        "filter": "减弱药效",
+        "full": "完整药效"
       }
     },
     "chat": {
@@ -1786,7 +1796,24 @@
         "rollDamage": "投掷伤害",
         "damageFlavor": "{name} 伤害了身体",
         "panicFlavor": "恐慌压力：{name}",
-        "granted": "{name} 赋予：{items}"
+        "granted": "{name} 赋予：{items}",
+        "ware": {
+          "toxinFilters": "毒素过滤器",
+          "medichines": "医疗纳米机",
+          "nanophages": "噬纳米体",
+          "both": "{first}和{second}",
+          "digestiveSymbiotes": "消化共生体",
+          "immunizers": "免疫器"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>：我的{ware}可能将其阻挡",
+        "rollFilterCheck": "投掷 SOM 检定（{ware}）",
+        "filteredOut": "我的{ware}挡住了 <strong>{name}</strong>",
+        "nullified": "{ware} 抵消了 <strong>{name}</strong>",
+        "immune": "我对 <strong>{name}</strong> 免疫",
+        "becameImmune": "我的免疫器使我对 <strong>{name}</strong> 免疫",
+        "immunizerTest": "我的免疫器分析 <strong>{name}</strong>（医学：药理学 {target}）",
+        "immunizerSuccess": "从此免疫",
+        "immunizerFailure": "这次未能学会"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

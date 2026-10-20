@@ -725,6 +725,13 @@ class MockChatMessage {
     return global.game.user.isGM || this.author === global.game.user.id;
   }
 
+  async delete() {
+    global.game.messages.delete(this.id);
+    const index = createdMessages.indexOf(this);
+    if (index >= 0) createdMessages.splice(index, 1);
+    return this;
+  }
+
   // Foundry lets the author or a GM change a message; dotted keys reach into flags.
   async update(changes = {}) {
     for (const [key, value] of Object.entries(changes)) setProperty(this, key, deepClone(value));

@@ -1316,6 +1316,10 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "Imunidades aprendidas",
+          "forget": "Esquecer"
         }
       }
     },
@@ -1756,6 +1760,12 @@
         "standardDescription": "Adiciona todo o Ware, Traits e Flaws listados nos slots de Aprimoramento deste corpo.",
         "flatLabel": "Sem aprimoramentos",
         "flatDescription": "Adiciona o corpo como está, sem nenhum dos aprimoramentos listados."
+      },
+      "doseDefense": {
+        "header": "Implantes defensivos",
+        "copy": "Seus {ware} enfraqueceriam {name}. Efeito completo ou fraco da droga?",
+        "filter": "Efeito fraco da droga",
+        "full": "Efeito completo da droga"
       }
     },
     "chat": {
@@ -1793,7 +1803,24 @@
         "rollDamage": "Rolar dano",
         "damageFlavor": "{name} fere o corpo",
         "panicFlavor": "Estresse de pânico: {name}",
-        "granted": "{name} concede: {items}"
+        "granted": "{name} concede: {items}",
+        "ware": {
+          "toxinFilters": "Filtros de toxinas",
+          "medichines": "Medichines",
+          "nanophages": "Nanófagos",
+          "both": "{first} e {second}",
+          "digestiveSymbiotes": "Simbiontes digestivos",
+          "immunizers": "Imunizadores"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>: meus {ware} podem bloqueá-la",
+        "rollFilterCheck": "Rolar teste de SOM ({ware})",
+        "filteredOut": "Meus {ware} bloqueiam <strong>{name}</strong>",
+        "nullified": "{ware} anulam <strong>{name}</strong>",
+        "immune": "Sou imune a <strong>{name}</strong>",
+        "becameImmune": "Meus imunizadores me tornam imune a <strong>{name}</strong>",
+        "immunizerTest": "Meus imunizadores analisam <strong>{name}</strong> (Medicina: Farmacologia {target})",
+        "immunizerSuccess": "Imune a partir de agora",
+        "immunizerFailure": "Não aprendido desta vez"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

@@ -5,6 +5,7 @@ import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
 import { requestUseCheck, requestDoseHarm } from "../common/dose-checks.js";
+import { requestFilterCheck } from "../common/dose-defense.js";
 import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
@@ -131,6 +132,13 @@ export async function addChatListeners(html) {
     if (rollDoseCheck) {
       const messageId = rollDoseCheck.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestUseCheck(messageId);
+      return;
+    }
+
+    const rollFilterCheck = event.target.closest("button.rollFilterCheck");
+    if (rollFilterCheck) {
+      const messageId = rollFilterCheck.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestFilterCheck(messageId);
       return;
     }
 

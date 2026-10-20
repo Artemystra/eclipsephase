@@ -3,6 +3,7 @@ import { gmList, diceFormula } from "./general-sheet-functions.js";
 import { conditionData } from "./dose-checks.js";
 import { postDrugCard } from "./doses.js";
 import { GLOBAL_MOD_KEY } from "./global-mod.js";
+import { halveUp } from "./dose-defense.js";
 
 // Toxins that keep working while they run (Core p.334-335): Necrosis's DV 1d6 every action turn,
 // BTX2's DV 2d10 + 10 for three turns, CR Gas's single DV 1d6, Disruptor's -5 to all actions that
@@ -121,7 +122,8 @@ export function tickBreakdowns(roll, damage, ticks) {
 
 /**
  * Rolls the damage of the ticks that came due in one roll, then deals it tick by tick, so each
- * tick is measured against the Wound Threshold on its own. Armour does not stop a toxin.
+ * tick is measured against the Wound Threshold on its own. Armour does not stop a toxin; defensive
+ * ware that halves the dose halves each tick, rounded up.
  * @param {Actor} actor - The actor the dose is on
  * @param {Object} dose - The dose flag
  * @param {Number} ticks - How many ticks to roll
@@ -129,7 +131,7 @@ export function tickBreakdowns(roll, damage, ticks) {
  */
 async function dealTickDamage(actor, dose, ticks) {
   const roll = await new Roll(combinedDamage(dose.overTime.damage, ticks)).evaluate();
-  const perTick = tickBreakdowns(roll, dose.overTime.damage, ticks);
+  const perTick = tickBreakdowns(roll, dose.overTime.damage, ticks).map(tick => dose.defense?.halved ? { ...tick, total: halveUp(tick.total) } : tick);
   const output = {
     type: "defaultDamage",
     copy: game.i18n.format("ep2e.chat.dose.overTimeFlavor", { name: dose.name, count: ticks }),

@@ -4096,3 +4096,19 @@ body.ep-dose-targeting #board {
 .eclipsephase .grant-row .grant-description.grant-has-description i {
   color: var(--highlight);
 }
+
+/* What an immunizer has learned, listed on its ware sheet. */
+.eclipsephase .ware-immunities {
+  margin-top: 10px;
+}
+
+.eclipsephase .ware-immunity {
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 10px;
+}
+
+.eclipsephase .ware-immunity a {
+  flex: 0 0 20px;
+  text-align: right;
+}

@@ -1,6 +1,8 @@
 import { RollCheck, TaskRollModifier, TASK_RESULT } from "../rolls/dice.js";
 import { postDrugCard, DOSE_CARD, rollDrugHarm } from "./doses.js";
 import { diceFormula } from "./general-sheet-functions.js";
+import { defendedFormula } from "./dose-defense.js";
+
 
 // Some drugs call for a check the moment they take hold (Core p.330-335): Inhibitor's WIL -20,
 // Flight's WIL against panic, the SOM or WIL against incapacitation of Twitch, Nervex and
@@ -29,14 +31,16 @@ function checkLabel(useCheck) {
 
 /**
  * The harm a failed check does and how much, for the roll card to carry: stress to the mind or
- * damage to the body, both rolled from the check's single dice field.
+ * damage to the body, both rolled from the check's single dice field - halved when defensive ware
+ * halves the dose.
  * @param {Object} useCheck - The drug's check
+ * @param {Object} dose - The dose flag
  * @returns {Object} harm ("stress", "damage" or null) and formula
  */
-function harmOf(useCheck) {
+function harmOf(useCheck, dose) {
   const formula = diceFormula(useCheck?.stress);
   const harm = ["stress", "damage"].includes(useCheck?.failure) && formula ? useCheck.failure : null;
-  return { harm, formula: harm ? formula : "" };
+  return { harm, formula: harm ? defendedFormula(formula, dose) : "" };
 }
 
 /**
@@ -124,7 +128,7 @@ export async function requestUseCheck(messageId, systemOptions = {}) {
     key: `system.aptitudes.${aptitude}.value`,
     apttype: aptitude,
     rollvalue: actor.system.aptitudes?.[aptitude]?.roll ?? 0,
-    contextFlags: { doseCheck: { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck) } }
+    contextFlags: { doseCheck: { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck, dose), filterBonus: dose.defense?.checkBonus === true } }
   };
   return RollCheck(dataset, actor.system, actor, systemOptions, null, "skill");
 }

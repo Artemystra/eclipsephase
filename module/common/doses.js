@@ -4,6 +4,7 @@ import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./b
 import { consumeDose, gmList, diceFormula } from "./general-sheet-functions.js";
 import { RollCheck, TASK_RESULT, rollToChat, WEAPON_DAMAGE_OUTPUT } from "../rolls/dice.js";
 import { postUseCheckCard, markCheckCardRolled, rollDoseHarm } from "./dose-checks.js";
+import { doseDefense, defenseApplies, defendedDoseData, defendedFormula, postFilterCheckCard, wareNames, markFilterCardRolled, rollImmunizers, WARE } from "./dose-defense.js";
 
 export const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
 const DOSE_SOCKET = "system.eclipsephase";
@@ -201,7 +202,8 @@ export async function postWearOffCard(actor, effect) {
   const dose = effect.getFlag("eclipsephase", "dose");
   const timed = Number.isFinite(effect.duration?.value) && effect.duration.value > 0;
   const endedEarly = timed && !durationRunOut(effect);
-  const sv = dose.wearOff || "";
+  if (dose.filteredOut) return;
+  const sv = defendedFormula(dose.wearOff || "", dose);
   const name = dose.name ?? effect.name;
   const card = {
     icon: "fa-syringe",
@@ -312,6 +314,100 @@ async function putDoseOn(actor, data) {
 }
 
 /**
+ * Asks whoever takes a drug willingly whether their defensive ware should weaken it. The full
+ * effect is the primary choice - shown on the right by the dialog's class, first in the list.
+ * @param {Object} defense - What doseDefense reported
+ * @param {String} name - The drug's name
+ * @returns {Promise<Boolean>} True when the ware should work on it
+ */
+async function letWareWork(defense, name) {
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.dialog.doseDefense.header") },
+    classes: ["ep2e-primary-right"],
+    content: `<p>${game.i18n.format("ep2e.dialog.doseDefense.copy", { name, ware: wareNames(defense) })}</p>`,
+    buttons: [
+      { action: "full", label: game.i18n.localize("ep2e.dialog.doseDefense.full"), default: true, callback: () => ({ filter: false }) },
+      { action: "weak", label: game.i18n.localize("ep2e.dialog.doseDefense.filter"), callback: () => ({ filter: true }) }
+    ],
+    position: { width: 340 },
+    modal: true,
+    rejectClose: false
+  });
+  return result?.filter === true;
+}
+
+/**
+ * Puts defensive ware to work on a dose about to take hold: a toxin always, a drug only when its
+ * taker wants it - an unwilling target always. Returns the data to put on, or none at all when the
+ * ware nullifies the substance.
+ * @param {Actor} actor - The actor the dose is for
+ * @param {Object} data - The dose's effect data
+ * @param {Object} [options] - willing: taken by choice; ask: whether a willing taker may be asked
+ * @returns {Promise<Object>} data (null when nullified), defense, whether the ware worked, and
+ *   wanted - whether the actor's defences are to act on it at all, immunizers included
+ */
+export async function defendDose(actor, data, { willing = true, ask = true } = {}) {
+  const dose = data.flags?.eclipsephase?.dose ?? {};
+  const defense = doseDefense(actor, dose);
+  const forced = dose.category === "toxin" || !willing;
+  if (!defenseApplies(defense)) return { data, defense, working: false, wanted: forced };
+  const working = defense.immune || forced || (ask && await letWareWork(defense, dose.name));
+  if (!working) return { data, defense, working: false, wanted: false };
+  if (defense.by.includes(WARE.nanophages)) await actor.setFlag("eclipsephase", "nanophagesUsedAt", game.time.worldTime);
+  if (defense.nullify) return { data: null, defense, working: true, wanted: true };
+  return { data: defendedDoseData(data, defense), defense, working: true, wanted: true };
+}
+
+/**
+ * The card a dose leaves when defensive ware nullifies it outright.
+ * @param {Actor} actor - The actor
+ * @param {String} name - The drug's name
+ * @param {Object} defense - What doseDefense reported
+ * @returns {Promise<ChatMessage>} The card
+ */
+function postNullifiedCard(actor, name, defense) {
+  const key = defense.immune ? "ep2e.chat.dose.immune" : "ep2e.chat.dose.nullified";
+  return postDrugCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format(key, { name, ware: wareNames(defense) }) });
+}
+
+/**
+ * Lets a dose take hold, in the order the book has it: the immunizers test the substance first,
+ * then its effect lands and the drug's own check is asked for.
+ * @param {Actor} actor - The actor
+ * @param {Object} data - The dose's effect data, defended where ware is at work
+ * @param {Boolean} wanted - Whether the actor's defences act on it, immunizers included
+ * @returns {Promise<Object>} The effect now running and whether it was a renewal
+ */
+export async function applyDose(actor, data, wanted) {
+  if (wanted) await rollImmunizers(actor, data.flags?.eclipsephase?.dose);
+  const result = await putDoseOn(actor, data);
+  await postUseCheckCard(actor, result.effect);
+  return result;
+}
+
+/**
+ * What follows once a dose is spent on an actor: nothing when ware nullifies it, the filters' SOM
+ * Check first where they may keep it out - the dose takes hold only if that fails - and otherwise
+ * the dose at once.
+ * @param {Actor} actor - The actor
+ * @param {Object} defended - What defendDose reported
+ * @returns {Promise<Object>} effect (null while a filter check is pending or when nullified),
+ *   pending and nullified
+ */
+async function letDoseIn(actor, defended) {
+  if (!defended.data) {
+    await postNullifiedCard(actor, defended.name, defended.defense);
+    return { effect: null, nullified: true, pending: false };
+  }
+  if (defended.working && defended.defense.filterCheck) {
+    await postFilterCheckCard(actor, defended.data, defended.defense, defended.wanted);
+    return { effect: null, nullified: false, pending: true };
+  }
+  const { effect } = await applyDose(actor, defended.data, defended.wanted);
+  return { effect, nullified: false, pending: false };
+}
+
+/**
  * Takes one dose of a drug: refuses an ammunition pack, which only loads into a weapon, refuses a
  * dose in a body it cannot act on, spends it from the pack and puts its effect on the actor. The
  * effect data is read before the dose is spent, because the last dose takes the drug itself off
@@ -340,10 +436,10 @@ export async function takeDose(actor, item) {
     return { ...outcome, refused: false, effect: null };
   }
 
-  const { effect, renewed } = await putDoseOn(actor, data);
-  await postDoseCard(actor, item, outcome, renewed);
-  await postUseCheckCard(actor, effect);
-  return { ...outcome, refused: false, effect };
+  const defended = await defendDose(actor, data, { willing: true });
+  await postDoseCard(actor, item, outcome, !!activeDoseFor(actor, item.name));
+  const { effect, nullified, pending } = await letDoseIn(actor, { ...defended, name: item.name });
+  return { ...outcome, refused: false, effect, nullified, pending };
 }
 
 /**
@@ -408,11 +504,11 @@ export async function claimDose(message, actor) {
   const spent = pack ? await consumeDose(giver, pack) : { taken: false };
   if (!spent.taken) return { claimed: false, reasonKey: "ep2e.actorSheet.warnings.offerPackEmpty" };
 
-  const { effect } = await putDoseOn(actor, offer.data);
+  const defended = await defendDose(actor, offer.data, { willing: !offer.forced, ask: false });
   const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
   const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...offer.card, footnote, offer: false });
   await message.update({ content, "flags.eclipsephase.doseOffer.usedBy": actor.name });
-  await postUseCheckCard(actor, effect);
+  await letDoseIn(actor, { ...defended, name: offer.name });
   return { claimed: true, reasonKey: null };
 }
 
@@ -563,6 +659,11 @@ export function registerDoseSocket() {
     if (payload?.action === "rollWearOff") {
       if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
       await rollWearOffStress(game.messages.get(payload.messageId));
+      return;
+    }
+    if (payload?.action === "markFilterRolled") {
+      if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
+      await markFilterCardRolled(game.messages.get(payload.messageId));
       return;
     }
     if (payload?.action === "rollDoseHarm") {

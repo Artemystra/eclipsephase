@@ -5,7 +5,53 @@
     "core": {}
   },
   "img": "systems/eclipsephase/resources/icons/combat.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "Gp4IEUsTqZVDNNuO",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Toxin Filters",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.toxinFilters",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!2wAaImRHQwvFH95o.Gp4IEUsTqZVDNNuO"
+    }
+  ],
   "system": {
     "additionalSystems": {},
     "description": "+30 to apt checks to resist drugs/toxins, effect/duration halved.",

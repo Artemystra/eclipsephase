@@ -97,7 +97,11 @@
           "psiGammaBoosted": false,
           "autoPushSelection": "none",
           "puppetSocked": [],
-          "hasCyberbrainChain": false
+          "hasCyberbrainChain": false,
+      "toxinFilters": false,
+      "nanophages": false,
+      "digestiveSymbiotes": false,
+      "immunizers": false
         },
         "initiative": {
           "value": null,

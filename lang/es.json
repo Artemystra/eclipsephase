@@ -1302,6 +1302,10 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "Inmunidades aprendidas",
+          "forget": "Olvidar"
         }
       }
     },
@@ -1742,6 +1746,12 @@
         "standardDescription": "Añade todo el Ware, Traits y Flaws listados en las ranuras de Mejora de este cuerpo.",
         "flatLabel": "Sin mejoras",
         "flatDescription": "Añade el cuerpo tal cual, sin ninguna de sus mejoras listadas."
+      },
+      "doseDefense": {
+        "header": "Implantes defensivos",
+        "copy": "Tus {ware} debilitarían {name}. ¿Efecto completo o débil de la droga?",
+        "filter": "Efecto débil de la droga",
+        "full": "Efecto completo de la droga"
       }
     },
     "chat": {
@@ -1779,7 +1789,24 @@
         "rollDamage": "Tirar daño",
         "damageFlavor": "{name} daña el cuerpo",
         "panicFlavor": "Estrés de pánico: {name}",
-        "granted": "{name} otorga: {items}"
+        "granted": "{name} otorga: {items}",
+        "ware": {
+          "toxinFilters": "Filtros de toxinas",
+          "medichines": "Medichines",
+          "nanophages": "Nanófagos",
+          "both": "{first} y {second}",
+          "digestiveSymbiotes": "Simbiontes digestivos",
+          "immunizers": "Inmunizadores"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>: mis {ware} podrían bloquearla",
+        "rollFilterCheck": "Tirar chequeo de SOM ({ware})",
+        "filteredOut": "Mis {ware} bloquean <strong>{name}</strong>",
+        "nullified": "{ware} anulan <strong>{name}</strong>",
+        "immune": "Soy inmune a <strong>{name}</strong>",
+        "becameImmune": "Mis inmunizadores me hacen inmune a <strong>{name}</strong>",
+        "immunizerTest": "Mis inmunizadores analizan <strong>{name}</strong> (Medicina: Farmacología {target})",
+        "immunizerSuccess": "Inmune a partir de ahora",
+        "immunizerFailure": "Esta vez no lo aprenden"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

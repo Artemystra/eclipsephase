@@ -1,5 +1,6 @@
 import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
 import { folderTree, rowCandidates, RANDOM } from "../common/dose-grants.js";
+import { learnedBy } from "../common/dose-defense.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -164,6 +165,10 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
 
     if (item.type === "drug") {
       context.grantRows = await this._grantRows(item);
+    }
+
+    if (item.type === "ware") {
+      context.immunities = learnedBy(item);
     }
 
     if (item.type === "rangedWeapon") {
@@ -429,6 +434,11 @@ async _onRender(context, options) {
   if (item.type === "drug") {
     this._activateGrantListeners(html, item);
   }
+
+  html.querySelectorAll(".immunity-delete").forEach(button => button.addEventListener("click", event => {
+    event.preventDefault();
+    item.setFlag("eclipsephase", "immunities", learnedBy(item).filter(name => name !== button.dataset.name));
+  }));
 
   if (item.type === "vehicle") {
     this._activateVehicleListeners(html, item);

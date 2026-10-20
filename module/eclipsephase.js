@@ -25,6 +25,7 @@ import { registerExpiryCleanup } from "./common/expiry.js";
 import { registerUseCheckHooks } from "./common/dose-checks.js";
 import { registerOverTimeHooks } from "./common/dose-over-time.js";
 import { registerGrantHooks } from "./common/dose-grants.js";
+import { registerDefenseHooks } from "./common/dose-defense.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -202,6 +203,7 @@ Hooks.once('init', async function() {
   registerUseCheckHooks();
   registerOverTimeHooks();
   registerGrantHooks();
+  registerDefenseHooks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;

@@ -51,6 +51,21 @@
                     </tr>
                 </table>
             </div>
+            {{#if immunities.length}}
+            <div class="flexrow subheader" style="margin-top: 10px;">
+                <h3 class="subheader dialog">{{localize "ep2e.item.ware.immunities.headline"}}</h3>
+            </div>
+            <div class="ware-immunities">
+                {{#each immunities as |name|}}
+                <div class="flexrow ware-immunity">
+                    <span>{{name}}</span>
+                    {{#if ../editable}}
+                    <a class="immunity-delete" data-name="{{name}}" data-tooltip="{{localize 'ep2e.item.ware.immunities.forget'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+            {{/if}}
         </div>
 
         <div class="tab {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description">

@@ -2698,10 +2698,32 @@ function _ep27_missingBlueprints(item, blueprints) {
  * blueprint effects its compendium entry has.
  * @returns {Promise<Boolean>} True when at least one drug needs work
  */
+// The effect each piece of defensive ware reports itself through, so doses can tell it is there.
+const _ep27_DEFENSIVE_WARE = {
+  "Toxin Filters": "system.additionalSystems.toxinFilters",
+  "Nanophages": "system.additionalSystems.nanophages",
+  "Digestive Symbiotes": "system.additionalSystems.digestiveSymbiotes",
+  "Immunizers": "system.additionalSystems.immunizers"
+};
+
+/**
+ * The effect a defensive ware item placed before 2.7 is missing, matched by name.
+ * @param {Item} item - The item
+ * @returns {Object|null} The effect data, or null when the item needs none
+ */
+export function _ep27_missingWareMarker(item) {
+  const key = item.type === "ware" ? _ep27_DEFENSIVE_WARE[item.name] : undefined;
+  if (!key) return null;
+  if (Array.from(item.effects ?? []).some(effect => effect.changes?.some(change => change.key === key))) return null;
+  const changes = [{ key, value: true, priority: null, type: "override" }];
+  return { name: item.name, img: "/icons/svg/mystery-man.svg", disabled: false, transfer: true, changes, flags: {}, system: { changes } };
+}
+
 export async function migrationPre27Needed() {
   const blueprints = await _ep27_drugBlueprints();
-  const needs = item => item.type === "drug"
-    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null);
+  const needs = item => (item.type === "drug"
+    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null))
+    || _ep27_missingWareMarker(item) !== null;
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
@@ -2739,6 +2761,15 @@ export async function migrationPre27(startMigration) {
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => item.type === "drug",
+    includeCompendiums: true
+  });
+
+  await forEachItem(async item => {
+    const marker = _ep27_missingWareMarker(item);
+    if (marker) await item.createEmbeddedDocuments("ActiveEffect", [marker]);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "ware",
     includeCompendiums: true
   });
 
