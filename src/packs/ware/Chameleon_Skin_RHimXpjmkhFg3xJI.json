@@ -17,7 +17,25 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bh"
+    "wareType": "bh",
+    "rollOptions": [
+      {
+        "id": "camo",
+        "label": "ep2e.item.ware.rollOptions.camouflage",
+        "value": 10,
+        "appliesTo": [
+          "infiltrate"
+        ]
+      },
+      {
+        "id": "still",
+        "label": "ep2e.item.ware.rollOptions.camouflageStill",
+        "value": 30,
+        "appliesTo": [
+          "infiltrate"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

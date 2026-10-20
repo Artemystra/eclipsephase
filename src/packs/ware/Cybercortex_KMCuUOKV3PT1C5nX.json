@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "c"
+    "wareType": "c",
+    "rollOptions": [
+      {
+        "id": "commands",
+        "label": "ep2e.item.ware.rollOptions.commands",
+        "value": 10,
+        "appliesTo": [
+          "cog"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

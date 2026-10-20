@@ -51,6 +51,10 @@
   --focusBackground: #2b2b2b;
   --highlightBackground: #414141;
   --accentBackground: #24485d;
+  --augmented: #26a69a;
+  --augmentedTurquoise: #19d3c5;
+  --augmentedMagenta: #ff2bd6;
+  --augmentedYellow: #f5ec1b;
   --color-bg-option: #1f1f1f;
   --color-shadow-primary: #36aee9!important;
   --color-border-highlight: #36aee9!important;
@@ -2289,6 +2293,13 @@ h3.subheaderBlank {
   border-bottom: solid var(--negative) 3px;
 }
 
+/* Ware options in the roll dialog: a slanted neon line, magenta into turquoise into yellow. The
+   plain turquoise (--augmented) is kept for anywhere a single colour is needed. */
+.flexrow.subheader.colorAugmented{
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(100deg, var(--augmentedMagenta) 0%, var(--augmentedMagenta) 12%, var(--augmentedTurquoise) 28%, var(--augmentedTurquoise) 72%, var(--augmentedYellow) 88%, var(--augmentedYellow) 100%) 1;
+}
+
 .listBackground {
   padding: 5px 0.5em 5px 0.5em;
   min-height: 40px;
@@ -4111,4 +4122,25 @@ body.ep-dose-targeting #board {
 .eclipsephase .ware-immunity a {
   flex: 0 0 20px;
   text-align: right;
+}
+
+/* The special skills a ware's bonus is set to, and the button to change them. */
+.eclipsephase .ware-skill-picks {
+  margin-top: 10px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.eclipsephase .ware-skill-picks button {
+  flex: 0 0 auto;
+}
+
+/* A ware setup button keeps Foundry's button height as its least, so a long name can wrap. */
+.chatControls .chatButton.ware-setup-button {
+  height: auto;
+  min-height: var(--button-size, 2em);
+  line-height: normal;
+  white-space: normal;
+  padding: 4px 8px;
 }

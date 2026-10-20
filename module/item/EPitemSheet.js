@@ -1,6 +1,7 @@
 import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
 import { folderTree, rowCandidates, RANDOM } from "../common/dose-grants.js";
 import { learnedBy } from "../common/dose-defense.js";
+import { hasSkillOptions, pickSpecialSkills } from "../common/ware-skills.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -169,6 +170,8 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
 
     if (item.type === "ware") {
       context.immunities = learnedBy(item);
+      context.skillSetup = hasSkillOptions(item) && item.parent instanceof Actor;
+      context.skillPicks = (item.system.rollOptions ?? []).filter(option => option.specialSkill).flatMap(option => option.specialSkills ?? []);
     }
 
     if (item.type === "rangedWeapon") {
@@ -434,6 +437,11 @@ async _onRender(context, options) {
   if (item.type === "drug") {
     this._activateGrantListeners(html, item);
   }
+
+  html.querySelector(".ware-skill-setup")?.addEventListener("click", event => {
+    event.preventDefault();
+    pickSpecialSkills(item.parent, item);
+  });
 
   html.querySelectorAll(".immunity-delete").forEach(button => button.addEventListener("click", event => {
     event.preventDefault();

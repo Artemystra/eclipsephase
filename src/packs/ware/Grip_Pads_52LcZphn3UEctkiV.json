@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": [
+      {
+        "id": "climb",
+        "label": "ep2e.item.ware.rollOptions.climbing",
+        "value": 30,
+        "appliesTo": [
+          "athletics"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

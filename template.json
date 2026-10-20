@@ -1256,7 +1256,8 @@
       "bonus": null,
       "malus": null,
       "boundTo": null,
-      "wareType": null
+      "wareType": null,
+      "rollOptions": []
     },
     "aspect": {
       "templates": [

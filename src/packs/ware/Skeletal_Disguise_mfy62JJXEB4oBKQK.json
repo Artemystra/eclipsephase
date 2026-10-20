@@ -15,7 +15,8 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "c"
+    "wareType": "c",
+    "rollOptions": []
   },
   "effects": [],
   "sort": 0,

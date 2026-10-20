@@ -15,7 +15,8 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": []
   },
   "effects": [],
   "sort": 0,

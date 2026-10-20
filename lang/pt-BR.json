@@ -1320,6 +1320,42 @@
         "immunities": {
           "headline": "Imunidades aprendidas",
           "forget": "Esquecer"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Fadiga adrenal",
+          "reach": "Vantagem de alcance",
+          "camouflage": "Camuflagem (não contra radar, raio X, gama ou infravermelho)",
+          "camouflageStill": "Camuflagem, parado e nu ou com roupa inteligente",
+          "commands": "Entender comandos",
+          "touch": "Baseado no tato",
+          "navigation": "Navegação, mapas, rotas",
+          "hearing": "Audição",
+          "pheromones": "Mesma espécie, pode sentir seu cheiro",
+          "smell": "Olfato",
+          "scentEmotions": "Sentir emoções pelo cheiro, à queima-roupa",
+          "vision": "Visão",
+          "microManipulation": "Micro ou nanomanipulação",
+          "glide": "Planar por longas distâncias",
+          "grappling": "Agarrão",
+          "climbing": "Escalada",
+          "concealed": "Item oculto",
+          "impersonateMesh": "Imitar um ego da hipermalha",
+          "meshCutOff": "Desconectado da hipermalha",
+          "magneticGrip": "Agarre magnético",
+          "mimicry": "Imitar um alvo estudado (em vez de +10)",
+          "recall": "Recordar",
+          "neuralFatigue": "Fadiga do sistema nervoso",
+          "knockout": "Resistir a um nocaute optogenético",
+          "balance": "Equilíbrio",
+          "disguise": "Disfarce ou imitação",
+          "disguisedAsPerson": "Disfarçado de uma pessoa específica",
+          "stress": "Contra estresse ou um transtorno desencadeado",
+          "swarmLeverage": "Alavanca, força, destreza fina ou objetos pequenos"
+        },
+        "skillSetup": {
+          "headline": "Perícias especiais",
+          "none": "Nenhuma escolhida",
+          "button": "Escolher"
         }
       }
     },
@@ -1508,7 +1544,8 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "Aumentos"
       },
       "successType": {
         "success": "Sucesso",
@@ -1766,6 +1803,14 @@
         "copy": "Seus {ware} enfraqueceriam {name}. Efeito completo ou fraco da droga?",
         "filter": "Efeito fraco da droga",
         "full": "Efeito completo da droga"
+      },
+      "wareSkills": {
+        "header": "{ware}: Perícias especiais",
+        "kind": {
+          "hardware": "{ware} ({bonus}) ajuda com perícias de Hardware. Marque suas perícias especiais que são de Hardware:",
+          "disguise": "{ware} ({bonus}) ajuda com Perícia exótica: Disfarce. Marque suas perícias especiais de disfarce:"
+        },
+        "noSkills": "Este personagem ainda não tem perícias especiais. Você pode configurar isso depois na ficha do implante."
       }
     },
     "chat": {
@@ -1829,6 +1874,11 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "Rolar Dano do Truque"
+      },
+      "wareSetup": {
+        "headline": "Configure seus implantes",
+        "copy": "Alguns implantes dão bônus a perícias especiais. Diga uma vez para quais das suas perícias especiais cada um vale.",
+        "done": "Todos os ajustes feitos."
       }
     },
     "rule": {

@@ -1306,6 +1306,42 @@
         "immunities": {
           "headline": "Inmunidades aprendidas",
           "forget": "Olvidar"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Fatiga adrenal",
+          "reach": "Ventaja de alcance",
+          "camouflage": "Camuflaje (no contra radar, rayos X, gamma o infrarrojo)",
+          "camouflageStill": "Camuflaje, quieto y desnudo o con ropa inteligente",
+          "commands": "Entender órdenes",
+          "touch": "Basado en el tacto",
+          "navigation": "Navegación, mapas, rutas",
+          "hearing": "Oído",
+          "pheromones": "Misma especie, puede olerte",
+          "smell": "Olfato",
+          "scentEmotions": "Oler emociones, a quemarropa",
+          "vision": "Vista",
+          "microManipulation": "Micro o nanomanipulación",
+          "glide": "Planeo de larga distancia",
+          "grappling": "Presa",
+          "climbing": "Escalada",
+          "concealed": "Objeto oculto",
+          "impersonateMesh": "Suplantar un ego de la hipermalla",
+          "meshCutOff": "Desconectado de la hipermalla",
+          "magneticGrip": "Agarre magnético",
+          "mimicry": "Suplantar a un objetivo estudiado (en lugar de +10)",
+          "recall": "Recordar",
+          "neuralFatigue": "Fatiga del sistema nervioso",
+          "knockout": "Resistir un noqueo optogenético",
+          "balance": "Equilibrio",
+          "disguise": "Disfraz o suplantación",
+          "disguisedAsPerson": "Disfrazado de una persona concreta",
+          "stress": "Contra estrés o un trastorno desencadenado",
+          "swarmLeverage": "Palanca, fuerza, destreza fina u objetos pequeños"
+        },
+        "skillSetup": {
+          "headline": "Habilidades especiales",
+          "none": "Ninguna elegida",
+          "button": "Elegir"
         }
       }
     },
@@ -1494,7 +1530,8 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "Aumentos"
       },
       "successType": {
         "success": "Success",
@@ -1752,6 +1789,14 @@
         "copy": "Tus {ware} debilitarían {name}. ¿Efecto completo o débil de la droga?",
         "filter": "Efecto débil de la droga",
         "full": "Efecto completo de la droga"
+      },
+      "wareSkills": {
+        "header": "{ware}: Habilidades especiales",
+        "kind": {
+          "hardware": "{ware} ({bonus}) ayuda con habilidades de Hardware. Marca tus habilidades especiales que sean de Hardware:",
+          "disguise": "{ware} ({bonus}) ayuda con Habilidad exótica: Disfraz. Marca tus habilidades especiales de disfraz:"
+        },
+        "noSkills": "Este personaje aún no tiene habilidades especiales. Puedes configurarlo después en la hoja del implante."
       }
     },
     "chat": {
@@ -1815,6 +1860,11 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "Tirar Daño del Sleight"
+      },
+      "wareSetup": {
+        "headline": "Configura tus implantes",
+        "copy": "Algunos implantes dan bonificaciones a habilidades especiales. Indica una vez para cuáles de tus habilidades especiales sirve cada uno.",
+        "done": "Todos los ajustes hechos."
       }
     },
     "rule": {

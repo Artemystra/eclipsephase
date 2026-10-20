@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": [
+      {
+        "id": "balance",
+        "label": "ep2e.item.ware.rollOptions.balance",
+        "value": 10,
+        "appliesTo": [
+          "athletics"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

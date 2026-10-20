@@ -70,7 +70,15 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "b"
+    "wareType": "b",
+    "rollOptions": [
+      {
+        "id": "fatigue",
+        "label": "ep2e.item.ware.rollOptions.adrenalFatigue",
+        "value": -20,
+        "appliesTo": []
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

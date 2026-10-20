@@ -1,4 +1,4 @@
-import { checkKeys, doseRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../../module/common/dose-options.js";
+import { checkKeys, doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../../module/common/dose-options.js";
 import { globalModifiers } from "../../module/common/global-mod.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
 
@@ -100,5 +100,44 @@ describe("an option that applies on its own", () => {
     expect(tickableRollOptions(offered)).toEqual([]);
     expect(chosenRollOptions(offered, {}).map(entry => entry.drug)).toEqual(["Randomizer"]);
     expect(doseRollOptions(actor, { key: "guns" })).toEqual([]);
+  });
+});
+
+describe("ware options", () => {
+  /**
+   * A character sleeved in morph1 carrying the given ware.
+   * @param {Object[]} ware - Ware items
+   * @returns {Actor} The prepared actor
+   */
+  function wearing(ware) {
+    return makeActor({ type: "character", system: { activeMorph: "morph1" }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } }, ...ware] });
+  }
+
+  test("a special-skill option fits only the special skills the player picked for it", () => {
+    const option = { id: "micro", label: "x", value: 10, appliesTo: [], specialSkill: "hardware", specialSkills: ["HW: Robotics"] };
+    const actor = wearing([{ _id: "fd1", name: "Fractal Digits", type: "ware", system: { boundTo: "morph1", rollOptions: [option] } }]);
+
+    expect(wareRollOptions(actor, { key: "HW: Robotics" })).toHaveLength(1);
+    expect(wareRollOptions(actor, { key: "Pilot: Air" })).toEqual([]);
+    expect(wareRollOptions(actor, { key: "athletics" })).toEqual([]);
+  });
+
+  test("a special-skill option with nothing picked yet is offered nowhere", () => {
+    const option = { id: "micro", label: "x", value: 10, appliesTo: [], specialSkill: "hardware", specialSkills: [] };
+    const actor = wearing([{ _id: "fd1", name: "Fractal Digits", type: "ware", system: { boundTo: "morph1", rollOptions: [option] } }]);
+
+    expect(wareRollOptions(actor, { key: "HW: Robotics" })).toEqual([]);
+  });
+
+  test("Mimicry's +30 replaces its own +10, so it adds the difference", async () => {
+    expect(await optionValue({ value: 30, replacesFlat: 10 })).toBe(20);
+  });
+
+  test("a ware option that applies on its own is not offered as a checkbox", () => {
+    const actor = wearing([{ _id: "w1", name: "Some Ware", type: "ware", system: { boundTo: "morph1", rollOptions: [{ id: "always", label: "x", value: 10, appliesTo: ["perceive"], automatic: true }] } }]);
+    const offered = wareRollOptions(actor, { key: "perceive" });
+
+    expect(chosenRollOptions(offered, {})).toHaveLength(1);
+    expect(tickableRollOptions(offered)).toEqual([]);
   });
 });

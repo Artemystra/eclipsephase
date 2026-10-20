@@ -15,7 +15,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": [
+      {
+        "id": "glide",
+        "label": "ep2e.item.ware.rollOptions.glide",
+        "value": 10,
+        "appliesTo": [
+          "free fall"
+        ]
+      }
+    ]
   },
   "effects": [],
   "sort": 0,

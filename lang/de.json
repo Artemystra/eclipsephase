@@ -1335,6 +1335,42 @@
         "immunities": {
           "headline": "Gelernte Immunitäten",
           "forget": "Vergessen"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Adrenale Erschöpfung",
+          "reach": "Reichweitenvorteil",
+          "camouflage": "Tarnung (nicht gegen Radar, Röntgen, Gamma, Infrarot)",
+          "camouflageStill": "Tarnung, still und unbekleidet oder in Smart Clothing",
+          "commands": "Befehle verstehen",
+          "touch": "Tastbasiert",
+          "navigation": "Orientierung, Karten, Routen",
+          "hearing": "Hören",
+          "pheromones": "Gleiche Spezies, kann dich riechen",
+          "smell": "Riechen",
+          "scentEmotions": "Gefühle riechen, Nahdistanz",
+          "vision": "Sehen",
+          "microManipulation": "Mikro- oder Nanoarbeit",
+          "glide": "Gleiten über lange Strecken",
+          "grappling": "Ringen",
+          "climbing": "Klettern",
+          "concealed": "Verborgener Gegenstand",
+          "impersonateMesh": "Hypermesh-Ego imitieren",
+          "meshCutOff": "Vom Hypermesh abgeschnitten",
+          "magneticGrip": "Magnetischer Halt",
+          "mimicry": "Studierte Person imitieren (statt +10)",
+          "recall": "Erinnern",
+          "neuralFatigue": "Erschöpfung des Nervensystems",
+          "knockout": "Optogenetischem Knockout widerstehen",
+          "balance": "Balance",
+          "disguise": "Verkleidung oder Imitation",
+          "disguisedAsPerson": "Als bestimmte Person verkleidet",
+          "stress": "Gegen Stress oder ausgelöste Störung",
+          "swarmLeverage": "Hebelkraft, Kraft, Feinmotorik oder kleine Objekte"
+        },
+        "skillSetup": {
+          "headline": "Spezialfertigkeiten",
+          "none": "Keine gewählt",
+          "button": "Wählen"
         }
       }
     },
@@ -1529,7 +1565,8 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie"
-        }
+        },
+        "augmentations": "Augmentierungen"
       },
       "successType": {
         "success": "Erfolg",
@@ -1796,6 +1833,14 @@
         "copy": "Deine {ware} würden {name} abschwächen. Volle oder schwache Wirkung der Droge?",
         "filter": "Schwache Drogenwirkung",
         "full": "Volle Drogenwirkung"
+      },
+      "wareSkills": {
+        "header": "{ware}: Spezialfertigkeiten",
+        "kind": {
+          "hardware": "{ware} ({bonus}) hilft bei Hardware-Fertigkeiten. Kreuze deine Spezialfertigkeiten an, die Hardware sind:",
+          "disguise": "{ware} ({bonus}) hilft bei Exotic Skill: Disguise. Kreuze deine Spezialfertigkeiten an, die Verkleidung sind:"
+        },
+        "noSkills": "Dieser Charakter hat noch keine Spezialfertigkeiten. Du kannst das später auf dem Sheet der Ware einstellen."
       }
     },
     "chat": {
@@ -1859,6 +1904,11 @@
         "psiInfection": "Psi Infektion Würfeln",
         "weaponDamage": "Waffenschaden würfeln",
         "psiDamage": "Fertigkeits-Schaden würfeln"
+      },
+      "wareSetup": {
+        "headline": "Ware einstellen",
+        "copy": "Manche Ware gibt Boni auf Spezialfertigkeiten. Sag einmal, für welche deiner Spezialfertigkeiten sie jeweils gilt.",
+        "done": "Alle Anpassungen erledigt."
       }
     },
     "rule": {

@@ -1313,6 +1313,42 @@
         "immunities": {
           "headline": "已习得的免疫",
           "forget": "遗忘"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "肾上腺疲劳",
+          "reach": "触及优势",
+          "camouflage": "伪装（对雷达、X射线、伽马、红外无效）",
+          "camouflageStill": "伪装，静止且裸体或穿智能服装",
+          "commands": "理解指令",
+          "touch": "基于触觉",
+          "navigation": "导航、地图、路线",
+          "hearing": "听觉",
+          "pheromones": "同种族，能闻到你",
+          "smell": "嗅觉",
+          "scentEmotions": "嗅出情绪，近距离",
+          "vision": "视觉",
+          "microManipulation": "微观或纳米操作",
+          "glide": "长距离滑翔",
+          "grappling": "擒抱",
+          "climbing": "攀爬",
+          "concealed": "隐藏物品",
+          "impersonateMesh": "冒充超网自我",
+          "meshCutOff": "与超网断开",
+          "magneticGrip": "磁力抓握",
+          "mimicry": "冒充研究过的目标（代替+10）",
+          "recall": "记忆回想",
+          "neuralFatigue": "神经系统疲劳",
+          "knockout": "抵抗光遗传学击倒",
+          "balance": "平衡",
+          "disguise": "伪装或冒充",
+          "disguisedAsPerson": "伪装成特定的人",
+          "stress": "对抗压力或被触发的障碍",
+          "swarmLeverage": "杠杆、力量、精细操作或小物件"
+        },
+        "skillSetup": {
+          "headline": "特殊技能",
+          "none": "未选择",
+          "button": "选择"
         }
       }
     },
@@ -1501,7 +1537,8 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "增强"
       },
       "successType": {
         "success": "Success",
@@ -1759,6 +1796,14 @@
         "copy": "你的{ware}会削弱{name}。药物以完整效果还是减弱效果生效？",
         "filter": "减弱药效",
         "full": "完整药效"
+      },
+      "wareSkills": {
+        "header": "{ware}：特殊技能",
+        "kind": {
+          "hardware": "{ware}（{bonus}）有助于硬件技能。请勾选属于硬件的特殊技能：",
+          "disguise": "{ware}（{bonus}）有助于异类技能：伪装。请勾选属于伪装的特殊技能："
+        },
+        "noSkills": "该角色还没有特殊技能。你可以稍后在植入物的表单中设置。"
       }
     },
     "chat": {
@@ -1822,6 +1867,11 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "投掷灵术伤害"
+      },
+      "wareSetup": {
+        "headline": "设置你的植入物",
+        "copy": "有些植入物为特殊技能提供加值。请为每个植入物指定一次适用于哪些特殊技能。",
+        "done": "所有调整已完成。"
       }
     },
     "rule": {

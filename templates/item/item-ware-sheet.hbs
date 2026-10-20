@@ -51,6 +51,15 @@
                     </tr>
                 </table>
             </div>
+            {{#if skillSetup}}
+            <div class="flexrow subheader" style="margin-top: 10px;">
+                <h3 class="subheader dialog">{{localize "ep2e.item.ware.skillSetup.headline"}}</h3>
+            </div>
+            <div class="flexrow ware-skill-picks">
+                <span>{{#if skillPicks.length}}{{#each skillPicks as |name|}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}{{else}}<i>{{localize "ep2e.item.ware.skillSetup.none"}}</i>{{/if}}</span>
+                {{#if editable}}<button type="button" class="ware-skill-setup">{{localize "ep2e.item.ware.skillSetup.button"}}</button>{{/if}}
+            </div>
+            {{/if}}
             {{#if immunities.length}}
             <div class="flexrow subheader" style="margin-top: 10px;">
                 <h3 class="subheader dialog">{{localize "ep2e.item.ware.immunities.headline"}}</h3>

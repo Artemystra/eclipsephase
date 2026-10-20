@@ -397,6 +397,25 @@ describe("the 2.7 backfill of what C added", () => {
     expect(actor.items.get("meds1").system.healingAddition).toEqual("meds");
   });
 
+  test("ware on a sheet gets its namesake's situational bonuses, unless it has its own", async () => {
+    const climb = [{ id: "climb", label: "ep2e.item.ware.rollOptions.climbing", value: 30, appliesTo: ["athletics"] }];
+    game.packs.set("eclipsephase.ware", { metadata: { type: "Item", package: "eclipsephase" }, getDocuments: async () => [new CONFIG.Item.documentClass({ name: "Grip Pads", type: "ware", system: { rollOptions: climb } })] });
+    const own = [{ id: "mine", label: "Homebrew", value: 5, appliesTo: [] }];
+    const actor = makeActor({ type: "character", items: [
+      { _id: "gp1", name: "Grip Pads", type: "ware", system: { rollOptions: [] } },
+      { _id: "gp2", name: "Grip Pads", type: "ware", system: { rollOptions: own } }
+    ] });
+
+    try {
+      await runLadderFrom("2.5");
+    } finally {
+      game.packs.delete("eclipsephase.ware");
+    }
+
+    expect(actor.items.get("gp1").system.rollOptions).toEqual(climb);
+    expect(actor.items.get("gp2").system.rollOptions).toEqual(own);
+  });
+
   test("a drug that already carries values of its own keeps them", async () => {
     const own = { id: "mine", label: "Homebrew", value: 5, appliesTo: [] };
     const drug = worldItem({ name: "Juice", type: "drug", system: { ...CURRENT, rollOptions: [own], wearOff: { d10: 0, d6: 2, bonus: 0 } } });

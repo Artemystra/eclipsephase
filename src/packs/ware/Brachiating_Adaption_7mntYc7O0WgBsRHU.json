@@ -15,7 +15,18 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bh"
+    "wareType": "bh",
+    "rollOptions": [
+      {
+        "id": "reach",
+        "label": "ep2e.item.ware.rollOptions.reach",
+        "value": 10,
+        "appliesTo": [
+          "melee",
+          "fray"
+        ]
+      }
+    ]
   },
   "effects": [],
   "sort": 0,

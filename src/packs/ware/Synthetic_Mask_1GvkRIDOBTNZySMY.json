@@ -17,7 +17,19 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "h"
+    "wareType": "h",
+    "rollOptions": [
+      {
+        "id": "person",
+        "label": "ep2e.item.ware.rollOptions.disguisedAsPerson",
+        "value": 30,
+        "appliesTo": [
+          "deceive"
+        ],
+        "specialSkill": "disguise",
+        "specialSkills": []
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

@@ -17,7 +17,25 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": [
+      {
+        "id": "smell",
+        "label": "ep2e.item.ware.rollOptions.smell",
+        "value": 10,
+        "appliesTo": [
+          "perceive"
+        ]
+      },
+      {
+        "id": "emotions",
+        "label": "ep2e.item.ware.rollOptions.scentEmotions",
+        "value": 10,
+        "appliesTo": [
+          "kinesics"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

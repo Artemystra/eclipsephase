@@ -13,6 +13,7 @@ import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
 import { getStrainFamily } from "../rolls/strain-families.js";
+import { needsSkillSetup, pickSpecialSkills } from "../common/ware-skills.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 import { getRezSpendOptions } from "../api/registry.js";
 
@@ -1255,6 +1256,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       await maybeApplyStandardEnhancements(actor, created[0], boundToFor(created[0]));
       await MORPHFUNCTION.applyFrame(actor, created[0], boundToFor(created[0]));
     }
+
+    if (needsSkillSetup(created[0])) await pickSpecialSkills(actor, created[0]);
 
     return created[0] ?? null;
   }

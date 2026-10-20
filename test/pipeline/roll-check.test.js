@@ -458,6 +458,65 @@ describe("drug options in the roll dialog", () => {
   });
 });
 
+describe("ware options in the roll dialog", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * A roller sleeved in morph1 with Grip Pads, plus Enhanced Hearing left in a spare morph.
+   * @returns {Object} The prepared actor
+   */
+  function augmentedRoller() {
+    return makeActor({
+      type: "character",
+      name: "Roller",
+      system: { activeMorph: "morph1", aptitudes: { som: { value: 15 } }, skillsVig: { athletics: { value: 40 } }, pools: { vigor: { value: 2 } } },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "morph2", name: "Spare", type: "morph", system: { type: "bio" } },
+        { _id: "grip1", name: "Grip Pads", type: "ware", system: { boundTo: "morph1", rollOptions: [{ id: "climb", label: "ep2e.item.ware.rollOptions.climbing", value: 30, appliesTo: ["athletics"] }] } },
+        { _id: "ear1", name: "Enhanced Hearing", type: "ware", system: { boundTo: "morph2", rollOptions: [{ id: "hearing", label: "ep2e.item.ware.rollOptions.hearing", value: 10, appliesTo: ["perceive", "athletics"] }] } }
+      ]
+    });
+  }
+
+  /**
+   * Rolls a check while recording what the dialog was rendered with.
+   * @param {Object} actor - The roller
+   * @param {Object} answer - What the dialog answers
+   * @returns {Promise<Object>} The dialog data and the posted card
+   */
+  async function climb(actor, answer) {
+    let dialogData = null;
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      if (String(template).includes("test-dialog")) dialogData = data;
+      return realRender(template, data);
+    };
+    seedDialogs(answer);
+    seedRolls([42]);
+    try {
+      await RollCheck(skillDataset({ key: "athletics", name: "Athletics" }), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return { dialogData, card: global.__ep.createdMessages[0] };
+  }
+
+  test("ware in the active body offers its option in a block of its own; ware in another body does not", async () => {
+    const { dialogData } = await climb(augmentedRoller(), { cancelled: true });
+
+    expect(dialogData.wareOptions.map(entry => entry.field)).toEqual(["wareOption-grip1-climb"]);
+    expect(dialogData.doseOptions).toEqual([]);
+  });
+
+  test("ticked, it lands on the roll under the ware's name", async () => {
+    const { card } = await climb(augmentedRoller(), plainDialogAnswer({ "wareOption-grip1-climb": true }));
+
+    expect(card.content).toContain("Grip Pads");
+    expect(card.content).toContain("ep2e.item.ware.rollOptions.climbing");
+  });
+});
+
 describe("a drug option that applies on its own", () => {
   beforeEach(() => { resetWorld(); resetRegistry(); });
 

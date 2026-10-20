@@ -1356,6 +1356,42 @@
         "immunities": {
           "headline": "Learned Immunities",
           "forget": "Forget"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Adrenal fatigue",
+          "reach": "Reach advantage",
+          "camouflage": "Camouflage (not vs. radar, x-ray, gamma or infrared)",
+          "camouflageStill": "Camouflage, still and nude or in smart clothing",
+          "commands": "Understanding commands",
+          "touch": "Touch-based",
+          "navigation": "Navigation, maps, routes",
+          "hearing": "Hearing",
+          "pheromones": "Same species, can smell you",
+          "smell": "Smell",
+          "scentEmotions": "Smelling emotions, point-blank",
+          "vision": "Vision",
+          "microManipulation": "Micro- or nano-manipulation",
+          "glide": "Long-distance glide",
+          "grappling": "Grappling",
+          "climbing": "Climbing",
+          "concealed": "Concealed item",
+          "impersonateMesh": "Impersonating a hypermeshed ego",
+          "meshCutOff": "Cut off from the hypermesh",
+          "magneticGrip": "Magnetic grip",
+          "mimicry": "Impersonating a studied target (instead of +10)",
+          "recall": "Memory recall",
+          "neuralFatigue": "Nervous system fatigue",
+          "knockout": "Resisting an optogenetic knockout",
+          "balance": "Balance",
+          "disguise": "Disguise or impersonation",
+          "disguisedAsPerson": "Disguised as a particular person",
+          "stress": "Vs. stress or a triggered disorder",
+          "swarmLeverage": "Leverage, strength, fine dexterity or small objects"
+        },
+        "skillSetup": {
+          "headline": "Special Skills",
+          "none": "None picked",
+          "button": "Choose"
         }
       }
     },
@@ -1555,7 +1591,8 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "Augmentations"
       },
       "successType": {
         "success": "Success",
@@ -1823,6 +1860,14 @@
         "copy": "Your {ware} would weaken {name}. Take it at its full or at a weak effect?",
         "filter": "Weak Drug Effect",
         "full": "Full Drug Effect"
+      },
+      "wareSkills": {
+        "header": "{ware}: Special Skills",
+        "kind": {
+          "hardware": "{ware} ({bonus}) helps with Hardware skills. Tick your special skills that are Hardware skills:",
+          "disguise": "{ware} ({bonus}) helps with Exotic Skill: Disguise. Tick your special skills that are disguise skills:"
+        },
+        "noSkills": "This character has no special skills yet. You can set this later on the ware's sheet."
       }
     },
     "chat": {
@@ -1887,6 +1932,11 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "Roll Sleight Damage"
+      },
+      "wareSetup": {
+        "headline": "Set up your ware",
+        "copy": "Some ware gives bonuses to special skills. Say once which of your special skills each one is for.",
+        "done": "All adjustments done."
       }
     },
     "rule": {
@@ -2064,7 +2114,7 @@
       }
     },
     "migration": {
-      "27": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>First time is free...!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:</p><ul><li>Every drug's <b>Duration</b> is now functional and runs on the clock.</li><li>Drugs come in <b>packs</b> of five doses by default, settable per drug.</li><li>Dropping the same drug, ammo or grenade again adds to your existing stack.</li><li>Only <b>ammunition packs</b> load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.</li><li>A drug's effects apply when you <b>take</b> it, not while you carry it.</li><li>Every drug is now either a <b>drug</b> or a <b>toxin</b>. The book's chapters live on as folders in the compendium.</li><li>Drugs now bring their <b>situational modifiers</b> into your rolls, call for <b>checks</b> when they take hold and can leave <b>stress</b> behind when they wear off. Drugs already on your sheets get these from the compendium.</li><li>Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.</li><li>Drugs now also work <b>over time</b>, can lend <b>traits</b> while they run, and meet your <b>defensive ware</b>: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.</li></ul></span>",
+      "27": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>First time is free...!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:</p><ul><li>Every drug's <b>Duration</b> is now functional and runs on the clock.</li><li>Drugs come in <b>packs</b> of five doses by default, settable per drug.</li><li>Dropping the same drug, ammo or grenade again adds to your existing stack.</li><li>Only <b>ammunition packs</b> load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.</li><li>A drug's effects apply when you <b>take</b> it, not while you carry it.</li><li>Every drug is now either a <b>drug</b> or a <b>toxin</b>. The book's chapters live on as folders in the compendium.</li><li>Drugs now bring their <b>situational modifiers</b> into your rolls, call for <b>checks</b> when they take hold and can leave <b>stress</b> behind when they wear off. Drugs already on your sheets get these from the compendium.</li><li>Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.</li><li>Drugs now also work <b>over time</b>, can lend <b>traits</b> while they run, and meet your <b>defensive ware</b>: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.</li><li>Ware now brings its <b>situational bonuses</b> into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium.</li></ul></span>",
       "25": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Eclipse Phase Goes Modular, And Psi Interacts With Its Environment (Mostly Your Brain)<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This is a small step for you, but a huge one for the System, as I enabled the Eclipse Phase 2e system of having modules of its own! This will give you the opportunity to choose whether you want to go with the rules of your EP 100% verbatim or to tweak them a little or even create something your own and plug it in. Let me make the start:</p><p>From today on there are two all new modules to be had for EP!</p><p>First a module to have shops which gives you the option to create in game shops for buying or cashing in favors with the original EP system or some other rules I came up with. All fully customizable and completely changeable to convey your playstyle!</p><p>The second is the Ki module which introduces a new flavour of Psi called Ki. While it uses the same logic as Psi (Ki Gamma and Ki Chi) it has a suite of all new sleights that are all affecting the real space instead of one psyche. And require a Cyberbrain instead of being blocked by one.</p><p>Don't like any of these? You don't have to use them as standard Psi just remains in the core system and nothing changes for you if you don't want to... nothing that is but the following few things:</p><ul><li>Any Aspect item (Gamma/Epsilon sleights) can now carry an optional damage formula, set on its own sheet, and roll it via a new button after a successful cast - the GM still judges whether it actually hit, same as weapon damage.</li><li><b>Psychic Stab</b> and <b>Nightmare</b> are backfilled with their book damage automatically, on every character/NPC/goon that already owns a copy, and in the world items list.</li><li>Sub-strain <b>Influence Effect</b> tables are now kept per archetype, so you can switch archetype without the table you filled in for the previous one being deleted.</li><li>A Cyberbrain now has a concrete effect on Psi, and so does a synthmorph carrying a <b>Brain Box</b>; to make that possible, Cyberbrain and Core System ware you already own gets an invisible marker so the system can recognise it.</li></ul><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "25ki": "<p>One more thing, just for this world: it carries <b>Ki</b> characters from a pre-release build. Their sub-strain choices - The Crucible, Redline, Signal, Ruin and Colony - move into the Ki module's own data now. Nothing you see on the sheet changes, and the five Psi archetypes are not touched.</p>",
       "110": "<span class='resource-label' style='flex: 100%'><p>Dice Roll Refactoring<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a major update restructuring all dice rolls within the system.</b><p/><p>In order to work properly, there are some minor tweaks made on NPC/Threat level. This might cause you to reinstate any NPC/Threat token to currently active encounters, as only the main instance of these tokens (aka the NPC/Threat in the actors list) will be updated accordingly.</p></div></span>",

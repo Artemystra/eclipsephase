@@ -664,6 +664,35 @@ describe("the temporary traits authored from the book", () => {
   });
 });
 
+describe("the situational bonuses ware brings, authored from the book", () => {
+  /**
+   * Every ware item in the compendium, read from its source JSON.
+   * @returns {Object[]} The item sources
+   */
+  function packWare() {
+    const dir = path.join(PACK_DIR, "..", "ware");
+    return fs.readdirSync(dir).filter(file => file.endsWith(".json"))
+      .map(file => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8"))).filter(item => item.type === "ware");
+  }
+
+  test("every option names a label the language file has, and a value", () => {
+    const en = JSON.parse(fs.readFileSync(path.join(PACK_DIR, "..", "..", "..", "lang", "en.json"), "utf8"));
+    const missing = packWare().flatMap(ware => (ware.system.rollOptions ?? [])
+      .filter(option => !option.label.split(".").reduce((node, key) => node?.[key], en) || !Number(option.value))
+      .map(option => `${ware.name}: ${option.id}`));
+
+    expect(packWare().filter(ware => ware.system.rollOptions?.length).length).toBeGreaterThanOrEqual(31);
+    expect(missing).toEqual([]);
+  });
+
+  test("Mimicry's +30 replaces its flat +10, and the ware for special skills waits for the player's pick", () => {
+    const byName = Object.fromEntries(packWare().map(ware => [ware.name, ware.system.rollOptions ?? []]));
+
+    expect(byName["Mimicry Module"]).toEqual([expect.objectContaining({ value: 30, replacesFlat: 10 })]);
+    expect(byName["Fractal Digits"]).toEqual([expect.objectContaining({ specialSkill: "hardware", specialSkills: [] })]);
+  });
+});
+
 describe("Randomizer", () => {
   test("applies on its own on every social test, as the book's 'at any given time' says", () => {
     const randomizer = packDrugs().find(drug => drug.name === "Randomizer");

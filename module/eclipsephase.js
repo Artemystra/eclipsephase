@@ -26,6 +26,7 @@ import { registerUseCheckHooks } from "./common/dose-checks.js";
 import { registerOverTimeHooks } from "./common/dose-over-time.js";
 import { registerGrantHooks } from "./common/dose-grants.js";
 import { registerDefenseHooks } from "./common/dose-defense.js";
+import { postWareSetupCard } from "./common/ware-skills.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -870,6 +871,14 @@ Hooks.once("ready", async () => {
   }
 
   await game.user.unsetFlag("eclipsephase", "pendingArmorStashNotices");
+});
+
+// Asks a player, once after the 2.7 migration, which special skills the ware their characters
+// already carried applies to. Runs on every user's client but only finds what the migration flagged.
+Hooks.once("ready", async () => {
+  if (!game.user.getFlag("eclipsephase", "pendingWareSetup")) return;
+  await postWareSetupCard(game.user);
+  await game.user.unsetFlag("eclipsephase", "pendingWareSetup");
 });
 
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages

@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "chm"
+    "wareType": "chm",
+    "rollOptions": [
+      {
+        "id": "recall",
+        "label": "ep2e.item.ware.rollOptions.recall",
+        "value": 20,
+        "appliesTo": [
+          "cog"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

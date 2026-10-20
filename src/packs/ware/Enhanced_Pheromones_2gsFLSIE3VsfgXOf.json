@@ -17,7 +17,18 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "b"
+    "wareType": "b",
+    "rollOptions": [
+      {
+        "id": "pheromones",
+        "label": "ep2e.item.ware.rollOptions.pheromones",
+        "value": 10,
+        "appliesTo": [
+          "persuade",
+          "provoke"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

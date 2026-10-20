@@ -70,7 +70,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "b"
+    "wareType": "b",
+    "rollOptions": [
+      {
+        "id": "touch",
+        "label": "ep2e.item.ware.rollOptions.touch",
+        "value": -20,
+        "appliesTo": [
+          "perceive"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

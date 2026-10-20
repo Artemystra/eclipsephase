@@ -1,0 +1,13 @@
+<div class="alignCenter">
+  <p><i class="fas fa-microchip awesomeIcon" style="color: var(--augmented);"></i> <strong>{{localize "ep2e.chat.wareSetup.headline"}}</strong></p>
+  {{#if done}}
+  <p style="font-size: 11px; color: var(--inactive);">{{localize "ep2e.chat.wareSetup.done"}}</p>
+  {{else}}
+  <p style="font-size: 12px;">{{localize "ep2e.chat.wareSetup.copy"}}</p>
+  <div class="chatControls ep-chat-stack">
+    {{#each entries as |entry|}}
+    <button type="button" class="chatButton wareSkillSetup ware-setup-button ep-chat-secondary" data-action="wareSkillSetup" data-actor-uuid="{{entry.actorUuid}}" data-item-id="{{entry.itemId}}">{{entry.label}}</button>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>

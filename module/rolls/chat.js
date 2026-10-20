@@ -6,6 +6,7 @@ import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
 import { requestUseCheck, requestDoseHarm } from "../common/dose-checks.js";
 import { requestFilterCheck } from "../common/dose-defense.js";
+import { setupFromCard } from "../common/ware-skills.js";
 import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
@@ -132,6 +133,12 @@ export async function addChatListeners(html) {
     if (rollDoseCheck) {
       const messageId = rollDoseCheck.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestUseCheck(messageId);
+      return;
+    }
+
+    const wareSkillSetup = event.target.closest("button.wareSkillSetup");
+    if (wareSkillSetup) {
+      setupFromCard(wareSkillSetup.dataset.actorUuid, wareSkillSetup.dataset.itemId);
       return;
     }
 

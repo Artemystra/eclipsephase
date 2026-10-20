@@ -17,7 +17,18 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "ch"
+    "wareType": "ch",
+    "rollOptions": [
+      {
+        "id": "reach",
+        "label": "ep2e.item.ware.rollOptions.reach",
+        "value": 10,
+        "appliesTo": [
+          "melee",
+          "fray"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

@@ -5,7 +5,7 @@ import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 import { globalModifiers } from "../common/global-mod.js";
-import { doseRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../common/dose-options.js";
+import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs } from "../common/dose-options.js";
 import { drugPsiPenalties } from "../common/dose-state.js";
 
 /*
@@ -654,7 +654,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options[entry] = values[entry] || false
     }
 
-    const doseChoices = chosenRollOptions(doseRollOptions(actorWhole, dataset), values)
+    const doseChoices = chosenRollOptions([...doseRollOptions(actorWhole, dataset), ...wareRollOptions(actorWhole, dataset)], values)
     options.doseChoices = await Promise.all(doseChoices.map(async entry => ({ ...entry, value: await optionValue(entry.option) })))
 
     // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
@@ -782,7 +782,8 @@ if (traits) {
 
 const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
 const doseOptions = tickableRollOptions(doseRollOptions(actorWhole, dataset));
-rollData.names.push(...doseOptions.map(entry => entry.field));
+const wareOptions = tickableRollOptions(wareRollOptions(actorWhole, dataset));
+rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field));
 
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
     specName,
@@ -797,6 +798,7 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     dataset,
     poolOptions,
     doseOptions,
+    wareOptions,
     rollContext
 });
 

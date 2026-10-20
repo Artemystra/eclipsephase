@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "ch"
+    "wareType": "ch",
+    "rollOptions": [
+      {
+        "id": "micro",
+        "label": "ep2e.item.ware.rollOptions.microManipulation",
+        "value": 10,
+        "appliesTo": [],
+        "specialSkill": "hardware",
+        "specialSkills": []
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

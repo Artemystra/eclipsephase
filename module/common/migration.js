@@ -1,3 +1,4 @@
+import { wareAwaitingSetup } from "./ware-skills.js";
 import { normaliseDrugSystem } from "./drugs.js";
 
 export async function migrationLegacy(startMigration, endMigration){
@@ -2719,11 +2720,54 @@ export function _ep27_missingWareMarker(item) {
   return { name: item.name, img: "/icons/svg/mystery-man.svg", disabled: false, transfer: true, changes, flags: {}, system: { changes } };
 }
 
+/**
+ * The roll options each ware in the system compendium carries, by name.
+ * @returns {Promise<Map<String, Object[]>>} The options, for ware that has any
+ */
+async function _ep27_wareOptions() {
+  const catalogue = new Map();
+  const pack = game.packs.get("eclipsephase.ware");
+  if (!pack) return catalogue;
+  for (const ware of await pack.getDocuments()) {
+    const options = ware.system?.rollOptions;
+    if (Array.isArray(options) && options.length) catalogue.set(ware.name, options);
+  }
+  return catalogue;
+}
+
+/**
+ * The roll options a ware placed before 2.7 is missing, from its compendium namesake. Ware that
+ * already carries options of its own keeps them.
+ * @param {Item} item - The item
+ * @param {Map<String, Object[]>} catalogue - What _ep27_wareOptions read
+ * @returns {Object[]|null} The options to add, or null when there is nothing to add
+ */
+export function _ep27_missingWareOptions(item, catalogue) {
+  if (item.type !== "ware" || item.system?.rollOptions?.length) return null;
+  const options = catalogue.get(item.name);
+  return options ? foundry.utils.deepClone(options) : null;
+}
+
+/**
+ * Flags every player whose character carries ware still waiting for its special skills, so their
+ * own client asks them on their next login.
+ * @returns {Promise<void>} Resolves once every player is flagged
+ */
+async function _ep27_flagWareSetup() {
+  for (const actor of game.actors.filter(entry => entry.type === "character" && wareAwaitingSetup(entry).length)) {
+    for (const user of game.users.filter(entry => !entry.isGM && actor.testUserPermission(entry, "OWNER"))) {
+      await user.setFlag("eclipsephase", "pendingWareSetup", true);
+    }
+  }
+}
+
 export async function migrationPre27Needed() {
   const blueprints = await _ep27_drugBlueprints();
+  const wareOptions = await _ep27_wareOptions();
   const needs = item => (item.type === "drug"
     && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null))
-    || _ep27_missingWareMarker(item) !== null;
+    || _ep27_missingWareMarker(item) !== null
+    || _ep27_missingWareOptions(item, wareOptions) !== null;
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
@@ -2764,14 +2808,18 @@ export async function migrationPre27(startMigration) {
     includeCompendiums: true
   });
 
+  const wareOptions = await _ep27_wareOptions();
   await forEachItem(async item => {
     const marker = _ep27_missingWareMarker(item);
     if (marker) await item.createEmbeddedDocuments("ActiveEffect", [marker]);
+    const options = _ep27_missingWareOptions(item, wareOptions);
+    if (options) await item.update({ "system.rollOptions": options });
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => item.type === "ware",
     includeCompendiums: true
   });
+  await _ep27_flagWareSetup();
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };

@@ -64,7 +64,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bm"
+    "wareType": "bm",
+    "rollOptions": [
+      {
+        "id": "stress",
+        "label": "ep2e.item.ware.rollOptions.stress",
+        "value": 10,
+        "appliesTo": [
+          "wil"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",
