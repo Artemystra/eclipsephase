@@ -929,6 +929,121 @@ export function pickTokenOnCanvas({ bodyClass = "ep-targeting" } = {}) {
 }
 
 /**
+ * Draws one crosshair of the picking cursor's shape: a ring, four strokes and a centre dot.
+ * @param {Object} graphics - The PIXI graphics to draw into
+ * @param {Number} pixel - One screen pixel, in canvas units
+ * @param {Number} color - The colour
+ * @param {Number} grow - Screen pixels added on every side, for an outline drawn beneath
+ * @returns {void}
+ */
+function drawCrosshair(graphics, pixel, color, grow) {
+  graphics.lineStyle((2.5 + 2 * grow) * pixel, color, 1);
+  graphics.drawCircle(0, 0, 9 * pixel);
+  for (const [x, y] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) graphics.moveTo(x * (6 - grow) * pixel, y * (6 - grow) * pixel).lineTo(x * (15 + grow) * pixel, y * (15 + grow) * pixel);
+  graphics.lineStyle(0);
+  graphics.beginFill(color, 1).drawCircle(0, 0, (1.5 + grow) * pixel).endFill();
+}
+
+/**
+ * Draws a red crosshair with a thin white border on a token where it was clicked, the shape and
+ * on-screen size of the picking cursor (32 pixels across) at the zoom it was clicked at.
+ * @param {Object} token - The token placeable
+ * @param {Object} point - The click, in canvas coordinates
+ * @returns {Function} Removes the crosshair again
+ */
+export function drawTargetMarker(token, point) {
+  const graphics = new PIXI.Graphics();
+  const pixel = 1 / (globalThis.canvas?.stage?.scale?.x || 1);
+  drawCrosshair(graphics, pixel, 0xffffff, 1);
+  drawCrosshair(graphics, pixel, 0xdb2a2a, 0);
+  graphics.position.set(point.x - (token.x ?? 0), point.y - (token.y ?? 0));
+  token.addChild(graphics);
+  return () => graphics.destroy();
+}
+
+/**
+ * The text that follows the cursor while targets are picked: how many are left below it, and once
+ * the first one is marked, how to confirm above it.
+ * @param {Number} left - Targets still to pick
+ * @param {Number} marked - Targets marked so far
+ * @returns {String} The label's HTML
+ */
+export function targetCounterLabel(left, marked) {
+  const hint = marked ? `<span class="ep-targeting-hint">${escapeText(game.i18n.localize("ep2e.targeting.confirmHint"))}</span>` : "";
+  return `${hint}<span class="ep-targeting-count">${escapeText(game.i18n.format("ep2e.targeting.remaining", { count: left }))}</span>`;
+}
+
+/**
+ * Lets the user mark up to a number of tokens on the canvas. A click marks a token, another click
+ * on it unmarks it, a click past the limit is refused with a notice. A right-click confirms what is
+ * marked; Escape, or a right-click with nothing marked, cancels. The clicks are kept from the
+ * canvas itself, so picking targets does not also select or deselect tokens.
+ * @param {Object} options - max: how many may be marked; bodyClass: the class that sets the cursor;
+ *   marker: marker(token, point) draws a mark and returns what removes it
+ * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
+ *   cancelled
+ */
+export function pickTokensOnCanvas({ max = 1, bodyClass = "ep-targeting-multi", marker = drawTargetMarker } = {}) {
+  const board = document.getElementById("board");
+  if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
+  ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
+
+  return new Promise(resolve => {
+    const marked = new Map();
+    const label = document.createElement("div");
+    label.className = "ep-targeting-counter";
+    const refresh = () => { label.innerHTML = targetCounterLabel(max - marked.size, marked.size); };
+    const finish = tokens => {
+      board.removeEventListener("pointerdown", onPointer, true);
+      board.removeEventListener("contextmenu", onContext, true);
+      document.removeEventListener("pointermove", onMove, true);
+      document.removeEventListener("keydown", onKey, true);
+      document.body.classList.remove(bodyClass);
+      for (const unmark of marked.values()) unmark?.();
+      label.remove();
+      resolve(tokens);
+    };
+    const onPointer = event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (event.button === 2) return finish(marked.size ? Array.from(marked.keys()) : null);
+      if (event.button !== 0) return;
+      const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+      const token = tokenAt(point, canvas.tokens.placeables);
+      if (!token) return;
+      if (marked.has(token)) {
+        marked.get(token)?.();
+        marked.delete(token);
+      }
+      else if (marked.size >= max) ui.notifications.warn(game.i18n.format("ep2e.targeting.limitReached", { max }));
+      else marked.set(token, marker(token, point));
+      refresh();
+    };
+    const onContext = event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    const onMove = event => {
+      label.style.left = `${event.clientX}px`;
+      label.style.top = `${event.clientY}px`;
+    };
+    const onKey = event => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      finish(null);
+    };
+
+    refresh();
+    document.body.append(label);
+    document.body.classList.add(bodyClass);
+    board.addEventListener("pointerdown", onPointer, true);
+    board.addEventListener("contextmenu", onContext, true);
+    document.addEventListener("pointermove", onMove, true);
+    document.addEventListener("keydown", onKey, true);
+  });
+}
+
+/**
  * The actor of the token the user has selected on the canvas.
  * @returns {Actor|null} The actor, or null when nothing is selected
  */
@@ -1136,6 +1251,13 @@ export async function pickActorFromList(actors, header, copy) {
         weaponSelected = await WEAPON.weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID)
         
         if (!weaponSelected || weaponSelected.cancel){
+          return;
+        }
+
+        if (weaponSelected.drugId) {
+          const drug = actorWhole.items.get(weaponSelected.drugId);
+          const { forceDose } = await import("./doses.js");
+          if (drug) await forceDose(actorWhole, drug, systemOptions);
           return;
         }
 

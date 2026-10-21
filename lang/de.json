@@ -147,7 +147,9 @@
         "doseAlreadyUsed": "Diese Dosis wurde schon genommen.",
         "offerPackEmpty": "Das Pack, aus dem diese Dosis angeboten wurde, ist leer oder nicht mehr da.",
         "ammoPackNotTaken": "{name} ist ein Munitionspack: Lade es in eine Waffe, statt es einzunehmen.",
-        "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert."
+        "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert.",
+        "attackDelivered": "Dieser Angriff wurde bereits auf seine Ziele angewendet.",
+        "attackNoPayload": "Die Waffe weiß nicht, mit welcher Droge sie geladen ist. Lade sie zuerst nach."
       },
       "button": {
         "edit": "Editieren",
@@ -1438,7 +1440,8 @@
         "ranged": {
           "weaponSelect": {
             "headline": "Waffenwahl",
-            "modeSelectionHeadline": "Waffenmodus Wählen"
+            "modeSelectionHeadline": "Waffenmodus Wählen",
+            "drugsHeadline": "Drogen und Toxine"
           },
           "attacker": {
             "smartLinkLabel": "Smart Link (sonst -10)",
@@ -1566,7 +1569,8 @@
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie"
         },
-        "augmentations": "Augmentierungen"
+        "augmentations": "Augmentierungen",
+        "dodgeCoverLabel": "Hinter Deckung ausweichen"
       },
       "successType": {
         "success": "Erfolg",
@@ -1845,6 +1849,12 @@
       "doseHistory": {
         "header": "Dosis-Verlauf",
         "copy": "{actor} hat <strong>{name}</strong> in den <strong class=\"dose-history-highlight\">letzten 24 Stunden {day}-mal</strong> und in den <strong class=\"dose-history-highlight\">letzten 7 Tagen {week}-mal</strong> genommen."
+      },
+      "targeting": {
+        "fewerTitle": "Weniger Ziele",
+        "fewerHeadline": "Weniger Ziele als Dosen",
+        "fewerCopy": "Die Waffe verteilt {max} Dosen. Willst du wirklich nur {count} Ziele auswählen?",
+        "fewerConfirm": "Bestätigen"
       }
     },
     "chat": {
@@ -1871,7 +1881,6 @@
         "useOnMe": "Auf mich anwenden",
         "useOnSelection": "Auf Auswahl anwenden",
         "offered": "Ich biete eine Dosis <strong>{name}</strong> an",
-        "forced": "Ich habe meinem Ziel eine Dosis <strong>{name}</strong> verabreicht",
         "woreOff": "Meine Dosis <strong>{name}</strong> hat nachgelassen",
         "endedEarly": "Meine Dosis <strong>{name}</strong> wurde vorzeitig beendet",
         "wearOffSv": "Stress beim Nachlassen (SV)",
@@ -1910,7 +1919,8 @@
         "addictedBoth": "Mein Ego und mein Körper sind süchtig nach <strong>{name}</strong>",
         "addictionRaisedEgo": "Die Sucht meines Egos nach <strong>{name}</strong> steigt auf Stufe {level}",
         "addictionRaisedBody": "Die Sucht meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
-        "addictionRaisedBoth": "Die Sucht meines Egos und meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}"
+        "addictionRaisedBoth": "Die Sucht meines Egos und meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
+        "unaffected": "{drug} kann im Körper von {name} nicht wirken."
       },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",
@@ -1924,6 +1934,24 @@
         "headline": "Ware einstellen",
         "copy": "Manche Ware gibt Boni auf Spezialfertigkeiten. Sag einmal, für welche deiner Spezialfertigkeiten sie jeweils gilt.",
         "done": "Alle Anpassungen erledigt."
+      },
+      "attack": {
+        "applyDose": "Dosis auf ausgewählte Ziele anwenden",
+        "applyTargets": "Auf ausgewählte Ziele anwenden",
+        "targets": "Ziele: {names}",
+        "hitByPool": "Der Poolpunkt hat den Angriff mit {weapon} zum Treffer gemacht."
+      },
+      "defence": {
+        "headline": "Verteidigung gegen {weapon}",
+        "doseLabel": "{name}, je eine Dosis",
+        "dodge": "Ausweichen",
+        "parry": "Parieren",
+        "rollAll": "Restliche auf einmal würfeln",
+        "outcome": {
+          "hit": "Getroffen",
+          "half": "Teilweise ausgewichen: halbe Dosis",
+          "none": "Abgewehrt"
+        }
       }
     },
     "rule": {
@@ -2135,6 +2163,12 @@
         "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
         "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
       }
+    },
+    "targeting": {
+      "cancelHint": "ESC oder Rechtsklick ohne Ziele bricht ab.",
+      "confirmHint": "Rechtsklick zum Bestätigen",
+      "remaining": "Noch {count} Ziele",
+      "limitReached": "Die Höchstzahl von {max} Zielen ist erreicht. Klicke ein markiertes Ziel erneut an, um die Markierung zu entfernen."
     }
   }
 }

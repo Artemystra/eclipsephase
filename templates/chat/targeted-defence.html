@@ -1,0 +1,29 @@
+<div class="alignCenter ep-defence-card">
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 15px 10px 0 10px;">
+    <i class="fa-solid fa-crosshairs" style="font-size: 36px; color: var(--negative);"></i>
+    <div style="text-align: center; font-size: 14px;">{{headline}}</div>
+  </div>
+
+  {{#if effectLabel}}
+  <div style="display: block; margin: 15px 0 10px 0; padding: 10px 0; background-color: var(--pitchBorder);">
+    <div style="font-size: 14px; line-height: 1.6;"><span><i>{{effectLabel}}</i></span></div>
+  </div>
+  {{/if}}
+
+  <div class="chatControls ep-chat-stack">
+    {{#each entries as |entry|}}
+      {{#if entry.outcome}}
+      <p class="ep-defence-outcome">{{entry.name}}: <b>{{entry.outcomeLabel}}</b></p>
+      {{else if ../melee}}
+      <p class="ep-defence-name">{{entry.name}}</p>
+      <button type="button" class="chatButton defenceRoll ep-chat-secondary" data-action="defenceRoll" data-kind="dodge" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.dodge"}}</button>
+      <button type="button" class="chatButton defenceRoll ep-chat-secondary" data-action="defenceRoll" data-kind="parry" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.parry"}}</button>
+      {{else}}
+      <button type="button" class="chatButton defenceRoll ep-chat-secondary" data-action="defenceRoll" data-kind="dodge" data-target-uuid="{{entry.uuid}}">{{entry.name}}</button>
+      {{/if}}
+    {{/each}}
+    {{#if rollAll}}
+    <button type="button" class="chatButton defenceRollAll ep-chat-primary" data-action="defenceRollAll">{{localize "ep2e.chat.defence.rollAll"}}</button>
+    {{/if}}
+  </div>
+</div>

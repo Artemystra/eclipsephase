@@ -1,9 +1,9 @@
-import { takeDose, settleOverTime, damageTicksDue, combinedDamage, tickBreakdowns, registerOverTimeHooks } from "../../module/common/doses.js";
+import { takeDose, settleOverTime, damageTicksDue, combinedDamage, tickBreakdowns, registerOverTimeHooks, endRunOutDoses } from "../../module/common/doses.js";
 import { drugHealingAddition } from "../../module/rolls/modifiers.js";
 import { globalModifiers } from "../../module/rolls/modifiers.js";
 import { flatBonus } from "../../module/rolls/dice.js";
 import { JSDOM } from "jsdom";
-import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
+import { makeActor, makeUnlinkedToken, resetWorld, seedRolls } from "../setup/factories.js";
 
 const START = 5000;
 const NO_DAMAGE = { d10: 0, d6: 0, bonus: 0 };
@@ -15,7 +15,17 @@ const NO_DAMAGE = { d10: 0, d6: 0, bonus: 0 };
  * @returns {Actor} The prepared actor
  */
 function exposed(overTime, duration = { value: 1, units: "minutes" }) {
-  return makeActor({
+  return makeActor(exposedData(overTime, duration));
+}
+
+/**
+ * The data of a character carrying one toxin with the given effects over time, as exposed() builds it.
+ * @param {Object} overTime - The toxin's overTime
+ * @param {Object} duration - The toxin's duration
+ * @returns {Object} The actor data
+ */
+function exposedData(overTime, duration) {
+  return {
     type: "character",
     system: { activeMorph: "morph1" },
     items: [
@@ -29,7 +39,7 @@ function exposed(overTime, duration = { value: 1, units: "minutes" }) {
         }
       }
     ]
-  });
+  };
 }
 
 /**
@@ -175,6 +185,23 @@ describe("damage every tick", () => {
 
     expect(dose.getFlag("eclipsephase", "dose").overTimeState.ticks).toBe(2);
     expect(actor.system.health.physical.value).toBe(6);
+  });
+
+  test("a clock jump past a token's dose deals the ticks still due before the dose goes", async () => {
+    const scene = { uuid: "Scene.s1", tokens: [] };
+    const actor = makeUnlinkedToken(scene, exposedData({ damage: { d10: 0, d6: 1, bonus: 0 } }, { value: 1, units: "minutes" }));
+    const dose = await dosed(actor);
+    seedRolls([2]);
+    await settleOverTime(actor, dose, START);
+    seedRolls([40]);
+
+    game.time.worldTime = START + 120;
+    await dose.update({ "duration.expired": true });
+    await endRunOutDoses(actor, [dose]);
+
+    expect(dose.getFlag("eclipsephase", "dose").overTimeState.ticks).toBe(20);
+    expect(actor.system.health.physical.value).toBe(42);
+    expect(actor.effects.find(effect => effect.getFlag("eclipsephase", "dose"))).toBeUndefined();
   });
 
   test("the active GM settles a dose the moment it takes hold", async () => {

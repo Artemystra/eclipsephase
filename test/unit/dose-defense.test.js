@@ -1,4 +1,4 @@
-import { takeDose, offerDose, claimDose, doseDefense, halveUp, halvedDuration, defendedDoseData, defendedFormula, requestFilterCheck, becomeImmune, immunities, learnedBy, registerDefenseHooks, WARE, settleOverTime } from "../../module/common/doses.js";
+import { takeDose, doseDefense, halveUp, halvedDuration, defendedDoseData, defendedFormula, requestFilterCheck, becomeImmune, immunities, learnedBy, registerDefenseHooks, WARE, settleOverTime, doseFromAttack, chemicalPayload } from "../../module/common/doses.js";
 import { _ep27_missingWareMarker } from "../../module/common/migration.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
@@ -225,14 +225,14 @@ describe("a drug taken willingly", () => {
     expect(doseOn(actor).changes[0].value).toBe("-10");
   });
 
-  test("forced on an unwilling target, it meets the ware without anyone being asked", async () => {
+  test("delivered by an attack, it meets the ware without anyone being asked", async () => {
     const attacker = guarded({}, { category: "drug" });
     const target = guarded({ medichines: true });
-    game.user.isGM = true;
-    const { message } = await offerDose(attacker, attacker.items.get("drug1"), { forced: true });
+    const wait = jest.spyOn(foundry.applications.api.DialogV2, "wait");
 
-    await claimDose(message, target);
+    await doseFromAttack({ payload: chemicalPayload(attacker.items.get("drug1")) }, target, "hit");
 
+    expect(wait).not.toHaveBeenCalled();
     expect(doseOn(target).changes[0].value).toBe("-10");
   });
 });

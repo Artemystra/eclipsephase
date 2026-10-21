@@ -36,7 +36,7 @@
     <button type="button" class="chatButton useDose playerOnlyControl notForOwnerControl" data-action="useDose" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.dose.useOnMe"}}</button>
     <button type="button" class="chatButton useDose gmOnlyControl ep-chat-secondary" data-action="useDose" data-selection="true">{{localize "ep2e.chat.dose.useOnSelection"}}</button>
     <button type="button" class="chatButton pickDoseNpc gmOnlyControl ep-chat-secondary" data-action="pickDoseNpc">{{localize "ep2e.chat.dose.chooseNpc"}}</button>
-    <button type="button" class="chatButton pickDoseTarget {{#if forced}}ownerOnlyControl{{else}}gmOnlyControl{{/if}} ep-chat-primary" data-action="pickDoseTarget" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.dose.chooseTarget"}}</button>
+    <button type="button" class="chatButton pickDoseTarget gmOnlyControl ep-chat-primary" data-action="pickDoseTarget" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.dose.chooseTarget"}}</button>
   </div>
   {{/if}}
 </div>

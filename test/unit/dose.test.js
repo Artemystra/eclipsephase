@@ -1,9 +1,8 @@
-import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, forceDose, registerForcedDoseHooks, deliverForcedDose, rollWearOffStress, requestWearOffRoll } from "../../module/common/doses.js";
+import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, rollWearOffStress, requestWearOffRoll } from "../../module/common/doses.js";
 import { registerExpiryCleanup, cleanUpExpired } from "../../module/common/expiry.js";
 import { selectDoseRecipient } from "../../module/common/drugs.js";
 import { registerPoolRule } from "../../module/common/pool-rule.js";
 import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
-import { TASK_RESULT } from "../../module/rolls/dice.js";
 
 const { createdMessages } = global.__ep;
 
@@ -829,112 +828,6 @@ describe("who a dose is for", () => {
       seedDialogs(answer);
       expect(await selectDoseRecipient("Kick")).toEqual(expected);
     });
-});
-
-describe("forcing a dose on an unwilling target", () => {
-  const SKIP_DIALOG = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } };
-
-  /**
-   * An attacker with a fair Melee skill, carrying one fresh pack of Kick.
-   * @returns {Actor} The prepared actor
-   */
-  function attacker() {
-    return makeActor({
-      type: "character",
-      system: { activeMorph: "morph1", aptitudes: { som: { value: 15 } }, skillsVig: { melee: { value: 40 } }, pools: { vigor: { value: 2 } } },
-      items: [
-        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
-      ]
-    });
-  }
-
-  /**
-   * The dose offer cards posted so far.
-   * @returns {Object[]} The offer messages
-   */
-  function offers() {
-    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "doseOffer"));
-  }
-
-  beforeEach(() => registerForcedDoseHooks());
-
-  test("the attack carries what it is trying to deliver", async () => {
-    const actor = attacker();
-    seedRolls([95]);
-
-    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
-
-    expect(createdMessages[0].flags.eclipsephase.roll.doseAttempt).toEqual({ actorUuid: actor.uuid, itemId: "kick1", delivered: false });
-  });
-
-  test("a hit posts the dose's card, worded as forced, and spends nothing until it is placed", async () => {
-    const actor = attacker();
-    seedRolls([5]);
-
-    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    expect(offers()).toHaveLength(1);
-    expect(offers()[0].content).toContain("ep2e.chat.dose.forced");
-    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
-  });
-
-  test("a miss spends nothing and posts no card", async () => {
-    const actor = attacker();
-    seedRolls([95]);
-
-    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    expect(offers()).toHaveLength(0);
-    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
-  });
-
-  test("a pool spend that turns the miss into a hit delivers the dose then, and only once", async () => {
-    const actor = attacker();
-    seedRolls([95]);
-    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
-    const attack = createdMessages[0];
-    const context = { ...attack.flags.eclipsephase.roll, messageId: attack.id };
-
-    Hooks.callAll("eclipsephase.poolResult", { context, newResult: TASK_RESULT.SUCCESS });
-    await new Promise(resolve => setTimeout(resolve, 0));
-    Hooks.callAll("eclipsephase.poolResult", { context, newResult: TASK_RESULT.SUCCESS });
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    expect(offers()).toHaveLength(1);
-    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
-  });
-
-  test("a pool spend that leaves it a miss delivers nothing", async () => {
-    const actor = attacker();
-    seedRolls([95]);
-    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
-    const attack = createdMessages[0];
-
-    Hooks.callAll("eclipsephase.poolResult", { context: { ...attack.flags.eclipsephase.roll, messageId: attack.id }, newResult: TASK_RESULT.FAILURE });
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    expect(offers()).toHaveLength(0);
-  });
-
-  test("an ammunition pack or an empty pack is refused before any attack is rolled", async () => {
-    const ammo = carrying({ isAmmo: true });
-    const empty = carrying({ usagesUsed: 5 });
-
-    expect(await forceDose(ammo, ammo.items.get("kick1"), SKIP_DIALOG)).toBeNull();
-    expect(await forceDose(empty, empty.items.get("kick1"), SKIP_DIALOG)).toBeNull();
-    expect(createdMessages).toHaveLength(0);
-  });
-
-  test("a drug gone from the sheet before the hit lands is not delivered", async () => {
-    const actor = attacker();
-    const attempt = { actorUuid: actor.uuid, itemId: "gone", delivered: false };
-
-    expect(await deliverForcedDose(attempt, "no-such-message")).toBeNull();
-    expect(offers()).toHaveLength(0);
-  });
 });
 
 describe("the stress a drug leaves behind as it wears off", () => {

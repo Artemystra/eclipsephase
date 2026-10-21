@@ -1,5 +1,6 @@
 import EPactorSheet from "../../module/actor/EPactorSheet.js";
 import { reloadWeapon } from "../../module/common/weapon-functions.js";
+import { registerChemicalAttacks } from "../../module/common/doses.js";
 import { makeActor, resetWorld, seedDialogs, setSetting, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -175,6 +176,19 @@ describe("loading a sprayer with a drug", () => {
     expect(sprayer.system.ammoMin).toEqual(sprayer.system.ammoMax);
     expect(sprayer.system.ammoSelected.id).toEqual("drug1");
     expect(sprayer.system.ammoSelected.dvModifier).toMatchObject({ d10: 0, d6: 0, bonus: 0 });
+  });
+
+  test("the sprayer keeps the dose it is loaded with, even once loading has used the last pack up", async () => {
+    registerChemicalAttacks();
+    setSetting("eclipsephase", "ammoRules", "survival");
+    const actor = sprayerWith({ quantity: 1 });
+
+    await pressReload(actor);
+
+    expect(actor.items.get("drug1")).toBeUndefined();
+    const dose = actor.items.get("gun1").system.ammoSelected.dose;
+    expect(dose).toMatchObject({ name: "Grin", drugType: "biochem" });
+    expect(dose.data.flags.eclipsephase.dose.name).toBe("Grin");
   });
 
   test("under survival rules loading uses up one ammunition pack", async () => {

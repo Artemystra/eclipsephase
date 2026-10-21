@@ -165,8 +165,12 @@
       </div>
   {{/if}}
 
-  {{#if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
-    {{#if (or (eq resultClass "success")(eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true))}}
+  {{#if (and rollContext.targetedAttack (eq resultClass "success"))}}
+   <div class="chatControls">
+     <button type="button" class="chatButton targetedAttack privateChatButton" data-action="targetedAttack" data-ownerid="{{actor.id}}">{{localize rollContext.targetedAttack.labelKey}}</button>
+   </div>
+  {{else if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
+    {{#if (and (not rollContext.targetedAttack) (or (eq resultClass "success")(eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true)))}}
      <div class="chatControls">
        <button type="button" class="chatButton weaponDamage privateChatButton" data-action="weaponDamage">{{localize "ep2e.chat.buttonLabel.weaponDamage"}}</button>
      </div>

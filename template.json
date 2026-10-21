@@ -630,6 +630,7 @@
       "ammoSelected": {
         "_id": "-",
         "name": "",
+        "dose": null,
         "dvModifier": {
           "d10": null,
           "d6": null,

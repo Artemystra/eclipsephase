@@ -144,7 +144,9 @@
         "doseAlreadyUsed": "这一剂已经被使用。",
         "offerPackEmpty": "提供这一剂的药包已空或已不存在。",
         "ammoPackNotTaken": "{name} 是弹药包：请将其装入武器，而不是服用。",
-        "noPlacedToken": "该角色当前没有已放置的指令牌。"
+        "noPlacedToken": "该角色当前没有已放置的指令牌。",
+        "attackDelivered": "此攻击已应用于其目标。",
+        "attackNoPayload": "武器不知道装填的是哪种药物。请先重新装填。"
       },
       "button": {
         "edit": "编辑",
@@ -1478,6 +1480,9 @@
               "moderate": "中级（-20）",
               "major": "上级（-30）"
             }
+          },
+          "weaponSelect": {
+            "drugsHeadline": "药物与毒素"
           }
         },
         "melee": {
@@ -1538,7 +1543,8 @@
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
         },
-        "augmentations": "增强"
+        "augmentations": "增强",
+        "dodgeCoverLabel": "在掩体后闪避"
       },
       "successType": {
         "success": "Success",
@@ -1808,6 +1814,12 @@
       "doseHistory": {
         "header": "服药记录",
         "copy": "{actor} 在<strong class=\"dose-history-highlight\">过去 24 小时</strong>内服用 <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} 次</strong>，<strong class=\"dose-history-highlight\">过去 7 天</strong>内 <strong class=\"dose-history-highlight\">{week} 次</strong>。"
+      },
+      "targeting": {
+        "fewerTitle": "目标较少",
+        "fewerHeadline": "目标少于剂量",
+        "fewerCopy": "该武器会散布 {max} 剂。确定只选择 {count} 个目标吗？",
+        "fewerConfirm": "确认"
       }
     },
     "chat": {
@@ -1834,7 +1846,6 @@
         "useOnMe": "用在我身上",
         "useOnSelection": "用在选中对象上",
         "offered": "我提供一剂 <strong>{name}</strong>",
-        "forced": "我给目标打入了一剂 <strong>{name}</strong>",
         "woreOff": "我的 <strong>{name}</strong> 药效已经消退",
         "endedEarly": "我的 <strong>{name}</strong> 被提前终止",
         "wearOffSv": "药效消退压力 (SV)",
@@ -1873,7 +1884,8 @@
         "addictedBoth": "我的自我和身体都对 <strong>{name}</strong> 上瘾了",
         "addictionRaisedEgo": "我的自我对 <strong>{name}</strong> 的成瘾升至 {level} 级",
         "addictionRaisedBody": "我的身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
-        "addictionRaisedBoth": "我的自我和身体对 <strong>{name}</strong> 的成瘾升至 {level} 级"
+        "addictionRaisedBoth": "我的自我和身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
+        "unaffected": "{drug} 无法作用于 {name} 的身体。"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
@@ -1887,6 +1899,24 @@
         "headline": "设置你的植入物",
         "copy": "有些植入物为特殊技能提供加值。请为每个植入物指定一次适用于哪些特殊技能。",
         "done": "所有调整已完成。"
+      },
+      "attack": {
+        "applyDose": "对所选目标施用剂量",
+        "applyTargets": "应用到所选目标",
+        "targets": "目标：{names}",
+        "hitByPool": "资源池的投入使 {weapon} 的攻击变为命中。"
+      },
+      "defence": {
+        "headline": "防御 {weapon}",
+        "doseLabel": "{name}，每人一剂",
+        "dodge": "闪避",
+        "parry": "格挡",
+        "rollAll": "一次性投掷其余",
+        "outcome": {
+          "hit": "命中",
+          "half": "部分闪避：半剂",
+          "none": "避开"
+        }
       }
     },
     "rule": {
@@ -2104,6 +2134,12 @@
         "unknownTraitType": "未知的特征类型。请至少选择一项——意识或义体——以使用该特征。",
         "enhancementsAdded": "已为 {body} 添加 {count} 项插件。"
       }
+    },
+    "targeting": {
+      "cancelHint": "按 ESC 或在未选目标时右键取消。",
+      "confirmHint": "右键确认",
+      "remaining": "还剩 {count} 个目标",
+      "limitReached": "已达到最多 {max} 个目标。再次点击已标记的目标可取消标记。"
     }
   }
 }

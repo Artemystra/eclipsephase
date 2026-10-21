@@ -4166,3 +4166,35 @@ body.ep-dose-targeting #board {
 body.ep-targeting #board {
   cursor: crosshair !important;
 }
+
+/* Marking several targets: a neon turquoise crosshair, with the targets left below it and how to
+   confirm above it. */
+body.ep-targeting-multi #board {
+  cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='%2300f5e4' stroke-width='2.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='1.5' fill='%2300f5e4'/></svg>") 16 16, crosshair !important;
+}
+
+.ep-targeting-counter {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  color: #00f5e4;
+  font-size: 13px;
+  font-weight: bold;
+  text-shadow: 0 0 3px black, 0 0 6px black;
+  white-space: nowrap;
+}
+
+.ep-targeting-counter .ep-targeting-count:only-child {
+  margin-top: 56px;
+}
+
+.ep-defence-card .ep-defence-name,
+.ep-defence-card .ep-defence-outcome {
+  margin: 0;
+  text-align: center;
+}

@@ -144,7 +144,9 @@
         "doseAlreadyUsed": "Esta dosis ya se ha usado.",
         "offerPackEmpty": "El paquete del que se ofreció esta dosis está vacío o ya no existe.",
         "ammoPackNotTaken": "{name} es un paquete de munición: cárgalo en un arma en lugar de tomarlo.",
-        "noPlacedToken": "Este actor no está representado por un token colocado en este momento."
+        "noPlacedToken": "Este actor no está representado por un token colocado en este momento.",
+        "attackDelivered": "Este ataque ya se ha aplicado a sus objetivos.",
+        "attackNoPayload": "El arma no sabe con qué droga está cargada. Recárgala primero."
       },
       "button": {
         "edit": "Edit",
@@ -1471,6 +1473,9 @@
               "moderate": "Moderate (-20)",
               "major": "Major (-30)"
             }
+          },
+          "weaponSelect": {
+            "drugsHeadline": "Drogas y toxinas"
           }
         },
         "melee": {
@@ -1531,7 +1536,8 @@
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
         },
-        "augmentations": "Aumentos"
+        "augmentations": "Aumentos",
+        "dodgeCoverLabel": "Esquivar tras cobertura"
       },
       "successType": {
         "success": "Success",
@@ -1801,6 +1807,12 @@
       "doseHistory": {
         "header": "Historial de dosis",
         "copy": "{actor} tomó <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} veces</strong> en las <strong class=\"dose-history-highlight\">últimas 24 horas</strong> y <strong class=\"dose-history-highlight\">{week} veces</strong> en los <strong class=\"dose-history-highlight\">últimos 7 días</strong>."
+      },
+      "targeting": {
+        "fewerTitle": "Menos objetivos",
+        "fewerHeadline": "Menos objetivos que dosis",
+        "fewerCopy": "El arma reparte {max} dosis. ¿Seguro que quieres seleccionar solo {count} objetivos?",
+        "fewerConfirm": "Confirmar"
       }
     },
     "chat": {
@@ -1827,7 +1839,6 @@
         "useOnMe": "Usar en mí",
         "useOnSelection": "Usar en la selección",
         "offered": "Ofrezco una dosis de <strong>{name}</strong>",
-        "forced": "Le he metido a mi objetivo una dosis de <strong>{name}</strong>",
         "woreOff": "Mi dosis de <strong>{name}</strong> ha dejado de hacer efecto",
         "endedEarly": "Mi dosis de <strong>{name}</strong> se terminó antes de tiempo",
         "wearOffSv": "Estrés al pasar el efecto (SV)",
@@ -1866,7 +1877,8 @@
         "addictedBoth": "Mi ego y mi cuerpo son adictos a <strong>{name}</strong>",
         "addictionRaisedEgo": "La adicción de mi ego a <strong>{name}</strong> sube al nivel {level}",
         "addictionRaisedBody": "La adicción de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
-        "addictionRaisedBoth": "La adicción de mi ego y de mi cuerpo a <strong>{name}</strong> sube al nivel {level}"
+        "addictionRaisedBoth": "La adicción de mi ego y de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
+        "unaffected": "{drug} no puede actuar en el cuerpo de {name}."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
@@ -1880,6 +1892,24 @@
         "headline": "Configura tus implantes",
         "copy": "Algunos implantes dan bonificaciones a habilidades especiales. Indica una vez para cuáles de tus habilidades especiales sirve cada uno.",
         "done": "Todos los ajustes hechos."
+      },
+      "attack": {
+        "applyDose": "Aplicar dosis a los objetivos seleccionados",
+        "applyTargets": "Aplicar a los objetivos seleccionados",
+        "targets": "Objetivos: {names}",
+        "hitByPool": "El gasto de reserva convirtió el ataque con {weapon} en un impacto."
+      },
+      "defence": {
+        "headline": "Defenderse de {weapon}",
+        "doseLabel": "{name}, una dosis cada uno",
+        "dodge": "Esquivar",
+        "parry": "Parar",
+        "rollAll": "Tirar el resto a la vez",
+        "outcome": {
+          "hit": "Impacto",
+          "half": "Esquivado en parte: media dosis",
+          "none": "Evitado"
+        }
       }
     },
     "rule": {
@@ -2097,6 +2127,12 @@
         "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait.",
         "enhancementsAdded": "{count} mejora(s) añadida(s) a {body}."
       }
+    },
+    "targeting": {
+      "cancelHint": "Pulsa ESC o haz clic derecho sin objetivos para cancelar.",
+      "confirmHint": "Clic derecho para confirmar",
+      "remaining": "Quedan {count} objetivos",
+      "limitReached": "Se ha alcanzado el máximo de {max} objetivos. Vuelve a hacer clic en un objetivo marcado para desmarcarlo."
     }
   }
 }

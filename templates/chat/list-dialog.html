@@ -38,8 +38,10 @@
         </div>
         <div class="grid" style="margin-bottom: 20px;">
             {{#each objectList}}
-            <div style="min-height: 40px; display: flex;">
-                {{#if id}}
+            <div style="min-height: 40px; display: flex;{{#if heading}} grid-column: 1 / -1; align-items: flex-end;{{/if}}">
+                {{#if heading}}
+                <h3 class="subheader dialog" style="width: 100%;">{{localize heading}}</h3>
+                {{else if id}}
                 <div>
                     <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>

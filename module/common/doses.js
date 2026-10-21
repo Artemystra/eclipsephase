@@ -8,6 +8,8 @@ import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifie
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
 import { getBodyBindingInfo } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
+import { chemicalDoses } from "./weapon-functions.js";
+import { registerAttackEffect } from "../rolls/targeted-attacks.js";
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
 // biological body; an electronic drug is software and needs an infomorph or a cyberbrain.
@@ -427,10 +429,9 @@ export async function takeDose(actor, item) {
  * still being on the sheet.
  * @param {Actor} actor - The actor handing the dose over
  * @param {Item} item - The drug
- * @param {Object} [options] - forced: the dose got into an unwilling target through a melee hit
  * @returns {Promise<Object>} offered, and the message posted
  */
-export async function offerDose(actor, item, { forced = false } = {}) {
+export async function offerDose(actor, item) {
   if (isAmmoPack(item.system)) {
     ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.ammoPackNotTaken", { name: item.name }));
     return { offered: false, message: null };
@@ -446,14 +447,14 @@ export async function offerDose(actor, item, { forced = false } = {}) {
   const card = {
     icon: "fa-syringe",
     color: "--negative",
-    headline: game.i18n.format(forced ? "ep2e.chat.dose.forced" : "ep2e.chat.dose.offered", { name: item.name }),
+    headline: game.i18n.format("ep2e.chat.dose.offered", { name: item.name }),
     rows: doseRows(item.system, null)
   };
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...card, offer: true, forced, actorUuid: actor.uuid });
+  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...card, offer: true, actorUuid: actor.uuid });
   const message = await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
-    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null, forced, giverUuid: actor.uuid, itemId: item.id } } }
+    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null, giverUuid: actor.uuid, itemId: item.id } } }
   });
   return { offered: true, message };
 }
@@ -482,7 +483,7 @@ export async function claimDose(message, actor) {
   const spent = pack ? await consumeDose(giver, pack) : { taken: false };
   if (!spent.taken) return { claimed: false, reasonKey: "ep2e.actorSheet.warnings.offerPackEmpty" };
 
-  const defended = await defendDose(actor, offer.data, { willing: !offer.forced, ask: false });
+  const defended = await defendDose(actor, offer.data, { willing: true, ask: false });
   const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
   const addiction = addictionControls(actor, offer.data?.flags?.eclipsephase?.dose);
   const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...offer.card, footnote, offer: false, addiction });
@@ -534,8 +535,8 @@ export async function requestDoseClaim(messageId, { selection = false } = {}) {
 /**
  * Forces a dose on an unwilling target: a melee attack first (Core p.330: a patch goes on with a
  * touch-only attack, +20 - the attacker ticks Touch only in the dialog; a coated blade or a needle
- * is an ordinary attack). Nothing is spent yet - the dose leaves the pack, and its card appears,
- * only once the attack hits.
+ * is an ordinary attack). A hit offers the attacker the target button; the dose leaves the pack
+ * once the target is picked, and goes in unless the target dodges or parries.
  * @param {Actor} actor - The attacker
  * @param {Item} item - The drug
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
@@ -557,41 +558,118 @@ export async function forceDose(actor, item, systemOptions = {}) {
     type: "skill",
     rollvalue: actor.system.skillsVig?.melee?.roll ?? 0,
     pooltype: "Vigor",
-    contextFlags: { doseAttempt: { actorUuid: actor.uuid, itemId: item.id, delivered: false } }
+    contextFlags: {
+      targetedAttack: {
+        effect: "dose",
+        targets: 1,
+        area: false,
+        labelKey: "ep2e.chat.attack.applyDose",
+        weaponName: item.name,
+        effectLabel: game.i18n.format("ep2e.chat.defence.doseLabel", { name: item.name }),
+        payload: { ...chemicalPayload(item), giverUuid: actor.uuid, itemId: item.id, spend: true }
+      }
+    }
   };
   return RollCheck(dataset, actor.system, actor, systemOptions, null, "skill");
 }
 
 /**
- * Delivers a forced dose once its attack has hit: marks the attack's card so a later pool spend
- * cannot deliver it twice, then spends the dose and posts its card for the GM to place.
- * @param {Object} attempt - The doseAttempt the attack carried
- * @param {String} messageId - The attack's chat card
- * @returns {Promise<Object|null>} What offerDose reported, or null when nothing was delivered
+ * The dose a chemical weapon or a forced drug carries, read off the drug now, so a hit still knows
+ * what it delivers once the pack is gone.
+ * @param {Item} item - The drug
+ * @returns {Object} data (the dose's effect data), drugType and name
  */
-export async function deliverForcedDose(attempt, messageId) {
-  const message = game.messages.get(messageId);
-  if (!attempt || message?.getFlag?.("eclipsephase", "roll")?.doseAttempt?.delivered) return null;
-
-  const actor = await fromUuid(attempt.actorUuid);
-  const item = actor?.items?.get(attempt.itemId);
-  if (!item) {
-    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: "" }));
-    return null;
-  }
-
-  if (message) await message.update({ "flags.eclipsephase.roll.doseAttempt.delivered": true });
-  return offerDose(actor, item, { forced: true });
+export function chemicalPayload(item) {
+  return { data: doseEffectData(item), drugType: item.system.drugType ?? "", name: item.name };
 }
 
 /**
- * Hangs the forced dose on the attack's outcome: a hit delivers it at once, and a miss a pool
- * spend later turns into a hit delivers it then. Both run on the client that rolled or spent.
+ * The dose a weapon is loaded with: the copy taken at loading, or for a weapon loaded before that
+ * copy existed, the pack it names if the actor still carries it.
+ * @param {Actor} actor - The weapon's owner
+ * @param {Item} weapon - The weapon
+ * @returns {Object|null} The payload, or null when it is not known
+ */
+export function weaponPayload(actor, weapon) {
+  const stored = weapon?.system?.ammoSelected?.dose;
+  if (stored?.data) return stored;
+  const pack = actor?.items?.get?.(weapon?.system?.ammoSelected?.id);
+  return pack?.type === "drug" ? chemicalPayload(pack) : null;
+}
+
+/**
+ * Takes back the dose an attack put on a target, when a pool spend turns the defence around. It
+ * goes without a wear-off card, as it never took hold.
+ * @param {Actor} actor - The target
+ * @param {String} defenceId - The defence the dose came through
+ * @returns {Promise<void>} Resolves once it is gone
+ */
+async function undoAttackDose(actor, defenceId) {
+  const effect = Array.from(actor.effects ?? []).find(entry => defenceId && entry.getFlag?.("eclipsephase", "dose")?.defenceId === defenceId);
+  if (!effect) return;
+  await effect.update({ "flags.eclipsephase.dose.filteredOut": true });
+  await actor.deleteEmbeddedDocuments("ActiveEffect", [effect.id]);
+}
+
+/**
+ * Carries out what an attack's dose does to one target after their defence: the full dose on a
+ * hit, half of it when they only partly dodged, nothing when they got away. The dose meets the
+ * target's body and their defensive ware as any unwilling dose does.
+ * @param {Object} attack - The attack, with its payload
+ * @param {Actor} target - The target
+ * @param {String} outcome - "hit", "half" or "none"
+ * @param {Object} [options] - byPool: a pool spend changed the defence, so the earlier dose goes;
+ *   defenceId: the defence it comes through
+ * @returns {Promise<Object|null>} What letting the dose in reported, or null when none went in
+ */
+export async function doseFromAttack(attack, target, outcome, { byPool = false, defenceId = null } = {}) {
+  if (byPool) await undoAttackDose(target, defenceId);
+  const payload = attack.payload;
+  if (outcome === "none" || !payload?.data) return null;
+  const substrate = doseSubstrate(target, { system: { drugType: payload.drugType } });
+  if (!substrate.allowed) {
+    await postCard(target, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
+    return null;
+  }
+  let data = foundry.utils.deepClone(payload.data);
+  data.flags.eclipsephase.dose.defenceId = defenceId;
+  if (outcome === "half") data = defendedDoseData(data, { halve: true, by: [], checkBonus: false });
+  const defended = await defendDose(target, data, { willing: false, ask: false });
+  return letDoseIn(target, { ...defended, name: payload.name });
+}
+
+/**
+ * Lets attacks carry doses: a weapon that fires chemicals keeps a copy of the drug it is loaded
+ * with, its hits and a forced dose's hit deliver it to the targets the attacker picks.
  * @returns {void}
  */
-export function registerForcedDoseHooks() {
-  settleOnRoll("doseAttempt", (attempt, passed, { message, context }) => {
-    if (passed) deliverForcedDose(attempt, message?.id ?? context.messageId);
+export function registerChemicalAttacks() {
+  Hooks.on("eclipsephase.weaponLoaded", ({ ammo, ammoType, update }) => {
+    if (ammoType === "chemical" && ammo?.type === "drug") update["system.ammoSelected.dose"] = chemicalPayload(ammo);
+  });
+  registerAttackEffect("dose", {
+    detect(context) {
+      if (context.rolledFrom !== "rangedWeapon") return null;
+      const doses = chemicalDoses(context.weapon?.weaponTraits);
+      if (!doses) return null;
+      const payload = weaponPayload(context.actor, context.weapon?.weapon);
+      const effectLabel = payload ? game.i18n.format("ep2e.chat.defence.doseLabel", { name: payload.name }) : "";
+      return { targets: doses, area: true, payload, labelKey: "ep2e.chat.attack.applyDose", effectLabel };
+    },
+    ready(attack) {
+      if (attack.payload?.data) return true;
+      ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.attackNoPayload"));
+      return false;
+    },
+    async beforeDelivery(attack) {
+      if (!attack.payload?.spend) return true;
+      const giver = await fromUuid(attack.payload.giverUuid);
+      const pack = giver?.items?.get?.(attack.payload.itemId);
+      const spent = pack ? await consumeDose(giver, pack) : { taken: false };
+      if (!spent.taken) ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.offerPackEmpty"));
+      return spent.taken;
+    },
+    resolve: doseFromAttack
   });
 }
 
@@ -621,14 +699,19 @@ export function registerDoseSocket() {
 }
 
 /**
- * Removes every dose whose duration has run out, called from the actor's effect-duration hook on
- * the GM's client. Foundry's expiry only marks an effect; taking it off the actor is the system's
- * job, and the wear-off card hangs on exactly that deletion.
+ * Removes every dose whose duration has run out, called once Foundry marked it expired on the GM's
+ * client. Foundry's expiry only marks an effect; taking it off the actor is the system's job, and
+ * the wear-off card hangs on exactly that deletion. The ticks still due up to the dose's end are
+ * dealt first: a clock jump past the end drops the dose from Foundry's tracking before the clock
+ * hook runs, so for an unlinked token nothing else would deal them.
  * @param {Actor} actor - The actor whose effects were refreshed
  * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
  * @returns {Promise<void>} Resolves once every run-out dose is gone
  */
-export function endRunOutDoses(actor, effects) {
+export async function endRunOutDoses(actor, effects) {
+  for (const effect of effects) {
+    if (effect.getFlag?.("eclipsephase", "dose") && durationRunOut(effect)) await settleInTurn(actor, effect);
+  }
   return deleteRunOutEffects(actor, effects, "dose");
 }
 
@@ -654,10 +737,8 @@ function pickNpc() {
 }
 
 /**
- * Hands an offered dose to a target picked on the card: a token on the canvas, or an NPC from the
- * list. The GM can do both. A dose forced on an unwilling target in a fight also lets the
- * attacker's own players pick on the canvas; their pick is sent to the active GM, whose client
- * makes the claim, since only it may change the card and another actor.
+ * Hands an offered dose to a target the GM picks on the card: a token on the canvas, or an NPC
+ * from the list.
  * @param {String} messageId - The offer card's id
  * @param {String} mode - "canvas" or "npc"
  * @param {Object} [pickers] - Replacements for the two pickers, for tests
@@ -667,8 +748,7 @@ export async function chooseDoseTarget(messageId, mode, pickers = {}) {
   const message = game.messages.get(messageId);
   const offer = message?.getFlag?.("eclipsephase", "doseOffer");
   if (!offer) return { claimed: false, cancelled: true };
-  const attacker = !game.user.isGM && offer.forced && mode === "canvas" && fromUuidSync(offer.giverUuid ?? "")?.isOwner;
-  if (!game.user.isGM && !attacker) return { claimed: false, cancelled: true };
+  if (!game.user.isGM) return { claimed: false, cancelled: true };
 
   let actor = null;
   if (mode === "canvas") {
@@ -684,11 +764,6 @@ export async function chooseDoseTarget(messageId, mode, pickers = {}) {
     actor = await (pickers.npc ?? pickNpc)();
   }
   if (!actor) return { claimed: false, cancelled: true };
-
-  if (!game.user.isGM) {
-    const sent = relayToActiveGM("claimDose", { messageId, actorUuid: actor.uuid, userId: game.user.id });
-    return sent ? { claimed: false, sent: true } : { claimed: false, cancelled: true };
-  }
 
   const result = await claimDose(message, actor);
   if (result.reasonKey) ui.notifications.warn(game.i18n.localize(result.reasonKey));
@@ -1481,7 +1556,9 @@ function inheritedCopy(actor, effect) {
 /**
  * Brings one dose's effects over time up to the world time: deals the damage of every tick due
  * and not yet dealt, grows the modifier to the steps due. The progress is written to the dose
- * before anything is rolled, so a second call cannot deal the same tick twice.
+ * before anything is rolled, so a second call cannot deal the same tick twice. A dose Foundry has
+ * marked expired no longer applies, but is still settled up to its end - the ticks are capped by
+ * its span - so a clock jump past the end deals what fell due before it.
  * @param {Actor} actor - The actor the dose is on
  * @param {ActiveEffect} effect - The dose
  * @param {Number} [now] - The world time
@@ -1489,7 +1566,7 @@ function inheritedCopy(actor, effect) {
  */
 export async function settleOverTime(actor, effect, now = game.time.worldTime) {
   const dose = effect?.getFlag?.("eclipsephase", "dose");
-  if (!dose || !hasOverTime(dose.overTime) || !effect.active || inheritedCopy(actor, effect)) return null;
+  if (!dose || !hasOverTime(dose.overTime) || effect.disabled || inheritedCopy(actor, effect)) return null;
   const state = dose.overTimeState ?? {};
   const ticks = damageTicksDue(dose.overTime, effect, now) - (Number(state.ticks) || 0);
   const steps = modifierStepsDue(dose.overTime, effect, now);
@@ -1511,26 +1588,31 @@ export async function settleOverTime(actor, effect, now = game.time.worldTime) {
 
 /**
  * Settles a dose one call at a time: a call arriving while the dose is still being settled runs
- * once more after it, never alongside it.
+ * once more after it, never alongside it, and resolves only once that run is done.
  * @param {Actor} actor - The actor the dose is on
  * @param {ActiveEffect} effect - The dose
  * @returns {Promise<void>} Resolves once settled
  */
-async function settleInTurn(actor, effect) {
+function settleInTurn(actor, effect) {
   const key = effect.uuid ?? effect.id;
-  if (settling.has(key)) {
-    settling.set(key, true);
-    return;
+  const running = settling.get(key);
+  if (running) {
+    running.again = true;
+    return running.done;
   }
-  settling.set(key, false);
-  try {
-    do {
-      settling.set(key, false);
-      await settleOverTime(actor, effect);
-    } while (settling.get(key) === true && Array.from(actor.effects ?? []).some(entry => entry.id === effect.id));
-  } finally {
-    settling.delete(key);
-  }
+  const entry = { again: false, done: null };
+  settling.set(key, entry);
+  entry.done = (async () => {
+    try {
+      do {
+        entry.again = false;
+        await settleOverTime(actor, effect);
+      } while (entry.again && Array.from(actor.effects ?? []).some(candidate => candidate.id === effect.id));
+    } finally {
+      settling.delete(key);
+    }
+  })();
+  return entry.done;
 }
 
 /**
@@ -2091,13 +2173,13 @@ export function registerAddictionHooks() {
 
 /**
  * Hangs everything a dose does on Foundry's and the roll pipeline's hooks: the wear-off card and
- * what a dose leaves behind, forced doses, the checks on taking, effects over time, lent items,
- * defensive ware and addiction.
+ * what a dose leaves behind, doses from attacks, the checks on taking, effects over time, lent
+ * items, defensive ware and addiction.
  * @returns {void}
  */
 export function registerDrugHooks() {
   registerDoseHooks();
-  registerForcedDoseHooks();
+  registerChemicalAttacks();
   registerUseCheckHooks();
   registerOverTimeHooks();
   registerGrantHooks();

@@ -208,7 +208,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 async function defineRoll(dataset, actorWhole){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -649,7 +649,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     }
 
     const rollContext = {
-        dataset, actor: actorWhole, actorModel, rolledFrom, roll,
+        dataset, actor: actorWhole, actorModel, rolledFrom, roll, weapon: weaponSelected ?? null,
         rollType: roll.type, sections: [], cancelReason: null,
         options: null, task: null, pool: null, modifiers: [], itemData: null, flags: { ...(dataset.contextFlags ?? {}) },
         outputData: null, message: null, blind: false, rollMode: null

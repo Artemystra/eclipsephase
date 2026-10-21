@@ -123,8 +123,14 @@
     </div>
     <div class="form-group listBackgroundMain">
         <label class="resource-value">{{localize "ep2e.roll.dialog.dodgeRangedLabel"}}</label>
-        <input class="item-standard-margin-both-large sheet" type="checkbox" checked name="rangedFray">
+        <input class="item-standard-margin-both-large sheet" type="checkbox" {{#unless dataset.frayMelee}}checked{{/unless}} name="rangedFray" id="rangedFray">
     </div>
+    {{#if dataset.dodgeCover}}
+    <div class="form-group listBackgroundMain">
+        <label class="resource-value" for="behindCover">{{localize "ep2e.roll.dialog.dodgeCoverLabel"}}</label>
+        <input class="item-standard-margin-both-large sheet" type="checkbox" name="behindCover" id="behindCover">
+    </div>
+    {{/if}}
 </div>
 {{/if}}
 {{#if (eq rollType "psi")}}

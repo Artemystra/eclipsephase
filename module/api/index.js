@@ -18,6 +18,8 @@ import {
   selectFromSearchableList,
   tokenAt,
   pickTokenOnCanvas,
+  pickTokensOnCanvas,
+  drawTargetMarker,
   selectedTokenActor,
   pickActorFromList,
   readRollContext,
@@ -46,7 +48,9 @@ import {
   registerTaskResultText
 } from "./registry.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
-import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData } from "../common/doses.js";
+import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
+import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome } from "../rolls/targeted-attacks.js";
+import { chemicalDoses } from "../common/weapon-functions.js";
 import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
 
 /**
@@ -107,6 +111,8 @@ export const ui = {
   selectFromSearchableList,
   tokenAt,
   pickTokenOnCanvas,
+  pickTokensOnCanvas,
+  drawTargetMarker,
   selectedTokenActor,
   pickActorFromList
 };
@@ -160,6 +166,7 @@ export const drugs = {
   activeDoseFor,
   doseSubstrate,
   doseEffectData,
+  chemicalPayload,
   chooseDrugForm,
   needsVectorChoice,
   drugVector,
@@ -170,7 +177,20 @@ export const drugs = {
 };
 
 /**
+ * Attacks whose targets are picked after the hit, each defending from a card of their own.
+ * @since 2.7
+ */
+export const attacks = {
+  registerAttackEffect,
+  applyTargetedAttack,
+  postDefenceCards,
+  rollDefence,
+  defenceOutcome,
+  chemicalDoses
+};
+
+/**
  * The full game.eclipsephase.api surface, grouped by area.
  * @since 2.5
  */
-export const api = { rolls, actors, ui, chat, migration, registry, drugs };
+export const api = { rolls, actors, ui, chat, migration, registry, drugs, attacks };

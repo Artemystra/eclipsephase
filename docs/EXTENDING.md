@@ -46,13 +46,16 @@ api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervou
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
             // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
-            // tokenAt, pickTokenOnCanvas, selectedTokenActor, pickActorFromList
+            // tokenAt, pickTokenOnCanvas, pickTokensOnCanvas, drawTargetMarker,
+            // selectedTokenActor, pickActorFromList
 api.chat    // readRollContext(element)
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
 api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData,
-              // chooseDrugForm, needsVectorChoice, drugVector, isAmmoPack, runningDoses,
-              // drugBlockingPsi, drugPsiPenalties
+              // chemicalPayload, chooseDrugForm, needsVectorChoice, drugVector, isAmmoPack,
+              // runningDoses, drugBlockingPsi, drugPsiPenalties
+api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence,
+              // defenceOutcome, chemicalDoses
 ```
 
 `api.drugs` is described in "Drugs and doses" below.
@@ -63,6 +66,14 @@ card that asks for a target afterwards - and resolves to the token, or `null` wh
 the cursor; the default `ep-targeting` shows a crosshair. `selectedTokenActor()` is the actor of
 the user's selected token, and `pickActorFromList(actors, header, copy)` asks for one actor from
 a list the user can filter by typing.
+
+`api.ui.pickTokensOnCanvas({ max, bodyClass, marker })` lets the user mark up to `max` tokens: a
+click marks a token, another click unmarks it, a click past `max` is refused with a notice, a
+right-click confirms. Escape, or a right-click with nothing marked, cancels. It resolves to the
+marked tokens in the order they were marked, or `null`. The default `bodyClass`,
+`ep-targeting-multi`, shows a turquoise crosshair with the targets left below it;
+`marker(token, point)` draws the mark and returns what removes it - the default is
+`drawTargetMarker`, a red crosshair where the token was clicked.
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
 what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/`postRoll` below.
@@ -115,7 +126,7 @@ from a listener.
 | Hook | Fires | Arguments | Purpose |
 |---|---|---|---|
 | `eclipsephase.preRollDialog` | In `RollCheck()`, right after the roll is defined, before the options dialog opens | `rollContext` (mutable; set `rollContext.cancelReason` to a loc key before returning `false`) | Cancel a roll before its dialog opens |
-| `eclipsephase.preRoll` | In `RollCheck()`, right before the roll is performed | `rollContext` with `dataset`, `actor`, `actorModel`, `rolledFrom`, `rollType`, `options`, `task`, `pool`, `modifiers` (array to push into), `itemData`, `flags` | Add a `TaskRollModifier` (or `{text, value, comment}`) to `modifiers`, or contribute data via `itemData`/`flags` |
+| `eclipsephase.preRoll` | In `RollCheck()`, right before the roll is performed | `rollContext` with `dataset`, `actor`, `actorModel`, `rolledFrom`, `rollType`, `options`, `task`, `pool`, `modifiers` (array to push into), `itemData`, `flags`, `weapon` (what `weaponPreparation` returned for a weapon attack, or `null`) | Add a `TaskRollModifier` (or `{text, value, comment}`) to `modifiers`, or contribute data via `itemData`/`flags` |
 | `eclipsephase.postRoll` | In `RollCheck()`, after the chat card was created | `rollContext` with `outputData`, `message` (the created `ChatMessage`, or `null`), `blind`, `rollMode` | React to a completed roll |
 | `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a chat card was applied | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
 | `eclipsephase.prepareActorMods` | In `EPactor.prepareData()`, right after `mods`/`currentStatus` are reset | `(actorWhole, actorModel)` | Contribute to `actorModel.mods` before derived values are computed |
@@ -125,6 +136,7 @@ from a listener.
 | `eclipsephase.effectSuppression` | In `effects.js`, while deciding whether an ActiveEffect is suppressed | `(item, actor, result)` - set `result.suppressed` | Add a suppression rule for a module's own item types |
 | `eclipsephase.prepareActorSheetContext` | In `EPactorSheet._prepareContext()`, as its last statement | `(sheet, context)` | Add to the sheet's render context |
 | `eclipsephase.effectDurations` | In `EPactor.onUpdateEffectDurations()`, whenever a tracked effect's remaining duration changed | `(actorWhole, effects, event, context)` | React to a timed effect running down or expiring |
+| `eclipsephase.weaponLoaded` | In the reload handler, right before a weapon's new load is written | `{ actor, weapon, ammo, ammoType, update }` - mutate `update` | Keep something about the load on the weapon, as the system keeps a chemical weapon's dose |
 | `eclipsephase.postRest` | In the rest handler, right before the actor update is written | `(actorWhole, restType, updates)` - mutate `updates` | Add fields to a rest's update payload |
 | `eclipsephase.ready` | In the system's own `ready` hook | `(game.eclipsephase)` | Register a module once the API is in place |
 
@@ -439,7 +451,8 @@ Listen to `deleteActiveEffect` and check for the `dose` flag to react to a dose 
 const { drugs } = game.eclipsephase.api;
 await drugs.takeDose(actor, item);        // { taken, emptied, refused, effect }
 await drugs.offerDose(actor, item);       // { offered, message } - a card anyone can claim
-await drugs.forceDose(actor, item);       // a melee attack; the dose goes in on a hit
+await drugs.forceDose(actor, item);       // a melee attack that delivers the dose, see "Targeted attacks"
+drugs.chemicalPayload(item);              // { data, drugType, name } - the dose a hit delivers
 drugs.activeDoseFor(actor, "Kick");       // the running dose, or null
 drugs.doseSubstrate(actor, item);         // { allowed, reasonKey }
 await drugs.chooseDrugForm(itemData);     // false when cancelled; keeps only the chosen form
@@ -453,13 +466,54 @@ drugs.drugPsiPenalties(actor);            // [{ name, modifier }]
 
 `takeDose`, `offerDose` and `forceDose` behave exactly like the sheet's controls: they refuse an
 ammunition pack, an empty pack or a body the drug cannot act on with a notification, spend the
-dose and post the cards. An offered or forced dose is only spent once someone claims it.
+dose and post the cards. An offered dose is only spent once someone claims it, a forced one once
+the attacker has picked the target after the hit.
 
 A pack holds one form. A sheet that lets someone acquire a drug - an actor sheet, a shop - calls
 `chooseDrugForm(itemData)` on the incoming data before creating it: it asks for the form and
 whether the pack is ammunition, and does nothing for anything else. `api.actors.mergeOrCreateItem(actor,
 itemData)` then adds it to a matching stack - same type and name, and for a drug the same form -
 or creates it.
+
+## Targeted attacks
+
+Some attacks pick their targets after the hit: the attack card shows a button instead of damage,
+the attacker marks the targets on the canvas with `api.ui.pickTokensOnCanvas`, and each target's
+owner - its player owners, or the GM for a target no player owns - gets one card to defend from.
+The card has a button per target; against a ranged attack it also rolls the rest at once, without
+a dialog. A ranged defence is Fray, halved; against an area attack the dialog adds "Dodge behind
+cover". A melee defence is Fray in full or a parry with Melee.
+
+`api.attacks.defenceOutcome(attack, passed, behindCover)` decides what reaches the target: a
+failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"` through, or
+`"none"` behind cover; any other successful defence is `"none"`. A pool spend on the defence
+settles it again.
+
+What the hit brings is registered:
+
+```js
+game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
+  detect(rollContext) {            // at preRoll: does this roll carry the effect?
+    if (!rollContext.weapon?.weapon?.getFlag("my-module", "net")) return null;
+    return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {} };
+  },
+  ready(attack) { return true; },              // optional, before picking: false refuses
+  async beforeDelivery(attack) { return true; }, // optional, after picking: false refuses
+  async resolve(attack, target, outcome, { byPool, defenceId }) {}
+});
+```
+
+The attack travels in `flags.eclipsephase.roll.targetedAttack` on the attack card:
+`{ id, effect, actorUuid, weaponName, defence, area, targets, payload, labelKey, effectLabel,
+delivered, targetNames }`. A caller can set it up itself through `dataset.contextFlags.targetedAttack`,
+as `forceDose` does. `resolve` runs on the defender's client; with `byPool` it should undo what
+the earlier outcome did first.
+
+The system registers one effect, `"dose"`. A weapon with the "Ammunition: Chems" trait
+(`specialAmmoDrugs`) carries it: one dose per target, as many targets as its Multi Shot number
+(`api.attacks.chemicalDoses(weaponTraits)`), as an area attack. The weapon keeps a copy of the
+drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it once the pack is
+used up.
 
 ## Chat message context
 

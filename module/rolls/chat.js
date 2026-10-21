@@ -5,6 +5,7 @@ import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "../common/ware-skills.js";
+import { applyTargetedAttack, rollDefence, rollRemainingDefences } from "./targeted-attacks.js";
 
 /**
  * Hides GM info from players
@@ -98,6 +99,27 @@ export async function addChatListeners(html) {
     const weaponDamage = event.target.closest("button.weaponDamage");
     if (weaponDamage) {
       damageFunctions.prepareWeapon({ currentTarget: weaponDamage });
+      return;
+    }
+
+    const targetedAttack = event.target.closest("button.targetedAttack");
+    if (targetedAttack) {
+      const message = game.messages.get(targetedAttack.closest("[data-message-id]")?.dataset.messageId);
+      if (message) applyTargetedAttack(message);
+      return;
+    }
+
+    const defenceRoll = event.target.closest("button.defenceRoll");
+    if (defenceRoll) {
+      const message = game.messages.get(defenceRoll.closest("[data-message-id]")?.dataset.messageId);
+      if (message) rollDefence(message, defenceRoll.dataset.targetUuid, defenceRoll.dataset.kind);
+      return;
+    }
+
+    const defenceRollAll = event.target.closest("button.defenceRollAll");
+    if (defenceRollAll) {
+      const message = game.messages.get(defenceRollAll.closest("[data-message-id]")?.dataset.messageId);
+      if (message) rollRemainingDefences(message);
       return;
     }
 

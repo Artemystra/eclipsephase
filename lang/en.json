@@ -148,7 +148,9 @@
         "doseAlreadyUsed": "This dose has already been used.",
         "offerPackEmpty": "The pack this dose was offered from is empty or gone.",
         "ammoPackNotTaken": "{name} is an ammunition pack: load it into a weapon instead.",
-        "noPlacedToken": "This actor isn't represented by a placed token right now."
+        "noPlacedToken": "This actor isn't represented by a placed token right now.",
+        "attackDelivered": "This attack has already been applied to its targets.",
+        "attackNoPayload": "The weapon does not know which drug it is loaded with. Reload it first."
       },
       "button": {
         "edit": "Edit",
@@ -1461,7 +1463,8 @@
         "ranged": {
           "weaponSelect": {
             "headline": "Select Weapon",
-            "modeSelectionHeadline": "Select Weapon Mode"
+            "modeSelectionHeadline": "Select Weapon Mode",
+            "drugsHeadline": "Drugs and Toxins"
           },
           "ammoSelect": {
             "headline": "Select Ammunition"
@@ -1592,7 +1595,8 @@
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
         },
-        "augmentations": "Augmentations"
+        "augmentations": "Augmentations",
+        "dodgeCoverLabel": "Dodge behind cover"
       },
       "successType": {
         "success": "Success",
@@ -1872,6 +1876,12 @@
       "doseHistory": {
         "header": "Dose History",
         "copy": "{actor} took <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} times</strong> in the <strong class=\"dose-history-highlight\">last 24 hours</strong> and <strong class=\"dose-history-highlight\">{week} times</strong> in the <strong class=\"dose-history-highlight\">last 7 days</strong>."
+      },
+      "targeting": {
+        "fewerTitle": "Fewer Targets",
+        "fewerHeadline": "Fewer targets than doses",
+        "fewerCopy": "The weapon delivers {max} doses, are you sure that you want to select {count} targets only?",
+        "fewerConfirm": "Confirm"
       }
     },
     "chat": {
@@ -1898,7 +1908,6 @@
         "useOnMe": "Use on me",
         "useOnSelection": "Use on selection",
         "offered": "I'm offering a dose of <strong>{name}</strong>",
-        "forced": "I got a dose of <strong>{name}</strong> into my target",
         "woreOff": "My dose of <strong>{name}</strong> wore off",
         "endedEarly": "My dose of <strong>{name}</strong> was ended early",
         "wearOffSv": "Wear-off stress (SV)",
@@ -1937,7 +1946,8 @@
         "addictedBoth": "My ego and my body are addicted to <strong>{name}</strong>",
         "addictionRaisedEgo": "My ego's addiction to <strong>{name}</strong> grows to level {level}",
         "addictionRaisedBody": "My body's addiction to <strong>{name}</strong> grows to level {level}",
-        "addictionRaisedBoth": "My ego's and my body's addiction to <strong>{name}</strong> grows to level {level}"
+        "addictionRaisedBoth": "My ego's and my body's addiction to <strong>{name}</strong> grows to level {level}",
+        "unaffected": "{drug} cannot act on {name}'s body."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
@@ -1952,6 +1962,24 @@
         "headline": "Set up your ware",
         "copy": "Some ware gives bonuses to special skills. Say once which of your special skills each one is for.",
         "done": "All adjustments done."
+      },
+      "attack": {
+        "applyDose": "Apply dose to selected targets",
+        "applyTargets": "Apply to selected targets",
+        "targets": "Targets: {names}",
+        "hitByPool": "The pool spend turned the {weapon} attack into a hit."
+      },
+      "defence": {
+        "headline": "Defend against the {weapon}",
+        "doseLabel": "{name}, one dose each",
+        "dodge": "Dodge",
+        "parry": "Parry",
+        "rollAll": "Roll remaining at once",
+        "outcome": {
+          "hit": "Hit",
+          "half": "Partly dodged: half",
+          "none": "Avoided"
+        }
       }
     },
     "rule": {
@@ -2186,6 +2214,12 @@
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
       }
+    },
+    "targeting": {
+      "cancelHint": "Press ESC or right-click with no targets to cancel.",
+      "confirmHint": "Right click to confirm",
+      "remaining": "{count} targets left",
+      "limitReached": "The maximum of {max} targets is reached. Click a marked target again to unmark it."
     }
   }
 }

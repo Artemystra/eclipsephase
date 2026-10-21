@@ -1,5 +1,8 @@
 import { itemReduction, listSelection, gmList } from "./general-sheet-functions.js";
 import { damageValueCalc } from "./general-sheet-functions.js";
+import { dosesRemaining, isAmmoPack } from "./drugs.js";
+
+const DRUG_CHOICE = "drug-";
 /**
  * End-to-end weapon preparation
  * @param {*} actorWhole The actor document
@@ -70,11 +73,36 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
     currentAmmo = weaponUsed.currentAmmo ? weaponUsed.currentAmmo : null,
     weaponTraits = weaponUsed.weaponTraits
     weaponMode = weaponUsed.weaponMode
-    selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits, weaponMode}
+    selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits, weaponMode, drugId: weaponUsed.drugId ?? null}
     
   }
 
   return selection
+}
+
+/**
+ * The drugs a character can force on someone in melee: those at hand with a dose left, not packs
+ * meant to load a weapon. NPCs and goons carry all of theirs at hand.
+ * @param {Actor} actor - The attacker
+ * @returns {Item[]} The drugs
+ */
+export function forceableDrugs(actor) {
+  return Array.from(actor.items ?? []).filter(item => item.type === "drug"
+    && (actor.type !== "character" || item.system.active === true)
+    && !isAmmoPack(item.system)
+    && dosesRemaining(item.system) > 0);
+}
+
+/**
+ * How many doses one shot of a weapon delivers: a weapon that fires chemicals delivers one per
+ * round it uses up, so its Multi Shot number, or a single dose without one. Any other weapon
+ * delivers none.
+ * @param {Object} weaponTraits - The weapon's curated traits for the mode fired
+ * @returns {Number} Doses per shot
+ */
+export function chemicalDoses(weaponTraits) {
+  if (!weaponTraits?.automatedEffects?.specialAmmoDrugs) return 0;
+  return Number(weaponTraits.additionalEffects?.multiShot?.number) || 1;
 }
 
 //Constructs a subset of active traits
@@ -220,6 +248,12 @@ export async function weaponListConstructor(actor, skillKey){
         weaponslist.push(weaponEntry)
     }
   }
+  const drugs = skillKey === "melee" ? forceableDrugs(actor) : [];
+  if (drugs.length) {
+    weaponslist.push({ "heading": "ep2e.roll.dialog.ranged.weaponSelect.drugsHeadline" });
+    for (const drug of drugs) weaponslist.push({ "id": `${DRUG_CHOICE}${drug.id}`, "name": drug.name });
+  }
+
   if (weaponslist.length > 2){
     checkWeapon = await listSelection(weaponslist, "weaponList", 536)
     weaponID = checkWeapon.selection ? checkWeapon.selection : weaponID = "0";
@@ -236,6 +270,10 @@ export async function weaponListConstructor(actor, skillKey){
     if (weaponID === "1"){
       let cancel = false;
       return {cancel};
+    }
+
+    if (weaponID.startsWith(DRUG_CHOICE)) {
+      return { cancel: false, drugId: weaponID.slice(DRUG_CHOICE.length) };
     }
 
     else {
@@ -446,7 +484,7 @@ export async function reloadWeapon(html, actor) {
         if (difference > 0 || ammoPresent != ammoSelected.id) {
           currentAmmo = maxAmmo;
 
-          weaponUpdate.push({
+          const loaded = {
             "_id": weaponID,
             "system.ammoMin": currentAmmo,
             "system.ammoSelected.id": ammoSelected.id,
@@ -454,8 +492,11 @@ export async function reloadWeapon(html, actor) {
             "system.ammoSelected.dvModifier": ammoType != "chemical" ? ammoSelected.system.dv : { "d10": 0, "d6": 0, "bonus": 0 },
             "system.ammoSelected.description": ammoSelected.system.description,
             "system.ammoSelected.dvModifier.calculated": dv,
-            "system.ammoSelected.traits": ammoType != "chemical" ? traits : {}
-          });
+            "system.ammoSelected.traits": ammoType != "chemical" ? traits : {},
+            "system.ammoSelected.dose": null
+          };
+          Hooks.callAll("eclipsephase.weaponLoaded", { actor, weapon, ammo: ammoSelected, ammoType, update: loaded });
+          weaponUpdate.push(loaded);
 
           let message = {};
           message.type = "reload";
