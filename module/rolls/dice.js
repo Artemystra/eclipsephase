@@ -5,6 +5,7 @@ import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
+import { TASK_RESULT_TEMPLATE, taskCardState } from "./task-card.js";
 
 /*
  * Path constants for dialog templates
@@ -12,7 +13,7 @@ import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOption
 export const TASK_CHECK_DIALOG_TEMPLATE = "systems/eclipsephase/templates/chat/skill-test-dialog.html"
 export const GUNS_TASK_DIALOG = "systems/eclipsephase/templates/chat/gun-test-dialog.html"
 export const MELEE_TASK_DIALOG = "systems/eclipsephase/templates/chat/melee-test-dialog.html"
-export const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
+export const TASK_RESULT_OUTPUT = TASK_RESULT_TEMPLATE
 export const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
 export const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
 export const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
@@ -1436,10 +1437,24 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
         whisper: showTo,
         sound: message.sound,
         blind: blind,
-        flags: message.rollContext ? {eclipsephase: {roll: message.rollContext}} : {}
+        flags: rollCardFlags(message, htmlTemplate)
     })
 
     return message;
+}
+
+/**
+ * The flags a roll's chat card carries: the roll context its buttons read, and for a task roll the
+ * card's own state, so a pool spend can redraw it.
+ * @param {Object} message - The data the card was drawn from
+ * @param {String} htmlTemplate - The card's template
+ * @returns {Object} The message flags
+ */
+function rollCardFlags(message, htmlTemplate){
+    const flags = {}
+    if (message.rollContext) flags.roll = message.rollContext
+    if (htmlTemplate === TASK_RESULT_TEMPLATE) flags.taskCard = taskCardState(message)
+    return Object.keys(flags).length ? {eclipsephase: flags} : {}
 }
 
 function breakdown(roll){

@@ -1904,8 +1904,7 @@
       "attack": {
         "applyDose": "对所选目标施用剂量",
         "applyTargets": "应用到所选目标",
-        "targets": "目标：{names}",
-        "hitByPool": "资源池的投入使 {weapon} 的攻击变为命中。"
+        "targets": "目标：{names}"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -1918,6 +1917,11 @@
           "half": "部分闪避：半剂",
           "none": "避开"
         }
+      },
+      "poolSpent": {
+        "swapped": "{name} 消耗了一点{pool}来交换骰子",
+        "upgraded": "{name} 消耗了一点{pool}来提升结果",
+        "mitigated": "{name} 消耗了一点{pool}来减轻失败"
       }
     },
     "rule": {

@@ -8,6 +8,7 @@ import { forceDose, takeDose } from "../../common/doses.js";
 import { owningActor } from "../../common/pool-rule.js";
 import { durationRunOut } from "../../common/time.js";
 import { applyTargetedAttack } from "../../rolls/targeted-attacks.js";
+import { registerChatCardBatch } from "./chat-cards.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
@@ -64,6 +65,8 @@ function skipDialogOptions(overrides = {}) {
 }
 
 Hooks.on("quenchReady", quench => {
+  registerChatCardBatch(quench);
+
   quench.registerBatch("eclipsephase.core.actors", context => {
     const { describe, it, assert } = context;
 
@@ -523,12 +526,13 @@ Hooks.on("quenchReady", quench => {
     const TARGET = { type: "character", name: "Quench Target" };
 
     /**
-     * The cards a pool spend posted to offer the target button, since a given point in the chat log.
+     * The cards posted since a given point in the chat log, apart from the attack card itself.
      * @param {Set<String>} before - Message ids that existed before the test
+     * @param {ChatMessage} attack - The attack card
      * @returns {ChatMessage[]} The cards
      */
-    function newHitCards(before) {
-      return game.messages.contents.filter(message => !before.has(message.id) && message.getFlag("eclipsephase", "targetedAttack"));
+    function otherNewCards(before, attack) {
+      return game.messages.contents.filter(message => !before.has(message.id) && message.id !== attack.id);
     }
 
     /**
@@ -598,16 +602,17 @@ Hooks.on("quenchReady", quench => {
         await attackWithFace(95, async (actor, drug, attack, before) => {
           await new Promise(resolve => setTimeout(resolve, 300));
           assert.notInclude(attack.content, "targetedAttack");
-          assert.strictEqual(newHitCards(before).length, 0);
+          assert.strictEqual(otherNewCards(before, attack).length, 0);
         });
       });
 
-      it("a miss a pool spend turns into a hit offers the target button on a card of its own", async function () {
+      it("a miss a pool spend turns into a hit shows the target button on the same card, and posts no other", async function () {
         await attackWithFace(91, async (actor, drug, attack, before) => {
-          assert.strictEqual(newHitCards(before).length, 0, "the flipped 19 must not count before the pool is spent");
+          assert.notInclude(attack.content, "targetedAttack", "the flipped 19 must not count before the pool is spent");
           await spendPoolOn(attack);
-          await waitUntil(() => newHitCards(before).length === 1);
-          assert.strictEqual(newHitCards(before).length, 1);
+          await waitUntil(() => game.messages.get(attack.id).content.includes("targetedAttack"));
+          assert.include(game.messages.get(attack.id).content, "ep-pool-spent");
+          assert.strictEqual(otherNewCards(before, attack).length, 0);
           assert.strictEqual(drug.system.usagesUsed, 0);
         });
       });
@@ -616,7 +621,7 @@ Hooks.on("quenchReady", quench => {
         await attackWithFace(5, async (actor, drug, attack, before) => {
           await spendPoolOn(attack);
           await new Promise(resolve => setTimeout(resolve, 300));
-          assert.strictEqual(newHitCards(before).length, 0);
+          assert.strictEqual(otherNewCards(before, attack).length, 0);
         });
       });
     });

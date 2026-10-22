@@ -51,6 +51,7 @@ import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffec
 import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome } from "../rolls/targeted-attacks.js";
 import { chemicalDoses } from "../common/weapon-functions.js";
 import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
+import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -116,11 +117,15 @@ export const ui = {
 };
 
 /**
- * Reads the roll context a chat card carries in its message flags.
+ * Reads the roll context a chat card carries in its message flags, and changes cards that keep
+ * their own state.
  * @since 2.5
  */
 export const chat = {
-  readRollContext
+  readRollContext,
+  registerCard,
+  renderCard,
+  updateCard
 };
 
 /**

@@ -4,12 +4,17 @@ import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./b
 import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, pickTokensOnCanvas, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
 import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
-import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll } from "../rolls/check-cards.js";
+import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll, registerCheckCard } from "../rolls/check-cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
 import { getBodyBindingInfo } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
 import { chemicalDoses } from "./weapon-functions.js";
+import { registerCard, renderCard, updateCard } from "./chat-cards.js";
 import { registerAttackEffect } from "../rolls/targeted-attacks.js";
+
+for (const key of ["doseCheck", "doseFilter", "addictionCheck"]) registerCheckCard(key);
+registerCard("doseOffer", { render: renderOfferCard, mutations: { claim: (state, { usedBy, addiction }) => ({ ...state, usedBy, addiction }) } });
+registerCard("wearOff", { render: renderWearOffCard });
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
 // biological body; an electronic drug is software and needs an infomorph or a cyberbrain.
@@ -190,6 +195,16 @@ export async function postWearOffCard(actor, effect) {
 }
 
 /**
+ * Draws a wear-off card: its stress button until the stress is rolled.
+ * @param {Object} state - The card's wearOff flag
+ * @returns {Promise<String>} The card's HTML
+ */
+function renderWearOffCard(state) {
+  const button = state.rolled ? null : { action: "rollWearOff", label: game.i18n.localize("ep2e.chat.dose.rollWearOff") };
+  return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...state.card, button, actorUuid: state.actorUuid });
+}
+
+/**
  * Rolls the harm a drug does - stress or damage - through the system's roll output, so the 3D dice
  * play before the result shows, and applies it through the ordinary damage path, trauma and wounds
  * included.
@@ -217,12 +232,8 @@ export async function rollWearOffStress(message) {
   const actor = await fromUuid(wearOff.actorUuid);
   if (!actor) return null;
 
-  await message.update({ "flags.eclipsephase.wearOff.rolled": true });
-  const taken = await rollDrugHarm(actor, { formula: wearOff.sv, target: "mental", copy: game.i18n.format("ep2e.chat.dose.wearOffFlavor", { name: wearOff.name }) });
-
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, wearOff.card);
-  await message.update({ content });
-  return taken;
+  await updateCard(message, "wearOff", "merge", { rolled: true });
+  return rollDrugHarm(actor, { formula: wearOff.sv, target: "mental", copy: game.i18n.format("ep2e.chat.dose.wearOffFlavor", { name: wearOff.name }) });
 }
 
 /**
@@ -450,13 +461,30 @@ export async function offerDose(actor, item) {
     headline: game.i18n.format("ep2e.chat.dose.offered", { name: item.name }),
     rows: doseRows(item.system, null)
   };
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...card, offer: true, actorUuid: actor.uuid });
+  const state = { data, drugType, name: item.name, card, usedBy: null, addiction: null, giverUuid: actor.uuid, itemId: item.id };
   const message = await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
-    content,
-    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null, giverUuid: actor.uuid, itemId: item.id } } }
+    content: await renderCard("doseOffer", state),
+    flags: { eclipsephase: { doseOffer: state } }
   });
   return { offered: true, message };
+}
+
+/**
+ * Draws a dose offer card: its buttons while nobody has taken the dose, then who took it and, for
+ * an addictive drug, the GM's controls for that person.
+ * @param {Object} state - The card's doseOffer flag
+ * @returns {Promise<String>} The card's HTML
+ */
+function renderOfferCard(state) {
+  const taken = !!state.usedBy;
+  return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, {
+    ...state.card,
+    offer: !taken,
+    actorUuid: state.giverUuid,
+    footnote: taken ? game.i18n.format("ep2e.chat.dose.usedBy", { name: state.usedBy }) : "",
+    addiction: taken ? state.addiction : null
+  });
 }
 
 /**
@@ -484,10 +512,8 @@ export async function claimDose(message, actor) {
   if (!spent.taken) return { claimed: false, reasonKey: "ep2e.actorSheet.warnings.offerPackEmpty" };
 
   const defended = await defendDose(actor, offer.data, { willing: true, ask: false });
-  const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
-  const addiction = addictionControls(actor, offer.data?.flags?.eclipsephase?.dose);
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...offer.card, footnote, offer: false, addiction });
-  await message.update({ content, "flags.eclipsephase.doseOffer.usedBy": actor.name });
+  const addiction = addictionControls(actor, offer.data?.flags?.eclipsephase?.dose) ?? null;
+  await updateCard(message, "doseOffer", "claim", { usedBy: actor.name, addiction });
   await letDoseIn(actor, { ...defended, name: offer.name });
   return { claimed: true, reasonKey: null };
 }
@@ -686,10 +712,7 @@ export function registerDoseSocket() {
       const result = await claimDose(card(payload), await fromUuid(payload.actorUuid));
       if (result.reasonKey) game.socket.emit(SYSTEM_SOCKET, { action: "claimDoseRefused", userId: payload.userId, reasonKey: result.reasonKey });
     },
-    markDoseCheckRolled: payload => markCheckCardRolled(card(payload)),
     rollWearOff: payload => rollWearOffStress(card(payload)),
-    markAddictionRolled: payload => markAddictionCardRolled(card(payload)),
-    markFilterRolled: payload => markFilterCardRolled(card(payload)),
     rollDoseHarm: payload => rollDoseHarm(card(payload))
   });
   registerSocketActions({
@@ -842,7 +865,7 @@ export async function postUseCheckCard(actor, effect) {
  * @returns {Promise<void>} Resolves once marked or asked
  */
 export function markCheckCardRolled(message) {
-  return markCardRolled(message, "doseCheck", "markDoseCheckRolled");
+  return markCardRolled(message, "doseCheck");
 }
 
 /**
@@ -1254,7 +1277,7 @@ export function postFilterCheckCard(actor, data, defense, wanted = true) {
  * @returns {Promise<void>} Resolves once marked or asked
  */
 export function markFilterCardRolled(message) {
-  return markCardRolled(message, "doseFilter", "markFilterRolled");
+  return markCardRolled(message, "doseFilter");
 }
 
 /**
@@ -2028,7 +2051,7 @@ export async function demandWillpower(actorUuid, name, addiction = null) {
  * @returns {Promise<void>} Resolves once marked or asked
  */
 export function markAddictionCardRolled(message) {
-  return markCardRolled(message, "addictionCheck", "markAddictionRolled");
+  return markCardRolled(message, "addictionCheck");
 }
 
 /**

@@ -1,12 +1,33 @@
 import { RollCheck, isHit } from "./dice.js";
 import { postCard, ownersAndGMs, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
-import { relayToActiveGM } from "../common/general-helper-functions.js";
+import { registerCard, updateCard } from "../common/chat-cards.js";
 
 // A check asked for on a chat card: the card carries a button, the owner rolls from it - spending
 // pool if they like - and once the roll lands the outcome is settled, then settled again should a
 // pool spend turn it around. Drugs' checks on taking, toxin filters and addiction all run this way;
 // each brings only what the check is for and what its outcome does. Modelled on pools.js, where a
 // chat button likewise carries the roll on.
+
+/**
+ * Draws a check card: its button while the check waits, a note once it is rolled.
+ * @param {Object} state - The card's state: card, button, actorUuid, rolled
+ * @returns {Promise<String>} The card's HTML
+ */
+function renderCheckCard(state) {
+  const data = state.rolled
+    ? { ...state.card, footnote: game.i18n.localize("ep2e.chat.dose.checkRolled") }
+    : { ...state.card, button: state.button, actorUuid: state.actorUuid };
+  return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, data);
+}
+
+/**
+ * Registers a kind of check card, so it can be redrawn once rolled - on this client and on the GM's.
+ * @param {String} key - The flag the card keeps its request under
+ * @returns {void}
+ */
+export function registerCheckCard(key) {
+  registerCard(key, { render: renderCheckCard });
+}
 
 /**
  * Posts a check card for the owners of an actor and every GM.
@@ -17,27 +38,19 @@ import { relayToActiveGM } from "../common/general-helper-functions.js";
  * @returns {Promise<ChatMessage>} The card
  */
 export function postCheckCard(actor, key, { card, button, payload = {} }) {
+  registerCheckCard(key);
   return postCard(actor, { ...card, button, actorUuid: actor.uuid },
-    { eclipsephase: { [key]: { actorUuid: actor.uuid, card, rolled: false, ...payload } } }, ownersAndGMs(actor));
+    { eclipsephase: { [key]: { actorUuid: actor.uuid, card, button, rolled: false, ...payload } } }, ownersAndGMs(actor));
 }
 
 /**
- * Turns a check card into a record once it is rolled: the button gives way to a note. Done where
- * the card may be changed; a player rolling from someone else's card asks the active GM.
+ * Turns a check card into a record once it is rolled: the button gives way to a note.
  * @param {ChatMessage} message - The card
  * @param {String} key - The flag the card keeps its request under
- * @param {String} relayAction - The socket action the GM marks it under
- * @returns {Promise<void>} Resolves once marked or asked
+ * @returns {Promise<Boolean>} What updateCard reported
  */
-export async function markCardRolled(message, key, relayAction) {
-  const request = message?.getFlag?.("eclipsephase", key);
-  if (!request) return;
-  if (!message.isOwner && !game.user.isGM) {
-    relayToActiveGM(relayAction, { messageId: message.id }, { warn: false });
-    return;
-  }
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...request.card, footnote: game.i18n.localize("ep2e.chat.dose.checkRolled") });
-  await message.update({ content, [`flags.eclipsephase.${key}.rolled`]: true });
+export function markCardRolled(message, key) {
+  return updateCard(message, key, "merge", { rolled: true });
 }
 
 /**

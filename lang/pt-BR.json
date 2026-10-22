@@ -1911,8 +1911,7 @@
       "attack": {
         "applyDose": "Aplicar dose aos alvos selecionados",
         "applyTargets": "Aplicar aos alvos selecionados",
-        "targets": "Alvos: {names}",
-        "hitByPool": "O gasto da reserva transformou o ataque com {weapon} em acerto."
+        "targets": "Alvos: {names}"
       },
       "defence": {
         "headline": "Defender-se de {weapon}",
@@ -1925,6 +1924,11 @@
           "half": "Esquiva parcial: meia dose",
           "none": "Evitado"
         }
+      },
+      "poolSpent": {
+        "swapped": "{name} usou um ponto de {pool} para trocar os dados",
+        "upgraded": "{name} usou um ponto de {pool} para melhorar o resultado",
+        "mitigated": "{name} usou um ponto de {pool} para suavizar a falha"
       }
     },
     "rule": {

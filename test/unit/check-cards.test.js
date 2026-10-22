@@ -31,7 +31,7 @@ describe("a check card", () => {
     const actor = checker();
     const card = await postCheckCard(actor, "testCheck", { card: { icon: "fa-x", color: "--negative", headline: "Check!" }, button: { action: "rollTest", label: "Roll" } });
 
-    await markCardRolled(card, "testCheck", "markTestRolled");
+    await markCardRolled(card, "testCheck");
 
     expect(card.content).not.toContain("rollTest");
     expect(card.content).toContain("ep2e.chat.dose.checkRolled");
@@ -48,13 +48,13 @@ describe("a check card", () => {
     game.socket.emit = (name, payload) => emitted.push(payload);
 
     try {
-      await markCardRolled(card, "testCheck", "markTestRolled");
+      await markCardRolled(card, "testCheck");
     } finally {
       game.socket.emit = realEmit;
       game.user.isGM = true;
     }
 
-    expect(emitted).toEqual([{ action: "markTestRolled", messageId: card.id }]);
+    expect(emitted).toEqual([{ action: "updateCard", messageId: card.id, key: "testCheck", mutation: "merge", payload: { rolled: true }, extra: {} }]);
   });
 });
 

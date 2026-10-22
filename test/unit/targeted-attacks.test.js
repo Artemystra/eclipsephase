@@ -3,6 +3,7 @@ import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDe
 import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload, activeDoseFor, DOSE_CURSOR } from "../../module/common/doses.js";
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
+import { usePoolFromChat } from "../../module/rolls/pools.js";
 import { pickTokensOnCanvas, targetLabel, iconGlyph, MARK_COLOR } from "../../module/common/general-sheet-functions.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
@@ -140,31 +141,18 @@ describe("what a chemical weapon delivers", () => {
     expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
   });
 
-  test("a pool spend that turns the miss into a hit offers the targets on a card of its own, once", async () => {
+  test("a pool spend that turns the miss into a hit shows the target button on the same card, for the attacker's owner", async () => {
     const actor = await shooter();
-    const card = await fire(actor, 95);
-    const context = { ...card.flags.eclipsephase.roll, messageId: card.id };
+    await actor.update({ "system.pools.vigor.value": 2 });
+    const card = await fire(actor, 91);
+    const posted = createdMessages.length;
 
-    Hooks.callAll("eclipsephase.poolResult", { context, newResult: TASK_RESULT.SUCCESS });
-    await until(() => createdMessages.some(message => message.getFlag?.("eclipsephase", "targetedAttack")));
-    Hooks.callAll("eclipsephase.poolResult", { context, newResult: TASK_RESULT.SUCCESS_ONE });
-    await new Promise(resolve => setTimeout(resolve, 20));
-
-    const offered = createdMessages.filter(message => message.getFlag?.("eclipsephase", "targetedAttack"));
-    expect(offered).toHaveLength(1);
-    expect(offered[0].content).toContain("ep2e.chat.attack.hitByPool");
-  });
-
-  test("the attacker's owner sees the button on the card a pool spend posts", async () => {
-    const actor = await shooter();
-    const card = await fire(actor, 95);
-    Hooks.callAll("eclipsephase.poolResult", { context: { ...card.flags.eclipsephase.roll, messageId: card.id }, newResult: TASK_RESULT.SUCCESS });
-    await until(() => createdMessages.some(message => message.getFlag?.("eclipsephase", "targetedAttack")));
+    await usePoolFromChat({ currentTarget: { dataset: { usepool: "pool" }, closest: () => ({ dataset: { messageId: card.id } }) } });
     const holder = document.createElement("div");
-    holder.innerHTML = createdMessages.find(message => message.getFlag?.("eclipsephase", "targetedAttack")).content;
-
+    holder.innerHTML = card.content;
     await ownerVision(holder);
 
+    expect(createdMessages).toHaveLength(posted);
     expect(holder.querySelector("button.targetedAttack").classList.contains("noShow")).toBe(false);
   });
 });

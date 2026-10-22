@@ -1967,8 +1967,7 @@
       "attack": {
         "applyDose": "Apply dose to selected targets",
         "applyTargets": "Apply to selected targets",
-        "targets": "Targets: {names}",
-        "hitByPool": "The pool spend turned the {weapon} attack into a hit."
+        "targets": "Targets: {names}"
       },
       "defence": {
         "headline": "Defend against the {weapon}",
@@ -1981,6 +1980,11 @@
           "half": "Partly dodged: half",
           "none": "Avoided"
         }
+      },
+      "poolSpent": {
+        "swapped": "{name} used a {pool} point to swap the dice",
+        "upgraded": "{name} used a {pool} point to raise the result",
+        "mitigated": "{name} used a {pool} point to soften the failure"
       }
     },
     "rule": {

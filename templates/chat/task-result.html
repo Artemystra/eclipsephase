@@ -23,6 +23,9 @@
   <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
     <span class="{{resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize resultText}}</span> <p>
 
+      {{#if poolSpent}}
+      <p class="ep-pool-spent">{{poolSpent}}</p>
+      {{else}}
       <div class="item privateChatButton" data-ownerid={{actor.id}}>
         {{#if alternatives.options.swap}}
         <div class="slideShow">
@@ -100,6 +103,7 @@
         </div>
         {{/if}}
       </div>
+      {{/if}}
   </div>
 
   {{#if modifiers}}
@@ -159,13 +163,15 @@
   
   {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass}}
 
-  {{#if (and (eq skillKey "psi")(eq alternatives.options.available true)(ne options.usePool "ignoreInfection")(ne actor.type "goon"))}}
+  {{#if (and (eq skillKey "psi")(or (eq alternatives.options.available true) poolSpent)(ne options.usePool "ignoreInfection")(ne actor.type "goon"))}}
       <div class="chatControls">
         <button type="button" class="chatButton psiEffect privateChatButton" data-action="psiEffect">{{localize "ep2e.chat.buttonLabel.psiInfection"}}</button>
       </div>
   {{/if}}
 
-  {{#if (and rollContext.targetedAttack (eq resultClass "success"))}}
+  {{#if (and rollContext.targetedAttack targetNames)}}
+   <p class="ep-attack-targets">{{targetNames}}</p>
+  {{else if (and rollContext.targetedAttack (eq resultClass "success"))}}
    <div class="chatControls">
      <button type="button" class="chatButton targetedAttack privateChatButton" data-action="targetedAttack" data-ownerid="{{actor.id}}">{{localize rollContext.targetedAttack.labelKey}}</button>
    </div>

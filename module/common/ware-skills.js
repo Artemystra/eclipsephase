@@ -1,4 +1,5 @@
 import { escapeText } from "./general-sheet-functions.js";
+import { registerCard, renderCard, updateCard } from "./chat-cards.js";
 
 // Ware whose bonus applies to a special skill - Fractal Digits to Hardware, Skinflex to Exotic
 // Skill: Disguise. Special skills are named freely ("HW: Robotics"), so the player says once, per
@@ -120,6 +121,8 @@ export function setupEntries(user) {
     .flatMap(actor => wareAwaitingSetup(actor).map(item => ({ actorUuid: actor.uuid, itemId: item.id, label: `${actor.name}: ${item.name}` })));
 }
 
+registerCard("wareSetup", { render: state => setupCardContent(state.entries) });
+
 /**
  * Renders a setup card: a button for each ware still waiting, or the note that all is done.
  * @param {Object[]} entries - What setupEntries listed
@@ -147,7 +150,7 @@ export async function postWareSetupCard(user = game.user) {
   return ChatMessage.create({
     speaker: { alias: "System" },
     whisper: [user.id],
-    content: await setupCardContent(entries),
+    content: await renderCard("wareSetup", { entries }),
     flags: { eclipsephase: { wareSetup: { entries } } }
   });
 }
@@ -164,6 +167,6 @@ export async function setupFromCard(actorUuid, itemId) {
   const item = actor?.items?.get(itemId);
   if (!item || !(await pickSpecialSkills(actor, item))) return;
   for (const message of game.messages.filter(entry => entry.getFlag?.("eclipsephase", "wareSetup") && entry.isOwner)) {
-    await message.update({ content: await setupCardContent(message.getFlag("eclipsephase", "wareSetup").entries) });
+    await updateCard(message, "wareSetup");
   }
 }

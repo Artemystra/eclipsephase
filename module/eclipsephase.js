@@ -21,7 +21,8 @@ import { registerRegistryHelpers, registerRollSource, registerPoolOption, regist
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./common/pool-rule.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
-import { registerTargetedAttackHooks, registerTargetedAttackSocket } from "./rolls/targeted-attacks.js";
+import { registerTargetedAttackHooks } from "./rolls/targeted-attacks.js";
+import { registerCardSocket } from "./common/chat-cards.js";
 import { registerExpiryCleanup } from "./common/expiry.js";
 import { postWareSetupCard } from "./common/ware-skills.js";
 import { api } from "./api/index.js";
@@ -820,7 +821,7 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
   registerPsiEffectSocket();
   registerDoseSocket();
-  registerTargetedAttackSocket();
+  registerCardSocket();
 });
 
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll

@@ -1,7 +1,7 @@
-import { RollCheck, isHit } from "./dice.js";
+import { RollCheck } from "./dice.js";
 import { settleOnRoll } from "./check-cards.js";
-import { pickTokensOnCanvas, confirmation, gmList, postCard } from "../common/general-sheet-functions.js";
-import { registerSocketActions, relayToActiveGM } from "../common/general-helper-functions.js";
+import { pickTokensOnCanvas, confirmation, gmList } from "../common/general-sheet-functions.js";
+import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 
 // An attack that lands on targets the attacker picks after the hit: a button on the attack card
 // marks them on the canvas, and every target's owner rolls a defence from a card of their own. What
@@ -9,7 +9,11 @@ import { registerSocketActions, relayToActiveGM } from "../common/general-helper
 
 export const DEFENCE_TEMPLATE = "systems/eclipsephase/templates/chat/targeted-defence.html";
 const EFFECTS = new Map();
-const MARKING = new Map();
+
+registerCard("attackDefence", {
+  render: renderDefenceCard,
+  mutations: { markOutcome: (state, { targetUuid, outcome }) => ({ ...state, entries: state.entries.map(entry => entry.uuid === targetUuid ? { ...entry, outcome } : entry) }) }
+});
 
 /**
  * Registers what an attack can bring onto its targets.
@@ -66,19 +70,6 @@ export function attackFor(context) {
 }
 
 /**
- * The attack a card carries and the flag path it sits under: on the attack roll itself, or on the
- * card a pool spend posted after turning a miss into a hit.
- * @param {ChatMessage} message - The card
- * @returns {Object} attack, or null, and its path
- */
-export function attackOn(message) {
-  const onRoll = message?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
-  if (onRoll) return { attack: onRoll, path: "flags.eclipsephase.roll.targetedAttack" };
-  const onCard = message?.getFlag?.("eclipsephase", "targetedAttack");
-  return { attack: onCard ?? null, path: "flags.eclipsephase.targetedAttack" };
-}
-
-/**
  * Asks whether fewer targets than the attack delivers to are meant.
  * @param {Object} attack - The attack
  * @param {Number} count - The targets picked
@@ -91,25 +82,6 @@ async function confirmFewer(attack, count) {
 }
 
 /**
- * The attack card with its target button turned into the list of who was picked.
- * @param {String} content - The card's markup
- * @param {String[]} names - The targets' names
- * @returns {String} The new markup
- */
-export function contentWithTargets(content, names) {
-  const holder = document.createElement("div");
-  holder.innerHTML = content;
-  const note = document.createElement("p");
-  note.className = "ep-attack-targets";
-  note.textContent = game.i18n.format("ep2e.chat.attack.targets", { names: names.join(", ") });
-  const button = holder.querySelector("button.targetedAttack");
-  const controls = button?.closest(".chatControls") ?? button;
-  if (controls) controls.replaceWith(note);
-  else holder.append(note);
-  return holder.innerHTML;
-}
-
-/**
  * Carries out an attack card's target button: the attacker marks the targets, the attack is noted
  * as delivered, and each target's owner gets a card to defend from.
  * @param {ChatMessage} message - The attack card
@@ -117,7 +89,7 @@ export function contentWithTargets(content, names) {
  * @returns {Promise<Actor[]|null>} The targets, or null when nothing was delivered
  */
 export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, confirm = confirmFewer } = {}) {
-  const { attack, path } = attackOn(message);
+  const attack = message?.getFlag?.("eclipsephase", "roll")?.targetedAttack ?? null;
   if (!attack) return null;
   const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
   if (attacker && !attacker.isOwner) return null;
@@ -135,7 +107,9 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   if (handlers?.beforeDelivery && (await handlers.beforeDelivery(attack)) === false) return null;
 
   const names = targets.map(target => target.name);
-  await message.update({ content: contentWithTargets(message.content, names), [`${path}.delivered`]: true, [`${path}.targetNames`]: names });
+  const delivered = { "flags.eclipsephase.roll.targetedAttack.delivered": true, "flags.eclipsephase.roll.targetedAttack.targetNames": names };
+  if (message.getFlag("eclipsephase", "taskCard")) await updateCard(message, "taskCard", "targets", { names }, { extra: delivered });
+  else await message.update(delivered);
   await postDefenceCards({ ...attack, delivered: true, targetNames: names }, targets);
   return targets;
 }
@@ -194,7 +168,7 @@ export async function postDefenceCards(attack, targets) {
     const state = { attack, entries: group.targets.map(target => ({ uuid: target.uuid, name: target.name, outcome: null })) };
     cards.push(await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: attacker }),
-      content: await renderDefenceCard(state),
+      content: await renderCard("attackDefence", state),
       whisper: [...new Set([...group.users, ...gmList()])],
       flags: { eclipsephase: { attackDefence: state } }
     }));
@@ -274,47 +248,20 @@ export function defenceOutcome(attack, passed, behindCover) {
 }
 
 /**
- * Notes a target's outcome on its defence card. Done where the card may be changed; anyone else
- * asks the active GM. Notes on one card are written one after another, each on top of the last,
- * so outcomes landing together do not overwrite each other.
+ * Notes a target's outcome on its defence card.
  * @param {ChatMessage} message - The defence card
  * @param {String} targetUuid - The target
  * @param {String} outcome - "hit", "half" or "none"
- * @returns {Promise<void>} Resolves once noted or asked
+ * @returns {Promise<Boolean>} What updateCard reported
  */
 export function markDefenceRolled(message, targetUuid, outcome) {
-  if (!message?.getFlag?.("eclipsephase", "attackDefence")) return Promise.resolve();
-  if (!message.isOwner && !game.user.isGM) {
-    relayToActiveGM("markDefenceRolled", { messageId: message.id, targetUuid, outcome }, { warn: false });
-    return Promise.resolve();
-  }
-  const write = async () => {
-    const state = message.getFlag("eclipsephase", "attackDefence");
-    const entries = state.entries.map(entry => entry.uuid === targetUuid ? { ...entry, outcome } : entry);
-    await message.update({ content: await renderDefenceCard({ ...state, entries }), "flags.eclipsephase.attackDefence.entries": entries });
-  };
-  const next = (MARKING.get(message.id) ?? Promise.resolve()).then(write, write);
-  MARKING.set(message.id, next);
-  next.finally(() => { if (MARKING.get(message.id) === next) MARKING.delete(message.id); });
-  return next;
+  return updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome });
 }
 
 /**
- * Posts the card a pool spend leaves when it turns an attack's miss into a hit, carrying the target
- * button the attack card never showed.
- * @param {Object} attack - The attack
- * @returns {Promise<ChatMessage|null>} The card
- */
-async function postHitByPoolCard(attack) {
-  const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
-  if (!attacker) return null;
-  const label = game.i18n.localize(attack.labelKey ?? "ep2e.chat.attack.applyTargets");
-  return postCard(attacker, { icon: "fa-crosshairs", color: "--negative", headline: game.i18n.format("ep2e.chat.attack.hitByPool", { weapon: attack.weaponName }), button: { action: "targetedAttack", label }, actorUuid: attacker.uuid }, { eclipsephase: { targetedAttack: attack } });
-}
-
-/**
- * Registers the hooks targeted attacks run on: the attack is put on the roll, a pool spend that
- * turns a miss into a hit offers the target button, and a defence settles its target's outcome.
+ * Registers the hooks targeted attacks run on: the attack is put on the roll, and a defence settles
+ * its target's outcome. A pool spend that turns a miss into a hit needs no hook - the roll card is
+ * redrawn and shows the target button itself.
  * @returns {void}
  */
 export function registerTargetedAttackHooks() {
@@ -323,13 +270,6 @@ export function registerTargetedAttackHooks() {
     if (context?.flags?.targetedAttack?.id) return;
     const attack = attackFor(context);
     if (attack) context.flags.targetedAttack = attack;
-  });
-
-  settleOnRoll("targetedAttack", async (attack, passed, { byPool, message, context }) => {
-    if (!byPool || !passed || isHit(context?.alternatives?.originalResult)) return;
-    if (message?.getFlag?.("eclipsephase", "roll")?.targetedAttack?.offeredByPool) return;
-    if (message) await message.update({ "flags.eclipsephase.roll.targetedAttack.offeredByPool": true });
-    await postHitByPoolCard(attack);
   });
 
   settleOnRoll("attackDefence", async (defence, passed, { byPool }) => {
@@ -343,12 +283,3 @@ export function registerTargetedAttackHooks() {
   });
 }
 
-/**
- * Registers the socket action the active GM notes defences under for players.
- * @returns {void}
- */
-export function registerTargetedAttackSocket() {
-  registerSocketActions({
-    markDefenceRolled: payload => markDefenceRolled(game.messages.get(payload.messageId), payload.targetUuid, payload.outcome)
-  });
-}

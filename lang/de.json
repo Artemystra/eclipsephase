@@ -1939,8 +1939,7 @@
       "attack": {
         "applyDose": "Dosis auf ausgewählte Ziele anwenden",
         "applyTargets": "Auf ausgewählte Ziele anwenden",
-        "targets": "Ziele: {names}",
-        "hitByPool": "Der Poolpunkt hat den Angriff mit {weapon} zum Treffer gemacht."
+        "targets": "Ziele: {names}"
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -1953,6 +1952,11 @@
           "half": "Teilweise ausgewichen: halbe Dosis",
           "none": "Abgewehrt"
         }
+      },
+      "poolSpent": {
+        "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
+        "upgraded": "{name} hat einen Punkt {pool} eingesetzt, um das Ergebnis zu verbessern",
+        "mitigated": "{name} hat einen Punkt {pool} eingesetzt, um den Fehlschlag abzumildern"
       }
     },
     "rule": {

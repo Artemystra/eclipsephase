@@ -4159,6 +4159,18 @@ li:has(.ep-system-notice) .message-header {
 
 /* Picking a token on the canvas from a chat card: a crosshair until the click. A feature may set
    its own cursor class instead, as an offered dose does with its syringe. */
+/* Notes a roll card shows once something happened on it: a pool point spent, the targets picked. */
+.ep-pool-spent,
+.ep-attack-targets {
+  min-width: 100%;
+  margin: 0 0 20px 0;
+  padding: 0 5px;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: var(--inactive);
+  text-align: center;
+}
+
 /* The text that follows the picking cursor: what is left to pick below it, how to confirm above it. */
 .ep-targeting-counter {
   position: fixed;

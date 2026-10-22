@@ -29,6 +29,9 @@ Object {
   },
   "chat": Object {
     "readRollContext": [Function],
+    "registerCard": [Function],
+    "renderCard": [Function],
+    "updateCard": [Function],
   },
   "drugs": Object {
     "activeDoseFor": [Function],

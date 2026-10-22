@@ -48,7 +48,7 @@ api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowContr
             // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
             // tokenAt, pickTokensOnCanvas, drawTargetMarker, selectedTokenActor,
             // pickActorFromList
-api.chat    // readRollContext(element)
+api.chat    // readRollContext(element), registerCard, renderCard, updateCard
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
 api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData,
@@ -132,7 +132,7 @@ from a listener.
 | `eclipsephase.preRollDialog` | In `RollCheck()`, right after the roll is defined, before the options dialog opens | `rollContext` (mutable; set `rollContext.cancelReason` to a loc key before returning `false`) | Cancel a roll before its dialog opens |
 | `eclipsephase.preRoll` | In `RollCheck()`, right before the roll is performed | `rollContext` with `dataset`, `actor`, `actorModel`, `rolledFrom`, `rollType`, `options`, `task`, `pool`, `modifiers` (array to push into), `itemData`, `flags`, `weapon` (what `weaponPreparation` returned for a weapon attack, or `null`) | Add a `TaskRollModifier` (or `{text, value, comment}`) to `modifiers`, or contribute data via `itemData`/`flags` |
 | `eclipsephase.postRoll` | In `RollCheck()`, after the chat card was created | `rollContext` with `outputData`, `message` (the created `ChatMessage`, or `null`), `blind`, `rollMode` | React to a completed roll |
-| `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a chat card was applied | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
+| `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a roll card was applied and the card redrawn | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
 | `eclipsephase.prepareActorMods` | In `EPactor.prepareData()`, right after `mods`/`currentStatus` are reset | `(actorWhole, actorModel)` | Contribute to `actorModel.mods` before derived values are computed |
 | `eclipsephase.prepareActorStatus` | In `EPactor.prepareData()`, before the status-sidebar modifiers are summed | `(actorWhole, actorModel)` | Push `{label, modifier, flag}` onto `actorModel.currentStatus.specialModifiers` |
 | `eclipsephase.prepareActorDerived` | In `EPactor.prepareData()`, as its last statement | `(actorWhole, actorModel)` | Override fully-derived fields |
@@ -557,6 +557,40 @@ Hooks.on("eclipsephase.preRoll", context => {
   context.flags.myModule = { orderId: "abc", discountSteps: 2 };
 });
 ```
+
+### One card per roll
+
+A task roll's card keeps what it shows in `flags.eclipsephase.taskCard`. A pool spend no longer
+posts a card of its own: it redraws the roll card, whose pool controls give way to a note on who
+spent which pool, and whose result - on a swap, the die as well - shows the new values. What the
+new result unlocks (a damage button, a target button) appears on that same card, and the buttons
+go by the new result: `flags.eclipsephase.roll.alternatives.spent` is set, and `alternatives.result`
+is the result they use. A card can take one pool spend. Cards from before keep the old separate
+pool card.
+
+### Cards that change
+
+A card that changes after it was posted keeps its state in its flags under one key and is drawn
+again from it. Register the kind of card once, at load, on every client - the active GM redraws
+cards for users who may not edit them:
+
+```js
+const { chat } = game.eclipsephase.api;
+chat.registerCard("myModule-vote", {
+  render: state => renderTemplate("modules/my-module/vote.html", state),
+  mutations: { vote: (state, { name }) => ({ ...state, votes: [...state.votes, name] }) }
+});
+
+const state = { votes: [] };
+await ChatMessage.create({ content: await chat.renderCard("myModule-vote", state), flags: { eclipsephase: { "myModule-vote": state } } });
+
+await chat.updateCard(message, "myModule-vote", "vote", { name: "Ana" });   // or "merge" with fields
+```
+
+`updateCard(message, key, mutation, payload, { extra })` runs the change on the card's current
+state, redraws it and writes content and state in one update, together with any `extra` update
+fields. Changes to one card run one after another, so changes arriving together are all kept. A
+user who may not edit the card sends the change to the active GM.
 
 ## Module sub-types for your own document types
 

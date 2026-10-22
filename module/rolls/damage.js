@@ -5,6 +5,15 @@ import { inheritChatVisibility, readRollContext } from "../common/general-sheet-
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
 import { drugHealingAddition } from "./modifiers.js";
 
+/**
+ * The result a roll card's buttons go by: the one a pool point turned it into, or the rolled one.
+ * @param {Object} context - The roll context
+ * @returns {Number} The result
+ */
+export function spentOrOriginalResult(context) {
+  return context.alternatives?.spent && Number.isFinite(context.alternatives.result) ? context.alternatives.result : context.alternatives?.originalResult;
+}
+
 export async function prepareWeapon(data, result, preparedContext) {
   const context = preparedContext ?? readRollContext(data.currentTarget);
 
@@ -13,7 +22,7 @@ export async function prepareWeapon(data, result, preparedContext) {
   const selectedWeaponMode = context.item.weaponMode;
   const rolledFrom = context.rolledFrom;
   const skillKey = rolledFrom === "ccWeapon" ? "melee" : "guns";
-  const rollResult = Number.isFinite(result) ? result : context.alternatives.originalResult;
+  const rollResult = Number.isFinite(result) ? result : spentOrOriginalResult(context);
   const biomorphTarget = context.options.biomorphTarget;
   const touchOnly = context.options.touchOnly;
   const attackMode = context.options.attackMode;
@@ -152,7 +161,7 @@ export async function preparePsiDamage(data) {
 
   const {blind, recipientList} = inheritChatVisibility(context.messageId, context.options.rollMode);
 
-  await dealPsiDamage(actorWhole, sleightItem, context.alternatives.originalResult, blind, recipientList, context.options.push);
+  await dealPsiDamage(actorWhole, sleightItem, spentOrOriginalResult(context), blind, recipientList, context.options.push);
 }
 
 export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {
