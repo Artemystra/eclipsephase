@@ -205,7 +205,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!Lm4SIyVtnYHFRNNA.KCTLizyVyleqviqP"
+          "_key": "!actors.items.effects!P5IWLrIrc4u41d7i.Lm4SIyVtnYHFRNNA.KCTLizyVyleqviqP"
         }
       ],
       "flags": {
@@ -455,7 +455,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!3uXjN0vptMTt8v6t.9NzZWvTlcIN3z6gB"
+          "_key": "!actors.items.effects!P5IWLrIrc4u41d7i.3uXjN0vptMTt8v6t.9NzZWvTlcIN3z6gB"
         }
       ],
       "system": {
@@ -1233,20 +1233,58 @@
         "additionalSystems": {},
         "description": "+10 seduction Provoke, Enhanced Behavior: Aroused (2).",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "social",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "8 hours",
+        "duration": {
+          "value": 8,
+          "units": "hours"
+        },
         "addictionMod": "-10",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "physical",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "rollOptions": [
+          {
+            "id": "seduce",
+            "label": "ep2e.item.drug.rollOptions.hitherSeduce",
+            "value": 10,
+            "appliesTo": [
+              "provoke"
+            ]
+          }
+        ],
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [
+          {
+            "pack": "eclipsephase.traits",
+            "folder": "",
+            "item": "xGMEXPrvbypAfXKI",
+            "title": "Aroused",
+            "description": "",
+            "or": false
+          }
+        ],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1256,9 +1294,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.XhmxeR43eE2R2AA1",
+        "modifiedTime": 1674425460397,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.WbXJPBIdUZBLPiKT",
         "duplicateSource": null,
         "exportSource": null
       },

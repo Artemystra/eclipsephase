@@ -220,16 +220,19 @@ describe("damage every tick", () => {
 describe("a modifier that grows", () => {
   const disruptor = { interval: "hour", modifier: -5, incapacitates: true };
 
-  test("takes its first step as the dose takes hold, then one every full hour, on the intoxicated line", async () => {
+  test("takes its first step after the first full hour, then one every hour, up to the end of the dose, on the intoxicated line", async () => {
     const actor = exposed(disruptor, { value: 8, units: "hours" });
     const dose = await dosed(actor);
 
     await settleOverTime(actor, dose, START);
     const atOnce = globalModifiers(actor);
     await settleOverTime(actor, dose, START + 2 * 3600 + 60);
+    const afterTwoHours = globalModifiers(actor);
+    await settleOverTime(actor, dose, START + 8 * 3600);
 
-    expect(atOnce).toEqual([expect.objectContaining({ label: "ep2e.roll.announce.intoxicated", modifier: -5 })]);
-    expect(globalModifiers(actor)).toEqual([expect.objectContaining({ label: "ep2e.roll.announce.intoxicated", modifier: -15 })]);
+    expect(atOnce).toEqual([]);
+    expect(afterTwoHours).toEqual([expect.objectContaining({ label: "ep2e.roll.announce.intoxicated", modifier: -10 })]);
+    expect(globalModifiers(actor)).toEqual([expect.objectContaining({ label: "ep2e.roll.announce.intoxicated", modifier: -40 })]);
   });
 
   test("incapacitates once it reaches the Durability, and only once", async () => {

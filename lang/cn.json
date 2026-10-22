@@ -1143,7 +1143,9 @@
           "oxytocinaTrust": "涉及信任时",
           "randomizerSocial": "社交检定，随机决定",
           "stiffResist": "对抗说服或挑衅",
-          "tongzhiShared": "在共同兴趣上说服"
+          "tongzhiShared": "在共同兴趣上说服",
+          "monoNoAwareArt": "用于艺术技能",
+          "gravyHighGravity": "抵消高重力惩罚"
         },
         "takeDose": "服用一剂",
         "dosesLeft": "剩余剂量",

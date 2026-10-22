@@ -1144,7 +1144,9 @@
           "oxytocinaTrust": "cuando importa la confianza",
           "randomizerSocial": "pruebas sociales, al azar",
           "stiffResist": "contra Persuadir o Provocar",
-          "tongzhiShared": "Persuadir sobre intereses comunes"
+          "tongzhiShared": "Persuadir sobre intereses comunes",
+          "monoNoAwareArt": "en habilidades de Arte",
+          "gravyHighGravity": "contra penalizaciones por gravedad alta"
         },
         "takeDose": "Tomar una dosis",
         "dosesLeft": "Dosis restantes",

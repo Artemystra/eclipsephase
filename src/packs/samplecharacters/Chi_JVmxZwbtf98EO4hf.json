@@ -253,7 +253,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!YQWw4FHwLuTmjWp3.uZqlbycaKsWn1oKu"
+          "_key": "!actors.items.effects!JVmxZwbtf98EO4hf.YQWw4FHwLuTmjWp3.uZqlbycaKsWn1oKu"
         }
       ],
       "flags": {
@@ -509,7 +509,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!EtT9kNfzoZaalZlz.DV7PBIH52WvRzqK6"
+          "_key": "!actors.items.effects!JVmxZwbtf98EO4hf.EtT9kNfzoZaalZlz.DV7PBIH52WvRzqK6"
         }
       ],
       "system": {
@@ -673,7 +673,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!7O0xpVMCNYJcojTD.kI05TAES1AAiTJkw"
+          "_key": "!actors.items.effects!JVmxZwbtf98EO4hf.7O0xpVMCNYJcojTD.kI05TAES1AAiTJkw"
         }
       ],
       "flags": {
@@ -760,7 +760,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!awUmjlsjjtW36wdj.qaXw2Se5cOCdYCii"
+          "_key": "!actors.items.effects!JVmxZwbtf98EO4hf.awUmjlsjjtW36wdj.qaXw2Se5cOCdYCii"
         }
       ],
       "flags": {
@@ -860,7 +860,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!dVCpdfEzLZ7zwrkW.rMhEeBaqR8gQ5atR"
+          "_key": "!actors.items.effects!JVmxZwbtf98EO4hf.dVCpdfEzLZ7zwrkW.rMhEeBaqR8gQ5atR"
         }
       ],
       "flags": {},
@@ -1757,7 +1757,53 @@
       "name": "Comfurt",
       "type": "drug",
       "img": "systems/eclipsephase/resources/icons/drug.png",
-      "effects": [],
+      "effects": [
+        {
+          "_id": "PBhnMuDh73cZtkuL",
+          "name": "Comfurt",
+          "img": "systems/eclipsephase/resources/icons/drug.png",
+          "type": "base",
+          "disabled": false,
+          "transfer": true,
+          "origin": null,
+          "tint": "#ffffff",
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "statuses": [],
+          "flags": {},
+          "sort": 0,
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "system": {
+            "changes": [
+              {
+                "key": "system.mods.lucmod",
+                "value": "+5",
+                "priority": null,
+                "type": "add"
+              }
+            ]
+          },
+          "_stats": {
+            "coreVersion": "14.356",
+            "systemId": null,
+            "systemVersion": null,
+            "createdTime": null,
+            "modifiedTime": null,
+            "lastModifiedBy": null,
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          },
+          "_key": "!actors.items.effects!JVmxZwbtf98EO4hf.LTwAtlK4OWQhThwF.PBhnMuDh73cZtkuL"
+        }
+      ],
       "folder": null,
       "sort": 0,
       "flags": {
@@ -1768,20 +1814,39 @@
         "additionalSystems": {},
         "description": "+5 LUC, +1 TT, +5 IR.",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "health",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "12 hours",
+        "duration": {
+          "value": 12,
+          "units": "hours"
+        },
         "addictionMod": "-10",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "mental",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1791,9 +1856,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.qiDS0KrMcmIreAQK",
+        "modifiedTime": 1674425643498,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.ybHhEevYSVHErTT7",
         "duplicateSource": null,
         "exportSource": null
       },
@@ -1814,20 +1879,48 @@
         "additionalSystems": {},
         "description": "Enhanced Behavior: Obsessive (2), reduce timeframes 25%.",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "cognitive",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "12 hours",
+        "duration": {
+          "value": 12,
+          "units": "hours"
+        },
         "addictionMod": "-",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "mental",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [
+          {
+            "pack": "eclipsephase.traits",
+            "folder": "",
+            "item": "xGMEXPrvbypAfXKI",
+            "title": "Obsessive",
+            "description": "",
+            "or": false
+          }
+        ],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1837,9 +1930,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.A7yPGkGPrkeAjmJQ",
+        "modifiedTime": 1674425530561,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.0l63AbfkCNvo1XNJ",
         "duplicateSource": null,
         "exportSource": null
       },

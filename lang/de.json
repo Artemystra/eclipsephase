@@ -1165,7 +1165,9 @@
           "oxytocinaTrust": "wenn Vertrauen eine Rolle spielt",
           "randomizerSocial": "soziale Proben, per Zufall",
           "stiffResist": "gegen Überreden oder Provozieren",
-          "tongzhiShared": "Überreden bei gemeinsamen Interessen"
+          "tongzhiShared": "Überreden bei gemeinsamen Interessen",
+          "monoNoAwareArt": "auf Kunst-Fertigkeiten",
+          "gravyHighGravity": "gegen Mali durch hohe Schwerkraft"
         },
         "takeDose": "Dosis nehmen",
         "dosesLeft": "Verbleibende Dosen",

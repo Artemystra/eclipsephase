@@ -44,7 +44,17 @@
       "incapacitates": false
     },
     "healingAddition": "",
-    "grants": []
+    "grants": [],
+    "rollOptions": [
+      {
+        "id": "art",
+        "label": "ep2e.item.drug.rollOptions.monoNoAwareArt",
+        "value": 10,
+        "appliesTo": [
+          "know"
+        ]
+      }
+    ]
   },
   "ownership": {
     "default": 0,

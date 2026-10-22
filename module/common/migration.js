@@ -2687,6 +2687,55 @@ function _ep27_missingDrugData(item, catalogue) {
   return Object.keys(update).length ? update : null;
 }
 
+// Book corrections (errata 1.3/1.4 and the Core tables) made to drugs that may already sit on a
+// sheet, as item update paths. Each replaces only the exact old value, so a value somebody changed
+// by hand stays.
+const _ep27_TOXIN_ICON = "systems/eclipsephase/resources/icons/toxic-512.png";
+const _ep27_DRUG_ICON = "systems/eclipsephase/resources/icons/drug.png";
+const _ep27_DRUG_ERRATA = {
+  "Bananas Furiosas": ({ system }) => system.duration?.value === 1 && system.duration?.units === "days" ? { "system.duration": { ...system.duration, value: 8, units: "hours" } } : null,
+  "Nervex": ({ system }) => !Number(system.duration?.value) ? { "system.duration": { ...system.duration, value: 10, units: "minutes" } } : null,
+  "Xsense": ({ system, img }) => {
+    const update = {};
+    if (system.category === "toxin") update["system.category"] = "drug";
+    if (img === _ep27_TOXIN_ICON) update.img = _ep27_DRUG_ICON;
+    return Object.keys(update).length ? update : null;
+  },
+  "Psi-Opener": ({ system }) => system.cost === "minor" ? { "system.cost": "rare" } : null,
+  "Psi-Kick": ({ system }) => system.cost === "minor" ? { "system.cost": "rare" } : null,
+  "Brutalitea": ({ system }) => typeof system.description === "string" && system.description.includes("+3 DR") ? { "system.description": system.description.replace("+3 DR", "+8 DR") } : null,
+  "Aggro": ({ system }) => {
+    const options = system.rollOptions ?? [];
+    const other = options.find(option => option.id === "otherSocial");
+    if (!other || other.appliesTo?.includes("provoke")) return null;
+    return { "system.rollOptions": options.map(option => option === other ? { ...option, appliesTo: [...(option.appliesTo ?? []), "provoke"] } : option) };
+  }
+};
+
+/**
+ * The book corrections a drug on a sheet still needs.
+ * @param {Item} item - The drug item, read with its repairs applied
+ * @returns {Object|null} The item update, or null when none is due
+ */
+export function _ep27_drugErrata(item) {
+  return _ep27_DRUG_ERRATA[item.name]?.({ system: item.system ?? {}, img: item.img }) ?? null;
+}
+
+/**
+ * Blueprint effects a drug carries that the book does not give it: Inhibitor's flat -30 to Psi,
+ * which belongs only to a passed check. Matched exactly, so an effect of somebody's own stays.
+ * @param {Item} item - The drug item
+ * @returns {String[]|null} The ids of the effects to remove, or null when there are none
+ */
+export function _ep27_wrongBlueprints(item) {
+  if (item.name !== "Inhibitor") return null;
+  const wrong = Array.from(item.effects ?? []).filter(effect => {
+    const changes = effect.changes ?? effect.system?.changes ?? [];
+    return changes.length === 1 && changes[0].key === "system.skillsMox.psi.mod" && String(changes[0].value).trim() === "-30";
+  });
+  return wrong.length ? wrong.map(effect => effect.id) : null;
+}
+
 /**
  * The blueprint effects a drug dragged before 2.7 is missing. A dose copies the drug's own effects,
  * so a drug that has none does nothing when taken. Only a drug with no effects at all is filled,
@@ -2772,7 +2821,8 @@ export async function migrationPre27Needed() {
   const blueprints = await _ep27_drugBlueprints();
   const wareOptions = await _ep27_wareOptions();
   const needs = item => (item.type === "drug"
-    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null))
+    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null
+      || _ep27_drugErrata(item) !== null || _ep27_wrongBlueprints(item) !== null))
     || _ep27_missingWareMarker(item) !== null
     || _ep27_missingWareOptions(item, wareOptions) !== null;
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
@@ -2809,6 +2859,12 @@ export async function migrationPre27(startMigration) {
       for (const [key, value] of Object.entries(data)) update[`system.${key}`] = value;
       await item.update(update);
     }
+
+    const errata = _ep27_drugErrata(item);
+    if (errata) await item.update(errata);
+
+    const wrong = _ep27_wrongBlueprints(item);
+    if (wrong) await item.deleteEmbeddedDocuments("ActiveEffect", wrong);
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => item.type === "drug",

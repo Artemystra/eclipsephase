@@ -390,7 +390,7 @@ Effects over time tick on the world clock while the dose runs:
 
 `interval` is `"turn"` or `"hour"`. Every tick deals `damage`, each tick measured against the Wound
 Threshold on its own. `ticks` caps the number of ticks; no value means every tick the dose lasts.
-`modifier` is added once more on every tick as a penalty to all actions; with `incapacitates` the
+`modifier` is added once more after every full interval as a penalty to all actions, the first after one interval; with `incapacitates` the
 target is incapacitated once that penalty reaches their Durability.
 
 A grant row lends one item from a compendium:

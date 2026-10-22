@@ -70,8 +70,8 @@
     "oral": true,
     "drugType": "biochem",
     "duration": {
-      "value": null,
-      "units": ""
+      "value": 10,
+      "units": "minutes"
     },
     "addictionMod": "-",
     "addictionType": "none",

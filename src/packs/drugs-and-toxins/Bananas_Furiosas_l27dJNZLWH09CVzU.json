@@ -24,8 +24,8 @@
     "oral": true,
     "drugType": "biochem",
     "duration": {
-      "value": 1,
-      "units": "days"
+      "value": 8,
+      "units": "hours"
     },
     "addictionMod": "-",
     "addictionType": "none",

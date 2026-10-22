@@ -417,6 +417,33 @@ describe("the 2.7 backfill of what C added", () => {
     expect(actor.items.get("gp2").system.rollOptions).toEqual(own);
   });
 
+  test("drugs on a sheet get the book's corrections, but only where they still hold the old value", async () => {
+    const inhibitorBlueprint = { name: "Inhibitor", changes: [{ key: "system.skillsMox.psi.mod", value: "-30", type: "add" }] };
+    const actor = makeActor({
+      type: "character",
+      items: [
+        { _id: "ban1", name: "Bananas Furiosas", type: "drug", system: { ...CURRENT, category: "drug", duration: { value: 1, units: "days" } } },
+        { _id: "ban2", name: "Bananas Furiosas", type: "drug", system: { ...CURRENT, category: "drug", duration: { value: 2, units: "days" } } },
+        { _id: "nerv1", name: "Nervex", type: "drug", system: { ...CURRENT, duration: { value: null, units: "" } } },
+        { _id: "xs1", name: "Xsense", type: "drug", img: "systems/eclipsephase/resources/icons/toxic-512.png", system: { ...CURRENT, category: "toxin" } },
+        { _id: "po1", name: "Psi-Opener", type: "drug", system: { ...CURRENT, cost: "minor" } },
+        { _id: "bru1", name: "Brutalitea", type: "drug", system: { ...CURRENT, description: "+5 DUR, +1 WT, +3 DR." } },
+        { _id: "inh1", name: "Inhibitor", type: "drug", system: CURRENT, effects: [inhibitorBlueprint] }
+      ]
+    });
+
+    await runLadderFrom("2.5");
+
+    expect(actor.items.get("ban1").system.duration).toMatchObject({ value: 8, units: "hours" });
+    expect(actor.items.get("ban2").system.duration).toMatchObject({ value: 2, units: "days" });
+    expect(actor.items.get("nerv1").system.duration).toMatchObject({ value: 10, units: "minutes" });
+    expect(actor.items.get("xs1").system.category).toBe("drug");
+    expect(actor.items.get("xs1").img).toBe("systems/eclipsephase/resources/icons/drug.png");
+    expect(actor.items.get("po1").system.cost).toBe("rare");
+    expect(actor.items.get("bru1").system.description).toBe("+5 DUR, +1 WT, +8 DR.");
+    expect(Array.from(actor.items.get("inh1").effects)).toHaveLength(0);
+  });
+
   test("a drug on a sheet that records no addiction gets its namesake's type and modifier", async () => {
     const actor = makeActor({ type: "character", items: [{ _id: "kick1", name: "Kick", type: "drug", system: { ...CURRENT, addictionType: "none", addictionMod: "-" } }] });
 

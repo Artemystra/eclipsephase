@@ -1433,8 +1433,8 @@ export function damageTicksDue(overTime, effect, now) {
 }
 
 /**
- * How many steps a growing modifier has taken by now: the first as the dose takes hold, then one
- * per full interval, up to the dose's span.
+ * How many steps a growing modifier has taken by now: one per full interval since the dose took
+ * hold, the first after one interval (Core p.335: "every hour"), up to the dose's span.
  * @param {Object} overTime - The dose's overTime
  * @param {ActiveEffect} effect - The dose
  * @param {Number} now - The world time
@@ -1444,7 +1444,7 @@ export function modifierStepsDue(overTime, effect, now) {
   if (!Number(overTime?.modifier)) return 0;
   const step = intervalSeconds(overTime.interval);
   const cap = Math.max(1, Math.floor(doseSeconds(effect) / step));
-  return Math.min(Math.floor(elapsedSeconds(effect, now) / step) + 1, cap);
+  return Math.min(Math.floor(elapsedSeconds(effect, now) / step), cap);
 }
 
 /**

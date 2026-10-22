@@ -205,7 +205,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!ACKJAOYHRT6omMhm.VCaFLiAqYGIISRWU"
+          "_key": "!actors.items.effects!fZNgYiuO5aKai41e.ACKJAOYHRT6omMhm.VCaFLiAqYGIISRWU"
         }
       ],
       "flags": {
@@ -455,7 +455,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!Ao7I6H6uoefcOegP.A81ri25hfScJpGDm"
+          "_key": "!actors.items.effects!fZNgYiuO5aKai41e.Ao7I6H6uoefcOegP.A81ri25hfScJpGDm"
         }
       ],
       "system": {
@@ -664,7 +664,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!gZQgUw1JXC69lUui.Un04m8WfeLA3En6J"
+          "_key": "!actors.items.effects!fZNgYiuO5aKai41e.gZQgUw1JXC69lUui.Un04m8WfeLA3En6J"
         }
       ],
       "flags": {},
@@ -1358,20 +1358,59 @@
         "additionalSystems": {},
         "description": "+10 SAV/WIL Checks vs. Persuade/Provoke,  Enhanced Behavior: Stubborn (Level 2).",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "social",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "8 hours",
+        "duration": {
+          "value": 8,
+          "units": "hours"
+        },
         "addictionMod": "-10",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "mental",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "rollOptions": [
+          {
+            "id": "resist",
+            "label": "ep2e.item.drug.rollOptions.stiffResist",
+            "value": 10,
+            "appliesTo": [
+              "sav",
+              "wil"
+            ]
+          }
+        ],
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [
+          {
+            "pack": "eclipsephase.traits",
+            "folder": "",
+            "item": "xGMEXPrvbypAfXKI",
+            "title": "Stubborn",
+            "description": "",
+            "or": false
+          }
+        ],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1381,9 +1420,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.vZMum4poV13eY3Px",
+        "modifiedTime": 1674424952517,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.2l9Fic3VCYYmEYRH",
         "duplicateSource": null,
         "exportSource": null
       },

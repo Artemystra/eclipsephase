@@ -121,11 +121,25 @@ describe("the shipped drug compendium", () => {
     }
   });
 
-  test("only the two drugs that never end on their own are open-ended", () => {
+  test("only Retcon, which never ends on its own, is open-ended", () => {
     const openEnded = packDrugs().filter(drug => drug.system.duration.value === null);
 
-    expect(openEnded.map(drug => drug.name).sort()).toEqual(["Nervex", "Retcon"]);
+    expect(openEnded.map(drug => drug.name).sort()).toEqual(["Retcon"]);
     for (const drug of openEnded) expect(drug.system.duration.units).toEqual("");
+  });
+
+  test("a drug shows the drug icon and a toxin the toxin icon", () => {
+    const icon = { drug: "systems/eclipsephase/resources/icons/drug.png", toxin: "systems/eclipsephase/resources/icons/toxic-512.png" };
+
+    for (const drug of packDrugs()) expect({ name: drug.name, img: drug.img }).toEqual({ name: drug.name, img: icon[drug.system.category] });
+  });
+
+  test("the errata's durations and the book's cost tiers are the ones shipped", () => {
+    const named = name => packDrugs().find(drug => drug.name === name).system;
+
+    expect(named("Bananas Furiosas").duration).toMatchObject({ value: 8, units: "hours" });
+    expect(named("Nervex").duration).toMatchObject({ value: 10, units: "minutes" });
+    expect([named("Psi-Opener").cost, named("Psi-Kick").cost]).toEqual(["rare", "rare"]);
   });
 
   test("every drug ships as one full pack in the consumable slot", () => {
@@ -179,7 +193,7 @@ describe("the blueprint effects authored from the book", () => {
   test("exactly the flat, unconditional modifiers carry a blueprint effect", () => {
     const withEffects = packDrugs().filter(drug => drug.effects.length > 0).map(drug => drug.name).sort();
     expect(withEffects).toEqual([
-      "Blab", "Brutalitea", "CR Gas", "Comfurt", "DDR", "Drive", "Grin", "Inhibitor", "Kick", "Klar",
+      "Blab", "Brutalitea", "CR Gas", "Comfurt", "DDR", "Drive", "Grin", "Kick", "Klar",
       "MRDR", "Nervex", "Neuropath", "Nofux", "Orbital Hash", "Phlo", "Psike-Out", "TGS", "Tongzhi", "Twitch"
     ]);
   });
@@ -573,7 +587,15 @@ describe("the conditional options authored from the book", () => {
 
   test("exactly the drugs whose effect depends on the situation carry options", () => {
     const withOptions = packDrugs().filter(drug => drug.system.rollOptions?.length).map(drug => drug.name).sort();
-    expect(withOptions).toEqual(["Aggro", "Blab", "Buzz", "CR Gas", "Flight", "Hither", "Juice", "Neem", "Orbital Hash", "Oxytocin-A", "Randomizer", "Stiff", "Tongzhi"]);
+    expect(withOptions).toEqual(["Aggro", "Blab", "Buzz", "CR Gas", "Flight", "Gravy", "Hither", "Juice", "Mono no Aware", "Neem", "Orbital Hash", "Oxytocin-A", "Randomizer", "Stiff", "Tongzhi"]);
+  });
+
+  test("Aggro's -20 reaches every other social test, Provoke used for anything but intimidation included", () => {
+    const aggro = packDrugs().find(drug => drug.name === "Aggro");
+    const other = aggro.system.rollOptions.find(option => option.id === "otherSocial");
+
+    expect(other).toMatchObject({ value: -20 });
+    expect(other.appliesTo).toEqual(expect.arrayContaining(["deceive", "kinesics", "persuade", "provoke"]));
   });
 
   test("every option has an id, a translated label, a number and checks that exist", () => {
