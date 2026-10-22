@@ -891,45 +891,79 @@ export function tokenAt(point, tokens) {
   return hits.at(-1) ?? null;
 }
 
+// The system's colours for picking targets: the cursor turquoise, the mark on a picked token red.
+export const TARGET_COLOR = "#00f5e4";
+export const MARK_COLOR = "#db2a2a";
+
 /**
- * Lets the user click a token on the canvas. The cursor changes until the click; a click on empty
- * canvas, a right-click or Escape cancels. The click is kept from the canvas itself, so picking a
- * target does not also select or deselect tokens.
- * @param {Object} [options] - bodyClass: the class that sets the cursor while picking
- * @returns {Promise<Object|null>} The token clicked, or null when cancelled
+ * The default picking cursor as an image: a ring, four strokes and a centre dot, 32 pixels across.
+ * @param {String} color - The colour, as CSS
+ * @returns {String} A data URL
  */
-export function pickTokenOnCanvas({ bodyClass = "ep-targeting" } = {}) {
-  const board = document.getElementById("board");
-  if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
-
-  return new Promise(resolve => {
-    const finish = token => {
-      board.removeEventListener("pointerdown", onPointer, true);
-      document.removeEventListener("keydown", onKey, true);
-      document.body.classList.remove(bodyClass);
-      resolve(token);
-    };
-    const onPointer = event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (event.button !== 0) return finish(null);
-      const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
-      finish(tokenAt(point, canvas.tokens.placeables));
-    };
-    const onKey = event => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      finish(null);
-    };
-
-    document.body.classList.add(bodyClass);
-    board.addEventListener("pointerdown", onPointer, true);
-    document.addEventListener("keydown", onKey, true);
-  });
+function crosshairImage(color) {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='${color}' stroke-width='2.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='1.5' fill='${color}'/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 /**
- * Draws one crosshair of the picking cursor's shape: a ring, four strokes and a centre dot.
+ * The character a Font Awesome icon draws, from the value its stylesheet gives `content` or `--fa`:
+ * the first quoted string, with CSS escapes like \f48e decoded. Font Awesome 7 adds an empty
+ * alternative text after a slash (`"\f48e" / ""`), which is not part of the glyph.
+ * @param {String} value - The computed value
+ * @returns {String} The glyph, or "" when there is none
+ */
+export function iconGlyph(value) {
+  const quoted = String(value ?? "").match(/^\s*(["'])((?:\\.|(?!\1).)*)\1/);
+  if (!quoted) return "";
+  return quoted[2].replace(/\\([0-9a-fA-F]{1,6})\s?/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))).replace(/\\(.)/g, "$1");
+}
+
+/**
+ * A Font Awesome icon drawn as an image, 32 pixels across, in a colour with a 1-pixel white border:
+ * the same glyph the chat cards show, read from the icon font Foundry already loaded and scaled to
+ * fit the image whatever its proportions.
+ * @param {String} icon - The icon's class, e.g. "fa-syringe"
+ * @param {String} color - The colour, as CSS
+ * @returns {String} A data URL
+ */
+export function iconImage(icon, color) {
+  const size = 32;
+  const probe = document.createElement("i");
+  probe.className = `fa-solid ${icon}`;
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  document.body.append(probe);
+  const style = getComputedStyle(probe, "::before");
+  const glyph = iconGlyph(getComputedStyle(probe).getPropertyValue("--fa")) || iconGlyph(style.content);
+  const family = style.fontFamily;
+  const weight = style.fontWeight;
+  probe.remove();
+
+  const image = document.createElement("canvas");
+  image.width = size;
+  image.height = size;
+  const context = image.getContext("2d");
+  const fit = size - 4;
+  context.font = `${weight} ${fit}px ${family}`;
+  const measured = context.measureText(glyph);
+  const width = (measured.actualBoundingBoxLeft + measured.actualBoundingBoxRight) || fit;
+  const height = (measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent) || fit;
+  const scale = Math.min(1, fit / Math.max(width, height));
+  context.font = `${weight} ${fit * scale}px ${family}`;
+  const box = context.measureText(glyph);
+  const x = (size - (box.actualBoundingBoxLeft + box.actualBoundingBoxRight)) / 2 + box.actualBoundingBoxLeft;
+  const y = (size - (box.actualBoundingBoxAscent + box.actualBoundingBoxDescent)) / 2 + box.actualBoundingBoxAscent;
+  context.lineJoin = "round";
+  context.lineWidth = 2;
+  context.strokeStyle = "#ffffff";
+  context.strokeText(glyph, x, y);
+  context.fillStyle = color;
+  context.fillText(glyph, x, y);
+  return image.toDataURL();
+}
+
+/**
+ * Draws one crosshair of the default cursor's shape: a ring, four strokes and a centre dot.
  * @param {Object} graphics - The PIXI graphics to draw into
  * @param {Number} pixel - One screen pixel, in canvas units
  * @param {Number} color - The colour
@@ -945,61 +979,86 @@ function drawCrosshair(graphics, pixel, color, grow) {
 }
 
 /**
- * Draws a red crosshair with a thin white border on a token where it was clicked, the shape and
- * on-screen size of the picking cursor (32 pixels across) at the zoom it was clicked at.
+ * Draws the mark of a picked target on a token where it was clicked: the cursor's shape - the
+ * crosshair, or the icon picking ran with - in its colour (red by default) with a 1-pixel white
+ * border, as large on screen as the cursor (32 pixels across) at the zoom it was clicked at.
  * @param {Object} token - The token placeable
  * @param {Object} point - The click, in canvas coordinates
- * @returns {Function} Removes the crosshair again
+ * @param {Object} [options] - icon: the Font Awesome class picking ran with, or none for the
+ *   crosshair; color: the mark's colour as a CSS hex value, MARK_COLOR by default
+ * @returns {Function} Removes the mark again
  */
-export function drawTargetMarker(token, point) {
-  const graphics = new PIXI.Graphics();
+export function drawTargetMarker(token, point, { icon = null, color = MARK_COLOR } = {}) {
   const pixel = 1 / (globalThis.canvas?.stage?.scale?.x || 1);
-  drawCrosshair(graphics, pixel, 0xffffff, 1);
-  drawCrosshair(graphics, pixel, 0xdb2a2a, 0);
-  graphics.position.set(point.x - (token.x ?? 0), point.y - (token.y ?? 0));
-  token.addChild(graphics);
-  return () => graphics.destroy();
+  let mark;
+  if (icon) {
+    mark = PIXI.Sprite.from(iconImage(icon, color));
+    mark.anchor.set(0.5);
+    mark.scale.set(pixel);
+  }
+  else {
+    mark = new PIXI.Graphics();
+    drawCrosshair(mark, pixel, 0xffffff, 1);
+    drawCrosshair(mark, pixel, Number.parseInt(color.replace("#", ""), 16), 0);
+  }
+  mark.position.set(point.x - (token.x ?? 0), point.y - (token.y ?? 0));
+  token.addChild(mark);
+  return () => mark.destroy();
 }
 
 /**
- * The text that follows the cursor while targets are picked: how many are left below it, and once
- * the first one is marked, how to confirm above it.
- * @param {Number} left - Targets still to pick
- * @param {Number} marked - Targets marked so far
+ * The text that follows the cursor while targets are picked. Below it: for several targets how
+ * many are left, for one target whether it is chosen yet. Above it, once something is marked, how
+ * to confirm.
+ * @param {Object} state - multi: several targets; left: targets still to pick; marked: targets marked
  * @returns {String} The label's HTML
  */
-export function targetCounterLabel(left, marked) {
+export function targetLabel({ multi, left, marked }) {
   const hint = marked ? `<span class="ep-targeting-hint">${escapeText(game.i18n.localize("ep2e.targeting.confirmHint"))}</span>` : "";
-  return `${hint}<span class="ep-targeting-count">${escapeText(game.i18n.format("ep2e.targeting.remaining", { count: left }))}</span>`;
+  const text = multi
+    ? game.i18n.format("ep2e.targeting.remaining", { count: left })
+    : game.i18n.localize(marked ? "ep2e.targeting.targetChosen" : "ep2e.targeting.selectTarget");
+  return `${hint}<span class="ep-targeting-count">${escapeText(text)}</span>`;
 }
 
 /**
- * Lets the user mark up to a number of tokens on the canvas. A click marks a token, another click
- * on it unmarks it, a click past the limit is refused with a notice. A right-click confirms what is
- * marked; Escape, or a right-click with nothing marked, cancels. The clicks are kept from the
- * canvas itself, so picking targets does not also select or deselect tokens.
- * @param {Object} options - max: how many may be marked; bodyClass: the class that sets the cursor;
- *   marker: marker(token, point) draws a mark and returns what removes it
+ * Lets the user pick targets on the canvas. A click marks a token, another click on it unmarks it;
+ * a right-click confirms what is marked, and Escape, or a right-click with nothing marked, cancels.
+ * With several targets a click past the limit is refused with a notice; with one, a click on
+ * another token moves the mark over to it. The clicks are kept from the canvas itself, so picking
+ * targets does not also select or deselect tokens. The cursor is set by a stylesheet rule rather
+ * than on the board, since the canvas writes its own cursor onto the board over every token.
+ * @param {Object} [options] - icon: a Font Awesome class for the cursor and the marks, none for
+ *   the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
+ *   marks' colour, the red MARK_COLOR by default; multi: several targets; max: how many, with multi;
+ *   marker: marker(token, point, {icon, color}) draws a mark and returns what removes it
  * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
  *   cancelled
  */
-export function pickTokensOnCanvas({ max = 1, bodyClass = "ep-targeting-multi", marker = drawTargetMarker } = {}) {
+export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, marker = drawTargetMarker } = {}) {
   const board = document.getElementById("board");
   if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
   ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
+  const limit = multi ? Math.max(1, Number(max) || 1) : 1;
 
   return new Promise(resolve => {
     const marked = new Map();
     const label = document.createElement("div");
     label.className = "ep-targeting-counter";
-    const refresh = () => { label.innerHTML = targetCounterLabel(max - marked.size, marked.size); };
+    const refresh = () => { label.innerHTML = targetLabel({ multi, left: limit - marked.size, marked: marked.size }); };
+    const unmark = token => {
+      marked.get(token)?.();
+      marked.delete(token);
+    };
+    const cursor = document.createElement("style");
+    cursor.textContent = `#board { cursor: url("${icon ? iconImage(icon, color) : crosshairImage(color)}") 16 16, crosshair !important; }`;
     const finish = tokens => {
       board.removeEventListener("pointerdown", onPointer, true);
       board.removeEventListener("contextmenu", onContext, true);
       document.removeEventListener("pointermove", onMove, true);
       document.removeEventListener("keydown", onKey, true);
-      document.body.classList.remove(bodyClass);
-      for (const unmark of marked.values()) unmark?.();
+      cursor.remove();
+      for (const token of Array.from(marked.keys())) unmark(token);
       label.remove();
       resolve(tokens);
     };
@@ -1011,12 +1070,13 @@ export function pickTokensOnCanvas({ max = 1, bodyClass = "ep-targeting-multi", 
       const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
       const token = tokenAt(point, canvas.tokens.placeables);
       if (!token) return;
-      if (marked.has(token)) {
-        marked.get(token)?.();
-        marked.delete(token);
+      if (marked.has(token)) unmark(token);
+      else if (!multi) {
+        for (const other of Array.from(marked.keys())) unmark(other);
+        marked.set(token, marker(token, point, { icon, color: markColor }));
       }
-      else if (marked.size >= max) ui.notifications.warn(game.i18n.format("ep2e.targeting.limitReached", { max }));
-      else marked.set(token, marker(token, point));
+      else if (marked.size >= limit) ui.notifications.warn(game.i18n.format("ep2e.targeting.limitReached", { max: limit }));
+      else marked.set(token, marker(token, point, { icon, color: markColor }));
       refresh();
     };
     const onContext = event => {
@@ -1035,7 +1095,7 @@ export function pickTokensOnCanvas({ max = 1, bodyClass = "ep-targeting-multi", 
 
     refresh();
     document.body.append(label);
-    document.body.classList.add(bodyClass);
+    document.head.append(cursor);
     board.addEventListener("pointerdown", onPointer, true);
     board.addEventListener("contextmenu", onContext, true);
     document.addEventListener("pointermove", onMove, true);

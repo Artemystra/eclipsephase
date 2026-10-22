@@ -14,8 +14,9 @@ const MARKING = new Map();
 /**
  * Registers what an attack can bring onto its targets.
  * @param {String} effect - The effect's key, carried on the attack
- * @param {Object} handlers - detect(rollContext) returns {targets, area, payload, labelKey} for an
- *   attack that brings the effect, or null; beforeDelivery(attack) may refuse delivery by returning
+ * @param {Object} handlers - detect(rollContext) returns {targets, area, payload, labelKey, and
+ *   optionally cursor: {icon, color} to pick the targets with} for an attack that brings the effect,
+ *   or null; beforeDelivery(attack) may refuse delivery by returning
  *   false; resolve(attack, target, outcome, {byPool, defenceId}) carries out "hit", "half" or "none"
  * @returns {void}
  */
@@ -127,7 +128,7 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   const handlers = EFFECTS.get(attack.effect);
   if (handlers?.ready && !handlers.ready(attack)) return null;
 
-  const tokens = await pick({ max: attack.targets });
+  const tokens = await pick({ multi: attack.targets > 1, max: attack.targets, ...(attack.cursor ?? {}) });
   if (!tokens?.length) return null;
   if (tokens.length < attack.targets && !(await confirm(attack, tokens.length))) return null;
   const targets = tokens.map(token => token.actor).filter(Boolean);

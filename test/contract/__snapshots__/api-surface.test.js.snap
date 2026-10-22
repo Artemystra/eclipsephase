@@ -85,7 +85,6 @@ Object {
     "itemTypeFilterPills": [Function],
     "moreInfo": [Function],
     "pickActorFromList": [Function],
-    "pickTokenOnCanvas": [Function],
     "pickTokensOnCanvas": [Function],
     "registerCommonHandlers": [Function],
     "selectBody": [Function],

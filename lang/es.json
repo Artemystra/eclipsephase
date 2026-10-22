@@ -136,7 +136,6 @@
         "doseNeedsCyberbrain": "Esta droga solo funciona en un infomorfo o un cibercerebro.",
         "noDosesLeft": "{name} no tiene dosis restantes.",
         "doseCheckRolled": "Este chequeo ya se ha tirado.",
-        "doseTargetPrompt": "Haz clic en el token que recibe la dosis. Haz clic fuera o pulsa Escape para cancelar.",
         "doseNoScene": "Abre una escena para elegir un objetivo en ella.",
         "doseNeedsGM": "Debe haber un GM conectado para entregar esta dosis.",
         "doseNoSelection": "Selecciona primero un token.",
@@ -2134,7 +2133,9 @@
       "cancelHint": "Pulsa ESC o haz clic derecho sin objetivos para cancelar.",
       "confirmHint": "Clic derecho para confirmar",
       "remaining": "Quedan {count} objetivos",
-      "limitReached": "Se ha alcanzado el máximo de {max} objetivos. Vuelve a hacer clic en un objetivo marcado para desmarcarlo."
+      "limitReached": "Se ha alcanzado el máximo de {max} objetivos. Vuelve a hacer clic en un objetivo marcado para desmarcarlo.",
+      "selectTarget": "Elegir objetivo",
+      "targetChosen": "Objetivo elegido"
     }
   }
 }

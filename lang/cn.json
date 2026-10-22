@@ -136,7 +136,6 @@
         "doseNeedsCyberbrain": "这种药物只能在信息形体或赛博脑上运行。",
         "noDosesLeft": "{name} 没有剩余剂量。",
         "doseCheckRolled": "这次检定已经掷过了。",
-        "doseTargetPrompt": "点击接受这一剂的令牌。点击其他位置或按 Esc 取消。",
         "doseNoScene": "请先打开一个场景，再在其中选择目标。",
         "doseNeedsGM": "必须有 GM 在线才能交付这一剂。",
         "doseNoSelection": "请先选中一个令牌。",
@@ -2141,7 +2140,9 @@
       "cancelHint": "按 ESC 或在未选目标时右键取消。",
       "confirmHint": "右键确认",
       "remaining": "还剩 {count} 个目标",
-      "limitReached": "已达到最多 {max} 个目标。再次点击已标记的目标可取消标记。"
+      "limitReached": "已达到最多 {max} 个目标。再次点击已标记的目标可取消标记。",
+      "selectTarget": "选择目标",
+      "targetChosen": "已选目标"
     }
   }
 }

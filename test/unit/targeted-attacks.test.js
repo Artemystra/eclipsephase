@@ -1,9 +1,9 @@
 import { JSDOM } from "jsdom";
 import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDefence, rollRemainingDefences, defenceOutcome } from "../../module/rolls/targeted-attacks.js";
-import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload, activeDoseFor } from "../../module/common/doses.js";
+import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload, activeDoseFor, DOSE_CURSOR } from "../../module/common/doses.js";
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
-import { pickTokensOnCanvas, targetCounterLabel } from "../../module/common/general-sheet-functions.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, MARK_COLOR } from "../../module/common/general-sheet-functions.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
@@ -177,6 +177,15 @@ describe("picking the targets", () => {
 
     expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ delivered: true, targetNames: ["Ana", "Bo", "Cy"] });
     expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
+  });
+
+  test("a sprayer's targets are picked several at once, with the default crosshair", async () => {
+    const card = await fire(await shooter(), 5);
+    const pick = jest.fn(async () => [{ actor: target("Ana") }]);
+
+    await applyTargetedAttack(card, { pick, confirm: async () => true });
+
+    expect(pick).toHaveBeenCalledWith({ multi: true, max: 3 });
   });
 
   test("fewer targets than doses go ahead only once confirmed", async () => {
@@ -372,8 +381,12 @@ describe("forcing a drug on someone in melee", () => {
     expect(forceableDrugs(actor).map(item => item.name)).toEqual(["Kick"]);
   });
 
-  test("a hit offers the dose to one target, defended in melee", async () => {
+  test("a hit offers the dose to one target, defended in melee, picked with the dose cards' syringe", async () => {
     const card = await lunge(attacker(), 5);
+    const pick = jest.fn(async () => null);
+    await applyTargetedAttack(card, { pick });
+
+    expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, ...DOSE_CURSOR });
 
     expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "dose", targets: 1, area: false, defence: "melee" });
     expect(card.content).toContain("ep2e.chat.attack.applyDose");
@@ -471,10 +484,11 @@ describe("marking targets on the canvas", () => {
   /**
    * Starts picking with a marker that records which tokens are marked.
    * @param {Number} max - How many may be marked
+   * @param {Object} [options] - Further picker options, e.g. multi or color
    * @returns {Promise<Object[]|null>} What the picker resolves to
    */
-  function picking(max) {
-    return pickTokensOnCanvas({ max, marker: picked => { marks.add(picked.name); return () => marks.delete(picked.name); } });
+  function picking(max, options = { multi: true }) {
+    return pickTokensOnCanvas({ max, ...options, marker: picked => { marks.add(picked.name); return () => marks.delete(picked.name); } });
   }
 
   test("clicked tokens are marked, a second click unmarks, and a right-click confirms them in order", async () => {
@@ -491,7 +505,7 @@ describe("marking targets on the canvas", () => {
   });
 
   test("a click past the limit marks nothing and says the limit is reached", async () => {
-    const pick = picking(1);
+    const pick = picking(1, { multi: true });
     press(10);
     press(210);
     press(10, 2);
@@ -512,11 +526,64 @@ describe("marking targets on the canvas", () => {
     expect(marks.size).toBe(0);
   });
 
-  test("the cursor shows how many targets are left, and how to confirm once one is marked", () => {
+  test("with one target, a click on another token moves the mark over, and a click on the marked one unmarks it", async () => {
+    const pick = picking(1, {});
+    press(10);
+    press(210);
+    expect(marks).toEqual(new Set(["Bo"]));
+    press(210);
+    expect(marks.size).toBe(0);
+    press(410);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Cy"]);
+    expect(ui.notifications.warn).not.toHaveBeenCalled();
+  });
+
+  test("marks are drawn in the system's red unless the caller names another colour", async () => {
+    const colours = [];
+    const marker = (picked, point, { color }) => { colours.push(color); return () => {}; };
+    const standard = pickTokensOnCanvas({ marker });
+    press(10);
+    press(10, 2);
+    await standard;
+    const custom = pickTokensOnCanvas({ marker, markColor: "#00ff00" });
+    press(10);
+    press(10, 2);
+    await custom;
+
+    expect(colours).toEqual([MARK_COLOR, "#00ff00"]);
+  });
+
+  test("the cursor shows how many targets are left, or for one target whether it is chosen, and how to confirm once one is marked", () => {
     const format = jest.spyOn(game.i18n, "format");
 
-    expect(targetCounterLabel(3, 0)).not.toContain("ep2e.targeting.confirmHint");
-    expect(targetCounterLabel(2, 1)).toContain("ep2e.targeting.confirmHint");
+    expect(targetLabel({ multi: true, left: 3, marked: 0 })).not.toContain("ep2e.targeting.confirmHint");
+    expect(targetLabel({ multi: true, left: 2, marked: 1 })).toContain("ep2e.targeting.confirmHint");
     expect(format).toHaveBeenLastCalledWith("ep2e.targeting.remaining", { count: 2 });
+    expect(targetLabel({ multi: false, left: 1, marked: 0 })).toContain("ep2e.targeting.selectTarget");
+    expect(targetLabel({ multi: false, left: 0, marked: 1 })).toContain("ep2e.targeting.targetChosen");
+  });
+
+  test("an icon's glyph is read without Font Awesome 7's alternative text, escaped or not", () => {
+    const syringe = String.fromCodePoint(0xf48e);
+
+    expect(iconGlyph(`"${syringe}" / ""`)).toBe(syringe);
+    expect(iconGlyph(String.raw`"\f48e" / ""`)).toBe(syringe);
+    expect(iconGlyph(String.raw`"\f48e"`)).toBe(syringe);
+    expect(iconGlyph("none")).toBe("");
+  });
+
+  test("the cursor takes the colour it is given while picking, outranks the canvas's own cursor, and goes again afterwards", async () => {
+    const cursorRules = () => Array.from(document.head.querySelectorAll("style")).map(style => style.textContent).filter(text => text.includes("#board"));
+    const pick = picking(1, { color: "#123456" });
+    const during = cursorRules();
+    press(10, 2);
+    await pick;
+
+    expect(during).toHaveLength(1);
+    expect(during[0]).toContain(encodeURIComponent("#123456"));
+    expect(during[0]).toContain("!important");
+    expect(cursorRules()).toEqual([]);
   });
 });

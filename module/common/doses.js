@@ -1,7 +1,7 @@
 import { drugVector, doseOnset, dosesRemaining, isAmmoPack, consumeDose, parseAddictionMod } from "./drugs.js";
 import { durationRunOut, isTimedSpan, SECONDS_PER } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
-import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, pickTokenOnCanvas, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
+import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, pickTokensOnCanvas, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
 import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
 import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll } from "../rolls/check-cards.js";
@@ -566,6 +566,7 @@ export async function forceDose(actor, item, systemOptions = {}) {
         labelKey: "ep2e.chat.attack.applyDose",
         weaponName: item.name,
         effectLabel: game.i18n.format("ep2e.chat.defence.doseLabel", { name: item.name }),
+        cursor: DOSE_CURSOR,
         payload: { ...chemicalPayload(item), giverUuid: actor.uuid, itemId: item.id, spend: true }
       }
     }
@@ -715,8 +716,9 @@ export async function endRunOutDoses(actor, effects) {
   return deleteRunOutEffects(actor, effects, "dose");
 }
 
-// While someone picks who receives an offered dose, the canvas shows a syringe cursor.
-const DOSE_TARGETING_CLASS = "ep-dose-targeting";
+// Whoever picks who receives a dose - the GM placing an offered one, an attacker forcing one - does
+// so with the syringe the dose cards show, in the system's picking colours.
+export const DOSE_CURSOR = { icon: "fa-syringe" };
 
 /**
  * The actors a GM may hand a dose to from the NPC list: the world's NPCs. Goons are left out -
@@ -756,8 +758,7 @@ export async function chooseDoseTarget(messageId, mode, pickers = {}) {
       ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseNoScene"));
       return { claimed: false, cancelled: true };
     }
-    ui.notifications.info(game.i18n.localize("ep2e.actorSheet.warnings.doseTargetPrompt"));
-    const token = await (pickers.canvas ?? (() => pickTokenOnCanvas({ bodyClass: DOSE_TARGETING_CLASS })))();
+    const token = await (pickers.canvas ?? (async () => (await pickTokensOnCanvas(DOSE_CURSOR))?.[0] ?? null))();
     actor = token?.actor ?? null;
   }
   else if (mode === "npc") {

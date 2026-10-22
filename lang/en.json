@@ -140,7 +140,6 @@
         "doseNeedsCyberbrain": "This drug only runs on an infomorph or a cyberbrain.",
         "noDosesLeft": "{name} has no doses left.",
         "doseCheckRolled": "This check has already been rolled.",
-        "doseTargetPrompt": "Click the token that receives the dose. Click elsewhere or press Escape to cancel.",
         "doseNoScene": "Open a scene to pick a target on it.",
         "doseNeedsGM": "A GM needs to be connected to hand this dose over.",
         "doseNoSelection": "Select a token first.",
@@ -2221,7 +2220,9 @@
       "cancelHint": "Press ESC or right-click with no targets to cancel.",
       "confirmHint": "Right click to confirm",
       "remaining": "{count} targets left",
-      "limitReached": "The maximum of {max} targets is reached. Click a marked target again to unmark it."
+      "limitReached": "The maximum of {max} targets is reached. Click a marked target again to unmark it.",
+      "selectTarget": "Select target",
+      "targetChosen": "Target chosen"
     }
   }
 }

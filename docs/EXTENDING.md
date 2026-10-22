@@ -46,8 +46,8 @@ api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervou
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
             // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
-            // tokenAt, pickTokenOnCanvas, pickTokensOnCanvas, drawTargetMarker,
-            // selectedTokenActor, pickActorFromList
+            // tokenAt, pickTokensOnCanvas, drawTargetMarker, selectedTokenActor,
+            // pickActorFromList
 api.chat    // readRollContext(element)
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
@@ -60,20 +60,24 @@ api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, ro
 
 `api.drugs` is described in "Drugs and doses" below.
 
-`api.ui.pickTokenOnCanvas({ bodyClass })` lets the user click a token on the canvas - for a chat
-card that asks for a target afterwards - and resolves to the token, or `null` when cancelled
-(empty canvas, right-click or Escape). `bodyClass` is put on `document.body` while picking, to set
-the cursor; the default `ep-targeting` shows a crosshair. `selectedTokenActor()` is the actor of
-the user's selected token, and `pickActorFromList(actors, header, copy)` asks for one actor from
-a list the user can filter by typing.
+`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, marker })` lets the user pick targets on
+the canvas - for a chat card that asks for them afterwards. A click marks a token, another click
+on it unmarks it, a right-click confirms; Escape, or a right-click with nothing marked, cancels.
+It resolves to the marked tokens in the order they were marked, or `null`.
 
-`api.ui.pickTokensOnCanvas({ max, bodyClass, marker })` lets the user mark up to `max` tokens: a
-click marks a token, another click unmarks it, a click past `max` is refused with a notice, a
-right-click confirms. Escape, or a right-click with nothing marked, cancels. It resolves to the
-marked tokens in the order they were marked, or `null`. The default `bodyClass`,
-`ep-targeting-multi`, shows a turquoise crosshair with the targets left below it;
-`marker(token, point)` draws the mark and returns what removes it - the default is
-`drawTargetMarker`, a red crosshair where the token was clicked.
+- `icon` is a Font Awesome class, e.g. `"fa-syringe"`, drawn as the cursor and as the marks.
+  Without it both are a crosshair. The system's own colours are a turquoise cursor and red marks
+  with a white border; `color` and `markColor` (CSS hex values) change them.
+- `multi: true` picks up to `max` targets: the text under the cursor counts down, and a click past
+  `max` is refused with a notice. Without it one target is picked: the text says whether it is
+  chosen, and a click on another token moves the mark over to it.
+- `marker(token, point, { icon, color })` draws the mark and returns what removes it. The default,
+  `drawTargetMarker`, draws the cursor's shape in `markColor` with a white border where the token
+  was clicked.
+
+`selectedTokenActor()` is the actor of the user's selected token, and
+`pickActorFromList(actors, header, copy)` asks for one actor from a list the user can filter by
+typing.
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
 what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/`postRoll` below.
@@ -495,7 +499,8 @@ What the hit brings is registered:
 game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
   detect(rollContext) {            // at preRoll: does this roll carry the effect?
     if (!rollContext.weapon?.weapon?.getFlag("my-module", "net")) return null;
-    return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {} };
+    return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {},
+      cursor: { icon: "fa-spider-web" } };   // optional: icon, color, markColor; the crosshair otherwise
   },
   ready(attack) { return true; },              // optional, before picking: false refuses
   async beforeDelivery(attack) { return true; }, // optional, after picking: false refuses
@@ -505,7 +510,7 @@ game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
 
 The attack travels in `flags.eclipsephase.roll.targetedAttack` on the attack card:
 `{ id, effect, actorUuid, weaponName, defence, area, targets, payload, labelKey, effectLabel,
-delivered, targetNames }`. A caller can set it up itself through `dataset.contextFlags.targetedAttack`,
+delivered, targetNames, cursor }`. A caller can set it up itself through `dataset.contextFlags.targetedAttack`,
 as `forceDose` does. `resolve` runs on the defender's client; with `byPool` it should undo what
 the earlier outcome did first.
 

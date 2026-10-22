@@ -139,7 +139,6 @@
         "doseNeedsCyberbrain": "Diese Droge laeuft nur auf einem Infomorph oder einem Cyberbrain.",
         "noDosesLeft": "{name} hat keine Dosen mehr.",
         "doseCheckRolled": "Diese Probe wurde schon gewürfelt.",
-        "doseTargetPrompt": "Klicke auf das Token, das die Dosis bekommt. Ein Klick daneben oder Escape bricht ab.",
         "doseNoScene": "Öffne eine Szene, um dort ein Ziel zu wählen.",
         "doseNeedsGM": "Ein GM muss verbunden sein, damit die Dosis übergeben werden kann.",
         "doseNoSelection": "Wähle zuerst ein Token aus.",
@@ -2170,7 +2169,9 @@
       "cancelHint": "ESC oder Rechtsklick ohne Ziele bricht ab.",
       "confirmHint": "Rechtsklick zum Bestätigen",
       "remaining": "Noch {count} Ziele",
-      "limitReached": "Die Höchstzahl von {max} Zielen ist erreicht. Klicke ein markiertes Ziel erneut an, um die Markierung zu entfernen."
+      "limitReached": "Die Höchstzahl von {max} Zielen ist erreicht. Klicke ein markiertes Ziel erneut an, um die Markierung zu entfernen.",
+      "selectTarget": "Ziel auswählen",
+      "targetChosen": "Ziel gewählt"
     }
   }
 }
