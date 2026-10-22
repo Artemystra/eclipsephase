@@ -65,7 +65,8 @@ the canvas - for a chat card that asks for them afterwards. A click marks a toke
 on it unmarks it, a right-click confirms; Escape, or a right-click with nothing marked, cancels.
 It resolves to the marked tokens in the order they were marked, or `null`.
 
-- `icon` is a Font Awesome class, e.g. `"fa-syringe"`, drawn as the cursor and as the marks.
+- `icon` is a Font Awesome class, e.g. `"fa-syringe"`, or one of the system's own shapes,
+  `"ep-slash"` (melee) or `"ep-lightning"` (psi), drawn as the cursor and as the marks.
   Without it both are a crosshair. The system's own colours are a turquoise cursor and red marks
   with a white border; `color` and `markColor` (CSS hex values) change them.
 - `multi: true` picks up to `max` targets: the text under the cursor counts down, and a click past

@@ -1,5 +1,6 @@
 import { damageValueCalc } from "../../module/common/general-sheet-functions.js";
 import { applySuccessTierBonus, takeDamage } from "../../module/rolls/damage.js";
+import { damageFormula } from "../../module/rolls/damage-formula.js";
 import { resetWorld } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -182,5 +183,21 @@ describe("takeDamage", () => {
 
     expect(createdMessages).toHaveLength(0);
     expect(actor.updates).toHaveLength(1);
+  });
+});
+
+describe("damageFormula", () => {
+  test("parts join in order: the base, its extras, then the success tier's dice", () => {
+    expect(damageFormula({ base: "1d10+2", extras: ["+1d10", "", " + 1d6"] }, 4)).toBe("1d10+2+1d10 + 1d6+1d6");
+  });
+
+  test("a critical doubles everything, a multiplier wraps that, a halving wraps it all", () => {
+    expect(damageFormula({ base: "2d10" }, 7)).toBe("2*(2d10)");
+    expect(damageFormula({ base: "2d10", multiplier: 2 }, 7)).toBe("2*(2*(2d10))");
+    expect(damageFormula({ base: "2d10", multiplier: 2, halved: true }, 3)).toBe("ceil((2*(2d10))/2)");
+  });
+
+  test("damage that follows no attack takes only its own parts", () => {
+    expect(damageFormula({ base: "1d10+2", halved: true })).toBe("ceil((1d10+2)/2)");
   });
 });

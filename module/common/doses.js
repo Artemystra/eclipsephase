@@ -11,6 +11,7 @@ import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequis
 import { chemicalDoses } from "./weapon-functions.js";
 import { registerCard, renderCard, updateCard } from "./chat-cards.js";
 import { registerAttackEffect } from "../rolls/targeted-attacks.js";
+import { damageFormula } from "../rolls/damage-formula.js";
 
 for (const key of ["doseCheck", "doseFilter", "addictionCheck"]) registerCheckCard(key);
 registerCard("doseOffer", { render: renderOfferCard, mutations: { claim: (state, { usedBy, addiction }) => ({ ...state, usedBy, addiction }) } });
@@ -1238,7 +1239,7 @@ export function defendedDoseData(data, defense) {
  * @returns {String} The formula, halved when the dose is
  */
 export function defendedFormula(formula, dose) {
-  return dose?.defense?.halved && formula ? `ceil((${formula}) / 2)` : formula;
+  return dose?.defense?.halved && formula ? damageFormula({ base: formula, halved: true }) : formula;
 }
 
 /**

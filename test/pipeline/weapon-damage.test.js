@@ -1,4 +1,4 @@
-import { prepareWeapon } from "../../module/rolls/damage.js";
+import { prepareWeapon, dealPsiDamage } from "../../module/rolls/damage.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
 
 /**
@@ -111,6 +111,94 @@ describe("the damage formula a hit assembles", () => {
     await prepareWeapon(null, 7, weaponContext(actor));
 
     expect([...formulas]).toEqual(["ceil((2*(1d10+1d6+2))/2)"]);
+  });
+
+  test("dvHalved halves a plain hit as well", async () => {
+    const actor = makeFighter({ traits: { dvHalved: { name: "dvHalved", value: true } } });
+    await prepareWeapon(null, 4, weaponContext(actor));
+
+    expect([...formulas]).toEqual(["ceil((1d10+1d6+2+1d6)/2)"]);
+  });
+
+  test.each([
+    ["fullAuto", "1d10+1d6+2+2d10"],
+    ["charge", "1d10+1d6+2+1d6"],
+    ["aggressive", "1d10+1d6+2+1d10"],
+    ["aggressiveCharge", "1d10+1d6+2+1d10"]
+  ])("the %s attack mode adds its own dice", async (attackMode, formula) => {
+    await prepareWeapon(null, 3, weaponContext(makeFighter(), { options: { biomorphTarget: false, touchOnly: false, attackMode, rollMode: "public" } }));
+
+    expect([...formulas]).toEqual([formula]);
+  });
+
+  test("a ranged hit leaves the melee damage mod out", async () => {
+    const actor = makeShooter();
+    await actor.update({ "system.mods.meleeDamageMod": "+2" });
+    await prepareWeapon(null, 3, weaponContext(actor, { rolledFrom: "rangedWeapon", item: { weaponId: "gun1", weaponMode: "1" } }));
+
+    expect([...formulas]).toEqual(["1d10"]);
+  });
+});
+
+describe("the damage formula a psi hit assembles", () => {
+  let formulas;
+  beforeEach(() => { resetWorld(); formulas = recordFormulas(); seedRolls([9]); });
+  afterEach(() => formulas.restore());
+
+  /**
+   * An async knowing one sleight that deals 2d10.
+   * @param {Object} [options] - psiType of the sleight; boosted for a gamma-boosted async with an
+   *   automatic push
+   * @returns {Object} The actor and its sleight
+   */
+  function asyncWith({ psiType = "gamma", boosted = false } = {}) {
+    const actor = makeActor({
+      type: "character",
+      name: "Async",
+      system: { additionalSystems: boosted ? { psiGammaBoosted: true, autoPushSelection: "effect" } : {} },
+      items: [{ _id: "stab1", name: "Psychic Stab", type: "aspect", system: { psiType, damage: { target: "physical", d10: 2, d6: 0, bonus: 0 } } }]
+    });
+    return { actor, sleight: actor.items.get("stab1") };
+  }
+
+  test.each([
+    [3, "", "2d10"],
+    [4, "", "2d10+1d6"],
+    [5, "", "2d10+2d6"],
+    [7, "", "2*(2d10)"],
+    [3, "effect", "2*(2d10)"],
+    [4, "effect", "2*(2d10+1d6)"],
+    [7, "effect", "2*(2*(2d10))"]
+  ])("result %s with push '%s' rolls %s", async (result, push, formula) => {
+    const { actor, sleight } = asyncWith();
+
+    await dealPsiDamage(actor, sleight, result, false, null, push);
+
+    expect([...formulas]).toEqual([formula]);
+  });
+
+  test("an automatic gamma push doubles the damage as a chosen one does", async () => {
+    const { actor, sleight } = asyncWith({ boosted: true });
+
+    await dealPsiDamage(actor, sleight, 3, false, null, "");
+
+    expect([...formulas]).toEqual(["2*(2d10)"]);
+  });
+
+  test("a chi sleight is never multiplied by a push", async () => {
+    const { actor, sleight } = asyncWith({ psiType: "chi" });
+
+    await dealPsiDamage(actor, sleight, 3, false, null, "effect");
+
+    expect([...formulas]).toEqual(["2d10"]);
+  });
+
+  test("a miss rolls nothing", async () => {
+    const { actor, sleight } = asyncWith();
+
+    await dealPsiDamage(actor, sleight, 2, false, null, "");
+
+    expect([...formulas]).toEqual([]);
   });
 });
 

@@ -4,6 +4,7 @@ import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
 import { getRollSource } from "../api/registry.js";
+import { TARGET_SHAPES } from "./target-icons.js";
 
 /**
  * Foundry VTTs active effect creation & deletion functions
@@ -919,14 +920,30 @@ export function iconGlyph(value) {
 }
 
 /**
- * A Font Awesome icon drawn as an image, 32 pixels across, in a colour with a 1-pixel white border:
- * the same glyph the chat cards show, read from the icon font Foundry already loaded and scaled to
- * fit the image whatever its proportions.
- * @param {String} icon - The icon's class, e.g. "fa-syringe"
+ * One of the system's own target shapes drawn as an image, 32 pixels across, in a colour with a
+ * 1-pixel white border.
+ * @param {Object} shape - viewBox (its square size) and d (its path data)
+ * @param {String} color - The colour, as CSS
+ * @returns {String} A data URL
+ */
+function shapeImage({ viewBox, d }, color) {
+  const pad = viewBox / 16;
+  const span = viewBox + 2 * pad;
+  const border = (2 * span) / 32;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='${-pad} ${-pad} ${span} ${span}'><path d='${d}' fill='${color}' fill-rule='evenodd' stroke='#ffffff' stroke-width='${border}' stroke-linejoin='round' paint-order='stroke'/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+/**
+ * An icon drawn as an image, 32 pixels across, in a colour with a 1-pixel white border: one of the
+ * system's own shapes ("ep-slash", "ep-lightning"), or a Font Awesome icon - the same glyph the chat
+ * cards show, read from the icon font Foundry already loaded and scaled to fit the image.
+ * @param {String} icon - A shape's key, or a Font Awesome class, e.g. "fa-syringe"
  * @param {String} color - The colour, as CSS
  * @returns {String} A data URL
  */
 export function iconImage(icon, color) {
+  if (TARGET_SHAPES[icon]) return shapeImage(TARGET_SHAPES[icon], color);
   const size = 32;
   const probe = document.createElement("i");
   probe.className = `fa-solid ${icon}`;
@@ -1028,8 +1045,8 @@ export function targetLabel({ multi, left, marked }) {
  * another token moves the mark over to it. The clicks are kept from the canvas itself, so picking
  * targets does not also select or deselect tokens. The cursor is set by a stylesheet rule rather
  * than on the board, since the canvas writes its own cursor onto the board over every token.
- * @param {Object} [options] - icon: a Font Awesome class for the cursor and the marks, none for
- *   the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
+ * @param {Object} [options] - icon: one of the system's shapes ("ep-slash", "ep-lightning") or a
+ *   Font Awesome class for the cursor and the marks, none for the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
  *   marks' colour, the red MARK_COLOR by default; multi: several targets; max: how many, with multi;
  *   marker: marker(token, point, {icon, color}) draws a mark and returns what removes it
  * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when

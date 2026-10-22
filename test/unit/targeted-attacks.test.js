@@ -4,7 +4,8 @@ import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload,
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, MARK_COLOR } from "../../module/common/general-sheet-functions.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, MARK_COLOR } from "../../module/common/general-sheet-functions.js";
+import { TARGET_SHAPES } from "../../module/common/target-icons.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
@@ -551,6 +552,26 @@ describe("marking targets on the canvas", () => {
     expect(format).toHaveBeenLastCalledWith("ep2e.targeting.remaining", { count: 2 });
     expect(targetLabel({ multi: false, left: 1, marked: 0 })).toContain("ep2e.targeting.selectTarget");
     expect(targetLabel({ multi: false, left: 0, marked: 1 })).toContain("ep2e.targeting.targetChosen");
+  });
+
+  test("the system's own shapes are drawn in the colour asked for, with a white border, from their traced paths", () => {
+    for (const key of ["ep-slash", "ep-lightning"]) {
+      const svg = decodeURIComponent(iconImage(key, "#123456").replace("data:image/svg+xml,", ""));
+
+      expect(svg).toContain("fill='#123456'");
+      expect(svg).toContain("stroke='#ffffff'");
+      expect(svg).toContain(TARGET_SHAPES[key].d);
+    }
+  });
+
+  test("a picker started with a shape shows it as the cursor", async () => {
+    const cursorRule = () => Array.from(document.head.querySelectorAll("style")).map(style => style.textContent).find(text => text.includes("#board"));
+    const pick = picking(1, { icon: "ep-slash" });
+    const during = cursorRule();
+    press(10, 2);
+    await pick;
+
+    expect(during).toContain(encodeURIComponent(TARGET_SHAPES["ep-slash"].d.slice(0, 20)));
   });
 
   test("an icon's glyph is read without Font Awesome 7's alternative text, escaped or not", () => {

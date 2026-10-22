@@ -4,6 +4,8 @@ import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from ".
 import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
 import { drugHealingAddition } from "./modifiers.js";
+import { damageFormula } from "./damage-formula.js";
+export { applySuccessTierBonus } from "./damage-formula.js";
 
 /**
  * The result a roll card's buttons go by: the one a pool point turned it into, or the rolled one.
@@ -69,57 +71,14 @@ export async function prepareWeapon(data, result, preparedContext) {
   }
 }
 
-/**
- * Success-tier bonus and critical-success doubling, shared by dealWeaponDamage and dealPsiDamage.
- * @param {Number} rollResult - The task result tier
- * @returns {Object} successModifier and criticalModifier roll formula fragments
- */
-export function applySuccessTierBonus(rollResult) {
-  let successModifier = "";
-  let criticalModifier = "";
-
-  if (rollResult === 4) {
-    successModifier = "+1d6";
-  }
-  else if (rollResult === 5) {
-    successModifier = "+2d6";
-  }
-  else if (rollResult === 7 || rollResult === 9) {
-    criticalModifier = "2*(";
-    successModifier = ")";
-  }
-
-  return { successModifier, criticalModifier };
-}
-
 async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList) {
-  let meleeDamageMod = actorWhole.system.mods.meleeDamageMod;
-  let { successModifier, criticalModifier } = applySuccessTierBonus(rollResult);
-  let weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage;
-
-  //Damage Chat Message Constructor
-  let intermediateRollFormula;
-  let rollFormula = null;
-
-  if (weaponSelected.rolledFrom === "ccWeapon") {
-    intermediateRollFormula = weaponDamage + modeDamage + (meleeDamageMod ? meleeDamageMod : "") + (biomorphTarget ? " + 1d6" : "") + successModifier;
-  }
-  else {
-    intermediateRollFormula = weaponDamage + modeDamage + (biomorphTarget ? " + 1d6" : "") + successModifier;
-  }
-
-  if (criticalModifier && !weaponSelected.weaponTraits.automatedEffects.dvHalved) {
-    rollFormula = criticalModifier + intermediateRollFormula;
-  }
-  else if (!criticalModifier && !weaponSelected.weaponTraits.automatedEffects.dvHalved) {
-    rollFormula = intermediateRollFormula;
-  }
-  else if (!criticalModifier && weaponSelected.weaponTraits.automatedEffects.dvHalved) {
-    rollFormula = "ceil((" + intermediateRollFormula + ")/2)";
-  }
-  else {
-    rollFormula = "ceil((" + criticalModifier + intermediateRollFormula + ")/2)";
-  }
+  const meleeDamageMod = weaponSelected.rolledFrom === "ccWeapon" ? actorWhole.system.mods.meleeDamageMod || "" : "";
+  const weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage;
+  const rollFormula = damageFormula({
+    base: weaponDamage,
+    extras: [modeDamage, meleeDamageMod, biomorphTarget ? " + 1d6" : ""],
+    halved: !!weaponSelected.weaponTraits.automatedEffects.dvHalved
+  }, rollResult);
 
   //The message is built
   let message = {};
@@ -167,12 +126,10 @@ export async function preparePsiDamage(data) {
 export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {
   if (!isHit(rollResult)) return;
 
-  const { successModifier, criticalModifier } = applySuccessTierBonus(rollResult);
   const baseDamage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv;
   const manualPushMultiplier = GAMMA_PUSH_EFFECTS[manualPush]?.damageMultiplier ?? 1;
   const pushMultiplier = sleightItem.system.psiType !== "chi" ? Math.max(gammaAutoPushDamageMultiplier(actorWhole), manualPushMultiplier) : 1;
-  const baseFormula = criticalModifier ? criticalModifier + baseDamage + successModifier : baseDamage + successModifier;
-  const rollFormula = pushMultiplier > 1 ? `${pushMultiplier}*(${baseFormula})` : baseFormula;
+  const rollFormula = damageFormula({ base: baseDamage, multiplier: pushMultiplier }, rollResult);
 
   let message = {};
   message.type = "psiDamage";
