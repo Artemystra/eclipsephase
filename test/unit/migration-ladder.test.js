@@ -1,5 +1,9 @@
 import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } from "../setup/factories.js";
 
+// The version of the last migration step: what a world is stamped with once it has climbed the whole
+// ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
+const LATEST_MIGRATION = "2.7";
+
 
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
 // of Foundry's canvas API stubbed than the rest of the suite needs.
@@ -59,9 +63,9 @@ describe("the migration ladder's closing dialog", () => {
     expect(done).toHaveLength(1);
   });
 
-  test("it still ends up stamped at the current version", async () => {
+  test("it still ends up stamped at the latest migration", async () => {
     await runLadderFrom("2.1.5");
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 
   test("a world with nothing to migrate is not told anything at all", async () => {
@@ -96,7 +100,7 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
     const rendered = await runLadderFrom("2.1.5");
 
     expect(offers(rendered)).toHaveLength(1);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 
   test("a world with no Ki data is offered the notice without the Ki block", async () => {
@@ -109,7 +113,7 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
     const rendered = await runLadderFrom("2.3");
 
     expect(rendered).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 });
 
@@ -184,7 +188,7 @@ describe("the 2.7 drug schema", () => {
     try {
       const rendered = await runLadderFrom("2.5");
       expect(rendered).toEqual([]);
-      expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+      expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
     } finally {
       game.items.delete(drug.id);
     }
@@ -282,7 +286,7 @@ describe("the 2.7 blueprint backfill", () => {
     const rendered = await runLadderFrom("2.5");
 
     expect(rendered).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 
   test("a world without the drug compendium still migrates its schema", async () => {
@@ -303,7 +307,7 @@ describe("the whole ladder on an old world", () => {
     jest.restoreAllMocks();
   });
 
-  test.each(["1.5", "2.0"])("a world last migrated at %s with every sample actor climbs to the current version without an error", async from => {
+  test.each(["1.5", "2.0"])("a world last migrated at %s with every sample actor climbs to the latest migration without an error", async from => {
     registerSystemPacks();
     for (const name of fixtureNames()) makeActorFromFixture(name);
     const errors = jest.spyOn(console, "error").mockImplementation(() => {});
@@ -311,7 +315,7 @@ describe("the whole ladder on an old world", () => {
     await runLadderFrom(from, { start: true, weaponUpdateList: [] });
 
     expect(errors.mock.calls).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 });
 
