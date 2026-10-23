@@ -34,6 +34,7 @@ import {
   bodyNervousSystem,
   sleevedNervousSystem,
   CYBERBRAIN_MARKER,
+  targetKinds,
   getBodyBindingInfo,
   resolveBodyForItem,
   applyStandardEnhancements,
@@ -48,7 +49,7 @@ import {
 } from "./registry.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
-import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome } from "../rolls/attacks.js";
+import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget } from "../rolls/attacks.js";
 import { tokenAt, pickTokensOnCanvas, drawTargetMarker } from "../common/targeting.js";
 import { chemicalDoses } from "../common/weapon-functions.js";
 import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
@@ -83,6 +84,7 @@ export const actors = {
   bodyNervousSystem,
   sleevedNervousSystem,
   CYBERBRAIN_MARKER,
+  targetKinds,
   getBodyBindingInfo,
   resolveBodyForItem,
   applyStandardEnhancements,
@@ -181,7 +183,8 @@ export const drugs = {
 };
 
 /**
- * Attacks whose targets are picked after the hit, each defending from a card of their own.
+ * Attacks on targets: picked before the roll or after the hit, each target defending from a card
+ * of its own (2.7); follow-up visibility, not resisting and unsuitable targets (2.8).
  * @since 2.7
  */
 export const attacks = {
@@ -190,7 +193,10 @@ export const attacks = {
   postDefenceCards,
   rollDefence,
   defenceOutcome,
-  chemicalDoses
+  chemicalDoses,
+  followUpVisibility,
+  yieldDefence,
+  unsuitableTarget
 };
 
 /**

@@ -40,7 +40,7 @@ api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, useP
             // prepareRecipients, gmList, inheritChatVisibility, damageValueCalc,
             // applySuccessTierBonus
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
-            // sleevedNervousSystem, CYBERBRAIN_MARKER, transferItemBetweenActors,
+            // sleevedNervousSystem, CYBERBRAIN_MARKER, targetKinds, transferItemBetweenActors,
             // mergeOrCreateItem, requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
             // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
@@ -55,23 +55,31 @@ api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, d
               // chemicalPayload, chooseDrugForm, needsVectorChoice, drugVector, isAmmoPack,
               // runningDoses, drugBlockingPsi, drugPsiPenalties
 api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence,
-              // defenceOutcome, chemicalDoses
+              // defenceOutcome, chemicalDoses, followUpVisibility, yieldDefence,
+              // unsuitableTarget
 ```
 
 `api.drugs` is described in "Drugs and doses" below.
 
-`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, marker })` lets the user pick targets on
-the canvas - for a chat card that asks for them afterwards. A click marks a token, another click
-on it unmarks it, a right-click confirms; Escape, or a right-click with nothing marked, cancels.
-It resolves to the marked tokens in the order they were marked, or `null`.
+`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, within, refuse, marker })` lets
+the user pick targets on the canvas. A click marks a token, another click on it unmarks it, a
+right-click confirms; Escape, or a right-click with nothing marked, cancels. Open sheets are
+minimised while the user picks and come back afterwards. It resolves to the marked tokens in the
+order they were marked, or `null`.
 
 - `icon` is a Font Awesome class, e.g. `"fa-syringe"`, or one of the system's own shapes,
   `"ep-slash"` (melee) or `"ep-lightning"` (psi), drawn as the cursor and as the marks.
   Without it both are a crosshair. The system's own colours are a turquoise cursor and red marks
   with a white border; `color` and `markColor` (CSS hex values) change them.
 - `multi: true` picks up to `max` targets: the text under the cursor counts down, and a click past
-  `max` is refused with a notice. Without it one target is picked: the text says whether it is
-  chosen, and a click on another token moves the mark over to it.
+  `max` is refused with a notice. `max: Infinity` takes any number, and the text counts what is
+  marked. Without `multi` one target is picked: the text says whether it is chosen, and a click on
+  another token moves the mark over to it.
+- `within` (in scene units, edge to edge) refuses a further token farther than that from every
+  token already marked, with a notice - a burst at targets within a meter of each other is
+  `within: 1`.
+- `refuse(token)` returns a notice for a token that may not be picked, or nothing; the notice is
+  shown and the token stays unmarked.
 - `marker(token, point, { icon, color })` draws the mark and returns what removes it. The default,
   `drawTargetMarker`, draws the cursor's shape in `markColor` with a white border where the token
   was clicked.
@@ -82,6 +90,9 @@ typing.
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
 what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/`postRoll` below.
+A dataset may carry `visibility: { whisper, blind }`, which then decides who sees the roll card
+instead of the dialog's roll mode - the system's defence rolls are seen as their attack was this
+way.
 `api.chat.readRollContext(element)` takes any element inside a chat card (typically the button a
 listener fired on) and returns the roll context described in "Chat message context" below,
 falling back to the card's legacy `data-*` attributes for cards created before this existed.
@@ -482,21 +493,44 @@ or creates it.
 
 ## Targeted attacks
 
-Some attacks pick their targets after the hit: the attack card shows a button instead of damage,
-the attacker marks the targets on the canvas with `api.ui.pickTokensOnCanvas`, and each target's
-owner - its player owners, or the GM for a target no player owns - gets one card to defend from.
-The card has a button per target; against a ranged attack it also rolls the rest at once, without
-a dialog. A ranged defence is Fray, halved; against an area attack the dialog adds "Dodge behind
-cover". A melee defence is Fray in full or a parry with Melee.
+An attack lands on targets. Every attack dialog that rolls a weapon, a psi-gamma sleight, or an
+attack a caller set up itself has "Choose target(s)" as its primary button: the dialog steps
+aside, the attacker marks the targets on the canvas, and confirming them rolls the attack. "Roll
+without targets" rolls as before; the attack card then offers its target button after a hit. On a
+hit - straight away, or once a pool point turns a miss into one - each target's owner (its player
+owners, or the GM for a target no player owns) gets one card to defend from. The attack card names
+its targets and, once each has defended, the outcome.
+
+How many targets an attack takes comes from the dialog: one for a single shot or a melee attack, two
+or three for a burst or full auto at several targets (at least two, within a meter of each other),
+by range for a cone, any number for suppressive fire, and as many as "Number of targets" names for
+melee, where each target is attacked on its own. A sleight takes one, two with the Additional
+Target push.
+
+### Defending
+
+The defence follows from the attack: against a ranged attack Fray, halved, with "Dodge behind
+cover" against an area attack; against a melee attack Fray in full or a parry with Melee; against a
+sleight a WIL Check (Moxie pool), on half WIL against a pushed Power. A ranged card also rolls the
+rest at once, without a dialog. Every defence dialog offers "Full defense" (+30). A target may
+choose not to resist a sleight: `api.attacks.yieldDefence(message, targetUuid)` - the card's "Don't
+resist" button - lets the attack land without a roll. An attack set up with `willing: true` skips
+the defence cards altogether and lands on every target at once.
 
 `api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
 the target: a failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"`
 through, or `"none"` behind cover. Otherwise it is an opposed test against `attack.roll`
-(`{ value, result }`, the attack's die and result as they stood when its targets were chosen):
-when both succeed, a critical success beats one that is not, and between equals the higher die
-wins, a tie going to the defender. Once the targets are chosen the attack card hides its pool
-controls, so the attack's die cannot change under a defence already rolled; a pool spend on the
-defence settles it again. Every defence dialog offers "Full defense" (+30).
+(`{ value, result }`, the attack's die and result as its card shows them when the defence lands -
+a pool point spent on the attack before that counts): when both succeed, a critical success beats
+one that is not, and between equals the higher die wins, a tie going to the defender. The attack
+card keeps its pool controls until the first target has defended. A defender who wins against a
+sleight with a critical success is noted as having locked the async out.
+
+Defence cards, defence rolls and the damage card are seen as the attack card was:
+`api.attacks.followUpVisibility(attackCard, targets)` is public for a public attack, and otherwise
+whispers to those who saw the attack card, the GMs and the targets' owners.
+
+### Registering an effect
 
 What the hit brings is registered:
 
@@ -505,25 +539,55 @@ game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
   detect(rollContext) {            // at preRoll: does this roll carry the effect?
     if (!rollContext.weapon?.weapon?.getFlag("my-module", "net")) return null;
     return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {},
-      cursor: { icon: "fa-spider-web" } };   // optional: icon, color, markColor; the crosshair otherwise
+      cursor: { icon: "fa-spider-web" },       // optional: icon, color, markColor; the crosshair otherwise
+      within: null,                             // optional: picker distance for several targets
+      unsuitable: ["infomorph"],                // optional: target kinds it cannot strike
+      willing: false };                         // optional: land without defence cards
   },
   ready(attack) { return true; },              // optional, before picking: false refuses
   async beforeDelivery(attack) { return true; }, // optional, after picking: false refuses
-  async resolve(attack, target, outcome, { byPool, defenceId }) {}
+  async resolve(attack, target, outcome, { byPool, defenceId, kind }) {}
 });
 ```
 
 The attack travels in `flags.eclipsephase.roll.targetedAttack` on the attack card:
-`{ id, effect, actorUuid, weaponName, defence, area, targets, payload, labelKey, effectLabel,
-delivered, targetNames, cursor }`. A caller can set it up itself through `dataset.contextFlags.targetedAttack`,
-as `forceDose` does. `resolve` runs on the defender's client; with `byPool` it should undo what
-the earlier outcome did first.
+`{ id, effect, actorUuid, weaponName, defence, area, targets, within, unsuitable, willing, payload,
+labelKey, effectLabel, cursor, preTargets, delivered, targetNames, roll, messageId }`. `targets: 0`
+stands for any number. `defence` is `"ranged"`, `"melee"` or `"will"`. `preTargets` lists the actor
+uuids picked in the dialog. A caller can set an attack up itself through
+`dataset.contextFlags.targetedAttack`, as `forceDose` does; its dialog picks targets the same way.
+`resolve` runs where the defence settles; `outcome` is `"hit"`, `"half"` or `"none"`, `kind` how the
+target defended (`"dodge"`, `"parry"`, `"will"`, `"yield"` or `"willing"`), and with `byPool` it
+should undo what the earlier outcome did first.
 
-The system registers one effect, `"dose"`. A weapon with the "Ammunition: Chems" trait
-(`specialAmmoDrugs`) carries it: one dose per target, as many targets as its Multi Shot number
-(`api.attacks.chemicalDoses(weaponTraits)`), as an area attack. The weapon keeps a copy of the
-drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it once the pack is
-used up.
+### Unsuitable targets
+
+`api.actors.targetKinds(actor)` names what an actor counts as when picked: `"biomorph"`,
+`"synthmorph"` or `"infomorph"` by its morph, `"bot"`, `"vehicle"` or `"animal"` while it jams one,
+and `"cyberbrain"` as well when its body runs one. An attack's `unsuitable` lists the kinds it
+cannot strike; the picker refuses those with a notice, before the roll and after it alike.
+`api.attacks.unsuitableTarget(actor, unsuitable)` returns that notice, or `null`. A psi-gamma
+sleight cannot strike a synthmorph, an infomorph, a bot or a vehicle, and takes -30 against a
+cyberbrain picked before the roll (once the roll has landed, the modifier can no longer apply).
+
+### The system's effects
+
+- `"damage"` - a weapon that deals damage, and a psi-gamma sleight that does. Once every target has
+  defended and one was struck, a damage card follows the last defence with "Roll damage": one roll
+  counts for every target struck. The active GM puts it on each target, less the armour it meets:
+  `payload.armorUsed` is `"energy"` or `"kinetic"` (a weapon mode's armour type, or the loaded
+  ammunition's when it names one), `"mental"` against psi (Psi Armor: WIL / 3, plus effects on
+  `system.mods.mentalArmorMod`) or `"none"`. `payload.armorPiercing` halves the armour (armour
+  piercing, a Penetration push), half damage reaches a target who partly dodged an area attack,
+  and `payload.damageTarget` puts it on the body or, as stress, the mind. The card shows each
+  target's owners and the GMs the reckoning, everyone else only whether damage got through.
+- `"sleight"` - a psi-gamma sleight without damage of its own. The targets resist with WIL, and the
+  outcome stays on the cards; what the sleight does is the GM's to apply.
+- `"dose"` - a weapon with the "Ammunition: Chems" trait (`specialAmmoDrugs`) delivers one dose per
+  target, as an area attack, to as many targets as its cone reaches at the range chosen
+  (`api.attacks.chemicalDoses(weaponTraits)` tells whether a weapon fires chemicals). The weapon
+  keeps a copy of the drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it
+  once the pack is used up. `forceDose` sets up a melee attack carrying a dose.
 
 ## Chat message context
 
@@ -538,7 +602,7 @@ card's `[data-message-id]`). The returned object:
   actorUuid, userId, rolledFrom, rollType,
   pool: { skillPoolValue, flexPoolValue, updatePoolPath, updateFlexPath, poolType },
   alternatives: { usageType, result, value, originalResult, resultClass, resultText },
-  options: { push, attackMode, biomorphTarget, touchOnly, rollMode },
+  options: { push, attackMode, biomorphTarget, touchOnly, range, rollMode },
   item: { weaponId, weaponMode, sleightId, damageTarget },
   messageId
 }
