@@ -1,6 +1,6 @@
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { spentOrOriginalResult } from "../../module/rolls/damage.js";
+import { spentOrOriginalResult } from "../../module/rolls/cards.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;

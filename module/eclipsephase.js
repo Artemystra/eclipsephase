@@ -21,12 +21,13 @@ import { registerRegistryHelpers, registerRollSource, registerPoolOption, regist
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./common/pool-rule.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
-import { registerTargetedAttackHooks } from "./rolls/targeted-attacks.js";
+import { registerTargetedAttackHooks } from "./rolls/attacks.js";
 import { registerCardSocket } from "./common/chat-cards.js";
 import { registerExpiryCleanup } from "./common/expiry.js";
 import { postWareSetupCard } from "./common/ware-skills.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
+import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -199,6 +200,7 @@ Hooks.once('init', async function() {
   registerExpiryCleanup();
   registerTargetedAttackHooks();
   registerDrugHooks();
+  registerWeaponAttacks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;
@@ -248,6 +250,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
+    "systems/eclipsephase/templates/chat/partials/card-header.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
@@ -402,6 +405,7 @@ Hooks.once("ready", async function() {
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
+  let before28 = foundry.utils.isNewerVersion("2.8", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -703,6 +707,20 @@ Hooks.once("ready", async function() {
     endMigration = Migration27["endMigration"];
   }
 
+  if (before28 && !(await update.migrationPre28Needed())) {
+    await game.settings.set("eclipsephase", "migrationVersion", "2.8");
+  }
+  else if (before28) {
+    const messageCopy = "ep2e.migration.28";
+    let migration = await migrationStart(false, messageHeadline, messageCopy, 900);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration28 = await update.migrationPre28(startMigration);
+    endMigration = endMigration || Migration28["endMigration"];
+  }
+
     if(endMigration){
       await migrationEnd(endMigration)
   }
@@ -822,6 +840,7 @@ Hooks.once("ready", () => {
   registerPsiEffectSocket();
   registerDoseSocket();
   registerCardSocket();
+  registerWeaponAttackSocket();
 });
 
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll

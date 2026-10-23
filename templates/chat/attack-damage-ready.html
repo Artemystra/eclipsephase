@@ -1,0 +1,10 @@
+<div class="alignCenter ep-attack-damage-card">
+  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon="fa-burst" color="--negative" text=headline open=true}}
+
+  <div class="chatControls ep-chat-stack">
+    {{#each targets as |target|}}
+    <p class="ep-defence-outcome">{{target.name}}: <b>{{target.outcomeLabel}}</b></p>
+    {{/each}}
+    <button type="button" class="chatButton attackDamage ownerOnlyControl ep-chat-primary" data-action="attackDamage" data-actor-uuid="{{actorUuid}}">{{localize "ep2e.chat.attack.rollDamage"}}</button>
+  </div>
+</div>

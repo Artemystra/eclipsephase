@@ -25,6 +25,7 @@
 
       {{#if poolSpent}}
       <p class="ep-pool-spent">{{poolSpent}}</p>
+      {{else if defended}}
       {{else}}
       <div class="item privateChatButton" data-ownerid={{actor.id}}>
         {{#if alternatives.options.swap}}
@@ -171,12 +172,18 @@
 
   {{#if (and rollContext.targetedAttack targetNames)}}
    <p class="ep-attack-targets">{{targetNames}}</p>
+  {{else if (and rollContext.targetedAttack.preTargets (eq resultClass "success"))}}
+  {{else if (and rollContext.targetedAttack (eq resultClass "success") (eq rollContext.targetedAttack.effect "damage"))}}
+   <div class="chatControls ep-chat-stack">
+     <button type="button" class="chatButton weaponDamage ownerOnlyControl ep-chat-secondary" data-action="weaponDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.damageWithoutTarget"}}</button>
+     <button type="button" class="chatButton targetedAttack ownerOnlyControl ep-chat-primary" data-action="targetedAttack" data-actor-uuid="{{actor.uuid}}">{{localize rollContext.targetedAttack.labelKey}}</button>
+   </div>
   {{else if (and rollContext.targetedAttack (eq resultClass "success"))}}
    <div class="chatControls">
      <button type="button" class="chatButton targetedAttack privateChatButton" data-action="targetedAttack" data-ownerid="{{actor.id}}">{{localize rollContext.targetedAttack.labelKey}}</button>
    </div>
   {{else if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
-    {{#if (and (not rollContext.targetedAttack) (or (eq resultClass "success")(eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true)))}}
+    {{#if (or (and (not rollContext.targetedAttack) (eq resultClass "success")) (eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true))}}
      <div class="chatControls">
        <button type="button" class="chatButton weaponDamage privateChatButton" data-action="weaponDamage">{{localize "ep2e.chat.buttonLabel.weaponDamage"}}</button>
      </div>

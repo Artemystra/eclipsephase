@@ -1,7 +1,7 @@
 import { damageValueCalc } from "../../module/common/general-sheet-functions.js";
-import { applySuccessTierBonus, takeDamage } from "../../module/rolls/damage.js";
+import { applySuccessTierBonus, takeDamage, applyDamage } from "../../module/rolls/damage.js";
 import { damageFormula } from "../../module/rolls/damage-formula.js";
-import { resetWorld } from "../setup/factories.js";
+import { resetWorld, makeActor } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 
@@ -199,5 +199,81 @@ describe("damageFormula", () => {
 
   test("damage that follows no attack takes only its own parts", () => {
     expect(damageFormula({ base: "1d10+2", halved: true })).toBe("ceil((1d10+2)/2)");
+  });
+});
+
+describe("applyDamage", () => {
+  beforeEach(() => resetWorld());
+
+  /**
+   * A character of WIL 15 in a biomorph of Durability 30.
+   * @returns {Object} The prepared actor
+   */
+  function body() {
+    return makeActor({ type: "character", system: { activeMorph: "morph1", aptitudes: { wil: { value: 15 } } }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } }] });
+  }
+
+  test("damage lands on the sheet with its wounds, and says what was taken", async () => {
+    const actor = body();
+    const threshold = actor.system.physical.wt;
+
+    const result = await applyDamage(actor, 14);
+
+    expect(result).toEqual({ taken: 14, wounds: Math.floor(14 / threshold) });
+    expect(actor.system.health.physical.value).toBe(14);
+    expect(actor.system.physical.wounds).toBe(Math.floor(14 / threshold));
+  });
+
+  test("it posts no card of its own unless asked to", async () => {
+    await applyDamage(body(), 8);
+    const quiet = createdMessages.length;
+    await applyDamage(body(), 8, { announce: true });
+
+    expect(quiet).toBe(0);
+    expect(createdMessages).toHaveLength(1);
+  });
+
+  test("damage beyond what the body can still take is held to it", async () => {
+    const actor = body();
+    const ceiling = actor.system.physical.dr;
+
+    const result = await applyDamage(actor, ceiling + 50);
+
+    expect(result.taken).toBe(ceiling);
+    expect(actor.system.health.physical.value).toBe(ceiling);
+  });
+
+  test("stress goes on the mind with its traumas", async () => {
+    const actor = body();
+
+    const result = await applyDamage(actor, 5, { target: "mental" });
+
+    expect(actor.system.health.mental.value).toBe(5);
+    expect(result.taken).toBe(5);
+  });
+
+  test("the bars move from where they stood, not from empty", async () => {
+    const actor = body();
+    await applyDamage(actor, 10);
+    const before = actor.system.physical.relativePhysicalDamage;
+
+    await applyDamage(actor, 5);
+
+    expect(before).toBeGreaterThan(1);
+    expect(actor.system.physical.oldHealthBarValue).toBe(before);
+    expect(actor.system.health.barModifier).toBe("physicalUp");
+  });
+
+  test("several amounts are each measured against the threshold, but written at once", async () => {
+    const actor = body();
+    const threshold = actor.system.physical.wt;
+    const update = jest.spyOn(actor, "update");
+
+    const result = await applyDamage(actor, [threshold, threshold - 1, threshold]);
+
+    expect(result).toEqual({ taken: 3 * threshold - 1, wounds: 2 });
+    expect(actor.system.physical.wounds).toBe(2);
+    expect(actor.system.health.physical.value).toBe(3 * threshold - 1);
+    expect(update).toHaveBeenCalledTimes(1);
   });
 });

@@ -266,6 +266,12 @@ eclipsephase.drugCategories = {
     toxin: "ep2e.item.drug.table.category.toxin"
 }
 
+eclipsephase.armorUsed = {
+    energy: "ep2e.item.weapon.table.armorUsed.energy",
+    kinetic: "ep2e.item.weapon.table.armorUsed.kinetic",
+    none: "ep2e.item.weapon.table.armorUsed.none"
+}
+
 eclipsephase.grenadeArmorVector = {
     none: "ep2e.item.weapon.table.armorUsed.none",
     kinetic: "ep2e.item.weapon.table.armorUsed.kinetic",

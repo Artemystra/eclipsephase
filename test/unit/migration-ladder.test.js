@@ -2,7 +2,7 @@ import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } fr
 
 // The version of the last migration step: what a world is stamped with once it has climbed the whole
 // ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
-const LATEST_MIGRATION = "2.7";
+const LATEST_MIGRATION = "2.8";
 
 
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
@@ -297,6 +297,41 @@ describe("the 2.7 blueprint backfill", () => {
 
     expect(drug.system.duration).toEqual({ value: 3, units: "hours" });
     expect(Array.from(drug.effects)).toEqual([]);
+  });
+});
+
+describe("the 2.8 armour type per weapon mode", () => {
+  afterEach(() => {
+    game.items.clear();
+    game.actors.clear();
+    game.packs.clear();
+  });
+
+  test("weapons on a sheet get their compendium namesake's armour, others the default, and set ones stay", async () => {
+    registerSystemPacks();
+    const actor = makeActor({ type: "character", items: [
+      { _id: "frz1", name: "Freezer", type: "rangedWeapon", system: { ammoType: "spray" } },
+      { _id: "own1", name: "Garage Laser", type: "rangedWeapon", system: { ammoType: "beam" } },
+      { _id: "set1", name: "Torch", type: "rangedWeapon", system: { ammoType: "spray", mode1: { armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    const rendered = await runLadderFrom("2.7");
+
+    expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.28");
+    expect(actor.items.get("frz1")._source.system.mode1.armorused).toBe("none");
+    expect(actor.items.get("own1")._source.system.mode1.armorused).toBe("energy");
+    expect(actor.items.get("set1")._source.system.mode1.armorused).toBe("kinetic");
+  });
+
+  test("a world whose weapons all name their armour is stamped without being asked", async () => {
+    makeActor({ type: "character", items: [
+      { _id: "kn1", name: "Knife", type: "ccWeapon", system: { mode1: { armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    const rendered = await runLadderFrom("2.7");
+
+    expect(rendered).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8");
   });
 });
 

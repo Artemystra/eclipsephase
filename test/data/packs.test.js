@@ -47,6 +47,15 @@ describe("compendium sources", () => {
     expect(offenders.map(o => `${o.pack}/${o.file}: ${o.data.type}`)).toEqual([]);
   });
 
+  test("every weapon mode names the armour its damage meets, and a beam weapon's meets energy armour", () => {
+    const kinds = new Set(["energy", "kinetic", "none"]);
+    const weapons = documents.filter(({ data }) => data.type === "rangedWeapon" || data.type === "ccWeapon");
+    expect(weapons.length).toBeGreaterThan(0);
+    const offenders = weapons.filter(({ data }) => ["mode1", "mode2"].some(mode => !kinds.has(data.system[mode]?.armorused))
+      || (data.system.ammoType === "beam" && data.system.mode1.armorused !== "energy"));
+    expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);
+  });
+
   test("every document carries a name and an id", () => {
     const offenders = documents.filter(({ data }) => !data.name || !data._id);
     expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);

@@ -7,7 +7,21 @@ import { registerSocketActions, relayToActiveGM } from "./socket.js";
 // card at a time, and hands the change to the active GM when the user may not edit the card.
 
 const CARD_TYPES = new Map();
-const WRITES = new Map();
+const QUEUES = new Map();
+
+/**
+ * Runs work for one key after the work queued for that key before it, so changes to the same
+ * card never overlap. Work that fails does not hold up what comes after it.
+ * @param {String} key - What the work is about, e.g. a message id
+ * @param {Function} work - async () => result
+ * @returns {Promise<*>} What the work returned
+ */
+export function inOrder(key, work) {
+  const done = (QUEUES.get(key) ?? Promise.resolve()).then(work, work);
+  QUEUES.set(key, done);
+  done.finally(() => { if (QUEUES.get(key) === done) QUEUES.delete(key); }).catch(() => {});
+  return done;
+}
 
 /**
  * Merges a change into a card's state.
@@ -17,6 +31,26 @@ const WRITES = new Map();
  */
 function merge(state, change) {
   return foundry.utils.mergeObject(state, change ?? {}, { inplace: false });
+}
+
+/**
+ * A copy of a value that can be kept in a card's flags: documents become their id, uuid, name and
+ * type, functions are dropped.
+ * @param {*} value - The value
+ * @param {Number} [depth] - How deep the copy has gone
+ * @returns {*} The plain copy
+ */
+export function storable(value, depth = 0) {
+  if (value === null || typeof value !== "object") return typeof value === "function" ? undefined : value;
+  if (depth > 8) return undefined;
+  if (value.documentName && typeof value.toObject === "function") return { id: value.id, uuid: value.uuid, name: value.name, type: value.type };
+  if (Array.isArray(value)) return value.map(entry => storable(entry, depth + 1));
+  const copy = {};
+  for (const [key, entry] of Object.entries(value)) {
+    const kept = storable(entry, depth + 1);
+    if (kept !== undefined) copy[key] = kept;
+  }
+  return copy;
 }
 
 /**
@@ -68,10 +102,7 @@ export function updateCard(message, key, mutation = "merge", payload = {}, { ext
     await message.update({ content: await type.render(next), [`flags.eclipsephase.${key}`]: next, ...extra });
     return true;
   };
-  const done = (WRITES.get(message.id) ?? Promise.resolve()).then(write, write);
-  WRITES.set(message.id, done);
-  done.finally(() => { if (WRITES.get(message.id) === done) WRITES.delete(message.id); }).catch(() => {});
-  return done;
+  return inOrder(`write:${message.id}`, write);
 }
 
 /**

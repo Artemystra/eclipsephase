@@ -41,12 +41,15 @@
                         <select name="attackMode"  style="max-width: 140px;">
                             <option value="single">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.single"}}</option>
                             <option value="burst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.burst"}}</option>
-                            <option value="fullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.fullAuto"}}</option>
                             <option value="wBurst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wBurst"}}</option>
+                            <option value="burstTargets">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.burstTargets"}}</option>
+                            <option value="fullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.fullAuto"}}</option>
                             <option value="wFullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wFullAuto"}}</option>
+                            <option value="fullAutoTargets">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.fullAutoTargets"}}</option>
                             <option value="suppressive">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.suppressive"}}</option>
                         </select>
                     </div>
+                    <input type="hidden" name="preTargets" value="">
                     <div class="form-group listBackgroundMain">
                         <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.aim.label"}}:</label>
                         <select class="input-largePlus" name="aim">

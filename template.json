@@ -631,6 +631,7 @@
         "_id": "-",
         "name": "",
         "dose": null,
+        "armorused": "",
         "dvModifier": {
           "d10": null,
           "d6": null,
@@ -757,6 +758,7 @@
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "firingMode": "",
         "traits": {
           "armorPiercing": {
@@ -845,6 +847,7 @@
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "firingMode": "",
         "traits": {
           "armorPiercing": {
@@ -1083,6 +1086,7 @@
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "traits": {
           "armorPiercing": {
             "name": "ep2e.item.weapon.table.trait.armorPiercing",
@@ -1129,6 +1133,7 @@
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "traits": {
           "armorPiercing": {
             "name": "ep2e.item.weapon.table.trait.armorPiercing",

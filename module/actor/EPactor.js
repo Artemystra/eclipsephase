@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js"
-import { takeDamage } from "../rolls/damage.js"
+import { applyDamage } from "../rolls/damage.js"
 import { endAllChiPushes } from "../rolls/psi.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 import { globalModifiers } from "../rolls/modifiers.js";
@@ -313,10 +313,6 @@ export default class EPactor extends Actor {
   // ceiling instead for those two; everything else keeps native behavior.
   async modifyTokenAttribute(attribute, value, isDelta = false, isBar = true) {
     const ceilingByAttribute = { "health.physical": "physical.dr", "health.mental": "mental.ir" };
-    const DAMAGE_CONFIG = {
-      "health.physical": { barTarget: "physical", thresholdPath: "physical.wt", modifierPath: "physical.wounds" },
-      "health.mental": { barTarget: "mental", thresholdPath: "mental.tt", modifierPath: "mental.trauma" }
-    };
     const ceilingPath = ceilingByAttribute[attribute];
     if (!isBar || !ceilingPath) return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
 
@@ -330,16 +326,11 @@ export default class EPactor extends Actor {
 
     // Taking damage (not healing - healDamage() is a whole dialog-driven mechanic meant to be
     // triggered deliberately from the sheet, not implied by a smaller HUD value) runs the same
-    // wound/trauma-threshold math and chat announcement takeDamage() posts from the sheet's damage
+    // wound/trauma-threshold math and chat announcement applyDamage() posts from the sheet's damage
     // button, instead of silently just moving the raw value.
     if (clampedUpdate > current) {
-      const config = DAMAGE_CONFIG[attribute];
-      const currentModifier = foundry.utils.getProperty(this.system, config.modifierPath) ?? 0;
-      const threshold = foundry.utils.getProperty(this.system, config.thresholdPath) || 1;
-      return takeDamage(
-        { value: clampedUpdate - current }, current, 1, 0, currentModifier, threshold,
-        `system.${attribute}.value`, `system.${config.modifierPath}`, this, config.barTarget, ceiling
-      );
+      await applyDamage(this, clampedUpdate - current, { target: attribute === "health.mental" ? "mental" : "physical", announce: true });
+      return this;
     }
 
     const updates = { [`system.${attribute}.value`]: clampedUpdate };

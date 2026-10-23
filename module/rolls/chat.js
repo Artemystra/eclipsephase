@@ -5,7 +5,7 @@ import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "../common/ware-skills.js";
-import { applyTargetedAttack, rollDefence, rollRemainingDefences } from "./targeted-attacks.js";
+import { applyTargetedAttack, rollDefence, rollRemainingDefences } from "./attacks.js";
 
 /**
  * Hides GM info from players
@@ -106,6 +106,13 @@ export async function addChatListeners(html) {
     if (targetedAttack) {
       const message = game.messages.get(targetedAttack.closest("[data-message-id]")?.dataset.messageId);
       if (message) applyTargetedAttack(message);
+      return;
+    }
+
+    const attackDamage = event.target.closest("button.attackDamage");
+    if (attackDamage) {
+      const message = game.messages.get(attackDamage.closest("[data-message-id]")?.dataset.messageId);
+      if (message) damageFunctions.rollAttackDamage(message);
       return;
     }
 

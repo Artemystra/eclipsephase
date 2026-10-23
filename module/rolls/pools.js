@@ -83,7 +83,7 @@ export async function update(options, pool, task, actorWhole){
         let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + game.i18n.localize(poolType);
         //Determine pool to be updated
 
-        actorWhole.update({[poolPath] : poolUpdate});
+        await actorWhole.update({[poolPath] : poolUpdate});
         
         if(options === "pool" && task || options === "flex" && task)
             task.addModifier(new TaskRollModifier(message, poolMod))

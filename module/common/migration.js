@@ -1,5 +1,6 @@
 import { wareAwaitingSetup } from "./ware-skills.js";
 import { normaliseDrugSystem } from "./drugs.js";
+import { defaultArmorUsed } from "./weapon-functions.js";
 
 export async function migrationLegacy(startMigration, endMigration){
     if (startMigration){
@@ -2883,6 +2884,78 @@ export async function migrationPre27(startMigration) {
     includeCompendiums: true
   });
   await _ep27_flagWareSetup();
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  return { endMigration: true };
+}
+
+// The system compendiums that carry weapons.
+const _ep28_WEAPON_PACKS = ["eclipsephase.weapons", "eclipsephase.diemens-homebrew-items"];
+
+/**
+ * The armour type each weapon in the system compendiums names per mode, by weapon name.
+ * @returns {Promise<Map<String, Object>>} mode1 and mode2 armour types, per weapon name
+ */
+async function _ep28_weaponArmor() {
+  const catalogue = new Map();
+  for (const id of _ep28_WEAPON_PACKS) {
+    const pack = game.packs.get(id);
+    if (!pack) continue;
+    for (const weapon of await pack.getDocuments()) {
+      if (weapon.type !== "rangedWeapon" && weapon.type !== "ccWeapon") continue;
+      const source = weapon._source?.system ?? weapon.system ?? {};
+      catalogue.set(weapon.name, { mode1: source.mode1?.armorused, mode2: source.mode2?.armorused });
+    }
+  }
+  return catalogue;
+}
+
+/**
+ * The armour type a weapon placed before 2.8 is missing per mode: its compendium namesake's,
+ * otherwise the one its damage meets by default. A mode that names one keeps it.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep28_weaponArmor read
+ * @returns {Object|null} The item update, or null when nothing is missing
+ */
+export function _ep28_missingArmorUsed(item, catalogue) {
+  if (item.type !== "rangedWeapon" && item.type !== "ccWeapon") return null;
+  const source = item._source?.system ?? item.system ?? {};
+  const update = {};
+  for (const mode of ["mode1", "mode2"]) {
+    if (source[mode]?.armorused) continue;
+    update[`system.${mode}.armorused`] = catalogue.get(item.name)?.[mode] || defaultArmorUsed(item);
+  }
+  return Object.keys(update).length ? update : null;
+}
+
+/**
+ * Whether any weapon in the world has a mode without an armour type.
+ * @returns {Promise<Boolean>} True when at least one weapon needs one
+ */
+export async function migrationPre28Needed() {
+  const needs = item => _ep28_missingArmorUsed(item, new Map()) !== null;
+  return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
+}
+
+/**
+ * Gives every weapon in the world the armour type its damage meets, per mode: the world's own
+ * items, every actor's embedded ones and the world's item compendiums.
+ * @param {Boolean} startMigration - Whether the user confirmed the migration
+ * @returns {Promise<Object>} Whether the closing notice is due
+ */
+export async function migrationPre28(startMigration) {
+  const latestUpdate = "2.8";
+  if (!startMigration) return { endMigration: false };
+
+  const catalogue = await _ep28_weaponArmor();
+  await forEachItem(async item => {
+    const update = _ep28_missingArmorUsed(item, catalogue);
+    if (update) await item.update(update);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "rangedWeapon" || item.type === "ccWeapon",
+    includeCompendiums: true
+  });
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };

@@ -1,5 +1,6 @@
 import { signed } from "./dice.js";
 import { boundToActiveBody } from "../common/body-markers.js";
+import { isChecked } from "../common/general-sheet-functions.js";
 
 // What an actor's items and effects contribute to a roll beyond its skill and aptitude, in one
 // place for the roll pipeline:
@@ -108,7 +109,7 @@ export function wareRollOptions(actor, dataset) {
  * @returns {Object[]} The entries that apply to this roll
  */
 export function chosenRollOptions(offered, values = {}) {
-  return offered.filter(entry => entry.option.automatic || values[entry.field] === true || values[entry.field] === "true");
+  return offered.filter(entry => entry.option.automatic || isChecked(values[entry.field]));
 }
 
 /**

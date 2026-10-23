@@ -1,17 +1,19 @@
 import { drugVector, doseOnset, dosesRemaining, isAmmoPack, consumeDose, parseAddictionMod } from "./drugs.js";
 import { durationRunOut, isTimedSpan, SECONDS_PER } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
-import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, pickTokensOnCanvas, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
+import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
 import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
-import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll, registerCheckCard } from "../rolls/check-cards.js";
+import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
 import { getBodyBindingInfo } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
-import { chemicalDoses } from "./weapon-functions.js";
+import { chemicalDoses, attackTargetCount } from "./weapon-functions.js";
 import { registerCard, renderCard, updateCard } from "./chat-cards.js";
-import { registerAttackEffect } from "../rolls/targeted-attacks.js";
+import { registerAttackEffect } from "../rolls/attacks.js";
+import { pickTokensOnCanvas } from "./targeting.js";
 import { damageFormula } from "../rolls/damage-formula.js";
+import { applyDamage, damageLine, appendDamageLines } from "../rolls/damage.js";
 
 for (const key of ["doseCheck", "doseFilter", "addictionCheck"]) registerCheckCard(key);
 registerCard("doseOffer", { render: renderOfferCard, mutations: { claim: (state, { usedBy, addiction }) => ({ ...state, usedBy, addiction }) } });
@@ -216,8 +218,9 @@ function renderWearOffCard(state) {
 export async function rollDrugHarm(actor, { formula, target, copy }) {
   const roll = await new Roll(formula).evaluate();
   const output = { type: "defaultDamage", copy, rollTitle: "ep2e.roll.announce.total" };
-  await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
-  await actor.modifyTokenAttribute(target === "physical" ? "health.physical" : "health.mental", roll.total, true, true);
+  const posted = await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
+  const result = await applyDamage(actor, roll.total, { target });
+  await appendDamageLines(posted, [damageLine(actor, result, target)]);
   return roll.total;
 }
 
@@ -682,7 +685,8 @@ export function registerChemicalAttacks() {
       if (!doses) return null;
       const payload = weaponPayload(context.actor, context.weapon?.weapon);
       const effectLabel = payload ? game.i18n.format("ep2e.chat.defence.doseLabel", { name: payload.name }) : "";
-      return { targets: doses, area: true, payload, labelKey: "ep2e.chat.attack.applyDose", effectLabel };
+      const targets = attackTargetCount(context.weapon?.weapon, context.options ?? {});
+      return { targets, area: true, within: targets > 1 ? 1 : null, payload, labelKey: "ep2e.chat.attack.applyDose", effectLabel };
     },
     ready(attack) {
       if (attack.payload?.data) return true;
@@ -1525,8 +1529,9 @@ async function dealTickDamage(actor, dose, ticks) {
     rollTitle: "ep2e.roll.announce.total",
     diceArray: perTick.length > 1 ? perTick : null
   };
-  await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
-  for (const tick of perTick) await actor.modifyTokenAttribute("health.physical", tick.total, true, true);
+  const posted = await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
+  const result = await applyDamage(actor, perTick.map(tick => tick.total));
+  await appendDamageLines(posted, [damageLine(actor, result)]);
   return perTick.map(tick => tick.total);
 }
 

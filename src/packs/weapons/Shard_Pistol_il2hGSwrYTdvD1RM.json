@@ -140,6 +140,7 @@
       "d6": 2,
       "bonus": 6,
       "dv": null,
+      "armorused": "kinetic",
       "firingMode": "saBFfa",
       "traits": {
         "armorPiercing": {
@@ -228,6 +229,7 @@
       "d6": null,
       "bonus": null,
       "dv": null,
+      "armorused": "kinetic",
       "firingMode": "ss",
       "traits": {
         "armorPiercing": {

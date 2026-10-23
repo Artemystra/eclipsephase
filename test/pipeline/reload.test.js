@@ -120,6 +120,25 @@ describe("reloading a weapon", () => {
   });
 });
 
+describe("the armour loaded ammunition meets", () => {
+  test("reloading takes over the armour the ammunition names", async () => {
+    const plasma = { ...rounds("ammo1"), system: { ...rounds("ammo1").system, armorused: "energy" } };
+    const actor = makeActor({ type: "character", items: [pistol(), plasma] });
+
+    await pressReload(actor);
+
+    expect(actor.items.get("gun1").system.ammoSelected.armorused).toBe("energy");
+  });
+
+  test("ammunition that names none leaves the weapon's own", async () => {
+    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1")] });
+
+    await pressReload(actor);
+
+    expect(actor.items.get("gun1").system.ammoSelected.armorused).toBe("");
+  });
+});
+
 describe("the survival ammunition rule", () => {
   beforeEach(() => setSetting("eclipsephase", "ammoRules", "survival"));
 

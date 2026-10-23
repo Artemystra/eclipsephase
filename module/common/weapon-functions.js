@@ -81,6 +81,110 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
 }
 
 /**
+ * The armour a weapon's damage meets when the weapon names none: energy for a beam weapon, kinetic
+ * for any other (Core p.214: beams are energy, firearms and melee kinetic).
+ * @param {Item|Object} item - The weapon
+ * @returns {String} "energy" or "kinetic"
+ */
+export function defaultArmorUsed(item) {
+  return item?.type === "rangedWeapon" && item.system?.ammoType === "beam" ? "energy" : "kinetic";
+}
+
+/**
+ * The armour an attack meets: the loaded ammunition's when it names one, otherwise the fired
+ * mode's, otherwise the weapon's default.
+ * @param {Item} weapon - The weapon
+ * @param {String} [mode] - "1" or "2", the mode fired
+ * @returns {String} "energy", "kinetic" or "none"
+ */
+export function attackArmorUsed(weapon, mode = "1") {
+  const ammo = weapon?.system?.ammoSelected?.armorused;
+  if (ammo === "energy" || ammo === "kinetic" || ammo === "none") return ammo;
+  return weapon?.system?.[`mode${mode}`]?.armorused || defaultArmorUsed(weapon);
+}
+
+// An attack's target count that stands for any number of targets. Kept as 0, since a card's flags
+// cannot hold Infinity.
+export const ANY_TARGETS = 0;
+
+// What each attack mode of the attack dialogs does (Core p.204-206): rounds a ranged mode uses,
+// the modifier it brings (kind says which dialog's modifiers it joins), the damage dice it adds,
+// the targets it strikes with one attack test, and what it leaves the attacker open to afterwards.
+// An aggressive attack takes either +10 to hit (Aggressive Hit) or +1d10 DV (Ruthless Attack), and
+// costs -10 on Fray until the attacker's next action.
+export const ATTACK_MODES = {
+  single: { rounds: 1 },
+  burst: { rounds: 3, damage: "+1d10" },
+  wBurst: { rounds: 3, hit: { kind: "ranged", value: 10, announce: "ep2e.roll.announce.combat.ranged.wBurst" } },
+  burstTargets: { rounds: 3, targets: 2 },
+  fullAuto: { rounds: 10, damage: "+2d10" },
+  wFullAuto: { rounds: 10, hit: { kind: "ranged", value: 30, announce: "ep2e.roll.announce.combat.ranged.wFullAuto" } },
+  fullAutoTargets: { rounds: 10, targets: 3 },
+  suppressive: { rounds: 20, targets: ANY_TARGETS },
+  charge: { damage: "+1d6", hit: { kind: "melee", value: -10, announce: "ep2e.roll.announce.combat.melee.charge", addition: "ep2e.roll.announce.combat.melee.chargeAddition" } },
+  aggressive: { hit: { kind: "melee", value: 10, announce: "ep2e.roll.announce.combat.melee.agressive" }, exposure: { nameKey: "ep2e.roll.announce.combat.melee.agressive", fray: -10 } },
+  aggressiveCharge: { damage: "+1d10", exposure: { nameKey: "ep2e.roll.announce.combat.melee.agressiveCharge", fray: -10 } }
+};
+
+/**
+ * The fewest targets an attack mode needs: two for a mode that strikes several, one otherwise.
+ * @param {String} attackMode - The mode chosen in the attack dialog
+ * @returns {Number} The minimum
+ */
+export function minimumTargets(attackMode) {
+  return ATTACK_MODES[attackMode]?.targets > 1 ? 2 : 1;
+}
+
+/**
+ * Whether a weapon fires in a cone: every spray weapon does (Core p.217).
+ * @param {Item} weapon - The weapon
+ * @returns {Boolean} True for a cone weapon
+ */
+export function isConeWeapon(weapon) {
+  return weapon?.type === "rangedWeapon" && weapon.system?.ammoType === "spray";
+}
+
+/**
+ * How many targets a cone reaches at a range (Core p.218): one at point-blank and close, two at
+ * range, three beyond it.
+ * @param {String} range - The distance chosen in the attack dialog
+ * @returns {Number} The targets
+ */
+export function coneTargets(range) {
+  if (range === "range") return 2;
+  if (range === "beyond" || range === "beyond+") return 3;
+  return 1;
+}
+
+/**
+ * The damage dice a cone adds or loses at a range (Core p.218): +1d10 at point-blank and close,
+ * -1d10 beyond range.
+ * @param {Item} weapon - The weapon
+ * @param {String} range - The distance chosen in the attack dialog
+ * @returns {String} A formula fragment, "" for none
+ */
+export function coneDamage(weapon, range) {
+  if (!isConeWeapon(weapon)) return "";
+  if (range === "beyond" || range === "beyond+") return "-1d10";
+  if (range === "range") return "";
+  return "+1d10";
+}
+
+
+/**
+ * How many targets a ranged attack strikes: a cone by its range, a burst or full auto at several
+ * targets by the mode, suppressive fire anyone who breaks cover, anything else one.
+ * @param {Item} weapon - The weapon
+ * @param {Object} options - attackMode and range from the attack dialog
+ * @returns {Number} The targets, ANY_TARGETS for any number
+ */
+export function attackTargetCount(weapon, { attackMode, range } = {}) {
+  if (attackMode === "suppressive") return ANY_TARGETS;
+  if (isConeWeapon(weapon)) return coneTargets(range);
+  return ATTACK_MODES[attackMode]?.targets ?? 1;
+}
+
+/**
  * The drugs a character can force on someone in melee: those at hand with a dose left, not packs
  * meant to load a weapon. NPCs and goons carry all of theirs at hand.
  * @param {Actor} actor - The attacker
@@ -493,7 +597,8 @@ export async function reloadWeapon(html, actor) {
             "system.ammoSelected.description": ammoSelected.system.description,
             "system.ammoSelected.dvModifier.calculated": dv,
             "system.ammoSelected.traits": ammoType != "chemical" ? traits : {},
-            "system.ammoSelected.dose": null
+            "system.ammoSelected.dose": null,
+            "system.ammoSelected.armorused": ammoSelected.system?.armorused ?? ""
           };
           Hooks.callAll("eclipsephase.weaponLoaded", { actor, weapon, ammo: ammoSelected, ammoType, update: loaded });
           weaponUpdate.push(loaded);

@@ -133,6 +133,14 @@
     {{/if}}
 </div>
 {{/if}}
+{{#if dataset.defence}}
+<div class="contentBoxMargin">
+    <div class="form-group listBackgroundMain">
+        <label class="resource-value" for="fullDefense">{{localize "ep2e.roll.dialog.fullDefenseLabel"}}</label>
+        <input class="item-standard-margin-both-large sheet" type="checkbox" name="fullDefense" id="fullDefense">
+    </div>
+</div>
+{{/if}}
 {{#if (eq rollType "psi")}}
     {{#if (ne actorType "goon")}}
     <div class="contentBoxMargin">

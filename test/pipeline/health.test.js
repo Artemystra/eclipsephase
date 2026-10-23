@@ -1,4 +1,4 @@
-import { healthBarChange } from "../../module/rolls/damage.js";
+import { healthBarChange } from "../../module/rolls/health.js";
 import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -144,5 +144,41 @@ describe("the token's health bar", () => {
 
     expect(actor.system.health.physical.value).toEqual(5);
     expect(actor.system.physical.wounds).toEqual(1);
+  });
+});
+
+describe("the bars on the sheet", () => {
+  /**
+   * A sheet's health elements, each with a style to read the bar widths from.
+   * @returns {Object} querySelector and the elements by id
+   */
+  function sheetHtml() {
+    const elements = {};
+    return {
+      elements,
+      querySelector: selector => {
+        const id = selector.replace("#", "");
+        elements[id] ??= { style: {}, value: "", addEventListener: () => {} };
+        return elements[id];
+      }
+    };
+  }
+
+  test("a sheet drawn again while the bars move picks the animation up instead of starting it over", async () => {
+    const actor = hurt();
+    await actor.update({ "system.health.physical.value": 1, "system.physical.oldHealthBarValue": 60, "system.physical.oldDeathBarValue": 0, "system.health.barModifier": "physicalDown" });
+    const first = sheetHtml();
+    const second = sheetHtml();
+
+    const animation = healthBarChange(actor, first);
+    await new Promise(resolve => setTimeout(resolve, 120));
+    const reached = parseFloat(first.elements.physicalHealthBar.style.width);
+    const redraw = healthBarChange(actor, second);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(reached).toBeLessThan(60);
+    expect(parseFloat(second.elements.physicalHealthBar.style.width)).toBeLessThanOrEqual(reached);
+    await Promise.all([animation, redraw]);
+    expect(parseFloat(second.elements.physicalHealthBar.style.width)).toBe(actor.system.physical.relativePhysicalDamage);
   });
 });

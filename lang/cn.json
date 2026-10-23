@@ -1406,7 +1406,8 @@
         "button": {
           "roll": "投骰",
           "cancel": "取消",
-          "useSelection": "使用该选项"
+          "useSelection": "使用该选项",
+          "rollWithoutTargets": "无目标投掷"
         },
         "reputationMode": {
           "headline": "类型",
@@ -1433,11 +1434,13 @@
             "fireMode": {
               "label": "射击模式",
               "single": "单发射击",
-              "burst": "窄点射（+1d10）",
-              "fullAuto": "窄全自动（+2d10）",
-              "wBurst": "宽点射（+10命中）",
-              "wFullAuto": "宽全自动（+30命中）",
-              "suppressive": "压制（使用20发弹药）"
+              "burst": "点射：+1d10 伤害",
+              "fullAuto": "全自动：+2d10 伤害",
+              "wBurst": "点射：+10 命中",
+              "wFullAuto": "全自动：+30 命中",
+              "suppressive": "压制射击（20发）",
+              "burstTargets": "点射：两个目标",
+              "fullAutoTargets": "全自动：三个目标"
             },
             "aim": {
               "label": "瞄准",
@@ -1461,7 +1464,8 @@
               "major": "上级（-30）",
               "blind": "目盲（-30+）",
               "indirect": "间接 (-20)"
-            }
+            },
+            "pickTargets": "选择目标"
           },
           "defender": {
             "isProne": "俯卧（射程内-10）",
@@ -1545,7 +1549,8 @@
           "exoticMorphology": "Exotic Morphology"
         },
         "augmentations": "增强",
-        "dodgeCoverLabel": "在掩体后闪避"
+        "dodgeCoverLabel": "在掩体后闪避",
+        "fullDefenseLabel": "全力防御（+30）"
       },
       "successType": {
         "success": "Success",
@@ -1741,7 +1746,8 @@
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
             "fray": "Fray Ranged"
-          }
+          },
+          "fullDefense": "全力防御"
         }
       },
       "psi": {
@@ -1904,7 +1910,11 @@
       "attack": {
         "applyDose": "对所选目标施用剂量",
         "applyTargets": "应用到所选目标",
-        "targets": "目标：{names}"
+        "targets": "目标：{names}",
+        "chooseTarget": "选择目标",
+        "rollDamage": "投掷伤害",
+        "damageWithoutTarget": "无目标伤害",
+        "damageReady": "{weapon} 造成的伤害"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -1916,12 +1926,25 @@
           "hit": "命中",
           "half": "部分闪避：半剂",
           "none": "避开"
-        }
+        },
+        "severalTargets": "多个目标"
       },
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",
         "upgraded": "{name} 消耗了一点{pool}来提升结果",
         "mitigated": "{name} 消耗了一点{pool}来减轻失败"
+      },
+      "damage": {
+        "appliedPhysical": "{name} 受到 {taken} 点伤害和 {wounds} 处创伤",
+        "appliedMental": "{name} 受到 {taken} 点压力和 {wounds} 次心理创伤",
+        "attackHit": "{name}：{share} - {armor} 护甲（{armorType}）= {damage}，{woundsTaken}",
+        "attackHalf": "{name}（减半）：{share} - {armor} 护甲（{armorType}）= {damage}，{woundsTaken}",
+        "attackMissed": "{name} 未被击中",
+        "attackParried": "{name} 格挡了攻击",
+        "attackTookDamage": "{name} 被击中并受到伤害",
+        "attackSoaked": "{name} 被击中，但护甲吸收了全部伤害",
+        "amountDamage": "{value} 伤害",
+        "amountWounds": "{value} 创伤"
       }
     },
     "rule": {
@@ -2146,7 +2169,10 @@
       "remaining": "还剩 {count} 个目标",
       "limitReached": "已达到最多 {max} 个目标。再次点击已标记的目标可取消标记。",
       "selectTarget": "选择目标",
-      "targetChosen": "已选目标"
+      "targetChosen": "已选目标",
+      "tooFar": "其他目标必须距已标记目标 {within} 米以内。",
+      "marked": "已标记 {count} 个目标",
+      "tooFew": "请至少选择 {min} 个目标。"
     }
   }
 }

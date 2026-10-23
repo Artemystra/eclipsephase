@@ -1,4 +1,4 @@
-import { postCheckCard, markCardRolled, rollAptitudeCheck, settleOnRoll, modifiersOnRoll } from "../../module/rolls/check-cards.js";
+import { postCheckCard, markCardRolled, rollAptitudeCheck, settleOnRoll, modifiersOnRoll } from "../../module/rolls/cards.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
 

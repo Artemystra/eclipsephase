@@ -1,17 +1,16 @@
 import { JSDOM } from "jsdom";
-import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDefence, rollRemainingDefences, defenceOutcome } from "../../module/rolls/targeted-attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDefence, rollRemainingDefences, defenceOutcome } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload, activeDoseFor, DOSE_CURSOR } from "../../module/common/doses.js";
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, MARK_COLOR } from "../../module/common/general-sheet-functions.js";
-import { TARGET_SHAPES } from "../../module/common/target-icons.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 const SKIP_DIALOG = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } };
-const SINGLE_SHOT = { skipDialog: true, presetOptions: { ...SKIP_DIALOG.presetOptions, attackMode: "single" } };
+const SINGLE_SHOT = { skipDialog: true, presetOptions: { ...SKIP_DIALOG.presetOptions, attackMode: "single", range: "beyond" } };
 const DODGE = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, rangedFray: true, behindCover: false } };
 const DODGE_IN_COVER = { skipDialog: true, presetOptions: { ...DODGE.presetOptions, behindCover: true } };
 const GRIN = { _id: "grin1", name: "Grin", type: "drug", system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" } } };
@@ -53,7 +52,8 @@ function target(name, morphType = "bio") {
 }
 
 /**
- * Fires the sprayer with the d100 showing the given value.
+ * Fires the sprayer beyond its range, where its cone reaches three targets, with the d100 showing
+ * the given value.
  * @param {Actor} actor - The shooter
  * @param {Number} die - The d100 result
  * @returns {Promise<Object>} The attack card
@@ -121,7 +121,7 @@ describe("what a chemical weapon delivers", () => {
     expect(chemicalDoses({ automatedEffects: {}, additionalEffects: { multiShot: { number: 3 } } })).toBe(0);
   });
 
-  test("a sprayer's hit offers to apply its dose to three targets instead of rolling damage, and uses three rounds", async () => {
+  test("a sprayer's hit beyond range offers to apply its dose to three targets instead of rolling damage, and uses three rounds", async () => {
     const actor = await shooter();
 
     const card = await fire(actor, 5);
@@ -164,8 +164,9 @@ describe("picking the targets", () => {
 
     await aimAt(card, [target("Ana"), target("Bo"), target("Cy")]);
 
-    expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ delivered: true, targetNames: ["Ana", "Bo", "Cy"] });
+    expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ delivered: true, targetNames: ["Ana", "Bo", "Cy"], roll: { value: 5 } });
     expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
+    expect(card.content).not.toContain("data-usepool");
   });
 
   test("a sprayer's targets are picked several at once, with the default crosshair", async () => {
@@ -174,7 +175,7 @@ describe("picking the targets", () => {
 
     await applyTargetedAttack(card, { pick, confirm: async () => true });
 
-    expect(pick).toHaveBeenCalledWith({ multi: true, max: 3 });
+    expect(pick).toHaveBeenCalledWith({ multi: true, max: 3, within: 1 });
   });
 
   test("fewer targets than doses go ahead only once confirmed", async () => {
@@ -192,6 +193,32 @@ describe("picking the targets", () => {
 
     expect(await aimAt(card, [target("Dee")])).toBeNull();
     expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.attackDelivered");
+  });
+});
+
+describe("what a defence card names", () => {
+  test("a card for one target leaves the name to the speaker, a card for several names each", async () => {
+    await aimAt(await fire(await shooter(), 5), [target("Ana")]);
+    await aimAt(await fire(await shooter(), 5), [target("Bo"), target("Cy")]);
+
+    const [single, several] = defenceCards();
+    expect(single.content).not.toContain(">Ana<");
+    expect(several.content).toContain(">Bo<");
+    expect(several.content).toContain(">Cy<");
+  });
+});
+
+describe("who a defence card speaks as", () => {
+  test("a card for one target speaks as that target, a card for several says so", async () => {
+    const ana = target("Ana");
+    const card = await fire(await shooter(), 5);
+    await aimAt(card, [ana]);
+    const second = await fire(await shooter(), 5);
+    await aimAt(second, [target("Bo"), target("Cy")]);
+
+    const [single, several] = defenceCards();
+    expect(single.speaker.actor).toBe(ana.id);
+    expect(several.speaker.alias).toBe("ep2e.chat.defence.severalTargets");
   });
 });
 
@@ -239,12 +266,19 @@ describe("dodging a sprayer's dose", () => {
     return defenceCards().at(-1);
   }
 
-  test("an area attack's outcome: a failed dodge takes the dose, a dodge in the open half of it, a dodge behind cover none", () => {
-    const attack = { defence: "ranged", area: true };
-    expect(defenceOutcome(attack, false, false)).toBe("hit");
-    expect(defenceOutcome(attack, true, false)).toBe("half");
-    expect(defenceOutcome(attack, true, true)).toBe("none");
-    expect(defenceOutcome({ defence: "melee", area: false }, true, false)).toBe("none");
+  test.each([
+    ["a failed dodge vs an area attack", { defence: "ranged", area: true }, { passed: false }, "hit"],
+    ["a dodge in the open vs an area attack", { defence: "ranged", area: true }, { passed: true, result: 3, value: 90 }, "half"],
+    ["a dodge behind cover vs an area attack", { defence: "ranged", area: true }, { passed: true, result: 3, value: 90, behindCover: true }, "none"],
+    ["a failed defence", { defence: "melee", roll: { value: 20, result: 3 } }, { passed: false }, "hit"],
+    ["both succeed, the attacker rolled higher", { defence: "melee", roll: { value: 40, result: 4 } }, { passed: true, result: 3, value: 30 }, "hit"],
+    ["both succeed, the defender rolled higher", { defence: "melee", roll: { value: 30, result: 3 } }, { passed: true, result: 4, value: 40 }, "none"],
+    ["both succeed with the same die", { defence: "ranged", roll: { value: 30, result: 3 } }, { passed: true, result: 3, value: 30 }, "none"],
+    ["the attacker's critical beats a higher defence", { defence: "melee", roll: { value: 22, result: 7 } }, { passed: true, result: 4, value: 50 }, "hit"],
+    ["the defender's critical beats a higher attack", { defence: "melee", roll: { value: 50, result: 4 } }, { passed: true, result: 7, value: 33 }, "none"],
+    ["a successful defence against an attack whose roll is unknown", { defence: "melee" }, { passed: true, result: 3, value: 10 }, "none"]
+  ])("%s", (label, attack, defence, outcome) => {
+    expect(defenceOutcome(attack, defence)).toBe(outcome);
   });
 
   test("a failed dodge puts the full dose on the target", async () => {
@@ -375,7 +409,7 @@ describe("forcing a drug on someone in melee", () => {
     const pick = jest.fn(async () => null);
     await applyTargetedAttack(card, { pick });
 
-    expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, ...DOSE_CURSOR });
+    expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, within: null, ...DOSE_CURSOR });
 
     expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "dose", targets: 1, area: false, defence: "melee" });
     expect(card.content).toContain("ep2e.chat.attack.applyDose");
@@ -392,6 +426,28 @@ describe("forcing a drug on someone in melee", () => {
     expect(defence.content).toContain("ep2e.chat.defence.dodge");
     expect(defence.content).toContain("ep2e.chat.defence.parry");
     expect(defence.content).not.toContain("ep2e.chat.defence.rollAll");
+  });
+
+  test("a parry that succeeds but rolls lower than the attack still lets the dose in", async () => {
+    const parrier = target("Ana");
+    await aimAt(await lunge(attacker(), 30), [parrier]);
+
+    seedRolls([20]);
+    await rollDefence(defenceCards().at(-1), parrier.uuid, "parry", SKIP_DIALOG);
+    await until(() => outcomeOf(parrier));
+
+    expect(outcomeOf(parrier)).toBe("hit");
+  });
+
+  test("full defence adds +30 to the defence roll", async () => {
+    const parrier = target("Ana");
+    await aimAt(await lunge(attacker(), 5), [parrier]);
+
+    seedRolls([50]);
+    await rollDefence(defenceCards().at(-1), parrier.uuid, "dodge", { skipDialog: true, presetOptions: { ...SKIP_DIALOG.presetOptions, fullDefense: true } });
+    const roll = createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.attackDefence).at(-1);
+
+    expect(roll.getFlag("eclipsephase", "taskCard").data.modifiers).toContainEqual(expect.objectContaining({ text: "ep2e.roll.announce.combat.fullDefense" }));
   });
 
   test("a successful parry keeps the dose out, a failed dodge lets it in", async () => {
@@ -444,7 +500,7 @@ describe("marking targets on the canvas", () => {
    * @returns {Object} The token
    */
   function token(name, x) {
-    return { name, x, y: 0, w: 100, h: 100, actor: { name }, bounds: { contains: (px, py) => px >= x && px < x + 100 && py >= 0 && py < 100 } };
+    return { name, x, y: 0, w: 100, h: 100, actor: { name }, bounds: { x, y: 0, width: 100, height: 100, contains: (px, py) => px >= x && px < x + 100 && py >= 0 && py < 100 } };
   }
 
   /**
@@ -491,6 +547,20 @@ describe("marking targets on the canvas", () => {
 
     expect((await pick).map(picked => picked.name)).toEqual(["Bo", "Cy"]);
     expect(marks.size).toBe(0);
+  });
+
+  test("with a distance limit, a token too far from every marked one is refused, one near any of them is not", async () => {
+    canvas.grid = { size: 100, distance: 1 };
+    const pick = picking(3, { multi: true, within: 1 });
+    press(10);
+    press(410);
+    press(210);
+    press(410);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Ana", "Bo", "Cy"]);
+    expect(ui.notifications.warn).toHaveBeenCalledTimes(1);
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooFar"));
   });
 
   test("a click past the limit marks nothing and says the limit is reached", async () => {

@@ -140,6 +140,7 @@
       "d6": null,
       "bonus": 6,
       "dv": null,
+      "armorused": "energy",
       "firingMode": "saBF",
       "traits": {
         "armorPiercing": {
@@ -228,6 +229,7 @@
       "d6": null,
       "bonus": null,
       "dv": null,
+      "armorused": "energy",
       "firingMode": "ss",
       "traits": {
         "armorPiercing": {

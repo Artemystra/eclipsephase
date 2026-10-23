@@ -1,114 +1,112 @@
-import { weaponPreparation } from "../common/weapon-functions.js";
-import { damageValueCalc } from "../common/general-sheet-functions.js";
+import { weaponPreparation, coneDamage, ATTACK_MODES, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
-import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
-import { drugHealingAddition } from "./modifiers.js";
 import { damageFormula } from "./damage-formula.js";
+import { registerAttackEffect, followUpVisibility, outcomeLabel } from "./attacks.js";
+import { spentOrOriginalResult, damageReady } from "./cards.js";
+import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
+import { registerSocketActions, relayToActiveGM, runOrRelay } from "../common/socket.js";
+import { MELEE_CURSOR } from "../common/targeting.js";
 export { applySuccessTierBonus } from "./damage-formula.js";
 
-/**
- * The result a roll card's buttons go by: the one a pool point turned it into, or the rolled one.
- * @param {Object} context - The roll context
- * @returns {Number} The result
- */
-export function spentOrOriginalResult(context) {
-  return context.alternatives?.spent && Number.isFinite(context.alternatives.result) ? context.alternatives.result : context.alternatives?.originalResult;
-}
+// Damage: what a weapon or sleight rolls, how it reaches an actor as damage or stress, and an
+// attack's damage card, on which the active GM puts one roll on every target struck.
 
+/**
+ * Rolls and posts a weapon's damage from its attack card.
+ * @param {Object} data - The click on the card's damage button
+ * @param {Number} [result] - The attack's result tier; read off the card when not given
+ * @param {Object} [preparedContext] - The roll context, when the caller has it already
+ * @returns {Promise<Object|undefined>} What rollToChat returned, or nothing when no damage is due
+ */
 export async function prepareWeapon(data, result, preparedContext) {
   const context = preparedContext ?? readRollContext(data.currentTarget);
-
-  const actorWhole = await fromUuid(context.actorUuid);
-  const weaponID = context.item.weaponId;
-  const selectedWeaponMode = context.item.weaponMode;
-  const rolledFrom = context.rolledFrom;
-  const skillKey = rolledFrom === "ccWeapon" ? "melee" : "guns";
   const rollResult = Number.isFinite(result) ? result : spentOrOriginalResult(context);
-  const biomorphTarget = context.options.biomorphTarget;
-  const touchOnly = context.options.touchOnly;
-  const attackMode = context.options.attackMode;
   const {blind, recipientList} = inheritChatVisibility(context.messageId, context.options.rollMode);
-  let modeDamage;
-  if (attackMode === "burst" || attackMode === "aggressive" || attackMode === "aggressiveCharge") {
-    modeDamage = "+1d10";
-  }
-  else if (attackMode === "charge") {
-    modeDamage = "+1d6";
-  }
-  else if (attackMode === "fullAuto") {
-    modeDamage = "+2d10";
-  }
-  else {
-    modeDamage = "";
-  }
-
-  let weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, selectedWeaponMode);
-
-  if (isHit(rollResult)) {
-    await dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList);
-  }
-  else if (weaponSelected.weaponTraits.automatedEffects.dvOnMiss) {
-    let damageCalc = await damageValueCalc({ type: "kinetic" }, weaponSelected.weaponTraits.automatedEffects.dvOnMiss.dv, null, "ammo");
-    let rollFormula = damageCalc.dv;
-
-    //The message is built
-    let message = {};
-
-    message.type = "damage";
-    message.weaponName = weaponSelected.weaponName;
-    message.ammoLoadedName = rolledFrom === "rangedWeapon" ? weaponSelected.weapon.system.ammoSelected.name : null;
-
-    //Weapon traits are added
-    message.weaponTraits = weaponSelected.weaponTraits.additionalEffects;
-    message.weaponTraits["dvOnMiss"] = weaponSelected.weaponTraits.automatedEffects["dvOnMiss"];
-    message.weaponTraits.dvOnMiss["calculated"] = rollFormula;
-    message.rollTitle = "ep2e.roll.announce.damageDone";
-
-    let roll = await new Roll(rollFormula).evaluate();
-
-    await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
-  }
+  const damage = await weaponDamage(context, rollResult);
+  if (!damage) return;
+  return rollToChat(null, damage.message, WEAPON_DAMAGE_OUTPUT, damage.roll, damage.actor.name, recipientList, blind, "rollOutput");
 }
 
-async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList) {
+/**
+ * The damage a weapon attack deals, rolled but not posted: on a hit the weapon's damage with the
+ * firing mode's dice and the success tier's bonus, on a miss the damage a weapon deals even then.
+ * @param {Object} context - The attack's roll context
+ * @param {Number} rollResult - The attack's result tier
+ * @returns {Promise<Object|null>} actor, message (the card's data) and roll (false for a weapon
+ *   that deals no damage), or null when nothing is due
+ */
+export async function weaponDamage(context, rollResult) {
+  const actorWhole = await fromUuid(context.actorUuid);
+  const rolledFrom = context.rolledFrom;
+  const skillKey = rolledFrom === "ccWeapon" ? "melee" : "guns";
+  const weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, context.item.weaponId, context.item.weaponMode);
+  if (!weaponSelected) return null;
+
+  if (isHit(rollResult)) {
+    const modeDice = modeDamage(context.options.attackMode) + coneDamage(weaponSelected.weapon, context.options.range);
+    return { actor: actorWhole, ...(await hitDamage(actorWhole, weaponSelected, rollResult, modeDice, context.options.biomorphTarget, context.options.touchOnly)) };
+  }
+  if (!weaponSelected.weaponTraits.automatedEffects.dvOnMiss) return null;
+
+  const damageCalc = await damageValueCalc({ type: "kinetic" }, weaponSelected.weaponTraits.automatedEffects.dvOnMiss.dv, null, "ammo");
+  const message = {
+    type: "damage",
+    weaponName: weaponSelected.weaponName,
+    ammoLoadedName: rolledFrom === "rangedWeapon" ? weaponSelected.weapon.system.ammoSelected.name : null,
+    weaponTraits: weaponSelected.weaponTraits.additionalEffects,
+    rollTitle: "ep2e.roll.announce.damageDone"
+  };
+  message.weaponTraits["dvOnMiss"] = weaponSelected.weaponTraits.automatedEffects["dvOnMiss"];
+  message.weaponTraits.dvOnMiss["calculated"] = damageCalc.dv;
+  return { actor: actorWhole, message, roll: await new Roll(damageCalc.dv).evaluate() };
+}
+
+/**
+ * The extra damage dice a firing or attack mode adds. A burst or full auto at several targets, and
+ * suppressive fire, deal a single shot's damage.
+ * @param {String} attackMode - The mode chosen in the attack dialog
+ * @returns {String} A formula fragment, "" for none
+ */
+export function modeDamage(attackMode) {
+  return ATTACK_MODES[attackMode]?.damage ?? "";
+}
+
+/**
+ * A hit's damage card data and roll.
+ * @param {Actor} actorWhole - The attacker
+ * @param {Object} weaponSelected - What weaponPreparation returned
+ * @param {Number} rollResult - The attack's result tier
+ * @param {String} modeDice - The firing mode's extra dice
+ * @param {Boolean} biomorphTarget - The target is a biomorph, for weapons that deal more to one
+ * @param {Boolean} touchOnly - A touch that deals no damage
+ * @returns {Promise<Object>} message and roll (false when the weapon deals no damage)
+ */
+async function hitDamage(actorWhole, weaponSelected, rollResult, modeDice, biomorphTarget, touchOnly) {
   const meleeDamageMod = weaponSelected.rolledFrom === "ccWeapon" ? actorWhole.system.mods.meleeDamageMod || "" : "";
   const weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage;
   const rollFormula = damageFormula({
     base: weaponDamage,
-    extras: [modeDamage, meleeDamageMod, biomorphTarget ? " + 1d6" : ""],
+    extras: [modeDice, meleeDamageMod, biomorphTarget ? " + 1d6" : ""],
     halved: !!weaponSelected.weaponTraits.automatedEffects.dvHalved
   }, rollResult);
 
-  //The message is built
-  let message = {};
+  const message = {
+    type: "damage",
+    weaponName: weaponSelected.weaponName,
+    ammoLoadedName: weaponSelected.rolledFrom === "rangedWeapon" ? weaponSelected.weapon.system.ammoSelected.name : null,
+    rollTitle: "ep2e.roll.announce.damageDone",
+    weaponTraits: weaponSelected.weaponTraits.additionalEffects
+  };
+  if (biomorphTarget) message.weaponTraits["bioMorphsOnly"] = weaponSelected.weaponTraits.confirmationEffects["bioMorphsOnly"];
+  if (!Object.keys(message.weaponTraits).length) delete message.weaponTraits;
 
-  message.type = "damage";
-  message.weaponName = weaponSelected.weaponName;
-  message.ammoLoadedName = weaponSelected.rolledFrom === "rangedWeapon" ? weaponSelected.weapon.system.ammoSelected.name : null;
-  message.rollTitle = "ep2e.roll.announce.damageDone";
-
-  //Weapon traits that are applied on the roll result
-  message.weaponTraits = weaponSelected.weaponTraits.additionalEffects;
-  if (biomorphTarget) {
-    message.weaponTraits["bioMorphsOnly"] = weaponSelected.weaponTraits.confirmationEffects["bioMorphsOnly"];
-  }
-
-  //Weapon Traits object gets deleted, if it's empty
-  if (!Object.keys(message.weaponTraits).length > 0) {
-    delete message.weaponTraits;
-  }
-
-  if (!weaponSelected.weaponTraits.automatedEffects.noDamage && weaponDamage != "ep2e.item.weapon.table.noDamage") {
-    let roll = await new Roll(rollFormula).evaluate();
-
-    await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
-  }
-  else {
+  if (weaponSelected.weaponTraits.automatedEffects.noDamage || weaponDamage === "ep2e.item.weapon.table.noDamage") {
     message.total = false;
-
-    await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, false, actorWhole.name, recipientList, blind, "rollOutput");
+    return { message, roll: false };
   }
+  return { message, roll: await new Roll(rollFormula).evaluate() };
 }
 
 // Rolls and posts a psi sleight's damage (e.g. Psychic Stab, Nightmare) - the GM still judges whether it hit.
@@ -142,117 +140,83 @@ export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, 
 }
 
 
-//Character Healing & Damage
-//Animate health bars on character sheet reload
-export async function healthBarChange(actor, html) {
-  const actorModel = actor.system;
-  const barModifier = actorModel.health.barModifier;
+// Where damage and stress live on an actor, how far they may go, and what counts a wound or trauma.
+export const DAMAGE_CONFIG = {
+  physical: { attribute: "health.physical", ceilingPath: "physical.dr", thresholdPath: "physical.wt", modifierPath: "physical.wounds", barPath: "physical.relativePhysicalDamage", overBarPath: "physical.relativeDeathDamage", oldBarPath: "physical.oldHealthBarValue", oldOverBarPath: "physical.oldDeathBarValue", barModifier: "physicalUp" },
+  mental: { attribute: "health.mental", ceilingPath: "mental.ir", thresholdPath: "mental.tt", modifierPath: "mental.trauma", barPath: "mental.relativeStressDamage", overBarPath: "mental.relativeInsanityDamage", oldBarPath: "mental.oldStressBarValue", oldOverBarPath: "mental.oldInsanityBarValue", barModifier: "mentalUp" }
+};
 
-  //Physical Variable Definition
-  const physicalHealthBarContainer = html.querySelector("#physicalHealthBarContainer");
-  const physicalDeathBarContainer = html.querySelector("#physicalDeathBarContainer");
-  const physicalHealthBar = html.querySelector("#physicalHealthBar");
-  const physicalDeathBar = html.querySelector("#physicalDeathBar");
-  const healthBarValue = actorModel.physical.relativePhysicalDamage;
-  const deathBarValue = actorModel.physical.relativeDeathDamage;
-  const oldHealthBarValue = actorModel.physical.oldHealthBarValue ? actorModel.physical.oldHealthBarValue : 0;
-  const oldDeathBarValue = actorModel.physical.oldDeathBarValue ? actorModel.physical.oldDeathBarValue : 0;
-  const currentWounds = actor.system.physical.wounds;
-  const woundThreshold = actor.system.physical.wt;
-  const physicalHealthTarget = "system.health.physical.value";
-  const woundTarget = "system.physical.wounds";
-  const currentPhysicalDamage = actor.system.health.physical.value;
-  const receivePhysicalDamage = html.querySelector("#receivePhysicalDamage");
-  const maxPhysicalHealth = actor.system.health.physical.max + actor.system.health.death.max;
-
-  //Physical Container Definition (Depends on Body type chosen)
-  if (physicalHealthBarContainer) physicalHealthBarContainer.style.width = actorModel.physical.relativeDurabilityContainer + "%";
-  if (physicalDeathBarContainer) physicalDeathBarContainer.style.width = actorModel.physical.relativeDeathContainer + "%";
-
-  //Mental Variable Definition
-  const currentMentalDamage = Number(actor.system.health.mental.value);
-  const receiveMentalDamage = html.querySelector("#receiveMentalDamage");
-  const mentalStressBar = html.querySelector("#mentalStressBar");
-  const mentalInsanityBar = html.querySelector("#mentalInsanityBar");
-  const stressBarValue = actorModel.mental.relativeStressDamage;
-  const insanityBarValue = actorModel.mental.relativeInsanityDamage;
-  const currentTrauma = actor.system.mental.trauma;
-  const traumaThreshold = actor.system.mental.tt;
-  const mentalHealthTarget = "system.health.mental.value";
-  const traumaTarget = "system.mental.trauma";
-  const oldStressBarValue = actorModel.mental.oldStressBarValue ? Number(actorModel.mental.oldStressBarValue) : 0;
-  const oldInsanityBarValue = actorModel.mental.oldInsanityBarValue ? Number(actorModel.mental.oldInsanityBarValue) : 0;
-  const maxMentalHealth = actor.system.health.mental.max + actor.system.health.insanity.max;
-
-  //Physical health bar animation
-  //Physical damage Animation
-  if (barModifier === "physicalUp") {
-    await barUp(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical");
+/**
+ * Puts damage or stress on an actor through the one path every source uses: the amount is held to
+ * what the actor can still take, wounds or traumas follow from the Wound or Trauma Threshold, and
+ * the sheet's bars move from where they stood. Several amounts - the ticks of a dose - are each
+ * measured against the threshold on their own but written at once, so the bars move once. A
+ * status card is posted only when asked for - a source that shows the result on a card of its own
+ * stays quiet, so nothing is announced twice.
+ * @param {Actor} actor - Who takes it
+ * @param {Number|Number[]} amount - The damage or stress, or several amounts in turn
+ * @param {Object} [options] - target: "physical" (damage, the default) or "mental" (stress);
+ *   announce: post the status card
+ * @returns {Promise<Object>} taken and wounds (traumas for stress)
+ */
+export async function applyDamage(actor, amount, { target = "physical", announce = false } = {}) {
+  const config = DAMAGE_CONFIG[target] ?? DAMAGE_CONFIG.physical;
+  const read = path => Number(foundry.utils.getProperty(actor.system, path)) || 0;
+  const current = read(`${config.attribute}.value`);
+  const threshold = read(config.thresholdPath) || 1;
+  let room = read(config.ceilingPath) - current;
+  const pieces = (Array.isArray(amount) ? amount : [amount]).map(piece => Math.max(0, Math.floor(Number(piece) || 0)));
+  let taken = 0;
+  let wounds = 0;
+  for (const piece of pieces) {
+    const part = Math.max(0, Math.min(piece, room));
+    room -= part;
+    taken += part;
+    wounds += Math.floor(part / threshold);
   }
-  //Physical Heal Animation
-  else if (barModifier === "physicalDown") {
-    if (physicalHealthBar) physicalHealthBar.style.width = oldHealthBarValue + "%";
-    if (physicalDeathBar) physicalDeathBar.style.width = oldDeathBarValue + "%";
-    await barDown(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical");
+  if (taken < 1) return { taken: 0, wounds: 0 };
+
+  const currentModifier = read(config.modifierPath);
+  if (pieces.length === 1) {
+    await takeDamage({ value: taken }, current, read(config.barPath), read(config.overBarPath), currentModifier, threshold, `system.${config.attribute}.value`, `system.${config.modifierPath}`, actor, target === "mental" ? "mental" : "physical", read(config.ceilingPath), { announce });
   }
-  //No change/Open sheet
   else {
-    if (physicalHealthBar) physicalHealthBar.style.width = healthBarValue + "%";
-    if (physicalDeathBar) physicalDeathBar.style.width = deathBarValue + "%";
+    await actor.update({
+      [`system.${config.attribute}.value`]: current + taken,
+      [`system.${config.modifierPath}`]: currentModifier + wounds,
+      [`system.${config.oldBarPath}`]: Math.max(1, read(config.barPath)),
+      [`system.${config.oldOverBarPath}`]: read(config.overBarPath),
+      "system.health.barModifier": config.barModifier
+    });
   }
+  return { taken, wounds };
+}
 
-  //Mental health bar animation
-  if (actor.type != "goon") {
-    //Mental damage Animation
-    if (barModifier === "mentalUp") {
-      await barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental");
-    }
-    //Mental Heal Animation
-    else if (barModifier === "mentalDown") {
-      if (mentalStressBar) mentalStressBar.style.width = oldStressBarValue + "%";
-      if (mentalInsanityBar) mentalInsanityBar.style.width = oldInsanityBarValue + "%";
-      await barDown(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental");
-    }
-    //No Change/Open Sheet
-    else {
-      if (mentalStressBar) mentalStressBar.style.width = stressBarValue + "%";
-      if (mentalInsanityBar) mentalInsanityBar.style.width = insanityBarValue + "%";
-    }
-  }
+/**
+ * The line a card shows for damage or stress taken.
+ * @param {Actor} actor - Who took it
+ * @param {Object} result - What applyDamage returned
+ * @param {String} [target] - "physical" or "mental"
+ * @returns {String} The line
+ */
+export function damageLine(actor, { taken, wounds }, target = "physical") {
+  return game.i18n.format(target === "mental" ? "ep2e.chat.damage.appliedMental" : "ep2e.chat.damage.appliedPhysical", { name: actor.name, taken, wounds });
+}
 
-  //Take Physical Damage
-  html.querySelector("#takePhysicalDamage")?.addEventListener("click",
-    takeDamage.bind("physical", receivePhysicalDamage, currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "physical", maxPhysicalHealth)
-  );
-
-  //Take Mental Damage
-  html.querySelector("#takeMentalDamage")?.addEventListener("click",
-    takeDamage.bind("mental", receiveMentalDamage, currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "mental", maxMentalHealth)
-  );
-
-  //Mental Heal Full
-  html.querySelector("#healMentalDamageFull")?.addEventListener("click",
-    healDamage.bind("mentalHeal", currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "full", "mental")
-  );
-
-  //Physical Heal Full
-  html.querySelector("#healPhysicalDamageFull")?.addEventListener("click",
-    healDamage.bind("physicalHeal", currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "full", "physical")
-  );
-
-  //Mental Heal Partial
-  html.querySelector("#healMentalDamagePartial")?.addEventListener("click",
-    healDamage.bind("mentalHeal", currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "partial", "mental")
-  );
-
-  //Physical Heal Partial
-  html.querySelector("#healPhysicalDamagePartial")?.addEventListener("click",
-    healDamage.bind("physicalHeal", currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "partial", "physical")
-  );
+/**
+ * Adds result lines under a damage card already posted, once the damage is on the sheet - after
+ * the dice have shown, so the bars do not give the result away early.
+ * @param {Object} output - What rollToChat returned for the card
+ * @param {String[]} lines - The lines
+ * @returns {Promise<void>} Resolves once the card shows them
+ */
+export async function appendDamageLines(output, lines) {
+  if (!output?.chatMessage || !lines.length) return;
+  await updateCard(output.chatMessage, "damageCard", "applied", { lines });
 }
 
 //Take Damage through character sheet
-export async function takeDamage(receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth) {
+export async function takeDamage(receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth, { announce = true } = {}) {
   let inputValue = Number(receiveDamage?.value) < maxHealth ? Number(receiveDamage?.value) : maxHealth;
   let oldDamageBarTarget = "";
   let oldOverBarTarget = "";
@@ -284,7 +248,7 @@ export async function takeDamage(receiveDamage, currentDamage, bar, overBar, cur
     let newDamage = eval(inputValue + currentDamage) >= maxHealth ? maxHealth : eval(inputValue + currentDamage);
     let newModifier = Math.floor(inputValue / threshold) + currentModifier;
 
-    if (actor.type === "character") {
+    if (announce && actor.type === "character") {
       message.damageValue = inputValue;
       message.modifierValue = Math.floor(inputValue / threshold);
 
@@ -306,406 +270,269 @@ export async function takeDamage(receiveDamage, currentDamage, bar, overBar, cur
   }
 }
 
-//Heal damage through character sheet
-async function healDamage(currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget) {
-  let newDamage = 0;
-  let newModifier = currentModifier;
-  let oldDamageBarTarget = "";
-  let oldOverBarTarget = "";
-  let damageCount = currentDamage;
-  let woundCount = currentModifier;
-  let healFormula;
-  let message = {};
-  const activeMorphType = actor.system.physical.activeMorphType;
-  message.totalDamage = currentDamage + currentModifier;
+// A weapon hit lands on the targets the attacker picks: each defends, and once every defence is in
+// a damage card follows the last of them, offering the damage. One roll counts for every target
+// struck; the active GM puts it on each of them, less the armour it meets, and the same card names
+// what each one took.
 
-  //Dialog args
-  const dialog = "systems/eclipsephase/templates/chat/pop-up.html";
-  const dialogType = "healDamage";
-  let enhancements = {};
-  let enhancementsCount = 0;
-  let hoursPassed = 0;
+export const DAMAGE_READY_TEMPLATE = "systems/eclipsephase/templates/chat/attack-damage-ready.html";
+const ROLLING = new Set();
 
-  for (let enhancement in actor.system.additionalSystems.healing) {
-    enhancements[enhancement] = true;
-    enhancementsCount++;
+registerCard("damageCard", {
+  render: renderDamageCard,
+  mutations: {
+    rolled: (state, { data }) => ({ ...state, data }),
+    applied: (state, { lines }) => ({ ...state, lines })
   }
+});
 
-  const barModifierTarget = "system.health.barModifier";
-  let barModifier = "";
-
-  if (healTarget === "mental") {
-    message.title = "ep2e.roll.announce.heal.full.mindHeal";
-    message.damageType = "ep2e.roll.announce.heal.full.stress";
-    message.modifierType = "ep2e.roll.announce.heal.full.trauma";
-    oldDamageBarTarget = "system.mental.oldStressBarValue";
-    oldOverBarTarget = "system.mental.oldInsanityBarValue";
-    barModifier = "mentalDown";
-  }
-  else if (healTarget === "physical") {
-    switch (activeMorphType) {
-      case "bio":
-        message.title = "ep2e.roll.announce.heal.full.bodyHeal";
-        break;
-      case "synth":
-        message.title = "ep2e.roll.announce.heal.full.bodyRepair";
-        break;
-      case "info":
-        message.title = "ep2e.roll.announce.heal.full.bodyDefrag";
-        break;
-      default:
-        break;
-    }
-    message.damageType = "ep2e.roll.announce.heal.full.damage";
-    message.modifierType = "ep2e.roll.announce.heal.full.wounds";
-    oldDamageBarTarget = "system.physical.oldHealthBarValue";
-    oldOverBarTarget = "system.physical.oldDeathBarValue";
-    barModifier = "physicalDown";
-  }
-
-  if (message.totalDamage > 0) {
-    if (healType === "partial") {
-      healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount, drugHealingAddition(actor));
-
-      if (healFormula.cancelled) {
-        return;
-      }
-
-      let healRoll = [];
-      let repetition = 0;
-
-      if (damageCount > 0 && (healFormula.heal).length > 0) {
-        for (let i = 1; i <= healFormula.duration; i++) {
-          hoursPassed++;
-
-          if (repetition >= (healFormula.heal).length) {
-            hoursPassed--;
-            break;
-          }
-
-          if (damageCount > 0 && healFormula.heal[repetition].cycle === hoursPassed) {
-            let rollFormula = healFormula.heal[repetition].roll;
-
-            let arrayItem = await new Roll(rollFormula).evaluate();
-            healRoll.push(arrayItem);
-
-            damageCount = damageCount - healRoll[repetition]._total > 0 ? damageCount - healRoll[repetition]._total : 0;
-            repetition++;
-          }
-
-          if (damageCount === 0) {
-            break;
-          }
-        }
-      }
-
-      if (hoursPassed > healFormula.duration) {
-        hoursPassed--;
-      }
-
-      if (healTarget === "physical") {
-        message.weeksValue = Math.floor(hoursPassed / 168);
-        message.daysValue = Math.floor((hoursPassed - message.weeksValue * 168) / 24);
-        message.hoursValue = (hoursPassed - message.weeksValue * 168) % 24;
-      }
-      if (healTarget === "mental") {
-        message.weeksValue = Math.floor(hoursPassed / 7);
-        message.daysValue = Math.floor((hoursPassed - message.weeksValue * 7));
-      }
-
-      let rollCount = repetition;
-      let woundHealing = 0;
-      repetition = 0;
-      if ((healFormula.wound).length > 0 && woundCount > 0) {
-        if (healFormula.wound[repetition].cycle + hoursPassed <= healFormula.duration) {
-          for (woundHealing; woundHealing <= healFormula.duration - hoursPassed; woundHealing++) {
-            if (repetition >= (healFormula.wound).length || healFormula.wound[repetition].cycle + hoursPassed > healFormula.duration) {
-              hoursPassed--;
-              break;
-            }
-
-            if (healFormula.wound[repetition].cycle === woundHealing) {
-              woundCount = woundCount - healFormula.wound[repetition].heal > 0 ? woundCount - healFormula.wound[repetition].heal : 0;
-              repetition++;
-            }
-
-            if (woundCount === 0) {
-              break;
-            }
-
-            if (woundCount != 0 && woundHealing === healFormula.duration - hoursPassed && repetition === (healFormula.wound).length) {
-              break;
-            }
-          }
-        }
-      }
-
-      hoursPassed += woundHealing;
-      message.roll = true;
-      message.rollTimes = "ep2e.roll.announce.heal.partial.rollTimes";
-      message.rollLength = rollCount;
-      message.title = "ep2e.roll.announce.heal.partial.rollCopy";
-      message.weeksLabel = "ep2e.roll.announce.heal.partial.weeks";
-      message.daysLabel = "ep2e.roll.announce.heal.partial.days";
-      message.hoursLabel = "ep2e.roll.announce.heal.partial.hours";
-      message.rollTitle = "ep2e.roll.announce.total";
-
-      if (healRoll.length > 0) {
-        if (healRoll.length === 1) {
-          await rollToChat(null, message, DAMAGE_STATUS_OUTPUT, healRoll[0], actor.name, game.user._id, false, "rollOutput");
-        }
-        else {
-          await rollToChat(null, message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput");
-        }
-      }
-
-      newDamage = damageCount;
-      newModifier = woundCount;
-
-      if (healTarget === "physical") {
-        message.weeksValue = Math.floor(hoursPassed / 168);
-        message.daysValue = Math.floor((hoursPassed - message.weeksValue * 168) / 24);
-        message.hoursValue = (hoursPassed - message.weeksValue * 168) % 24;
-      }
-      else {
-        message.weeksValue = Math.floor(hoursPassed / 7);
-        message.daysValue = Math.floor((hoursPassed - message.weeksValue * 7));
-        message.hoursValue = false;
-      }
-
-      message.damageValue = newDamage > 0 ? currentDamage - damageCount : currentDamage;
-      message.modifierValue = newModifier > 0 ? currentModifier - woundCount : currentModifier;
-    }
-    else if (healType === "full") {
-      newModifier = 0;
-
-      message.damageValue = currentDamage;
-      message.modifierValue = currentModifier;
-    }
-
-    message.roll = false;
-    if (message.weeksValue || message.daysValue || message.hoursValue) {
-      message.timeframe = true;
-      message.timeframeLabel = "ep2e.roll.announce.heal.partial.timeframeLabel";
-    }
-  }
-  else {
-    message.title = "ep2e.roll.announce.heal.partial.fullCopy";
-  }
-
-  if (currentDamage === damageCount && currentModifier === woundCount && message.totalDamage > 0 && healType != "full") {
-    message.title = "ep2e.roll.announce.heal.partial.notEnoughTime";
-    message.subheader = "ep2e.roll.announce.heal.partial.minimumTimeframe";
-    let hoursPassedHealth = healFormula.minimumHealingCycles.health;
-    let hoursPassedWounds = healFormula.minimumHealingCycles.modifier;
-    if (healTarget === "physical") {
-      message.weeksValueHealth = Math.floor(hoursPassedHealth / 168);
-      message.daysValueHealth = Math.floor((hoursPassedHealth - message.weeksValueHealth * 168) / 24);
-      message.hoursValueHealth = (hoursPassedHealth - message.weeksValueHealth * 168) % 24;
-      message.weeksValueWounds = Math.floor(hoursPassedWounds / 168);
-      message.daysValueWounds = Math.floor((hoursPassedWounds - message.weeksValueWounds * 168) / 24);
-      message.hoursValueWounds = (hoursPassedWounds - message.weeksValueWounds * 168) % 24;
-    }
-    else {
-      message.weeksValueHealth = Math.floor(hoursPassedHealth / 7);
-      message.daysValueHealth = Math.floor((hoursPassedHealth - message.weeksValueHealth * 7));
-      message.hoursValueHealth = false;
-      message.weeksValueWounds = Math.floor(hoursPassedWounds / 7);
-      message.daysValueWounds = Math.floor((hoursPassedWounds - message.weeksValueWounds * 7));
-      message.hoursValueWounds = false;
-    }
-    message.noTime = true;
-    message.totalDamage = 0;
-  }
-
-  if (actor.type === "character") {
-    let html = await foundry.applications.handlebars.renderTemplate(DAMAGE_STATUS_OUTPUT, message);
-
-    ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor }),
-      flavor: html
-    });
-  }
-  else if (actor.type != "character") {
-    let html = await foundry.applications.handlebars.renderTemplate(DAMAGE_STATUS_OUTPUT, message);
-
-    ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor }),
-      flavor: html,
-      whisper: ChatMessage.getWhisperRecipients("GM")
-    });
-  }
-
-  return actor.update({
-    [damageTarget]: newDamage,
-    [modifierTarget]: newModifier,
-    [oldDamageBarTarget]: bar,
-    [oldOverBarTarget]: overBar,
-    [barModifierTarget]: barModifier
+/**
+ * Draws a damage card: before the roll, the targets' outcomes and the button to roll; after it,
+ * the roll and what each target took.
+ * @param {Object} state - The card's damageCard flag
+ * @returns {Promise<String>} The markup
+ */
+export function renderDamageCard(state) {
+  if (state.data) return foundry.applications.handlebars.renderTemplate(WEAPON_DAMAGE_OUTPUT, { ...state.data, appliedLines: state.lines ?? [] });
+  return foundry.applications.handlebars.renderTemplate(DAMAGE_READY_TEMPLATE, {
+    headline: game.i18n.format("ep2e.chat.attack.damageReady", { weapon: state.weaponName }),
+    actorUuid: state.actorUuid,
+    targets: (state.targets ?? []).map(target => ({ ...target, outcomeLabel: outcomeLabel(target.outcome) }))
   });
 }
 
-//Bar animation
-//Animate bar going up (e.g. taking damage)
-async function barUp(bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType) {
-  if (!bar || !overBar) return actor.update({ ["system.health.barModifier"]: "none" });
-
-  for (let i = oldBarValue; i <= barValue; i++) {
-    await new Promise(resolve => setTimeout(resolve, 7));
-    bar.style.width = i + "%";
-  }
-  for (let i = oldOverBarValue; i <= overBarValue; i++) {
-    await new Promise(resolve => setTimeout(resolve, 7));
-    overBar.style.width = i + "%";
-  }
-  await new Promise(resolve => setTimeout(resolve, 10));
-  return actor.update({ ["system.health.barModifier"]: "none" });
-}
-
-//Animate bar going down (e.g. healing)
-async function barDown(bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType) {
-  if (!bar || !overBar) return actor.update({ "system.health.barModifier": "none" });
-
-  for (let i = oldOverBarValue; i >= overBarValue; i--) {
-    await new Promise(resolve => setTimeout(resolve, 7));
-    overBar.style.width = i + "%";
-  }
-  for (let i = oldBarValue; i >= barValue; i--) {
-    await new Promise(resolve => setTimeout(resolve, 7));
-    bar.style.width = i + "%";
-  }
-  await new Promise(resolve => setTimeout(resolve, 10));
-  return actor.update({ "system.health.barModifier": "none" });
-}
-
-//Special Dialogs
-
-async function healingDialog(dialog, type, dialogType, enhancements, enhancementsCount, presetAddition = "") {
-  const dialogName = game.i18n.localize("ep2e.skills.pool.dialogHeadline");
-  const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
-  const confirmButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
-
-  const content = await foundry.applications.handlebars.renderTemplate(dialog, {
-    type,
-    dialogType,
-    enhancements,
-    enhancementsCount,
-    presetAddition
-  });
-
-  const result = await foundry.applications.api.DialogV2.wait({
-    window: { title: dialogName },
-    classes: ["ep2e-primary-right"],
-    content,
-    buttons: [
-      {
-        action: "confirm",
-        label: confirmButton,
-        default: true,
-        callback: (event, button) => {
-          return _healingResult(button.form, enhancements, type);
-        }
-      },
-      {
-        action: "cancel",
-        label: cancelButton,
-        callback: () => ({ cancelled: true })
-      }
-    ],
-    position: { width: 315 },
-    modal: true,
-    rejectClose: false
-  });
-
-  return result ?? { cancelled: true };
-}
-
-//Healing configurator
-function _healingResult(form, enhancements, type) {
-  let addition;
-  let durationMultiplier = form.durationMultiplier.value ? form.durationMultiplier.value : 1;
-  let duration;
-  let circumstances;
-  let healingBasis;
-  let healingAddition;
-  let healCycle = [];
-  let woundCycle = [];
-
-  if (type === "physical") {
-    addition = form.addition.value;
-    duration = form.duration.value === "weeks" ? durationMultiplier * 168 : form.duration.value === "days" ? durationMultiplier * 24 : durationMultiplier * 1;
-    circumstances = form.circumstances.value === "harsh" ? 3 : form.circumstances.value === "poor" ? 2 : 1;
-    healingBasis = enhancements.medichines === true ? { "dice": "1d10", "timeframe": 1 * circumstances, "woundCycle": 24 * circumstances } : enhancements.biomods === true ? { "dice": "1d10", "timeframe": 12 * circumstances, "woundCycle": 72 * circumstances } : { "dice": "1d10", "timeframe": 24 * circumstances, "woundCycle": 168 * circumstances };
-    healingAddition = addition === "tank" ? { "dice": "2d10", "timeframe": 1, "woundCycle": 2, "limit": false } : addition === "spray" ? { "dice": "1d10", "timeframe": 1, "woundCycle": false, "limit": 12 } : addition === "fixers" ? { "dice": "1d10", "timeframe": 1, "woundCycle": 24, "limit": 140 } : addition === "meds" ? { "dice": "1d10", "timeframe": 1, "woundCycle": 24, "limit": 24 } : false;
-    let limit = healingAddition.limit ? healingAddition.limit : duration;
-
-    for (let arrayConstructor = 0; arrayConstructor <= duration + 1; arrayConstructor++) {
-      if (arrayConstructor > 0) {
-        if (healingAddition && Number.isInteger(arrayConstructor / healingBasis.timeframe) && arrayConstructor <= limit) {
-          healCycle.push({ "cycle": arrayConstructor, "roll": healingBasis.dice + " + " + healingAddition.dice });
-        }
-        else if (healingAddition && !Number.isInteger(arrayConstructor / healingBasis.timeframe) && arrayConstructor <= limit) {
-          healCycle.push({ "cycle": arrayConstructor, "roll": healingAddition.dice });
-        }
-        else if (Number.isInteger(arrayConstructor / healingBasis.timeframe)) {
-          healCycle.push({ "cycle": arrayConstructor, "roll": healingBasis.dice });
-        }
-
-        if (healingAddition && Number.isInteger(arrayConstructor / healingAddition.woundCycle) && Number.isInteger(arrayConstructor / healingBasis.woundCycle) && arrayConstructor <= limit) {
-          woundCycle.push({ "cycle": arrayConstructor, "heal": 2, "limit": limit });
-        }
-        else if (healingAddition && Number.isInteger(arrayConstructor / healingAddition.woundCycle) && arrayConstructor <= limit) {
-          woundCycle.push({ "cycle": arrayConstructor, "heal": 1, "limit": limit });
-        }
-        else if (Number.isInteger(arrayConstructor / healingBasis.woundCycle)) {
-          woundCycle.push({ "cycle": arrayConstructor, "heal": 1, "limit": false });
-        }
-      }
+/**
+ * The attack a weapon roll carries: a weapon that deals damage, fires no chemicals and is not used
+ * for a touch only. Ranged weapons pick with the crosshair, melee weapons with the slash. A cone
+ * strikes as an area; a cone or a burst at several targets takes targets within a meter of each
+ * other.
+ * @param {Object} context - The roll context at preRoll
+ * @returns {Object|null} The attack's data, or null when the roll is no such attack
+ */
+export function detectWeaponAttack(context) {
+  if (context.rolledFrom !== "rangedWeapon" && context.rolledFrom !== "ccWeapon") return null;
+  const selected = context.weapon;
+  if (!selected?.weapon || chemicalDoses(selected.weaponTraits)) return null;
+  if (selected.weaponTraits?.automatedEffects?.noDamage || isChecked(context.options?.touchOnly)) return null;
+  const targets = context.rolledFrom === "rangedWeapon" ? attackTargetCount(selected.weapon, context.options ?? {}) : 1;
+  return {
+    targets,
+    area: isConeWeapon(selected.weapon),
+    within: targets > 1 ? 1 : null,
+    labelKey: "ep2e.chat.attack.chooseTarget",
+    cursor: context.rolledFrom === "ccWeapon" ? MELEE_CURSOR : {},
+    payload: {
+      armorUsed: attackArmorUsed(selected.weapon, selected.weaponMode || "1"),
+      armorPiercing: !!selected.weaponTraits?.additionalEffects?.armorPiercing?.value
     }
+  };
+}
 
-    let minimumHealingCycles = {};
-    minimumHealingCycles.health = healingAddition ? healingAddition.timeframe < healingBasis.timeframe ? healingAddition.timeframe : healingBasis.timeframe : healingBasis.timeframe;
-    minimumHealingCycles.modifier = healingAddition ? healingAddition.woundCycle < healingBasis.woundCycle ? healingAddition.woundCycle : healingBasis.woundCycle : healingBasis.woundCycle;
+/**
+ * Notes a target's defence on the attack card, where the card may be changed and otherwise by the
+ * active GM.
+ * @param {Object} attack - The attack
+ * @param {Actor} target - The target
+ * @param {String} outcome - "hit", "half" or "none"
+ * @param {Object} [options] - kind: "dodge" or "parry"
+ * @returns {Promise<*>} What settling reported, or null when it was sent on
+ */
+function noteDefence(attack, target, outcome, { kind = "dodge" } = {}) {
+  const card = game.messages.get(attack.messageId);
+  if (!card) return null;
+  return runOrRelay(card, "noteAttackDefence", () => settleAttackDefence(card, target.uuid, outcome, kind), { payload: { messageId: card.id, uuid: target.uuid, outcome, kind } });
+}
 
-    return {
-      duration: duration,
-      heal: healCycle,
-      wound: woundCycle,
-      minimumHealingCycles: minimumHealingCycles
-    };
-  }
+/**
+ * Notes a defence on the attack card, and once every target has defended and one was struck,
+ * posts the damage card after them. Defences settled together are noted one after another, so
+ * the card is posted once.
+ * @param {ChatMessage} card - The attack card
+ * @param {String} uuid - The target
+ * @param {String} outcome - "hit", "half" or "none"
+ * @param {String} [kind] - "dodge" or "parry"
+ * @returns {Promise<ChatMessage|null>} The damage card, once posted
+ */
+export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
+  const settle = async () => {
+    await updateCard(card, "taskCard", "defence", { uuid, outcome, kind });
+    const state = card.getFlag("eclipsephase", "taskCard");
+    if (!damageReady(state)) return null;
+    await updateCard(card, "taskCard", "damageOffered");
+    return postDamageCard(card, state.targets);
+  };
+  return inOrder(`settle:${card.id}`, settle);
+}
 
-  if (type === "mental") {
-    addition = form.addition.checked;
-    duration = form.duration.value === "weeks" ? durationMultiplier * 7 : durationMultiplier * 1;
+/**
+ * Posts an attack's damage card, seen as the attack card was and by the targets' owners.
+ * @param {ChatMessage} card - The attack card
+ * @param {Object[]} targets - { uuid, name, outcome } each
+ * @returns {Promise<ChatMessage>} The damage card
+ */
+async function postDamageCard(card, targets) {
+  const context = card.getFlag("eclipsephase", "roll");
+  const actors = (await Promise.all(targets.map(target => fromUuid(target.uuid)))).filter(Boolean);
+  const { whisper, blind } = followUpVisibility(card, actors);
+  const state = { attackMessageId: card.id, actorUuid: context.actorUuid, weaponName: context.targetedAttack.weaponName, targets, data: null, lines: [] };
+  return ChatMessage.create({
+    speaker: card.speaker,
+    content: await renderCard("damageCard", state),
+    whisper: whisper.length ? whisper : null,
+    blind,
+    flags: { eclipsephase: { damageCard: state } }
+  });
+}
 
-    for (let arrayConstructor = 0; arrayConstructor <= duration + 1; arrayConstructor++) {
-      if (arrayConstructor > 0) {
-        if (addition) {
-          healCycle.push({ "cycle": arrayConstructor, "roll": "1d6" });
-        }
-        else if (Number.isInteger(arrayConstructor / 7) && !addition) {
-          healCycle.push({ "cycle": arrayConstructor, "roll": "1d6" });
-        }
+/**
+ * What one target takes of an attack's damage: half of it when they only partly dodged, less the
+ * armour it meets - halved by armour piercing. Halves round up.
+ * @param {Number} total - The damage rolled
+ * @param {String} outcome - "hit" or "half"
+ * @param {Number} armor - The target's armour value against it
+ * @param {Boolean} [armorPiercing] - The attack pierces armour
+ * @returns {Object} share (before armour), armor (as counted) and dealt
+ */
+export function damageAgainst(total, outcome, armor, armorPiercing = false) {
+  const share = outcome === "half" ? Math.ceil(total / 2) : total;
+  const counted = armorPiercing ? Math.ceil(armor / 2) : armor;
+  return { share, armor: counted, dealt: Math.max(0, share - counted) };
+}
 
-        if (Number.isInteger(arrayConstructor / 7) && addition) {
-          woundCycle.push({ "cycle": arrayConstructor, "heal": 1, "limit": false });
-        }
-        else if (Number.isInteger(arrayConstructor / 30) && addition) {
-          woundCycle.push({ "cycle": arrayConstructor, "heal": 1, "limit": false });
-        }
-      }
+/**
+ * The armour an actor has against a kind of damage.
+ * @param {Actor} actor - The target
+ * @param {String} armorUsed - "energy", "kinetic" or "none"
+ * @returns {Number} The armour value
+ */
+export function armorAgainst(actor, armorUsed) {
+  if (armorUsed === "energy") return Number(actor.system?.physical?.energyArmorTotal) || 0;
+  if (armorUsed === "kinetic") return Number(actor.system?.physical?.kineticArmorTotal) || 0;
+  return 0;
+}
+
+/**
+ * What the damage card shows for one target. A target that got away is named as such for
+ * everyone; for one that was struck, the target's owners and the GMs see the reckoning, everyone
+ * else only whether damage got through.
+ * @param {Object} target - uuid, name, outcome and kind ("dodge" or "parry")
+ * @param {Object} [result] - What damageAgainst and applyDamage reported, with armorUsed
+ * @returns {String|Object} The line, or uuid, detail and summary for a target that was struck
+ */
+export function attackDamageLine(target, result) {
+  if (target.outcome === "none") return game.i18n.format(target.kind === "parry" ? "ep2e.chat.damage.attackParried" : "ep2e.chat.damage.attackMissed", { name: target.name });
+  const key = target.outcome === "half" ? "ep2e.chat.damage.attackHalf" : "ep2e.chat.damage.attackHit";
+  const summary = game.i18n.format(result.taken > 0 ? "ep2e.chat.damage.attackTookDamage" : "ep2e.chat.damage.attackSoaked", { name: target.name });
+  return { uuid: target.uuid, summary, detail: reckoning(key, target, result) };
+}
+
+/**
+ * The reckoning of what a struck target took, as markup: what got through and the wounds stand out.
+ * @param {String} key - The line's localization key
+ * @param {Object} target - name
+ * @param {Object} result - share, armor, armorUsed, taken and wounds
+ * @returns {String} The line
+ */
+function reckoning(key, target, result) {
+  return game.i18n.format(key, {
+    name: escapeText(target.name),
+    share: result.share,
+    armor: result.armor,
+    armorType: escapeText(game.i18n.localize(`ep2e.item.weapon.table.armorUsed.${result.armorUsed}`)),
+    damage: highlighted("ep2e.chat.damage.amountDamage", result.taken),
+    woundsTaken: highlighted("ep2e.chat.damage.amountWounds", result.wounds)
+  });
+}
+
+/**
+ * An amount in a damage reckoning, as markup that stands out: the number in bold, number and word
+ * in the text colour.
+ * @param {String} key - The amount's localization key, with {value}
+ * @param {Number} value - The amount
+ * @returns {String} The markup
+ */
+function highlighted(key, value) {
+  const amount = game.i18n.format(key, { value: `<b>${Number(value) || 0}</b>` });
+  return `<span class="ep-damage-value">${amount}</span>`;
+}
+
+/**
+ * Puts an attack's damage on every target its card names, as the active GM: each takes its share
+ * less its armour, and the damage card lists what each one took.
+ * @param {Object} request - cardId (the damage card), total, armorUsed, armorPiercing and targets
+ *   ({ uuid, name, outcome } each)
+ * @returns {Promise<Array<String|Object>>} The lines written onto the card
+ */
+export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, targets }) {
+  const lines = [];
+  for (const target of targets) {
+    if (target.outcome === "none") {
+      lines.push(attackDamageLine(target));
+      continue;
     }
-
-    let minimumHealingCycles = {};
-    minimumHealingCycles.health = addition ? 1 : 7;
-    minimumHealingCycles.modifier = addition ? 7 : 30;
-
-    return {
-      duration: duration,
-      heal: healCycle,
-      wound: woundCycle,
-      minimumHealingCycles: minimumHealingCycles
-    };
+    const actor = await fromUuid(target.uuid);
+    if (!actor) continue;
+    const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing);
+    const result = await applyDamage(actor, against.dealt);
+    lines.push(attackDamageLine({ ...target, name: actor.name }, { ...against, ...result, armorUsed }));
   }
+  const card = game.messages.get(cardId);
+  if (card) await updateCard(card, "damageCard", "applied", { lines });
+  return lines;
+}
+
+/**
+ * Rolls an attack's damage from its damage card: one roll for every target struck. The card turns
+ * into the roll, and the active GM puts the damage on the targets.
+ * @param {ChatMessage} card - The damage card
+ * @returns {Promise<Number|null>} The damage rolled, or null when nothing was rolled
+ */
+export async function rollAttackDamage(card) {
+  const state = card?.getFlag?.("eclipsephase", "damageCard");
+  const attackCard = state ? game.messages.get(state.attackMessageId) : null;
+  const context = attackCard?.getFlag?.("eclipsephase", "roll");
+  const attack = context?.targetedAttack;
+  if (!state || state.data || !attack || ROLLING.has(card.id)) return null;
+  const attacker = await fromUuid(context.actorUuid);
+  if (!attacker?.isOwner) return null;
+
+  ROLLING.add(card.id);
+  try {
+    const damage = await weaponDamage({ ...foundry.utils.deepClone(context), messageId: attackCard.id }, spentOrOriginalResult(context));
+    if (!damage?.roll) return null;
+    const shown = await rollToChat({ preventPrintToChat: true }, damage.message, WEAPON_DAMAGE_OUTPUT, damage.roll, damage.actor.name, card.whisper ?? [], card.blind === true, "rollOutput");
+    await updateCard(card, "damageCard", "rolled", { data: storable(shown) });
+
+    const total = Number(shown.total) || 0;
+    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, targets: state.targets };
+    if (game.user.isGM) await applyAttackDamage(request);
+    else relayToActiveGM("applyAttackDamage", request);
+    return total;
+  } finally {
+    ROLLING.delete(card.id);
+  }
+}
+
+/**
+ * Lets weapon attacks land on targets through the "damage" attack effect. Registered after the
+ * dose effect, so a chemical weapon's hit stays a dose.
+ * @returns {void}
+ */
+export function registerWeaponAttacks() {
+  registerAttackEffect("damage", {
+    detect: detectWeaponAttack,
+    resolve: noteDefence
+  });
+}
+
+/**
+ * Registers the socket actions the active GM notes defences on attack cards and puts an attack's
+ * damage on its targets under.
+ * @returns {void}
+ */
+export function registerWeaponAttackSocket() {
+  registerSocketActions({
+    applyAttackDamage: payload => applyAttackDamage(payload),
+    noteAttackDefence: payload => settleAttackDefence(game.messages.get(payload.messageId), payload.uuid, payload.outcome, payload.kind)
+  });
 }

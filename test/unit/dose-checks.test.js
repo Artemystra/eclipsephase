@@ -221,6 +221,18 @@ describe("a check whose failure harms the body", () => {
     expect(actor.system.health.mental.value ?? 0).toEqual(0);
   });
 
+  test("the damage card itself says what was taken, and no second card repeats it", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+
+    seedRolls([95, 7]);
+    await requestUseCheck(checkCard().id, SKIP_DIALOG);
+    await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.damage.appliedPhysical")));
+
+    expect(createdMessages.filter(message => message.content?.includes("ep2e.chat.damage.appliedPhysical"))).toHaveLength(1);
+    expect(createdMessages.some(message => message.flavor?.includes("ep2e.roll.announce.combat.damage"))).toBe(false);
+  });
+
   test("with pool left, nothing is rolled until the card's button is pressed", async () => {
     const actor = carrying("Caustic", CAUSTIC);
     await takeDose(actor, actor.items.get("drug1"));

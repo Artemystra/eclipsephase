@@ -7,8 +7,9 @@ import { strainSubstrate } from "../../common/body-markers.js";
 import { forceDose, takeDose } from "../../common/doses.js";
 import { owningActor } from "../../common/pool-rule.js";
 import { durationRunOut } from "../../common/time.js";
-import { applyTargetedAttack } from "../../rolls/targeted-attacks.js";
+import { applyTargetedAttack } from "../../rolls/attacks.js";
 import { registerChatCardBatch } from "./chat-cards.js";
+import { registerHealthBatch } from "./health.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
@@ -66,6 +67,7 @@ function skipDialogOptions(overrides = {}) {
 
 Hooks.on("quenchReady", quench => {
   registerChatCardBatch(quench);
+  registerHealthBatch(quench);
 
   quench.registerBatch("eclipsephase.core.actors", context => {
     const { describe, it, assert } = context;

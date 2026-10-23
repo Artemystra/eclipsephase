@@ -1,7 +1,9 @@
 import { RollCheck } from "../../rolls/dice.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import { takeDose, offerDose, claimDose, requestUseCheck, rollWearOffStress, demandWillpower, requestAddictionCheck } from "../../common/doses.js";
-import { postDefenceCards, rollRemainingDefences } from "../../rolls/targeted-attacks.js";
+import { postDefenceCards, rollRemainingDefences, applyTargetedAttack, rollDefence } from "../../rolls/attacks.js";
+import { rollAttackDamage } from "../../rolls/damage.js";
+import { weaponPreparation } from "../../common/weapon-functions.js";
 import { withTempActor, seedDice, restoreDice, uniformForFace, waitUntil, suppressDice3d, restoreDice3d } from "./helpers.js";
 
 // Every chat card that changes after it is posted, driven once through its change in a live world:
@@ -212,6 +214,39 @@ export function registerChatCardBatch(quench) {
           assert.deepInclude(shape, { root: true, icon: true, stray: 0, primaryLast: true });
           assert.deepEqual(after.getFlag("eclipsephase", "attackDefence").entries.map(entry => entry.outcome), ["hit", "hit"]);
           assert.strictEqual(cardShape(after).buttons, 0);
+          return after;
+        })));
+      });
+
+      it("a weapon attack's damage card follows the defence and turns into the roll, naming what the target took", async function () {
+        this.timeout(30000);
+        const pistol = { name: "Quench Pistol", type: "rangedWeapon", system: { active: true, ammoType: "kinetic", ammoMin: 10, ammoMax: 10, mode1: { d10: 2, d6: 0, bonus: 2, armorused: "kinetic" } } };
+        const vest = { name: "Quench Vest", type: "armor", system: { energy: 2, kinetic: 3 } };
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Shooter", system: { skillsVig: { guns: { value: 60 } } }, items: [pistol] }, shooter => withTempActor({ type: "npc", name: "Quench Mark", items: [vest] }, async mark => {
+          await waitUntil(() => shooter.getFlag("eclipsephase", "defaultMorphAdded"));
+          const weapon = await weaponPreparation(shooter, "guns", "rangedWeapon", shooter.items.find(item => item.name === "Quench Pistol").id);
+          seedDice([uniformForFace(30, 100)]);
+          await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, shooter.system, shooter, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "single" } }, weapon, "rangedWeapon");
+          const card = newestWith("taskCard");
+          await applyTargetedAttack(card, { pick: async () => [{ actor: mark }], confirm: async () => true });
+          const defence = newestWith("attackDefence");
+
+          seedDice([uniformForFace(95, 100)]);
+          await rollDefence(defence, mark.uuid, "dodge", { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, rangedFray: true, behindCover: false } });
+          await waitUntil(() => newestWith("damageCard"), 8000);
+          const damage = newestWith("damageCard");
+          const shape = cardShape(damage);
+          restoreDice();
+          await rollAttackDamage(damage);
+          await waitUntil(() => game.messages.get(damage.id).getFlag("eclipsephase", "damageCard").lines.length, 8000);
+
+          const after = game.messages.get(damage.id);
+          const state = after.getFlag("eclipsephase", "damageCard");
+          assert.deepInclude(shape, { root: true, icon: true, buttons: 1, stray: 0, primaryLast: true });
+          assert.strictEqual(mark.system.health.physical.value, Math.max(0, state.data.total - 3));
+          assert.include(after.content, "ep-damage-applied");
+          assert.strictEqual(cardShape(after).buttons, 0);
+          assert.isTrue(cardShape(after).root);
           return after;
         })));
       });

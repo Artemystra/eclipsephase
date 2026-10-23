@@ -1399,7 +1399,8 @@
         "button": {
           "roll": "Roll",
           "cancel": "Cancel",
-          "useSelection": "Use this Selection"
+          "useSelection": "Use this Selection",
+          "rollWithoutTargets": "Tirar sin objetivos"
         },
         "reputationMode": {
           "headline": "Mode",
@@ -1426,11 +1427,13 @@
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
-              "burst": "Narrow Burst (+1d10)",
-              "fullAuto": "Narrow Full Auto (+2d10)",
-              "wBurst": "Wide Burst (+10 Hit)",
-              "wFullAuto": "Wide Full Auto (+30 Hit)",
-              "suppressive": "Suppressive (uses 20 rounds)"
+              "burst": "Burst: +1d10 DV",
+              "fullAuto": "Full auto: +2d10 DV",
+              "wBurst": "Burst: +10 to hit",
+              "wFullAuto": "Full auto: +30 to hit",
+              "suppressive": "Suppressive fire (20 rounds)",
+              "burstTargets": "Ráfaga: dos objetivos",
+              "fullAutoTargets": "Automático: tres objetivos"
             },
             "aim": {
               "label": "Aim",
@@ -1454,7 +1457,8 @@
               "major": "Major (-30)",
               "blind": "Blind (-30+)",
               "indirect": "Indirect (-20)"
-            }
+            },
+            "pickTargets": "Elegir objetivos"
           },
           "defender": {
             "isProne": "Is Prone (-10 if at range)",
@@ -1538,7 +1542,8 @@
           "exoticMorphology": "Exotic Morphology"
         },
         "augmentations": "Aumentos",
-        "dodgeCoverLabel": "Esquivar tras cobertura"
+        "dodgeCoverLabel": "Esquivar tras cobertura",
+        "fullDefenseLabel": "Defensa total (+30)"
       },
       "successType": {
         "success": "Success",
@@ -1734,7 +1739,8 @@
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
             "fray": "Fray Ranged"
-          }
+          },
+          "fullDefense": "Defensa total"
         }
       },
       "psi": {
@@ -1897,7 +1903,11 @@
       "attack": {
         "applyDose": "Aplicar dosis a los objetivos seleccionados",
         "applyTargets": "Aplicar a los objetivos seleccionados",
-        "targets": "Objetivos: {names}"
+        "targets": "Objetivos: {names}",
+        "chooseTarget": "Elegir objetivo",
+        "rollDamage": "Tirar daño",
+        "damageWithoutTarget": "Daño sin objetivo",
+        "damageReady": "Daño de {weapon}"
       },
       "defence": {
         "headline": "Defenderse de {weapon}",
@@ -1909,12 +1919,25 @@
           "hit": "Impacto",
           "half": "Esquivado en parte: media dosis",
           "none": "Evitado"
-        }
+        },
+        "severalTargets": "Varios objetivos"
       },
       "poolSpent": {
         "swapped": "{name} gastó un punto de {pool} para intercambiar los dados",
         "upgraded": "{name} gastó un punto de {pool} para mejorar el resultado",
         "mitigated": "{name} gastó un punto de {pool} para suavizar el fallo"
+      },
+      "damage": {
+        "appliedPhysical": "{name} recibe {taken} de daño y {wounds} heridas",
+        "appliedMental": "{name} recibe {taken} de estrés y {wounds} traumas",
+        "attackHit": "{name}: {share} - {armor} de blindaje ({armorType}) = {damage}, {woundsTaken}",
+        "attackHalf": "{name} (mitad): {share} - {armor} de blindaje ({armorType}) = {damage}, {woundsTaken}",
+        "attackMissed": "{name} no fue alcanzado",
+        "attackParried": "{name} paró el ataque",
+        "attackTookDamage": "{name} fue alcanzado y sufrió daño",
+        "attackSoaked": "{name} fue alcanzado, pero el blindaje absorbió todo el daño",
+        "amountDamage": "{value} de daño",
+        "amountWounds": "{value} heridas"
       }
     },
     "rule": {
@@ -2139,7 +2162,10 @@
       "remaining": "Quedan {count} objetivos",
       "limitReached": "Se ha alcanzado el máximo de {max} objetivos. Vuelve a hacer clic en un objetivo marcado para desmarcarlo.",
       "selectTarget": "Elegir objetivo",
-      "targetChosen": "Objetivo elegido"
+      "targetChosen": "Objetivo elegido",
+      "tooFar": "Los demás objetivos deben estar a {within} m como mucho de uno marcado.",
+      "marked": "{count} objetivos marcados",
+      "tooFew": "Elige al menos {min} objetivos."
     }
   }
 }

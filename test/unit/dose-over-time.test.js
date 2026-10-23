@@ -130,9 +130,8 @@ describe("damage every tick", () => {
 
   test("each tick goes against the Wound Threshold on its own, not as one sum", async () => {
     const actor = exposed({ damage: { d10: 2, d6: 0, bonus: 10 }, ticks: 3 }, { value: 1, units: "hours" });
+    await actor.items.get("morph1").update({ "system.dur": 100 });
     const dose = await dosed(actor);
-    const dealt = [];
-    actor.modifyTokenAttribute = async (attribute, value) => dealt.push([attribute, value]);
     const RealRoll = global.Roll;
     global.Roll = class extends RealRoll {
       async evaluate() {
@@ -148,7 +147,9 @@ describe("damage every tick", () => {
       global.Roll = RealRoll;
     }
 
-    expect(dealt).toEqual([["health.physical", 13], ["health.physical", 17], ["health.physical", 21]]);
+    expect(actor.system.health.physical.value).toBe(51);
+    expect(actor.system.physical.wounds).toBe(1);
+    expect(global.__ep.createdMessages.filter(message => message.flavor?.includes("ep2e.roll.announce.combat.damage")).length).toBe(0);
   });
 
   test("a tick is dealt once, however often the dose is settled", async () => {

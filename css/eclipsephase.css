@@ -842,6 +842,11 @@ dialog.dialog::backdrop {
   flex-direction: row-reverse;
 }
 
+/* Every dialog's primary action sits on the right and keeps the default look; the others are secondary. */
+.ep2e-primary-right .form-footer button:not(:first-child) {
+  background-color: var(--mainBackground);
+}
+
 #sidebar {
   background-color: rgba(0,0,0,0.5)!important;
   backdrop-filter: blur(6px);
@@ -4161,7 +4166,8 @@ li:has(.ep-system-notice) .message-header {
    its own cursor class instead, as an offered dose does with its syringe. */
 /* Notes a roll card shows once something happened on it: a pool point spent, the targets picked. */
 .ep-pool-spent,
-.ep-attack-targets {
+.ep-attack-targets,
+.ep-damage-applied {
   min-width: 100%;
   margin: 0 0 20px 0;
   padding: 0 5px;
@@ -4169,6 +4175,22 @@ li:has(.ep-system-notice) .message-header {
   font-size: 12px;
   color: var(--inactive);
   text-align: center;
+}
+
+/* The targets line keeps clear of the roll result above it. */
+.ep-attack-targets {
+  margin-top: 10px;
+}
+
+/* What got through and the wounds stand out in a damage reckoning. */
+.ep-damage-value {
+  color: var(--mainText);
+}
+
+/* The damage lines keep clear of the roll result above them. */
+.ep-damage-lines {
+  min-width: 100%;
+  margin-top: 10px;
 }
 
 /* The text that follows the picking cursor: what is left to pick below it, how to confirm above it. */

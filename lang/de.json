@@ -1429,7 +1429,8 @@
           "roll": "Würfeln",
           "cancel": "Abbrechen",
           "useSelection": "Auswahl bestätigen",
-          "withoutWeapon": "Wurf ohne Waffe"
+          "withoutWeapon": "Wurf ohne Waffe",
+          "rollWithoutTargets": "Ohne Ziel würfeln"
         },
         "reputationMode": {
           "headline": "Reputationsmod",
@@ -1461,11 +1462,13 @@
             "fireMode": {
               "label": "Feuermodus",
               "single": "Einzelschuss",
-              "burst": "Enge Salve (+1d10)",
-              "fullAuto": "Fokussiert und Vollautomatisch (+2d10)",
-              "wBurst": "Weite Salve (+10 Hit)",
-              "wFullAuto": "Vollautomatischer Streuschuss (+30 Hit)",
-              "suppressive": "Niederhalten (verbraucht 20 Schuss)"
+              "burst": "Salve: +1d10 SW",
+              "fullAuto": "Vollautomatisch: +2d10 SW",
+              "wBurst": "Salve: +10 Treffen",
+              "wFullAuto": "Vollautomatisch: +30 Treffen",
+              "suppressive": "Niederhalten (20 Schuss)",
+              "burstTargets": "Salve: zwei Ziele",
+              "fullAutoTargets": "Vollautomatisch: drei Ziele"
             },
             "aim": {
               "label": "Zielen",
@@ -1490,7 +1493,8 @@
               "major": "Gross (-30)",
               "blind": "Blind (-30+)",
               "indirect": "Indirekt (-20)"
-            }
+            },
+            "pickTargets": "Ziele wählen"
           },
           "defender": {
             "isProne": "Gestürzt (-10 auf Reichweite)",
@@ -1571,7 +1575,8 @@
           "exoticMorphology": "Exotische Morphologie"
         },
         "augmentations": "Augmentierungen",
-        "dodgeCoverLabel": "Hinter Deckung ausweichen"
+        "dodgeCoverLabel": "Hinter Deckung ausweichen",
+        "fullDefenseLabel": "Volle Verteidigung (+30)"
       },
       "successType": {
         "success": "Erfolg",
@@ -1776,7 +1781,8 @@
             "wounds": "Wunde(n)",
             "stress": "Stress",
             "trauma": "Trauma"
-          }
+          },
+          "fullDefense": "Volle Verteidigung"
         }
       },
       "psi": {
@@ -1939,7 +1945,11 @@
       "attack": {
         "applyDose": "Dosis auf ausgewählte Ziele anwenden",
         "applyTargets": "Auf ausgewählte Ziele anwenden",
-        "targets": "Ziele: {names}"
+        "targets": "Ziele: {names}",
+        "chooseTarget": "Ziel wählen",
+        "rollDamage": "Schaden würfeln",
+        "damageWithoutTarget": "Schaden ohne Ziel",
+        "damageReady": "Schaden durch {weapon}"
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -1951,12 +1961,25 @@
           "hit": "Getroffen",
           "half": "Teilweise ausgewichen: halbe Dosis",
           "none": "Abgewehrt"
-        }
+        },
+        "severalTargets": "Mehrere Ziele"
       },
       "poolSpent": {
         "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
         "upgraded": "{name} hat einen Punkt {pool} eingesetzt, um das Ergebnis zu verbessern",
         "mitigated": "{name} hat einen Punkt {pool} eingesetzt, um den Fehlschlag abzumildern"
+      },
+      "damage": {
+        "appliedPhysical": "{name} erleidet {taken} Schaden und {wounds} Wunden",
+        "appliedMental": "{name} erleidet {taken} Stress und {wounds} Traumata",
+        "attackHit": "{name}: {share} - {armor} Rüstung ({armorType}) = {damage}, {woundsTaken}",
+        "attackHalf": "{name} (halb): {share} - {armor} Rüstung ({armorType}) = {damage}, {woundsTaken}",
+        "attackMissed": "{name} wurde nicht getroffen",
+        "attackParried": "{name} hat pariert",
+        "attackTookDamage": "{name} wurde getroffen und hat Schaden erlitten",
+        "attackSoaked": "{name} wurde getroffen, aber die Rüstung hat den ganzen Schaden geschluckt",
+        "amountDamage": "{value} Schaden",
+        "amountWounds": "{value} Wunden"
       }
     },
     "rule": {
@@ -2175,7 +2198,10 @@
       "remaining": "Noch {count} Ziele",
       "limitReached": "Die Höchstzahl von {max} Zielen ist erreicht. Klicke ein markiertes Ziel erneut an, um die Markierung zu entfernen.",
       "selectTarget": "Ziel auswählen",
-      "targetChosen": "Ziel gewählt"
+      "targetChosen": "Ziel gewählt",
+      "tooFar": "Weitere Ziele müssen höchstens {within} m von einem markierten entfernt sein.",
+      "marked": "{count} Ziele markiert",
+      "tooFew": "Wähle mindestens {min} Ziele."
     }
   }
 }

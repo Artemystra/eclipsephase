@@ -123,9 +123,9 @@ describe("the damage formula a hit assembles", () => {
   test.each([
     ["fullAuto", "1d10+1d6+2+2d10"],
     ["charge", "1d10+1d6+2+1d6"],
-    ["aggressive", "1d10+1d6+2+1d10"],
+    ["aggressive", "1d10+1d6+2"],
     ["aggressiveCharge", "1d10+1d6+2+1d10"]
-  ])("the %s attack mode adds its own dice", async (attackMode, formula) => {
+  ])("the %s attack mode adds its own dice, an aggressive hit none since it takes +10 to hit instead (Core p.204)", async (attackMode, formula) => {
     await prepareWeapon(null, 3, weaponContext(makeFighter(), { options: { biomorphTarget: false, touchOnly: false, attackMode, rollMode: "public" } }));
 
     expect([...formulas]).toEqual([formula]);

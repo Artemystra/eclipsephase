@@ -1,5 +1,5 @@
 import { doseTargetCandidates, chooseDoseTarget, offerDose, requestDoseClaim } from "../../module/common/doses.js";
-import { tokenAt } from "../../module/common/general-sheet-functions.js";
+import { tokenAt } from "../../module/common/targeting.js";
 import { selectFromSearchableList } from "../../module/common/general-sheet-functions.js";
 import { GMvision, ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";

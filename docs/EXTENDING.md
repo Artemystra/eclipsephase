@@ -489,10 +489,14 @@ The card has a button per target; against a ranged attack it also rolls the rest
 a dialog. A ranged defence is Fray, halved; against an area attack the dialog adds "Dodge behind
 cover". A melee defence is Fray in full or a parry with Melee.
 
-`api.attacks.defenceOutcome(attack, passed, behindCover)` decides what reaches the target: a
-failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"` through, or
-`"none"` behind cover; any other successful defence is `"none"`. A pool spend on the defence
-settles it again.
+`api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
+the target: a failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"`
+through, or `"none"` behind cover. Otherwise it is an opposed test against `attack.roll`
+(`{ value, result }`, the attack's die and result as they stood when its targets were chosen):
+when both succeed, a critical success beats one that is not, and between equals the higher die
+wins, a tie going to the defender. Once the targets are chosen the attack card hides its pool
+controls, so the attack's die cannot change under a defence already rolled; a pool spend on the
+defence settles it again. Every defence dialog offers "Full defense" (+30).
 
 What the hit brings is registered:
 
