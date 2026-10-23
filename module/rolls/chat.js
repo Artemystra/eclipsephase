@@ -4,8 +4,8 @@ import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
-import { setupFromCard } from "../common/ware-skills.js";
-import { applyTargetedAttack, rollDefence, rollRemainingDefences } from "./attacks.js";
+import { setupFromCard } from "./modifiers.js";
+import { applyTargetedAttack, rollDefence, rollRemainingDefences, yieldDefence } from "./attacks.js";
 
 /**
  * Hides GM info from players
@@ -120,6 +120,13 @@ export async function addChatListeners(html) {
     if (defenceRoll) {
       const message = game.messages.get(defenceRoll.closest("[data-message-id]")?.dataset.messageId);
       if (message) rollDefence(message, defenceRoll.dataset.targetUuid, defenceRoll.dataset.kind);
+      return;
+    }
+
+    const defenceYield = event.target.closest("button.defenceYield");
+    if (defenceYield) {
+      const message = game.messages.get(defenceYield.closest("[data-message-id]")?.dataset.messageId);
+      if (message) yieldDefence(message, defenceYield.dataset.targetUuid);
       return;
     }
 

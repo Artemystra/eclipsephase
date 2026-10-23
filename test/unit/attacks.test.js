@@ -1,5 +1,6 @@
 import { JSDOM } from "jsdom";
-import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDefence, rollRemainingDefences, defenceOutcome } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDefence, rollRemainingDefences, defenceOutcome, unsuitableTarget } from "../../module/rolls/attacks.js";
+import { targetKinds, CYBERBRAIN_MARKER } from "../../module/common/morp-functions.js";
 import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload, activeDoseFor, DOSE_CURSOR } from "../../module/common/doses.js";
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
@@ -175,7 +176,7 @@ describe("picking the targets", () => {
 
     await applyTargetedAttack(card, { pick, confirm: async () => true });
 
-    expect(pick).toHaveBeenCalledWith({ multi: true, max: 3, within: 1 });
+    expect(pick).toHaveBeenCalledWith({ multi: true, max: 3, within: 1, refuse: null });
   });
 
   test("fewer targets than doses go ahead only once confirmed", async () => {
@@ -205,6 +206,36 @@ describe("what a defence card names", () => {
     expect(single.content).not.toContain(">Ana<");
     expect(several.content).toContain(">Bo<");
     expect(several.content).toContain(">Cy<");
+  });
+});
+
+describe("targets an attack cannot strike", () => {
+  test("a target counts as the kind of body it acts through, and as a cyberbrain when it runs one", () => {
+    const brain = { _id: "brain1", name: "Cyberbrain", type: "ware", system: { boundTo: "morph1" }, effects: [{ name: "Cyberbrain", disabled: true, changes: [{ key: CYBERBRAIN_MARKER, value: "true", type: "override" }] }] };
+    const pod = makeActor({ type: "character", name: "Pod", system: { activeMorph: "morph1" }, items: [{ _id: "morph1", name: "Pod", type: "morph", system: { type: "bio" } }, brain] });
+    const jammer = makeActor({ type: "character", name: "Jammer", system: { activeMorph: "morph1", activeJam: "bot1" }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } }, { _id: "bot1", name: "Drone", type: "vehicle", system: { chassisType: "robot" } }] });
+
+    expect(targetKinds(target("Ana"))).toEqual(["biomorph"]);
+    expect(targetKinds(target("Bo", "synth"))).toEqual(["synthmorph"]);
+    expect(targetKinds(pod)).toEqual(["biomorph", "cyberbrain"]);
+    expect(targetKinds(jammer)).toEqual(["bot"]);
+  });
+
+  test("an attack names the kinds it cannot strike, and a target of such a kind is refused with a notice", () => {
+    expect(unsuitableTarget(target("Bo", "synth"), ["synthmorph", "bot"])).toContain("ep2e.targeting.unsuitable");
+    expect(unsuitableTarget(target("Ana"), ["synthmorph", "bot"])).toBeNull();
+    expect(unsuitableTarget(target("Bo", "synth"))).toBeNull();
+  });
+
+  test("picking an attack's targets refuses the kinds it names", async () => {
+    const card = await fire(await shooter(), 5);
+    await card.update({ "flags.eclipsephase.roll.targetedAttack.unsuitable": ["synthmorph"] });
+    let refuse = null;
+
+    await applyTargetedAttack(card, { pick: async options => { refuse = options.refuse; return null; } });
+
+    expect(refuse({ actor: target("Bo", "synth") })).toContain("ep2e.targeting.unsuitable");
+    expect(refuse({ actor: target("Ana") })).toBeNull();
   });
 });
 
@@ -409,7 +440,7 @@ describe("forcing a drug on someone in melee", () => {
     const pick = jest.fn(async () => null);
     await applyTargetedAttack(card, { pick });
 
-    expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, within: null, ...DOSE_CURSOR });
+    expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, within: null, refuse: null, ...DOSE_CURSOR });
 
     expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "dose", targets: 1, area: false, defence: "melee" });
     expect(card.content).toContain("ep2e.chat.attack.applyDose");
@@ -561,6 +592,16 @@ describe("marking targets on the canvas", () => {
     expect((await pick).map(picked => picked.name)).toEqual(["Ana", "Bo", "Cy"]);
     expect(ui.notifications.warn).toHaveBeenCalledTimes(1);
     expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooFar"));
+  });
+
+  test("a token the caller refuses is not marked, and the caller's notice is shown", async () => {
+    const pick = picking(3, { multi: true, refuse: token => (token.name === "Bo" ? "not Bo" : null) });
+    press(210);
+    press(10);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Ana"]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith("not Bo");
   });
 
   test("a click past the limit marks nothing and says the limit is reached", async () => {

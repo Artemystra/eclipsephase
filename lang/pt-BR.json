@@ -933,7 +933,8 @@
         "noArmorSubheadline": "Nenhuma Armadura Equipada",
         "concealWarning": "Valores de Armadura acima de 11 não são ocultáveis - pense nisso como, no mínimo, uma camada grossa e perceptível de roupa.",
         "encumberanceWarning": "Enquanto sua Armadura cumulativa exceder a Durabilidade do seu corpo, você é incapaz de se mover.",
-        "armorSourceHint": "Para alterar seu valor de Armadura, adicione-a ao seu Morph atual ou ao Corpo Remoto que estiver em jamming."
+        "armorSourceHint": "Para alterar seu valor de Armadura, adicione-a ao seu Morph atual ou ao Corpo Remoto que estiver em jamming.",
+        "mentalHint": "A armadura mental (ícone do cérebro) só conta contra ataques psi e vem com o sleight Psi Armor"
       },
       "ranged": {
         "headline": "Combate de Distância",
@@ -1050,7 +1051,8 @@
             "label": "Armadura Utilizada",
             "none": "Nenhuma",
             "kinetic": "Cinética",
-            "energy": "Energética"
+            "energy": "Energética",
+            "mental": "Mental"
           },
           "firingMode": {
             "label": "Modo de Disparo",
@@ -1557,7 +1559,11 @@
         },
         "augmentations": "Aumentos",
         "dodgeCoverLabel": "Esquivar atrás de cobertura",
-        "fullDefenseLabel": "Defesa total (+30)"
+        "fullDefenseLabel": "Defesa total (+30)",
+        "psi": {
+          "touch": "Toque (+20)",
+          "willing": "Alvo voluntário (sem resistência)"
+        }
       },
       "successType": {
         "success": "Sucesso",
@@ -1623,7 +1629,9 @@
           "noBioBrain": "Psi só funciona a partir de um cérebro biológico. Um Cérebro Cibernético o bloqueia, e um infomorfo não tem sistema nervoso algum.",
           "blockedByDrug": "Uma droga está bloqueando seu psi.",
           "substrateBlockedTooltip": "Psi precisa de um cérebro biológico",
-          "substrateMismatch": "Cérebro biológico em um corpo sintético"
+          "substrateMismatch": "Cérebro biológico em um corpo sintético",
+          "touch": "Toque",
+          "cyberbrain": "Alvo com cibercérebro"
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."
@@ -1932,9 +1940,17 @@
         "outcome": {
           "hit": "Acerto",
           "half": "Esquiva parcial: meia dose",
-          "none": "Evitado"
+          "none": "Evitado",
+          "will": {
+            "hit": "Afetado",
+            "half": "Afetado",
+            "none": "Resistiu"
+          }
         },
-        "severalTargets": "Vários alvos"
+        "severalTargets": "Vários alvos",
+        "resist": "Resistir (VON)",
+        "yield": "Não resistir",
+        "lockedOut": "Crítico: o async fica bloqueado desta mente até se recuperar."
       },
       "poolSpent": {
         "swapped": "{name} usou um ponto de {pool} para trocar os dados",
@@ -1951,7 +1967,9 @@
         "attackTookDamage": "{name} foi atingido e sofreu dano",
         "attackSoaked": "{name} foi atingido, mas a armadura absorveu todo o dano",
         "amountDamage": "{value} de dano",
-        "amountWounds": "{value} ferimentos"
+        "amountWounds": "{value} ferimentos",
+        "amountStress": "{value} de estresse",
+        "amountTraumas": "{value} traumas"
       }
     },
     "rule": {
@@ -2180,7 +2198,17 @@
       "targetChosen": "Alvo escolhido",
       "tooFar": "Os demais alvos devem estar a no máximo {within} m de um marcado.",
       "marked": "{count} alvos marcados",
-      "tooFew": "Escolha pelo menos {min} alvos."
+      "tooFew": "Escolha pelo menos {min} alvos.",
+      "unsuitable": "{name} não pode ser alvo disto: {kind}.",
+      "kind": {
+        "biomorph": "biomorfo",
+        "synthmorph": "sintemorfo",
+        "infomorph": "infomorfo",
+        "bot": "bot",
+        "vehicle": "veículo",
+        "animal": "animal",
+        "cyberbrain": "cibercérebro"
+      }
     }
   }
 }

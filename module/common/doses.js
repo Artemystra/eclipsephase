@@ -1,12 +1,11 @@
 import { drugVector, doseOnset, dosesRemaining, isAmmoPack, consumeDose, parseAddictionMod } from "./drugs.js";
 import { durationRunOut, isTimedSpan, SECONDS_PER } from "./time.js";
-import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
 import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
 import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
 import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
-import { getBodyBindingInfo } from "./morp-functions.js";
+import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER, getBodyBindingInfo } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
 import { chemicalDoses, attackTargetCount } from "./weapon-functions.js";
 import { registerCard, renderCard, updateCard } from "./chat-cards.js";

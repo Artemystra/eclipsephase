@@ -12,8 +12,14 @@
             <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important; margin-right: 5px;"/>
             <span class="resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
         </div>
-        {{else}}
+        {{else if (not actor.system.mental.armorTotal)}}
         <span class="resource-value">{{localize "ep2e.sideCar.armor.noArmorSubheadline"}}</span>
+        {{/if}}
+        {{#if actor.system.mental.armorTotal}}
+        <div class="flexrow flex-group-center" style="align-items: center; margin-left: 8px;">
+            <i class="fa-solid fa-brain icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
+            <span class="resource-value alignLeft">{{actor.system.mental.armorTotal}}</span>
+        </div>
         {{/if}}
         {{#if actor.system.physical.armorDurAnnounce}}
         <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--negative); margin-left: 8px;" title="{{localize 'ep2e.sideCar.armor.encumberanceWarning'}}"></i>
@@ -33,6 +39,10 @@
                 {{/if}}
                 <p/>
                 <label style="color: var(--mainText);">{{localize "ep2e.sideCar.armor.armorSourceHint"}}</label>
+                {{#if actor.system.mental.armorTotal}}
+                <p/>
+                <label style="color: var(--mainText);">{{localize "ep2e.sideCar.armor.mentalHint"}}</label>
+                {{/if}}
             </div>
             <div class="tooltipBottomBorder">
                 <div class="tooltipBottom"></div>

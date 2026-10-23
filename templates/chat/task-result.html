@@ -175,7 +175,11 @@
   {{else if (and rollContext.targetedAttack.preTargets (eq resultClass "success"))}}
   {{else if (and rollContext.targetedAttack (eq resultClass "success") (eq rollContext.targetedAttack.effect "damage"))}}
    <div class="chatControls ep-chat-stack">
+     {{#if (eq rolledFrom "psiSleight")}}
+     <button type="button" class="chatButton psiDamage ownerOnlyControl ep-chat-secondary" data-action="psiDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.damageWithoutTarget"}}</button>
+     {{else}}
      <button type="button" class="chatButton weaponDamage ownerOnlyControl ep-chat-secondary" data-action="weaponDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.damageWithoutTarget"}}</button>
+     {{/if}}
      <button type="button" class="chatButton targetedAttack ownerOnlyControl ep-chat-primary" data-action="targetedAttack" data-actor-uuid="{{actor.uuid}}">{{localize rollContext.targetedAttack.labelKey}}</button>
    </div>
   {{else if (and rollContext.targetedAttack (eq resultClass "success"))}}
@@ -190,7 +194,7 @@
     {{/if}}
   {{/if}}
 
-  {{#if (and (eq rolledFrom "psiSleight")(eq resultClass "success") itemdata.damage)}}
+  {{#if (and (eq rolledFrom "psiSleight")(eq resultClass "success") itemdata.damage (not rollContext.targetedAttack))}}
    <div class="chatControls">
      <button type="button" class="chatButton psiDamage privateChatButton" data-action="psiDamage">{{localize "ep2e.chat.buttonLabel.psiDamage"}}</button>
    </div>

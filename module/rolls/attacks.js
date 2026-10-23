@@ -1,6 +1,8 @@
 import { RollCheck, isCriticalSuccess, isHit } from "./dice.js";
 import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
+import { targetKinds } from "../common/morp-functions.js";
+import { gammaSleight, sleightModifiers, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
 import { pickTokensOnCanvas, MELEE_CURSOR } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount } from "../common/weapon-functions.js";
@@ -15,7 +17,7 @@ const EFFECTS = new Map();
 
 registerCard("attackDefence", {
   render: renderDefenceCard,
-  mutations: { markOutcome: (state, { targetUuid, outcome }) => ({ ...state, entries: state.entries.map(entry => entry.uuid === targetUuid ? { ...entry, outcome } : entry) }) }
+  mutations: { markOutcome: (state, { targetUuid, outcome, lockedOut = false }) => ({ ...state, entries: state.entries.map(entry => entry.uuid === targetUuid ? { ...entry, outcome, lockedOut } : entry) }) }
 });
 
 /**
@@ -42,11 +44,13 @@ export function attackEffect(effect) {
 }
 
 /**
- * How a target defends against an attack rolled from a source.
+ * How a target defends against an attack rolled from a source: a sleight with WIL (Core p.276), a
+ * ranged attack by dodging, a melee attack by dodging or parrying.
  * @param {String} rolledFrom - The attack roll's source
- * @returns {String} "ranged" or "melee"
+ * @returns {String} "will", "ranged" or "melee"
  */
 export function defenceKind(rolledFrom) {
+  if (rolledFrom === "psiSleight") return "will";
   return rolledFrom === "rangedWeapon" ? "ranged" : "melee";
 }
 
@@ -69,6 +73,28 @@ export function chosenTargets(options) {
  */
 export function attackRoll(message) {
   return { value: Number(message.getFlag("eclipsephase", "taskCard")?.data?.rollResult) || null, result: spentOrOriginalResult(message.getFlag("eclipsephase", "roll") ?? {}) };
+}
+
+/**
+ * The notice for a target an attack cannot strike, or nothing when it can. An attack names the
+ * kinds of target it cannot strike - a sleight cannot reach a synthmorph, for instance - and a
+ * module can name its own.
+ * @param {Actor} actor - The target
+ * @param {String[]} [unsuitable] - The kinds the attack cannot strike, as targetKinds names them
+ * @returns {String|null} The notice
+ */
+export function unsuitableTarget(actor, unsuitable = []) {
+  const kind = targetKinds(actor).find(entry => unsuitable.includes(entry));
+  return kind ? game.i18n.format("ep2e.targeting.unsuitable", { name: actor.name, kind: game.i18n.localize(`ep2e.targeting.kind.${kind}`) }) : null;
+}
+
+/**
+ * A picker's refusal for an attack's unsuitable targets.
+ * @param {String[]} [unsuitable] - The kinds the attack cannot strike
+ * @returns {Function|null} refuse(token) for pickTokensOnCanvas, or null when nothing is refused
+ */
+export function refuseUnsuitable(unsuitable = []) {
+  return unsuitable.length ? token => (token.actor ? unsuitableTarget(token.actor, unsuitable) : null) : null;
 }
 
 /**
@@ -128,7 +154,7 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   if (handlers?.ready && !handlers.ready(attack)) return null;
 
   const any = attack.targets === ANY_TARGETS;
-  const tokens = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, ...(attack.cursor ?? {}) });
+  const tokens = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, refuse: refuseUnsuitable(attack.unsuitable), ...(attack.cursor ?? {}) });
   if (!tokens?.length) return null;
   if (!any && tokens.length < attack.targets && !(await confirm(attack, tokens.length))) return null;
   const targets = tokens.map(token => token.actor).filter(Boolean);
@@ -140,7 +166,11 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   const delivered = { "flags.eclipsephase.roll.targetedAttack.delivered": true, "flags.eclipsephase.roll.targetedAttack.targetNames": names, "flags.eclipsephase.roll.targetedAttack.roll": roll };
   if (message.getFlag("eclipsephase", "taskCard")) await updateCard(message, "taskCard", "targets", { names, uuids }, { extra: delivered });
   else await message.update(delivered);
-  await postDefenceCards({ ...attack, delivered: true, targetNames: names, roll, messageId: message.id }, targets);
+  const sent = { ...attack, delivered: true, targetNames: names, roll, messageId: message.id };
+  if (attack.willing) {
+    for (const target of targets) await handlers?.resolve?.(sent, target, "hit", { kind: "willing" });
+  }
+  else await postDefenceCards(sent, targets);
   return targets;
 }
 
@@ -185,12 +215,15 @@ export function defenceGroups(targets) {
 }
 
 /**
- * What a defence's outcome is called on a card.
+ * What a defence's outcome is called on a card: a target that resisted a sleight "resisted", one
+ * it reached "affected", the rest as hit, half or avoided.
  * @param {String|null} outcome - "hit", "half" or "none"
+ * @param {String} [defence] - How the target defended: "will", "ranged" or "melee"
  * @returns {String} The label, "" while the target has yet to defend
  */
-export function outcomeLabel(outcome) {
-  return outcome ? game.i18n.localize(`ep2e.chat.defence.outcome.${outcome}`) : "";
+export function outcomeLabel(outcome, defence) {
+  if (!outcome) return "";
+  return game.i18n.localize(defence === "will" ? `ep2e.chat.defence.outcome.will.${outcome}` : `ep2e.chat.defence.outcome.${outcome}`);
 }
 
 /**
@@ -205,7 +238,9 @@ export function renderDefenceCard(state) {
     effectLabel: state.attack.effectLabel ?? "",
     melee: state.attack.defence === "melee",
     several: state.entries.length > 1,
-    entries: state.entries.map(entry => ({ ...entry, outcomeLabel: outcomeLabel(entry.outcome) })),
+    entries: state.entries.map(entry => ({ ...entry, outcomeLabel: outcomeLabel(entry.outcome, state.attack.defence) })),
+    will: state.attack.defence === "will",
+    icon: state.attack.defence === "will" ? "fa-brain" : "fa-crosshairs",
     rollAll: state.attack.defence === "ranged" && remaining.length > 1,
     rollAllUuid: remaining[0]?.uuid ?? ""
   });
@@ -257,13 +292,18 @@ export async function postDefenceCards(attack, targets) {
 }
 
 /**
- * The roll a defence takes: Fray, halved against a ranged attack, or Melee to parry.
+ * The roll a defence takes: Fray, halved against a ranged attack; Melee to parry; a WIL Check
+ * against psi, on half WIL against a pushed Power.
  * @param {Actor} actor - The defender
  * @param {Object} attack - The attack
- * @param {String} kind - "dodge" or "parry"
+ * @param {String} kind - "dodge", "parry" or "will"
  * @returns {Object} The roll's dataset, without its context flags
  */
 export function defenceDataset(actor, attack, kind) {
+  if (kind === "will") {
+    const will = Number(actor.system.aptitudes?.wil?.roll) || 0;
+    return { type: "skill", key: "system.aptitudes.wil.value", apttype: "wil", name: game.i18n.localize(actor.system.aptitudes?.wil?.name ?? "WIL"), rollvalue: attack.payload?.halveWill ? Math.floor(will / 2) : will, pooltype: "Moxie", defence: true };
+  }
   if (kind === "parry") {
     return { type: "skill", key: "melee", name: game.i18n.localize("ep2e.skills.vigorSkills.melee"), rollvalue: actor.system.skillsVig?.melee?.roll ?? 0, pooltype: "Vigor", defence: true };
   }
@@ -304,8 +344,8 @@ export async function rollDefence(message, targetUuid, kind = "dodge", systemOpt
 }
 
 /**
- * Rolls every remaining target's dodge on a card together, without a dialog: the dice fly at once
- * and each target keeps a roll card of its own.
+ * Rolls every remaining target's defence on a card together, without a dialog - a dodge, or WIL
+ * against psi: the dice fly at once and each target keeps a roll card of its own.
  * @param {ChatMessage} message - The defence card
  * @returns {Promise<void>} Resolves once all are rolled
  */
@@ -313,7 +353,8 @@ export async function rollRemainingDefences(message) {
   const state = message?.getFlag?.("eclipsephase", "attackDefence");
   const presetOptions = { rangedFray: state?.attack?.defence === "ranged", behindCover: false, fullDefense: false, rollMode: "public", usePool: "", globalMod: 0 };
   const remaining = (state?.entries ?? []).filter(entry => !entry.outcome);
-  await Promise.all(remaining.map(entry => rollDefence(message, entry.uuid, "dodge", { skipDialog: true, presetOptions })));
+  const kind = state?.attack?.defence === "will" ? "will" : "dodge";
+  await Promise.all(remaining.map(entry => rollDefence(message, entry.uuid, kind, { skipDialog: true, presetOptions })));
 }
 
 /**
@@ -340,10 +381,29 @@ export function defenceOutcome(attack, { passed, result, value, behindCover = fa
  * @param {ChatMessage} message - The defence card
  * @param {String} targetUuid - The target
  * @param {String} outcome - "hit", "half" or "none"
+ * @param {Object} [options] - lockedOut: the target won with a critical success against psi
  * @returns {Promise<Boolean>} What updateCard reported
  */
-export function markDefenceRolled(message, targetUuid, outcome) {
-  return updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome });
+export function markDefenceRolled(message, targetUuid, outcome, { lockedOut = false } = {}) {
+  return updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome, lockedOut });
+}
+
+/**
+ * A target's choice not to resist (Core p.276: a willing target who knows what is happening): the
+ * attack lands without a defence roll.
+ * @param {ChatMessage} message - The defence card
+ * @param {String} targetUuid - The target
+ * @returns {Promise<Boolean>} True once noted, false when it was not this user's to choose
+ */
+export async function yieldDefence(message, targetUuid) {
+  const state = message?.getFlag?.("eclipsephase", "attackDefence");
+  const entry = state?.entries?.find(candidate => candidate.uuid === targetUuid);
+  if (!entry || entry.outcome) return false;
+  const target = await fromUuid(targetUuid);
+  if (!target?.isOwner) return false;
+  await markDefenceRolled(message, targetUuid, "hit");
+  await EFFECTS.get(state.attack.effect)?.resolve?.(state.attack, target, "hit", { kind: "yield" });
+  return true;
 }
 
 // What an attack that leaves its attacker open is marked by on the attacker.
@@ -396,7 +456,7 @@ export function exposureModifiers(actor, dataset) {
  */
 export function registerTargetedAttackHooks() {
   Hooks.on("eclipsephase.preRoll", context => {
-    if (context?.modifiers) context.modifiers.push(...exposureModifiers(context.actor, context.dataset));
+    if (context?.modifiers) context.modifiers.push(...exposureModifiers(context.actor, context.dataset), ...sleightModifiers(context, targetKinds));
     if (context?.flags?.attackDefence) context.flags.attackDefence.behindCover = isChecked(context.options?.behindCover);
     if (context?.flags?.targetedAttack?.id) return;
     const attack = attackFor(context);
@@ -420,7 +480,8 @@ export function registerTargetedAttackHooks() {
     const origin = state.attack.messageId ? game.messages.get(state.attack.messageId) : null;
     const attack = origin ? { ...state.attack, roll: attackRoll(origin) } : state.attack;
     const outcome = defenceOutcome(attack, { passed, result, value, behindCover: defence.behindCover });
-    await markDefenceRolled(card, defence.targetUuid, outcome);
+    const lockedOut = attack.defence === "will" && outcome === "none" && isCriticalSuccess(result);
+    await markDefenceRolled(card, defence.targetUuid, outcome, { lockedOut });
     const target = await fromUuid(defence.targetUuid);
     if (target) await EFFECTS.get(state.attack.effect)?.resolve?.(state.attack, target, outcome, { byPool, defenceId: defence.defenceId, kind: defence.kind ?? "dodge" });
   });
@@ -438,18 +499,22 @@ function meleeTargets(form) {
 
 /**
  * How an attack dialog picks its targets, or null for a roll that is no attack: a roll with a
- * weapon, or one that brings an attack of its own, such as a forced dose.
+ * weapon, a psi-gamma sleight, or one that brings an attack of its own, such as a forced dose.
  * @param {Object} rollContext - The roll context the dialog is shown for
- * @returns {Object|null} cursor; count(form), the targets the chosen options strike (Infinity
+ * @returns {Object|null} cursor; refuse, the picker's refusal of unsuitable targets; count(form), the targets the chosen options strike (Infinity
  *   for any number); minimum(form), the fewest a mode needs
  */
 export function attackPicking(rollContext) {
   const preset = rollContext?.flags?.targetedAttack;
   const weapon = rollContext?.weapon?.weapon ?? null;
   const rolledFrom = rollContext?.rolledFrom;
+  if (!preset && gammaSleight(rollContext)) {
+    return { cursor: PSI_CURSOR, refuse: refuseUnsuitable(PSI_UNSUITABLE), count: form => form?.elements?.push?.value === "target" ? 2 : 1, minimum: () => 1 };
+  }
   if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"))) return null;
   return {
     cursor: preset?.cursor ?? (rolledFrom === "ccWeapon" ? MELEE_CURSOR : {}),
+    refuse: refuseUnsuitable(preset?.unsuitable),
     count: form => {
       if (preset) return preset.targets === ANY_TARGETS ? Infinity : preset.targets ?? 1;
       if (rolledFrom !== "rangedWeapon") return meleeTargets(form);

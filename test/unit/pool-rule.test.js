@@ -1,4 +1,4 @@
-import { registerPoolRule, settlePools, owningActor } from "../../module/common/pool-rule.js";
+import { registerPoolRule, settlePools, owningActor } from "../../module/rolls/pools.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 

@@ -210,12 +210,13 @@ export function sheetsAside() {
  *   Font Awesome class for the cursor and the marks, none for the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
  *   marks' colour, the red MARK_COLOR by default; multi: several targets; max: how many, with multi
  *   (Infinity for any number); within: how far, in scene units, a further target may be from the
- *   nearest marked one; marker: marker(token, point, {icon, color}) draws a mark and returns what
+ *   nearest marked one; refuse: refuse(token) returns the notice for a token that may not be
+ *   picked, or nothing; marker: marker(token, point, {icon, color}) draws a mark and returns what
  *   removes it
  * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
  *   cancelled
  */
-export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, within = null, marker = drawTargetMarker } = {}) {
+export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, within = null, refuse = null, marker = drawTargetMarker } = {}) {
   const board = document.getElementById("board");
   if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
   ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
@@ -252,7 +253,9 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
       const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
       const token = tokenAt(point, canvas.tokens.placeables);
       if (!token) return;
-      if (marked.has(token)) unmark(token);
+      const refusal = marked.has(token) ? null : refuse?.(token);
+      if (refusal) ui.notifications.warn(refusal);
+      else if (marked.has(token)) unmark(token);
       else if (!multi) {
         for (const other of Array.from(marked.keys())) unmark(other);
         marked.set(token, marker(token, point, { icon, color: markColor }));
@@ -329,7 +332,7 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     const modal = element?.open && element.matches?.(":modal");
     element?.close?.();
     if (element?.style) element.style.display = "none";
-    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...picking.cursor });
+    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...(picking.refuse ? { refuse: picking.refuse } : {}), ...picking.cursor });
     const actors = (tokens ?? []).map(token => token.actor).filter(Boolean);
     if (actors.length >= minimum) {
       input.value = actors.map(actor => actor.uuid).join(",");

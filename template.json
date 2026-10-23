@@ -87,6 +87,8 @@
           "ttMod": null,
           "energyMod": null,
           "kineticMod": null,
+          "mentalArmorMod": null,
+          "psiArmor": false,
           "meleeDamageMod": null
         },
         "additionalSystems": {

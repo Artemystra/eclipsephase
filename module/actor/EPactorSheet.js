@@ -14,7 +14,7 @@ import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
 import { getStrainFamily } from "../rolls/strain-families.js";
-import { needsSkillSetup, pickSpecialSkills } from "../common/ware-skills.js";
+import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 import { getRezSpendOptions } from "../api/registry.js";
 

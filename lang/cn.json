@@ -932,7 +932,8 @@
         "noArmorSubheadline": "没有装备护甲d",
         "concealWarning": "护甲值高于11时无法隐藏——可以把它想象成至少一层又厚又显眼的衣物。",
         "encumberanceWarning": "当你的累计护甲值超过身体的耐久值时，你将无法移动。",
-        "armorSourceHint": "如需更改护甲值，请将护甲添加到你当前的Morph，或添加到你正在Jamming的远程躯体上。"
+        "armorSourceHint": "如需更改护甲值，请将护甲添加到你当前的Morph，或添加到你正在Jamming的远程躯体上。",
+        "mentalHint": "精神护甲（大脑图标）仅对异能攻击生效，来自异能 Psi Armor"
       },
       "ranged": {
         "headline": "远程战斗",
@@ -1049,7 +1050,8 @@
             "label": "护甲",
             "none": "无",
             "kinetic": "动能",
-            "energy": "能量"
+            "energy": "能量",
+            "mental": "精神"
           },
           "firingMode": {
             "label": "射击模式",
@@ -1550,7 +1552,11 @@
         },
         "augmentations": "增强",
         "dodgeCoverLabel": "在掩体后闪避",
-        "fullDefenseLabel": "全力防御（+30）"
+        "fullDefenseLabel": "全力防御（+30）",
+        "psi": {
+          "touch": "接触（+20）",
+          "willing": "自愿目标（不抵抗）"
+        }
       },
       "successType": {
         "success": "Success",
@@ -1616,7 +1622,9 @@
           "noBioBrain": "灵能只能通过生物大脑运作。电子脑会阻断它，而信息体根本没有神经系统。",
           "blockedByDrug": "一种药物正在封锁你的灵能。",
           "substrateBlockedTooltip": "灵能需要生物大脑",
-          "substrateMismatch": "生物大脑处于合成体内"
+          "substrateMismatch": "生物大脑处于合成体内",
+          "touch": "接触",
+          "cyberbrain": "目标装有电子脑"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"
@@ -1925,9 +1933,17 @@
         "outcome": {
           "hit": "命中",
           "half": "部分闪避：半剂",
-          "none": "避开"
+          "none": "避开",
+          "will": {
+            "hit": "受影响",
+            "half": "受影响",
+            "none": "已抵抗"
+          }
         },
-        "severalTargets": "多个目标"
+        "severalTargets": "多个目标",
+        "resist": "抵抗（意志）",
+        "yield": "不抵抗",
+        "lockedOut": "大成功：异能者在恢复前无法再进入此心智。"
       },
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",
@@ -1944,7 +1960,9 @@
         "attackTookDamage": "{name} 被击中并受到伤害",
         "attackSoaked": "{name} 被击中，但护甲吸收了全部伤害",
         "amountDamage": "{value} 伤害",
-        "amountWounds": "{value} 创伤"
+        "amountWounds": "{value} 创伤",
+        "amountStress": "{value} 压力",
+        "amountTraumas": "{value} 心理创伤"
       }
     },
     "rule": {
@@ -2172,7 +2190,17 @@
       "targetChosen": "已选目标",
       "tooFar": "其他目标必须距已标记目标 {within} 米以内。",
       "marked": "已标记 {count} 个目标",
-      "tooFew": "请至少选择 {min} 个目标。"
+      "tooFew": "请至少选择 {min} 个目标。",
+      "unsuitable": "{name} 无法被此选为目标：{kind}。",
+      "kind": {
+        "biomorph": "生物义体",
+        "synthmorph": "合成义体",
+        "infomorph": "信息义体",
+        "bot": "机器人",
+        "vehicle": "载具",
+        "animal": "动物",
+        "cyberbrain": "电子脑"
+      }
     }
   }
 }

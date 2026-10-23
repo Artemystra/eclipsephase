@@ -12,19 +12,18 @@ import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
-import  { registerPsiEffectSocket } from "./rolls/psi.js"
+import  { registerPsiEffectSocket, registerSleightAttacks } from "./rolls/psi.js"
 import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
-import { registerPoolRule } from "./common/pool-rule.js";
+import { registerPoolRule } from "./rolls/pools.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
 import { registerTargetedAttackHooks } from "./rolls/attacks.js";
 import { registerCardSocket } from "./common/chat-cards.js";
-import { registerExpiryCleanup } from "./common/expiry.js";
-import { postWareSetupCard } from "./common/ware-skills.js";
+import { postWareSetupCard } from "./rolls/modifiers.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
@@ -197,10 +196,11 @@ Hooks.once('init', async function() {
   CONFIG.eclipsephase = eclipsephase;
   registerCoreStrainFamilies();
   registerPoolRule();
-  registerExpiryCleanup();
+  effectsPrep.registerExpiryCleanup();
   registerTargetedAttackHooks();
   registerDrugHooks();
   registerWeaponAttacks();
+  registerSleightAttacks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;

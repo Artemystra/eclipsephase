@@ -945,7 +945,8 @@
         "noArmorSubheadline": "Keine Rüstung",
         "concealWarning": "Rüstungswerte über 11 lassen sich nicht verbergen - stell es dir wie mindestens eine dicke, auffällige Kleidungsschicht vor.",
         "encumberanceWarning": "Solange deine kumulierte Rüstung die Ausdauer deines Körpers übersteigt, bist du bewegungsunfähig.",
-        "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst."
+        "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst.",
+        "mentalHint": "Mentale Rüstung (Gehirn-Symbol) zählt nur gegen Psi-Angriffe und kommt mit dem Sleight Psi Armor"
       },
       "ranged": {
         "headline": "Fernkampf",
@@ -1072,7 +1073,8 @@
             "label": "Widerstandsart",
             "none": "Keine",
             "kinetic": "Kinetisch",
-            "energy": "Energie"
+            "energy": "Energie",
+            "mental": "Mental"
           },
           "firingMode": {
             "label": "Feuermodus",
@@ -1576,7 +1578,11 @@
         },
         "augmentations": "Augmentierungen",
         "dodgeCoverLabel": "Hinter Deckung ausweichen",
-        "fullDefenseLabel": "Volle Verteidigung (+30)"
+        "fullDefenseLabel": "Volle Verteidigung (+30)",
+        "psi": {
+          "touch": "Berührung (+20)",
+          "willing": "Freiwilliges Ziel (kein Widerstand)"
+        }
       },
       "successType": {
         "success": "Erfolg",
@@ -1643,7 +1649,9 @@
           "noBioBrain": "Psi funktioniert nur aus einem biologischen Gehirn. Ein Cyberhirn blockiert es, und ein Infomorph hat gar kein Nervensystem.",
           "blockedByDrug": "Eine Droge blockiert dein Psi.",
           "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
-          "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper"
+          "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper",
+          "touch": "Berührung",
+          "cyberbrain": "Ziel mit Cyberbrain"
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
@@ -1960,9 +1968,17 @@
         "outcome": {
           "hit": "Getroffen",
           "half": "Teilweise ausgewichen: halbe Dosis",
-          "none": "Abgewehrt"
+          "none": "Abgewehrt",
+          "will": {
+            "hit": "Betroffen",
+            "half": "Betroffen",
+            "none": "Widerstanden"
+          }
         },
-        "severalTargets": "Mehrere Ziele"
+        "severalTargets": "Mehrere Ziele",
+        "resist": "Widerstehen (WIL)",
+        "yield": "Nicht widerstehen",
+        "lockedOut": "Kritisch: Das Async ist aus diesem Geist ausgesperrt, bis es sich erholt."
       },
       "poolSpent": {
         "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
@@ -1979,7 +1995,9 @@
         "attackTookDamage": "{name} wurde getroffen und hat Schaden erlitten",
         "attackSoaked": "{name} wurde getroffen, aber die Rüstung hat den ganzen Schaden geschluckt",
         "amountDamage": "{value} Schaden",
-        "amountWounds": "{value} Wunden"
+        "amountWounds": "{value} Wunden",
+        "amountStress": "{value} Stress",
+        "amountTraumas": "{value} Traumata"
       }
     },
     "rule": {
@@ -2201,7 +2219,17 @@
       "targetChosen": "Ziel gewählt",
       "tooFar": "Weitere Ziele müssen höchstens {within} m von einem markierten entfernt sein.",
       "marked": "{count} Ziele markiert",
-      "tooFew": "Wähle mindestens {min} Ziele."
+      "tooFew": "Wähle mindestens {min} Ziele.",
+      "unsuitable": "{name} kann damit nicht anvisiert werden: {kind}.",
+      "kind": {
+        "biomorph": "Biomorph",
+        "synthmorph": "Synthmorph",
+        "infomorph": "Infomorph",
+        "bot": "Bot",
+        "vehicle": "Fahrzeug",
+        "animal": "Tier",
+        "cyberbrain": "Cyberbrain"
+      }
     }
   }
 }

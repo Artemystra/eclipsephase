@@ -1,6 +1,6 @@
 import { postUseCheckCard, requestUseCheck, settleUseCheck, registerUseCheckHooks, rollDoseHarm, takeDose, registerDoseHooks } from "../../module/common/doses.js";
 import { drugBlockingPsi, drugPsiPenalties } from "../../module/rolls/modifiers.js";
-import { strainSubstrate } from "../../module/common/body-markers.js";
+import { strainSubstrate } from "../../module/common/morp-functions.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";

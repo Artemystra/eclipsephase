@@ -1,5 +1,5 @@
 <div class="alignCenter ep-defence-card">
-  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon="fa-crosshairs" color="--negative" text=headline open=true}}
+  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon=icon color="--negative" text=headline open=true}}
 
   {{#if effectLabel}}
   <div style="display: block; margin: 15px 0 10px 0; padding: 10px 0; background-color: var(--pitchBorder);">
@@ -10,7 +10,11 @@
   <div class="chatControls ep-chat-stack">
     {{#each entries as |entry|}}
       {{#if entry.outcome}}
-      <p class="ep-defence-outcome">{{entry.name}}: <b>{{entry.outcomeLabel}}</b></p>
+      <p class="ep-defence-outcome">{{entry.name}}: <b>{{entry.outcomeLabel}}</b>{{#if entry.lockedOut}}<br>{{localize "ep2e.chat.defence.lockedOut"}}{{/if}}</p>
+      {{else if ../will}}
+      {{#if ../several}}<p class="ep-defence-name">{{entry.name}}</p>{{/if}}
+      <button type="button" class="chatButton defenceYield ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceYield" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.yield"}}</button>
+      <button type="button" class="chatButton defenceRoll ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceRoll" data-kind="will" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.resist"}}</button>
       {{else if ../melee}}
       {{#if ../several}}<p class="ep-defence-name">{{entry.name}}</p>{{/if}}
       <button type="button" class="chatButton defenceRoll ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceRoll" data-kind="dodge" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.dodge"}}</button>

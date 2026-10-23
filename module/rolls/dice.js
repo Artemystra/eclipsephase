@@ -1,7 +1,7 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
 import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
-import { strainSubstrate } from "../common/body-markers.js";
+import { strainSubstrate } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
@@ -221,7 +221,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 async function defineRoll(dataset, actorWhole){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -241,6 +241,7 @@ async function defineRoll(dataset, actorWhole){
             sleight.duration = sleightItem.system.durationName
             sleight.infection = sleightItem.system.infection
             sleight.sleightID = dataset.itemid
+            sleight.gamma = sleightItem.system.psiType === "gamma"
             if (sleightItem.system.damage?.d10 || sleightItem.system.damage?.d6 || sleightItem.system.damage?.bonus) {
                 sleight.damage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv
                 sleight.damageTarget = sleightItem.system.damage.target
@@ -898,9 +899,10 @@ const buttons = picking
         cancel
     ];
 
+const narrow = (rollData.templateSize?.width ?? 0) < 400
 const result = await foundry.applications.api.DialogV2.wait({
     window: { title: rollData.title },
-    classes: ["ep2e-primary-right"],
+    classes: picking && narrow ? ["ep2e-primary-right", "ep2e-primary-below"] : ["ep2e-primary-right"],
     content,
     buttons,
     modal: true,

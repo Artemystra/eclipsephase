@@ -1,7 +1,7 @@
 import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, rollWearOffStress, requestWearOffRoll } from "../../module/common/doses.js";
-import { registerExpiryCleanup, cleanUpExpired } from "../../module/common/expiry.js";
+import { registerExpiryCleanup, cleanUpExpired, overdueByClock, expireOverdue } from "../../module/effects.js";
 import { selectDoseRecipient } from "../../module/common/drugs.js";
-import { registerPoolRule } from "../../module/common/pool-rule.js";
+import { registerPoolRule } from "../../module/rolls/pools.js";
 import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -317,6 +317,43 @@ describe("a dose running out", () => {
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(doseOn(actor)).toBeUndefined();
+  });
+
+  test("a dose whose time is up during a combat is marked expired once the clock moves, and goes", async () => {
+    registerExpiryCleanup();
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+    const dose = doseOn(actor);
+    dose.duration.expiry = "turnStart";
+    dose.duration.remaining = 0;
+    const activeGM = game.users.activeGM;
+    game.users.activeGM = { isSelf: true };
+
+    try {
+      await expireOverdue();
+      await new Promise(resolve => setTimeout(resolve, 0));
+    } finally {
+      game.users.activeGM = activeGM;
+    }
+
+    expect(doseOn(actor)).toBeUndefined();
+  });
+
+  test("only the system's clock-timed effects whose time is up count as overdue", async () => {
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+    const dose = doseOn(actor);
+    dose.duration.remaining = 0;
+    const [turn, running, own] = await actor.createEmbeddedDocuments("ActiveEffect", [
+      { name: "Aggressive", duration: { value: 1, units: "rounds", expiry: "turnStart" }, flags: { eclipsephase: { effectKey: "attackExposure" } } },
+      { name: "Running", duration: { value: 8, units: "hours" }, flags: { eclipsephase: { effectKey: "other" } } },
+      { name: "Someone's own", duration: { value: 1, units: "seconds" } }
+    ]);
+    turn.duration.remaining = 0;
+    running.duration.remaining = 100;
+    own.duration.remaining = 0;
+
+    expect(overdueByClock([dose, turn, running, own])).toEqual([dose]);
   });
 
   test("a mark made on somebody else's client is theirs to clean up", async () => {

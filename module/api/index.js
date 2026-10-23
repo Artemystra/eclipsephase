@@ -33,9 +33,12 @@ import {
   chainHasWareMarker,
   bodyNervousSystem,
   sleevedNervousSystem,
-  CYBERBRAIN_MARKER
-} from "../common/body-markers.js";
-import { getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame } from "../common/morp-functions.js";
+  CYBERBRAIN_MARKER,
+  getBodyBindingInfo,
+  resolveBodyForItem,
+  applyStandardEnhancements,
+  applyFrame
+} from "../common/morp-functions.js";
 import {
   registerRollSource,
   registerPoolOption,

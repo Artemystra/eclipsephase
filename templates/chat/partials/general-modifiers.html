@@ -182,6 +182,19 @@
         </div>
     </div>
     {{/if}}
+    {{#if rollData.sleight.gamma}}
+    <div class="contentBoxMargin">
+        <div class="form-group listBackgroundMain">
+            <input type="checkbox" class="sheet" name="psiTouch" id="psiTouch">
+            <label class="resource-label" for="psiTouch">{{localize "ep2e.roll.dialog.psi.touch"}}</label>
+        </div>
+        <div class="form-group listBackgroundMain">
+            <input type="checkbox" class="sheet" name="willing" id="willing">
+            <label class="resource-label" for="willing">{{localize "ep2e.roll.dialog.psi.willing"}}</label>
+        </div>
+        <input type="hidden" name="preTargets" value="">
+    </div>
+    {{/if}}
 {{/if}}
 {{#if doseOptions.length}}
 <div class="contentBoxMargin">

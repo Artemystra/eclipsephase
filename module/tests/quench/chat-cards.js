@@ -1,7 +1,7 @@
 import { RollCheck } from "../../rolls/dice.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import { takeDose, offerDose, claimDose, requestUseCheck, rollWearOffStress, demandWillpower, requestAddictionCheck } from "../../common/doses.js";
-import { postDefenceCards, rollRemainingDefences, applyTargetedAttack, rollDefence } from "../../rolls/attacks.js";
+import { postDefenceCards, rollRemainingDefences, applyTargetedAttack, rollDefence, yieldDefence } from "../../rolls/attacks.js";
 import { rollAttackDamage } from "../../rolls/damage.js";
 import { weaponPreparation } from "../../common/weapon-functions.js";
 import { withTempActor, seedDice, restoreDice, uniformForFace, waitUntil, suppressDice3d, restoreDice3d } from "./helpers.js";
@@ -246,6 +246,58 @@ export function registerChatCardBatch(quench) {
           assert.strictEqual(mark.system.health.physical.value, Math.max(0, state.data.total - 3));
           assert.include(after.content, "ep-damage-applied");
           assert.strictEqual(cardShape(after).buttons, 0);
+          assert.isTrue(cardShape(after).root);
+          return after;
+        })));
+      });
+
+      it("a psi attack is resisted with WIL on its defence card, and a target who does not resist takes the damage card's stab", async function () {
+        this.timeout(30000);
+        const stab = { name: "Quench Stab", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", infection: 0, damage: { target: "physical", d10: 2, d6: 0, bonus: 0 } } };
+        await keepingOnly(() => withTempActor({ type: "goon", name: "Quench Async", items: [stab] }, async caster => withTempActor({ type: "character", name: "Quench Mind" }, async mind => {
+          await waitUntil(() => mind.getFlag("eclipsephase", "defaultMorphAdded"));
+          seedDice([uniformForFace(30, 100)]);
+          await RollCheck({ name: "Psi", key: "psi", type: "psi", rollvalue: 70, itemid: caster.items.find(item => item.name === "Quench Stab").id, pooltype: "Moxie" }, caster.system, caster, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } }, null, "psiSleight");
+          const card = newestWith("taskCard");
+          await applyTargetedAttack(card, { pick: async () => [{ actor: mind }], confirm: async () => true });
+          const defence = newestWith("attackDefence");
+          const shape = cardShape(defence);
+          assert.include(defence.content, "data-kind=\"will\"");
+          assert.include(defence.content, "defenceYield");
+
+          await yieldDefence(defence, mind.uuid);
+          await waitUntil(() => newestWith("damageCard"), 8000);
+          const damage = newestWith("damageCard");
+          restoreDice();
+          await rollAttackDamage(damage);
+          await waitUntil(() => game.messages.get(damage.id).getFlag("eclipsephase", "damageCard").lines.length, 8000);
+
+          const after = game.messages.get(damage.id);
+          assert.deepInclude(shape, { root: true, icon: true, stray: 0 });
+          assert.isAbove(mind.system.health.physical.value, 0);
+          assert.isTrue(cardShape(after).root);
+          return after;
+        })));
+      });
+
+      it("a target who resists psi with a critical success locks the async out, and the card says so", async function () {
+        this.timeout(30000);
+        const sense = { name: "Quench Sense", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } } };
+        await keepingOnly(() => withTempActor({ type: "goon", name: "Quench Async", items: [sense] }, async caster => withTempActor({ type: "character", name: "Quench Mind", system: { aptitudes: { wil: { value: 15 } } } }, async mind => {
+          await waitUntil(() => mind.getFlag("eclipsephase", "defaultMorphAdded"));
+          seedDice([uniformForFace(30, 100)]);
+          await RollCheck({ name: "Psi", key: "psi", type: "psi", rollvalue: 70, itemid: caster.items.find(item => item.name === "Quench Sense").id, pooltype: "Moxie" }, caster.system, caster, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } }, null, "psiSleight");
+          const card = newestWith("taskCard");
+          await applyTargetedAttack(card, { pick: async () => [{ actor: mind }], confirm: async () => true });
+          const defence = newestWith("attackDefence");
+
+          seedDice([uniformForFace(22, 100)]);
+          await rollDefence(defence, mind.uuid, "will", { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } });
+          await waitUntil(() => game.messages.get(defence.id).getFlag("eclipsephase", "attackDefence").entries[0].outcome, 8000);
+
+          const after = game.messages.get(defence.id);
+          assert.deepInclude(after.getFlag("eclipsephase", "attackDefence").entries[0], { outcome: "none", lockedOut: true });
+          assert.include(after.content, game.i18n.localize("ep2e.chat.defence.lockedOut"));
           assert.isTrue(cardShape(after).root);
           return after;
         })));

@@ -1,6 +1,7 @@
 import { RollCheck, isHit } from "./dice.js";
 import { postCard, ownersAndGMs, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
 import { registerCard, updateCard, storable } from "../common/chat-cards.js";
+import { outcomeLabel } from "./attacks.js";
 
 // The cards a roll leaves in the chat and redraws as it goes on: the task card, check cards, and
 // the state a damage card starts from.
@@ -53,9 +54,19 @@ export function damageCardState(message) {
 export function taskCardView(state) {
   const view = { ...state.data };
   if (state.spent) view.poolSpent = game.i18n.format(`ep2e.chat.poolSpent.${state.spent.usageType}`, { name: state.spent.spender, pool: game.i18n.localize(state.spent.poolName) });
-  if (state.targets?.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: state.targets.map(target => target.name).join(", ") });
+  if (state.targets?.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: state.targets.map(targetWithOutcome(state)).join(", ") });
   view.defended = (state.targets ?? []).some(target => target.outcome);
   return view;
+}
+
+/**
+ * How a target is named on the attack card: with the outcome of its defence once it is in.
+ * @param {Object} state - The taskCard flag
+ * @returns {Function} target => its name, and "(outcome)" once defended
+ */
+function targetWithOutcome(state) {
+  const defence = state.data?.rollContext?.targetedAttack?.defence;
+  return target => (target.outcome ? `${target.name} (${outcomeLabel(target.outcome, defence)})` : target.name);
 }
 
 /**

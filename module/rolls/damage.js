@@ -1,7 +1,7 @@
 import { weaponPreparation, coneDamage, ATTACK_MODES, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
-import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
+import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
 import { registerAttackEffect, followUpVisibility, outcomeLabel } from "./attacks.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
@@ -123,20 +123,40 @@ export async function preparePsiDamage(data) {
 
 export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {
   if (!isHit(rollResult)) return;
+  const { message, roll } = await sleightDamage(actorWhole, sleightItem, rollResult, manualPush);
+  await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
+}
 
+/**
+ * A sleight's damage, rolled but not posted: its damage value, multiplied by an Effect push - a
+ * gamma-boosted async's free one or the one chosen - and doubled on a critical.
+ * @param {Actor} actorWhole - The async
+ * @param {Item} sleightItem - The sleight
+ * @param {Number} rollResult - The psi test's result tier
+ * @param {String} [manualPush] - The push chosen in the dialog
+ * @returns {Promise<Object>} message (the card's data) and roll
+ */
+export async function sleightDamage(actorWhole, sleightItem, rollResult, manualPush) {
   const baseDamage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv;
   const manualPushMultiplier = GAMMA_PUSH_EFFECTS[manualPush]?.damageMultiplier ?? 1;
   const pushMultiplier = sleightItem.system.psiType !== "chi" ? Math.max(gammaAutoPushDamageMultiplier(actorWhole), manualPushMultiplier) : 1;
   const rollFormula = damageFormula({ base: baseDamage, multiplier: pushMultiplier }, rollResult);
+  const message = { type: "psiDamage", sleightName: sleightItem.name, rollTitle: "ep2e.roll.announce.damageDone" };
+  return { message, roll: await new Roll(rollFormula).evaluate() };
+}
 
-  let message = {};
-  message.type = "psiDamage";
-  message.sleightName = sleightItem.name;
-  message.rollTitle = "ep2e.roll.announce.damageDone";
-
-  let roll = await new Roll(rollFormula).evaluate();
-
-  await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
+/**
+ * The damage an attack on targets deals, rolled but not posted: a sleight's or a weapon's.
+ * @param {Object} context - The attack's roll context
+ * @param {Number} rollResult - The attack's result tier
+ * @returns {Promise<Object|null>} actor, message and roll, or null when nothing is due
+ */
+export async function attackDamageRoll(context, rollResult) {
+  if (context.rolledFrom !== "psiSleight") return weaponDamage(context, rollResult);
+  const actor = await fromUuid(context.actorUuid);
+  const sleight = actor?.items?.get(context.item?.sleightId);
+  if (!sleight || !isHit(rollResult)) return null;
+  return { actor, ...(await sleightDamage(actor, sleight, rollResult, context.options?.push)) };
 }
 
 
@@ -330,14 +350,15 @@ export function detectWeaponAttack(context) {
 
 /**
  * Notes a target's defence on the attack card, where the card may be changed and otherwise by the
- * active GM.
+ * active GM. Any attack on targets can resolve through it; only a damage attack goes on to its
+ * damage card.
  * @param {Object} attack - The attack
  * @param {Actor} target - The target
  * @param {String} outcome - "hit", "half" or "none"
  * @param {Object} [options] - kind: "dodge" or "parry"
  * @returns {Promise<*>} What settling reported, or null when it was sent on
  */
-function noteDefence(attack, target, outcome, { kind = "dodge" } = {}) {
+export function noteDefence(attack, target, outcome, { kind = "dodge" } = {}) {
   const card = game.messages.get(attack.messageId);
   if (!card) return null;
   return runOrRelay(card, "noteAttackDefence", () => settleAttackDefence(card, target.uuid, outcome, kind), { payload: { messageId: card.id, uuid: target.uuid, outcome, kind } });
@@ -357,7 +378,7 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
   const settle = async () => {
     await updateCard(card, "taskCard", "defence", { uuid, outcome, kind });
     const state = card.getFlag("eclipsephase", "taskCard");
-    if (!damageReady(state)) return null;
+    if (!damageReady(state) || card.getFlag("eclipsephase", "roll")?.targetedAttack?.effect !== "damage") return null;
     await updateCard(card, "taskCard", "damageOffered");
     return postDamageCard(card, state.targets);
   };
@@ -402,12 +423,13 @@ export function damageAgainst(total, outcome, armor, armorPiercing = false) {
 /**
  * The armour an actor has against a kind of damage.
  * @param {Actor} actor - The target
- * @param {String} armorUsed - "energy", "kinetic" or "none"
+ * @param {String} armorUsed - "energy", "kinetic", "mental" (against psi) or "none"
  * @returns {Number} The armour value
  */
 export function armorAgainst(actor, armorUsed) {
   if (armorUsed === "energy") return Number(actor.system?.physical?.energyArmorTotal) || 0;
   if (armorUsed === "kinetic") return Number(actor.system?.physical?.kineticArmorTotal) || 0;
+  if (armorUsed === "mental") return Number(actor.system?.mental?.armorTotal) || 0;
   return 0;
 }
 
@@ -439,8 +461,8 @@ function reckoning(key, target, result) {
     share: result.share,
     armor: result.armor,
     armorType: escapeText(game.i18n.localize(`ep2e.item.weapon.table.armorUsed.${result.armorUsed}`)),
-    damage: highlighted("ep2e.chat.damage.amountDamage", result.taken),
-    woundsTaken: highlighted("ep2e.chat.damage.amountWounds", result.wounds)
+    damage: highlighted(result.damageTarget === "mental" ? "ep2e.chat.damage.amountStress" : "ep2e.chat.damage.amountDamage", result.taken),
+    woundsTaken: highlighted(result.damageTarget === "mental" ? "ep2e.chat.damage.amountTraumas" : "ep2e.chat.damage.amountWounds", result.wounds)
   });
 }
 
@@ -459,11 +481,11 @@ function highlighted(key, value) {
 /**
  * Puts an attack's damage on every target its card names, as the active GM: each takes its share
  * less its armour, and the damage card lists what each one took.
- * @param {Object} request - cardId (the damage card), total, armorUsed, armorPiercing and targets
- *   ({ uuid, name, outcome } each)
+ * @param {Object} request - cardId (the damage card), total, armorUsed, armorPiercing, damageTarget
+ *   ("physical" or "mental", for stress) and targets ({ uuid, name, outcome } each)
  * @returns {Promise<Array<String|Object>>} The lines written onto the card
  */
-export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, targets }) {
+export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", targets }) {
   const lines = [];
   for (const target of targets) {
     if (target.outcome === "none") {
@@ -473,8 +495,8 @@ export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercin
     const actor = await fromUuid(target.uuid);
     if (!actor) continue;
     const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing);
-    const result = await applyDamage(actor, against.dealt);
-    lines.push(attackDamageLine({ ...target, name: actor.name }, { ...against, ...result, armorUsed }));
+    const result = await applyDamage(actor, against.dealt, { target: damageTarget });
+    lines.push(attackDamageLine({ ...target, name: actor.name }, { ...against, ...result, armorUsed, damageTarget }));
   }
   const card = game.messages.get(cardId);
   if (card) await updateCard(card, "damageCard", "applied", { lines });
@@ -498,13 +520,13 @@ export async function rollAttackDamage(card) {
 
   ROLLING.add(card.id);
   try {
-    const damage = await weaponDamage({ ...foundry.utils.deepClone(context), messageId: attackCard.id }, spentOrOriginalResult(context));
+    const damage = await attackDamageRoll({ ...foundry.utils.deepClone(context), messageId: attackCard.id }, spentOrOriginalResult(context));
     if (!damage?.roll) return null;
     const shown = await rollToChat({ preventPrintToChat: true }, damage.message, WEAPON_DAMAGE_OUTPUT, damage.roll, damage.actor.name, card.whisper ?? [], card.blind === true, "rollOutput");
     await updateCard(card, "damageCard", "rolled", { data: storable(shown) });
 
     const total = Number(shown.total) || 0;
-    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, targets: state.targets };
+    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", targets: state.targets };
     if (game.user.isGM) await applyAttackDamage(request);
     else relayToActiveGM("applyAttackDamage", request);
     return total;
@@ -520,7 +542,7 @@ export async function rollAttackDamage(card) {
  */
 export function registerWeaponAttacks() {
   registerAttackEffect("damage", {
-    detect: detectWeaponAttack,
+    detect: context => detectWeaponAttack(context) ?? detectSleightAttack(context, { damaging: true }),
     resolve: noteDefence
   });
 }

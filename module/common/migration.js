@@ -1,4 +1,4 @@
-import { wareAwaitingSetup } from "./ware-skills.js";
+import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
 import { defaultArmorUsed } from "./weapon-functions.js";
 
@@ -2928,18 +2928,35 @@ export function _ep28_missingArmorUsed(item, catalogue) {
   return Object.keys(update).length ? update : null;
 }
 
+// The change through which the Psi Armor sleight reports itself, so mental armour can be counted.
+const _ep28_PSI_ARMOR_KEY = "system.mods.psiArmor";
+
 /**
- * Whether any weapon in the world has a mode without an armour type.
- * @returns {Promise<Boolean>} True when at least one weapon needs one
+ * The marker a Psi Armor sleight placed before 2.8 is missing, matched by name.
+ * @param {Item} item - The item
+ * @returns {Object|null} The effect data, or null when the item needs none
+ */
+export function _ep28_missingPsiArmorMarker(item) {
+  if (item.type !== "aspect" || item.name !== "Psi Armor") return null;
+  if (Array.from(item.effects ?? []).some(effect => (effect.changes ?? effect.system?.changes ?? []).some(change => change.key === _ep28_PSI_ARMOR_KEY))) return null;
+  const changes = [{ key: _ep28_PSI_ARMOR_KEY, value: "true", priority: null, type: "override" }];
+  return { name: item.name, img: "/icons/svg/mystery-man.svg", disabled: false, transfer: true, changes, flags: {}, system: { changes } };
+}
+
+/**
+ * Whether any weapon in the world has a mode without an armour type, or a Psi Armor sleight lacks
+ * the marker mental armour is counted from.
+ * @returns {Promise<Boolean>} True when at least one item needs work
  */
 export async function migrationPre28Needed() {
-  const needs = item => _ep28_missingArmorUsed(item, new Map()) !== null;
+  const needs = item => _ep28_missingArmorUsed(item, new Map()) !== null || _ep28_missingPsiArmorMarker(item) !== null;
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
 /**
- * Gives every weapon in the world the armour type its damage meets, per mode: the world's own
- * items, every actor's embedded ones and the world's item compendiums.
+ * Gives every weapon in the world the armour type its damage meets, per mode, and every Psi Armor
+ * sleight its marker: the world's own items, every actor's embedded ones and the world's item
+ * compendiums.
  * @param {Boolean} startMigration - Whether the user confirmed the migration
  * @returns {Promise<Object>} Whether the closing notice is due
  */
@@ -2954,6 +2971,15 @@ export async function migrationPre28(startMigration) {
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => item.type === "rangedWeapon" || item.type === "ccWeapon",
+    includeCompendiums: true
+  });
+
+  await forEachItem(async item => {
+    const marker = _ep28_missingPsiArmorMarker(item);
+    if (marker) await item.createEmbeddedDocuments("ActiveEffect", [marker]);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "aspect",
     includeCompendiums: true
   });
 

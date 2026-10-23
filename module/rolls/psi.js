@@ -5,7 +5,9 @@ import { gmList, prepareRecipients, inheritChatVisibility, readRollContext } fro
 import { effectRuleKey } from "../common/general-helper-functions.js";
 import { getStrainFamily, listStrainFamilies } from "./strain-families.js";
 import { durationRunOut } from "../common/time.js";
-import { strainSubstrate } from "../common/body-markers.js";
+import { strainSubstrate } from "../common/morp-functions.js";
+import { registerAttackEffect } from "./attacks.js";
+import { noteDefence } from "./damage.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
 
@@ -412,4 +414,90 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
         }
     }
 
+}
+// A psi-gamma sleight used on someone else is an attack (Core p.276): opposed by the target's WIL,
+// and unable to reach a body without a biological brain.
+export const PSI_CURSOR = { icon: "ep-lightning" };
+export const PSI_UNSUITABLE = ["synthmorph", "infomorph", "bot", "vehicle"];
+const PSI_CYBERBRAIN_MODIFIER = -30;
+const PSI_TOUCH_MODIFIER = 20;
+
+/**
+ * The psi-gamma sleight a roll uses, or null for any other roll.
+ * @param {Object} context - The roll context, with actor and dataset
+ * @returns {Item|null} The sleight
+ */
+export function gammaSleight(context) {
+    if (context?.rolledFrom !== "psiSleight") return null;
+    const sleight = context.actor?.items?.get?.(context.dataset?.itemid);
+    return sleight?.system?.psiType === "gamma" ? sleight : null;
+}
+
+/**
+ * Whether a sleight deals damage or stress of its own.
+ * @param {Item} sleight - The sleight
+ * @returns {Boolean} True when it names a damage value
+ */
+export function sleightDamages(sleight) {
+    const damage = sleight?.system?.damage;
+    return !!(damage?.d10 || damage?.d6 || damage?.bonus);
+}
+
+/**
+ * The attack a psi-gamma sleight's roll carries: one target, two with the Additional Target push;
+ * a willing target does not resist. Power has the target resist on half their WIL, Penetration
+ * halves mental armour. Damaging sleights and the others are told apart, as each goes to its own
+ * effect.
+ * @param {Object} context - The roll context at preRoll
+ * @param {Object} options - damaging: whether to recognise the damaging sleights or the others
+ * @returns {Object|null} The attack's data, or null when the roll is no such attack
+ */
+export function detectSleightAttack(context, { damaging }) {
+    const sleight = gammaSleight(context);
+    if (!sleight || sleightDamages(sleight) !== damaging) return null;
+    const push = context.options?.push;
+    return {
+        targets: push === "target" ? 2 : 1,
+        area: false,
+        labelKey: "ep2e.chat.attack.chooseTarget",
+        cursor: PSI_CURSOR,
+        unsuitable: PSI_UNSUITABLE,
+        willing: context.options?.willing === true || context.options?.willing === "on",
+        payload: {
+            armorUsed: "mental",
+            armorPiercing: push === "penetration",
+            halveWill: push === "power",
+            damageTarget: sleight.system.damage?.target === "mental" ? "mental" : "physical"
+        }
+    };
+}
+
+/**
+ * What a psi-gamma sleight's own circumstances add to its test: +20 at touch range, -30 against a
+ * target who runs a cyberbrain.
+ * @param {Object} context - The roll context at preRoll
+ * @param {Function} kindsOf - kindsOf(actor) lists what a target counts as
+ * @returns {Object[]} { text, value } per modifier
+ */
+export function sleightModifiers(context, kindsOf) {
+    if (!gammaSleight(context)) return [];
+    const modifiers = [];
+    const touch = context.options?.psiTouch;
+    if (touch === true || touch === "on") modifiers.push({ text: "ep2e.roll.announce.psi.touch", value: PSI_TOUCH_MODIFIER });
+    const targets = String(context.options?.preTargets || "").split(",").filter(Boolean).map(uuid => fromUuidSync(uuid)).filter(Boolean);
+    if (targets.some(target => kindsOf(target).includes("cyberbrain"))) modifiers.push({ text: "ep2e.roll.announce.psi.cyberbrain", value: PSI_CYBERBRAIN_MODIFIER });
+    return modifiers;
+}
+
+/**
+ * Lets psi-gamma sleights without damage of their own land on targets: each target resists with
+ * WIL, and the outcome stays on the cards - what the sleight does is the GM's to apply. Damaging
+ * sleights go through the damage effect instead. Registered after it.
+ * @returns {void}
+ */
+export function registerSleightAttacks() {
+    registerAttackEffect("sleight", {
+        detect: context => detectSleightAttack(context, { damaging: false }),
+        resolve: noteDefence
+    });
 }

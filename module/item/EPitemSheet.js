@@ -1,6 +1,6 @@
 import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText } from "../common/general-sheet-functions.js";
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
-import { hasSkillOptions, pickSpecialSkills } from "../common/ware-skills.js";
+import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;

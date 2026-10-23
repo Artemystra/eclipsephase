@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { needsSkillSetup, applySkillPicks, pickSpecialSkills, postWareSetupCard, setupFromCard, wareAwaitingSetup } from "../../module/common/ware-skills.js";
+import { needsSkillSetup, applySkillPicks, pickSpecialSkills, postWareSetupCard, setupFromCard, wareAwaitingSetup } from "../../module/rolls/modifiers.js";
 import { wareRollOptions } from "../../module/rolls/modifiers.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
 

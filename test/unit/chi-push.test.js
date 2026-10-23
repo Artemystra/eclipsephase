@@ -1,6 +1,6 @@
 import { chiPushMinutes, pushChiSleight, endExpiredChiPushes } from "../../module/rolls/psi.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
-import { registerPoolRule } from "../../module/common/pool-rule.js";
+import { registerPoolRule } from "../../module/rolls/pools.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 const BOOST = [{ key: "system.pools.insight.mod", value: "+1", type: "add" }];

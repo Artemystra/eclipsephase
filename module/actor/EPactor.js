@@ -1,7 +1,7 @@
 import { eclipsephase } from "../config.js"
 import { applyDamage } from "../rolls/damage.js"
 import { endAllChiPushes } from "../rolls/psi.js"
-import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
+import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/morp-functions.js"
 import { globalModifiers } from "../rolls/modifiers.js";
 
 const gammaAutoPushInFlight = new Set();
@@ -172,6 +172,7 @@ export default class EPactor extends Actor {
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
+    this._calculateMentalArmor(actorModel);
     // Mirrors jammedHealthValues: when jamming, movement comes from the jammed body, not the sleeved
     // morph. Exposed on the actor (not just the item) so canvas/token code can read it directly
     // without re-resolving which body/movement slot is active itself.
@@ -785,6 +786,18 @@ export default class EPactor extends Actor {
     }
 
     actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum + actorModel.currentStatus.specialModifierSum;
+  }
+
+  /**
+   * Mental armour, which only psi meets (Core p.276): WIL / 3 from the Psi Armor sleight, which
+   * marks itself through system.mods.psiArmor, plus whatever effects add through mentalArmorMod.
+   * @param {Object} actorModel - The actor's system data
+   * @returns {void}
+   */
+  _calculateMentalArmor(actorModel) {
+    const psiArmor = actorModel.mods?.psiArmor === true || actorModel.mods?.psiArmor === "true" ? Math.floor((Number(actorModel.aptitudes?.wil?.value) || 0) / 3) : 0;
+    actorModel.mental ??= {};
+    actorModel.mental.armorTotal = psiArmor + (Number(actorModel.mods?.mentalArmorMod) || 0);
   }
 
   _calculateArmor(actorModel, actorWhole, jammedVehicleData) {

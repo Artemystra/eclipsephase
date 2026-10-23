@@ -842,9 +842,46 @@ dialog.dialog::backdrop {
   flex-direction: row-reverse;
 }
 
-/* Every dialog's primary action sits on the right and keeps the default look; the others are secondary. */
+/* Every dialog's primary action sits on the right in the accent colour; the others are secondary. */
+.ep2e-primary-right .form-footer button:first-child {
+  background-color: var(--accentBackground);
+}
+
 .ep2e-primary-right .form-footer button:not(:first-child) {
   background-color: var(--mainBackground);
+}
+
+/* A narrow dialog with three actions: the two secondaries side by side, the primary below on its own row. */
+.ep2e-primary-below .form-footer {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ep2e-primary-below .form-footer button:first-child {
+  order: 3;
+  flex: 1 0 100%;
+}
+
+.ep2e-primary-below .form-footer button:nth-child(2) {
+  order: 2;
+}
+
+.ep2e-primary-below .form-footer button:nth-child(3) {
+  order: 1;
+}
+
+/* The combat tracker draws its initiative die as the button's background, which the system's own button rule paints over. It is drawn as a mask in the icon blue instead. The core's icon path in --initiative-icon is relative and would resolve against this stylesheet, so the die is named from here - three levels up is Foundry's root. */
+.combat-sidebar .combat-tracker .token-initiative button {
+  background: var(--iconBlue);
+  border: none;
+  filter: none;
+  -webkit-mask: url("../../../icons/svg/d20.svg") no-repeat center / contain;
+  mask: url("../../../icons/svg/d20.svg") no-repeat center / contain;
+}
+
+.combat-sidebar .combat-tracker .token-initiative button:hover {
+  background: var(--highlight);
+  box-shadow: none;
 }
 
 #sidebar {
@@ -1159,15 +1196,22 @@ form button,
 .dialog .dialog-buttons button{
   color: var(--mainText);
   background: var(--highlightBackground);
+  border: 1px solid var(--iconGrey);
 }
 
 button.ui-control[aria-pressed=true] {
   border-color: var(--highlight);
 }
 
-body.game .app button:hover, 
-body.game .app button:focus {
-  box-shadow: var(--highlight);
+/* Every button glows in the highlight colour on hover and takes a highlight border when focused. */
+body.game button:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+body.game button:focus,
+body.game button:focus-visible {
+  border: 2px solid var(--highlight);
+  outline: none;
 }
 
 .eclipsephase button.sheetButton {
@@ -4043,6 +4087,10 @@ li:has(.ep-system-notice) .message-header {
 
 .chatControls.ep-chat-stack .ep-chat-primary {
   margin-top: 5px;
+}
+
+.chatControls .ep-chat-primary {
+  background-color: var(--accentBackground);
 }
 
 /* The flat part of a damage roll, set beside its dice. */
