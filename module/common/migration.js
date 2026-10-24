@@ -2,6 +2,91 @@ import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
 import { defaultArmorUsed } from "./weapon-functions.js";
 
+// The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
+// only its own English text - a title, an introduction, the bullets of what changed and footnote
+// comments. **Words** in the text are set in bold; everything else is plain text.
+export const MIGRATION_NOTICE_TEMPLATE = "systems/eclipsephase/templates/chat/migration-notice.html";
+export const SUPPORT_LINKS = {
+  github: "https://github.com/Artemystra/eclipsephase",
+  kofi: "https://ko-fi.com/diemen",
+  discord: "https://discordapp.com/users/186786554230996993"
+};
+
+export const MIGRATION_NOTES = {
+  "2.7": {
+    title: "First time is free...!",
+    intro: "Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:",
+    bullets: [
+      "Every drug's **Duration** is now functional and runs on the clock.",
+      "Drugs come in **packs** of five doses by default, settable per drug.",
+      "Dropping the same drug, ammo or grenade again adds to your existing stack.",
+      "Only **ammunition packs** load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.",
+      "A drug's effects apply when you **take** it, not while you carry it.",
+      "Every drug is now either a **drug** or a **toxin**. The book's chapters live on as folders in the compendium.",
+      "Drugs now bring their **situational modifiers** into your rolls, call for **checks** when they take hold and can leave **stress** behind when they wear off. Drugs already on your sheets get these from the compendium.",
+      "Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.",
+      "Drugs now also work **over time**, can lend **traits** while they run, and meet your **defensive ware**: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.",
+      "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
+    ],
+    comments: []
+  },
+  "2.8": {
+    title: "We always aimed for that!",
+    intro: "Weapons are updated a great deal in this iteration, agent, so you better gear up! Because while just rolling damage has already been implemented before, we're now moving towards a better UX during combat encounters and competitive dice rolls. So buckle up champ 'cause here. we. go!",
+    bullets: [
+      "Using Weapons and damaging Psi abilities is now a target practice! Choose your way to do harm, select your targets and cave in their faces... or melt them... or whatever...",
+      "We streamlined how weapons work to an extent, that they will now tell you whether a target is able to take damage or not.",
+      "Also weapons now do have a damage type rather than just an ammo type. This helps armor to understand if it's applicable or not.",
+      "Talking about armor: There's a new kind of armor now! Based on the glow-up of Psi with 2.5 we have now introduced the optional \"mental armor\", based on the psi chi sleight. That means you're now far better off against TITAN mutants in your adventures - psykers, sorry. I meant to say psykers...",
+      "That's not all, though. Beside ranged, we also have a full range of melee updates, GM quality of life hacks and much more in the quiver so to speak.",
+      "All of the original book weapons should be updated with this migration dialog, when it comes to homebrew weapons we tried to anticipate that energy weapons might do energy damage... but everything else just is kinetic. So you might want to check on these items!",
+      "Grenades and cone weapons: Well we're working very hard on these. But due to their nature we're still struggling a bit on how to represent them on the canvas. But fret not: We're Firewall. We will get there. Eventually..."
+    ],
+    comments: []
+  }
+};
+
+/**
+ * A release text as markup: escaped, with **words** set in bold.
+ * @param {String} text - The text
+ * @returns {String} The markup
+ */
+export function noticeText(text) {
+  return Handlebars.escapeExpression(String(text ?? "")).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+}
+
+/**
+ * Asks whether to migrate to a release, showing what the release brings.
+ * @param {String} version - The release, a key of MIGRATION_NOTES
+ * @param {Object} [options] - extra: a further note for this world only
+ * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
+ */
+export async function migrationNotice(version, { extra = "" } = {}) {
+  const note = MIGRATION_NOTES[version] ?? {};
+  const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
+    version,
+    title: note.title ?? version,
+    intro: noticeText(note.intro),
+    bullets: (note.bullets ?? []).map(noticeText),
+    comments: (note.comments ?? []).map(noticeText),
+    extra: extra ? noticeText(extra) : "",
+    links: SUPPORT_LINKS
+  });
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.migration.notice.windowTitle") },
+    classes: ["ep2e-primary-right", "ep-migration-dialog"],
+    content,
+    buttons: [
+      { action: "start", label: game.i18n.localize("ep2e.migration.notice.migrate"), default: true, callback: () => ({ start: true }) },
+      { action: "cancel", label: game.i18n.localize("ep2e.migration.notice.close"), callback: () => ({ cancelled: true }) }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 700 }
+  });
+  return result ?? { cancelled: true };
+}
+
 export async function migrationLegacy(startMigration, endMigration){
     if (startMigration){
   
@@ -821,7 +906,6 @@ export async function migrationPre09(startMigration, endMigration){
                 number++
               }
 
-
               if(armorTotal === "-" || !armorTotal){
                 armor["system.armor.energy"] = 0;
                 armor["system.armor.kinetic"] = 0;
@@ -920,7 +1004,6 @@ export async function migrationPre093(startMigration, endMigration){
           }
         } 
       }
-
 
       game.settings.set("eclipsephase", "migrationVersion", "0.9.3");
       endMigration = true
@@ -1457,7 +1540,6 @@ export function migrationPre110(startMigration, endMigration){
 
       if(actor.type != "goon")
         update["system.psiStrain.infection"] = parseInt(actor.system.psiStrain.infection)
-
 
       update["system.updated"] = latestUpdate
 
@@ -2510,7 +2592,6 @@ async function _ep25_addBrainWareMarker(item) {
   await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
 }
 
-
 // The sub-strains the Ki module owns. The five Psi archetypes stay in system data.
 const _ep25_KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
 
@@ -2584,7 +2665,6 @@ export async function migrationPre25(startMigration, endMigration) {
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
     }
-
 
     try {
       for (const item of actor.items) await _ep25_addBrainWareMarker(item);
@@ -2816,87 +2896,6 @@ async function _ep27_flagWareSetup() {
       await user.setFlag("eclipsephase", "pendingWareSetup", true);
     }
   }
-}
-
-// The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
-// only its own English text - a title, an introduction, the bullets of what changed and footnote
-// comments. **Words** in the text are set in bold; everything else is plain text.
-export const MIGRATION_NOTICE_TEMPLATE = "systems/eclipsephase/templates/chat/migration-notice.html";
-export const SUPPORT_LINKS = {
-  github: "https://github.com/Artemystra/eclipsephase",
-  kofi: "https://ko-fi.com/diemen",
-  discord: "https://discordapp.com/users/186786554230996993"
-};
-
-export const MIGRATION_NOTES = {
-  "2.7": {
-    title: "First time is free...!",
-    intro: "Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:",
-    bullets: [
-      "Every drug's **Duration** is now functional and runs on the clock.",
-      "Drugs come in **packs** of five doses by default, settable per drug.",
-      "Dropping the same drug, ammo or grenade again adds to your existing stack.",
-      "Only **ammunition packs** load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.",
-      "A drug's effects apply when you **take** it, not while you carry it.",
-      "Every drug is now either a **drug** or a **toxin**. The book's chapters live on as folders in the compendium.",
-      "Drugs now bring their **situational modifiers** into your rolls, call for **checks** when they take hold and can leave **stress** behind when they wear off. Drugs already on your sheets get these from the compendium.",
-      "Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.",
-      "Drugs now also work **over time**, can lend **traits** while they run, and meet your **defensive ware**: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.",
-      "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
-    ],
-    comments: []
-  },
-  "2.8": {
-    title: "Know Your Armor",
-    intro: "Lasers burn, bullets punch, and some things just soak through your clothes. Every weapon mode now says which armor its damage meets:",
-    bullets: [
-      "Each weapon mode has an **Armor Used** field in its header: **Energy**, **Kinetic** or **None**.",
-      "Weapons already on your sheets get the value of their compendium namesake. Weapons of your own get Energy for beam weapons and Kinetic for everything else - check the ones that should differ.",
-      "Psi now meets **mental armor**: Psi Armor sleights already on your sheets learn to report it."
-    ],
-    comments: []
-  }
-};
-
-/**
- * A release text as markup: escaped, with **words** set in bold.
- * @param {String} text - The text
- * @returns {String} The markup
- */
-export function noticeText(text) {
-  return Handlebars.escapeExpression(String(text ?? "")).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
-}
-
-/**
- * Asks whether to migrate to a release, showing what the release brings.
- * @param {String} version - The release, a key of MIGRATION_NOTES
- * @param {Object} [options] - extra: a further note for this world only
- * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
- */
-export async function migrationNotice(version, { extra = "" } = {}) {
-  const note = MIGRATION_NOTES[version] ?? {};
-  const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
-    version,
-    title: note.title ?? version,
-    intro: noticeText(note.intro),
-    bullets: (note.bullets ?? []).map(noticeText),
-    comments: (note.comments ?? []).map(noticeText),
-    extra: extra ? noticeText(extra) : "",
-    links: SUPPORT_LINKS
-  });
-  const result = await foundry.applications.api.DialogV2.wait({
-    window: { title: game.i18n.localize("ep2e.migration.notice.windowTitle") },
-    classes: ["ep2e-primary-right", "ep-migration-dialog"],
-    content,
-    buttons: [
-      { action: "start", label: game.i18n.localize("ep2e.migration.notice.migrate"), default: true, callback: () => ({ start: true }) },
-      { action: "cancel", label: game.i18n.localize("ep2e.migration.notice.close"), callback: () => ({ cancelled: true }) }
-    ],
-    modal: true,
-    rejectClose: false,
-    position: { width: 700 }
-  });
-  return result ?? { cancelled: true };
 }
 
 export async function migrationPre27Needed() {
