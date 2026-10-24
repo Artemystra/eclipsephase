@@ -2817,6 +2817,77 @@ async function _ep27_flagWareSetup() {
   }
 }
 
+// The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
+// only its own English text - a title, an introduction, the bullets of what changed and footnote
+// comments. **Words** in the text are set in bold; everything else is plain text.
+export const MIGRATION_NOTICE_TEMPLATE = "systems/eclipsephase/templates/chat/migration-notice.html";
+export const SUPPORT_LINKS = {
+  github: "https://github.com/Artemystra/eclipsephase",
+  kofi: "https://ko-fi.com/diemen",
+  discord: "https://discordapp.com/users/186786554230996993"
+};
+
+export const MIGRATION_NOTES = {
+  "2.7": {
+    title: "First time is free...!",
+    intro: "Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:",
+    bullets: [
+      "Every drug's **Duration** is now functional and runs on the clock.",
+      "Drugs come in **packs** of five doses by default, settable per drug.",
+      "Dropping the same drug, ammo or grenade again adds to your existing stack.",
+      "Only **ammunition packs** load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.",
+      "A drug's effects apply when you **take** it, not while you carry it.",
+      "Every drug is now either a **drug** or a **toxin**. The book's chapters live on as folders in the compendium.",
+      "Drugs now bring their **situational modifiers** into your rolls, call for **checks** when they take hold and can leave **stress** behind when they wear off. Drugs already on your sheets get these from the compendium.",
+      "Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.",
+      "Drugs now also work **over time**, can lend **traits** while they run, and meet your **defensive ware**: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.",
+      "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
+    ],
+    comments: []
+  }
+};
+
+/**
+ * A release text as markup: escaped, with **words** set in bold.
+ * @param {String} text - The text
+ * @returns {String} The markup
+ */
+export function noticeText(text) {
+  return Handlebars.escapeExpression(String(text ?? "")).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+}
+
+/**
+ * Asks whether to migrate to a release, showing what the release brings.
+ * @param {String} version - The release, a key of MIGRATION_NOTES
+ * @param {Object} [options] - extra: a further note for this world only
+ * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
+ */
+export async function migrationNotice(version, { extra = "" } = {}) {
+  const note = MIGRATION_NOTES[version] ?? {};
+  const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
+    version,
+    title: note.title ?? version,
+    intro: noticeText(note.intro),
+    bullets: (note.bullets ?? []).map(noticeText),
+    comments: (note.comments ?? []).map(noticeText),
+    extra: extra ? noticeText(extra) : "",
+    links: SUPPORT_LINKS
+  });
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.migration.notice.windowTitle") },
+    classes: ["ep2e-primary-right", "ep-migration-dialog"],
+    content,
+    buttons: [
+      { action: "start", label: game.i18n.localize("ep2e.migration.notice.migrate"), default: true, callback: () => ({ start: true }) },
+      { action: "cancel", label: game.i18n.localize("ep2e.migration.notice.close"), callback: () => ({ cancelled: true }) }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 700 }
+  });
+  return result ?? { cancelled: true };
+}
+
 export async function migrationPre27Needed() {
   const blueprints = await _ep27_drugBlueprints();
   const wareOptions = await _ep27_wareOptions();

@@ -2185,6 +2185,14 @@
         "updateLabel": "Update Notice",
         "main": "<b>Armor update:</b> {count} Armor item(s) on <b style='color: var(--highlight);'>{actor}</b> got automatically moved to their Stash.",
         "sub": "Since Armor now belongs to a specific body instead of just sitting in your inventory. You'll find it under Stashed Armor (Gear tab) - use the Equip button next to it to assign it to a body anytime."
+      },
+      "notice": {
+        "windowTitle": "Migration Pending",
+        "subheader": "Hey Agent, you've got a message from Laph",
+        "backup": "IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.",
+        "reachOut": "Don't forget to reach out, agent!",
+        "migrate": "Migrate Now!",
+        "close": "Close Without Migration"
       }
     },
     "systemMessage": {

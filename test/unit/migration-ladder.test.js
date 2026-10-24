@@ -33,6 +33,7 @@ async function runLadderFrom(from, answer = { start: true }) {
   const realRender = foundry.applications.handlebars.renderTemplate;
   foundry.applications.handlebars.renderTemplate = async (template, data = {}) => {
     if (String(template).includes("migration-dialog")) rendered.push({ copy: data.messageCopy, extra: data.messageCopyExtra });
+    if (String(template).includes("migration-notice")) rendered.push({ copy: `notice:${data.version}`, extra: data.extra || undefined });
     return realRender(template, data);
   };
 
@@ -130,7 +131,7 @@ describe("the 2.7 drug schema", () => {
 
     try {
       const rendered = await runLadderFrom("2.5");
-      expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.27");
+      expect(rendered.map(entry => entry.copy)).toContain("notice:2.7");
     } finally {
       game.items.delete(drug.id);
     }
@@ -242,7 +243,7 @@ describe("the 2.7 blueprint backfill", () => {
 
     const rendered = await runLadderFrom("2.5");
 
-    expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.27");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.7");
   });
 
   test("running it gives a drug on a sheet the effects of its compendium namesake", async () => {
@@ -363,7 +364,7 @@ describe("the 2.7 backfill of what C added", () => {
 
     const rendered = await runLadderFrom("2.5");
 
-    expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.27");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.7");
   });
 
   test("drugs on a sheet get their namesake's options, check and stress", async () => {

@@ -2135,6 +2135,14 @@
         "updateLabel": "Update-Hinweis",
         "main": "<b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände von <b style='color: var(--highlight);'>{actor}</b> wurden automatisch in den Stash verschoben.",
         "sub": "Da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Du findest sie unter Verstaute Rüstung (Ausrüstungs-Tab) - nutze den Ausrüsten-Button daneben, um sie jederzeit einem Körper zuzuweisen."
+      },
+      "notice": {
+        "windowTitle": "Migration ausstehend",
+        "subheader": "Hey Agent, du hast eine Nachricht von Laph",
+        "backup": "WICHTIG: Bis hierher wurden deine Daten weder aktualisiert noch verändert. Falls du deine Welt noch nicht gesichert hast, schließe diesen Dialog ohne Migration und lege eine Sicherung an, damit bei der Migration nichts verloren geht.",
+        "reachOut": "Melde dich gern, Agent!",
+        "migrate": "Jetzt migrieren!",
+        "close": "Ohne Migration schließen"
       }
     },
     "systemMessage": {

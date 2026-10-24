@@ -620,13 +620,15 @@
   color: var(--inactive);
 }
 
-.eclipsephase .footnote {
+/* A footnote everywhere: small, italic and grey. More specific rules only add spacing. */
+.footnote {
+  font-style: italic;
   font-size: 10px;
-  margin-left: -7px;
+  color: var(--inactive);
 }
 
-.chat-message .footnote {
-  font-size: 12px;
+.eclipsephase .footnote {
+  margin-left: -7px;
 }
 
 .eclipsephase .items-list {
@@ -4184,4 +4186,75 @@ li:has(.ep-system-notice) .message-header {
 .ep-defence-card .ep-defence-outcome {
   margin: 0;
   text-align: center;
+}
+
+/* The migration notice: a release's own text between the fixed parts, its bullets scrolling inside the dialog. */
+.ep-migration .ep-migration-body {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ep-migration .footnote {
+  font-size: 11px;
+}
+
+.ep-migration .ep-migration-title {
+  font-size: 25px;
+  border-bottom: none;
+  margin: 10px 0 0 0;
+}
+
+.ep-migration .ep-migration-bullets {
+  max-height: 300px;
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+.ep-migration .ep-migration-comments {
+  margin-top: 10px;
+}
+
+.ep-migration .ep-migration-reach {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.ep-migration .ep-migration-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ep-migration .ep-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.ep-migration .ep-social:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.ep-migration .ep-social-github {
+  background-color: #24292f;
+}
+
+.ep-migration .ep-social-kofi {
+  background-color: #29abe0;
+}
+
+.ep-migration .ep-social-discord {
+  background-color: #5865f2;
+}
+
+.ep-migration .ep-social-kofi-icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
+  mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
 }
