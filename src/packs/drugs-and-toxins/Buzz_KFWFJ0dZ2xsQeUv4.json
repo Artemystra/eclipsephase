@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "XLpKIp0Q6benJzPo",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,49 @@
     "additionalSystems": {},
     "description": "Hallucinations, –30 suggestive SAV/WIL Checks.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "moderate",
     "slotType": "consumable",
-    "category": "rec",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "36 hours",
+    "duration": {
+      "value": 36,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "suggestion",
+        "label": "ep2e.item.drug.rollOptions.buzzSuggestion",
+        "value": -30,
+        "appliesTo": [
+          "sav",
+          "wil"
+        ]
+      }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

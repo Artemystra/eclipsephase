@@ -2,8 +2,54 @@
   "name": "Klar",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
-  "effects": [],
-  "folder": null,
+  "effects": [
+    {
+      "_id": "HGp2jbLmrb5xeXLy",
+      "name": "Klar",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsIns.perceive.mod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!hu1ImLkGb4cgIpPa.HGp2jbLmrb5xeXLy"
+    }
+  ],
+  "folder": "C5oMRm2aIaMqJz22",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +59,38 @@
     "additionalSystems": {},
     "description": "+10 Perceive, no distraction modifiers",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "cognitive",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "8 hours",
+    "duration": {
+      "value": 8,
+      "units": "hours"
+    },
     "addictionMod": "-",
-    "addictionType": "none",
-    "quantity": 1
+    "addictionType": "mental",
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

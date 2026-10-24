@@ -1,39 +1,9 @@
-import { durationRunOut } from "./time.js";
+import { durationRunOut, isTimedSpan } from "./time.js";
+import { sameDrugForm } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
 import { getRollSource } from "../api/registry.js";
-
-/**
- * Foundry VTTs item creation & deletion functions
- * @param {Object} html - The HTML object to which the event listeners are added
- * @param {*} callerobj 
- * @param {*} caller 
- */
-export function registerItemHandlers(html,callerobj,caller){
-      // Add Inventory Item
-      html.find('.item-create').click(caller._onItemCreate.bind(this));
-
-      // Update Inventory Item
-      html.find('.item-edit').click(ev => {
-        const li = $(ev.currentTarget).parents(".item");
-        const item = callerobj.items.get(li.data("itemId"));
-        item.sheet.render(true);
-      });
-
-          // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      callerobj.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
-      li.slideUp(200, () => this.render(false));
-    });
-}
-
-export function createDroplist(html, callerobj){
-  html.find('name="droplist"')(ev => {
-  })
-  
-}
 
 /**
  * Foundry VTTs active effect creation & deletion functions
@@ -154,11 +124,45 @@ export async function tempEffectDeletion(actor, scope, key, values) {
  * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
  * @returns {Promise<void>} Resolves once the spent effects are gone
  */
-export async function deleteRunOutTempEffects(actor, effects) {
-  const spent = effects.filter(effect =>
-    effect.getFlag?.("eclipsephase", "effectKey") !== undefined && durationRunOut(effect));
+export function deleteRunOutTempEffects(actor, effects) {
+  return deleteRunOutEffects(actor, effects, "effectKey");
+}
 
+/**
+ * Deletes the effects carrying one of the system's flags whose duration has run out.
+ * @param {Actor} actor - The actor the effects are on
+ * @param {ActiveEffect[]} effects - The effects to look through
+ * @param {String} flag - The flag that marks them, e.g. "dose"
+ * @returns {Promise<void>} Resolves once they are gone
+ */
+export async function deleteRunOutEffects(actor, effects, flag) {
+  const spent = effects.filter(effect => effect.getFlag?.("eclipsephase", flag) !== undefined && durationRunOut(effect));
   if (spent.length) await actor.deleteEmbeddedDocuments("ActiveEffect", spent.map(effect => effect.id));
+}
+
+/**
+ * The data of an effect that runs on the world clock: started now, ending after its span - or
+ * running until ended when it has none - and marked with the system's flags.
+ * @param {Object} options - name, img, span ({value, units}), flags (under eclipsephase), and
+ *   optionally changes, statuses, showIcon, description, origin
+ * @returns {Object} The ActiveEffect data
+ */
+export function timedEffectData({ name, img, span, flags = {}, changes = [], statuses = [], showIcon = CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER, description = "", origin = null }) {
+  return {
+    name,
+    img,
+    origin,
+    description,
+    disabled: false,
+    transfer: false,
+    changes,
+    system: { changes },
+    statuses,
+    duration: isTimedSpan(span) ? { value: span.value, units: span.units, expiry: null } : { value: null, expiry: null },
+    start: ActiveEffect.getEffectStart(),
+    showIcon,
+    flags: { eclipsephase: flags }
+  };
 }
 
 /**
@@ -194,7 +198,6 @@ export function registerCommonHandlers(html, callerobj) {
   });
 
   //Toggle chat sections
-
 
   //Auto-close parent item
   html.querySelectorAll(".autoClose").forEach(element => {
@@ -270,41 +273,73 @@ export function registerCommonHandlers(html, callerobj) {
     wrapper.appendChild(icon);
 
     wrapper.addEventListener("click", () => {
-      new foundry.applications.apps.ImagePopout({ src: img.src, window: { title: img.title || "" } }).render(true);
+      new foundry.applications.apps.ImagePopout({ src: img.src, window: { title: img.title || img.alt || "" } }).render(true);
     });
   });
 }
 
 /**
- * Create special & know skills
- * @param {Object} event - The event starting the function (default: click)
- * @param {Object} callerobj - The object the function is called from (default: actor)
- * @returns 
+ * Whether an inline quantity edit has emptied a stack, which takes the item off the sheet rather
+ * than leaving a row holding nothing. Only the types carried as a stack are removed this way.
+ * Clearing the field counts the same as typing a nought, since both leave the stack at nothing.
+ * @param {Object} item - The item being edited
+ * @param {String} field - The edited field's data path
+ * @param {*} value - The value just entered
+ * @returns {Boolean} True when the item should go
  */
-export function itemCreate(event,callerobj){
-      event.preventDefault();
-      const header = event.currentTarget;
-      const type = header.dataset.type;
-      const data = duplicate(header.dataset);
-      const name = `New ${type.capitalize()}`;
-      const itemData = {
-        name: name,
-        type: type,
-        data: data
-      };
-      delete itemData.data["type"];
-      if (itemData.type === "specialSkill" || itemData.type === "knowSkill") {
-        itemData.name = "New Skill";
-      }
-      return callerobj.createEmbeddedDocuments("Item", [itemData]);
+export function emptiesStack(item, field, value){
+  if (field !== "system.quantity") return false;
+  if (!STACKABLE_TYPES.includes(item?.type)) return false;
+  if (value === null || value === undefined) return false;
+  const quantity = Number(value);
+  return Number.isFinite(quantity) && quantity <= 0;
 }
 
 /**
- * Deletes a given number of items from the actor's inventory
- * @param {Object} actor - The actor object the items are deleted from
- * @param {String} itemID - The ID of the item to be deleted
- * @param {Number} itemQuantity - The quantity of the items to be deleted
+ * Asks how many of a stacked item to delete. Defaults to one, so pressing delete on a stack never
+ * takes the whole stack with it by accident.
+ * @param {String} itemName - The item's name, shown in the headline
+ * @param {Number} stackSize - How many the stack holds, which caps the answer
+ * @returns {Promise<Object>} confirm, plus the count to delete clamped to the stack
  */
+export async function stackDeletion(itemName, stackSize){
+  if (game.eclipsephase?.testing?.autoConfirm) return { confirm: true, count: 1 };
+
+  const template = "systems/eclipsephase/templates/chat/pop-up.html";
+  const content = await foundry.applications.handlebars.renderTemplate(template, {
+    dialogType: "deleteStack",
+    popUpHeadline: `${game.i18n.localize("ep2e.actorSheet.button.delete")} ${itemName ?? ""}`,
+    popUpCopy: "ep2e.actorSheet.popUp.deleteStackCopy",
+    popUpInfo: "ep2e.actorSheet.popUp.deleteAdditionalInfo",
+    stackSize
+  });
+
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded") },
+    classes: ["ep2e-primary-right"],
+    content,
+    buttons: [
+      {
+        action: "confirm",
+        label: game.i18n.localize("ep2e.actorSheet.button.delete"),
+        default: true,
+        callback: (event, button) => Number(button.form.count.value)
+      },
+      {
+        action: "cancel",
+        label: game.i18n.localize("ep2e.roll.dialog.button.cancel"),
+        callback: () => false
+      }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 250 }
+  });
+
+  if (!Number.isFinite(result)) return { confirm: false, count: 0 };
+  return { confirm: true, count: Math.min(stackSize, Math.max(1, Math.floor(result))) };
+}
+
 export async function itemReduction(actor, itemID, itemQuantity){
   let quantity = Number(itemQuantity) - 1;
   let ammoUpdate = [];
@@ -766,9 +801,11 @@ export function itemToggle(html, item) {
  * @param {String} dialogTitle - The title displayed in the dialog. Has a fallback if none.
  * @param {String} headline - The headline within the dialog
  * @param {String} copy - The copy within the dialog
+ * @param {Function} [renderHook] - Called once the dialog is rendered, to wire live behaviour
+ * @param {Object} [extras] - Further template data, e.g. a checkbox below a standard list
  * @returns 
  */
-  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy, renderHook) {
+  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy, renderHook, extras = {}) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
@@ -780,7 +817,8 @@ export function itemToggle(html, item) {
       objectList,
       dialogType,
       headline,
-      copy
+      copy,
+      ...extras
     });
 
     const result = await foundry.applications.api.DialogV2.wait({
@@ -809,6 +847,282 @@ export function itemToggle(html, item) {
     return result ?? { cancelled: true };
   }
 
+/**
+ * Asks for one entry out of a list long enough to need a filter: a search field above a list that
+ * narrows as the user types. Enter takes the first entry still shown.
+ * @param {Object[]} entries - id and label per entry
+ * @param {String} header - The dialog title's localization key
+ * @param {String} copy - The explanation's localization key
+ * @returns {Promise<String|null>} The chosen id, or null when cancelled or nothing was chosen
+ */
+  export async function selectFromSearchableList(entries, header, copy) {
+    const renderHook = (event, dialog) => {
+      const root = dialog.element;
+      const filter = root.querySelector('input[name="Filter"]');
+      const select = root.querySelector('select[name="ItemSelect"]');
+      if (!filter || !select) return;
+      const narrow = () => {
+        const query = filter.value.trim().toLowerCase();
+        const shown = [...select.options].filter(option => {
+          option.hidden = !option.text.toLowerCase().includes(query);
+          return !option.hidden;
+        });
+        if (!shown.includes(select.selectedOptions[0])) select.value = shown[0]?.value ?? "";
+      };
+      filter.addEventListener("input", narrow);
+      narrow();
+      filter.focus();
+    };
+
+    const result = await listSelection(entries, "searchableList", 320, header, "", copy, renderHook);
+    if (result?.cancelled) return null;
+    return result?.selection || null;
+  }
+
+/**
+ * The token under a point on the canvas, the topmost one where several overlap. Tokens the user
+ * cannot see are skipped.
+ * @param {Object} point - Canvas coordinates
+ * @param {Object[]} tokens - The canvas tokens, in draw order
+ * @returns {Object|null} The token, or null over empty canvas
+ */
+export function tokenAt(point, tokens) {
+  const hits = tokens.filter(token => token.isVisible !== false && token.bounds?.contains(point.x, point.y));
+  return hits.at(-1) ?? null;
+}
+
+// The system's colours for picking targets: the cursor turquoise, the mark on a picked token red.
+export const TARGET_COLOR = "#00f5e4";
+export const MARK_COLOR = "#db2a2a";
+
+/**
+ * The default picking cursor as an image: a ring, four strokes and a centre dot, 32 pixels across.
+ * @param {String} color - The colour, as CSS
+ * @returns {String} A data URL
+ */
+function crosshairImage(color) {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='${color}' stroke-width='2.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='1.5' fill='${color}'/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+/**
+ * The character a Font Awesome icon draws, from the value its stylesheet gives `content` or `--fa`:
+ * the first quoted string, with CSS escapes like \f48e decoded. Font Awesome 7 adds an empty
+ * alternative text after a slash (`"\f48e" / ""`), which is not part of the glyph.
+ * @param {String} value - The computed value
+ * @returns {String} The glyph, or "" when there is none
+ */
+export function iconGlyph(value) {
+  const quoted = String(value ?? "").match(/^\s*(["'])((?:\\.|(?!\1).)*)\1/);
+  if (!quoted) return "";
+  return quoted[2].replace(/\\([0-9a-fA-F]{1,6})\s?/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))).replace(/\\(.)/g, "$1");
+}
+
+/**
+ * A Font Awesome icon drawn as an image, 32 pixels across, in a colour with a 1-pixel white border:
+ * the same glyph the chat cards show, read from the icon font Foundry already loaded and scaled to
+ * fit the image whatever its proportions.
+ * @param {String} icon - The icon's class, e.g. "fa-syringe"
+ * @param {String} color - The colour, as CSS
+ * @returns {String} A data URL
+ */
+export function iconImage(icon, color) {
+  const size = 32;
+  const probe = document.createElement("i");
+  probe.className = `fa-solid ${icon}`;
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  document.body.append(probe);
+  const style = getComputedStyle(probe, "::before");
+  const glyph = iconGlyph(getComputedStyle(probe).getPropertyValue("--fa")) || iconGlyph(style.content);
+  const family = style.fontFamily;
+  const weight = style.fontWeight;
+  probe.remove();
+
+  const image = document.createElement("canvas");
+  image.width = size;
+  image.height = size;
+  const context = image.getContext("2d");
+  const fit = size - 4;
+  context.font = `${weight} ${fit}px ${family}`;
+  const measured = context.measureText(glyph);
+  const width = (measured.actualBoundingBoxLeft + measured.actualBoundingBoxRight) || fit;
+  const height = (measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent) || fit;
+  const scale = Math.min(1, fit / Math.max(width, height));
+  context.font = `${weight} ${fit * scale}px ${family}`;
+  const box = context.measureText(glyph);
+  const x = (size - (box.actualBoundingBoxLeft + box.actualBoundingBoxRight)) / 2 + box.actualBoundingBoxLeft;
+  const y = (size - (box.actualBoundingBoxAscent + box.actualBoundingBoxDescent)) / 2 + box.actualBoundingBoxAscent;
+  context.lineJoin = "round";
+  context.lineWidth = 2;
+  context.strokeStyle = "#ffffff";
+  context.strokeText(glyph, x, y);
+  context.fillStyle = color;
+  context.fillText(glyph, x, y);
+  return image.toDataURL();
+}
+
+/**
+ * Draws one crosshair of the default cursor's shape: a ring, four strokes and a centre dot.
+ * @param {Object} graphics - The PIXI graphics to draw into
+ * @param {Number} pixel - One screen pixel, in canvas units
+ * @param {Number} color - The colour
+ * @param {Number} grow - Screen pixels added on every side, for an outline drawn beneath
+ * @returns {void}
+ */
+function drawCrosshair(graphics, pixel, color, grow) {
+  graphics.lineStyle((2.5 + 2 * grow) * pixel, color, 1);
+  graphics.drawCircle(0, 0, 9 * pixel);
+  for (const [x, y] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) graphics.moveTo(x * (6 - grow) * pixel, y * (6 - grow) * pixel).lineTo(x * (15 + grow) * pixel, y * (15 + grow) * pixel);
+  graphics.lineStyle(0);
+  graphics.beginFill(color, 1).drawCircle(0, 0, (1.5 + grow) * pixel).endFill();
+}
+
+/**
+ * Draws the mark of a picked target on a token where it was clicked: the cursor's shape - the
+ * crosshair, or the icon picking ran with - in its colour (red by default) with a 1-pixel white
+ * border, as large on screen as the cursor (32 pixels across) at the zoom it was clicked at.
+ * @param {Object} token - The token placeable
+ * @param {Object} point - The click, in canvas coordinates
+ * @param {Object} [options] - icon: the Font Awesome class picking ran with, or none for the
+ *   crosshair; color: the mark's colour as a CSS hex value, MARK_COLOR by default
+ * @returns {Function} Removes the mark again
+ */
+export function drawTargetMarker(token, point, { icon = null, color = MARK_COLOR } = {}) {
+  const pixel = 1 / (globalThis.canvas?.stage?.scale?.x || 1);
+  let mark;
+  if (icon) {
+    mark = PIXI.Sprite.from(iconImage(icon, color));
+    mark.anchor.set(0.5);
+    mark.scale.set(pixel);
+  }
+  else {
+    mark = new PIXI.Graphics();
+    drawCrosshair(mark, pixel, 0xffffff, 1);
+    drawCrosshair(mark, pixel, Number.parseInt(color.replace("#", ""), 16), 0);
+  }
+  mark.position.set(point.x - (token.x ?? 0), point.y - (token.y ?? 0));
+  token.addChild(mark);
+  return () => mark.destroy();
+}
+
+/**
+ * The text that follows the cursor while targets are picked. Below it: for several targets how
+ * many are left, for one target whether it is chosen yet. Above it, once something is marked, how
+ * to confirm.
+ * @param {Object} state - multi: several targets; left: targets still to pick; marked: targets marked
+ * @returns {String} The label's HTML
+ */
+export function targetLabel({ multi, left, marked }) {
+  const hint = marked ? `<span class="ep-targeting-hint">${escapeText(game.i18n.localize("ep2e.targeting.confirmHint"))}</span>` : "";
+  const text = multi
+    ? game.i18n.format("ep2e.targeting.remaining", { count: left })
+    : game.i18n.localize(marked ? "ep2e.targeting.targetChosen" : "ep2e.targeting.selectTarget");
+  return `${hint}<span class="ep-targeting-count">${escapeText(text)}</span>`;
+}
+
+/**
+ * Lets the user pick targets on the canvas. A click marks a token, another click on it unmarks it;
+ * a right-click confirms what is marked, and Escape, or a right-click with nothing marked, cancels.
+ * With several targets a click past the limit is refused with a notice; with one, a click on
+ * another token moves the mark over to it. The clicks are kept from the canvas itself, so picking
+ * targets does not also select or deselect tokens. The cursor is set by a stylesheet rule rather
+ * than on the board, since the canvas writes its own cursor onto the board over every token.
+ * @param {Object} [options] - icon: a Font Awesome class for the cursor and the marks, none for
+ *   the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
+ *   marks' colour, the red MARK_COLOR by default; multi: several targets; max: how many, with multi;
+ *   marker: marker(token, point, {icon, color}) draws a mark and returns what removes it
+ * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
+ *   cancelled
+ */
+export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, marker = drawTargetMarker } = {}) {
+  const board = document.getElementById("board");
+  if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
+  ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
+  const limit = multi ? Math.max(1, Number(max) || 1) : 1;
+
+  return new Promise(resolve => {
+    const marked = new Map();
+    const label = document.createElement("div");
+    label.className = "ep-targeting-counter";
+    const refresh = () => { label.innerHTML = targetLabel({ multi, left: limit - marked.size, marked: marked.size }); };
+    const unmark = token => {
+      marked.get(token)?.();
+      marked.delete(token);
+    };
+    const cursor = document.createElement("style");
+    cursor.textContent = `#board { cursor: url("${icon ? iconImage(icon, color) : crosshairImage(color)}") 16 16, crosshair !important; }`;
+    const finish = tokens => {
+      board.removeEventListener("pointerdown", onPointer, true);
+      board.removeEventListener("contextmenu", onContext, true);
+      document.removeEventListener("pointermove", onMove, true);
+      document.removeEventListener("keydown", onKey, true);
+      cursor.remove();
+      for (const token of Array.from(marked.keys())) unmark(token);
+      label.remove();
+      resolve(tokens);
+    };
+    const onPointer = event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (event.button === 2) return finish(marked.size ? Array.from(marked.keys()) : null);
+      if (event.button !== 0) return;
+      const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+      const token = tokenAt(point, canvas.tokens.placeables);
+      if (!token) return;
+      if (marked.has(token)) unmark(token);
+      else if (!multi) {
+        for (const other of Array.from(marked.keys())) unmark(other);
+        marked.set(token, marker(token, point, { icon, color: markColor }));
+      }
+      else if (marked.size >= limit) ui.notifications.warn(game.i18n.format("ep2e.targeting.limitReached", { max: limit }));
+      else marked.set(token, marker(token, point, { icon, color: markColor }));
+      refresh();
+    };
+    const onContext = event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    const onMove = event => {
+      label.style.left = `${event.clientX}px`;
+      label.style.top = `${event.clientY}px`;
+    };
+    const onKey = event => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      finish(null);
+    };
+
+    refresh();
+    document.body.append(label);
+    document.head.append(cursor);
+    board.addEventListener("pointerdown", onPointer, true);
+    board.addEventListener("contextmenu", onContext, true);
+    document.addEventListener("pointermove", onMove, true);
+    document.addEventListener("keydown", onKey, true);
+  });
+}
+
+/**
+ * The actor of the token the user has selected on the canvas.
+ * @returns {Actor|null} The actor, or null when nothing is selected
+ */
+export function selectedTokenActor() {
+  return globalThis.canvas?.tokens?.controlled?.[0]?.actor ?? null;
+}
+
+/**
+ * Lets the user pick one actor from a list they can filter by typing.
+ * @param {Actor[]} actors - The actors on offer
+ * @param {String} header - The dialog's title key
+ * @param {String} copy - The dialog's copy key
+ * @returns {Promise<Actor|null>} The actor, or null when cancelled
+ */
+export async function pickActorFromList(actors, header, copy) {
+  const id = await selectFromSearchableList(actors.map(actor => ({ id: actor.id, label: actor.name })), header, copy);
+  return id ? actors.find(actor => actor.id === id) ?? null : null;
+}
+
   function listSelectionOutcome(form) {
     let returnValue;
 
@@ -817,6 +1131,7 @@ export function itemToggle(html, item) {
       // Only present when a dialog embeds a nested body-picker dropdown next to a radio option
       // (e.g. the Ego/Morph trait dialog's "Morph" option) - absent for every other radio-only caller.
       if (form?.BodySelect) result.body = form.BodySelect.value;
+      if (form?.ExtraOption) result.extraOption = form.ExtraOption.checked === true;
       return result;
     }
 
@@ -962,42 +1277,6 @@ export function itemToggle(html, item) {
     }, 2000);
   }
 
-
-
-/**
- * A powerful constructor of joined rolls for the chat.
- * Use this in case you need to make a series of rolls and want to display them into
- * one singular chat message.
- * @param {Array} rollsArray - The array of rolls to be displayed
- * @param {Object} messageData - Object with the chat message data
- * @param {*} param2 
- * @returns - An object to be displayed in the chat
- */
-async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create=true}={}) {
-  for ( const roll of rollsArray ) {
-      if ( !roll._evaluated ) await roll.evaluate();
-  }
-
-  // Prepare chat data
-  messageData = foundry.utils.mergeObject({
-      user: game.user.id,
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      sound: CONFIG.sounds.dice
-  }, messageData);
-  messageData.rolls = rollsArray;
-
-  // Either create the message or just return the chat data
-  const cls = getDocumentClass("ChatMessage");
-  const msg = new cls(messageData);
-
-  // Either create or return the data
-  if ( create ) return cls.create(msg.toObject(), { rollMode });
-  else {
-      if ( rollMode ) msg.applyRollMode(rollMode);
-      return msg.toObject();
-  }
-}
-
   export async function rollFromSheet (actorWhole, dataset, rolledFrom, weaponID, systemOptions){
     if(dataset.type === 'skill') {
       
@@ -1035,6 +1314,13 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
           return;
         }
 
+        if (weaponSelected.drugId) {
+          const drug = actorWhole.items.get(weaponSelected.drugId);
+          const { forceDose } = await import("./doses.js");
+          if (drug) await forceDose(actorWhole, drug, systemOptions);
+          return;
+        }
+
         rolledFrom = weaponSelected.rolledFrom
 
       }
@@ -1052,6 +1338,83 @@ export function gmList(){
   let activeGMs = gmList.filter(user => user.active)
   let gmIDs = activeGMs.map(user => user._id)
   return gmIDs
+}
+
+/**
+ * The users a card only an actor's owners act on is whispered to: its owners and every GM.
+ * @param {Actor} actor - The actor
+ * @returns {String[]} User ids
+ */
+export function ownersAndGMs(actor) {
+  return game.users.filter(user => user.isGM || actor.testUserPermission?.(user, "OWNER")).map(user => user.id);
+}
+
+// The system's notice card: an icon, a headline, an optional box of rows, an optional button.
+export const CARD_TEMPLATE = "systems/eclipsephase/templates/chat/dose.html";
+
+/**
+ * Posts a notice card about an actor: an icon, a headline and an optional box of labelled rows, a
+ * row without a label reading as a note. A character's card is public; anyone else's goes to the
+ * GMs, as the reload card does.
+ * @param {Actor} actor - The actor the card is about
+ * @param {Object} card - icon, color (a CSS variable), headline, rows of {label, value}, and any
+ *   further template data such as a button
+ * @param {Object} [flags] - Flags stored on the message
+ * @param {String[]} [whisper] - Who sees the card, instead of the default
+ * @returns {Promise<ChatMessage>} The posted card
+ */
+export async function postCard(actor, { icon, color, headline, rows = [], ...extra }, flags = {}, whisper = null) {
+  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { icon, color, headline, rows, ...extra });
+  const recipients = whisper ?? actorAudience(actor);
+  return ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    flags,
+    ...(recipients ? { whisper: recipients } : {})
+  });
+}
+
+/**
+ * Who sees a card about an actor: everyone for a player character, the GMs for anyone else.
+ * @param {Actor} actor - The actor
+ * @returns {String[]|null} User ids, or null for a public card
+ */
+export function actorAudience(actor) {
+  return actor?.type === "character" ? null : gmList();
+}
+
+/**
+ * A compendium item found by its name.
+ * @param {String} packId - The compendium, e.g. "eclipsephase.traits"
+ * @param {String} name - The item's name
+ * @returns {Promise<Item|null>} The item, or null when the compendium lacks it
+ */
+export async function findCompendiumItem(packId, name) {
+  const pack = game.packs.get(packId);
+  const entry = pack ? (await pack.getIndex()).find(item => item.name === name) : null;
+  return entry ? pack.getDocument(entry._id) : null;
+}
+
+/**
+ * A compendium item's data, ready to put on a sheet: without its id and folder.
+ * @param {Item} document - The compendium item
+ * @returns {Object} The item data
+ */
+export function cloneCompendiumItem(document) {
+  const data = document.toObject();
+  delete data._id;
+  delete data.folder;
+  return data;
+}
+
+/**
+ * Text made safe to put into markup.
+ * @param {*} value - The text
+ * @returns {String} The escaped text
+ */
+export function escapeText(value) {
+  const text = String(value ?? "");
+  return foundry.utils.escapeHTML?.(text) ?? text.replace(/[&<>"']/g, character => `&#${character.charCodeAt(0)};`);
 }
 
 /**
@@ -1210,26 +1573,28 @@ export function readRollContext(element){
 }
 
 //DV calculator (this translates the three given integers into a human readable roll formula)
+/**
+ * The dice formula a damage-style value stands for: d10s, d6s and a flat bonus, e.g. "1d10+2".
+ * Used for weapon and ammo damage and for a drug's wear-off stress alike.
+ * @param {Object} value - d10, d6 and bonus as the sheets store them
+ * @returns {String} The formula, or "" when there are no dice
+ */
+export function diceFormula(value) {
+  const d10 = Number(value?.d10) || 0;
+  const d6 = Number(value?.d6) || 0;
+  const bonus = Number(value?.bonus) || 0;
+  const bonusValue = bonus ? "+" + bonus : "";
+  if (d10 && d6) return d10 + "d10+" + d6 + "d6" + bonusValue;
+  if (d10) return d10 + "d10" + bonusValue;
+  if (d6) return d6 + "d6" + bonusValue;
+  return "";
+}
+
 export async function damageValueCalc (object, dvPath, traits, calcType){
   let dv = "";
   if(calcType === "ammo"){
     //Ammo Damage Calculation
-    dv = "ep2e.item.weapon.table.noDamageValueModifier"
-    const d10 = object.type != "drug" ? Number(dvPath.d10) : 0;
-    const d6 = object.type != "drug" ? dvPath.d6 : 0;
-    const bonus = object.type != "drug" ? dvPath.bonus : 0;
-    let bonusValue = bonus ? "+"  + bonus : "";
-  
-    if (d10 && d6){
-      dv = d10 + "d10+" + d6 + "d6" + bonusValue;
-    }
-    else if (d10 && !d6){
-      dv = d10 + "d10" + bonusValue;
-    }
-    else if (!d10 && d6){
-      dv = d6 + "d6" + bonusValue;
-    }
-    
+    dv = (object.type != "drug" ? diceFormula(dvPath) : "") || "ep2e.item.weapon.table.noDamageValueModifier";
   }
   else if (calcType === "weapon"){
     //if the weapon has the noDamage Trait the calculation is skipped
@@ -1393,6 +1758,37 @@ export function addMinimizeSupport(sheet, handle) {
   });
 }
 
+// The item types carried as a stack rather than as one object per instance: each holds a quantity
+// and sits in the consumable slot, so a second copy of the same name is simply a bigger stack.
+export const STACKABLE_TYPES = ["drug", "ammo", "grenade"];
+
+/**
+ * Adds an incoming item to the actor's existing stack of the same type and name, or creates it
+ * when there is none to join. Shared by the actor-to-actor transfer and the drop of a fresh item
+ * from a compendium, so the two paths cannot disagree about what stacks. Drugs additionally have
+ * to match on the form they were bought in - an injected and an oral pack are not one stack.
+ * @param {Actor} actor - The actor receiving the item
+ * @param {Object} itemData - The incoming item's source data
+ * @returns {Promise<Item>} The stack that grew, or the item that was created
+ */
+export async function mergeOrCreateItem(actor, itemData) {
+  const existing = actor.items.find(i =>
+    i.type === itemData.type &&
+    i.name === itemData.name &&
+    (i.type !== "drug" || sameDrugForm(i.system, itemData.system))
+  );
+
+  if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
+    const currentQty = Number(existing.system.quantity ?? 0);
+    const incomingQty = Number(itemData.system?.quantity ?? 1) || 1;
+    await existing.update({ "system.quantity": currentQty + incomingQty });
+    return existing;
+  }
+
+  const [created] = await actor.createEmbeddedDocuments("Item", [itemData]);
+  return created;
+}
+
 export async function transferItemBetweenActors({
   sourceActor,
   targetActor,
@@ -1418,21 +1814,7 @@ export async function transferItemBetweenActors({
     itemData.system.boundTo = boundToOverride;
   }
 
-  const existing = targetActor.items.find(i =>
-    i.type === item.type &&
-    i.name === item.name
-  );
-
-  let createdOrUpdated;
-  if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
-    const currentQty = Number(existing.system.quantity ?? 0);
-    await existing.update({
-      "system.quantity": currentQty + Math.min(sourceQty, transferQty)
-    });
-    createdOrUpdated = existing;
-  } else {
-    [createdOrUpdated] = await targetActor.createEmbeddedDocuments("Item", [itemData]);
-  }
+  const createdOrUpdated = await mergeOrCreateItem(targetActor, itemData);
 
   if (sourceQty <= transferQty) {
     await sourceActor.deleteEmbeddedDocuments("Item", [item.id]);

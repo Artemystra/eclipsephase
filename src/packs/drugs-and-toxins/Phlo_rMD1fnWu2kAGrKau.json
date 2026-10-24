@@ -2,8 +2,54 @@
   "name": "Phlo",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
-  "effects": [],
-  "folder": null,
+  "effects": [
+    {
+      "_id": "o2EDxWIR9C2pZgm7",
+      "name": "Phlo",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.pools.vigor.mod",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!rMD1fnWu2kAGrKau.o2EDxWIR9C2pZgm7"
+    }
+  ],
+  "folder": "3LgPDiPKo14RtxW5",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +59,38 @@
     "additionalSystems": {},
     "description": "+1 Vigor, can use Vigor twice on same test.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "major",
     "slotType": "consumable",
-    "category": "combat",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "3 hours",
+    "duration": {
+      "value": 3,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

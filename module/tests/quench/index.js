@@ -4,6 +4,11 @@ import { confirmation } from "../../common/general-sheet-functions.js";
 import { _ep25_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
 import { getStrainFamily, listStrainFamilies, hasStrainFamily } from "../../rolls/strain-families.js";
 import { strainSubstrate } from "../../common/body-markers.js";
+import { forceDose, takeDose } from "../../common/doses.js";
+import { owningActor } from "../../common/pool-rule.js";
+import { durationRunOut } from "../../common/time.js";
+import { applyTargetedAttack } from "../../rolls/targeted-attacks.js";
+import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
   withTempItem,
@@ -506,4 +511,208 @@ Hooks.on("quenchReady", quench => {
       });
     });
   }, { displayName: "Eclipse Phase: Migrations" });
+
+  quench.registerBatch("eclipsephase.drugs.forcedDose", context => {
+    const { describe, it, assert } = context;
+
+    const KICK = {
+      name: "Quench Kick", type: "drug",
+      system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } }
+    };
+    const ATTACKER = { type: "character", system: { skillsVig: { melee: { value: 40 } }, pools: { vigor: { value: 2 } } }, items: [KICK] };
+    const TARGET = { type: "character", name: "Quench Target" };
+
+    /**
+     * The cards a pool spend posted to offer the target button, since a given point in the chat log.
+     * @param {Set<String>} before - Message ids that existed before the test
+     * @returns {ChatMessage[]} The cards
+     */
+    function newHitCards(before) {
+      return game.messages.contents.filter(message => !before.has(message.id) && message.getFlag("eclipsephase", "targetedAttack"));
+    }
+
+    /**
+     * Forces a dose with the percentile die landing on a given face, answering the dialog with
+     * nothing ticked, and cleans up every message the test posted.
+     * @param {Number} face - The face the d100 shows
+     * @param {Function} fn - Called with the attacker, the drug, the attack card and the ids from before
+     * @returns {Promise<void>} Resolves once fn has run and the chat is tidied
+     */
+    async function attackWithFace(face, fn) {
+      const before = new Set(game.messages.contents.map(message => message.id));
+      try {
+        await withTempActor(ATTACKER, async actor => {
+          await awaitDefaultMorph(actor);
+          const drug = actor.items.find(item => item.name === KICK.name);
+          seedDice([uniformForFace(face, 100)]);
+          try {
+            await withoutDiceAnimation(() => forceDose(actor, drug, skipDialogOptions()));
+          } finally {
+            restoreDice();
+          }
+          const attack = game.messages.contents.filter(message => message.getFlag("eclipsephase", "roll")?.targetedAttack).at(-1);
+          await fn(actor, drug, attack, before);
+        });
+      } finally {
+        const posted = game.messages.contents.filter(message => !before.has(message.id)).map(message => message.id);
+        if (posted.length) await ChatMessage.deleteDocuments(posted);
+      }
+    }
+
+    /**
+     * Spends a pool point from the attack card's pool button, the way a click on the card does.
+     * @param {ChatMessage} attack - The attack's chat card
+     * @returns {Promise<void>} Resolves once the spend has run
+     */
+    async function spendPoolOn(attack) {
+      const row = document.createElement("li");
+      row.dataset.messageId = attack.id;
+      const button = document.createElement("button");
+      button.dataset.usepool = "pool";
+      row.append(button);
+      await usePoolFromChat({ currentTarget: button });
+    }
+
+    describe("forcing a dose on an unwilling target", function () {
+      it("a hit offers the target button, and the dose stays in the pack until a target is picked", async function () {
+        await attackWithFace(5, async (actor, drug, attack) => {
+          assert.include(attack.content, "targetedAttack");
+          assert.isFalse(attack.getFlag("eclipsephase", "roll").targetedAttack.delivered);
+          assert.strictEqual(drug.system.usagesUsed, 0);
+        });
+      });
+
+      it("picking the target spends the dose and posts the defence card", async function () {
+        await attackWithFace(5, async (actor, drug, attack, before) => {
+          await withTempActor(TARGET, async target => {
+            await applyTargetedAttack(attack, { pick: async () => [{ actor: target }], confirm: async () => true });
+            const defence = game.messages.contents.filter(message => !before.has(message.id) && message.getFlag("eclipsephase", "attackDefence"));
+            assert.strictEqual(defence.length, 1);
+            assert.strictEqual(drug.system.usagesUsed, 1);
+            assert.isTrue(attack.getFlag("eclipsephase", "roll").targetedAttack.delivered);
+          });
+        });
+      });
+
+      it("a miss offers no target button", async function () {
+        await attackWithFace(95, async (actor, drug, attack, before) => {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          assert.notInclude(attack.content, "targetedAttack");
+          assert.strictEqual(newHitCards(before).length, 0);
+        });
+      });
+
+      it("a miss a pool spend turns into a hit offers the target button on a card of its own", async function () {
+        await attackWithFace(91, async (actor, drug, attack, before) => {
+          assert.strictEqual(newHitCards(before).length, 0, "the flipped 19 must not count before the pool is spent");
+          await spendPoolOn(attack);
+          await waitUntil(() => newHitCards(before).length === 1);
+          assert.strictEqual(newHitCards(before).length, 1);
+          assert.strictEqual(drug.system.usagesUsed, 0);
+        });
+      });
+
+      it("a pool spend on an attack that already hit offers nothing a second time", async function () {
+        await attackWithFace(5, async (actor, drug, attack, before) => {
+          await spendPoolOn(attack);
+          await new Promise(resolve => setTimeout(resolve, 300));
+          assert.strictEqual(newHitCards(before).length, 0);
+        });
+      });
+    });
+  }, { displayName: "Eclipse Phase: Forced doses" });
+
+  quench.registerBatch("eclipsephase.drugs.overTimeTokens", context => {
+    const { describe, it, assert } = context;
+
+    const POISON = {
+      name: "Quench Poison", type: "drug",
+      system: {
+        active: true, drugType: "", category: "toxin", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5,
+        duration: { value: 1, units: "minutes" },
+        overTime: { damage: { d10: 0, d6: 1, bonus: 0 }, interval: "turn", ticks: null, modifier: 0, incapacitates: false }
+      }
+    };
+
+    /**
+     * The running dose of the test poison on an actor.
+     * @param {Actor} actor - The actor
+     * @returns {ActiveEffect|undefined} The dose
+     */
+    function poisonOn(actor) {
+      return actor?.effects?.find(effect => effect.getFlag("eclipsephase", "dose")?.name === POISON.name);
+    }
+
+    /**
+     * The ticks a dose has dealt so far.
+     * @param {ActiveEffect} effect - The dose
+     * @returns {Number|null} Ticks, or null without a dose
+     */
+    function ticksOf(effect) {
+      return effect ? Number(effect.getFlag("eclipsephase", "dose")?.overTimeState?.ticks ?? 0) : null;
+    }
+
+    /**
+     * Places a token of a fresh actor on the viewed scene, doses the token's actor with a poison that
+     * deals 1d6 every action turn for a minute, jumps the clock two minutes, and records the ticks
+     * the dose had dealt when it was deleted. Puts the clock back and removes everything it made.
+     * @param {Boolean} linked - Whether the token is linked to its actor
+     * @returns {Promise<Object>} What was seen: the dose taken, ticks at onset and at deletion, and
+     *   the expiry hook's view
+     */
+    async function poisonedThenSkipped(linked) {
+      const before = new Set(game.messages.contents.map(message => message.id));
+      const seen = { taken: false, ticksAtOnset: null, ticksAtDeletion: null, deleted: false, expiry: [] };
+      const onExpire = Hooks.on("updateActiveEffect", (effect, changes) => {
+        if (foundry.utils.getProperty(changes ?? {}, "duration.expired") !== true) return;
+        seen.expiry.push({ parent: effect.parent?.documentName, parentIsToken: effect.parent?.isToken ?? null, owner: owningActor(effect)?.uuid ?? null, runOut: durationRunOut(effect), ticks: ticksOf(effect) });
+      });
+      const onDelete = Hooks.on("deleteActiveEffect", effect => {
+        if (effect.getFlag("eclipsephase", "dose")?.name !== POISON.name) return;
+        seen.deleted = true;
+        seen.ticksAtDeletion = ticksOf(effect);
+      });
+      let token = null;
+      suppressDice3d();
+      try {
+        await withTempActor({ type: "character", name: "Quench Threat", prototypeToken: { actorLink: linked }, items: [POISON] }, async actor => {
+          await awaitDefaultMorph(actor);
+          const data = (await actor.getTokenDocument({ x: 0, y: 0 })).toObject();
+          [token] = await canvas.scene.createEmbeddedDocuments("Token", [data]);
+          await takeDose(token.actor, token.actor.items.find(item => item.name === POISON.name));
+          seen.taken = !!poisonOn(token.actor);
+          await waitUntil(() => ticksOf(poisonOn(token.actor)) >= 1, 3000).catch(() => {});
+          seen.ticksAtOnset = ticksOf(poisonOn(token.actor));
+          await game.time.advance(120);
+          await waitUntil(() => seen.deleted, 8000).catch(() => {});
+          await new Promise(resolve => setTimeout(resolve, 300));
+        });
+      } finally {
+        restoreDice3d();
+        Hooks.off("updateActiveEffect", onExpire);
+        Hooks.off("deleteActiveEffect", onDelete);
+        if (token && canvas.scene.tokens.get(token.id)) await token.delete();
+        await game.time.advance(-120);
+        const posted = game.messages.contents.filter(message => !before.has(message.id)).map(message => message.id);
+        if (posted.length) await ChatMessage.deleteDocuments(posted);
+      }
+      return seen;
+    }
+
+    describe("effects over time on a token when the clock jumps past the dose's end", function () {
+      it("a linked token's dose has dealt all 20 ticks when it goes", async function () {
+        this.timeout(30000);
+        if (!canvas.scene) this.skip();
+        const seen = await poisonedThenSkipped(true);
+        assert.strictEqual(seen.ticksAtDeletion, 20, JSON.stringify(seen));
+      });
+
+      it("an unlinked token's dose has dealt all 20 ticks when it goes", async function () {
+        this.timeout(30000);
+        if (!canvas.scene) this.skip();
+        const seen = await poisonedThenSkipped(false);
+        assert.strictEqual(seen.ticksAtDeletion, 20, JSON.stringify(seen));
+      });
+    });
+  }, { displayName: "Eclipse Phase: Effects over time on tokens" });
 });

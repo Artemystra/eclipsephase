@@ -1,5 +1,5 @@
 import { isRunningEffect, watchedActors, rechargeTargets, runningEffectGroups } from "../../module/apps/time-panel.js";
-import { makeActor, resetWorld } from "../setup/factories.js";
+import { makeActor, makeUnlinkedToken, resetWorld } from "../setup/factories.js";
 
 /**
  * Registers an actor as a connected player's assigned character, which is who the panel watches.
@@ -134,5 +134,61 @@ describe("the running-effects list", () => {
       makeActor({ type: "character", name, effects: [{ name: "Kick", duration: { value: 1, units: "hours" } }] });
     }
     expect(runningEffectGroups().map(group => group.name)).toEqual(["Alix", "Zara"]);
+  });
+});
+
+describe("unlinked tokens", () => {
+  const KICK = { name: "Kick", duration: { value: 8, units: "hours" } };
+
+  /**
+   * A scene stand-in the GM is looking at.
+   * @param {String} id - The scene id
+   * @returns {Object} The scene
+   */
+  function scene(id = "s1") {
+    return { uuid: `Scene.${id}`, tokens: [] };
+  }
+
+  test("a GM sees the unlinked tokens on the scene being viewed, apart from their world actor", () => {
+    const viewed = scene();
+    game.scenes.viewed = viewed;
+    const copy = makeUnlinkedToken(viewed, { _id: "goon1", type: "goon", name: "Thug", effects: [KICK] }, { name: "Thug 2" });
+    makeActor({ _id: "goon1", type: "goon", name: "Thug" });
+
+    const groups = runningEffectGroups();
+
+    expect(groups.map(group => group.name)).toEqual(["Thug 2"]);
+    expect(groups[0].actorUuid).toEqual(copy.uuid);
+    expect(groups[0].effects[0].actorUuid).toEqual("Scene.s1.Token.token-1.Actor.goon1");
+  });
+
+  test("and those on the scene the players are on, each listed once", () => {
+    const shared = scene();
+    game.scenes.viewed = shared;
+    game.scenes.active = shared;
+    const other = scene("s2");
+    makeUnlinkedToken(shared, { type: "goon", name: "Thug" });
+    makeUnlinkedToken(other, { type: "goon", name: "Elsewhere" });
+
+    expect(watchedActors().map(actor => actor.name)).toEqual(["Thug"]);
+  });
+
+  test("a linked token is the world actor itself and is not listed twice", () => {
+    const viewed = scene();
+    game.scenes.viewed = viewed;
+    const hex = makeActor({ type: "character", name: "Hex" });
+    viewed.tokens.push({ documentName: "Token", actorLink: true, actor: hex });
+
+    expect(watchedActors()).toEqual([hex]);
+  });
+
+  test("a player never sees them", () => {
+    const viewed = scene();
+    game.scenes.viewed = viewed;
+    makeUnlinkedToken(viewed, { type: "goon", name: "Thug" });
+    game.user.isGM = false;
+    game.user.character = null;
+
+    expect(watchedActors()).toEqual([]);
   });
 });

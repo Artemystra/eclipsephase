@@ -97,7 +97,11 @@
           "psiGammaBoosted": false,
           "autoPushSelection": "none",
           "puppetSocked": [],
-          "hasCyberbrainChain": false
+          "hasCyberbrainChain": false,
+      "toxinFilters": false,
+      "nanophages": false,
+      "digestiveSymbiotes": false,
+      "immunizers": false
         },
         "initiative": {
           "value": null,
@@ -626,6 +630,7 @@
       "ammoSelected": {
         "_id": "-",
         "name": "",
+        "dose": null,
         "dvModifier": {
           "d10": null,
           "d6": null,
@@ -1180,16 +1185,57 @@
         "base",
         "buyable"
       ],
-      "category": "",
+      "category": "drug",
+      "isAmmo": false,
       "dermal": false,
       "inhalation": false,
       "injection": false,
       "oral": false,
       "drugType": "",
-      "duration": null,
+      "duration": {
+        "value": null,
+        "units": ""
+      },
       "addictionMod": null,
       "addictionType": "",
       "quantity": 1,
+      "usagesUsed": 0,
+      "usagesMax": 5,
+      "wearOff": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "useCheck": {
+        "aptitude": "",
+        "modifier": 0,
+        "failure": "",
+        "duration": {
+          "value": null,
+          "units": ""
+        },
+        "stress": {
+          "d10": 0,
+          "d6": 0,
+          "bonus": 0
+        },
+        "successPsiPenalty": 0
+      },
+      "rollOptions": [],
+      "blocksPsi": false,
+      "overTime": {
+        "damage": {
+          "d10": 0,
+          "d6": 0,
+          "bonus": 0
+        },
+        "interval": "turn",
+        "ticks": null,
+        "modifier": 0,
+        "incapacitates": false
+      },
+      "healingAddition": "",
+      "grants": [],
       "displayCategory": "consumable",
       "slotType": "consumable"
     },
@@ -1211,7 +1257,8 @@
       "bonus": null,
       "malus": null,
       "boundTo": null,
-      "wareType": null
+      "wareType": null,
+      "rollOptions": []
     },
     "aspect": {
       "templates": [

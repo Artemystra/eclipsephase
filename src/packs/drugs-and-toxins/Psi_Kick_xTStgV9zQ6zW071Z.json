@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "Z6bLrNt6OU1jrEbV",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,52 @@
     "additionalSystems": {},
     "description": "Effects of 1 specific psi-gamma sleight. SV 1d10 + 2.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
-    "cost": "minor",
+    "cost": "rare",
     "slotType": "consumable",
-    "category": "psi",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "1 hour",
+    "duration": {
+      "value": 1,
+      "units": "hours"
+    },
     "addictionMod": "-10",
-    "addictionType": "none",
-    "quantity": 1
+    "addictionType": "mental",
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "wearOff": {
+      "d10": 1,
+      "d6": 0,
+      "bonus": 2
+    },
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": [
+      {
+        "pack": "eclipsephase.psi-sleights",
+        "folder": "kp6gA22jUj1D588w",
+        "item": "random",
+        "title": "",
+        "description": "",
+        "or": false
+      }
+    ]
   },
   "ownership": {
     "default": 0,

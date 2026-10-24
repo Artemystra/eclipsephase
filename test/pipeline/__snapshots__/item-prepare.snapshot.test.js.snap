@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`EPitem.prepareData derives stable data for a drug straight out of the compendium 1`] = `
+Object {
+  "active": true,
+  "addictionMod": "-10",
+  "addictionType": "physical",
+  "additionalSystems": Object {},
+  "blocksPsi": false,
+  "category": "drug",
+  "cost": "minor",
+  "dermal": true,
+  "description": "Ignore 1 wound.",
+  "displayCategory": "consumable",
+  "drugType": "biochem",
+  "duration": Object {
+    "units": "hours",
+    "value": 3,
+  },
+  "grants": Array [],
+  "healingAddition": "",
+  "homebrew": false,
+  "inhalation": true,
+  "injection": true,
+  "isAmmo": false,
+  "oral": true,
+  "overTime": Object {
+    "damage": Object {
+      "bonus": 0,
+      "d10": 0,
+      "d6": 0,
+    },
+    "incapacitates": false,
+    "interval": "turn",
+    "modifier": 0,
+    "ticks": null,
+  },
+  "quantity": 1,
+  "rollOptions": Array [],
+  "slotType": "consumable",
+  "tags": Array [],
+  "updated": "",
+  "usagesMax": 5,
+  "usagesUsed": 0,
+  "useCheck": Object {
+    "aptitude": "",
+    "duration": Object {
+      "units": "",
+      "value": null,
+    },
+    "failure": "",
+    "modifier": 0,
+    "stress": Object {
+      "bonus": 0,
+      "d10": 0,
+      "d6": 0,
+    },
+    "successPsiPenalty": 0,
+  },
+  "wearOff": Object {
+    "bonus": 0,
+    "d10": 0,
+    "d6": 0,
+  },
+}
+`;
+
 exports[`EPitem.prepareData derives stable data for a morph 1`] = `
 Object {
   "cost": "moderate",

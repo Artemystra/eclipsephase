@@ -1,8 +1,8 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
-import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
-import { deleteRunOutTempEffects } from "../common/general-sheet-functions.js"
+import { endAllChiPushes } from "../rolls/psi.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
+import { globalModifiers } from "../rolls/modifiers.js";
 
 const gammaAutoPushInFlight = new Set();
 
@@ -42,7 +42,9 @@ export default class EPactor extends Actor {
    * Called by Foundry on every client whenever the remaining duration of one of this actor's
    * tracked effects changed - because world time moved, or a combat turn passed. Re-broadcast as a
    * system hook so anything watching timed effects has one place to listen instead of reaching
-   * into core's effect registry.
+   * into core's effect registry. Run-out system effects are not removed here: Foundry marks them
+   * expired right after calling this, without waiting, and removing them now raced that update.
+   * The clean-up waits for the mark instead (see registerExpiryCleanup).
    * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
    * @param {String} event - What triggered the refresh, e.g. "updateWorldTime" or "turnStart"
    * @param {Object} [context] - Foundry's contextual data for that event
@@ -50,9 +52,24 @@ export default class EPactor extends Actor {
    */
   async onUpdateEffectDurations(effects, event, context) {
     Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
-    if (!game.users.activeGM?.isSelf) return;
-    await endExpiredChiPushes(this, effects);
-    await deleteRunOutTempEffects(this, effects);
+  }
+
+  /**
+   * Hands a world actor's change on to its unlinked tokens, then registers the effects their
+   * copies now carry with Foundry's duration tracking. Foundry rebuilds a token copy's effects from
+   * the world actor here but never registers the rebuilt ones, so a dose the world actor took would
+   * sit on every unlinked copy without ever running down on the clock.
+   * @param {Object} [update] - The update delta
+   * @param {Object} [options] - The database operation that was performed
+   * @returns {void}
+   */
+  _updateDependentTokens(update = {}, options = {}) {
+    super._updateDependentTokens(update, options);
+    const registry = foundry.documents.ActiveEffect?.registry;
+    if (!registry?.initialized) return;
+    for (const token of this.getDependentTokens()) {
+      if (token.actor) registry.addFromParent(token.actor);
+    }
   }
 
   /**
@@ -619,7 +636,7 @@ export default class EPactor extends Actor {
       else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active && gearCheck.system.slotType != "consumable"){
         gearCount++
       }
-      else if(gearCheck.system.slotType === "consumable" && gearCheck.system.active){
+      else if(gearCheck.system.slotType === "consumable" && (ignoreActive || gearCheck.system.active)){
         consumableCount++
       }
     }
@@ -759,6 +776,10 @@ export default class EPactor extends Actor {
 
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
       actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
+    }
+
+    for (const { label, modifier, comment } of globalModifiers(actorWhole)) {
+      actorModel.currentStatus.specialModifiers.push({ label, modifier, comment, flag: "globalMod" });
     }
 
     Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);

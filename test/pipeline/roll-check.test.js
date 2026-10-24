@@ -1,4 +1,4 @@
-import { RollCheck, TaskRollModifier } from "../../module/rolls/dice.js";
+import { RollCheck, TaskRollModifier, resolveSkillRollValue } from "../../module/rolls/dice.js";
 import { registerRollSource, registerPoolOption, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
 
@@ -183,10 +183,12 @@ describe("RollCheck registry use", () => {
 
   test("a registered roll source supplies the skill value used by the jamming comparison", () => {
     registerRollSource("spikeSource", {
-      skillRoll: actorSystem => ({ rollvalue: actorSystem.skillsVig?.infiltrate?.roll, specname: "", poolType: "Vigor" })
+      skillRoll: () => ({ rollvalue: 77, specname: "", poolType: "Vigor" })
     });
     const actor = makeRoller();
-    expect(actor.system.skillsVig.infiltrate.roll).toBeGreaterThan(0);
+
+    expect(resolveSkillRollValue(actor.system, actor.items, { key: "infiltrate" }, "spikeSource")).toEqual(77);
+    expect(resolveSkillRollValue(actor.system, actor.items, { key: "infiltrate" }, "unregistered")).not.toEqual(77);
   });
 });
 
@@ -259,5 +261,286 @@ describe("a module's own chat-context block", () => {
     const stored = global.__ep.createdMessages[0].flags.eclipsephase.roll;
     expect(stored.shop).toEqual({ shopUuid: "Actor.shop0001", redeemLevels: 2 });
     expect(stored.item.weaponId).toEqual("");
+  });
+});
+
+describe("modifiers to all actions", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * The roller, under a running dose of a drug that costs every action something.
+   * @param {String} name - The drug's name
+   * @param {String} value - The modifier
+   * @returns {Object} The prepared actor
+   */
+  function dosedRoller(name, value) {
+    const actor = makeRoller();
+    actor._source.effects = [];
+    actor.effects.push(new ActiveEffect({
+      name,
+      duration: { value: 1, units: "hours" },
+      changes: [{ key: "system.mods.globalMod", value, type: "add" }],
+      flags: { eclipsephase: { dose: { name } } }
+    }, { parent: actor }));
+    actor.prepareData();
+    return actor;
+  }
+
+  test("a running dose's penalty lands on every check as intoxicated, naming the drug beneath", async () => {
+    const actor = dosedRoller("Twitch", "-20");
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    const card = global.__ep.createdMessages[0];
+    expect(card.content).toContain("ep2e.roll.announce.intoxicated");
+    expect(card.content).toContain("Twitch (-20)");
+    expect(card.content).toContain("ep-mod-breakdown");
+  });
+
+  test("a check by a vehicle's own skill is not the ego acting, and is left alone", async () => {
+    const actor = dosedRoller("Twitch", "-20");
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "vehicleSkill");
+
+    expect(global.__ep.createdMessages[0].content).not.toContain("Twitch");
+  });
+
+  test("without a dose nothing is added", async () => {
+    const actor = makeRoller();
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    expect(global.__ep.createdMessages[0].content).not.toContain("ep2e.roll.announce.globalEffects");
+  });
+});
+
+describe("the roll dialog", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * Runs a check while recording which dialog template it opened.
+   * @param {Object} dataset - The dataset a sheet click hands RollCheck
+   * @param {Object} answer - What the dialog answers
+   * @returns {Promise<String[]>} The templates rendered, in order
+   */
+  async function checkRecordingTemplates(dataset, answer) {
+    const actor = makeRoller();
+    const rendered = [];
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      rendered.push(template);
+      return realRender(template, data);
+    };
+    seedDialogs(answer);
+    seedRolls([42]);
+    try {
+      await RollCheck(dataset, actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return rendered;
+  }
+
+  test.each([
+    ["infiltrate", "systems/eclipsephase/templates/chat/skill-test-dialog.html"],
+    ["fray", "systems/eclipsephase/templates/chat/skill-test-dialog.html"],
+    ["guns", "systems/eclipsephase/templates/chat/gun-test-dialog.html"],
+    ["melee", "systems/eclipsephase/templates/chat/melee-test-dialog.html"]
+  ])("a %s check opens its own dialog", async (key, template) => {
+    const rendered = await checkRecordingTemplates(skillDataset({ key }), { cancelled: true });
+
+    expect(rendered[0]).toEqual(template);
+  });
+
+  test("cancelling the dialog rolls nothing and posts nothing", async () => {
+    await checkRecordingTemplates(skillDataset(), { cancelled: true });
+
+    expect(global.__ep.createdMessages).toHaveLength(0);
+  });
+
+  test("a specialization ticked in the dialog adds its +10", async () => {
+    await checkRecordingTemplates(skillDataset(), plainDialogAnswer({ useSpec: true }));
+
+    expect(global.__ep.createdMessages[0].content).toContain("ep2e.roll.announce.specialization");
+  });
+
+  test("a favor difficulty picked in the dialog lands on the roll", async () => {
+    await checkRecordingTemplates(skillDataset(), plainDialogAnswer({ favorMod: "-20" }));
+
+    expect(global.__ep.createdMessages[0].content).toContain("ep2e.roll.announce.favor");
+  });
+
+  test("a favor difficulty the sheet locked wins over the dialog, even when it is Moderate", async () => {
+    const actor = makeRoller();
+    seedDialogs(plainDialogAnswer({ favorMod: "-30" }));
+    seedRolls([42]);
+    let seen = null;
+    Hooks.on("eclipsephase.preRoll", context => { seen = context.options.favorMod; });
+
+    await RollCheck(skillDataset({ favorDifficultyLocked: true, favorDifficultyModifier: 0 }), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    expect(seen).toEqual(0);
+  });
+});
+
+describe("drug options in the roll dialog", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * The roller under a dose of CR Gas: -20 to all actions, and -30 on sight-based Perceive that
+   * replaces it when ticked.
+   * @returns {Object} The prepared actor
+   */
+  function gassedRoller() {
+    const actor = makeRoller();
+    actor.effects.push(new ActiveEffect({
+      _id: "crgas1", name: "CR Gas", duration: { value: 1, units: "hours" },
+      changes: [{ key: "system.mods.globalMod", value: "-20", type: "add" }],
+      flags: { eclipsephase: { dose: { name: "CR Gas", rollOptions: [{ id: "sight", label: "ep2e.item.drug.rollOptions.crgasSight", value: -30, appliesTo: ["perceive"], replacesGlobal: true }] } } }
+    }, { parent: actor }));
+    actor.prepareData();
+    return actor;
+  }
+
+  /**
+   * Rolls a check while recording what the dialog was rendered with.
+   * @param {Object} actor - The roller
+   * @param {Object} dataset - The check's dataset
+   * @param {Object} answer - What the dialog answers
+   * @returns {Promise<Object>} The dialog data and the posted card
+   */
+  async function rollRecording(actor, dataset, answer) {
+    let dialogData = null;
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      if (String(template).includes("test-dialog")) dialogData = data;
+      return realRender(template, data);
+    };
+    seedDialogs(answer);
+    seedRolls([42]);
+    try {
+      await RollCheck(dataset, actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return { dialogData, card: global.__ep.createdMessages[0] };
+  }
+
+  test("a Perceive check offers the option, a Guns check does not", async () => {
+    const actor = gassedRoller();
+
+    const perceive = await rollRecording(actor, skillDataset({ key: "perceive", name: "Perceive" }), { cancelled: true });
+    const guns = await rollRecording(actor, skillDataset({ key: "guns", name: "Guns" }), { cancelled: true });
+
+    expect(perceive.dialogData.doseOptions.map(entry => entry.field)).toEqual(["doseOption-crgas1-sight"]);
+    expect(guns.dialogData.doseOptions).toEqual([]);
+  });
+
+  test("ticked, it lands on the roll in place of the drug's own -20", async () => {
+    const { card } = await rollRecording(gassedRoller(), skillDataset({ key: "perceive", name: "Perceive" }), plainDialogAnswer({ "doseOption-crgas1-sight": true }));
+
+    expect(card.content).toContain("ep2e.item.drug.rollOptions.crgasSight");
+    expect(card.content).toContain("-30");
+    expect(card.content).not.toContain("ep2e.roll.announce.intoxicated");
+  });
+
+  test("left unticked, the drug's -20 stays and the option adds nothing", async () => {
+    const { card } = await rollRecording(gassedRoller(), skillDataset({ key: "perceive", name: "Perceive" }), plainDialogAnswer());
+
+    expect(card.content).toContain("ep2e.roll.announce.intoxicated");
+    expect(card.content).not.toContain("ep2e.item.drug.rollOptions.crgasSight");
+  });
+});
+
+describe("ware options in the roll dialog", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * A roller sleeved in morph1 with Grip Pads, plus Enhanced Hearing left in a spare morph.
+   * @returns {Object} The prepared actor
+   */
+  function augmentedRoller() {
+    return makeActor({
+      type: "character",
+      name: "Roller",
+      system: { activeMorph: "morph1", aptitudes: { som: { value: 15 } }, skillsVig: { athletics: { value: 40 } }, pools: { vigor: { value: 2 } } },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "morph2", name: "Spare", type: "morph", system: { type: "bio" } },
+        { _id: "grip1", name: "Grip Pads", type: "ware", system: { boundTo: "morph1", rollOptions: [{ id: "climb", label: "ep2e.item.ware.rollOptions.climbing", value: 30, appliesTo: ["athletics"] }] } },
+        { _id: "ear1", name: "Enhanced Hearing", type: "ware", system: { boundTo: "morph2", rollOptions: [{ id: "hearing", label: "ep2e.item.ware.rollOptions.hearing", value: 10, appliesTo: ["perceive", "athletics"] }] } }
+      ]
+    });
+  }
+
+  /**
+   * Rolls a check while recording what the dialog was rendered with.
+   * @param {Object} actor - The roller
+   * @param {Object} answer - What the dialog answers
+   * @returns {Promise<Object>} The dialog data and the posted card
+   */
+  async function climb(actor, answer) {
+    let dialogData = null;
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      if (String(template).includes("test-dialog")) dialogData = data;
+      return realRender(template, data);
+    };
+    seedDialogs(answer);
+    seedRolls([42]);
+    try {
+      await RollCheck(skillDataset({ key: "athletics", name: "Athletics" }), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return { dialogData, card: global.__ep.createdMessages[0] };
+  }
+
+  test("ware in the active body offers its option in a block of its own; ware in another body does not", async () => {
+    const { dialogData } = await climb(augmentedRoller(), { cancelled: true });
+
+    expect(dialogData.wareOptions.map(entry => entry.field)).toEqual(["wareOption-grip1-climb"]);
+    expect(dialogData.doseOptions).toEqual([]);
+  });
+
+  test("ticked, it lands on the roll under the ware's name", async () => {
+    const { card } = await climb(augmentedRoller(), plainDialogAnswer({ "wareOption-grip1-climb": true }));
+
+    expect(card.content).toContain("Grip Pads");
+    expect(card.content).toContain("ep2e.item.ware.rollOptions.climbing");
+  });
+});
+
+describe("a drug option that applies on its own", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  test("Randomizer lands on a social test without being ticked, and is not offered in the dialog", async () => {
+    const actor = makeRoller();
+    actor.effects.push(new ActiveEffect({
+      _id: "rnd1", name: "Randomizer", duration: { value: 1, units: "hours" },
+      flags: { eclipsephase: { dose: { name: "Randomizer", rollOptions: [{ id: "social", label: "ep2e.item.drug.rollOptions.randomizerSocial", value: 10, random: true, automatic: true, appliesTo: ["persuade"] }] } } }
+    }, { parent: actor }));
+    let dialogData = null;
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      if (String(template).includes("test-dialog")) dialogData = data;
+      return realRender(template, data);
+    };
+    seedDialogs(plainDialogAnswer());
+    seedRolls([2, 42]);
+    try {
+      await RollCheck(skillDataset({ key: "persuade", name: "Persuade" }), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+
+    expect(dialogData.doseOptions).toEqual([]);
+    expect(global.__ep.createdMessages[0].content).toContain("ep2e.item.drug.rollOptions.randomizerSocial");
   });
 });

@@ -64,7 +64,15 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bh"
+    "wareType": "bh",
+    "rollOptions": [
+      {
+        "id": "fatigue",
+        "label": "ep2e.item.ware.rollOptions.neuralFatigue",
+        "value": -20,
+        "appliesTo": []
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

@@ -1,20 +1,9 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
-import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
+import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, isRunningEffect, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-const TEMP_EFFECT_FLAGS = ["effectKey", "chiPushBoost", "dose"];
-
-/**
- * Whether an effect is one the panel should list: anything Foundry tracks a duration for, plus the
- * system's own temporary effects, which end on an event rather than on a clock.
- * @param {ActiveEffect} effect - The effect to judge
- * @returns {Boolean} True when the effect belongs in the list
- */
-export function isRunningEffect(effect) {
-  if (effect.isTemporary) return true;
-  return TEMP_EFFECT_FLAGS.some(flag => effect.getFlag?.("eclipsephase", flag) !== undefined);
-}
+export { isRunningEffect };
 
 /**
  * The characters the recharge reset applies to: the assigned characters of every connected player.
@@ -30,14 +19,51 @@ export function rechargeTargets() {
 }
 
 /**
+ * The scenes whose tokens a GM's list covers: the one being viewed and the one the players are on.
+ * @returns {Scene[]} The scenes, without duplicates
+ */
+function watchedScenes() {
+  return [...new Set([game.scenes?.viewed, game.scenes?.active].filter(Boolean))];
+}
+
+/**
  * The actors whose running effects the list shows. A GM sees everything in the world, since a
- * toxin ticking on an enemy is exactly what they need to keep track of; a player sees only their
- * own character, so the panel never leaks what the GM has running elsewhere.
+ * toxin ticking on an enemy is exactly what they need to keep track of, plus the unlinked tokens
+ * on the scenes in play: such a token's actor is its own copy, never in the world's actor list,
+ * and a goon is unlinked by default. A player sees only their own character, so the panel never
+ * leaks what the GM has running elsewhere.
  * @returns {Actor[]} The actors to read effects from
  */
 export function watchedActors() {
   if (!game.user.isGM) return game.user.character ? [game.user.character] : [];
-  return [...game.actors];
+
+  const actors = [...game.actors];
+  for (const scene of watchedScenes()) {
+    for (const token of scene.tokens ?? []) {
+      if (!token.actorLink && token.actor) actors.push(token.actor);
+    }
+  }
+  return actors;
+}
+
+/**
+ * The name a group is listed under: a token's own name for an unlinked token, since several
+ * copies of one goon would otherwise be indistinguishable.
+ * @param {Actor} actor - The watched actor
+ * @returns {String} The name to show
+ */
+function groupName(actor) {
+  return actor.isToken ? (actor.token?.name ?? actor.name) : actor.name;
+}
+
+/**
+ * The actor a panel control belongs to, found by its uuid, which tells an unlinked token's copy
+ * apart from the world actor it shares its id with.
+ * @param {String} actorUuid - The uuid the row carries
+ * @returns {Actor|null} The actor, or null when it is gone
+ */
+function rowActor(actorUuid) {
+  return actorUuid ? (fromUuidSync(actorUuid) ?? null) : null;
 }
 
 /**
@@ -57,7 +83,7 @@ export function runningEffectGroups() {
       if (effect.disabled || !isRunningEffect(effect)) continue;
       const description = effect.description || effect.parent?.system?.description || "";
       rows.push({
-        actorId: actor.id,
+        actorUuid: actor.uuid,
         effectId: effect.id,
         parentId: effect.parent?.id ?? null,
         onItem: effect.parent !== actor,
@@ -71,7 +97,7 @@ export function runningEffectGroups() {
 
     if (!rows.length) continue;
     rows.sort((a, b) => a.name.localeCompare(b.name));
-    groups.push({ actorId: actor.id, name: actor.name, count: rows.length, effects: rows });
+    groups.push({ actorUuid: actor.uuid, name: groupName(actor), playerCharacter: actor.type === "character", count: rows.length, effects: rows });
   }
 
   return groups.sort((a, b) => a.name.localeCompare(b.name));
@@ -98,6 +124,7 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       toggleAutoReset: EPtimePanel._onToggleAutoReset,
       toggleEffects: EPtimePanel._onToggleEffects,
       toggleActor: EPtimePanel._onToggleActor,
+      toggleThreats: EPtimePanel._onToggleThreats,
       effectInfo: EPtimePanel._onEffectInfo,
       beatsInfo: EPtimePanel._onBeatsInfo,
       toggleFormat: EPtimePanel._onToggleFormat
@@ -130,6 +157,11 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   // Which actors' effect lists are expanded, per client and per session.
   #openActors = new Set();
 
+  // Whether the non-player section is expanded, per client and per session.
+  #threatsOpen = true;
+
+  static #refreshQueued = false;
+
   static #instance = null;
 
   static #sidebarObserver = null;
@@ -152,11 +184,19 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   }
 
   /**
-   * Re-renders the panel if it is currently open, for the hooks that change what it shows.
+   * Re-renders the panel if it is currently open, for the hooks that change what it shows. Waits
+   * one tick: Foundry fires an effect's hook before it hands a world actor's change on to that
+   * actor's unlinked tokens, and rendering then would list the world actor without its copies.
+   * Several hooks in the same tick render once.
    * @returns {void}
    */
   static refresh() {
-    if (EPtimePanel.#instance?.rendered) EPtimePanel.#instance.render();
+    if (EPtimePanel.#refreshQueued) return;
+    EPtimePanel.#refreshQueued = true;
+    setTimeout(() => {
+      EPtimePanel.#refreshQueued = false;
+      if (EPtimePanel.#instance?.rendered) EPtimePanel.#instance.render();
+    }, 0);
   }
 
   /**
@@ -202,7 +242,7 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       // A player only ever sees their own character, so grouping by actor would add a level that
       // never has anything to choose between.
       grouped: this.canControl,
-      groups: runningEffectGroups().map(group => ({ ...group, open: this.#openActors.has(group.actorId) })),
+      sections: this.#effectSections(),
       effects: runningEffectGroups().flatMap(group => group.effects)
     };
   }
@@ -345,12 +385,12 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Ends one running effect straight from the list.
    * @param {Event} event - The originating click
-   * @param {HTMLElement} target - The row's button, carrying the actor, parent and effect ids
+   * @param {HTMLElement} target - The row's button, carrying the actor uuid, parent and effect ids
    * @returns {Promise<void>} Resolves once the effect is gone
    */
   static async _onEndEffect(event, target) {
-    const { actorId, parentId, effectId, onItem } = target.dataset;
-    const actor = game.actors.get(actorId);
+    const { actorUuid, parentId, effectId, onItem } = target.dataset;
+    const actor = rowActor(actorUuid);
     if (!actor) return;
     const parent = onItem === "true" ? actor.items.get(parentId) : actor;
     await parent?.deleteEmbeddedDocuments("ActiveEffect", [effectId]);
@@ -400,25 +440,25 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Expands or collapses one actor's list of running effects.
    * @param {Event} event - The originating click
-   * @param {HTMLElement} target - The actor row, carrying its id
+   * @param {HTMLElement} target - The actor row, carrying its uuid
    * @returns {Promise<void>} Resolves once the panel has re-rendered
    */
   static async _onToggleActor(event, target) {
-    const actorId = target.dataset.actorId;
-    if (this.#openActors.has(actorId)) this.#openActors.delete(actorId);
-    else this.#openActors.add(actorId);
+    const actorUuid = target.dataset.actorUuid;
+    if (this.#openActors.has(actorUuid)) this.#openActors.delete(actorUuid);
+    else this.#openActors.add(actorUuid);
     await this.render();
   }
 
   /**
    * Shows one effect's description in the system's standard dialog.
    * @param {Event} event - The originating click
-   * @param {HTMLElement} target - The info icon, carrying the actor, parent and effect ids
+   * @param {HTMLElement} target - The info icon, carrying the actor uuid, parent and effect ids
    * @returns {Promise<void>} Resolves once the dialog is dismissed
    */
   static async _onEffectInfo(event, target) {
-    const { actorId, parentId, effectId, onItem } = target.dataset;
-    const actor = game.actors.get(actorId);
+    const { actorUuid, parentId, effectId, onItem } = target.dataset;
+    const actor = rowActor(actorUuid);
     const parent = onItem === "true" ? actor?.items.get(parentId) : actor;
     const effect = parent?.effects.find(entry => entry.id === effectId);
     if (!effect) return;
@@ -430,6 +470,29 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       ok: { label: game.i18n.localize("ep2e.time.close") },
       modal: true
     });
+  }
+
+  /**
+   * Collapses or expands the non-player section of the running-effects list.
+   * @returns {Promise<void>} Resolves once the panel has re-rendered
+   */
+  static async _onToggleThreats() {
+    this.#threatsOpen = !this.#threatsOpen;
+    await this.render();
+  }
+
+  /**
+   * The GM's list in two sections: player characters, always open, then everyone else, which can
+   * be collapsed to keep a crowded scene out of the way. A section with nothing running is left out.
+   * @returns {Object[]} The sections, each with its label, collapse state and actor groups
+   */
+  #effectSections() {
+    const groups = runningEffectGroups().map(group => ({ ...group, open: this.#openActors.has(group.actorUuid) }));
+    const sections = [
+      { label: "ep2e.time.sectionPlayers", collapsible: false, open: true, groups: groups.filter(group => group.playerCharacter) },
+      { label: "ep2e.time.sectionThreats", collapsible: true, open: this.#threatsOpen, groups: groups.filter(group => !group.playerCharacter) }
+    ];
+    return sections.filter(section => section.groups.length);
   }
 
   /**

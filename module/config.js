@@ -214,24 +214,56 @@ eclipsephase.drugTypes = {
     electronic: "Electronic"
 }
 
+eclipsephase.drugDurationUnits = {
+    "": "ep2e.item.drug.table.durationUnits.none",
+    rounds: "ep2e.item.drug.table.durationUnits.rounds",
+    seconds: "ep2e.item.drug.table.durationUnits.seconds",
+    minutes: "ep2e.item.drug.table.durationUnits.minutes",
+    hours: "ep2e.item.drug.table.durationUnits.hours",
+    days: "ep2e.item.drug.table.durationUnits.days"
+}
+
 eclipsephase.drugAddicitonTypes = {
     none: "Select",
     physical: "Physical",
     mental: "Mental"
 }
 
+eclipsephase.drugCheckAptitudes = {
+    "": "ep2e.item.drug.mechanics.none",
+    cog: "ep2e.actorSheet.aptitudes.cog",
+    int: "ep2e.actorSheet.aptitudes.int",
+    ref: "ep2e.actorSheet.aptitudes.ref",
+    sav: "ep2e.actorSheet.aptitudes.sav",
+    som: "ep2e.actorSheet.aptitudes.som",
+    wil: "ep2e.actorSheet.aptitudes.wil"
+}
+
+eclipsephase.drugCheckFailures = {
+    "": "ep2e.item.drug.mechanics.none",
+    incapacitated: "ep2e.item.drug.mechanics.failures.incapacitated",
+    immobilized: "ep2e.item.drug.mechanics.failures.immobilized",
+    blocksPsi: "ep2e.item.drug.mechanics.failures.blocksPsi",
+    stress: "ep2e.item.drug.mechanics.failures.stress",
+    damage: "ep2e.item.drug.mechanics.failures.damage"
+}
+
+eclipsephase.drugOverTimeIntervals = {
+    turn: "ep2e.item.drug.mechanics.intervals.turn",
+    hour: "ep2e.item.drug.mechanics.intervals.hour"
+}
+
+eclipsephase.drugHealingAdditions = {
+    "": "ep2e.item.drug.mechanics.none",
+    meds: "ep2e.roll.dialog.heal.additions.meds",
+    fixers: "ep2e.roll.dialog.heal.additions.fixers",
+    spray: "ep2e.roll.dialog.heal.additions.spray",
+    tank: "ep2e.roll.dialog.heal.additions.tank"
+}
+
 eclipsephase.drugCategories = {
-    cognitive: "ep2e.item.drug.table.category.cognitive",
-    combat: "ep2e.item.drug.table.category.combat",
-    health: "ep2e.item.drug.table.category.health",
-    nano: "ep2e.item.drug.table.category.nano",
-    narco: "ep2e.item.drug.table.category.narco",
-    petals: "ep2e.item.drug.table.category.petals",
-    psi: "ep2e.item.drug.table.category.psi",
-    rec: "ep2e.item.drug.table.category.rec",
-    social: "ep2e.item.drug.table.category.social",
-    toxins: "ep2e.item.drug.table.category.toxins",
-    nanotox: "ep2e.item.drug.table.category.nanotox"
+    drug: "ep2e.item.drug.table.category.drug",
+    toxin: "ep2e.item.drug.table.category.toxin"
 }
 
 eclipsephase.grenadeArmorVector = {

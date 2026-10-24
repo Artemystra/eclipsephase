@@ -19,6 +19,11 @@ import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
+import { registerPoolRule } from "./common/pool-rule.js";
+import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
+import { registerTargetedAttackHooks, registerTargetedAttackSocket } from "./rolls/targeted-attacks.js";
+import { registerExpiryCleanup } from "./common/expiry.js";
+import { postWareSetupCard } from "./common/ware-skills.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -189,6 +194,10 @@ Hooks.once('init', async function() {
   CONFIG.Actor.documentClass = EPactor;
   CONFIG.eclipsephase = eclipsephase;
   registerCoreStrainFamilies();
+  registerPoolRule();
+  registerExpiryCleanup();
+  registerTargetedAttackHooks();
+  registerDrugHooks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;
@@ -391,6 +400,7 @@ Hooks.once("ready", async function() {
   let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
+  let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -673,6 +683,28 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
+  // 2.6 changed no data, so the drug schema is the first migration since 2.5. A world holding no
+  // drug that predates it or lacks its compendium blueprints is stamped silently rather than being
+  // asked about nothing.
+  if (before27 && !(await update.migrationPre27Needed())) {
+    endMigration = false;
+    await game.settings.set("eclipsephase", "migrationVersion", "2.7");
+  }
+  else if (before27) {
+    endMigration = false;
+    let migration = await update.migrationNotice("2.7");
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration27 = await update.migrationPre27(startMigration);
+    endMigration = Migration27["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth, messageCopyExtra) {
@@ -786,6 +818,8 @@ Hooks.once("ready", () => {
 Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
   registerPsiEffectSocket();
+  registerDoseSocket();
+  registerTargetedAttackSocket();
 });
 
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll
@@ -832,12 +866,21 @@ Hooks.once("ready", async () => {
   await game.user.unsetFlag("eclipsephase", "pendingArmorStashNotices");
 });
 
+// Asks a player, once after the 2.7 migration, which special skills the ware their characters
+// already carried applies to. Runs on every user's client but only finds what the migration flagged.
+Hooks.once("ready", async () => {
+  if (!game.user.getFlag("eclipsephase", "pendingWareSetup")) return;
+  await postWareSetupCard(game.user);
+  await game.user.unsetFlag("eclipsephase", "pendingWareSetup");
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);
   EPchat.GMvision(html, data);
   EPchat.ownerVision(html, data);
   EPchat.playerVision(html, data);
+  EPchat.doseHarmVision(message, html);
 });
 
 //Renders the ChatLog according to given visibility options
@@ -874,8 +917,9 @@ Hooks.on('renderSceneControls', (app, html) => {
   menu.appendChild(entry);
 });
 
-// Everything that changes what the panel shows: the clock itself, and effects coming and going.
-for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected"]) {
+// Everything that changes what the panel shows: the clock itself, effects coming and going, and
+// the scene in view or its tokens changing, since a GM's list covers the unlinked tokens on it.
+for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected", "canvasReady", "createToken", "deleteToken"]) {
   Hooks.on(hook, () => EPtimePanel.refresh());
 }
 

@@ -132,7 +132,20 @@
         "registeredId": "注册身份：{name}"
       },
       "warnings": {
-        "noPlacedToken": "该角色当前没有已放置的指令牌。"
+        "doseNeedsBiomorph": "这种药物只对生物躯体有效。",
+        "doseNeedsCyberbrain": "这种药物只能在信息形体或赛博脑上运行。",
+        "noDosesLeft": "{name} 没有剩余剂量。",
+        "doseCheckRolled": "这次检定已经掷过了。",
+        "doseNoScene": "请先打开一个场景，再在其中选择目标。",
+        "doseNeedsGM": "必须有 GM 在线才能交付这一剂。",
+        "doseNoSelection": "请先选中一个令牌。",
+        "doseNeedsClaimant": "请为自己指定角色，或以 GM 身份选中一个令牌，来服用这一剂。",
+        "doseAlreadyUsed": "这一剂已经被使用。",
+        "offerPackEmpty": "提供这一剂的药包已空或已不存在。",
+        "ammoPackNotTaken": "{name} 是弹药包：请将其装入武器，而不是服用。",
+        "noPlacedToken": "该角色当前没有已放置的指令牌。",
+        "attackDelivered": "此攻击已应用于其目标。",
+        "attackNoPayload": "武器不知道装填的是哪种药物。请先重新装填。"
       },
       "button": {
         "edit": "编辑",
@@ -164,6 +177,8 @@
       "popUp": {
         "needPuppetSockToJam": "需要 Puppet Sock 才能 Jam",
         "deleteCopyGeneral": "<b>警告:</b>这会将物品从你的人物卡中永远删除。",
+        "deleteStackCopy": "<b>警告:</b>你将从一组物品中删除。请选择删除数量，其余的会留在你的人物卡上。",
+        "deleteStackLabel": "删除数量",
         "deleteArmorWithBodyCopy": "<b>警告:</b>你即将删除{body}。这具身体上绑定了护甲——删除{body}也会一并删除其护甲。",
         "stashArmorCopy": "要收纳{name}吗？你可以随时在物品栏中找到它。",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>",
@@ -1058,7 +1073,8 @@
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
-            "rail": "Rail"
+            "rail": "Rail",
+            "chemical": "化学品或药物"
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
@@ -1112,8 +1128,47 @@
         }
       },
       "drug": {
+        "rollOptions": {
+          "aggroIntimidate": "用挑衅恐吓或激怒",
+          "aggroOtherSocial": "其他社交检定",
+          "blabInterrogation": "抵抗审讯",
+          "buzzSuggestion": "抵抗暗示",
+          "crgasSight": "依靠视觉的感知",
+          "flightFear": "对抗恐吓或恐惧",
+          "hitherSeduce": "用挑衅引诱",
+          "juiceFear": "对抗恐惧或操纵",
+          "neemRecall": "回忆",
+          "orbitalhashMemory": "知识技能或回忆",
+          "oxytocinaTrust": "涉及信任时",
+          "randomizerSocial": "社交检定，随机决定",
+          "stiffResist": "对抗说服或挑衅",
+          "tongzhiShared": "在共同兴趣上说服",
+          "monoNoAwareArt": "用于艺术技能",
+          "gravyHighGravity": "抵消高重力惩罚"
+        },
+        "takeDose": "服用一剂",
+        "dosesLeft": "剩余剂量",
+        "onset": {
+          "immediate": "立即生效",
+          "turn": "一个行动轮后生效",
+          "minutes15": "15 分钟后生效",
+          "app": "像软件一样运行，暂停即结束"
+        },
         "table": {
           "duration": "持续时间",
+          "durationUnits": {
+            "label": "单位",
+            "none": "无限",
+            "rounds": "行动轮",
+            "seconds": "秒",
+            "minutes": "分钟",
+            "hours": "小时",
+            "days": "天"
+          },
+          "usagesMax": "已用剂量",
+          "isAmmo": "弹药包",
+          "wearOffSv": "药效消退压力 (SV)",
+          "usagesTip": "已用 / 上限",
           "addictionModifier": "成瘾调整值",
           "addictionType": "成瘾类型",
           "applicationVectors": {
@@ -1125,17 +1180,8 @@
           },
           "category": {
             "label": "类别",
-            "cognitive": "认知药物",
-            "combat": "战斗药物",
-            "health": "健康药物",
-            "nano": "纳米药物",
-            "narco": "药物算法",
-            "petals": "万花镜",
-            "psi": "灵能药物",
-            "rec": "娱乐药物",
-            "social": "社交药物",
-            "toxins": "毒素",
-            "nanotox": "纳米毒素"
+            "drug": "药物",
+            "toxin": "毒素"
           },
           "type": {
             "label": "药物类型",
@@ -1143,6 +1189,52 @@
             "nano": "纳米",
             "electronic": "电子"
           }
+        },
+        "mechanics": {
+          "tab": "机制",
+          "none": "无",
+          "checkHeadline": "服用时检定",
+          "aptitude": "属性",
+          "modifier": "修正值",
+          "failure": "失败时",
+          "lasts": "持续",
+          "successPsi": "成功时灵能减值",
+          "failures": {
+            "incapacitated": "失能",
+            "immobilized": "无法移动",
+            "blocksPsi": "灵能被封锁",
+            "stress": "压力 (SV)",
+            "damage": "伤害 (DV)"
+          },
+          "overTimeHeadline": "持续效果",
+          "damage": "每跳伤害",
+          "interval": "每",
+          "ticks": "跳数",
+          "ticksTip": "留空：剂量持续期间一直生效",
+          "intervals": {
+            "turn": "行动回合",
+            "hour": "小时"
+          },
+          "growingModifier": "递增修正",
+          "growingModifierTip": "每个间隔叠加到所有行动上，例如每小时 -5",
+          "incapacitates": "达到 DUR 时失能",
+          "incapacitatesTip": "递增修正达到目标的耐久度时失能",
+          "healing": "治疗对话框",
+          "healingTip": "剂量生效期间，治疗对话框默认选中此附加项",
+          "harm": "伤害",
+          "grantsHeadline": "临时特质",
+          "grantPack": "合集",
+          "grantFolder": "文件夹",
+          "grantItem": "物品",
+          "random": "随机",
+          "connectorAnd": "且",
+          "connectorOr": "或",
+          "connectorTip": "“或”开始一个新的组合；从各组合中等概率随机抽取一个",
+          "grantDescription": "编辑标题和描述",
+          "grantDescriptionHint": "写在物品自身描述的上方。",
+          "grantTitlePlaceholder": "附加标题（可选）",
+          "grantDescriptionPlaceholder": "附加描述（可选）",
+          "grantTitleHint": "显示在物品名称后的括号中。"
         }
       },
       "additionalSkill": {
@@ -1220,11 +1312,52 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "已习得的免疫",
+          "forget": "遗忘"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "肾上腺疲劳",
+          "reach": "触及优势",
+          "camouflage": "伪装（对雷达、X射线、伽马、红外无效）",
+          "camouflageStill": "伪装，静止且裸体或穿智能服装",
+          "commands": "理解指令",
+          "touch": "基于触觉",
+          "navigation": "导航、地图、路线",
+          "hearing": "听觉",
+          "pheromones": "同种族，能闻到你",
+          "smell": "嗅觉",
+          "scentEmotions": "嗅出情绪，近距离",
+          "vision": "视觉",
+          "microManipulation": "微观或纳米操作",
+          "glide": "长距离滑翔",
+          "grappling": "擒抱",
+          "climbing": "攀爬",
+          "concealed": "隐藏物品",
+          "impersonateMesh": "冒充超网自我",
+          "meshCutOff": "与超网断开",
+          "magneticGrip": "磁力抓握",
+          "mimicry": "冒充研究过的目标（代替+10）",
+          "recall": "记忆回想",
+          "neuralFatigue": "神经系统疲劳",
+          "knockout": "抵抗光遗传学击倒",
+          "balance": "平衡",
+          "disguise": "伪装或冒充",
+          "disguisedAsPerson": "伪装成特定的人",
+          "stress": "对抗压力或被触发的障碍",
+          "swarmLeverage": "杠杆、力量、精细操作或小物件"
+        },
+        "skillSetup": {
+          "headline": "特殊技能",
+          "none": "未选择",
+          "button": "选择"
         }
       }
     },
     "roll": {
       "dialog": {
+        "underTheInfluence": "药效作用中",
         "generalModHeadline": "一般调整值",
         "attackerHeadline": "攻击者调整值",
         "defenderHeadline": "防御者调整值s",
@@ -1348,6 +1481,9 @@
               "moderate": "中级（-20）",
               "major": "上级（-30）"
             }
+          },
+          "weaponSelect": {
+            "drugsHeadline": "药物与毒素"
           }
         },
         "melee": {
@@ -1407,7 +1543,9 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "增强",
+        "dodgeCoverLabel": "在掩体后闪避"
       },
       "successType": {
         "success": "Success",
@@ -1437,6 +1575,8 @@
       },
       "announce": {
         "global": "状态",
+        "globalEffects": "持续效果",
+        "intoxicated": "受药物影响",
         "favor": "支援调整值",
         "specialization": "专精",
         "encumberance": "妨碍",
@@ -1469,6 +1609,7 @@
           "autoPushTooltip": "自动推送",
           "actorGone": "此感染检定所属的角色已不存在。",
           "noBioBrain": "灵能只能通过生物大脑运作。电子脑会阻断它，而信息体根本没有神经系统。",
+          "blockedByDrug": "一种药物正在封锁你的灵能。",
           "substrateBlockedTooltip": "灵能需要生物大脑",
           "substrateMismatch": "生物大脑处于合成体内"
         },
@@ -1608,6 +1749,25 @@
       }
     },
     "dialog": {
+      "selectDrugVector": {
+        "header": "哪种形态？",
+        "copy": "这种药物有多种形态：你买的是哪一种？所选形态决定了如何服用一剂，以及多久之后生效。",
+        "asAmmo": "弹药包：装入武器而非服用"
+      },
+      "doseRecipient": {
+        "header": "给谁？",
+        "copy": "你自己服用这剂，还是把它交给别人？按住 Shift 点击会立即由你自己服用。",
+        "self": "我自己",
+        "other": "自愿的目标",
+        "otherHint": "不会阻止你给它施用一剂的目标。",
+        "unwilling": "不自愿的目标",
+        "unwillingHint": "会抵抗你靠近的目标。"
+      },
+      "selectDoseNpc": {
+        "header": "选择 NPC",
+        "copy": "谁接受这一剂？输入文字以筛选列表。",
+        "search": "搜索…"
+      },
       "selectTrait": {
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
@@ -1637,9 +1797,97 @@
         "standardDescription": "添加此身体强化槽中列出的所有插件、特征与负面特征。",
         "flatLabel": "空载",
         "flatDescription": "按原样添加身体，不包含任何列出的插件。"
+      },
+      "doseDefense": {
+        "header": "防御植入物",
+        "copy": "你的{ware}会削弱{name}。药物以完整效果还是减弱效果生效？",
+        "filter": "减弱药效",
+        "full": "完整药效"
+      },
+      "wareSkills": {
+        "header": "{ware}：特殊技能",
+        "kind": {
+          "hardware": "{ware}（{bonus}）有助于硬件技能。请勾选属于硬件的特殊技能：",
+          "disguise": "{ware}（{bonus}）有助于异类技能：伪装。请勾选属于伪装的特殊技能："
+        },
+        "noSkills": "该角色还没有特殊技能。你可以稍后在植入物的表单中设置。"
+      },
+      "doseHistory": {
+        "header": "服药记录",
+        "copy": "{actor} 在<strong class=\"dose-history-highlight\">过去 24 小时</strong>内服用 <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} 次</strong>，<strong class=\"dose-history-highlight\">过去 7 天</strong>内 <strong class=\"dose-history-highlight\">{week} 次</strong>。"
+      },
+      "targeting": {
+        "fewerTitle": "目标较少",
+        "fewerHeadline": "目标少于剂量",
+        "fewerCopy": "该武器会散布 {max} 剂。确定只选择 {count} 个目标吗？",
+        "fewerConfirm": "确认"
       }
     },
     "chat": {
+      "dose": {
+        "taken": "我服用了一剂 <strong>{name}</strong>",
+        "renewed": "我又服用了一剂 <strong>{name}</strong>，持续时间重新开始",
+        "form": "形态",
+        "onset": "起效",
+        "duration": "持续时间",
+        "untilEnded": "直到手动结束",
+        "lastDose": "这是最后一剂。",
+        "usedBy": "已由 {name} 使用",
+        "outcomePsiBlocked": "<strong>{name}</strong> 封锁了我的灵能",
+        "outcomeIncapacitated": "<strong>{name}</strong> 使我失去行动能力",
+        "outcomeImmobilized": "<strong>{name}</strong> 使我无法移动",
+        "incapacitatedEffect": "失能（{name}）",
+        "immobilizedEffect": "无法移动（{name}）",
+        "rollCheck": "掷 {check}",
+        "checkRolled": "已掷过检定",
+        "checkNeeded": "<strong>{name}</strong> 需要进行 {check}",
+        "checkLabel": "{aptitude} 检定",
+        "chooseNpc": "选择一个 NPC",
+        "chooseTarget": "在画布上选择",
+        "useOnMe": "用在我身上",
+        "useOnSelection": "用在选中对象上",
+        "offered": "我提供一剂 <strong>{name}</strong>",
+        "woreOff": "我的 <strong>{name}</strong> 药效已经消退",
+        "endedEarly": "我的 <strong>{name}</strong> 被提前终止",
+        "wearOffSv": "药效消退压力 (SV)",
+        "rollWearOff": "掷压力",
+        "wearOffFlavor": "药效消退压力：{name}",
+        "app": "应用",
+        "overTimeFlavor": "{name}（{count}次）",
+        "rollDamage": "投掷伤害",
+        "damageFlavor": "{name} 伤害了身体",
+        "panicFlavor": "恐慌压力：{name}",
+        "granted": "{name} 赋予：{items}",
+        "ware": {
+          "toxinFilters": "毒素过滤器",
+          "medichines": "医疗纳米机",
+          "nanophages": "噬纳米体",
+          "both": "{first}和{second}",
+          "digestiveSymbiotes": "消化共生体",
+          "immunizers": "免疫器"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>：我的{ware}可能将其阻挡",
+        "rollFilterCheck": "投掷 SOM 检定（{ware}）",
+        "filteredOut": "我的{ware}挡住了 <strong>{name}</strong>",
+        "nullified": "{ware} 抵消了 <strong>{name}</strong>",
+        "immune": "我对 <strong>{name}</strong> 免疫",
+        "becameImmune": "我的免疫器使我对 <strong>{name}</strong> 免疫",
+        "immunizerTest": "我的免疫器分析 <strong>{name}</strong>（医学：药理学 {target}）",
+        "immunizerSuccess": "从此免疫",
+        "immunizerFailure": "这次未能学会",
+        "demandWillpower": "要求意志检定",
+        "doseHistoryTip": "最近服用此药物的次数",
+        "addictionCheckNeeded": "<strong>{name}</strong>：抵抗成瘾（意志检定 {modifier}）",
+        "rollAddictionCheck": "投掷意志检定（{modifier}）",
+        "addictionModifier": "成瘾修正（{name}）",
+        "addictedEgo": "我的自我对 <strong>{name}</strong> 上瘾了",
+        "addictedBody": "我的身体对 <strong>{name}</strong> 上瘾了",
+        "addictedBoth": "我的自我和身体都对 <strong>{name}</strong> 上瘾了",
+        "addictionRaisedEgo": "我的自我对 <strong>{name}</strong> 的成瘾升至 {level} 级",
+        "addictionRaisedBody": "我的身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
+        "addictionRaisedBoth": "我的自我和身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
+        "unaffected": "{drug} 无法作用于 {name} 的身体。"
+      },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
         "swapResult": "Swap Result",
@@ -1647,6 +1895,29 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "投掷灵术伤害"
+      },
+      "wareSetup": {
+        "headline": "设置你的植入物",
+        "copy": "有些植入物为特殊技能提供加值。请为每个植入物指定一次适用于哪些特殊技能。",
+        "done": "所有调整已完成。"
+      },
+      "attack": {
+        "applyDose": "对所选目标施用剂量",
+        "applyTargets": "应用到所选目标",
+        "targets": "目标：{names}",
+        "hitByPool": "资源池的投入使 {weapon} 的攻击变为命中。"
+      },
+      "defence": {
+        "headline": "防御 {weapon}",
+        "doseLabel": "{name}，每人一剂",
+        "dodge": "闪避",
+        "parry": "格挡",
+        "rollAll": "一次性投掷其余",
+        "outcome": {
+          "hit": "命中",
+          "half": "部分闪避：半剂",
+          "none": "避开"
+        }
       }
     },
     "rule": {
@@ -1793,6 +2064,8 @@
       "customHint": "分钟",
       "effects": "进行中的效果",
       "noEffects": "目前没有任何效果在进行",
+      "sectionPlayers": "玩家角色",
+      "sectionThreats": "非玩家角色与威胁",
       "endNow": "结束",
       "remaining": "剩余",
       "owner": "角色",
@@ -1832,7 +2105,15 @@
       "legacy": "<label class='resource-label'>感谢你使用我们的系统游玩《隐蚀期》。在接下来的更新中，为了确保整体文件的完整性，我们请求你快速地将你的数据迁移到最新的框架中，即0.8.1版本更新的框架。<p/><p/><b>为了引入一些比已有框架更酷的特性（例如本地化），这一步骤是必须的，而且只需要花费短短几秒钟。</b><p/><p/>谢谢你，祝你游戏愉快!<p><i>注意：我们对药物进行了整体的重做。只需要将其从合集包再次拖入，并删除旧的药物。</i></p></label>",
       "0861": "<label class='resource-label'><p>我们已经更新了物品结构，未来的迁移只会在你的物品处于特定版本时才会触发。<p/><p><b>这能防止你的角色卡和物品在触发迁移时损坏。</b><p/><p>请尽早迁移到这个版本，以协助我们稳定你角色的物品数据<p/> <p>谢谢你，祝你游戏愉快！</p></label>",
       "headlineEnd": "<h3 class='subheader dialog'>全部完成！</h3>",
-      "done": "<label class='resource-label'>请愉快地开始对抗TITAN并拯救宇宙吧！或做任何你想做的事情！</i></p></label>"
+      "done": "<label class='resource-label'>请愉快地开始对抗TITAN并拯救宇宙吧！或做任何你想做的事情！</i></p></label>",
+      "notice": {
+        "windowTitle": "待迁移",
+        "subheader": "嘿，特工，你有一条来自 Laph 的消息",
+        "backup": "重要：目前你的数据尚未更新或更改。如果你还没有保存世界，请先不迁移并关闭此对话框，创建备份，以免迁移时丢失数据。",
+        "reachOut": "别忘了联系我们，特工！",
+        "migrate": "立即迁移！",
+        "close": "不迁移并关闭"
+      }
     },
     "systemMessage": {
       "general": {
@@ -1862,6 +2143,14 @@
         "unknownTraitType": "未知的特征类型。请至少选择一项——意识或义体——以使用该特征。",
         "enhancementsAdded": "已为 {body} 添加 {count} 项插件。"
       }
+    },
+    "targeting": {
+      "cancelHint": "按 ESC 或在未选目标时右键取消。",
+      "confirmHint": "右键确认",
+      "remaining": "还剩 {count} 个目标",
+      "limitReached": "已达到最多 {max} 个目标。再次点击已标记的目标可取消标记。",
+      "selectTarget": "选择目标",
+      "targetChosen": "已选目标"
     }
   }
 }

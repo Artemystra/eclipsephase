@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": [
+      {
+        "id": "navigation",
+        "label": "ep2e.item.ware.rollOptions.navigation",
+        "value": 10,
+        "appliesTo": [
+          "survival"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

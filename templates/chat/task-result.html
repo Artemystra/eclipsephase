@@ -139,7 +139,7 @@
             <td class="table-dice-label">
               {{localize text}}
               {{#if comment}}
-              <br><label style="font-size: 12px">{{localize comment}}</label>
+              <br><label class="ep-mod-breakdown" style="font-size: 12px">{{localize comment}}</label>
               {{/if}}
             </td>
             <td class="table-dice-result">
@@ -165,8 +165,12 @@
       </div>
   {{/if}}
 
-  {{#if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
-    {{#if (or (eq resultClass "success")(eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true))}}
+  {{#if (and rollContext.targetedAttack (eq resultClass "success"))}}
+   <div class="chatControls">
+     <button type="button" class="chatButton targetedAttack privateChatButton" data-action="targetedAttack" data-ownerid="{{actor.id}}">{{localize rollContext.targetedAttack.labelKey}}</button>
+   </div>
+  {{else if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
+    {{#if (and (not rollContext.targetedAttack) (or (eq resultClass "success")(eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true)))}}
      <div class="chatControls">
        <button type="button" class="chatButton weaponDamage privateChatButton" data-action="weaponDamage">{{localize "ep2e.chat.buttonLabel.weaponDamage"}}</button>
      </div>
@@ -176,6 +180,11 @@
   {{#if (and (eq rolledFrom "psiSleight")(eq resultClass "success") itemdata.damage)}}
    <div class="chatControls">
      <button type="button" class="chatButton psiDamage privateChatButton" data-action="psiDamage">{{localize "ep2e.chat.buttonLabel.psiDamage"}}</button>
+   </div>
+  {{/if}}
+  {{#if (and rollContext.doseCheck.harm (ne resultClass "success"))}}
+   <div class="chatControls">
+     <button type="button" class="chatButton doseHarm privateChatButton" data-action="doseHarm" data-ownerid="{{actor.id}}">{{#if (eq rollContext.doseCheck.harm "damage")}}{{localize "ep2e.chat.dose.rollDamage"}}{{else}}{{localize "ep2e.chat.dose.rollWearOff"}}{{/if}}</button>
    </div>
   {{/if}}
   {{{epSlot "chatCard.buttons" this}}}

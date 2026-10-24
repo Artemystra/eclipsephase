@@ -70,7 +70,8 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "nh"
+    "wareType": "nh",
+    "rollOptions": []
   },
   "_stats": {
     "systemId": "eclipsephase",

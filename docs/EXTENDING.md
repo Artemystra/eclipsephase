@@ -16,7 +16,7 @@ game.eclipsephase = {
   rollItemMacro,         // builds a hotbar macro for an item
   rollWeaponMacro,       // builds a hotbar macro for a weapon roll
   version,               // game.system.version, e.g. "2.5"
-  api: { rolls, actors, ui, chat }
+  api: { rolls, actors, ui, chat, migration, registry, drugs }
 };
 ```
 
@@ -41,14 +41,43 @@ api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, useP
             // applySuccessTierBonus
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
             // sleevedNervousSystem, CYBERBRAIN_MARKER, transferItemBetweenActors,
-            // requestGMItemTransfer, tempEffectCreation, tempEffectDeletion
+            // mergeOrCreateItem, requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
+            // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
-            // itemTypeFilterPills, slideToggleVisibility
+            // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
+            // tokenAt, pickTokensOnCanvas, drawTargetMarker, selectedTokenActor,
+            // pickActorFromList
 api.chat    // readRollContext(element)
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
+api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData,
+              // chemicalPayload, chooseDrugForm, needsVectorChoice, drugVector, isAmmoPack,
+              // runningDoses, drugBlockingPsi, drugPsiPenalties
+api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence,
+              // defenceOutcome, chemicalDoses
 ```
+
+`api.drugs` is described in "Drugs and doses" below.
+
+`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, marker })` lets the user pick targets on
+the canvas - for a chat card that asks for them afterwards. A click marks a token, another click
+on it unmarks it, a right-click confirms; Escape, or a right-click with nothing marked, cancels.
+It resolves to the marked tokens in the order they were marked, or `null`.
+
+- `icon` is a Font Awesome class, e.g. `"fa-syringe"`, drawn as the cursor and as the marks.
+  Without it both are a crosshair. The system's own colours are a turquoise cursor and red marks
+  with a white border; `color` and `markColor` (CSS hex values) change them.
+- `multi: true` picks up to `max` targets: the text under the cursor counts down, and a click past
+  `max` is refused with a notice. Without it one target is picked: the text says whether it is
+  chosen, and a click on another token moves the mark over to it.
+- `marker(token, point, { icon, color })` draws the mark and returns what removes it. The default,
+  `drawTargetMarker`, draws the cursor's shape in `markColor` with a white border where the token
+  was clicked.
+
+`selectedTokenActor()` is the actor of the user's selected token, and
+`pickActorFromList(actors, header, copy)` asks for one actor from a list the user can filter by
+typing.
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
 what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/`postRoll` below.
@@ -101,7 +130,7 @@ from a listener.
 | Hook | Fires | Arguments | Purpose |
 |---|---|---|---|
 | `eclipsephase.preRollDialog` | In `RollCheck()`, right after the roll is defined, before the options dialog opens | `rollContext` (mutable; set `rollContext.cancelReason` to a loc key before returning `false`) | Cancel a roll before its dialog opens |
-| `eclipsephase.preRoll` | In `RollCheck()`, right before the roll is performed | `rollContext` with `dataset`, `actor`, `actorModel`, `rolledFrom`, `rollType`, `options`, `task`, `pool`, `modifiers` (array to push into), `itemData`, `flags` | Add a `TaskRollModifier` (or `{text, value, comment}`) to `modifiers`, or contribute data via `itemData`/`flags` |
+| `eclipsephase.preRoll` | In `RollCheck()`, right before the roll is performed | `rollContext` with `dataset`, `actor`, `actorModel`, `rolledFrom`, `rollType`, `options`, `task`, `pool`, `modifiers` (array to push into), `itemData`, `flags`, `weapon` (what `weaponPreparation` returned for a weapon attack, or `null`) | Add a `TaskRollModifier` (or `{text, value, comment}`) to `modifiers`, or contribute data via `itemData`/`flags` |
 | `eclipsephase.postRoll` | In `RollCheck()`, after the chat card was created | `rollContext` with `outputData`, `message` (the created `ChatMessage`, or `null`), `blind`, `rollMode` | React to a completed roll |
 | `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a chat card was applied | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
 | `eclipsephase.prepareActorMods` | In `EPactor.prepareData()`, right after `mods`/`currentStatus` are reset | `(actorWhole, actorModel)` | Contribute to `actorModel.mods` before derived values are computed |
@@ -111,6 +140,7 @@ from a listener.
 | `eclipsephase.effectSuppression` | In `effects.js`, while deciding whether an ActiveEffect is suppressed | `(item, actor, result)` - set `result.suppressed` | Add a suppression rule for a module's own item types |
 | `eclipsephase.prepareActorSheetContext` | In `EPactorSheet._prepareContext()`, as its last statement | `(sheet, context)` | Add to the sheet's render context |
 | `eclipsephase.effectDurations` | In `EPactor.onUpdateEffectDurations()`, whenever a tracked effect's remaining duration changed | `(actorWhole, effects, event, context)` | React to a timed effect running down or expiring |
+| `eclipsephase.weaponLoaded` | In the reload handler, right before a weapon's new load is written | `{ actor, weapon, ammo, ammoType, update }` - mutate `update` | Keep something about the load on the weapon, as the system keeps a chemical weapon's dose |
 | `eclipsephase.postRest` | In the rest handler, right before the actor update is written | `(actorWhole, restType, updates)` - mutate `updates` | Add fields to a rest's update payload |
 | `eclipsephase.ready` | In the system's own `ready` hook | `(game.eclipsephase)` | Register a module once the API is in place |
 
@@ -278,6 +308,218 @@ Four things are worth knowing before you build one:
 `getStrainFamily(id)`, `listStrainFamilies()` and `hasStrainFamily(id)` are on `api.registry` too,
 for reading the registry back.
 
+## Drugs and doses
+
+A drug is an Item of type `drug`. Taking a dose puts one ActiveEffect on the actor; everything the
+system does with the dose afterwards - the Time Panel row, the roll dialog's options, the check
+when it takes hold, the wear-off card - reads that effect. A module adds a drug by authoring the
+item; it adds behaviour by reading the effect.
+
+### Authoring a drug
+
+The fields that decide what a dose does:
+
+| Field | Meaning |
+|---|---|
+| `category` | `"drug"` or `"toxin"` |
+| `drugType` | `"biochem"`, `"nano"`, `"electronic"` or `""`. Biochem and nano need a biomorph, electronic an infomorph or a cyberbrain; `""` is never refused |
+| `dermal`, `inhalation`, `injection`, `oral` | The forms the drug comes in. A pack holds one form, chosen when the drug is added to a sheet |
+| `isAmmo` | The pack loads into a weapon and cannot be taken |
+| `usagesUsed`, `usagesMax` | Doses spent and doses per pack |
+| `duration` | `{ value, units }`, units one of `rounds`, `seconds`, `minutes`, `hours`, `days`. No value means the dose runs until it is ended by hand |
+| `wearOff` | `{ d10, d6, bonus }` - stress rolled from the card when the dose ends; all zero for none |
+| `rollOptions` | Conditional modifiers, see below |
+| `useCheck` | A check when the dose takes hold, see below |
+| `blocksPsi` | The dose blocks psi outright |
+| `overTime` | Effects over time, see below |
+| `healingAddition` | A dice formula added to healing rolls on Meds while the dose runs, e.g. `"1d10"` |
+| `grants` | Items lent for as long as the dose runs, see below |
+| `addictionType`, `addictionMod` | `"mental"`, `"physical"`, `"both"` or `""`/`"none"`, and the WIL Check's modifier as text, e.g. `"-20"` |
+
+The drug's own ActiveEffects are blueprints: they never apply from the item. A dose copies their
+`changes` onto the actor. Use them for flat modifiers that always hold - Kick's bonus to the Vigor pool - and
+`rollOptions` for anything that depends on the situation.
+
+A roll option is offered in the roll dialog while the dose runs, and the player ticks it when it
+applies:
+
+```json
+{
+  "id": "fear",
+  "label": "my-module.drugs.juiceFear",
+  "value": 30,
+  "appliesTo": ["sav", "wil"],
+  "random": false,
+  "automatic": false,
+  "replacesGlobal": false
+}
+```
+
+`appliesTo` lists skill keys, aptitude keys, or `"know"` for any Know skill; an empty list matches
+every check. `label` is a localization key or plain text. `random` rolls the sign - plus or minus
+`value`, even odds. `automatic` applies the option on every matching check without offering it.
+`replacesGlobal` stands in for the drug's own penalty to all actions on that roll, for a drug whose
+penalty is stronger in one situation.
+
+A use check is rolled from a card, by the actor's owner, the moment the dose takes hold:
+
+```json
+{
+  "aptitude": "wil",
+  "modifier": -20,
+  "failure": "blocksPsi",
+  "duration": { "value": null, "units": "" },
+  "stress": { "d10": 0, "d6": 0, "bonus": 0 },
+  "successPsiPenalty": -30
+}
+```
+
+`failure` is what a failed check does: `"incapacitated"` or `"immobilized"` puts a timed condition
+on the actor for `duration` (no value: as long as the dose runs) and removes it with the dose;
+`"blocksPsi"` blocks psi for the dose's span; `"stress"` posts a card that rolls `stress`.
+`successPsiPenalty` is a modifier on psi tests after a passed check. A pool spend that turns a
+failure into a pass undoes the failure. An empty `aptitude` means no check.
+
+Effects over time tick on the world clock while the dose runs:
+
+```json
+{
+  "damage": { "d10": 1, "d6": 0, "bonus": 0 },
+  "interval": "turn",
+  "ticks": null,
+  "modifier": -10,
+  "incapacitates": false
+}
+```
+
+`interval` is `"turn"` or `"hour"`. Every tick deals `damage`, each tick measured against the Wound
+Threshold on its own. `ticks` caps the number of ticks; no value means every tick the dose lasts.
+`modifier` is added once more after every full interval as a penalty to all actions, the first after one interval; with `incapacitates` the
+target is incapacitated once that penalty reaches their Durability.
+
+A grant row lends one item from a compendium:
+
+```json
+{ "pack": "eclipsephase.traits", "folder": "", "item": "random", "title": "", "description": "", "or": false }
+```
+
+`item` is a document id, or `"random"` for any item in `folder` (or the whole pack) the actor
+does not own yet. `title` is added in brackets after the item's name, `description` above its
+own. A row with `or: true` starts a new package; one package is picked at random, and all its rows
+are lent. Lent items carry `flags.eclipsephase.grantedBy` with the dose's id and go with it.
+
+Toxins always meet the body's defensive ware (Toxin Filters, Digestive Symbiotes, Medichines,
+Nanophages, Immunizers); a drug taken willingly asks first. A halved dose runs half as long and
+does half its effect, rounded up.
+
+### The dose effect
+
+A dose is an ActiveEffect on the actor with `transfer: false`, `showIcon` never, an explicit
+`start` and an expiry on the world clock. Its data comes from `api.drugs.doseEffectData(item)`,
+and it carries the drug's state in `flags.eclipsephase.dose`:
+
+```js
+{
+  itemId, name,        // the pack it came from; name is the key, see below
+  category, drugType,
+  vector,              // the form it was taken in
+  onset,               // e.g. "1 Action Turn", for the card
+  wearOff,             // dice formula, e.g. "1d10+2", or ""
+  rollOptions,         // as authored
+  useCheck,            // as authored, or null
+  checkOutcome,        // null, "passed" or "failed"
+  psiPenalty,          // set by a passed check
+  blocksPsi,           // from the drug, or from a failed check
+  overTime,            // as authored, or null
+  overTimeState,       // { ticks, steps } dealt so far
+  healingAddition,     // as authored
+  grants,              // as authored
+  addiction,           // { type, modifier }, or null
+  defense,             // { halved, by, checkBonus } when ware halved it
+  filteredOut          // true once a filter's check kept it out
+}
+```
+
+A drug does not stack with itself: a second dose of a drug already running - in any form - renews
+the running dose instead of adding another. The renewal restarts the clock, takes the new pack's
+data and asks for the check again. The name is what makes two packs the same drug.
+
+When a dose runs out, the system deletes it, and the client that deletes it posts the wear-off card
+and removes what the dose left behind: its conditions and its lent items.
+Listen to `deleteActiveEffect` and check for the `dose` flag to react to a dose ending; listen to
+`eclipsephase.effectDurations` to watch it run down.
+
+### `api.drugs`
+
+```js
+const { drugs } = game.eclipsephase.api;
+await drugs.takeDose(actor, item);        // { taken, emptied, refused, effect }
+await drugs.offerDose(actor, item);       // { offered, message } - a card anyone can claim
+await drugs.forceDose(actor, item);       // a melee attack that delivers the dose, see "Targeted attacks"
+drugs.chemicalPayload(item);              // { data, drugType, name } - the dose a hit delivers
+drugs.activeDoseFor(actor, "Kick");       // the running dose, or null
+drugs.doseSubstrate(actor, item);         // { allowed, reasonKey }
+await drugs.chooseDrugForm(itemData);     // false when cancelled; keeps only the chosen form
+drugs.needsVectorChoice(item.system);     // true while a drug still offers several forms
+drugs.drugVector(item.system);            // { key, label, onset } of its one form, or null
+drugs.isAmmoPack(item.system);            // true for a pack that loads into a weapon
+drugs.runningDoses(actor);                // the dose flag of every active dose
+drugs.drugBlockingPsi(actor);             // the drug's name, or null
+drugs.drugPsiPenalties(actor);            // [{ name, modifier }]
+```
+
+`takeDose`, `offerDose` and `forceDose` behave exactly like the sheet's controls: they refuse an
+ammunition pack, an empty pack or a body the drug cannot act on with a notification, spend the
+dose and post the cards. An offered dose is only spent once someone claims it, a forced one once
+the attacker has picked the target after the hit.
+
+A pack holds one form. A sheet that lets someone acquire a drug - an actor sheet, a shop - calls
+`chooseDrugForm(itemData)` on the incoming data before creating it: it asks for the form and
+whether the pack is ammunition, and does nothing for anything else. `api.actors.mergeOrCreateItem(actor,
+itemData)` then adds it to a matching stack - same type and name, and for a drug the same form -
+or creates it.
+
+## Targeted attacks
+
+Some attacks pick their targets after the hit: the attack card shows a button instead of damage,
+the attacker marks the targets on the canvas with `api.ui.pickTokensOnCanvas`, and each target's
+owner - its player owners, or the GM for a target no player owns - gets one card to defend from.
+The card has a button per target; against a ranged attack it also rolls the rest at once, without
+a dialog. A ranged defence is Fray, halved; against an area attack the dialog adds "Dodge behind
+cover". A melee defence is Fray in full or a parry with Melee.
+
+`api.attacks.defenceOutcome(attack, passed, behindCover)` decides what reaches the target: a
+failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"` through, or
+`"none"` behind cover; any other successful defence is `"none"`. A pool spend on the defence
+settles it again.
+
+What the hit brings is registered:
+
+```js
+game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
+  detect(rollContext) {            // at preRoll: does this roll carry the effect?
+    if (!rollContext.weapon?.weapon?.getFlag("my-module", "net")) return null;
+    return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {},
+      cursor: { icon: "fa-spider-web" } };   // optional: icon, color, markColor; the crosshair otherwise
+  },
+  ready(attack) { return true; },              // optional, before picking: false refuses
+  async beforeDelivery(attack) { return true; }, // optional, after picking: false refuses
+  async resolve(attack, target, outcome, { byPool, defenceId }) {}
+});
+```
+
+The attack travels in `flags.eclipsephase.roll.targetedAttack` on the attack card:
+`{ id, effect, actorUuid, weaponName, defence, area, targets, payload, labelKey, effectLabel,
+delivered, targetNames, cursor }`. A caller can set it up itself through `dataset.contextFlags.targetedAttack`,
+as `forceDose` does. `resolve` runs on the defender's client; with `byPool` it should undo what
+the earlier outcome did first.
+
+The system registers one effect, `"dose"`. A weapon with the "Ammunition: Chems" trait
+(`specialAmmoDrugs`) carries it: one dose per target, as many targets as its Multi Shot number
+(`api.attacks.chemicalDoses(weaponTraits)`), as an area attack. The weapon keeps a copy of the
+drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it once the pack is
+used up.
+
 ## Chat message context
 
 `RollCheck()` stores the data a chat card's buttons need in `flags.eclipsephase.roll` on the
@@ -304,7 +546,10 @@ keep working. Visibility (`blind`/whisper) is read from the `ChatMessage` itself
 The system stores only its own keys here. To put your own block on the card, assign it to
 `context.flags` in `eclipsephase.preRoll`; those keys are merged over the stored context, so a key
 you name is yours outright. This is the only route by which a chat button clicked later - a pool
-spend, say - can reach data your module gathered at roll time.
+spend, say - can reach data your module gathered at roll time. A roll your module starts itself
+can also carry flags from the start: put them on the dataset as `contextFlags` before calling
+`api.rolls.RollCheck`, and they arrive as `context.flags` in every hook. The system's own dose
+checks and forced doses travel this way.
 
 ```js
 Hooks.on("eclipsephase.preRoll", context => {

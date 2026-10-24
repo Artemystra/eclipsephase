@@ -7,7 +7,11 @@
       <p>{{localize copy}}</p>
     </div>
   </div>
-    {{#if total}}
+    {{#if diceArray}}
+      {{#each diceArray as |tick key|}}
+        {{> systems/eclipsephase/templates/chat/partials/roll-results.html diceBreakdown=tick total=tick.total rollTitle=../rollTitle rollType=tick.rollType}}
+      {{/each}}
+    {{else if total}}
       {{> systems/eclipsephase/templates/chat/partials/roll-results.html diceBreakdown=diceBreakdown total=total rollTitle=rollTitle rollType=rollType}}
     {{/if}}
   {{/if}}

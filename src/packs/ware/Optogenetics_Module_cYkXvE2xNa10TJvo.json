@@ -15,7 +15,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "c"
+    "wareType": "c",
+    "rollOptions": [
+      {
+        "id": "knockout",
+        "label": "ep2e.item.ware.rollOptions.knockout",
+        "value": -30,
+        "appliesTo": [
+          "wil"
+        ]
+      }
+    ]
   },
   "effects": [],
   "sort": 0,

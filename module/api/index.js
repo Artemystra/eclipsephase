@@ -15,11 +15,19 @@ import {
   addMinimizeSupport,
   registerCommonHandlers,
   itemTypeFilterPills,
+  selectFromSearchableList,
+  tokenAt,
+  pickTokensOnCanvas,
+  drawTargetMarker,
+  selectedTokenActor,
+  pickActorFromList,
   readRollContext,
   transferItemBetweenActors,
   tempEffectCreation,
-  tempEffectDeletion
+  tempEffectDeletion,
+  mergeOrCreateItem
 } from "../common/general-sheet-functions.js";
+import { needsVectorChoice, drugVector, isAmmoPack, chooseDrugForm } from "../common/drugs.js";
 import { requestGMItemTransfer, slideToggleVisibility } from "../common/general-helper-functions.js";
 import { epCreateProgressDialog, forEachActor, forEachItem, postNotice } from "../common/migration.js";
 import {
@@ -39,6 +47,10 @@ import {
   registerTaskResultText
 } from "./registry.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
+import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
+import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome } from "../rolls/targeted-attacks.js";
+import { chemicalDoses } from "../common/weapon-functions.js";
+import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -74,6 +86,7 @@ export const actors = {
   applyStandardEnhancements,
   applyFrame,
   transferItemBetweenActors,
+  mergeOrCreateItem,
   requestGMItemTransfer,
   tempEffectCreation,
   tempEffectDeletion
@@ -93,7 +106,13 @@ export const ui = {
   addMinimizeSupport,
   registerCommonHandlers,
   itemTypeFilterPills,
-  slideToggleVisibility
+  slideToggleVisibility,
+  selectFromSearchableList,
+  tokenAt,
+  pickTokensOnCanvas,
+  drawTargetMarker,
+  selectedTokenActor,
+  pickActorFromList
 };
 
 /**
@@ -135,7 +154,41 @@ export const registry = {
 };
 
 /**
+ * Taking, giving and forcing a dose of a drug, and reading the doses running on an actor.
+ * @since 2.7
+ */
+export const drugs = {
+  takeDose,
+  offerDose,
+  forceDose,
+  activeDoseFor,
+  doseSubstrate,
+  doseEffectData,
+  chemicalPayload,
+  chooseDrugForm,
+  needsVectorChoice,
+  drugVector,
+  isAmmoPack,
+  runningDoses,
+  drugBlockingPsi,
+  drugPsiPenalties
+};
+
+/**
+ * Attacks whose targets are picked after the hit, each defending from a card of their own.
+ * @since 2.7
+ */
+export const attacks = {
+  registerAttackEffect,
+  applyTargetedAttack,
+  postDefenceCards,
+  rollDefence,
+  defenceOutcome,
+  chemicalDoses
+};
+
+/**
  * The full game.eclipsephase.api surface, grouped by area.
  * @since 2.5
  */
-export const api = { rolls, actors, ui, chat, migration, registry };
+export const api = { rolls, actors, ui, chat, migration, registry, drugs, attacks };

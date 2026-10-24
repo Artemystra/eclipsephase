@@ -123,8 +123,14 @@
     </div>
     <div class="form-group listBackgroundMain">
         <label class="resource-value">{{localize "ep2e.roll.dialog.dodgeRangedLabel"}}</label>
-        <input class="item-standard-margin-both-large sheet" type="checkbox" checked name="rangedFray">
+        <input class="item-standard-margin-both-large sheet" type="checkbox" {{#unless dataset.frayMelee}}checked{{/unless}} name="rangedFray" id="rangedFray">
     </div>
+    {{#if dataset.dodgeCover}}
+    <div class="form-group listBackgroundMain">
+        <label class="resource-value" for="behindCover">{{localize "ep2e.roll.dialog.dodgeCoverLabel"}}</label>
+        <input class="item-standard-margin-both-large sheet" type="checkbox" name="behindCover" id="behindCover">
+    </div>
+    {{/if}}
 </div>
 {{/if}}
 {{#if (eq rollType "psi")}}
@@ -168,6 +174,32 @@
         </div>
     </div>
     {{/if}}
+{{/if}}
+{{#if doseOptions.length}}
+<div class="contentBoxMargin">
+    <div class="flexrow subheader colorNegative">
+        <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.underTheInfluence"}}</h3>
+    </div>
+    {{#each doseOptions as |entry|}}
+    <div class="form-group listBackgroundMain">
+        <input type="checkbox" class="sheet" name="{{entry.field}}" id="{{entry.field}}">
+        <label class="resource-label" for="{{entry.field}}">{{entry.drug}}: {{localize entry.option.label}} ({{entry.shown}})</label>
+    </div>
+    {{/each}}
+</div>
+{{/if}}
+{{#if wareOptions.length}}
+<div class="contentBoxMargin">
+    <div class="flexrow subheader colorAugmented">
+        <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.augmentations"}}</h3>
+    </div>
+    {{#each wareOptions as |entry|}}
+    <div class="form-group listBackgroundMain">
+        <input type="checkbox" class="sheet" name="{{entry.field}}" id="{{entry.field}}">
+        <label class="resource-label" for="{{entry.field}}">{{entry.drug}}: {{localize entry.option.label}} ({{entry.shown}})</label>
+    </div>
+    {{/each}}
+</div>
 {{/if}}
 {{#if (and actorWhole.system.additionalSystems.isJamming (ne rolledFrom "integration") (ne rolledFrom "vehicleSkill"))}}
 <div class="contentBoxMargin">

@@ -16,7 +16,18 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "chm"
+    "wareType": "chm",
+    "rollOptions": [
+      {
+        "id": "studied",
+        "label": "ep2e.item.ware.rollOptions.mimicry",
+        "value": 30,
+        "appliesTo": [
+          "deceive"
+        ],
+        "replacesFlat": 10
+      }
+    ]
   },
   "effects": [
     {

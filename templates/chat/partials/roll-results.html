@@ -32,6 +32,11 @@
                 <strong class="eyes">{{die.result}}</strong>
             </div>
             {{/each}}
+            {{#if diceBreakdown.bonus}}
+            <div class="diecontainerSmall bonus">
+                <strong class="eyes">{{diceBreakdown.bonus}}</strong>
+            </div>
+            {{/if}}
         </div>
 
     </div>

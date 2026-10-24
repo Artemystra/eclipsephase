@@ -217,7 +217,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!K6iNHHZx6IGLR3fz.c4JfIkkEKJ0J9hAG"
+          "_key": "!actors.items.effects!wjfP9LZPQdsW26Sm.K6iNHHZx6IGLR3fz.c4JfIkkEKJ0J9hAG"
         }
       ],
       "flags": {
@@ -507,7 +507,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!3BkjOTE9VHaaiYU2.k0Rvigj2v52Nwp9c"
+          "_key": "!actors.items.effects!wjfP9LZPQdsW26Sm.3BkjOTE9VHaaiYU2.k0Rvigj2v52Nwp9c"
         }
       ],
       "system": {
@@ -789,7 +789,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!9jU90dS40FmXWpjW.TLylWp2iKET61VSR"
+          "_key": "!actors.items.effects!wjfP9LZPQdsW26Sm.9jU90dS40FmXWpjW.TLylWp2iKET61VSR"
         }
       ],
       "flags": {},
@@ -1728,7 +1728,53 @@
       "name": "Grin",
       "type": "drug",
       "img": "systems/eclipsephase/resources/icons/drug.png",
-      "effects": [],
+      "effects": [
+        {
+          "_id": "Bxx64DyBJ7XYb89n",
+          "name": "Grin",
+          "img": "systems/eclipsephase/resources/icons/drug.png",
+          "type": "base",
+          "disabled": false,
+          "transfer": true,
+          "origin": null,
+          "tint": "#ffffff",
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "statuses": [],
+          "flags": {},
+          "sort": 0,
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "system": {
+            "changes": [
+              {
+                "key": "system.mods.woundMod",
+                "value": -1,
+                "priority": null,
+                "type": "add"
+              }
+            ]
+          },
+          "_stats": {
+            "coreVersion": "14.356",
+            "systemId": null,
+            "systemVersion": null,
+            "createdTime": null,
+            "modifiedTime": null,
+            "lastModifiedBy": null,
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          },
+          "_key": "!actors.items.effects!wjfP9LZPQdsW26Sm.ZzKDOe1Vwb8y4ki3.Bxx64DyBJ7XYb89n"
+        }
+      ],
       "folder": null,
       "sort": 0,
       "flags": {
@@ -1739,20 +1785,39 @@
         "additionalSystems": {},
         "description": "Ignore 1 wound.",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "combat",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "3 hours",
+        "duration": {
+          "value": 3,
+          "units": "hours"
+        },
         "addictionMod": "-10",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "physical",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1762,9 +1827,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.pBEjcZmTm7sH8iTm",
+        "modifiedTime": 1674425475575,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.U2TdcUBiQXuhvRv7",
         "duplicateSource": null,
         "exportSource": null
       },
@@ -1785,20 +1850,39 @@
         "additionalSystems": {},
         "description": "Heals 1d10 damage per hour or 1 wound per day.",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "moderate",
         "slotType": "consumable",
-        "category": "nano",
+        "category": "drug",
         "dermal": false,
         "inhalation": false,
-        "injection": true,
+        "injection": false,
         "oral": true,
         "drugType": "nano",
-        "duration": "1 day",
+        "duration": {
+          "value": 1,
+          "units": "days"
+        },
         "addictionMod": "-",
         "addictionType": "none",
-        "quantity": 1
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "meds",
+        "grants": [],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1808,9 +1892,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.PFs4b4aVgVpsKlVZ",
+        "modifiedTime": 1674425314878,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.cps7nL7UNVQq9IMD",
         "duplicateSource": null,
         "exportSource": null
       },
@@ -2653,7 +2737,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!8S0zv0xdxSQlEAXj.rUJAVCnBPeWGt6Xf"
+          "_key": "!actors.items.effects!wjfP9LZPQdsW26Sm.8S0zv0xdxSQlEAXj.rUJAVCnBPeWGt6Xf"
         }
       ],
       "system": {

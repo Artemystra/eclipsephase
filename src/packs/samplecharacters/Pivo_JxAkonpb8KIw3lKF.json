@@ -261,7 +261,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!8v5AYTUywEOeF6Uq.gEvGwdoCA46g3HPg"
+          "_key": "!actors.items.effects!JxAkonpb8KIw3lKF.8v5AYTUywEOeF6Uq.gEvGwdoCA46g3HPg"
         }
       ],
       "flags": {
@@ -588,7 +588,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!cmpAV3nY6WRRyhpJ.o97oNuVxtpYO0EuZ"
+          "_key": "!actors.items.effects!JxAkonpb8KIw3lKF.cmpAV3nY6WRRyhpJ.o97oNuVxtpYO0EuZ"
         }
       ],
       "flags": {
@@ -688,7 +688,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!f3c1e9ATCfOObGXh.OJ3XxUkOCJDATraQ"
+          "_key": "!actors.items.effects!JxAkonpb8KIw3lKF.f3c1e9ATCfOObGXh.OJ3XxUkOCJDATraQ"
         }
       ],
       "flags": {},
@@ -845,7 +845,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!3f3Y65TiYoapycoS.kTq0J5kR7prZFnId"
+          "_key": "!actors.items.effects!JxAkonpb8KIw3lKF.3f3Y65TiYoapycoS.kTq0J5kR7prZFnId"
         }
       ],
       "flags": {},
@@ -1736,7 +1736,53 @@
       "name": "Orbital Hash",
       "type": "drug",
       "img": "systems/eclipsephase/resources/icons/drug.png",
-      "effects": [],
+      "effects": [
+        {
+          "_id": "ZGhQib3WQBj7CrF9",
+          "name": "Orbital Hash",
+          "img": "systems/eclipsephase/resources/icons/drug.png",
+          "type": "base",
+          "disabled": false,
+          "transfer": true,
+          "origin": null,
+          "tint": "#ffffff",
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "statuses": [],
+          "flags": {},
+          "sort": 0,
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "system": {
+            "changes": [
+              {
+                "key": "system.mods.traumaMod",
+                "value": -1,
+                "priority": null,
+                "type": "add"
+              }
+            ]
+          },
+          "_stats": {
+            "coreVersion": "14.356",
+            "systemId": null,
+            "systemVersion": null,
+            "createdTime": null,
+            "modifiedTime": null,
+            "lastModifiedBy": null,
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          },
+          "_key": "!actors.items.effects!JxAkonpb8KIw3lKF.nAXWeBnT0COkDd2a.ZGhQib3WQBj7CrF9"
+        }
+      ],
       "folder": null,
       "sort": 0,
       "flags": {
@@ -1747,20 +1793,50 @@
         "additionalSystems": {},
         "description": "Ignore 1 trauma, –10 Know Tests/memory-related COG Checks",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "rec",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "3 hours",
+        "duration": {
+          "value": 3,
+          "units": "hours"
+        },
         "addictionMod": "-",
         "addictionType": "none",
-        "quantity": 1
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "rollOptions": [
+          {
+            "id": "memory",
+            "label": "ep2e.item.drug.rollOptions.orbitalhashMemory",
+            "value": -10,
+            "appliesTo": [
+              "know",
+              "cog"
+            ]
+          }
+        ],
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -1770,9 +1846,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.bprdEM2qzoGTR3oH",
+        "modifiedTime": 1674425135397,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.WKKHjh2wHS3tYxCG",
         "duplicateSource": null,
         "exportSource": null
       },

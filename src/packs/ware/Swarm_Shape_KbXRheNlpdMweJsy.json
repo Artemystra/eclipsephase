@@ -15,7 +15,15 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "h"
+    "wareType": "h",
+    "rollOptions": [
+      {
+        "id": "leverage",
+        "label": "ep2e.item.ware.rollOptions.swarmLeverage",
+        "value": -30,
+        "appliesTo": []
+      }
+    ]
   },
   "effects": [],
   "sort": 0,

@@ -136,7 +136,20 @@
         "registeredId": "Registered ID: {name}"
       },
       "warnings": {
-        "noPlacedToken": "This actor isn't represented by a placed token right now."
+        "doseNeedsBiomorph": "This drug only works in a biological body.",
+        "doseNeedsCyberbrain": "This drug only runs on an infomorph or a cyberbrain.",
+        "noDosesLeft": "{name} has no doses left.",
+        "doseCheckRolled": "This check has already been rolled.",
+        "doseNoScene": "Open a scene to pick a target on it.",
+        "doseNeedsGM": "A GM needs to be connected to hand this dose over.",
+        "doseNoSelection": "Select a token first.",
+        "doseNeedsClaimant": "Assign yourself a character, or as GM select a token, to take this dose.",
+        "doseAlreadyUsed": "This dose has already been used.",
+        "offerPackEmpty": "The pack this dose was offered from is empty or gone.",
+        "ammoPackNotTaken": "{name} is an ammunition pack: load it into a weapon instead.",
+        "noPlacedToken": "This actor isn't represented by a placed token right now.",
+        "attackDelivered": "This attack has already been applied to its targets.",
+        "attackNoPayload": "The weapon does not know which drug it is loaded with. Reload it first."
       },
       "button": {
         "edit": "Edit",
@@ -170,6 +183,8 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteStackCopy": "<b>Warning:</b>You are about to delete from a stack. Choose how many should go - the rest stays on your sheet.",
+        "deleteStackLabel": "Number to delete",
         "deleteArmorWithBodyCopy": "<b>Warning:</b>You are about to delete {body}. It has Armor bound to it - deleting {body} will also delete its Armor.",
         "stashArmorCopy": "Do you want to stash {name}? You'll find it in your inventory anytime.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up hold SHIFT while pressing the delete button.</p></i>",
@@ -1097,7 +1112,8 @@
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
-            "rail": "Rail"
+            "rail": "Rail",
+            "chemical": "Chemical or Drug"
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
@@ -1150,8 +1166,47 @@
         }
       },
       "drug": {
+        "rollOptions": {
+          "aggroIntimidate": "Provoke to intimidate or taunt",
+          "aggroOtherSocial": "other social tests",
+          "blabInterrogation": "resisting interrogation",
+          "buzzSuggestion": "resisting suggestion",
+          "crgasSight": "sight-based Perceive",
+          "flightFear": "against intimidation or fear",
+          "hitherSeduce": "Provoke to seduce",
+          "juiceFear": "against fear or manipulation",
+          "neemRecall": "recalling memories",
+          "orbitalhashMemory": "Know skills or recalling memories",
+          "oxytocinaTrust": "where trust matters",
+          "randomizerSocial": "social tests, decided by chance",
+          "stiffResist": "against Persuade or Provoke",
+          "tongzhiShared": "Persuade on shared interests",
+          "monoNoAwareArt": "on Art skills",
+          "gravyHighGravity": "against high-gravity penalties"
+        },
+        "takeDose": "Take a dose",
+        "dosesLeft": "Doses left",
+        "onset": {
+          "immediate": "Takes hold at once",
+          "turn": "Takes hold after one action turn",
+          "minutes15": "Takes hold after 15 minutes",
+          "app": "Runs like software, and stops the moment it is paused"
+        },
         "table": {
           "duration": "Duration",
+          "durationUnits": {
+            "label": "Unit",
+            "none": "Open-ended",
+            "rounds": "Action Turns",
+            "seconds": "Seconds",
+            "minutes": "Minutes",
+            "hours": "Hours",
+            "days": "Days"
+          },
+          "usagesMax": "Doses Used",
+          "isAmmo": "Ammunition pack",
+          "wearOffSv": "Wear-off stress (SV)",
+          "usagesTip": "Used / Max",
           "addictionModifier": "Addiction Mod",
           "addictionType": "Addiction Type",
           "applicationVectors": {
@@ -1163,17 +1218,8 @@
           },
           "category": {
             "label": "Category",
-            "cognitive": "Cognitive Drug",
-            "combat": "Combat Drug",
-            "health": "Health Drug",
-            "nano": "Nanodrug",
-            "narco": "Narcoalgorithm",
-            "petals": "Petal",
-            "psi": "Psi Drug",
-            "rec": "Recreational",
-            "social": "Social Drug",
-            "toxins": "Toxin",
-            "nanotox": "Nanotoxin"
+            "drug": "Drug",
+            "toxin": "Toxin"
           },
           "type": {
             "label": "Drug Type",
@@ -1181,6 +1227,52 @@
             "nano": "Nano",
             "electronic": "Electronic"
           }
+        },
+        "mechanics": {
+          "tab": "Mechanics",
+          "none": "None",
+          "checkHeadline": "Check on Taking",
+          "aptitude": "Aptitude",
+          "modifier": "Modifier",
+          "failure": "On Failure",
+          "lasts": "Lasts",
+          "successPsi": "Psi Penalty on Success",
+          "failures": {
+            "incapacitated": "Incapacitated",
+            "immobilized": "Immobilized",
+            "blocksPsi": "Psi Blocked",
+            "stress": "Stress (SV)",
+            "damage": "Damage (DV)"
+          },
+          "overTimeHeadline": "Effects over Time",
+          "damage": "Damage per Tick",
+          "interval": "Every",
+          "ticks": "Ticks",
+          "ticksTip": "Leave empty for as long as the dose runs",
+          "intervals": {
+            "turn": "Action Turn",
+            "hour": "Hour"
+          },
+          "growingModifier": "Growing Modifier",
+          "growingModifierTip": "Added to all actions every interval, e.g. -5 per hour",
+          "incapacitates": "Incapacitates at DUR",
+          "incapacitatesTip": "Incapacitated once the growing modifier reaches the target's Durability",
+          "healing": "Healing Dialog",
+          "healingTip": "While a dose runs, the healing dialog starts on this addition",
+          "harm": "Damage",
+          "grantsHeadline": "Temporary Traits",
+          "grantPack": "Compendium",
+          "grantFolder": "Folder",
+          "grantItem": "Item",
+          "random": "Random",
+          "connectorAnd": "AND",
+          "connectorOr": "OR",
+          "connectorTip": "OR starts a new package; one package is rolled at even odds",
+          "grantDescription": "Edit Title and Description",
+          "grantDescriptionHint": "Written above the item's own description.",
+          "grantTitlePlaceholder": "Additional title (optional)",
+          "grantDescriptionPlaceholder": "Additional description (optional)",
+          "grantTitleHint": "Shown in brackets after the item's name."
         }
       },
       "additionalSkill": {
@@ -1263,11 +1355,52 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "Learned Immunities",
+          "forget": "Forget"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Adrenal fatigue",
+          "reach": "Reach advantage",
+          "camouflage": "Camouflage (not vs. radar, x-ray, gamma or infrared)",
+          "camouflageStill": "Camouflage, still and nude or in smart clothing",
+          "commands": "Understanding commands",
+          "touch": "Touch-based",
+          "navigation": "Navigation, maps, routes",
+          "hearing": "Hearing",
+          "pheromones": "Same species, can smell you",
+          "smell": "Smell",
+          "scentEmotions": "Smelling emotions, point-blank",
+          "vision": "Vision",
+          "microManipulation": "Micro- or nano-manipulation",
+          "glide": "Long-distance glide",
+          "grappling": "Grappling",
+          "climbing": "Climbing",
+          "concealed": "Concealed item",
+          "impersonateMesh": "Impersonating a hypermeshed ego",
+          "meshCutOff": "Cut off from the hypermesh",
+          "magneticGrip": "Magnetic grip",
+          "mimicry": "Impersonating a studied target (instead of +10)",
+          "recall": "Memory recall",
+          "neuralFatigue": "Nervous system fatigue",
+          "knockout": "Resisting an optogenetic knockout",
+          "balance": "Balance",
+          "disguise": "Disguise or impersonation",
+          "disguisedAsPerson": "Disguised as a particular person",
+          "stress": "Vs. stress or a triggered disorder",
+          "swarmLeverage": "Leverage, strength, fine dexterity or small objects"
+        },
+        "skillSetup": {
+          "headline": "Special Skills",
+          "none": "None picked",
+          "button": "Choose"
         }
       }
     },
     "roll": {
       "dialog": {
+        "underTheInfluence": "Under the Influence",
         "generalModHeadline": "General Modifiers",
         "attackerHeadline": "Attacker Modifiers",
         "defenderHeadline": "Defender Modifiers",
@@ -1331,7 +1464,8 @@
         "ranged": {
           "weaponSelect": {
             "headline": "Select Weapon",
-            "modeSelectionHeadline": "Select Weapon Mode"
+            "modeSelectionHeadline": "Select Weapon Mode",
+            "drugsHeadline": "Drugs and Toxins"
           },
           "ammoSelect": {
             "headline": "Select Ammunition"
@@ -1461,7 +1595,9 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "Augmentations",
+        "dodgeCoverLabel": "Dodge behind cover"
       },
       "successType": {
         "success": "Success",
@@ -1491,6 +1627,8 @@
       },
       "announce": {
         "global": "Situational",
+        "globalEffects": "Ongoing effects",
+        "intoxicated": "Intoxicated",
         "favor": "Favor Modifier",
         "specialization": "Specialization",
         "encumberance": "Encumberance",
@@ -1525,6 +1663,7 @@
           "autoPushTooltip": "Auto-Push",
           "actorGone": "The character this Infection Test belongs to no longer exists.",
           "noBioBrain": "Psi only works from a biological brain. A Cyberbrain blocks it, and an infomorph has no nervous system to work through.",
+          "blockedByDrug": "A drug is blocking your psi.",
           "substrateBlockedTooltip": "Psi needs a biological brain",
           "substrateMismatch": "Biological brain in a synthetic body"
         },
@@ -1672,6 +1811,25 @@
       }
     },
     "dialog": {
+      "selectDrugVector": {
+        "header": "Which Form?",
+        "copy": "This drug comes in different shapes: which one did you buy? The form you pick is how a dose gets taken, and it decides how soon that dose takes hold.",
+        "asAmmo": "Ammunition pack: loads into a weapon instead of being taken"
+      },
+      "doseRecipient": {
+        "header": "Who Is It For?",
+        "copy": "Take the dose yourself, or offer it to someone else? Shift-click takes it yourself straight away.",
+        "self": "Myself",
+        "other": "Willing target",
+        "otherHint": "A target that is not trying to prevent you from applying a dose.",
+        "unwilling": "Unwilling target",
+        "unwillingHint": "A target that fights your approach."
+      },
+      "selectDoseNpc": {
+        "header": "Choose an NPC",
+        "copy": "Who receives the dose? Type to filter the list.",
+        "search": "Search…"
+      },
       "selectTrait": {
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
@@ -1701,9 +1859,97 @@
         "standardDescription": "Add all Ware, Traits, and Flaws listed in this body's Enhancement slots.",
         "flatLabel": "Flat",
         "flatDescription": "Add the body as-is, without any of its listed Enhancements."
+      },
+      "doseDefense": {
+        "header": "Defensive Ware",
+        "copy": "Your {ware} would weaken {name}. Take it at its full or at a weak effect?",
+        "filter": "Weak Drug Effect",
+        "full": "Full Drug Effect"
+      },
+      "wareSkills": {
+        "header": "{ware}: Special Skills",
+        "kind": {
+          "hardware": "{ware} ({bonus}) helps with Hardware skills. Tick your special skills that are Hardware skills:",
+          "disguise": "{ware} ({bonus}) helps with Exotic Skill: Disguise. Tick your special skills that are disguise skills:"
+        },
+        "noSkills": "This character has no special skills yet. You can set this later on the ware's sheet."
+      },
+      "doseHistory": {
+        "header": "Dose History",
+        "copy": "{actor} took <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} times</strong> in the <strong class=\"dose-history-highlight\">last 24 hours</strong> and <strong class=\"dose-history-highlight\">{week} times</strong> in the <strong class=\"dose-history-highlight\">last 7 days</strong>."
+      },
+      "targeting": {
+        "fewerTitle": "Fewer Targets",
+        "fewerHeadline": "Fewer targets than doses",
+        "fewerCopy": "The weapon delivers {max} doses, are you sure that you want to select {count} targets only?",
+        "fewerConfirm": "Confirm"
       }
     },
     "chat": {
+      "dose": {
+        "taken": "I took a dose of <strong>{name}</strong>",
+        "renewed": "I took another dose of <strong>{name}</strong>, which starts its clock over",
+        "form": "Form",
+        "onset": "Onset",
+        "duration": "Duration",
+        "untilEnded": "Until ended",
+        "lastDose": "That was the last dose.",
+        "usedBy": "Used by {name}",
+        "outcomePsiBlocked": "<strong>{name}</strong> blocks my psi",
+        "outcomeIncapacitated": "<strong>{name}</strong> leaves me incapacitated",
+        "outcomeImmobilized": "<strong>{name}</strong> leaves me immobilized",
+        "incapacitatedEffect": "Incapacitated ({name})",
+        "immobilizedEffect": "Immobilized ({name})",
+        "rollCheck": "Roll {check}",
+        "checkRolled": "Check rolled",
+        "checkNeeded": "<strong>{name}</strong> calls for a {check}",
+        "checkLabel": "{aptitude} Check",
+        "chooseNpc": "Select an NPC",
+        "chooseTarget": "Choose on canvas",
+        "useOnMe": "Use on me",
+        "useOnSelection": "Use on selection",
+        "offered": "I'm offering a dose of <strong>{name}</strong>",
+        "woreOff": "My dose of <strong>{name}</strong> wore off",
+        "endedEarly": "My dose of <strong>{name}</strong> was ended early",
+        "wearOffSv": "Wear-off stress (SV)",
+        "rollWearOff": "Roll stress",
+        "wearOffFlavor": "Wear-off stress: {name}",
+        "app": "App",
+        "overTimeFlavor": "{name} ({count}x)",
+        "rollDamage": "Roll damage",
+        "damageFlavor": "{name} harms the body",
+        "panicFlavor": "Panic stress: {name}",
+        "granted": "{name} grants: {items}",
+        "ware": {
+          "toxinFilters": "Toxin Filters",
+          "medichines": "Medichines",
+          "nanophages": "Nanophages",
+          "both": "{first} and {second}",
+          "digestiveSymbiotes": "Digestive Symbiotes",
+          "immunizers": "Immunizers"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>: my {ware} may keep it out",
+        "rollFilterCheck": "Roll SOM Check ({ware})",
+        "filteredOut": "My {ware} keep <strong>{name}</strong> out",
+        "nullified": "{ware} nullify <strong>{name}</strong>",
+        "immune": "I am immune to <strong>{name}</strong>",
+        "becameImmune": "My Immunizers make me immune to <strong>{name}</strong>",
+        "immunizerTest": "My Immunizers test <strong>{name}</strong> (Medicine: Pharmacology {target})",
+        "immunizerSuccess": "Immune from now on",
+        "immunizerFailure": "Not learned this time",
+        "demandWillpower": "Demand Willpower",
+        "doseHistoryTip": "How often this drug was taken recently",
+        "addictionCheckNeeded": "<strong>{name}</strong>: resist getting hooked (WIL Check {modifier})",
+        "rollAddictionCheck": "Roll WIL Check ({modifier})",
+        "addictionModifier": "Addiction modifier ({name})",
+        "addictedEgo": "My ego is addicted to <strong>{name}</strong>",
+        "addictedBody": "My body is addicted to <strong>{name}</strong>",
+        "addictedBoth": "My ego and my body are addicted to <strong>{name}</strong>",
+        "addictionRaisedEgo": "My ego's addiction to <strong>{name}</strong> grows to level {level}",
+        "addictionRaisedBody": "My body's addiction to <strong>{name}</strong> grows to level {level}",
+        "addictionRaisedBoth": "My ego's and my body's addiction to <strong>{name}</strong> grows to level {level}",
+        "unaffected": "{drug} cannot act on {name}'s body."
+      },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
         "swapResult": "Swap Result",
@@ -1712,6 +1958,29 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "Roll Sleight Damage"
+      },
+      "wareSetup": {
+        "headline": "Set up your ware",
+        "copy": "Some ware gives bonuses to special skills. Say once which of your special skills each one is for.",
+        "done": "All adjustments done."
+      },
+      "attack": {
+        "applyDose": "Apply dose to selected targets",
+        "applyTargets": "Apply to selected targets",
+        "targets": "Targets: {names}",
+        "hitByPool": "The pool spend turned the {weapon} attack into a hit."
+      },
+      "defence": {
+        "headline": "Defend against the {weapon}",
+        "doseLabel": "{name}, one dose each",
+        "dodge": "Dodge",
+        "parry": "Parry",
+        "rollAll": "Roll remaining at once",
+        "outcome": {
+          "hit": "Hit",
+          "half": "Partly dodged: half",
+          "none": "Avoided"
+        }
       }
     },
     "rule": {
@@ -1858,6 +2127,8 @@
       "customHint": "Minutes",
       "effects": "Running effects",
       "noEffects": "Nothing is running right now",
+      "sectionPlayers": "Player Characters",
+      "sectionThreats": "Non Player Characters & Threats",
       "endNow": "End now",
       "remaining": "Remaining",
       "owner": "Character",
@@ -1887,6 +2158,7 @@
       }
     },
     "migration": {
+      "27": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>First time is free...!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:</p><ul><li>Every drug's <b>Duration</b> is now functional and runs on the clock.</li><li>Drugs come in <b>packs</b> of five doses by default, settable per drug.</li><li>Dropping the same drug, ammo or grenade again adds to your existing stack.</li><li>Only <b>ammunition packs</b> load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.</li><li>A drug's effects apply when you <b>take</b> it, not while you carry it.</li><li>Every drug is now either a <b>drug</b> or a <b>toxin</b>. The book's chapters live on as folders in the compendium.</li><li>Drugs now bring their <b>situational modifiers</b> into your rolls, call for <b>checks</b> when they take hold and can leave <b>stress</b> behind when they wear off. Drugs already on your sheets get these from the compendium.</li><li>Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.</li><li>Drugs now also work <b>over time</b>, can lend <b>traits</b> while they run, and meet your <b>defensive ware</b>: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.</li><li>Ware now brings its <b>situational bonuses</b> into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium.</li></ul></span>",
       "25": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Eclipse Phase Goes Modular, And Psi Interacts With Its Environment (Mostly Your Brain)<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This is a small step for you, but a huge one for the System, as I enabled the Eclipse Phase 2e system of having modules of its own! This will give you the opportunity to choose whether you want to go with the rules of your EP 100% verbatim or to tweak them a little or even create something your own and plug it in. Let me make the start:</p><p>From today on there are two all new modules to be had for EP!</p><p>First a module to have shops which gives you the option to create in game shops for buying or cashing in favors with the original EP system or some other rules I came up with. All fully customizable and completely changeable to convey your playstyle!</p><p>The second is the Ki module which introduces a new flavour of Psi called Ki. While it uses the same logic as Psi (Ki Gamma and Ki Chi) it has a suite of all new sleights that are all affecting the real space instead of one psyche. And require a Cyberbrain instead of being blocked by one.</p><p>Don't like any of these? You don't have to use them as standard Psi just remains in the core system and nothing changes for you if you don't want to... nothing that is but the following few things:</p><ul><li>Any Aspect item (Gamma/Epsilon sleights) can now carry an optional damage formula, set on its own sheet, and roll it via a new button after a successful cast - the GM still judges whether it actually hit, same as weapon damage.</li><li><b>Psychic Stab</b> and <b>Nightmare</b> are backfilled with their book damage automatically, on every character/NPC/goon that already owns a copy, and in the world items list.</li><li>Sub-strain <b>Influence Effect</b> tables are now kept per archetype, so you can switch archetype without the table you filled in for the previous one being deleted.</li><li>A Cyberbrain now has a concrete effect on Psi, and so does a synthmorph carrying a <b>Brain Box</b>; to make that possible, Cyberbrain and Core System ware you already own gets an invisible marker so the system can recognise it.</li></ul><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "25ki": "<p>One more thing, just for this world: it carries <b>Ki</b> characters from a pre-release build. Their sub-strain choices - The Crucible, Redline, Signal, Ruin and Colony - move into the Ki module's own data now. Nothing you see on the sheet changes, and the five Psi archetypes are not touched.</p>",
       "110": "<span class='resource-label' style='flex: 100%'><p>Dice Roll Refactoring<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a major update restructuring all dice rolls within the system.</b><p/><p>In order to work properly, there are some minor tweaks made on NPC/Threat level. This might cause you to reinstate any NPC/Threat token to currently active encounters, as only the main instance of these tokens (aka the NPC/Threat in the actors list) will be updated accordingly.</p></div></span>",
@@ -1913,6 +2185,14 @@
         "updateLabel": "Update Notice",
         "main": "<b>Armor update:</b> {count} Armor item(s) on <b style='color: var(--highlight);'>{actor}</b> got automatically moved to their Stash.",
         "sub": "Since Armor now belongs to a specific body instead of just sitting in your inventory. You'll find it under Stashed Armor (Gear tab) - use the Equip button next to it to assign it to a body anytime."
+      },
+      "notice": {
+        "windowTitle": "Migration Pending",
+        "subheader": "Hey Agent, you've got a message from Laph",
+        "backup": "IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.",
+        "reachOut": "Don't forget to reach out, agent!",
+        "migrate": "Migrate Now!",
+        "close": "Close Without Migration"
       }
     },
     "systemMessage": {
@@ -1943,6 +2223,14 @@
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
       }
+    },
+    "targeting": {
+      "cancelHint": "Press ESC or right-click with no targets to cancel.",
+      "confirmHint": "Right click to confirm",
+      "remaining": "{count} targets left",
+      "limitReached": "The maximum of {max} targets is reached. Click a marked target again to unmark it.",
+      "selectTarget": "Select target",
+      "targetChosen": "Target chosen"
     }
   }
 }

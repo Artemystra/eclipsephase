@@ -51,6 +51,10 @@
   --focusBackground: #2b2b2b;
   --highlightBackground: #414141;
   --accentBackground: #24485d;
+  --augmented: #26a69a;
+  --augmentedTurquoise: #19d3c5;
+  --augmentedMagenta: #ff2bd6;
+  --augmentedYellow: #f5ec1b;
   --color-bg-option: #1f1f1f;
   --color-shadow-primary: #36aee9!important;
   --color-border-highlight: #36aee9!important;
@@ -616,13 +620,15 @@
   color: var(--inactive);
 }
 
-.eclipsephase .footnote {
+/* A footnote everywhere: small, italic and grey. More specific rules only add spacing. */
+.footnote {
+  font-style: italic;
   font-size: 10px;
-  margin-left: -7px;
+  color: var(--inactive);
 }
 
-.chat-message .footnote {
-  font-size: 12px;
+.eclipsephase .footnote {
+  margin-left: -7px;
 }
 
 .eclipsephase .items-list {
@@ -2284,6 +2290,18 @@ h3.subheaderBlank {
   border-bottom: solid var(--complementary1) 3px;
 }
 
+/* Drug options in the roll dialog, underlined in the negative colour the dose cards use. */
+.flexrow.subheader.colorNegative{
+  border-bottom: solid var(--negative) 3px;
+}
+
+/* Ware options in the roll dialog: a slanted neon line, magenta into turquoise into yellow. The
+   plain turquoise (--augmented) is kept for anywhere a single colour is needed. */
+.flexrow.subheader.colorAugmented{
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(100deg, var(--augmentedMagenta) 0%, var(--augmentedMagenta) 12%, var(--augmentedTurquoise) 28%, var(--augmentedTurquoise) 72%, var(--augmentedYellow) 88%, var(--augmentedYellow) 100%) 1;
+}
+
 .listBackground {
   padding: 5px 0.5em 5px 0.5em;
   min-height: 40px;
@@ -2824,6 +2842,12 @@ input[type="text"].multiselect-input:focus {
 }
 
 .item-image-zoomable:hover .item-image-zoom-icon {
+  opacity: 1;
+}
+
+/* A drug's dose control is revealed from anywhere on its row, not only over the thumbnail, so the
+   name is a hover target too. Scoped to the row list, where the drug rows live. */
+.item-row-list-entry:hover .drug-use .item-image-zoom-icon {
   opacity: 1;
 }
 
@@ -3922,6 +3946,21 @@ li:has(.ep-system-notice) .message-header {
   margin-bottom: 4px;
 }
 
+.ep-time-panel .ep-time-section-header {
+  align-items: center;
+  padding: 6px 0 2px;
+  color: var(--iconGrey);
+  border-bottom: solid 1px var(--pitchBorder);
+}
+
+.ep-time-panel .ep-time-section-toggle {
+  cursor: pointer;
+}
+
+.ep-time-panel .ep-time-section + .ep-time-section {
+  margin-top: 8px;
+}
+
 .ep-time-panel .ep-time-actor-row {
   gap: 6px;
   padding: 4px 0;
@@ -3972,4 +4011,250 @@ li:has(.ep-system-notice) .message-header {
 
 .ep-time-panel .ep-time-beats-info:hover {
   color: var(--highlight);
+}
+
+/* A modifier's breakdown, one source per line, set close together. */
+.ep-mod-breakdown {
+  display: inline-block;
+  white-space: pre-line;
+  line-height: 1.2;
+}
+
+/* A dialog's extra option reads as unavailable while its box is switched off. */
+.ep-dialog-extra-option input:disabled + label {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* A GM picking who receives an offered dose: the canvas shows a syringe in the negative colour (--negative, #db2a2a) until the click. */
+/* Chat card buttons stacked one above the other: secondaries in the dark ground, the primary last
+   and set a little apart. */
+.chatControls.ep-chat-stack {
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chatControls.ep-chat-stack .ep-chat-secondary {
+  background-color: var(--mainBackground);
+}
+
+.chatControls.ep-chat-stack .ep-chat-primary {
+  margin-top: 5px;
+}
+
+/* The flat part of a damage roll, set beside its dice. */
+.eclipsephase.dicetray .diecontainerSmall.bonus{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 10px;
+  background-color: var(--pitchBorder);
+  border-radius: 6px;
+}
+
+/* The die images carry transparent margins of their own (d10 about 6px, d6 about 10px at this
+   size), so the bonus keeps one such margin to sit as far from the dice as they sit apart. */
+.eclipsephase.dicetray .diecontainerSmall.tens + .diecontainerSmall.bonus{
+  margin-left: 6px;
+}
+
+.eclipsephase.dicetray .diecontainerSmall.sixes + .diecontainerSmall.bonus{
+  margin-left: 10px;
+}
+
+/* A drug's Temporary Traits rows: And/Or toggle, three pickers, the description button. */
+.eclipsephase .grant-rows {
+  margin-top: 10px;
+}
+
+.eclipsephase .grant-row {
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.eclipsephase .grant-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.eclipsephase .grant-row .grant-connector-slot {
+  flex: 0 0 44px;
+}
+
+.eclipsephase .grant-row .grant-button-slot {
+  flex: 0 0 20px;
+  text-align: center;
+}
+
+.eclipsephase .grant-row .grant-connector {
+  width: 44px;
+  height: 22px;
+  padding: 0;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.eclipsephase .grant-row .grant-connector.grant-or {
+  color: var(--negative);
+}
+
+.eclipsephase .grant-row .grant-description.grant-has-description i {
+  color: var(--highlight);
+}
+
+/* What an immunizer has learned, listed on its ware sheet. */
+.eclipsephase .ware-immunities {
+  margin-top: 10px;
+}
+
+.eclipsephase .ware-immunity {
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 10px;
+}
+
+.eclipsephase .ware-immunity a {
+  flex: 0 0 20px;
+  text-align: right;
+}
+
+/* The special skills a ware's bonus is set to, and the button to change them. */
+.eclipsephase .ware-skill-picks {
+  margin-top: 10px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.eclipsephase .ware-skill-picks button {
+  flex: 0 0 auto;
+}
+
+/* A ware setup button keeps Foundry's button height as its least, so a long name can wrap. */
+.chatControls .chatButton.ware-setup-button {
+  height: auto;
+  min-height: var(--button-size, 2em);
+  line-height: normal;
+  white-space: normal;
+  padding: 4px 8px;
+}
+
+/* The GM's addiction controls on a dose card: the WIL Check button and the dose history beside it. */
+.chatControls.dose-addiction {
+  align-items: center;
+}
+
+.chatControls.dose-addiction .doseHistory {
+  flex: 0 0 20px;
+  text-align: center;
+}
+
+/* The counts and time spans in a dose history, made to stand out. */
+.dose-history-highlight {
+  color: var(--negative);
+  font-weight: bold;
+}
+
+/* Picking a token on the canvas from a chat card: a crosshair until the click. A feature may set
+   its own cursor class instead, as an offered dose does with its syringe. */
+/* The text that follows the picking cursor: what is left to pick below it, how to confirm above it. */
+.ep-targeting-counter {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  color: #00f5e4;
+  font-size: 13px;
+  font-weight: bold;
+  text-shadow: 0 0 3px black, 0 0 6px black;
+  white-space: nowrap;
+}
+
+.ep-targeting-counter .ep-targeting-count:only-child {
+  margin-top: 56px;
+}
+
+.ep-defence-card .ep-defence-name,
+.ep-defence-card .ep-defence-outcome {
+  margin: 0;
+  text-align: center;
+}
+
+/* The migration notice: a release's own text between the fixed parts, its bullets scrolling inside the dialog. */
+.ep-migration .ep-migration-body {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ep-migration .footnote {
+  font-size: 11px;
+}
+
+.ep-migration .ep-migration-title {
+  font-size: 25px;
+  border-bottom: none;
+  margin: 10px 0 0 0;
+}
+
+.ep-migration .ep-migration-bullets {
+  max-height: 300px;
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+.ep-migration .ep-migration-comments {
+  margin-top: 10px;
+}
+
+.ep-migration .ep-migration-reach {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.ep-migration .ep-migration-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ep-migration .ep-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.ep-migration .ep-social:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.ep-migration .ep-social-github {
+  background-color: #24292f;
+}
+
+.ep-migration .ep-social-kofi {
+  background-color: #29abe0;
+}
+
+.ep-migration .ep-social-discord {
+  background-color: #5865f2;
+}
+
+.ep-migration .ep-social-kofi-icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
+  mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
 }

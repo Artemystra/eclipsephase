@@ -48,6 +48,22 @@ function deepClone(value) {
 }
 
 /**
+ * Whether a dot-notation path exists on an object, matching foundry.utils.hasProperty.
+ * @param {Object} object - The object to look in
+ * @param {String} key - The dot-notation path
+ * @returns {Boolean} True when the path resolves to a defined value
+ */
+function hasProperty(object, key) {
+  if (!object || !key) return false;
+  let target = object;
+  for (const step of String(key).split(".")) {
+    if (target === null || typeof target !== "object" || !(step in target)) return false;
+    target = target[step];
+  }
+  return true;
+}
+
+/**
  * Recursive merge of source into target, matching foundry.utils.mergeObject with default options.
  * @param {Object} target - The object mutated in place
  * @param {Object} source - The object read from
@@ -277,6 +293,18 @@ class MockDocument {
     return `${parentPart}${this.documentName}.${this.id}`;
   }
 
+  async _preCreate() {}
+
+  async _preUpdate() {}
+
+  updateSource(changes = {}) {
+    for (const [key, value] of Object.entries(changes)) {
+      setProperty(this._source, key, deepClone(value));
+      setProperty(this, key, deepClone(value));
+    }
+    return changes;
+  }
+
   getFlag(scope, key) {
     return getProperty(this.flags, `${scope}.${key}`);
   }
@@ -293,6 +321,7 @@ class MockDocument {
   }
 
   async update(changes = {}) {
+    global.Hooks.callAll(`preUpdate${this.documentName}`, this, changes, {}, global.game.user.id);
     for (const [key, value] of Object.entries(changes)) {
       if (value instanceof ForcedDeletion) {
         deleteProperty(this._source, key);
@@ -302,23 +331,37 @@ class MockDocument {
       setProperty(this._source, key, value);
       setProperty(this, key, value);
     }
-    this.prepareData();
+    (this.actor ?? this).prepareData?.();
+    global.Hooks.callAll(`update${this.documentName}`, this, changes, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
     return this;
   }
 
   // Foundry keeps ActiveEffects as embedded documents on both Actors and Items. Only that
   // collection is modelled here, which is all the system creates and deletes at runtime.
+  // Foundry re-prepares the owning actor before the lifecycle hooks fire, which is what lets a
+  // hook read pool totals that already reflect the new effect.
   async createEmbeddedDocuments(documentName, dataArray = []) {
     if (documentName !== "ActiveEffect") return [];
     const created = dataArray.map(data => new MockActiveEffect(data, { parent: this }));
+    for (const effect of created) global.Hooks.callAll("preCreateActiveEffect", effect, {}, {}, global.game.user.id);
     this.effects.push(...created);
+    this.prepareData?.();
+    for (const effect of created) global.Hooks.callAll("createActiveEffect", effect, {}, global.game.user.id);
+    this.actor?.prepareData?.();
+    await new Promise(resolve => setTimeout(resolve, 0));
     return created;
   }
 
   async deleteEmbeddedDocuments(documentName, ids = []) {
     if (documentName !== "ActiveEffect") return [];
     const removed = this.effects.filter(effect => ids.includes(effect.id));
+    for (const effect of removed) global.Hooks.callAll("preDeleteActiveEffect", effect, {}, global.game.user.id);
     this.effects = this.effects.filter(effect => !ids.includes(effect.id));
+    this.prepareData?.();
+    for (const effect of removed) global.Hooks.callAll("deleteActiveEffect", effect, {}, global.game.user.id);
+    this.actor?.prepareData?.();
+    await new Promise(resolve => setTimeout(resolve, 0));
     return removed;
   }
 
@@ -359,6 +402,8 @@ class MockActiveEffect {
     this.start = data.start ? deepClone(data.start) : null;
     this.showIcon = data.showIcon ?? global.CONST.ACTIVE_EFFECT_SHOW_ICON.CONDITIONAL;
     this.description = data.description ?? "";
+    this.origin = data.origin ?? null;
+    this.img = data.img ?? "";
     this.flags = deepClone(data.flags ?? {});
     const changes = data.system?.changes ?? data.changes ?? [];
     const Model = getEffectDataModel();
@@ -385,6 +430,18 @@ class MockActiveEffect {
 
   getFlag(scope, key) {
     return this.flags?.[scope]?.[key];
+  }
+
+  // Foundry lets an effect be updated in place; dotted keys reach into nested fields the way
+  // "duration.expired" does when a dose's clock is restarted.
+  async update(changes = {}) {
+    global.Hooks.callAll("preUpdateActiveEffect", this, changes, {}, global.game.user.id);
+    for (const [key, value] of Object.entries(changes)) setProperty(this, key, deepClone(value));
+    const owner = this.parent?.actor ?? this.parent;
+    owner?.prepareData?.();
+    global.Hooks.callAll("updateActiveEffect", this, changes, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    return this;
   }
 
   get active() {
@@ -461,8 +518,77 @@ class MockActor extends MockDocument {
     return "Actor";
   }
 
+  // Foundry hands a world actor's change on to the unlinked tokens built from it.
+  _updateDependentTokens() {}
+
+  getDependentTokens() {
+    return [];
+  }
+
+  // An unlinked token's actor is its own copy, parented to the TokenDocument it belongs to.
+  get isToken() {
+    return this.parent?.documentName === "Token";
+  }
+
+  get token() {
+    return this.isToken ? this.parent : null;
+  }
+
   get isOwner() {
     return true;
+  }
+
+  // Items are embedded documents too, and the system creates, updates and deletes them at runtime
+  // for stacking, reloading and using up a consumable. Anything else still goes to MockDocument,
+  // which models the ActiveEffect collection.
+  async createEmbeddedDocuments(documentName, dataArray = []) {
+    if (documentName !== "Item") return super.createEmbeddedDocuments(documentName, dataArray);
+
+    const created = [];
+    for (const data of dataArray) {
+      const type = data.type ?? "gear";
+      const defaults = deepClone(global.game.model?.Item?.[type] ?? {});
+      const item = new global.CONFIG.Item.documentClass(
+        { ...data, type, system: mergeObject(defaults, data.system ?? {}) },
+        { parent: this }
+      );
+      if (typeof item._preCreate === "function") await item._preCreate(data, {}, global.game.user);
+      global.Hooks.callAll("preCreateItem", item, data, {}, global.game.user.id);
+      await item.prepareData();
+      this.items.set(item.id, item);
+      uuidRegistry.set(item.uuid, item);
+      created.push(item);
+    }
+    this.prepareData();
+    for (const item of created) global.Hooks.callAll("createItem", item, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    return created;
+  }
+
+  async updateEmbeddedDocuments(documentName, updates = []) {
+    if (documentName !== "Item") return super.updateEmbeddedDocuments?.(documentName, updates) ?? [];
+
+    const updated = [];
+    for (const { _id, ...changes } of updates) {
+      const item = this.items.get(_id);
+      if (!item) continue;
+      await item.update(changes);
+      updated.push(item);
+    }
+    this.prepareData();
+    return updated;
+  }
+
+  async deleteEmbeddedDocuments(documentName, ids = []) {
+    if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids);
+
+    const removed = ids.map(id => this.items.get(id)).filter(Boolean);
+    for (const item of removed) global.Hooks.callAll("preDeleteItem", item, {}, global.game.user.id);
+    for (const item of removed) this.items.delete(item.id);
+    this.prepareData();
+    for (const item of removed) global.Hooks.callAll("deleteItem", item, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    return removed;
   }
 
   *allApplicableEffects() {
@@ -491,6 +617,10 @@ class MockActor extends MockDocument {
     this.system = deepClone(this._source.system ?? {});
     for (const item of this.items.values()) item.prepareData();
     this.applyActiveEffects();
+  }
+
+  reset() {
+    this.prepareData();
   }
 }
 
@@ -562,6 +692,13 @@ class MockRoll {
   async render() {
     return "";
   }
+  // Foundry keeps the evaluated total in _total behind the total getter; some system code reads it.
+  get _total() {
+    return this.total;
+  }
+  async toMessage(data = {}) {
+    return MockChatMessage.create({ ...data, rolls: [this.toJSON()] });
+  }
   toJSON() {
     return { formula: this.formula, total: this.total };
   }
@@ -574,13 +711,38 @@ const hookHandlers = new Map();
 
 class MockChatMessage {
   static async create(data = {}) {
-    const message = { ...data, id: randomID() };
+    const message = Object.assign(new MockChatMessage(), deepClone(data), { id: randomID(), author: data.author ?? global.game.user.id });
     createdMessages.push(message);
     global.game.messages.set(message.id, message);
     return message;
   }
+
+  getFlag(scope, key) {
+    return this.flags?.[scope]?.[key];
+  }
+
+  get isOwner() {
+    return global.game.user.isGM || this.author === global.game.user.id;
+  }
+
+  async delete() {
+    global.game.messages.delete(this.id);
+    const index = createdMessages.indexOf(this);
+    if (index >= 0) createdMessages.splice(index, 1);
+    return this;
+  }
+
+  // Foundry lets the author or a GM change a message; dotted keys reach into flags.
+  async update(changes = {}) {
+    for (const [key, value] of Object.entries(changes)) setProperty(this, key, deepClone(value));
+    global.Hooks.callAll("updateChatMessage", this, changes, {}, global.game.user.id);
+    return this;
+  }
   static getSpeaker({ actor } = {}) {
     return { actor: actor?.id ?? null, alias: actor?.name ?? "" };
+  }
+  static getWhisperRecipients(name) {
+    return name === "GM" ? [{ id: "gm-user", isGM: true }] : [];
   }
 }
 
@@ -656,6 +818,7 @@ function getHandlebars() {
     concat: (...args) => args.slice(0, -1).join(""),
     toLowerCase: value => String(value ?? "").toLowerCase(),
     checkedIf: condition => (condition ? "checked" : ""),
+    checked: condition => (condition ? "checked" : ""),
     numberFormat: value => String(value ?? "")
   });
   handlebarsReady = true;
@@ -754,6 +917,8 @@ function resetMock() {
   global.game.actors.clear();
   global.game.items.clear();
   global.game.packs.clear();
+  global.game.scenes.viewed = null;
+  global.game.scenes.active = null;
 }
 
 global.foundry = {
@@ -763,6 +928,7 @@ global.foundry = {
     duplicate: deepClone,
     getProperty,
     setProperty,
+    hasProperty,
     expandObject,
     getType,
     isNewerVersion,
@@ -824,7 +990,7 @@ global.foundry = {
       DialogV2: class DialogV2 {
         constructor(options = {}) {
           this.options = options;
-          this.element = { querySelector: () => null };
+          this.element = { querySelector: () => null, style: {} };
         }
         render() { return this; }
         close() { return this; }
@@ -857,6 +1023,9 @@ global.foundry = {
 };
 
 global.Hooks = Hooks;
+
+// Foundry extends Math with clamp, which the system leans on for pool arithmetic.
+Math.clamp = (num, min, max) => Math.min(max, Math.max(min, num));
 global.Handlebars = getHandlebars();
 global.ChatMessage = MockChatMessage;
 global.Roll = MockRoll;
@@ -927,6 +1096,7 @@ global.game = {
   actors: new MockCollection(),
   items: new MockCollection(),
   packs: new MockCollection(),
+  scenes: { viewed: null, active: null },
   macros: new MockCollection(),
   modules: new MockCollection(),
   socket: { on: () => {}, emit: () => {} },
@@ -947,6 +1117,8 @@ Object.defineProperty(global.game.eclipsephase, "api", {
 });
 
 global.fromUuid = async uuid => uuidRegistry.get(uuid) ?? null;
+global.fromUuidSync = uuid => uuidRegistry.get(uuid) ?? null;
+global.DEFAULT_TOKEN = "icons/svg/mystery-man.svg";
 global.getDocumentClass = name => (name === "Actor" ? MockActor : MockItem);
 
 global.__ep = {

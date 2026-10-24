@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "ch"
+    "wareType": "ch",
+    "rollOptions": [
+      {
+        "id": "grip",
+        "label": "ep2e.item.ware.rollOptions.magneticGrip",
+        "value": 30,
+        "appliesTo": [
+          "som"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

@@ -1,10 +1,34 @@
 import { eclipsephase } from "../config.js"
+import { normaliseDrugSystem } from "../common/drugs.js"
 
 // Default Morph Points -> cost-tier thresholds. RAW MP range is 0-12. A feature may override
 // the resulting tier through the prepareItemData hook.
 const MORPH_TIER_THRESHOLDS = { moderate: 2, major: 5, rare: 8 };
 
 export default class EPitem extends Item {
+
+    /**
+     * Repairs a drug whose data predates the current schema as it is created, so that a drug
+     * dragged in from a compendium that was never repacked lands with a usable duration span and
+     * a full pack of doses instead of the free text it was authored with.
+     * @param {Object} data - The item source data
+     * @param {Object} options - The creation options
+     * @param {User} user - The user performing the creation
+     * @returns {Boolean|void} False to block the creation
+     */
+    async _preCreate(data, options, user) {
+        const allowed = await super._preCreate(data, options, user);
+        if (allowed === false) return false;
+        if (this.type !== "drug") return allowed;
+
+        const repairs = normaliseDrugSystem(this._source.system);
+        if (!repairs) return allowed;
+
+        const update = {};
+        for (const [key, value] of Object.entries(repairs)) update[`system.${key}`] = value;
+        this.updateSource(update);
+        return allowed;
+    }
 
     async _preUpdate(changes, options, user) {
         await super._preUpdate(changes, options, user);
@@ -22,6 +46,11 @@ export default class EPitem extends Item {
 
     async prepareData() {
         super.prepareData();
+
+        if (this.type === "drug") {
+            const repairs = normaliseDrugSystem(this.system);
+            if (repairs) Object.assign(this.system, repairs);
+        }
         
         const brewStatus = game.settings.get("eclipsephase", "superBrew");
         const item = this;

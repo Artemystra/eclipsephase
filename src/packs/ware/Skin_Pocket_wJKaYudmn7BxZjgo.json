@@ -17,7 +17,17 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "b"
+    "wareType": "b",
+    "rollOptions": [
+      {
+        "id": "concealed",
+        "label": "ep2e.item.ware.rollOptions.concealed",
+        "value": 30,
+        "appliesTo": [
+          "infiltrate"
+        ]
+      }
+    ]
   },
   "_stats": {
     "systemId": "eclipsephase",

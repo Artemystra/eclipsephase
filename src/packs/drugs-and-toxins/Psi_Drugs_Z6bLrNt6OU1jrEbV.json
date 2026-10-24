@@ -1,0 +1,23 @@
+{
+  "name": "Psi Drugs",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "Z6bLrNt6OU1jrEbV",
+  "sort": 700000,
+  "color": null,
+  "description": "",
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.7",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!folders!Z6bLrNt6OU1jrEbV"
+}

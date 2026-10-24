@@ -1,6 +1,6 @@
 import EPtimePanel from "../../module/apps/time-panel.js";
 import { elapsedTime, BEATS, HOURS } from "../../module/common/time.js";
-import { makeActor, resetWorld, setSetting } from "../setup/factories.js";
+import { makeActor, makeUnlinkedToken, resetWorld, setSetting } from "../setup/factories.js";
 
 const DAY = 86400;
 
@@ -105,7 +105,7 @@ describe("ending an effect from the list", () => {
   test("an actor-owned effect is deleted", async () => {
     const actor = makeActor({ type: "character", effects: [{ _id: "fx1", name: "Kick", duration: { value: 8, units: "hours" } }] });
     await EPtimePanel._onEndEffect.call(panel(), null, {
-      dataset: { actorId: actor.id, parentId: actor.id, effectId: "fx1", onItem: "false" }
+      dataset: { actorUuid: actor.uuid, parentId: actor.id, effectId: "fx1", onItem: "false" }
     });
     expect(actor.effects).toHaveLength(0);
   });
@@ -116,14 +116,114 @@ describe("ending an effect from the list", () => {
       items: [{ _id: "it1", name: "Instinct", type: "aspect", effects: [{ _id: "fx2", name: "Boost" }] }]
     });
     await EPtimePanel._onEndEffect.call(panel(), null, {
-      dataset: { actorId: actor.id, parentId: "it1", effectId: "fx2", onItem: "true" }
+      dataset: { actorUuid: actor.uuid, parentId: "it1", effectId: "fx2", onItem: "true" }
     });
     expect(actor.items.get("it1").effects).toHaveLength(0);
   });
 
+  test("an unlinked token's effect is deleted from the token's copy, not from the world actor", async () => {
+    const viewed = { uuid: "Scene.s1", tokens: [] };
+    const copy = makeUnlinkedToken(viewed, { _id: "goon1", type: "goon", effects: [{ _id: "fx3", name: "Kick", duration: { value: 8, units: "hours" } }] });
+    const world = makeActor({ _id: "goon1", type: "goon", effects: [{ _id: "fx3", name: "Kick", duration: { value: 8, units: "hours" } }] });
+
+    await EPtimePanel._onEndEffect.call(panel(), null, {
+      dataset: { actorUuid: copy.uuid, parentId: copy.id, effectId: "fx3", onItem: "false" }
+    });
+
+    expect(copy.effects).toHaveLength(0);
+    expect(world.effects).toHaveLength(1);
+  });
+
   test("an actor that no longer exists is shrugged off", async () => {
     await expect(EPtimePanel._onEndEffect.call(panel(), null, {
-      dataset: { actorId: "gone", parentId: "gone", effectId: "fx", onItem: "false" }
+      dataset: { actorUuid: "Actor.gone", parentId: "gone", effectId: "fx", onItem: "false" }
     })).resolves.toBeUndefined();
+  });
+});
+
+describe("the GM's list in sections", () => {
+  const KICK = { name: "Kick", duration: { value: 8, units: "hours" } };
+
+  /**
+   * The panel's own context, as a GM sees it.
+   * @param {EPtimePanel} instance - The panel
+   * @returns {Promise<Object>} The context
+   */
+  async function context(instance) {
+    game.user.isGM = true;
+    return instance._prepareContext();
+  }
+
+  test("player characters come first, everyone else after them", async () => {
+    makeActor({ type: "npc", name: "Exhuman Brute", effects: [KICK] });
+    makeActor({ type: "character", name: "Hex", effects: [KICK] });
+    makeActor({ type: "goon", name: "Thug", effects: [KICK] });
+
+    const { sections } = await context(new EPtimePanel());
+
+    expect(sections.map(section => section.label)).toEqual(["ep2e.time.sectionPlayers", "ep2e.time.sectionThreats"]);
+    expect(sections[0].groups.map(group => group.name)).toEqual(["Hex"]);
+    expect(sections[1].groups.map(group => group.name)).toEqual(["Exhuman Brute", "Thug"]);
+  });
+
+  test("an unlinked copy of a player character is still listed with the players", async () => {
+    const viewed = { uuid: "Scene.s1", tokens: [] };
+    game.scenes.viewed = viewed;
+    makeUnlinkedToken(viewed, { _id: "dinah", type: "character", name: "Dinah", effects: [KICK] });
+
+    const { sections } = await context(new EPtimePanel());
+
+    expect(sections).toHaveLength(1);
+    expect(sections[0].label).toEqual("ep2e.time.sectionPlayers");
+  });
+
+  test("only the non-player section collapses, and the players stay open", async () => {
+    makeActor({ type: "character", name: "Hex", effects: [KICK] });
+    makeActor({ type: "goon", name: "Thug", effects: [KICK] });
+    const instance = new EPtimePanel();
+    instance.render = async () => instance;
+
+    await EPtimePanel._onToggleThreats.call(instance);
+    const { sections } = await context(instance);
+
+    expect(sections.map(section => [section.collapsible, section.open])).toEqual([[false, true], [true, false]]);
+  });
+
+  test("the template shows both headings with the actors under them", async () => {
+    makeActor({ type: "character", name: "Hex", effects: [KICK] });
+    makeActor({ type: "goon", name: "Thug", effects: [KICK] });
+    const instance = new EPtimePanel();
+    const data = { ...(await context(instance)), canControl: true };
+
+    const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/apps/time-panel.hbs", data);
+
+    expect(html).toContain("ep2e.time.sectionPlayers");
+    expect(html).toContain("ep2e.time.sectionThreats");
+    expect(html).toContain("Hex");
+    expect(html).toContain("Thug");
+  });
+
+  test("a section with nothing running is left out", async () => {
+    makeActor({ type: "goon", name: "Thug", effects: [KICK] });
+
+    const { sections } = await context(new EPtimePanel());
+
+    expect(sections.map(section => section.label)).toEqual(["ep2e.time.sectionThreats"]);
+  });
+});
+
+describe("refreshing the panel", () => {
+  test("waits a tick, so a world actor's change has reached its unlinked tokens, and renders once", async () => {
+    const instance = EPtimePanel.instance;
+    let renders = 0;
+    instance.rendered = true;
+    instance.render = async () => { renders++; return instance; };
+
+    EPtimePanel.refresh();
+    EPtimePanel.refresh();
+    expect(renders).toEqual(0);
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(renders).toEqual(1);
   });
 });

@@ -117,9 +117,70 @@ function resetWorld() {
   resetMock();
 }
 
+/**
+ * Builds an unlinked token on a scene: the token's own copy of an actor, parented to the token and
+ * kept out of the world's actor list, the way Foundry holds it. Build the copy before the world
+ * actor it shares an id with, so the world actor keeps the plain actor uuid.
+ * @param {Object} scene - A scene stand-in with a uuid and a tokens array
+ * @param {Object} data - Actor data, as makeActor takes it
+ * @param {Object} [tokenData] - The token's id and name
+ * @returns {Actor} The token's actor copy
+ */
+function makeUnlinkedToken(scene, data, { id = `token-${scene.tokens.length + 1}`, name } = {}) {
+  const actor = makeActor(data);
+  global.game.actors.delete(actor.id);
+  const token = { documentName: "Token", id, name: name ?? actor.name, actorLink: false, actor, uuid: `${scene.uuid}.Token.${id}` };
+  actor.parent = token;
+  global.__ep.uuidRegistry.set(actor.uuid, actor);
+  scene.tokens.push(token);
+  return actor;
+}
+
+/**
+ * Registers every system compendium as a pack read straight from its source files under
+ * src/packs, so code that reads a compendium - an old migration fetching a replacement item, the
+ * drug backfill - meets the real content. Documents are built fresh on every read.
+ * @returns {void}
+ */
+function registerSystemPacks() {
+  const root = path.join(SYSTEM_ROOT, "src", "packs");
+  for (const name of fs.readdirSync(root)) {
+    const dir = path.join(root, name);
+    if (!fs.statSync(dir).isDirectory()) continue;
+    const sources = () => fs.readdirSync(dir)
+      .filter(file => file.endsWith(".json"))
+      .map(file => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")))
+      .filter(doc => doc._key?.startsWith("!items!") || doc._key?.startsWith("!actors!"));
+    const build = doc => doc._key.startsWith("!actors!")
+      ? new global.CONFIG.Actor.documentClass(doc)
+      : new global.CONFIG.Item.documentClass(doc);
+    const type = sources()[0]?._key?.startsWith("!actors!") ? "Actor" : "Item";
+    const folders = fs.readdirSync(dir)
+      .filter(file => file.endsWith(".json"))
+      .map(file => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")))
+      .filter(doc => doc._key?.startsWith("!folders!"))
+      .map(doc => ({ id: doc._id, name: doc.name, folder: doc.folder ?? null }));
+    global.game.packs.set(`eclipsephase.${name}`, {
+      collection: `eclipsephase.${name}`,
+      documentName: type,
+      title: name,
+      metadata: { package: "eclipsephase", name, type },
+      folders,
+      getIndex: async () => sources().map(doc => ({ _id: doc._id, name: doc.name, type: doc.type, folder: doc.folder ?? null })),
+      getDocument: async id => {
+        const doc = sources().find(entry => entry._id === id);
+        return doc ? build(doc) : null;
+      },
+      getDocuments: async () => sources().map(build)
+    });
+  }
+}
+
 module.exports = {
   makeActor,
   makeItem,
+  makeUnlinkedToken,
+  registerSystemPacks,
   makeActorFromFixture,
   fixtureNames,
   loadPackItem,
@@ -129,3 +190,4 @@ module.exports = {
   seedRolls,
   seedDialogs
 };
+

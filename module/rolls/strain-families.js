@@ -1,3 +1,4 @@
+import { drugBlockingPsi } from "./modifiers.js";
 const strainFamilies = new Map();
 
 const MISSING_FAMILY_KEY = "ep2e.roll.announce.strainFamilyMissing";
@@ -103,13 +104,20 @@ export function registerCoreStrainFamilies() {
       const nervousSystem = sleevedNervousSystem(actor);
       const jamBlocked = !!actor?.system?.activeJam ||
         !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression");
-      const blocked = jamBlocked || nervousSystem === "info" || chainHasWareMarker(actor, CYBERBRAIN_MARKER);
+      const drugBlocked = !!drugBlockingPsi(actor);
+      const blocked = jamBlocked || drugBlocked || nervousSystem === "info" || chainHasWareMarker(actor, CYBERBRAIN_MARKER);
+      const reasonKey = jamBlocked ? "ep2e.roll.announce.jamming.noPsi"
+        : drugBlocked ? "ep2e.roll.announce.psi.blockedByDrug"
+        : "ep2e.roll.announce.psi.noBioBrain";
+      const tooltipKey = jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip"
+        : drugBlocked ? "ep2e.roll.announce.psi.blockedByDrug"
+        : "ep2e.roll.announce.psi.substrateBlockedTooltip";
       return {
         blocked,
         jamBlocked,
         penalised: !blocked && nervousSystem === "synth",
-        reasonKey: jamBlocked ? "ep2e.roll.announce.jamming.noPsi" : "ep2e.roll.announce.psi.noBioBrain",
-        tooltipKey: jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip" : "ep2e.roll.announce.psi.substrateBlockedTooltip"
+        reasonKey,
+        tooltipKey
       };
     },
     subStrains: CONFIG.eclipsephase.strains,

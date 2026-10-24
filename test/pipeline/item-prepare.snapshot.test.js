@@ -1,10 +1,16 @@
-import { makeActor, makeItem, resetWorld, setSetting } from "../setup/factories.js";
+import { makeActor, makeItem, loadPackItem, resetWorld, setSetting } from "../setup/factories.js";
 
 describe("EPitem.prepareData", () => {
   beforeEach(() => resetWorld());
 
   test("derives stable data for a morph", async () => {
     const item = makeItem({ type: "morph", name: "Splicer", system: { type: "bio", dur: 30, morphPoints: 2 } });
+    await item.prepareData();
+    expect(item.system).toMatchSnapshot();
+  });
+
+  test("derives stable data for a drug straight out of the compendium", async () => {
+    const item = makeItem(loadPackItem("drugs-and-toxins/Grin_pBEjcZmTm7sH8iTm.json"));
     await item.prepareData();
     expect(item.system).toMatchSnapshot();
   });

@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "3LgPDiPKo14RtxW5",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,59 @@
     "additionalSystems": {},
     "description": "+20 Provoke to intimidate/taunt, –20 other social tests.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "combat",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "15 minutes",
+    "duration": {
+      "value": 15,
+      "units": "minutes"
+    },
     "addictionMod": "+10",
-    "addictionType": "none",
-    "quantity": 1
+    "addictionType": "physical",
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "intimidate",
+        "label": "ep2e.item.drug.rollOptions.aggroIntimidate",
+        "value": 20,
+        "appliesTo": [
+          "provoke"
+        ]
+      },
+      {
+        "id": "otherSocial",
+        "label": "ep2e.item.drug.rollOptions.aggroOtherSocial",
+        "value": -20,
+        "appliesTo": [
+          "deceive",
+          "kinesics",
+          "persuade",
+          "provoke"
+        ]
+      }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

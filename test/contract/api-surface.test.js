@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { api } from "../../module/api/index.js";
 import * as registrySource from "../../module/api/registry.js";
+import * as doseSource from "../../module/common/doses.js";
 
 const SYSTEM_ROOT = path.resolve(__dirname, "..", "..");
 const system = JSON.parse(fs.readFileSync(path.join(SYSTEM_ROOT, "system.json"), "utf8"));
@@ -61,6 +62,23 @@ describe("api.registry", () => {
     expect(api.registry.registerSlot).toBe(registrySource.registerSlot);
     expect(api.registry.registerRezSpendOptions).toBe(registrySource.registerRezSpendOptions);
     expect(api.registry.registerTaskResultText).toBe(registrySource.registerTaskResultText);
+  });
+});
+
+describe("api documentation", () => {
+  test("every function under game.eclipsephase.api is named in docs/EXTENDING.md", () => {
+    const undocumented = Object.entries(api)
+      .flatMap(([group, members]) => Object.keys(members).map(name => `${group}.${name}`))
+      .filter(entry => !extendingDocs.includes(entry.split(".")[1]));
+    expect(undocumented).toEqual([]);
+  });
+});
+
+describe("api.drugs", () => {
+  test("re-exports the dose functions the sheet itself uses", () => {
+    expect(api.drugs.takeDose).toBe(doseSource.takeDose);
+    expect(api.drugs.offerDose).toBe(doseSource.offerDose);
+    expect(api.drugs.forceDose).toBe(doseSource.forceDose);
   });
 });
 

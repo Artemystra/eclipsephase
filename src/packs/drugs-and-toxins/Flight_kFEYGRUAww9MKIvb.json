@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/toxic-512.png",
   "effects": [],
-  "folder": null,
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,64 @@
     "additionalSystems": {},
     "description": "SV 1d10, –30 resist intimidation/fear effects.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "toxins",
+    "category": "toxin",
     "dermal": false,
     "inhalation": true,
     "injection": false,
     "oral": false,
     "drugType": "biochem",
-    "duration": "1 hour",
+    "duration": {
+      "value": 1,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "fear",
+        "label": "ep2e.item.drug.rollOptions.flightFear",
+        "value": -30,
+        "appliesTo": [
+          "sav",
+          "wil"
+        ]
+      }
+    ],
+    "useCheck": {
+      "aptitude": "wil",
+      "modifier": 0,
+      "failure": "stress",
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "stress": {
+        "d10": 1,
+        "d6": 0,
+        "bonus": 0
+      },
+      "successPsiPenalty": 0
+    },
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

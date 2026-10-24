@@ -16,7 +16,23 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "ch"
+    "wareType": "ch",
+    "rollOptions": [
+      {
+        "id": "impersonate",
+        "label": "ep2e.item.ware.rollOptions.impersonateMesh",
+        "value": 30,
+        "appliesTo": [
+          "deceive"
+        ]
+      },
+      {
+        "id": "cutoff",
+        "label": "ep2e.item.ware.rollOptions.meshCutOff",
+        "value": -10,
+        "appliesTo": []
+      }
+    ]
   },
   "effects": [
     {

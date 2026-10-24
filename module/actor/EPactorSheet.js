@@ -4,6 +4,8 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
+import { drugVector, isAmmoPack, dosesRemaining, chooseDrugForm, selectDoseRecipient } from "../common/drugs.js";
+import { takeDose, offerDose, forceDose } from "../common/doses.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -11,6 +13,7 @@ import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
 import { getStrainFamily } from "../rolls/strain-families.js";
+import { needsSkillSetup, pickSpecialSkills } from "../common/ware-skills.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 import { getRezSpendOptions } from "../api/registry.js";
 
@@ -31,7 +34,7 @@ function hasAnyMovement(bodyItem) {
  * @param {Object} strainFamily - The registry entry, registered or missing
  * @returns {String} A localisation key, or the family id when there is none
  */
-function strainTabLabel(strainFamily) {
+export function strainTabLabel(strainFamily) {
   if (strainFamily.tabLabel) return strainFamily.tabLabel;
   if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
   return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);
@@ -764,11 +767,17 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             gear.push(item);
           }
           else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
-            if (item.type === "drug"){
-              itemModel.slotName = "ep2e.item.general.table.slot.drug";
-              if (item.system.active){
+            if (item.type === "drug" && isAmmoPack(item.system)){
+              itemModel.slotName = "ep2e.item.drug.table.isAmmo";
+              itemModel.canTakeDose = false;
+              if (item.system.active || actor.type !== "character"){
                 ammo.chemical.push(item);
               }
+            }
+            else if (item.type === "drug"){
+              itemModel.slotName = drugVector(item.system)?.label ?? "ep2e.item.general.table.slot.drug";
+              itemModel.canTakeDose = true;
+              itemModel.dosesLeft = dosesRemaining(item.system);
             }
             else {
               itemModel.slotName = "ep2e.item.general.table.slot.consumable";
@@ -892,7 +901,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.gear = gear;
       actor.consumable = consumable;
       actor.gearActive = gear.filter(item => item.system.active);
-      actor.consumableActive = consumable.filter(item => item.system.active);
+      actor.consumableActive = actor.type === "character" ? consumable.filter(item => item.system.active) : consumable;
       actor.knowSkill = know;
       actor.specialSkill = special;
       actor.vehicle = vehicle;
@@ -1221,6 +1230,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     }
 
+    if (!(await chooseDrugForm(itemData))) return null;
+
     itemModel.updated = game.system.version;
 
     if (itemData.type === "aspect") {
@@ -1233,7 +1244,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       if (!allowed) return null;
     }
 
-    const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+    const created = SHEET.STACKABLE_TYPES.includes(itemData.type)
+      ? [await SHEET.mergeOrCreateItem(actor, itemData)]
+      : await actor.createEmbeddedDocuments("Item", [itemData]);
 
     if (pendingMessage) {
       systemMessage(pendingMessage.type, pendingMessage.key, pendingMessage.data);
@@ -1243,6 +1256,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       await maybeApplyStandardEnhancements(actor, created[0], boundToFor(created[0]));
       await MORPHFUNCTION.applyFrame(actor, created[0], boundToFor(created[0]));
     }
+
+    if (needsSkillSetup(created[0])) await pickSpecialSkills(actor, created[0]);
 
     return created[0] ?? null;
   }
@@ -1329,7 +1344,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!li) return;
 
         const item = actor.items.get(li.dataset.itemId);
-        item?.sheet?.render(true);
+        if (!item) return;
+
+        if (ev.currentTarget.dataset.viewOnly === "true") {
+          const SheetClass = item.sheet.constructor;
+          new SheetClass({
+            document: item,
+            editPermission: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER + 1
+          }).render(true);
+          return;
+        }
+
+        item.sheet?.render(true);
       });
     });
 
@@ -1346,6 +1372,21 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!askForOptions) {
           const item = actor.items.get(itemId);
           const itemName = li.dataset.itemName ? li.dataset.itemName : null;
+          const stackSize = Number(item?.system?.quantity);
+
+          if (SHEET.STACKABLE_TYPES.includes(item?.type) && stackSize > 1) {
+            const chosen = await SHEET.stackDeletion(itemName, stackSize);
+            if (!chosen.confirm) return;
+
+            if (chosen.count >= stackSize) {
+              await actor.deleteEmbeddedDocuments("Item", [itemId]);
+              HELPER.slideUp(li, 200, () => this.render(false));
+            }
+            else {
+              await item.update({ "system.quantity": stackSize - chosen.count });
+            }
+            return;
+          }
 
           if (item?.type === "morph" || item?.type === "vehicle") {
             let bucketKey = itemId;
@@ -1543,6 +1584,23 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     multiSelectPills(html, actor);
 
     //show on hover
+    html.querySelectorAll(".drug-use").forEach(element => {
+      element.addEventListener("click", async ev => {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        const itemId = ev.currentTarget.dataset.itemId;
+        const item = actor.items.get(itemId);
+        if (!item) return;
+        if (ev.shiftKey) return takeDose(actor, item);
+
+        const recipient = await selectDoseRecipient(item.name);
+        if (recipient === "self") await takeDose(actor, item);
+        else if (recipient === "other") await offerDose(actor, item);
+        else if (recipient === "unwilling") await forceDose(actor, item);
+      });
+    });
+
     html.querySelectorAll(".reveal").forEach(element => {
       element.addEventListener("mouseover", this._onToggleReveal.bind(this));
       element.addEventListener("mouseout", this._onToggleReveal.bind(this));
@@ -1842,7 +1900,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     
   }
 
-  _onSkillEdit(event) {
+  async _onSkillEdit(event) {
     event.preventDefault();
 
     const element = event.currentTarget;
@@ -1857,6 +1915,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const field = element.dataset.field;
     if (!field) return;
+
+    if (SHEET.emptiesStack(item, field, element.value)) {
+      await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+      HELPER.slideUp(itemElement, 200, () => this.render(false));
+      return;
+    }
 
     return item.update({ [field]: element.value });
   }

@@ -2,8 +2,54 @@
   "name": "Blab",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
-  "effects": [],
-  "folder": null,
+  "effects": [
+    {
+      "_id": "56Mlq4acrPcX6509",
+      "name": "Blab",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsMox.deceive.mod",
+            "value": "-30",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!sFkuWtxt7323mImD.56Mlq4acrPcX6509"
+    }
+  ],
+  "folder": "Ew1sB0iagLW7KP0Q",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +59,58 @@
     "additionalSystems": {},
     "description": "Neural Damage: Logorrhea, –30 Deceive,  –30 SAV/WIL Checks vs. interrogation.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "moderate",
     "slotType": "consumable",
-    "category": "social",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "1 hour",
+    "duration": {
+      "value": 1,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "interrogation",
+        "label": "ep2e.item.drug.rollOptions.blabInterrogation",
+        "value": -30,
+        "appliesTo": [
+          "sav",
+          "wil"
+        ]
+      }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": [
+      {
+        "pack": "eclipsephase.traits",
+        "folder": "",
+        "item": "v1dQPAvEdhZKLnMA",
+        "title": "Logorrhea",
+        "description": "",
+        "or": false
+      }
+    ]
   },
   "ownership": {
     "default": 0,

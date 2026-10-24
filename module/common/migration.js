@@ -1,3 +1,6 @@
+import { wareAwaitingSetup } from "./ware-skills.js";
+import { normaliseDrugSystem } from "./drugs.js";
+
 export async function migrationLegacy(startMigration, endMigration){
     if (startMigration){
   
@@ -2607,6 +2610,352 @@ export async function migrationPre25(startMigration, endMigration) {
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
+ * The repairs a drug's stored data needs to match the 2.7 schema, where a duration written as
+ * free text becomes a span and a pack gains the dose counter it is bought with. Read from the
+ * stored source rather than the prepared data, which repairs itself on every read and would
+ * therefore always look migrated.
+ * @param {Item} item - The drug item
+ * @returns {Object|null} The system changes to apply, or null when it is already current
+ */
+function _ep27_drugRepairs(item) {
+  return normaliseDrugSystem(item._source?.system ?? item.system);
+}
+
+const _ep27_DRUG_PACK = "eclipsephase.drugs-and-toxins";
+
+/**
+ * What every drug in the system's own compendium carries that a drug dragged before 2.7 lacks:
+ * its blueprint effects, its conditional roll options, its wear-off stress and the check it calls
+ * for, keyed by the drug's name. Effect ids and stats are dropped so each copy is created fresh.
+ * @returns {Promise<Map<String, Object>>} Drug name to { effects, rollOptions, wearOff, useCheck }
+ */
+async function _ep27_drugBlueprints() {
+  const catalogue = new Map();
+  const pack = game.packs.get(_ep27_DRUG_PACK);
+  if (!pack) return catalogue;
+
+  for (const drug of await pack.getDocuments()) {
+    const source = drug.toObject();
+    catalogue.set(drug.name, {
+      effects: (source.effects ?? []).map(({ _id, _stats, _key, ...effect }) => effect),
+      rollOptions: source.system?.rollOptions ?? [],
+      wearOff: source.system?.wearOff ?? null,
+      useCheck: source.system?.useCheck ?? null,
+      overTime: source.system?.overTime ?? null,
+      healingAddition: source.system?.healingAddition ?? "",
+      grants: source.system?.grants ?? [],
+      addictionType: source.system?.addictionType ?? "",
+      addictionMod: source.system?.addictionMod ?? null
+    });
+  }
+  return catalogue;
+}
+
+/**
+ * The 2.7 data a drug is missing compared with its compendium namesake: roll options when it has
+ * none, a wear-off stress when it has no dice, a check when it calls for none, effects over time
+ * when it has neither tick damage nor a growing modifier, a healing addition when it names none,
+ * temporary traits when it grants none, an addiction type when it records none.
+ * Only empty fields are filled, so a drug somebody gave values of their own keeps them.
+ * @param {Item} item - The drug item, read with its repairs applied
+ * @param {Map<String, Object>} catalogue - What _ep27_drugBlueprints read
+ * @returns {Object|null} The system changes to apply, or null when nothing is missing
+ */
+function _ep27_missingDrugData(item, catalogue) {
+  const known = catalogue.get(item.name);
+  if (!known) return null;
+  const system = item.system ?? {};
+  const update = {};
+  const hasDice = value => !!(Number(value?.d10) || Number(value?.d6) || Number(value?.bonus));
+
+  if (!(system.rollOptions?.length) && known.rollOptions.length) update.rollOptions = foundry.utils.deepClone(known.rollOptions);
+  if (!hasDice(system.wearOff) && hasDice(known.wearOff)) update.wearOff = foundry.utils.deepClone(known.wearOff);
+  if (!system.useCheck?.aptitude && known.useCheck?.aptitude) update.useCheck = foundry.utils.deepClone(known.useCheck);
+  const overTime = value => hasDice(value?.damage) || !!Number(value?.modifier);
+  if (!overTime(system.overTime) && overTime(known.overTime)) update.overTime = foundry.utils.deepClone(known.overTime);
+  if (!system.healingAddition && known.healingAddition) update.healingAddition = known.healingAddition;
+  if (!(system.grants?.length) && known.grants?.length) update.grants = foundry.utils.deepClone(known.grants);
+  const addictive = type => ["physical", "mental", "both"].includes(type);
+  if (!addictive(system.addictionType) && addictive(known.addictionType)) {
+    update.addictionType = known.addictionType;
+    if (system.addictionMod === null || system.addictionMod === undefined || system.addictionMod === "" || system.addictionMod === "-") update.addictionMod = known.addictionMod;
+  }
+  return Object.keys(update).length ? update : null;
+}
+
+// Book corrections (errata 1.3/1.4 and the Core tables) made to drugs that may already sit on a
+// sheet, as item update paths. Each replaces only the exact old value, so a value somebody changed
+// by hand stays.
+const _ep27_TOXIN_ICON = "systems/eclipsephase/resources/icons/toxic-512.png";
+const _ep27_DRUG_ICON = "systems/eclipsephase/resources/icons/drug.png";
+const _ep27_DRUG_ERRATA = {
+  "Bananas Furiosas": ({ system }) => system.duration?.value === 1 && system.duration?.units === "days" ? { "system.duration": { ...system.duration, value: 8, units: "hours" } } : null,
+  "Nervex": ({ system }) => !Number(system.duration?.value) ? { "system.duration": { ...system.duration, value: 10, units: "minutes" } } : null,
+  "Xsense": ({ system, img }) => {
+    const update = {};
+    if (system.category === "toxin") update["system.category"] = "drug";
+    if (img === _ep27_TOXIN_ICON) update.img = _ep27_DRUG_ICON;
+    return Object.keys(update).length ? update : null;
+  },
+  "Psi-Opener": ({ system }) => system.cost === "minor" ? { "system.cost": "rare" } : null,
+  "Psi-Kick": ({ system }) => system.cost === "minor" ? { "system.cost": "rare" } : null,
+  "Brutalitea": ({ system }) => typeof system.description === "string" && system.description.includes("+3 DR") ? { "system.description": system.description.replace("+3 DR", "+8 DR") } : null,
+  "Aggro": ({ system }) => {
+    const options = system.rollOptions ?? [];
+    const other = options.find(option => option.id === "otherSocial");
+    if (!other || other.appliesTo?.includes("provoke")) return null;
+    return { "system.rollOptions": options.map(option => option === other ? { ...option, appliesTo: [...(option.appliesTo ?? []), "provoke"] } : option) };
+  }
+};
+
+/**
+ * The book corrections a drug on a sheet still needs.
+ * @param {Item} item - The drug item, read with its repairs applied
+ * @returns {Object|null} The item update, or null when none is due
+ */
+export function _ep27_drugErrata(item) {
+  return _ep27_DRUG_ERRATA[item.name]?.({ system: item.system ?? {}, img: item.img }) ?? null;
+}
+
+/**
+ * Blueprint effects a drug carries that the book does not give it: Inhibitor's flat -30 to Psi,
+ * which belongs only to a passed check. Matched exactly, so an effect of somebody's own stays.
+ * @param {Item} item - The drug item
+ * @returns {String[]|null} The ids of the effects to remove, or null when there are none
+ */
+export function _ep27_wrongBlueprints(item) {
+  if (item.name !== "Inhibitor") return null;
+  const wrong = Array.from(item.effects ?? []).filter(effect => {
+    const changes = effect.changes ?? effect.system?.changes ?? [];
+    return changes.length === 1 && changes[0].key === "system.skillsMox.psi.mod" && String(changes[0].value).trim() === "-30";
+  });
+  return wrong.length ? wrong.map(effect => effect.id) : null;
+}
+
+/**
+ * The blueprint effects a drug dragged before 2.7 is missing. A dose copies the drug's own effects,
+ * so a drug that has none does nothing when taken. Only a drug with no effects at all is filled,
+ * by name from the compendium; one that already carries effects may be homebrew and is left alone.
+ * @param {Item} item - The drug item
+ * @param {Map<String, Object[]>} blueprints - What _ep27_drugBlueprints read
+ * @returns {Object[]|null} The effects to add, or null when there is nothing to add
+ */
+function _ep27_missingBlueprints(item, blueprints) {
+  if (Array.from(item.effects ?? []).length) return null;
+  const effects = blueprints.get(item.name)?.effects;
+  return effects?.length ? effects : null;
+}
+
+/**
+ * Whether any drug in the world still carries data from before the 2.7 schema or lacks the
+ * blueprint effects its compendium entry has.
+ * @returns {Promise<Boolean>} True when at least one drug needs work
+ */
+// The effect each piece of defensive ware reports itself through, so doses can tell it is there.
+const _ep27_DEFENSIVE_WARE = {
+  "Toxin Filters": "system.additionalSystems.toxinFilters",
+  "Nanophages": "system.additionalSystems.nanophages",
+  "Digestive Symbiotes": "system.additionalSystems.digestiveSymbiotes",
+  "Immunizers": "system.additionalSystems.immunizers"
+};
+
+/**
+ * The effect a defensive ware item placed before 2.7 is missing, matched by name.
+ * @param {Item} item - The item
+ * @returns {Object|null} The effect data, or null when the item needs none
+ */
+export function _ep27_missingWareMarker(item) {
+  const key = item.type === "ware" ? _ep27_DEFENSIVE_WARE[item.name] : undefined;
+  if (!key) return null;
+  if (Array.from(item.effects ?? []).some(effect => effect.changes?.some(change => change.key === key))) return null;
+  const changes = [{ key, value: true, priority: null, type: "override" }];
+  return { name: item.name, img: "/icons/svg/mystery-man.svg", disabled: false, transfer: true, changes, flags: {}, system: { changes } };
+}
+
+/**
+ * The roll options each ware in the system compendium carries, by name.
+ * @returns {Promise<Map<String, Object[]>>} The options, for ware that has any
+ */
+async function _ep27_wareOptions() {
+  const catalogue = new Map();
+  const pack = game.packs.get("eclipsephase.ware");
+  if (!pack) return catalogue;
+  for (const ware of await pack.getDocuments()) {
+    const options = ware.system?.rollOptions;
+    if (Array.isArray(options) && options.length) catalogue.set(ware.name, options);
+  }
+  return catalogue;
+}
+
+/**
+ * The roll options a ware placed before 2.7 is missing, from its compendium namesake. Ware that
+ * already carries options of its own keeps them.
+ * @param {Item} item - The item
+ * @param {Map<String, Object[]>} catalogue - What _ep27_wareOptions read
+ * @returns {Object[]|null} The options to add, or null when there is nothing to add
+ */
+export function _ep27_missingWareOptions(item, catalogue) {
+  if (item.type !== "ware" || item.system?.rollOptions?.length) return null;
+  const options = catalogue.get(item.name);
+  return options ? foundry.utils.deepClone(options) : null;
+}
+
+/**
+ * Flags every player whose character carries ware still waiting for its special skills, so their
+ * own client asks them on their next login.
+ * @returns {Promise<void>} Resolves once every player is flagged
+ */
+async function _ep27_flagWareSetup() {
+  for (const actor of game.actors.filter(entry => entry.type === "character" && wareAwaitingSetup(entry).length)) {
+    for (const user of game.users.filter(entry => !entry.isGM && actor.testUserPermission(entry, "OWNER"))) {
+      await user.setFlag("eclipsephase", "pendingWareSetup", true);
+    }
+  }
+}
+
+// The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
+// only its own English text - a title, an introduction, the bullets of what changed and footnote
+// comments. **Words** in the text are set in bold; everything else is plain text.
+export const MIGRATION_NOTICE_TEMPLATE = "systems/eclipsephase/templates/chat/migration-notice.html";
+export const SUPPORT_LINKS = {
+  github: "https://github.com/Artemystra/eclipsephase",
+  kofi: "https://ko-fi.com/diemen",
+  discord: "https://discordapp.com/users/186786554230996993"
+};
+
+export const MIGRATION_NOTES = {
+  "2.7": {
+    title: "First time is free...!",
+    intro: "Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:",
+    bullets: [
+      "Every drug's **Duration** is now functional and runs on the clock.",
+      "Drugs come in **packs** of five doses by default, settable per drug.",
+      "Dropping the same drug, ammo or grenade again adds to your existing stack.",
+      "Only **ammunition packs** load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.",
+      "A drug's effects apply when you **take** it, not while you carry it.",
+      "Every drug is now either a **drug** or a **toxin**. The book's chapters live on as folders in the compendium.",
+      "Drugs now bring their **situational modifiers** into your rolls, call for **checks** when they take hold and can leave **stress** behind when they wear off. Drugs already on your sheets get these from the compendium.",
+      "Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.",
+      "Drugs now also work **over time**, can lend **traits** while they run, and meet your **defensive ware**: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.",
+      "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
+    ],
+    comments: []
+  }
+};
+
+/**
+ * A release text as markup: escaped, with **words** set in bold.
+ * @param {String} text - The text
+ * @returns {String} The markup
+ */
+export function noticeText(text) {
+  return Handlebars.escapeExpression(String(text ?? "")).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+}
+
+/**
+ * Asks whether to migrate to a release, showing what the release brings.
+ * @param {String} version - The release, a key of MIGRATION_NOTES
+ * @param {Object} [options] - extra: a further note for this world only
+ * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
+ */
+export async function migrationNotice(version, { extra = "" } = {}) {
+  const note = MIGRATION_NOTES[version] ?? {};
+  const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
+    version,
+    title: note.title ?? version,
+    intro: noticeText(note.intro),
+    bullets: (note.bullets ?? []).map(noticeText),
+    comments: (note.comments ?? []).map(noticeText),
+    extra: extra ? noticeText(extra) : "",
+    links: SUPPORT_LINKS
+  });
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.migration.notice.windowTitle") },
+    classes: ["ep2e-primary-right", "ep-migration-dialog"],
+    content,
+    buttons: [
+      { action: "start", label: game.i18n.localize("ep2e.migration.notice.migrate"), default: true, callback: () => ({ start: true }) },
+      { action: "cancel", label: game.i18n.localize("ep2e.migration.notice.close"), callback: () => ({ cancelled: true }) }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 700 }
+  });
+  return result ?? { cancelled: true };
+}
+
+export async function migrationPre27Needed() {
+  const blueprints = await _ep27_drugBlueprints();
+  const wareOptions = await _ep27_wareOptions();
+  const needs = item => (item.type === "drug"
+    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null || _ep27_missingDrugData(item, blueprints) !== null
+      || _ep27_drugErrata(item) !== null || _ep27_wrongBlueprints(item) !== null))
+    || _ep27_missingWareMarker(item) !== null
+    || _ep27_missingWareOptions(item, wareOptions) !== null;
+  return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
+}
+
+/**
+ * Rewrites every drug in the world into the 2.7 schema: the world's own items, every actor's
+ * embedded ones and the world's item compendiums. A duration that cannot be read lands as
+ * open-ended instead of stopping the run. A drug without effects gets the blueprints of its
+ * compendium namesake, so a dose of it does what a fresh one from the compendium does.
+ * @param {Boolean} startMigration - Whether the user confirmed the migration
+ * @returns {Promise<Object>} Whether the closing notice is due
+ */
+export async function migrationPre27(startMigration) {
+  const latestUpdate = "2.7";
+  if (!startMigration) return { endMigration: false };
+
+  const blueprints = await _ep27_drugBlueprints();
+
+  await forEachItem(async item => {
+    const repairs = _ep27_drugRepairs(item);
+    if (repairs) {
+      const update = {};
+      for (const [key, value] of Object.entries(repairs)) update[`system.${key}`] = value;
+      await item.update(update);
+    }
+
+    const missing = _ep27_missingBlueprints(item, blueprints);
+    if (missing) await item.createEmbeddedDocuments("ActiveEffect", foundry.utils.deepClone(missing));
+
+    const data = _ep27_missingDrugData(item, blueprints);
+    if (data) {
+      const update = {};
+      for (const [key, value] of Object.entries(data)) update[`system.${key}`] = value;
+      await item.update(update);
+    }
+
+    const errata = _ep27_drugErrata(item);
+    if (errata) await item.update(errata);
+
+    const wrong = _ep27_wrongBlueprints(item);
+    if (wrong) await item.deleteEmbeddedDocuments("ActiveEffect", wrong);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "drug",
+    includeCompendiums: true
+  });
+
+  const wareOptions = await _ep27_wareOptions();
+  await forEachItem(async item => {
+    const marker = _ep27_missingWareMarker(item);
+    if (marker) await item.createEmbeddedDocuments("ActiveEffect", [marker]);
+    const options = _ep27_missingWareOptions(item, wareOptions);
+    if (options) await item.update({ "system.rollOptions": options });
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "ware",
+    includeCompendiums: true
+  });
+  await _ep27_flagWareSetup();
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };
 }
 

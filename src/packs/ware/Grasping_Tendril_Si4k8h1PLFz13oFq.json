@@ -15,7 +15,26 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bch"
+    "wareType": "bch",
+    "rollOptions": [
+      {
+        "id": "grapple",
+        "label": "ep2e.item.ware.rollOptions.grappling",
+        "value": 10,
+        "appliesTo": [
+          "melee"
+        ]
+      },
+      {
+        "id": "reach",
+        "label": "ep2e.item.ware.rollOptions.reach",
+        "value": 10,
+        "appliesTo": [
+          "melee",
+          "fray"
+        ]
+      }
+    ]
   },
   "effects": [],
   "sort": 0,

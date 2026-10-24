@@ -64,7 +64,8 @@
     "bonus": null,
     "malus": null,
     "boundTo": null,
-    "wareType": "bm"
+    "wareType": "bm",
+    "rollOptions": []
   },
   "_stats": {
     "systemId": "eclipsephase",

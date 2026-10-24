@@ -2,8 +2,54 @@
   "name": "Twitch",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/toxic-512.png",
-  "effects": [],
-  "folder": null,
+  "effects": [
+    {
+      "_id": "3w4fia9amTKVEvOH",
+      "name": "Twitch",
+      "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.globalMod",
+            "value": "-20",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!mCrB9ZZeIBi3uSED.3w4fia9amTKVEvOH"
+    }
+  ],
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +59,53 @@
     "additionalSystems": {},
     "description": "–20 actions, SOM Check vs. incapacitation.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "toxins",
+    "category": "toxin",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "10 minutes",
+    "duration": {
+      "value": 10,
+      "units": "minutes"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "useCheck": {
+      "aptitude": "som",
+      "modifier": 0,
+      "failure": "incapacitated",
+      "duration": {
+        "value": 10,
+        "units": "minutes"
+      },
+      "stress": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "successPsiPenalty": 0
+    },
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

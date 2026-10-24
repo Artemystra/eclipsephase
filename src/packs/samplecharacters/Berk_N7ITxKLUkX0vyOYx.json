@@ -462,7 +462,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!LD5bZHFIWPU7wVJZ.KPqqeTi8d5ku0fmC"
+          "_key": "!actors.items.effects!N7ITxKLUkX0vyOYx.LD5bZHFIWPU7wVJZ.KPqqeTi8d5ku0fmC"
         }
       ],
       "flags": {
@@ -637,7 +637,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!qTnmiEzNBJqkoT1v.zNmZW9N7A7kTENSO"
+          "_key": "!actors.items.effects!N7ITxKLUkX0vyOYx.qTnmiEzNBJqkoT1v.zNmZW9N7A7kTENSO"
         }
       ],
       "system": {
@@ -730,7 +730,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!ucbIMmPBtW89IuXz.3wo6t5CLy9OyjN0r"
+          "_key": "!actors.items.effects!N7ITxKLUkX0vyOYx.ucbIMmPBtW89IuXz.3wo6t5CLy9OyjN0r"
         }
       ],
       "system": {
@@ -817,7 +817,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!WVpy0TfDSavf17rF.H0M6yic28GLymOCh"
+          "_key": "!actors.items.effects!N7ITxKLUkX0vyOYx.WVpy0TfDSavf17rF.H0M6yic28GLymOCh"
         }
       ],
       "system": {
@@ -915,7 +915,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!items.effects!QptdFYTnwIv7rLgR.2R8jGXLQPcPJFsbj"
+          "_key": "!actors.items.effects!N7ITxKLUkX0vyOYx.QptdFYTnwIv7rLgR.2R8jGXLQPcPJFsbj"
         }
       ],
       "flags": {},
@@ -2257,20 +2257,60 @@
         "additionalSystems": {},
         "description": "+20 Provoke to intimidate/taunt, –20 other social tests.",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "combat",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "15 minutes",
+        "duration": {
+          "value": 15,
+          "units": "minutes"
+        },
         "addictionMod": "+10",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "physical",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "rollOptions": [
+          {
+            "id": "intimidate",
+            "label": "ep2e.item.drug.rollOptions.aggroIntimidate",
+            "value": 20,
+            "appliesTo": [
+              "provoke"
+            ]
+          },
+          {
+            "id": "otherSocial",
+            "label": "ep2e.item.drug.rollOptions.aggroOtherSocial",
+            "value": -20,
+            "appliesTo": [
+              "deceive",
+              "kinesics",
+              "persuade",
+              "provoke"
+            ]
+          }
+        ],
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -2280,9 +2320,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.jo3GAYGK409hcV16",
+        "modifiedTime": 1674425844182,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.l1V8zfmL6cUXv5lI",
         "duplicateSource": null,
         "exportSource": null
       },
@@ -2292,7 +2332,53 @@
       "name": "Grin",
       "type": "drug",
       "img": "systems/eclipsephase/resources/icons/drug.png",
-      "effects": [],
+      "effects": [
+        {
+          "_id": "Bxx64DyBJ7XYb89n",
+          "name": "Grin",
+          "img": "systems/eclipsephase/resources/icons/drug.png",
+          "type": "base",
+          "disabled": false,
+          "transfer": true,
+          "origin": null,
+          "tint": "#ffffff",
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "statuses": [],
+          "flags": {},
+          "sort": 0,
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "system": {
+            "changes": [
+              {
+                "key": "system.mods.woundMod",
+                "value": -1,
+                "priority": null,
+                "type": "add"
+              }
+            ]
+          },
+          "_stats": {
+            "coreVersion": "14.356",
+            "systemId": null,
+            "systemVersion": null,
+            "createdTime": null,
+            "modifiedTime": null,
+            "lastModifiedBy": null,
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          },
+          "_key": "!actors.items.effects!N7ITxKLUkX0vyOYx.4Fx0ubXxLLv6Sng5.Bxx64DyBJ7XYb89n"
+        }
+      ],
       "folder": null,
       "sort": 0,
       "flags": {
@@ -2303,20 +2389,39 @@
         "additionalSystems": {},
         "description": "Ignore 1 wound.",
         "active": true,
-        "displayCategory": "gear",
+        "displayCategory": "consumable",
         "updated": "",
         "cost": "minor",
         "slotType": "consumable",
-        "category": "combat",
-        "dermal": true,
-        "inhalation": true,
-        "injection": true,
+        "category": "drug",
+        "dermal": false,
+        "inhalation": false,
+        "injection": false,
         "oral": true,
         "drugType": "biochem",
-        "duration": "3 hours",
+        "duration": {
+          "value": 3,
+          "units": "hours"
+        },
         "addictionMod": "-10",
-        "addictionType": "none",
-        "quantity": 1
+        "addictionType": "physical",
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "overTime": {
+          "damage": {
+            "d10": 0,
+            "d6": 0,
+            "bonus": 0
+          },
+          "interval": "turn",
+          "ticks": null,
+          "modifier": 0,
+          "incapacitates": false
+        },
+        "healingAddition": "",
+        "grants": [],
+        "isAmmo": false
       },
       "ownership": {
         "default": 0
@@ -2326,9 +2431,9 @@
         "systemVersion": "0.8.0.1",
         "coreVersion": "13.346",
         "createdTime": null,
-        "modifiedTime": null,
-        "lastModifiedBy": null,
-        "compendiumSource": "Compendium.eclipsephase.drugs-and-toxins.Item.pBEjcZmTm7sH8iTm",
+        "modifiedTime": 1674425475575,
+        "lastModifiedBy": "bYyHIjslCiShkdKL",
+        "compendiumSource": "Item.U2TdcUBiQXuhvRv7",
         "duplicateSource": null,
         "exportSource": null
       },

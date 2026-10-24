@@ -1,6 +1,7 @@
 import { getStrainFamily, resetStrainFamilies, registerCoreStrainFamilies } from "../../module/rolls/strain-families.js";
 import { strainSubstrate } from "../../module/common/body-markers.js";
 import { tierTraitNames } from "../../module/common/sleight-prerequisite.js";
+import { resolvePhysicalDamageFormula } from "../../module/rolls/psi.js";
 
 const CYBERBRAIN = "flags.eclipsephase.grantsCyberbrain";
 
@@ -91,5 +92,16 @@ describe("the prerequisite traits a sleight asks for", () => {
 
   test("an unregistered family offers none", () => {
     expect(tierTraitNames("gamma-wave")).toEqual({});
+  });
+});
+
+describe("the physical damage a sleight's Infection Test deals", () => {
+  test.each([
+    [true, true, "2d6"],
+    [false, true, "1d6"],
+    [true, false, "1d6"],
+    [false, false, null]
+  ])("pushed %p with the virus rolling a 1 %p deals %p", (pushed, virusRolledOne, expected) => {
+    expect(resolvePhysicalDamageFormula(pushed, virusRolledOne)).toEqual(expected);
   });
 });

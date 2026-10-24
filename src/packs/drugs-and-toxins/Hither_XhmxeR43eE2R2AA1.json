@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "Ew1sB0iagLW7KP0Q",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,57 @@
     "additionalSystems": {},
     "description": "+10 seduction Provoke, Enhanced Behavior: Aroused (2).",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "social",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "8 hours",
+    "duration": {
+      "value": 8,
+      "units": "hours"
+    },
     "addictionMod": "-10",
-    "addictionType": "none",
-    "quantity": 1
+    "addictionType": "physical",
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "seduce",
+        "label": "ep2e.item.drug.rollOptions.hitherSeduce",
+        "value": 10,
+        "appliesTo": [
+          "provoke"
+        ]
+      }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": [
+      {
+        "pack": "eclipsephase.traits",
+        "folder": "",
+        "item": "xGMEXPrvbypAfXKI",
+        "title": "Aroused",
+        "description": "",
+        "or": false
+      }
+    ]
   },
   "ownership": {
     "default": 0,

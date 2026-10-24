@@ -1,9 +1,9 @@
 {
-  "name": "Ocytocin-A",
+  "name": "Oxytocin-A",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/toxic-512.png",
   "effects": [],
-  "folder": null,
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,49 @@
     "additionalSystems": {},
     "description": "Trusting, –30 WIL Checks/Kinesics Tests where trust is a factor.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "toxins",
+    "category": "toxin",
     "dermal": false,
     "inhalation": true,
     "injection": true,
     "oral": false,
     "drugType": "biochem",
-    "duration": "2 hours",
+    "duration": {
+      "value": 2,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "trust",
+        "label": "ep2e.item.drug.rollOptions.oxytocinaTrust",
+        "value": -30,
+        "appliesTo": [
+          "wil",
+          "kinesics"
+        ]
+      }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

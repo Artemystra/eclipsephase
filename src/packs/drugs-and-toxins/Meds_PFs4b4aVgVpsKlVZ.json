@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "oYmehpsC6nkyJx64",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +13,38 @@
     "additionalSystems": {},
     "description": "Heals 1d10 damage per hour or 1 wound per day.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "moderate",
     "slotType": "consumable",
-    "category": "nano",
+    "category": "drug",
     "dermal": false,
     "inhalation": false,
     "injection": true,
     "oral": true,
     "drugType": "nano",
-    "duration": "1 day",
+    "duration": {
+      "value": 1,
+      "units": "days"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "meds",
+    "grants": []
   },
   "ownership": {
     "default": 0,

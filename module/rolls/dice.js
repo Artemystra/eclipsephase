@@ -4,6 +4,7 @@ import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/
 import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
+import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
 
 /*
  * Path constants for dialog templates
@@ -33,6 +34,28 @@ export const TASK_RESULT = {
     CRITICAL_SUCCESS: 7,
     AUTOFAIL : 8,
     AUTOSUCCESS : 9
+}
+
+const HITS = [TASK_RESULT.SUCCESS, TASK_RESULT.SUCCESS_ONE, TASK_RESULT.SUCCESS_TWO, TASK_RESULT.CRITICAL_SUCCESS, TASK_RESULT.AUTOSUCCESS]
+
+/**
+ * Whether a task result is a success of any degree: an ordinary one, a critical one or an
+ * automatic one.
+ * @param {Number} result - The task result tier
+ * @returns {Boolean} True for a success
+ */
+export function isHit(result) {
+    return HITS.includes(result)
+}
+
+/**
+ * A number with its sign, the way modifiers are shown: +10, -20, 0.
+ * @param {Number|String} value - The number
+ * @returns {String} The signed number
+ */
+export function signed(value) {
+    const number = Number(value) || 0
+    return number > 0 ? `+${number}` : String(number)
 }
 
 export const HOMEBREW_TASK_RESULT_TEXT = {
@@ -185,7 +208,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 async function defineRoll(dataset, actorWhole){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -534,7 +557,7 @@ export class TaskRollModifier {
 
 // Reads the same base skill/aptitude value the sheet would set as data-rollvalue, but off an
 // arbitrary actorSystem/items pair - lets getOwnBodyEffectDelta diff the real actor vs. a clone.
-function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
+export function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
     const registered = getRollSource(rolledFrom)?.skillRoll?.(actorSystem, items, dataset);
     if (registered?.rollvalue !== undefined && registered?.rollvalue !== null) return registered.rollvalue;
 
@@ -626,9 +649,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     }
 
     const rollContext = {
-        dataset, actor: actorWhole, actorModel, rolledFrom, roll,
+        dataset, actor: actorWhole, actorModel, rolledFrom, roll, weapon: weaponSelected ?? null,
         rollType: roll.type, sections: [], cancelReason: null,
-        options: null, task: null, pool: null, modifiers: [], itemData: null, flags: {},
+        options: null, task: null, pool: null, modifiers: [], itemData: null, flags: { ...(dataset.contextFlags ?? {}) },
         outputData: null, message: null, blind: false, rollMode: null
     }
 
@@ -650,6 +673,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     for (let entry in values){
         options[entry] = values[entry] || false
     }
+
+    const doseChoices = chosenRollOptions([...doseRollOptions(actorWhole, dataset), ...wareRollOptions(actorWhole, dataset)], values)
+    options.doseChoices = await Promise.all(doseChoices.map(async entry => ({ ...entry, value: await optionValue(entry.option) })))
 
     // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
     // renders it disabled). The value is force-applied here too since favorDifficultyModifier can
@@ -775,6 +801,9 @@ if (traits) {
 }
 
 const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
+const doseOptions = tickableRollOptions(doseRollOptions(actorWhole, dataset));
+const wareOptions = tickableRollOptions(wareRollOptions(actorWhole, dataset));
+rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field));
 
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
     specName,
@@ -788,6 +817,8 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     rollData,
     dataset,
     poolOptions,
+    doseOptions,
+    wareOptions,
     rollContext
 });
 
@@ -909,6 +940,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         const strainFamily = psi.actorStrainFamily(actorWhole)
         if(strainSubstrate(actorWhole, strainFamily).penalised)
             task.addModifier(new TaskRollModifier(getStrainFamily(strainFamily).mismatchKey, -30))
+        for (const { name, modifier } of drugPsiPenalties(actorWhole))
+            task.addModifier(new TaskRollModifier(name, modifier))
     }
 
 
@@ -1219,6 +1252,14 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
             task.addModifier(new TaskRollModifier(announce, modValue))
     }
 
+    if (rolledFrom !== "vehicleSkill"){
+        const exclude = replacedDrugs(options.doseChoices ?? [])
+        for (const { label, modifier, comment } of globalModifiers(actorWhole, { exclude }))
+            task.addModifier(new TaskRollModifier(label, modifier, comment))
+        for (const choice of options.doseChoices ?? [])
+            task.addModifier(new TaskRollModifier(choice.drug, choice.value, choice.option.label))
+    }
+
     if (rolledFrom === "integration"){
         // For a real resleeve, check the newly sleeved Morph. For a jam, check the body actually
         // being jammed into instead - activeMorph never changes during a jam, so checking it here
@@ -1422,5 +1463,21 @@ function breakdown(roll){
             i++
         }
     }
+    diceBreakdown.bonus = flatBonus(roll)
     return diceBreakdown
+}
+
+/**
+ * The flat part of a roll - the +10 of 2d10 + 10 - signed as the dice tray shows it beside the dice.
+ * @param {Roll} roll - An evaluated roll
+ * @returns {String} e.g. "+10" or "-2", empty when the roll has none
+ */
+export function flatBonus(roll) {
+    let sign = 1
+    let bonus = 0
+    for (const term of roll?.terms ?? []) {
+        if (typeof term.operator === "string") sign = term.operator === "-" ? -1 : 1
+        else if (typeof term.number === "number" && term.faces === undefined) bonus += sign * term.number
+    }
+    return bonus ? signed(bonus) : ""
 }

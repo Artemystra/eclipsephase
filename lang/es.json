@@ -132,7 +132,20 @@
         "registeredId": "Identidad Registrada: {name}"
       },
       "warnings": {
-        "noPlacedToken": "Este actor no está representado por un token colocado en este momento."
+        "doseNeedsBiomorph": "Esta droga solo actua en un cuerpo biologico.",
+        "doseNeedsCyberbrain": "Esta droga solo funciona en un infomorfo o un cibercerebro.",
+        "noDosesLeft": "{name} no tiene dosis restantes.",
+        "doseCheckRolled": "Este chequeo ya se ha tirado.",
+        "doseNoScene": "Abre una escena para elegir un objetivo en ella.",
+        "doseNeedsGM": "Debe haber un GM conectado para entregar esta dosis.",
+        "doseNoSelection": "Selecciona primero un token.",
+        "doseNeedsClaimant": "Asígnate un personaje o, como GM, selecciona un token para tomar esta dosis.",
+        "doseAlreadyUsed": "Esta dosis ya se ha usado.",
+        "offerPackEmpty": "El paquete del que se ofreció esta dosis está vacío o ya no existe.",
+        "ammoPackNotTaken": "{name} es un paquete de munición: cárgalo en un arma en lugar de tomarlo.",
+        "noPlacedToken": "Este actor no está representado por un token colocado en este momento.",
+        "attackDelivered": "Este ataque ya se ha aplicado a sus objetivos.",
+        "attackNoPayload": "El arma no sabe con qué droga está cargada. Recárgala primero."
       },
       "button": {
         "edit": "Edit",
@@ -165,6 +178,8 @@
       "popUp": {
         "needPuppetSockToJam": "Se necesita un Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteStackCopy": "<b>Advertencia:</b>Vas a eliminar de una pila. Elige cuantos deben desaparecer - el resto permanece en tu hoja.",
+        "deleteStackLabel": "Cantidad a eliminar",
         "deleteArmorWithBodyCopy": "<b>Advertencia:</b>Estás a punto de eliminar {body}. Este cuerpo tiene Armadura asignada - al eliminar {body} también se eliminará su Armadura.",
         "stashArmorCopy": "¿Quieres guardar {name}? Lo encontrarás en tu inventario cuando quieras.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>",
@@ -1059,7 +1074,8 @@
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
-            "rail": "Rail"
+            "rail": "Rail",
+            "chemical": "Químico o droga"
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
@@ -1113,8 +1129,47 @@
         }
       },
       "drug": {
+        "rollOptions": {
+          "aggroIntimidate": "Provocar para intimidar o pinchar",
+          "aggroOtherSocial": "otras pruebas sociales",
+          "blabInterrogation": "resistir un interrogatorio",
+          "buzzSuggestion": "resistir la sugestión",
+          "crgasSight": "Percibir basado en la vista",
+          "flightFear": "contra intimidación o miedo",
+          "hitherSeduce": "Provocar para seducir",
+          "juiceFear": "contra miedo o manipulación",
+          "neemRecall": "recordar",
+          "orbitalhashMemory": "habilidades de Saber o recordar",
+          "oxytocinaTrust": "cuando importa la confianza",
+          "randomizerSocial": "pruebas sociales, al azar",
+          "stiffResist": "contra Persuadir o Provocar",
+          "tongzhiShared": "Persuadir sobre intereses comunes",
+          "monoNoAwareArt": "en habilidades de Arte",
+          "gravyHighGravity": "contra penalizaciones por gravedad alta"
+        },
+        "takeDose": "Tomar una dosis",
+        "dosesLeft": "Dosis restantes",
+        "onset": {
+          "immediate": "Actua de inmediato",
+          "turn": "Actua tras un turno de accion",
+          "minutes15": "Actua tras 15 minutos",
+          "app": "Funciona como software y termina en cuanto se pausa"
+        },
         "table": {
           "duration": "Duration",
+          "durationUnits": {
+            "label": "Unidad",
+            "none": "Indefinido",
+            "rounds": "Turnos de accion",
+            "seconds": "Segundos",
+            "minutes": "Minutos",
+            "hours": "Horas",
+            "days": "Dias"
+          },
+          "usagesMax": "Dosis usadas",
+          "isAmmo": "Paquete de munición",
+          "wearOffSv": "Estrés al pasar el efecto (SV)",
+          "usagesTip": "Usadas / Max",
           "addictionModifier": "Addiction Mod",
           "addictionType": "Addiction Type",
           "applicationVectors": {
@@ -1126,17 +1181,8 @@
           },
           "category": {
             "label": "Category",
-            "cognitive": "Cognitive Drug",
-            "combat": "Combat Drug",
-            "health": "Health Drug",
-            "nano": "Nanodrug",
-            "narco": "Narcoalgorithm",
-            "petals": "Petal",
-            "psi": "Psi Drug",
-            "rec": "Recreational",
-            "social": "Social Drug",
-            "toxins": "Toxin",
-            "nanotox": "Nanotoxin"
+            "drug": "Droga",
+            "toxin": "Toxina"
           },
           "type": {
             "label": "Drug Type",
@@ -1144,6 +1190,52 @@
             "nano": "Nano",
             "electronic": "Electronic"
           }
+        },
+        "mechanics": {
+          "tab": "Mecánica",
+          "none": "Ninguno",
+          "checkHeadline": "Chequeo al tomarla",
+          "aptitude": "Aptitud",
+          "modifier": "Modificador",
+          "failure": "Si falla",
+          "lasts": "Duración",
+          "successPsi": "Penalización psi con éxito",
+          "failures": {
+            "incapacitated": "Incapacitado",
+            "immobilized": "Inmovilizado",
+            "blocksPsi": "Psi bloqueado",
+            "stress": "Estrés (VE)",
+            "damage": "Daño (VD)"
+          },
+          "overTimeHeadline": "Efectos con el tiempo",
+          "damage": "Daño por tic",
+          "interval": "Cada",
+          "ticks": "Tics",
+          "ticksTip": "Déjalo vacío mientras dure la dosis",
+          "intervals": {
+            "turn": "Turno de acción",
+            "hour": "Hora"
+          },
+          "growingModifier": "Modificador creciente",
+          "growingModifierTip": "Se suma a todas las acciones en cada intervalo, p. ej. -5 por hora",
+          "incapacitates": "Incapacita al llegar a DUR",
+          "incapacitatesTip": "Incapacitado cuando el modificador creciente alcanza la Durabilidad del objetivo",
+          "healing": "Diálogo de curación",
+          "healingTip": "Mientras dure una dosis, el diálogo de curación empieza con este añadido",
+          "harm": "Daño",
+          "grantsHeadline": "Rasgos temporales",
+          "grantPack": "Compendio",
+          "grantFolder": "Carpeta",
+          "grantItem": "Objeto",
+          "random": "Aleatorio",
+          "connectorAnd": "Y",
+          "connectorOr": "O",
+          "connectorTip": "O empieza un paquete nuevo; se tira uno de los paquetes con la misma probabilidad",
+          "grantDescription": "Editar título y descripción",
+          "grantDescriptionHint": "Se escribe sobre la descripción del objeto.",
+          "grantTitlePlaceholder": "Título adicional (opcional)",
+          "grantDescriptionPlaceholder": "Descripción adicional (opcional)",
+          "grantTitleHint": "Aparece entre paréntesis tras el nombre del objeto."
         }
       },
       "additionalSkill": {
@@ -1213,11 +1305,52 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "Inmunidades aprendidas",
+          "forget": "Olvidar"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Fatiga adrenal",
+          "reach": "Ventaja de alcance",
+          "camouflage": "Camuflaje (no contra radar, rayos X, gamma o infrarrojo)",
+          "camouflageStill": "Camuflaje, quieto y desnudo o con ropa inteligente",
+          "commands": "Entender órdenes",
+          "touch": "Basado en el tacto",
+          "navigation": "Navegación, mapas, rutas",
+          "hearing": "Oído",
+          "pheromones": "Misma especie, puede olerte",
+          "smell": "Olfato",
+          "scentEmotions": "Oler emociones, a quemarropa",
+          "vision": "Vista",
+          "microManipulation": "Micro o nanomanipulación",
+          "glide": "Planeo de larga distancia",
+          "grappling": "Presa",
+          "climbing": "Escalada",
+          "concealed": "Objeto oculto",
+          "impersonateMesh": "Suplantar un ego de la hipermalla",
+          "meshCutOff": "Desconectado de la hipermalla",
+          "magneticGrip": "Agarre magnético",
+          "mimicry": "Suplantar a un objetivo estudiado (en lugar de +10)",
+          "recall": "Recordar",
+          "neuralFatigue": "Fatiga del sistema nervioso",
+          "knockout": "Resistir un noqueo optogenético",
+          "balance": "Equilibrio",
+          "disguise": "Disfraz o suplantación",
+          "disguisedAsPerson": "Disfrazado de una persona concreta",
+          "stress": "Contra estrés o un trastorno desencadenado",
+          "swarmLeverage": "Palanca, fuerza, destreza fina u objetos pequeños"
+        },
+        "skillSetup": {
+          "headline": "Habilidades especiales",
+          "none": "Ninguna elegida",
+          "button": "Elegir"
         }
       }
     },
     "roll": {
       "dialog": {
+        "underTheInfluence": "Bajo los efectos",
         "generalModHeadline": "General Modifiers",
         "attackerHeadline": "Attacker Modifiers",
         "defenderHeadline": "Defender Modifiers",
@@ -1341,6 +1474,9 @@
               "moderate": "Moderate (-20)",
               "major": "Major (-30)"
             }
+          },
+          "weaponSelect": {
+            "drugsHeadline": "Drogas y toxinas"
           }
         },
         "melee": {
@@ -1400,7 +1536,9 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology"
-        }
+        },
+        "augmentations": "Aumentos",
+        "dodgeCoverLabel": "Esquivar tras cobertura"
       },
       "successType": {
         "success": "Success",
@@ -1430,6 +1568,8 @@
       },
       "announce": {
         "global": "Situational",
+        "globalEffects": "Efectos activos",
+        "intoxicated": "Intoxicado",
         "favor": "Favor Modifier",
         "specialization": "Specialization",
         "encumberance": "Encumberance",
@@ -1462,6 +1602,7 @@
           "autoPushTooltip": "Empuje Automático",
           "actorGone": "El personaje al que pertenece esta prueba de infección ya no existe.",
           "noBioBrain": "El Psi solo funciona desde un cerebro biológico. Un Cerebro Cibernético lo bloquea, y un infomorfo no tiene sistema nervioso alguno.",
+          "blockedByDrug": "Una droga bloquea tu psi.",
           "substrateBlockedTooltip": "El Psi necesita un cerebro biológico",
           "substrateMismatch": "Cerebro biológico en un cuerpo sintético"
         },
@@ -1601,6 +1742,25 @@
       }
     },
     "dialog": {
+      "selectDrugVector": {
+        "header": "Que forma?",
+        "copy": "Esta droga viene en distintas formas: cual compraste? La forma elegida define como se toma una dosis y cuanto tarda en actuar.",
+        "asAmmo": "Paquete de munición: se carga en un arma en lugar de tomarse"
+      },
+      "doseRecipient": {
+        "header": "¿Para quién es?",
+        "copy": "¿Tomas la dosis tú mismo o se la ofreces a otra persona? Con Mayús+clic la tomas tú al instante.",
+        "self": "Para mí",
+        "other": "Objetivo dispuesto",
+        "otherHint": "Un objetivo que no intenta impedir que le apliques una dosis.",
+        "unwilling": "Objetivo reacio",
+        "unwillingHint": "Un objetivo que se resiste a que te acerques."
+      },
+      "selectDoseNpc": {
+        "header": "Elegir un PNJ",
+        "copy": "¿Quién recibe la dosis? Escribe para filtrar la lista.",
+        "search": "Buscar…"
+      },
       "selectTrait": {
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
@@ -1630,9 +1790,97 @@
         "standardDescription": "Añade todo el Ware, Traits y Flaws listados en las ranuras de Mejora de este cuerpo.",
         "flatLabel": "Sin mejoras",
         "flatDescription": "Añade el cuerpo tal cual, sin ninguna de sus mejoras listadas."
+      },
+      "doseDefense": {
+        "header": "Implantes defensivos",
+        "copy": "Tus {ware} debilitarían {name}. ¿Efecto completo o débil de la droga?",
+        "filter": "Efecto débil de la droga",
+        "full": "Efecto completo de la droga"
+      },
+      "wareSkills": {
+        "header": "{ware}: Habilidades especiales",
+        "kind": {
+          "hardware": "{ware} ({bonus}) ayuda con habilidades de Hardware. Marca tus habilidades especiales que sean de Hardware:",
+          "disguise": "{ware} ({bonus}) ayuda con Habilidad exótica: Disfraz. Marca tus habilidades especiales de disfraz:"
+        },
+        "noSkills": "Este personaje aún no tiene habilidades especiales. Puedes configurarlo después en la hoja del implante."
+      },
+      "doseHistory": {
+        "header": "Historial de dosis",
+        "copy": "{actor} tomó <strong>{name}</strong> <strong class=\"dose-history-highlight\">{day} veces</strong> en las <strong class=\"dose-history-highlight\">últimas 24 horas</strong> y <strong class=\"dose-history-highlight\">{week} veces</strong> en los <strong class=\"dose-history-highlight\">últimos 7 días</strong>."
+      },
+      "targeting": {
+        "fewerTitle": "Menos objetivos",
+        "fewerHeadline": "Menos objetivos que dosis",
+        "fewerCopy": "El arma reparte {max} dosis. ¿Seguro que quieres seleccionar solo {count} objetivos?",
+        "fewerConfirm": "Confirmar"
       }
     },
     "chat": {
+      "dose": {
+        "taken": "He tomado una dosis de <strong>{name}</strong>",
+        "renewed": "He tomado otra dosis de <strong>{name}</strong>, lo que reinicia su duracion",
+        "form": "Forma",
+        "onset": "Inicio",
+        "duration": "Duracion",
+        "untilEnded": "Hasta que se termine",
+        "lastDose": "Esa fue la ultima dosis.",
+        "usedBy": "Usada por {name}",
+        "outcomePsiBlocked": "<strong>{name}</strong> bloquea mi psi",
+        "outcomeIncapacitated": "<strong>{name}</strong> me deja incapacitado",
+        "outcomeImmobilized": "<strong>{name}</strong> me deja inmovilizado",
+        "incapacitatedEffect": "Incapacitado ({name})",
+        "immobilizedEffect": "Inmovilizado ({name})",
+        "rollCheck": "Tirar {check}",
+        "checkRolled": "Chequeo tirado",
+        "checkNeeded": "<strong>{name}</strong> exige un {check}",
+        "checkLabel": "Chequeo de {aptitude}",
+        "chooseNpc": "Seleccionar un PNJ",
+        "chooseTarget": "Elegir en el lienzo",
+        "useOnMe": "Usar en mí",
+        "useOnSelection": "Usar en la selección",
+        "offered": "Ofrezco una dosis de <strong>{name}</strong>",
+        "woreOff": "Mi dosis de <strong>{name}</strong> ha dejado de hacer efecto",
+        "endedEarly": "Mi dosis de <strong>{name}</strong> se terminó antes de tiempo",
+        "wearOffSv": "Estrés al pasar el efecto (SV)",
+        "rollWearOff": "Tirar estrés",
+        "wearOffFlavor": "Estrés al pasar el efecto: {name}",
+        "app": "App",
+        "overTimeFlavor": "{name} ({count}x)",
+        "rollDamage": "Tirar daño",
+        "damageFlavor": "{name} daña el cuerpo",
+        "panicFlavor": "Estrés de pánico: {name}",
+        "granted": "{name} otorga: {items}",
+        "ware": {
+          "toxinFilters": "Filtros de toxinas",
+          "medichines": "Medichines",
+          "nanophages": "Nanófagos",
+          "both": "{first} y {second}",
+          "digestiveSymbiotes": "Simbiontes digestivos",
+          "immunizers": "Inmunizadores"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>: mis {ware} podrían bloquearla",
+        "rollFilterCheck": "Tirar chequeo de SOM ({ware})",
+        "filteredOut": "Mis {ware} bloquean <strong>{name}</strong>",
+        "nullified": "{ware} anulan <strong>{name}</strong>",
+        "immune": "Soy inmune a <strong>{name}</strong>",
+        "becameImmune": "Mis inmunizadores me hacen inmune a <strong>{name}</strong>",
+        "immunizerTest": "Mis inmunizadores analizan <strong>{name}</strong> (Medicina: Farmacología {target})",
+        "immunizerSuccess": "Inmune a partir de ahora",
+        "immunizerFailure": "Esta vez no lo aprenden",
+        "demandWillpower": "Exigir voluntad",
+        "doseHistoryTip": "Cuántas veces se tomó esta droga recientemente",
+        "addictionCheckNeeded": "<strong>{name}</strong>: resistir la adicción (chequeo de VOL {modifier})",
+        "rollAddictionCheck": "Tirar chequeo de VOL ({modifier})",
+        "addictionModifier": "Modificador de adicción ({name})",
+        "addictedEgo": "Mi ego es adicto a <strong>{name}</strong>",
+        "addictedBody": "Mi cuerpo es adicto a <strong>{name}</strong>",
+        "addictedBoth": "Mi ego y mi cuerpo son adictos a <strong>{name}</strong>",
+        "addictionRaisedEgo": "La adicción de mi ego a <strong>{name}</strong> sube al nivel {level}",
+        "addictionRaisedBody": "La adicción de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
+        "addictionRaisedBoth": "La adicción de mi ego y de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
+        "unaffected": "{drug} no puede actuar en el cuerpo de {name}."
+      },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
         "swapResult": "Swap Result",
@@ -1640,6 +1888,29 @@
         "psiInfection": "Roll Psi Infection",
         "weaponDamage": "Roll Weapon Damage",
         "psiDamage": "Tirar Daño del Sleight"
+      },
+      "wareSetup": {
+        "headline": "Configura tus implantes",
+        "copy": "Algunos implantes dan bonificaciones a habilidades especiales. Indica una vez para cuáles de tus habilidades especiales sirve cada uno.",
+        "done": "Todos los ajustes hechos."
+      },
+      "attack": {
+        "applyDose": "Aplicar dosis a los objetivos seleccionados",
+        "applyTargets": "Aplicar a los objetivos seleccionados",
+        "targets": "Objetivos: {names}",
+        "hitByPool": "El gasto de reserva convirtió el ataque con {weapon} en un impacto."
+      },
+      "defence": {
+        "headline": "Defenderse de {weapon}",
+        "doseLabel": "{name}, una dosis cada uno",
+        "dodge": "Esquivar",
+        "parry": "Parar",
+        "rollAll": "Tirar el resto a la vez",
+        "outcome": {
+          "hit": "Impacto",
+          "half": "Esquivado en parte: media dosis",
+          "none": "Evitado"
+        }
       }
     },
     "rule": {
@@ -1786,6 +2057,8 @@
       "customHint": "Minutos",
       "effects": "Efectos activos",
       "noEffects": "Ahora mismo no hay nada activo",
+      "sectionPlayers": "Personajes jugadores",
+      "sectionThreats": "Personajes no jugadores y amenazas",
       "endNow": "Terminar",
       "remaining": "Restante",
       "owner": "Personaje",
@@ -1825,7 +2098,15 @@
       "legacy": "<label class='resource-label'>Thank you for playing Eclipse Phase with our system. To guarantee the overall file integrity in the upcoming updates, we ask you to shortly migrate your data to the latest structure, provided with update 0.8.1.<p/><p/><b>This is necessary for implementing even cooler features than we already have (like lokalization e.g.), and will only take a few seconds.</b><p/><p/> Thank you and have a great day playing!<p><i>Note: Please note that drugs underwent a general overhaul. Just pull them from the compendium again and delete the old ones.</i></p></label>",
       "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",
       "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
-      "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>"
+      "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>",
+      "notice": {
+        "windowTitle": "Migración pendiente",
+        "subheader": "Hola, agente, tienes un mensaje de Laph",
+        "backup": "IMPORTANTE: Hasta ahora tus datos no se han actualizado ni modificado. Si aún no has guardado tu mundo, cierra sin migrar y crea una copia de seguridad para no perder datos durante la migración.",
+        "reachOut": "¡No olvides ponerte en contacto, agente!",
+        "migrate": "¡Migrar ahora!",
+        "close": "Cerrar sin migrar"
+      }
     },
     "systemMessage": {
       "general": {
@@ -1855,6 +2136,14 @@
         "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait.",
         "enhancementsAdded": "{count} mejora(s) añadida(s) a {body}."
       }
+    },
+    "targeting": {
+      "cancelHint": "Pulsa ESC o haz clic derecho sin objetivos para cancelar.",
+      "confirmHint": "Clic derecho para confirmar",
+      "remaining": "Quedan {count} objetivos",
+      "limitReached": "Se ha alcanzado el máximo de {max} objetivos. Vuelve a hacer clic en un objetivo marcado para desmarcarlo.",
+      "selectTarget": "Elegir objetivo",
+      "targetChosen": "Objetivo elegido"
     }
   }
 }

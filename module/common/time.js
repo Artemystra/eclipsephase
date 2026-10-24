@@ -3,6 +3,18 @@ const SECONDS_PER_HOUR = 3600;
 const SECONDS_PER_DAY = 86400;
 const DAYS_PER_YEAR = 365;
 
+// Seconds in one of each duration unit an effect or a drug records.
+export const SECONDS_PER = { seconds: 1, minutes: SECONDS_PER_MINUTE, hours: SECONDS_PER_HOUR, days: SECONDS_PER_DAY };
+
+/**
+ * Whether a span of { value, units } is a real duration rather than "until ended".
+ * @param {Object} span - The span
+ * @returns {Boolean} True for a positive value with units
+ */
+export function isTimedSpan(span) {
+  return Number.isFinite(span?.value) && span.value > 0 && !!span.units;
+}
+
 // Swatch Internet Time: one day is 1000 beats. Beats are derived by integer maths over the day
 // rather than through a 86.4-second constant, which loses exactness at the half-day mark.
 const BEATS_PER_DAY = 1000;
@@ -198,4 +210,21 @@ export function durationRunOut(effect) {
   if (effect?.duration?.expired === true) return true;
   const remaining = effect?.duration?.remaining;
   return Number.isFinite(remaining) && remaining <= 0;
+}
+
+// The flags the system puts on its own temporary effects - a wound or trauma being ignored, a chi
+// push, a dose. These end on an event rather than on the clock, so Foundry does not always track
+// them, and the flag is what marks them as running.
+export const TEMP_EFFECT_FLAGS = ["effectKey", "chiPushBoost", "dose"];
+
+/**
+ * Whether an effect is a running temporary one: anything Foundry tracks a duration for, plus the
+ * system's own temporary effects. The Time Panel lists these, and a pool one of them raises is
+ * handed to the actor's current value for as long as it runs.
+ * @param {ActiveEffect} effect - The effect to judge
+ * @returns {Boolean} True when the effect is temporary
+ */
+export function isRunningEffect(effect) {
+  if (effect?.isTemporary) return true;
+  return TEMP_EFFECT_FLAGS.some(flag => effect?.getFlag?.("eclipsephase", flag) !== undefined);
 }

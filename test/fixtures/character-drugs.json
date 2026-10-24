@@ -1,0 +1,67 @@
+{
+  "name": "Carrying Drugs",
+  "type": "character",
+  "settings": {
+    "superBrew": true
+  },
+  "system": {
+    "aptitudes": {
+      "cog": { "value": 15 },
+      "int": { "value": 15 },
+      "ref": { "value": 15 },
+      "sav": { "value": 15 },
+      "som": { "value": 15 },
+      "wil": { "value": 15 }
+    },
+    "activeMorph": "o4auLt59iyV8732k",
+    "skillsVig": {
+      "guns": { "value": 40 }
+    }
+  },
+  "items": [
+    {
+      "_id": "drugstack000001",
+      "name": "Grin",
+      "type": "drug",
+      "system": {
+        "active": true,
+        "quantity": 3,
+        "usagesUsed": 3,
+        "usagesMax": 5,
+        "drugType": "biochem",
+        "duration": { "value": 3, "units": "hours" },
+        "addictionMod": "-10",
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "drugstowed00001",
+      "name": "Comfurt",
+      "type": "drug",
+      "system": {
+        "active": false,
+        "quantity": 1,
+        "usagesUsed": 0,
+        "usagesMax": 5,
+        "drugType": "biochem",
+        "duration": { "value": 8, "units": "hours" },
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "ammostack000001",
+      "name": "Regular Rounds",
+      "type": "ammo",
+      "system": {
+        "active": true,
+        "quantity": 12,
+        "cost": "minor"
+      }
+    }
+  ],
+  "packItems": [
+    "morphs/Ghost_o4auLt59iyV8732k.json",
+    "drugs-and-toxins/Randomizer_nJvlItnG1XlfS7ET.json",
+    "drugs-and-toxins/Disruptor_CejEulgdk7Y2YANY.json"
+  ]
+}

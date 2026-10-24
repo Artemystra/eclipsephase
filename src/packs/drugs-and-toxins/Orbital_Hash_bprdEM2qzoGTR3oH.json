@@ -2,8 +2,54 @@
   "name": "Orbital Hash",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
-  "effects": [],
-  "folder": null,
+  "effects": [
+    {
+      "_id": "ZGhQib3WQBj7CrF9",
+      "name": "Orbital Hash",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.traumaMod",
+            "value": -1,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!bprdEM2qzoGTR3oH.ZGhQib3WQBj7CrF9"
+    }
+  ],
+  "folder": "XLpKIp0Q6benJzPo",
   "sort": 0,
   "flags": {
     "core": {}
@@ -13,20 +59,49 @@
     "additionalSystems": {},
     "description": "Ignore 1 trauma, –10 Know Tests/memory-related COG Checks",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "rec",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "3 hours",
+    "duration": {
+      "value": 3,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "rollOptions": [
+      {
+        "id": "memory",
+        "label": "ep2e.item.drug.rollOptions.orbitalhashMemory",
+        "value": -10,
+        "appliesTo": [
+          "know",
+          "cog"
+        ]
+      }
+    ],
+    "overTime": {
+      "damage": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "interval": "turn",
+      "ticks": null,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

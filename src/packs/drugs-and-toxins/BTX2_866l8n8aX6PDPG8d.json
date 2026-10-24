@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/toxic-512.png",
   "effects": [],
-  "folder": null,
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -11,22 +11,55 @@
   "_id": "866l8n8aX6PDPG8d",
   "system": {
     "additionalSystems": {},
-    "description": "DV 2d10 +3 for 3 turns, SOM Check or immobilized for 1 hour",
+    "description": "DV 2d10 + 10 for 3 turns, SOM Check or immobilized for 1 hour",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "major",
     "slotType": "consumable",
-    "category": "toxins",
+    "category": "toxin",
     "dermal": true,
     "inhalation": false,
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "3 turns/1 hour",
+    "duration": {
+      "value": 1,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5,
+    "useCheck": {
+      "aptitude": "som",
+      "modifier": 0,
+      "failure": "immobilized",
+      "duration": {
+        "value": 1,
+        "units": "hours"
+      },
+      "stress": {
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
+      },
+      "successPsiPenalty": 0
+    },
+    "overTime": {
+      "damage": {
+        "d10": 2,
+        "d6": 0,
+        "bonus": 10
+      },
+      "interval": "turn",
+      "ticks": 3,
+      "modifier": 0,
+      "incapacitates": false
+    },
+    "healingAddition": "",
+    "grants": []
   },
   "ownership": {
     "default": 0,

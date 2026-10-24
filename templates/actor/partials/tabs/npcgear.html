@@ -203,6 +203,27 @@
                         <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noGearCopy"}}</label>
                         {{/if}}
                     </div>
+                    {{#if actor.consumable}}
+                    <div class="flexrow" style="align-items: center">
+                        <i class="fas fa-syringe awesomeIcon" style="color: var(--inactive); flex: 0.05;"></i>
+                        <label class="resource-label">{{localize "ep2e.inventory.consumablesLabel"}}:</label>
+                    </div>
+                    <div class="flexrow headSpace">
+                        {{#each actor.consumable as |item id|}}
+                        <div class="item flexrow trunContainer flex-between wantToKnowMoreFixed" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px; background-color: var(--pitchBorder); padding: 0 10px 0 10px;">
+                            <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
+                            <label class="flex-group-center noMargin
+                            alignCenter" style="background: none;
+                            font-size: 12px; flex:
+                            0.4"><i>{{localize item.system.slotName}}</i></label>
+                            <div class="flex-group-right" style="flex: 0.2;">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
                     <div class="flexrow flex-group-center">
                         <img src="systems/eclipsephase/resources/icons/ammo.png" style="max-width: 20px; padding-bottom: 3px;"/>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.ammunitionLabel"}}:</label>

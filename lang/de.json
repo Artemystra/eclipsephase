@@ -135,7 +135,20 @@
         "registeredId": "Registrierte ID: {name}"
       },
       "warnings": {
-        "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert."
+        "doseNeedsBiomorph": "Diese Droge wirkt nur in einem biologischen Koerper.",
+        "doseNeedsCyberbrain": "Diese Droge laeuft nur auf einem Infomorph oder einem Cyberbrain.",
+        "noDosesLeft": "{name} hat keine Dosen mehr.",
+        "doseCheckRolled": "Diese Probe wurde schon gewürfelt.",
+        "doseNoScene": "Öffne eine Szene, um dort ein Ziel zu wählen.",
+        "doseNeedsGM": "Ein GM muss verbunden sein, damit die Dosis übergeben werden kann.",
+        "doseNoSelection": "Wähle zuerst ein Token aus.",
+        "doseNeedsClaimant": "Weise dir einen Charakter zu oder wähle als GM ein Token aus, um diese Dosis zu nehmen.",
+        "doseAlreadyUsed": "Diese Dosis wurde schon genommen.",
+        "offerPackEmpty": "Das Pack, aus dem diese Dosis angeboten wurde, ist leer oder nicht mehr da.",
+        "ammoPackNotTaken": "{name} ist ein Munitionspack: Lade es in eine Waffe, statt es einzunehmen.",
+        "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert.",
+        "attackDelivered": "Dieser Angriff wurde bereits auf seine Ziele angewendet.",
+        "attackNoPayload": "Die Waffe weiß nicht, mit welcher Droge sie geladen ist. Lade sie zuerst nach."
       },
       "button": {
         "edit": "Editieren",
@@ -168,6 +181,8 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        "deleteStackCopy": "<b>Vorsicht:</b>Du loeschst aus einem Stapel. Waehle, wie viele verschwinden sollen - der Rest bleibt auf deinem Bogen.",
+        "deleteStackLabel": "Anzahl zu loeschen",
         "deleteArmorWithBodyCopy": "<b>Vorsicht:</b>Du bist dabei, {body} zu löschen. Diesem Körper ist Rüstung zugewiesen - beim Löschen von {body} wird auch seine Rüstung gelöscht.",
         "stashArmorCopy": "Möchtest du {name} verstauen? Du findest es jederzeit in deinem Inventar wieder.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>",
@@ -1081,7 +1096,8 @@
             "kinetic": "Kinetisch",
             "seeker": "Zielsuchend",
             "spray": "Flüssigkeit",
-            "rail": "Magnetisch"
+            "rail": "Magnetisch",
+            "chemical": "Chemikalie oder Droge"
           },
           "trait": {
             "armorPiercing": "Panzerbrechend",
@@ -1134,8 +1150,47 @@
         }
       },
       "drug": {
+        "rollOptions": {
+          "aggroIntimidate": "Provozieren zum Einschüchtern oder Reizen",
+          "aggroOtherSocial": "andere soziale Proben",
+          "blabInterrogation": "Widerstand gegen Verhöre",
+          "buzzSuggestion": "Widerstand gegen Beeinflussung",
+          "crgasSight": "Wahrnehmung über Sicht",
+          "flightFear": "gegen Einschüchterung oder Angst",
+          "hitherSeduce": "Provozieren zum Verführen",
+          "juiceFear": "gegen Angst oder Manipulation",
+          "neemRecall": "Erinnern",
+          "orbitalhashMemory": "Wissensfertigkeiten oder Erinnern",
+          "oxytocinaTrust": "wenn Vertrauen eine Rolle spielt",
+          "randomizerSocial": "soziale Proben, per Zufall",
+          "stiffResist": "gegen Überreden oder Provozieren",
+          "tongzhiShared": "Überreden bei gemeinsamen Interessen",
+          "monoNoAwareArt": "auf Kunst-Fertigkeiten",
+          "gravyHighGravity": "gegen Mali durch hohe Schwerkraft"
+        },
+        "takeDose": "Dosis nehmen",
+        "dosesLeft": "Verbleibende Dosen",
+        "onset": {
+          "immediate": "Wirkt sofort",
+          "turn": "Wirkt nach einer Handlungsrunde",
+          "minutes15": "Wirkt nach 15 Minuten",
+          "app": "Laeuft wie Software und endet, sobald sie pausiert wird"
+        },
         "table": {
           "duration": "Dauer",
+          "durationUnits": {
+            "label": "Einheit",
+            "none": "Offen",
+            "rounds": "Handlungsrunden",
+            "seconds": "Sekunden",
+            "minutes": "Minuten",
+            "hours": "Stunden",
+            "days": "Tage"
+          },
+          "usagesMax": "Dosen verbraucht",
+          "isAmmo": "Munitionspack",
+          "wearOffSv": "Stress beim Nachlassen (SV)",
+          "usagesTip": "Benutzt / Max",
           "addictionModifier": "Suchtmod",
           "addictionType": "Suchttyp",
           "applicationVectors": {
@@ -1147,17 +1202,8 @@
           },
           "category": {
             "label": "Kategorie",
-            "cognitive": "Kognitive Droge",
-            "combat": "Kampfdroge",
-            "health": "Heildroge",
-            "nano": "Nanodroge",
-            "narco": "Narcoalgorithmus",
-            "petals": "Blatt",
-            "psi": "Psidroge",
-            "rec": "Widerherstellung",
-            "social": "Soziale Droge",
-            "toxins": "Toxin",
-            "nanotox": "Nanotoxin"
+            "drug": "Droge",
+            "toxin": "Toxin"
           },
           "type": {
             "label": "Drogentyp",
@@ -1165,6 +1211,52 @@
             "nano": "Nano",
             "electronic": "Elektronisch"
           }
+        },
+        "mechanics": {
+          "tab": "Mechanik",
+          "none": "Keine",
+          "checkHeadline": "Check beim Nehmen",
+          "aptitude": "Attribut",
+          "modifier": "Modifikator",
+          "failure": "Bei Misserfolg",
+          "lasts": "Dauer",
+          "successPsi": "Psi-Abzug bei Erfolg",
+          "failures": {
+            "incapacitated": "Handlungsunfähig",
+            "immobilized": "Bewegungsunfähig",
+            "blocksPsi": "Psi blockiert",
+            "stress": "Stress (SV)",
+            "damage": "Schaden (DV)"
+          },
+          "overTimeHeadline": "Wirkung über Zeit",
+          "damage": "Schaden pro Tick",
+          "interval": "Alle",
+          "ticks": "Ticks",
+          "ticksTip": "Leer lassen: solange die Dosis wirkt",
+          "intervals": {
+            "turn": "Aktionsrunde",
+            "hour": "Stunde"
+          },
+          "growingModifier": "Wachsender Modifikator",
+          "growingModifierTip": "Kommt jedes Intervall auf alle Aktionen dazu, z. B. -5 pro Stunde",
+          "incapacitates": "Lähmt bei DUR",
+          "incapacitatesTip": "Handlungsunfähig, sobald der wachsende Modifikator die Durability des Ziels erreicht",
+          "healing": "Heilungsdialog",
+          "healingTip": "Solange eine Dosis wirkt, startet der Heilungsdialog mit dieser Ergänzung",
+          "harm": "Schaden",
+          "grantsHeadline": "Temporäre Traits",
+          "grantPack": "Kompendium",
+          "grantFolder": "Ordner",
+          "grantItem": "Item",
+          "random": "Zufällig",
+          "connectorAnd": "UND",
+          "connectorOr": "ODER",
+          "connectorTip": "ODER beginnt ein neues Paket; eines der Pakete wird mit gleicher Wahrscheinlichkeit erwürfelt",
+          "grantDescription": "Titel und Beschreibung bearbeiten",
+          "grantDescriptionHint": "Steht über der Beschreibung des Items.",
+          "grantTitlePlaceholder": "Zusätzlicher Titel (optional)",
+          "grantDescriptionPlaceholder": "Zusätzliche Beschreibung (optional)",
+          "grantTitleHint": "Steht in Klammern hinter dem Namen des Items."
         }
       },
       "additionalSkill": {
@@ -1242,11 +1334,52 @@
             "m": "M",
             "mn": "MN"
           }
+        },
+        "immunities": {
+          "headline": "Gelernte Immunitäten",
+          "forget": "Vergessen"
+        },
+        "rollOptions": {
+          "adrenalFatigue": "Adrenale Erschöpfung",
+          "reach": "Reichweitenvorteil",
+          "camouflage": "Tarnung (nicht gegen Radar, Röntgen, Gamma, Infrarot)",
+          "camouflageStill": "Tarnung, still und unbekleidet oder in Smart Clothing",
+          "commands": "Befehle verstehen",
+          "touch": "Tastbasiert",
+          "navigation": "Orientierung, Karten, Routen",
+          "hearing": "Hören",
+          "pheromones": "Gleiche Spezies, kann dich riechen",
+          "smell": "Riechen",
+          "scentEmotions": "Gefühle riechen, Nahdistanz",
+          "vision": "Sehen",
+          "microManipulation": "Mikro- oder Nanoarbeit",
+          "glide": "Gleiten über lange Strecken",
+          "grappling": "Ringen",
+          "climbing": "Klettern",
+          "concealed": "Verborgener Gegenstand",
+          "impersonateMesh": "Hypermesh-Ego imitieren",
+          "meshCutOff": "Vom Hypermesh abgeschnitten",
+          "magneticGrip": "Magnetischer Halt",
+          "mimicry": "Studierte Person imitieren (statt +10)",
+          "recall": "Erinnern",
+          "neuralFatigue": "Erschöpfung des Nervensystems",
+          "knockout": "Optogenetischem Knockout widerstehen",
+          "balance": "Balance",
+          "disguise": "Verkleidung oder Imitation",
+          "disguisedAsPerson": "Als bestimmte Person verkleidet",
+          "stress": "Gegen Stress oder ausgelöste Störung",
+          "swarmLeverage": "Hebelkraft, Kraft, Feinmotorik oder kleine Objekte"
+        },
+        "skillSetup": {
+          "headline": "Spezialfertigkeiten",
+          "none": "Keine gewählt",
+          "button": "Wählen"
         }
       }
     },
     "roll": {
       "dialog": {
+        "underTheInfluence": "Unter Einfluss",
         "generalModHeadline": "Allgemein",
         "attackerHeadline": "Angreifer",
         "defenderHeadline": "Verteidiger",
@@ -1308,7 +1441,8 @@
         "ranged": {
           "weaponSelect": {
             "headline": "Waffenwahl",
-            "modeSelectionHeadline": "Waffenmodus Wählen"
+            "modeSelectionHeadline": "Waffenmodus Wählen",
+            "drugsHeadline": "Drogen und Toxine"
           },
           "attacker": {
             "smartLinkLabel": "Smart Link (sonst -10)",
@@ -1435,7 +1569,9 @@
         },
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie"
-        }
+        },
+        "augmentations": "Augmentierungen",
+        "dodgeCoverLabel": "Hinter Deckung ausweichen"
       },
       "successType": {
         "success": "Erfolg",
@@ -1465,6 +1601,8 @@
       },
       "announce": {
         "global": "Situationsmod",
+        "globalEffects": "Laufende Effekte",
+        "intoxicated": "Berauscht",
         "favor": "Gefallenmod",
         "specialization": "Spezialisierung",
         "encumberance": "Überlastung",
@@ -1498,6 +1636,7 @@
           "autoPushTooltip": "Auto-Push",
           "actorGone": "Der Charakter, zu dem dieser Infektionstest gehört, existiert nicht mehr.",
           "noBioBrain": "Psi funktioniert nur aus einem biologischen Gehirn. Ein Cyberhirn blockiert es, und ein Infomorph hat gar kein Nervensystem.",
+          "blockedByDrug": "Eine Droge blockiert dein Psi.",
           "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
           "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper"
         },
@@ -1645,6 +1784,25 @@
       }
     },
     "dialog": {
+      "selectDrugVector": {
+        "header": "Welche Form?",
+        "copy": "Diese Droge gibt es in verschiedenen Formen: Welche hast du gekauft? Die gewaehlte Form bestimmt, wie eine Dosis genommen wird und wie schnell sie wirkt.",
+        "asAmmo": "Munitionspack: wird in eine Waffe geladen statt eingenommen"
+      },
+      "doseRecipient": {
+        "header": "Für wen?",
+        "copy": "Nimmst du die Dosis selbst, oder bietest du sie jemand anderem an? Mit Shift-Klick nimmst du sie sofort selbst.",
+        "self": "Für mich",
+        "other": "Freiwilliges Ziel",
+        "otherHint": "Ein Ziel, das nicht versucht, dich daran zu hindern, ihm eine Dosis zu verabreichen.",
+        "unwilling": "Unfreiwilliges Ziel",
+        "unwillingHint": "Ein Ziel, das sich gegen deine Annäherung wehrt."
+      },
+      "selectDoseNpc": {
+        "header": "NSC wählen",
+        "copy": "Wer bekommt die Dosis? Tippe, um die Liste zu filtern.",
+        "search": "Suchen…"
+      },
       "selectTrait": {
         "header": "Trait Typ Wählen",
         "copy": "Hinweis: Diese Eigenschaft kann für Egos oder Morphs gewählt werden. Morpheigenschaften sind an den derzeitig bewohnten Körper gebunden, während Egoeigenschaften immer erhalten bleiben, auch wenn der Körper gewechselt wird."
@@ -1674,9 +1832,97 @@
         "standardDescription": "Fügt alle Ware, Traits und Flaws hinzu, die in den Verbesserungs-Slots dieses Körpers hinterlegt sind.",
         "flatLabel": "Flach",
         "flatDescription": "Fügt den Körper so hinzu, wie er ist, ohne die hinterlegten Verbesserungen."
+      },
+      "doseDefense": {
+        "header": "Schutz-Ware",
+        "copy": "Deine {ware} würden {name} abschwächen. Volle oder schwache Wirkung der Droge?",
+        "filter": "Schwache Drogenwirkung",
+        "full": "Volle Drogenwirkung"
+      },
+      "wareSkills": {
+        "header": "{ware}: Spezialfertigkeiten",
+        "kind": {
+          "hardware": "{ware} ({bonus}) hilft bei Hardware-Fertigkeiten. Kreuze deine Spezialfertigkeiten an, die Hardware sind:",
+          "disguise": "{ware} ({bonus}) hilft bei Exotic Skill: Disguise. Kreuze deine Spezialfertigkeiten an, die Verkleidung sind:"
+        },
+        "noSkills": "Dieser Charakter hat noch keine Spezialfertigkeiten. Du kannst das später auf dem Sheet der Ware einstellen."
+      },
+      "doseHistory": {
+        "header": "Dosis-Verlauf",
+        "copy": "{actor} hat <strong>{name}</strong> in den <strong class=\"dose-history-highlight\">letzten 24 Stunden {day}-mal</strong> und in den <strong class=\"dose-history-highlight\">letzten 7 Tagen {week}-mal</strong> genommen."
+      },
+      "targeting": {
+        "fewerTitle": "Weniger Ziele",
+        "fewerHeadline": "Weniger Ziele als Dosen",
+        "fewerCopy": "Die Waffe verteilt {max} Dosen. Willst du wirklich nur {count} Ziele auswählen?",
+        "fewerConfirm": "Bestätigen"
       }
     },
     "chat": {
+      "dose": {
+        "taken": "Ich habe eine Dosis <strong>{name}</strong> genommen",
+        "renewed": "Ich habe noch eine Dosis <strong>{name}</strong> genommen, was die Wirkdauer neu startet",
+        "form": "Form",
+        "onset": "Wirkungseintritt",
+        "duration": "Dauer",
+        "untilEnded": "Bis zum Beenden",
+        "lastDose": "Das war die letzte Dosis.",
+        "usedBy": "Genommen von {name}",
+        "outcomePsiBlocked": "<strong>{name}</strong> blockiert mein Psi",
+        "outcomeIncapacitated": "<strong>{name}</strong> macht mich handlungsunfähig",
+        "outcomeImmobilized": "<strong>{name}</strong> macht mich bewegungsunfähig",
+        "incapacitatedEffect": "Handlungsunfähig ({name})",
+        "immobilizedEffect": "Bewegungsunfähig ({name})",
+        "rollCheck": "{check} würfeln",
+        "checkRolled": "Probe gewürfelt",
+        "checkNeeded": "<strong>{name}</strong> verlangt eine {check}",
+        "checkLabel": "{aptitude}-Probe",
+        "chooseNpc": "NSC auswählen",
+        "chooseTarget": "Auf dem Canvas wählen",
+        "useOnMe": "Auf mich anwenden",
+        "useOnSelection": "Auf Auswahl anwenden",
+        "offered": "Ich biete eine Dosis <strong>{name}</strong> an",
+        "woreOff": "Meine Dosis <strong>{name}</strong> hat nachgelassen",
+        "endedEarly": "Meine Dosis <strong>{name}</strong> wurde vorzeitig beendet",
+        "wearOffSv": "Stress beim Nachlassen (SV)",
+        "rollWearOff": "Stress würfeln",
+        "wearOffFlavor": "Stress beim Nachlassen: {name}",
+        "app": "App",
+        "overTimeFlavor": "{name} ({count}x)",
+        "rollDamage": "Schaden würfeln",
+        "damageFlavor": "{name} schadet dem Körper",
+        "panicFlavor": "Panik-Stress: {name}",
+        "granted": "{name} verleiht: {items}",
+        "ware": {
+          "toxinFilters": "Toxinfilter",
+          "medichines": "Medichines",
+          "nanophages": "Nanophagen",
+          "both": "{first} und {second}",
+          "digestiveSymbiotes": "Verdauungssymbionten",
+          "immunizers": "Immunisierer"
+        },
+        "filterCheckNeeded": "<strong>{name}</strong>: Meine {ware} könnten es abwehren",
+        "rollFilterCheck": "SOM-Check würfeln ({ware})",
+        "filteredOut": "Meine {ware} halten <strong>{name}</strong> ab",
+        "nullified": "{ware} heben <strong>{name}</strong> auf",
+        "immune": "Ich bin immun gegen <strong>{name}</strong>",
+        "becameImmune": "Meine Immunisierer machen mich immun gegen <strong>{name}</strong>",
+        "immunizerTest": "Meine Immunisierer prüfen <strong>{name}</strong> (Medizin: Pharmakologie {target})",
+        "immunizerSuccess": "Ab jetzt immun",
+        "immunizerFailure": "Diesmal nicht gelernt",
+        "demandWillpower": "Willenskraft verlangen",
+        "doseHistoryTip": "Wie oft diese Droge zuletzt genommen wurde",
+        "addictionCheckNeeded": "<strong>{name}</strong>: nicht süchtig werden (WIL-Check {modifier})",
+        "rollAddictionCheck": "WIL-Check würfeln ({modifier})",
+        "addictionModifier": "Suchtmodifikator ({name})",
+        "addictedEgo": "Mein Ego ist süchtig nach <strong>{name}</strong>",
+        "addictedBody": "Mein Körper ist süchtig nach <strong>{name}</strong>",
+        "addictedBoth": "Mein Ego und mein Körper sind süchtig nach <strong>{name}</strong>",
+        "addictionRaisedEgo": "Die Sucht meines Egos nach <strong>{name}</strong> steigt auf Stufe {level}",
+        "addictionRaisedBody": "Die Sucht meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
+        "addictionRaisedBoth": "Die Sucht meines Egos und meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
+        "unaffected": "{drug} kann im Körper von {name} nicht wirken."
+      },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",
         "swapResult": "Würfel Drehen",
@@ -1684,6 +1930,29 @@
         "psiInfection": "Psi Infektion Würfeln",
         "weaponDamage": "Waffenschaden würfeln",
         "psiDamage": "Fertigkeits-Schaden würfeln"
+      },
+      "wareSetup": {
+        "headline": "Ware einstellen",
+        "copy": "Manche Ware gibt Boni auf Spezialfertigkeiten. Sag einmal, für welche deiner Spezialfertigkeiten sie jeweils gilt.",
+        "done": "Alle Anpassungen erledigt."
+      },
+      "attack": {
+        "applyDose": "Dosis auf ausgewählte Ziele anwenden",
+        "applyTargets": "Auf ausgewählte Ziele anwenden",
+        "targets": "Ziele: {names}",
+        "hitByPool": "Der Poolpunkt hat den Angriff mit {weapon} zum Treffer gemacht."
+      },
+      "defence": {
+        "headline": "Verteidigung gegen {weapon}",
+        "doseLabel": "{name}, je eine Dosis",
+        "dodge": "Ausweichen",
+        "parry": "Parieren",
+        "rollAll": "Restliche auf einmal würfeln",
+        "outcome": {
+          "hit": "Getroffen",
+          "half": "Teilweise ausgewichen: halbe Dosis",
+          "none": "Abgewehrt"
+        }
       }
     },
     "rule": {
@@ -1830,6 +2099,8 @@
       "customHint": "Minuten",
       "effects": "Laufende Effekte",
       "noEffects": "Aktuell läuft nichts",
+      "sectionPlayers": "Spielercharaktere",
+      "sectionThreats": "Nichtspielercharaktere & Bedrohungen",
       "endNow": "Beenden",
       "remaining": "Verbleibend",
       "owner": "Charakter",
@@ -1864,6 +2135,14 @@
         "updateLabel": "Update-Hinweis",
         "main": "<b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände von <b style='color: var(--highlight);'>{actor}</b> wurden automatisch in den Stash verschoben.",
         "sub": "Da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Du findest sie unter Verstaute Rüstung (Ausrüstungs-Tab) - nutze den Ausrüsten-Button daneben, um sie jederzeit einem Körper zuzuweisen."
+      },
+      "notice": {
+        "windowTitle": "Migration ausstehend",
+        "subheader": "Hey Agent, du hast eine Nachricht von Laph",
+        "backup": "WICHTIG: Bis hierher wurden deine Daten weder aktualisiert noch verändert. Falls du deine Welt noch nicht gesichert hast, schließe diesen Dialog ohne Migration und lege eine Sicherung an, damit bei der Migration nichts verloren geht.",
+        "reachOut": "Melde dich gern, Agent!",
+        "migrate": "Jetzt migrieren!",
+        "close": "Ohne Migration schließen"
       }
     },
     "systemMessage": {
@@ -1893,6 +2172,14 @@
         "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
         "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
       }
+    },
+    "targeting": {
+      "cancelHint": "ESC oder Rechtsklick ohne Ziele bricht ab.",
+      "confirmHint": "Rechtsklick zum Bestätigen",
+      "remaining": "Noch {count} Ziele",
+      "limitReached": "Die Höchstzahl von {max} Zielen ist erreicht. Klicke ein markiertes Ziel erneut an, um die Markierung zu entfernen.",
+      "selectTarget": "Ziel auswählen",
+      "targetChosen": "Ziel gewählt"
     }
   }
 }
