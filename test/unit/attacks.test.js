@@ -5,7 +5,7 @@ import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload,
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, measuredDistances, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
@@ -122,7 +122,7 @@ describe("what a chemical weapon delivers", () => {
     expect(chemicalDoses({ automatedEffects: {}, additionalEffects: { multiShot: { number: 3 } } })).toBe(0);
   });
 
-  test("a sprayer's hit beyond range offers to apply its dose to three targets instead of rolling damage, and uses three rounds", async () => {
+  test("a sprayer's hit beyond range carries a dose for three targets instead of damage, offers no target button rolled without targets, and uses three rounds", async () => {
     const actor = await shooter();
 
     const card = await fire(actor, 5);
@@ -130,7 +130,7 @@ describe("what a chemical weapon delivers", () => {
     const attack = card.getFlag("eclipsephase", "roll").targetedAttack;
     expect(attack).toMatchObject({ effect: "dose", targets: 3, area: true, defence: "ranged", delivered: false });
     expect(attack.payload.name).toBe("Grin");
-    expect(card.content).toContain("ep2e.chat.attack.applyDose");
+    expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
     expect(card.content).not.toContain("ep2e.chat.buttonLabel.weaponDamage");
     expect(actor.items.get("gun1").system.ammoMin).toBe(12);
   });
@@ -143,7 +143,7 @@ describe("what a chemical weapon delivers", () => {
     expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
   });
 
-  test("a pool spend that turns the miss into a hit shows the target button on the same card, for the attacker's owner", async () => {
+  test("a pool spend that turns the miss into a hit keeps the same card, which offers no target button rolled without targets", async () => {
     const actor = await shooter();
     await actor.update({ "system.pools.vigor.value": 2 });
     const card = await fire(actor, 91);
@@ -155,7 +155,7 @@ describe("what a chemical weapon delivers", () => {
     await ownerVision(holder);
 
     expect(createdMessages).toHaveLength(posted);
-    expect(holder.querySelector("button.targetedAttack").classList.contains("noShow")).toBe(false);
+    expect(holder.querySelector("button.targetedAttack")).toBeNull();
   });
 });
 
@@ -443,7 +443,7 @@ describe("forcing a drug on someone in melee", () => {
     expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, within: null, refuse: null, ...DOSE_CURSOR });
 
     expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "dose", targets: 1, area: false, defence: "melee" });
-    expect(card.content).toContain("ep2e.chat.attack.applyDose");
+    expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
   });
 
   test("the dose leaves the pack once the target is picked, and the defence card offers dodging and parrying", async () => {
@@ -602,6 +602,29 @@ describe("marking targets on the canvas", () => {
 
     expect((await pick).map(picked => picked.name)).toEqual(["Ana"]);
     expect(ui.notifications.warn).toHaveBeenCalledWith("not Bo");
+  });
+
+  test("a measured pick shows the distance to the token under the cursor, else to the cursor itself", async () => {
+    canvas.grid = { size: 100, distance: 1 };
+    const describe = jest.fn(distance => `${distance} m`);
+    const pick = picking(1, { multi: false, measure: { from: tokens[0], describe } });
+    const label = () => document.querySelector(".ep-targeting-range")?.textContent;
+
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 450, clientY: 50, bubbles: true }));
+    expect(label()).toBe("3 m");
+    expect(describe).toHaveBeenLastCalledWith(3, tokens[2]);
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 150, clientY: 50, bubbles: true }));
+    expect(label()).toBe("0.5 m");
+    expect(describe).toHaveBeenLastCalledWith(0.5, null);
+    press(10, 2);
+    await pick;
+  });
+
+  test("distances run edge to edge, and the dialog's measured distances read back in order", () => {
+    expect(pointGap(tokens[0], { x: 150, y: 50 }, { size: 100, distance: 2 })).toBe(1);
+    expect(pointGap(tokens[0], { x: 50, y: 50 }, { size: 100, distance: 2 })).toBe(0);
+    expect(measuredDistances({ measuredRanges: "12.5,3" })).toEqual([12.5, 3]);
+    expect(measuredDistances({ measuredRanges: "" })).toEqual([]);
   });
 
   test("a click past the limit marks nothing and says the limit is reached", async () => {

@@ -52,7 +52,7 @@ import {
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
 import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget } from "../rolls/attacks.js";
-import { tokenAt, pickTokensOnCanvas, drawTargetMarker } from "../common/targeting.js";
+import { tokenAt, pickTokensOnCanvas, attackerToken, drawTargetMarker } from "../common/targeting.js";
 import { chemicalDoses, chooseMunition, needsMunitionChoice, munitionLabel } from "../common/weapon-functions.js";
 import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
 import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
@@ -119,6 +119,7 @@ export const ui = {
   selectFromSearchableList,
   tokenAt,
   pickTokensOnCanvas,
+  attackerToken,
   drawTargetMarker,
   selectedTokenActor,
   pickActorFromList

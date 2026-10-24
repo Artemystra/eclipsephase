@@ -4282,6 +4282,12 @@ li:has(.ep-system-notice) .message-header {
   margin-top: 56px;
 }
 
+/* The distance a measured attack shows under the count, in white so it reads apart from it. */
+.ep-targeting-counter .ep-targeting-range {
+  color: #ffffff;
+  font-weight: normal;
+}
+
 .ep-defence-card .ep-defence-name,
 .ep-defence-card .ep-defence-outcome {
   margin: 0;

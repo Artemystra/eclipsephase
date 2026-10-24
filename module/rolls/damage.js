@@ -1,4 +1,4 @@
-import { weaponPreparation, coneDamage, ATTACK_MODES, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { weaponPreparation, coneDamage, beyondRangeDamage, ATTACK_MODES, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
@@ -45,7 +45,7 @@ export async function weaponDamage(context, rollResult) {
   if (!weaponSelected) return null;
 
   if (isHit(rollResult)) {
-    const modeDice = modeDamage(context.options.attackMode) + coneDamage(weaponSelected.weapon, context.options.range);
+    const modeDice = modeDamage(context.options.attackMode) + coneDamage(weaponSelected.weapon, context.options.range) + beyondRangeDamage(weaponSelected.weapon, context.options.range, isChecked(context.options.vacuum));
     return { actor: actorWhole, ...(await hitDamage(actorWhole, weaponSelected, rollResult, modeDice, context.options.biomorphTarget, context.options.touchOnly)) };
   }
   if (!weaponSelected.weaponTraits.automatedEffects.dvOnMiss) return null;

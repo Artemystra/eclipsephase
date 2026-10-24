@@ -1508,7 +1508,8 @@
               "blind": "Às Cegas (-30+)",
               "indirect": "Indireto (-20)"
             },
-            "pickTargets": "Escolher alvos"
+            "pickTargets": "Escolher alvos",
+            "vacuum": "No vácuo"
           },
           "defender": {
             "isProne": "Prostrado (-10 se estiver no alcance)",
@@ -1665,7 +1666,8 @@
           "substrateBlockedTooltip": "Psi precisa de um cérebro biológico",
           "substrateMismatch": "Cérebro biológico em um corpo sintético",
           "touch": "Toque",
-          "cyberbrain": "Alvo com cibercérebro"
+          "cyberbrain": "Alvo com cibercérebro",
+          "range": "Alcance psi: {band} ({distance} m)"
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."
@@ -1794,7 +1796,9 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
-            "fray": "Fray Ranged"
+            "fray": "Fray Ranged",
+            "measured": "{band} ({distance} m)",
+            "proneAtRange": "Defensor deitado à distância"
           },
           "fullDefense": "Defesa total"
         }
@@ -2261,6 +2265,12 @@
         "vehicle": "veículo",
         "animal": "animal",
         "cyberbrain": "cibercérebro"
+      },
+      "band": {
+        "pointBlank": "À queima-roupa",
+        "close": "Perto",
+        "range": "Alcance",
+        "beyond": "Além do alcance"
       }
     }
   }

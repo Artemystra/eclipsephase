@@ -1,7 +1,7 @@
 import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, yieldDefence, defenceDataset, attackPicking } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { registerWeaponAttacks, rollAttackDamage } from "../../module/rolls/damage.js";
-import { registerSleightAttacks, detectSleightAttack, sleightModifiers, PSI_CURSOR, PSI_UNSUITABLE } from "../../module/rolls/psi.js";
+import { registerSleightAttacks, detectSleightAttack, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "../../module/rolls/psi.js";
 import { targetKinds, CYBERBRAIN_MARKER } from "../../module/common/morp-functions.js";
 import { _ep28_missingPsiArmorMarker } from "../../module/common/migration.js";
 import { RollCheck } from "../../module/rolls/dice.js";
@@ -132,6 +132,32 @@ describe("a psi-gamma sleight used on someone", () => {
     const modifiers = sleightModifiers({ rolledFrom: "psiSleight", actor, dataset: { itemid: "stab1" }, options: { psiTouch: true, preTargets: pod.uuid } }, targetKinds);
 
     expect(modifiers.map(modifier => modifier.value)).toEqual([20, -30]);
+  });
+
+  test("psi range (Core p.276-277): point-blank 2 m, close 10 m, then -10 per 2 m; doubled against asyncs, and once more by Increased Range", () => {
+    const at = (distance, options) => [psiRangeBand(distance, options).band, psiRangeBand(distance, options).modifier];
+
+    expect([at(2), at(3), at(10), at(11), at(12), at(13)]).toEqual([["pointBlank", 10], ["close", 0], ["close", 0], ["beyond", -10], ["beyond", -10], ["beyond", -20]]);
+    expect([at(4, { async: true }), at(20, { async: true }), at(24, { async: true }), at(25, { async: true })]).toEqual([["pointBlank", 10], ["close", 0], ["beyond", -10], ["beyond", -20]]);
+    expect([at(6, { async: true, pushRange: true }), at(30, { async: true, pushRange: true }), at(4, { pushRange: true })]).toEqual([["pointBlank", 10], ["close", 0], ["pointBlank", 10]]);
+  });
+
+  test("an async is a target with the Psi trait or a sleight; Increased Range is on when pushed or as a gamma-boosted async's free push", () => {
+    expect([isAsync(async()), isAsync(mind("Ana"))]).toEqual([true, false]);
+    expect(pushesRange({ actor: mind("Ana"), options: { push: "range" } })).toBe(true);
+    expect(pushesRange({ actor: { system: { additionalSystems: { psiGammaBoosted: true, autoPushSelection: "range" } } }, options: {} })).toBe(true);
+    expect(pushesRange({ actor: { system: { additionalSystems: { psiGammaBoosted: false, autoPushSelection: "range" } } }, options: {} })).toBe(false);
+  });
+
+  test("measured targets bring the range of the worst-placed one, and touch replaces it", () => {
+    const actor = async();
+    const near = mind("Ana");
+    const far = mind("Bo");
+    const context = options => ({ rolledFrom: "psiSleight", actor, dataset: { itemid: "stab1" }, options: { preTargets: `${near.uuid},${far.uuid}`, measuredRanges: "1,14", ...options } });
+
+    expect(sleightModifiers(context({}), () => [])).toEqual([{ text: expect.stringMatching(/ep2e\.roll\.announce\.psi\.range.*"distance":14/), value: -20 }]);
+    expect(sleightModifiers(context({ psiTouch: true }), () => []).map(modifier => modifier.value)).toEqual([20]);
+    expect(sleightModifiers(context({ measuredRanges: "" }), () => [])).toEqual([]);
   });
 
   test("the target resists with WIL, on half of it against Power", () => {

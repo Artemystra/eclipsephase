@@ -2,10 +2,10 @@ import { RollCheck, isCriticalSuccess, isHit } from "./dice.js";
 import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds } from "../common/morp-functions.js";
-import { gammaSleight, sleightModifiers, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
-import { pickTokensOnCanvas, MELEE_CURSOR } from "../common/targeting.js";
+import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
+import { pickTokensOnCanvas, attackerToken, tokenGap, MELEE_CURSOR } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
-import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount } from "../common/weapon-functions.js";
+import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
 // the hit from a button on the attack card, and every target's owner rolls a defence from a card of
@@ -498,23 +498,93 @@ function meleeTargets(form) {
 }
 
 /**
+ * Joins a picker's refusals: the first that refuses a token speaks.
+ * @param {...Function|null} checks - refuse(token) functions, nulls skipped
+ * @returns {Function|null} The joined refusal, or null when there is none
+ */
+function refuseAny(...checks) {
+  const active = checks.filter(Boolean);
+  return active.length ? token => active.map(check => check(token)).find(Boolean) ?? null : null;
+}
+
+/**
+ * The distance as the picker shows it: metres and the category with its modifier.
+ * @param {Number} distance - The distance in metres
+ * @param {Object} band - band and modifier
+ * @returns {String} e.g. "12 m · Range (-10)"
+ */
+function distanceText(distance, band) {
+  const modifier = band.modifier > 0 ? `+${band.modifier}` : `${band.modifier}`;
+  return `${Math.round(distance)} m · ${game.i18n.localize(`ep2e.targeting.band.${band.band}`)} (${modifier})`;
+}
+
+/**
+ * What a ranged attack measures while its targets are picked: the distance from the attacker's
+ * token, shown with its range category, and the farthest picked target's category set as the
+ * dialog's distance. Targets the weapon cannot be fired at so close are refused.
+ * @param {Object} rollContext - The roll context
+ * @returns {Object} measure(form), applyMeasured(form, distances) and refuse(token)
+ */
+function rangedMeasuring(rollContext) {
+  const range = weaponRange(rollContext.weapon);
+  const traits = rollContext.weapon?.weaponTraits?.automatedEffects ?? {};
+  const from = () => attackerToken(rollContext.actor);
+  return {
+    measure: () => {
+      const origin = from();
+      return origin ? { from: origin, describe: distance => distanceText(distance, rangeBand(distance, range, traits)) } : null;
+    },
+    applyMeasured: (form, distances) => {
+      const select = form?.elements?.range;
+      if (select && distances.length) select.value = rangeBand(Math.max(...distances), range, traits).select;
+    },
+    refuse: token => {
+      const origin = from();
+      return origin && token !== origin ? (game.i18n.localize(rangeRefusal(tokenGap(origin, token, canvas.grid), traits) ?? "") || null) : null;
+    }
+  };
+}
+
+/**
+ * What a psi-gamma sleight measures while its targets are picked: the distance from the async's
+ * token with its psi range category (Core p.276), doubled against asyncs and by the Increased Range
+ * push.
+ * @param {Object} rollContext - The roll context
+ * @returns {Function} measure(form)
+ */
+function psiMeasuring(rollContext) {
+  return form => {
+    const origin = attackerToken(rollContext.actor);
+    if (!origin) return null;
+    const pushRange = pushesRange({ actor: rollContext.actor, options: { push: form?.elements?.push?.value } });
+    return {
+      from: origin,
+      describe: (distance, token) => distanceText(distance, psiRangeBand(distance, { async: isAsync(token?.actor), pushRange }))
+    };
+  };
+}
+
+/**
  * How an attack dialog picks its targets, or null for a roll that is no attack: a roll with a
  * weapon, a psi-gamma sleight, or one that brings an attack of its own, such as a forced dose.
+ * Ranged weapons and sleights measure the distance from the attacker's token while picking.
  * @param {Object} rollContext - The roll context the dialog is shown for
  * @returns {Object|null} cursor; refuse, the picker's refusal of unsuitable targets; count(form), the targets the chosen options strike (Infinity
- *   for any number); minimum(form), the fewest a mode needs
+ *   for any number); minimum(form), the fewest a mode needs; measure(form) and applyMeasured(form, distances) where the attack is measured
  */
 export function attackPicking(rollContext) {
   const preset = rollContext?.flags?.targetedAttack;
   const weapon = rollContext?.weapon?.weapon ?? null;
   const rolledFrom = rollContext?.rolledFrom;
   if (!preset && gammaSleight(rollContext)) {
-    return { cursor: PSI_CURSOR, refuse: refuseUnsuitable(PSI_UNSUITABLE), count: form => form?.elements?.push?.value === "target" ? 2 : 1, minimum: () => 1 };
+    return { cursor: PSI_CURSOR, refuse: refuseUnsuitable(PSI_UNSUITABLE), measure: psiMeasuring(rollContext), count: form => form?.elements?.push?.value === "target" ? 2 : 1, minimum: () => 1 };
   }
   if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"))) return null;
+  const ranged = !preset && rolledFrom === "rangedWeapon" ? rangedMeasuring(rollContext) : null;
   return {
     cursor: preset?.cursor ?? (rolledFrom === "ccWeapon" ? MELEE_CURSOR : {}),
-    refuse: refuseUnsuitable(preset?.unsuitable),
+    refuse: refuseAny(refuseUnsuitable(preset?.unsuitable), ranged?.refuse),
+    ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured } : {}),
     count: form => {
       if (preset) return preset.targets === ANY_TARGETS ? Infinity : preset.targets ?? 1;
       if (rolledFrom !== "rangedWeapon") return meleeTargets(form);

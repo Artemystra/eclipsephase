@@ -1556,7 +1556,8 @@
               "blind": "Blind (-30+)",
               "indirect": "Indirect (-20)"
             },
-            "pickTargets": "Choose targets"
+            "pickTargets": "Choose targets",
+            "vacuum": "In Vacuum"
           },
           "defender": {
             "isProne": "Is Prone (-10 if at range)",
@@ -1712,7 +1713,8 @@
           "substrateBlockedTooltip": "Psi needs a biological brain",
           "substrateMismatch": "Biological brain in a synthetic body",
           "touch": "Touch",
-          "cyberbrain": "Target with a cyberbrain"
+          "cyberbrain": "Target with a cyberbrain",
+          "range": "Psi range: {band} ({distance} m)"
         },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."
@@ -1841,7 +1843,9 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
-            "fray": "Fray Ranged"
+            "fray": "Fray Ranged",
+            "measured": "{band} ({distance} m)",
+            "proneAtRange": "Defender prone at range"
           },
           "damage": {
             "physicalDamage": "My morph took damage",
@@ -2334,6 +2338,12 @@
         "vehicle": "vehicle",
         "animal": "animal",
         "cyberbrain": "cyberbrain"
+      },
+      "band": {
+        "pointBlank": "Point Blank",
+        "close": "Close",
+        "range": "Range",
+        "beyond": "Beyond Range"
       }
     }
   }

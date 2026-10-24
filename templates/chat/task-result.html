@@ -174,18 +174,14 @@
    <p class="ep-attack-targets">{{targetNames}}</p>
   {{else if (and rollContext.targetedAttack.preTargets (eq resultClass "success"))}}
   {{else if (and rollContext.targetedAttack (eq resultClass "success") (eq rollContext.targetedAttack.effect "damage"))}}
-   <div class="chatControls ep-chat-stack">
+   <div class="chatControls">
      {{#if (eq rolledFrom "psiSleight")}}
-     <button type="button" class="chatButton psiDamage ownerOnlyControl ep-chat-secondary" data-action="psiDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.damageWithoutTarget"}}</button>
+     <button type="button" class="chatButton psiDamage ownerOnlyControl ep-chat-primary" data-action="psiDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.buttonLabel.psiDamage"}}</button>
      {{else}}
-     <button type="button" class="chatButton weaponDamage ownerOnlyControl ep-chat-secondary" data-action="weaponDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.damageWithoutTarget"}}</button>
+     <button type="button" class="chatButton weaponDamage ownerOnlyControl ep-chat-primary" data-action="weaponDamage" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.buttonLabel.weaponDamage"}}</button>
      {{/if}}
-     <button type="button" class="chatButton targetedAttack ownerOnlyControl ep-chat-primary" data-action="targetedAttack" data-actor-uuid="{{actor.uuid}}">{{localize rollContext.targetedAttack.labelKey}}</button>
    </div>
   {{else if (and rollContext.targetedAttack (eq resultClass "success"))}}
-   <div class="chatControls">
-     <button type="button" class="chatButton targetedAttack privateChatButton" data-action="targetedAttack" data-ownerid="{{actor.id}}">{{localize rollContext.targetedAttack.labelKey}}</button>
-   </div>
   {{else if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
     {{#if (or (and (not rollContext.targetedAttack) (eq resultClass "success")) (eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true))}}
      <div class="chatControls">

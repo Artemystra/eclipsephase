@@ -1501,7 +1501,8 @@
               "blind": "目盲（-30+）",
               "indirect": "间接 (-20)"
             },
-            "pickTargets": "选择目标"
+            "pickTargets": "选择目标",
+            "vacuum": "真空中"
           },
           "defender": {
             "isProne": "俯卧（射程内-10）",
@@ -1658,7 +1659,8 @@
           "substrateBlockedTooltip": "灵能需要生物大脑",
           "substrateMismatch": "生物大脑处于合成体内",
           "touch": "接触",
-          "cyberbrain": "目标装有电子脑"
+          "cyberbrain": "目标装有电子脑",
+          "range": "灵能距离：{band}（{distance} 米）"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"
@@ -1787,7 +1789,9 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
-            "fray": "Fray Ranged"
+            "fray": "Fray Ranged",
+            "measured": "{band}（{distance} 米）",
+            "proneAtRange": "防御者在远处卧倒"
           },
           "fullDefense": "全力防御"
         }
@@ -2253,6 +2257,12 @@
         "vehicle": "载具",
         "animal": "动物",
         "cyberbrain": "电子脑"
+      },
+      "band": {
+        "pointBlank": "抵近",
+        "close": "近距",
+        "range": "射程内",
+        "beyond": "超出射程"
       }
     }
   }

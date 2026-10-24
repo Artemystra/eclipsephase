@@ -92,6 +92,7 @@ Object {
     "addDragSupport": [Function],
     "addMinimizeSupport": [Function],
     "addWindowControls": [Function],
+    "attackerToken": [Function],
     "confirmation": [Function],
     "drawTargetMarker": [Function],
     "itemTypeFilterPills": [Function],

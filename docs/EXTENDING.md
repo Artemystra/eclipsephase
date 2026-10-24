@@ -61,7 +61,7 @@ api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, ro
 
 `api.drugs` is described in "Drugs and doses" below.
 
-`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, within, refuse, marker })` lets
+`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, within, refuse, marker, measure })` lets
 the user pick targets on the canvas. A click marks a token, another click on it unmarks it, a
 right-click confirms; Escape, or a right-click with nothing marked, cancels. Open sheets are
 minimised while the user picks and come back afterwards. It resolves to the marked tokens in the
@@ -83,6 +83,11 @@ order they were marked, or `null`.
 - `marker(token, point, { icon, color })` draws the mark and returns what removes it. The default,
   `drawTargetMarker`, draws the cursor's shape in `markColor` with a white border where the token
   was clicked.
+- `measure: { from, describe(distance, token) }` (2.8.5) draws a line from the token `from` to the
+  cursor and shows under the count what `describe` returns for the distance, in scene units edge to
+  edge - to the token under the cursor (passed as `token`), else to the cursor itself. The system's
+  ranged attacks and psi-gamma sleights measure this way from the attacker's token
+  (`api.ui.attackerToken(actor)`).
 
 `selectedTokenActor()` is the actor of the user's selected token, and
 `pickActorFromList(actors, header, copy)` asks for one actor from a list the user can filter by
@@ -513,7 +518,7 @@ drugs.drugPsiPenalties(actor);            // [{ name, modifier }]
 `takeDose`, `offerDose` and `forceDose` behave exactly like the sheet's controls: they refuse an
 ammunition pack, an empty pack or a body the drug cannot act on with a notification, spend the
 dose and post the cards. An offered dose is only spent once someone claims it, a forced one once
-the attacker has picked the target after the hit.
+the attacker has picked the target.
 
 A pack holds one form. A sheet that lets someone acquire a drug - an actor sheet, a shop - calls
 `chooseDrugForm(itemData)` on the incoming data before creating it: it asks for the form and
@@ -526,7 +531,10 @@ or creates it.
 An attack lands on targets. Every attack dialog that rolls a weapon, a psi-gamma sleight, or an
 attack a caller set up itself has "Choose target(s)" as its primary button: the dialog steps
 aside, the attacker marks the targets on the canvas, and confirming them rolls the attack. "Roll
-without targets" rolls as before; the attack card then offers its target button after a hit. On a
+without targets" is the narrative path: the attack card then offers no target button, only a
+damaging attack's damage roll (2.8.5). Ranged attacks and sleights measure the distance from the
+attacker's token while picking: the farthest target's range category (Core p.207, psi p.276) is
+applied to the roll, and the dialog keeps the distances in `measuredRanges`. On a
 hit - straight away, or once a pool point turns a miss into one - each target's owner (its player
 owners, or the GM for a target no player owns) gets one card to defend from. The attack card names
 its targets and, once each has defended, the outcome.
@@ -662,7 +670,7 @@ Hooks.on("eclipsephase.preRoll", context => {
 A task roll's card keeps what it shows in `flags.eclipsephase.taskCard`. A pool spend no longer
 posts a card of its own: it redraws the roll card, whose pool controls give way to a note on who
 spent which pool, and whose result - on a swap, the die as well - shows the new values. What the
-new result unlocks (a damage button, a target button) appears on that same card, and the buttons
+new result unlocks (a damage button, say) appears on that same card, and the buttons
 go by the new result: `flags.eclipsephase.roll.alternatives.spent` is set, and `alternatives.result`
 is the result they use. A card can take one pool spend. Cards from before keep the old separate
 pool card.

@@ -175,11 +175,11 @@ describe("which weapon rolls are attacks on targets", () => {
 });
 
 describe("a weapon attack on a target", () => {
-  test("a hit offers the target button and damage without a target", async () => {
+  test("a hit rolled without targets offers only the damage, as a narrative roll does", async () => {
     const card = await attack(armed("Medium_Pistol_yWrFfONiXTuWWPpz.json"), "rangedWeapon", 30);
 
     expect(card.getFlag("eclipsephase", "roll").targetedAttack.effect).toBe("damage");
-    expect(card.content).toContain("data-action=\"targetedAttack\"");
+    expect(card.content).not.toContain("data-action=\"targetedAttack\"");
     expect(card.content).toContain("data-action=\"weaponDamage\"");
   });
 
@@ -496,7 +496,7 @@ describe("picking the targets in the attack dialog", () => {
     button.click();
     await until(() => counter.submitted);
 
-    expect(pick).toHaveBeenCalledWith({ multi: true, max: 2, within: 1 });
+    expect(pick).toHaveBeenCalledWith({ multi: true, max: 2, within: 1, refuse: expect.any(Function) });
     expect(root.querySelector('input[name="preTargets"]').value).toBe("Actor.ana,Actor.bo");
     expect(counter.submitted).toBe(1);
     expect(element.style.display).toBe("none");
@@ -511,7 +511,33 @@ describe("picking the targets in the attack dialog", () => {
     button.click();
     await until(() => counter.submitted);
 
-    expect(pick).toHaveBeenCalledWith({ multi: true, max: Infinity, within: null });
+    expect(pick).toHaveBeenCalledWith({ multi: true, max: Infinity, within: null, refuse: expect.any(Function) });
+  });
+
+  test("picked targets are measured from the attacker's token, and the farthest one's category becomes the dialog's distance", async () => {
+    const root = document.createElement("div");
+    root.innerHTML = `<form><select name="attackMode"><option value="single">1</option></select>
+      <select name="range"><option value="pointBlank">p</option><option value="none">c</option><option value="range">r</option><option value="beyond">b</option><option value="beyond+">b+</option></select>
+      <input type="hidden" name="preTargets" value=""><input type="hidden" name="measuredRanges" value="">
+      <button data-action="pickTargets"><span>Pick</span></button></form>`;
+    const button = root.querySelector("button");
+    let submitted = 0;
+    root.addEventListener("click", event => { if (event.target.closest("button")) submitted++; });
+    const square = x => ({ x, y: 0, width: 100, height: 100 });
+    const shooter = { bounds: square(0) };
+    const rifle = attackPicking({ rolledFrom: "rangedWeapon", weapon: { weapon: { type: "rangedWeapon", system: { ammoType: "kinetic", mode1: { range: 50 } } }, weaponMode: "1" } });
+    global.canvas = { grid: { size: 100, distance: 1 } };
+    try {
+      wirePreRollTargets(root, null, { ...rifle, measure: () => ({ from: shooter, describe: () => "" }) }, { pick: async () => [{ actor: { uuid: "Actor.ana" }, bounds: square(6100) }, { actor: { uuid: "Actor.bo" }, bounds: square(300) }] });
+
+      button.click();
+      await until(() => submitted);
+    } finally {
+      delete global.canvas;
+    }
+
+    expect(root.querySelector('input[name="measuredRanges"]').value).toBe("60,2");
+    expect(root.querySelector('select[name="range"]').value).toBe("beyond");
   });
 
   test("cancelling, or too few for the mode, brings the dialog back without rolling", async () => {
@@ -531,6 +557,57 @@ describe("picking the targets in the attack dialog", () => {
     expect(element.open).toBe(true);
     expect(element.style.display).toBe("");
     expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooFew"));
+  });
+});
+
+describe("a measured ranged attack", () => {
+  /**
+   * Fires a medium pistol at a target measured at a distance, with the d100 showing 30 and the damage dice 5.
+   * @param {String} measuredRanges - The dialog's measured distances
+   * @param {Object} [options] - Further dialog values, e.g. range or vacuum
+   * @returns {Promise<Object>} The attack card
+   */
+  async function shoot(measuredRanges, options = {}) {
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+    seedRolls([30]);
+    await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, measuredRanges, ...options } }, weapon, "rangedWeapon");
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1);
+  }
+
+  /**
+   * The modifiers a card's roll carried.
+   * @param {Object} card - The attack card
+   * @returns {Object[]} text and value per modifier
+   */
+  function modifiersOf(card) {
+    return card.getFlag("eclipsephase", "taskCard").data.modifiers.map(modifier => ({ text: String(modifier.text), value: Number(modifier.value) }));
+  }
+
+  test("the farthest target's distance sets the modifier by the book, uncapped, in place of the chosen distance", async () => {
+    const card = await shoot("12,140", { range: "range" });
+
+    const ranged = modifiersOf(card).filter(modifier => /combat\.ranged\.(measured|range|beyond)/.test(modifier.text));
+    expect(ranged).toEqual([{ text: expect.stringMatching(/ranged\.measured.*"distance":140/), value: -50 }]);
+  });
+
+  test("a prone defender at 10 m or more costs another -10; at point-blank the measured distance gives +10", async () => {
+    expect(modifiersOf(await shoot("15", { prone: true }))).toEqual(expect.arrayContaining([{ text: "ep2e.roll.announce.combat.ranged.proneAtRange", value: -10 }]));
+    expect(modifiersOf(await shoot("1")).filter(modifier => modifier.text.includes("combat.ranged.measured")).map(modifier => modifier.value)).toEqual([10]);
+  });
+
+  test("a kinetic weapon's damage beyond range has a d10 less, unless in vacuum", async () => {
+    const base = { rolledFrom: "rangedWeapon", item: { weaponId: "gun1", weaponMode: "1" }, options: { attackMode: "single" } };
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    const formula = async options => {
+      seedRolls([5, 5, 5]);
+      const result = await weaponDamage({ ...base, actorUuid: actor.uuid, options: { ...base.options, ...options } }, 3);
+      return result.roll.formula;
+    };
+
+    expect(await formula({ range: "beyond" })).toMatch(/^1d10\b/);
+    expect(await formula({ range: "beyond", vacuum: true })).toMatch(/^2d10\b/);
+    expect(await formula({ range: "range" })).toMatch(/^2d10\b/);
   });
 });
 

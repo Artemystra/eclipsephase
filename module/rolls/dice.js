@@ -6,9 +6,9 @@ import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
-import { wirePreRollTargets } from "../common/targeting.js";
+import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
 import { attackPicking, chosenTargets } from "./attacks.js";
-import { ATTACK_MODES } from "../common/weapon-functions.js";
+import { ATTACK_MODES, weaponRange, rangeBand } from "../common/weapon-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -221,7 +221,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 async function defineRoll(dataset, actorWhole){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'vacuum', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -1141,7 +1141,14 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.sizeXL";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    if (options.range === "range" && options.prone) {
+    const measured = rolledFrom === "rangedWeapon" && !weaponTraits?.automatedEffects?.steady?.value ? measuredDistances(options) : []
+    if (measured.length) {
+        const farthest = Math.max(...measured)
+        const band = rangeBand(farthest, weaponRange(weaponSelected), weaponTraits?.automatedEffects)
+        if (band.modifier) task.addModifier(new TaskRollModifier(game.i18n.format("ep2e.roll.announce.combat.ranged.measured", { band: game.i18n.localize(`ep2e.targeting.band.${band.band}`), distance: Math.round(farthest) }), band.modifier))
+        if (options.prone && farthest >= 10) task.addModifier(new TaskRollModifier("ep2e.roll.announce.combat.ranged.proneAtRange", -10))
+    }
+    else if (options.range === "range" && options.prone) {
         modValue = -20
         announce = "ep2e.roll.announce.combat.ranged.rangeProne";
         task.addModifier(new TaskRollModifier(announce, modValue))

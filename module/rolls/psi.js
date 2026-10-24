@@ -7,6 +7,7 @@ import { getStrainFamily, listStrainFamilies } from "./strain-families.js";
 import { durationRunOut } from "../common/time.js";
 import { strainSubstrate } from "../common/morp-functions.js";
 import { registerAttackEffect } from "./attacks.js";
+import { measuredDistances } from "../common/targeting.js";
 import { noteDefence } from "./damage.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
@@ -473,8 +474,44 @@ export function detectSleightAttack(context, { damaging }) {
 }
 
 /**
- * What a psi-gamma sleight's own circumstances add to its test: +20 at touch range, -30 against a
- * target who runs a cyberbrain.
+ * The range category a distance falls into for a sleight on someone else (Core p.276-277):
+ * point-blank up to 2 m (+10), close up to 10 m (+0), and -10 for every further 2 m. Against an
+ * async or exsurgent every category doubles, and the Increased Range push adds its base once more
+ * (point-blank 6 m and close 30 m with both). The 2 m step grows with the categories.
+ * @param {Number} distance - The distance in metres
+ * @param {Object} [options] - async: the target has psi; pushRange: the Increased Range push is on
+ * @returns {Object} band ("pointBlank", "close" or "beyond") and modifier
+ */
+export function psiRangeBand(distance, { async = false, pushRange = false } = {}) {
+    const factor = 1 + (async ? 1 : 0) + (pushRange ? 1 : 0);
+    const metres = Math.max(0, Number(distance) || 0);
+    if (metres <= 2 * factor) return { band: "pointBlank", modifier: 10 };
+    if (metres <= 10 * factor) return { band: "close", modifier: 0 };
+    return { band: "beyond", modifier: -10 * Math.ceil((metres - 10 * factor) / (2 * factor)) };
+}
+
+/**
+ * Whether a target counts as an async for psi range: it has the Psi trait or carries a sleight.
+ * @param {Actor} actor - The target
+ * @returns {Boolean} True for an async
+ */
+export function isAsync(actor) {
+    return Number(actor?.system?.additionalSystems?.hasPsi) > 0 || Array.from(actor?.items ?? []).some(item => item.type === "aspect");
+}
+
+/**
+ * Whether the Increased Range push is on for a roll, chosen or as a gamma-boosted async's free push.
+ * @param {Object} context - The roll context
+ * @returns {Boolean} True when it is
+ */
+export function pushesRange(context) {
+    const systems = context.actor?.system?.additionalSystems;
+    return context.options?.push === "range" || (systems?.psiGammaBoosted === true && systems?.autoPushSelection === "range");
+}
+
+/**
+ * What a psi-gamma sleight's own circumstances add to its test: +20 at touch range, otherwise the
+ * range category of the farthest measured target, and -30 against a target who runs a cyberbrain.
  * @param {Object} context - The roll context at preRoll
  * @param {Function} kindsOf - kindsOf(actor) lists what a target counts as
  * @returns {Object[]} { text, value } per modifier
@@ -483,8 +520,16 @@ export function sleightModifiers(context, kindsOf) {
     if (!gammaSleight(context)) return [];
     const modifiers = [];
     const touch = context.options?.psiTouch;
-    if (touch === true || touch === "on") modifiers.push({ text: "ep2e.roll.announce.psi.touch", value: PSI_TOUCH_MODIFIER });
+    const touching = touch === true || touch === "on";
+    if (touching) modifiers.push({ text: "ep2e.roll.announce.psi.touch", value: PSI_TOUCH_MODIFIER });
     const targets = String(context.options?.preTargets || "").split(",").filter(Boolean).map(uuid => fromUuidSync(uuid)).filter(Boolean);
+    const distances = measuredDistances(context.options);
+    if (!touching && distances.length === targets.length && targets.length) {
+        const pushRange = pushesRange(context);
+        const worst = targets.map((target, index) => ({ distance: distances[index], ...psiRangeBand(distances[index], { async: isAsync(target), pushRange }) }))
+            .reduce((low, entry) => entry.modifier < low.modifier ? entry : low);
+        modifiers.push({ text: game.i18n.format("ep2e.roll.announce.psi.range", { band: game.i18n.localize(`ep2e.targeting.band.${worst.band}`), distance: Math.round(worst.distance) }), value: worst.modifier });
+    }
     if (targets.some(target => kindsOf(target).includes("cyberbrain"))) modifiers.push({ text: "ep2e.roll.announce.psi.cyberbrain", value: PSI_CYBERBRAIN_MODIFIER });
     return modifiers;
 }

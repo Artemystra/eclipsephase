@@ -1530,7 +1530,8 @@
               "blind": "Blind (-30+)",
               "indirect": "Indirekt (-20)"
             },
-            "pickTargets": "Ziele wählen"
+            "pickTargets": "Ziele wählen",
+            "vacuum": "Im Vakuum"
           },
           "defender": {
             "isProne": "Gestürzt (-10 auf Reichweite)",
@@ -1685,7 +1686,8 @@
           "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
           "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper",
           "touch": "Berührung",
-          "cyberbrain": "Ziel mit Cyberbrain"
+          "cyberbrain": "Ziel mit Cyberbrain",
+          "range": "Psi-Reichweite: {band} ({distance} m)"
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
@@ -1814,7 +1816,9 @@
             "noAmmoPresent": "Keine passende Munition vorhanden.",
             "ammoSkillModifier": "Skillmodifikator (Munition)",
             "weaponFixated": "Aus der Hüfte geschossen",
-            "fray": "Schuss Ausweichen"
+            "fray": "Schuss Ausweichen",
+            "measured": "{band} ({distance} m)",
+            "proneAtRange": "Verteidiger liegt auf Entfernung"
           },
           "damage": {
             "physicalDamage": "Mein Morph wurde beschädigt",
@@ -2282,6 +2286,12 @@
         "vehicle": "Fahrzeug",
         "animal": "Tier",
         "cyberbrain": "Cyberbrain"
+      },
+      "band": {
+        "pointBlank": "Kernschuss",
+        "close": "Nah",
+        "range": "Reichweite",
+        "beyond": "Jenseits der Reichweite"
       }
     }
   }

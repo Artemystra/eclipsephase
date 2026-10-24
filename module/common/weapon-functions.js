@@ -285,6 +285,63 @@ export function weaponDataRepairs(type, system) {
   return repairs;
 }
 
+/**
+ * The range a weapon is fired at, in metres: the chosen mode's range rating.
+ * @param {Object} weaponSelected - The roll's weapon, with weapon and weaponMode
+ * @returns {Number|null} The metres, null for a weapon without one
+ */
+export function weaponRange(weaponSelected) {
+  const mode = weaponSelected?.weaponMode ?? "1";
+  return parseRangeText(weaponSelected?.weapon?.system?.[`mode${mode}`]?.range);
+}
+
+/**
+ * The range category a distance falls into for a weapon (Core p.207): point-blank up to 2 m (+10),
+ * close up to 10 m (+0), range up to the weapon's rating (-10), and beyond it -10 per range multiple,
+ * so 200 m with range 50 is -40. A long weapon gets nothing at point-blank. select is the attack
+ * dialog's matching distance entry.
+ * @param {Number} distance - The distance in metres
+ * @param {Number|null} range - The weapon's range rating, none for a weapon without one
+ * @param {Object} [traits] - The weapon's automated traits, of which long counts
+ * @returns {Object} band ("pointBlank", "close", "range" or "beyond"), multiples beyond range, modifier and select
+ */
+export function rangeBand(distance, range, traits = {}) {
+  const metres = Math.max(0, Number(distance) || 0);
+  if (range > 0 && metres > range) {
+    const multiples = Math.ceil(metres / range);
+    return { band: "beyond", multiples, modifier: -10 * multiples, select: multiples > 2 ? "beyond+" : "beyond" };
+  }
+  if (metres <= 2) return { band: "pointBlank", multiples: 0, modifier: traits?.long?.value ? 0 : 10, select: "pointBlank" };
+  if (metres <= 10) return { band: "close", multiples: 0, modifier: 0, select: "none" };
+  return { band: "range", multiples: 0, modifier: -10, select: "range" };
+}
+
+/**
+ * The damage a kinetic weapon loses beyond its range (Core p.207): -1d10, unless in vacuum. A cone
+ * loses it through coneDamage, beams and seekers never do.
+ * @param {Object} weapon - The weapon item
+ * @param {String} range - The attack dialog's distance entry
+ * @param {Boolean} vacuum - Whether the attack is made in vacuum
+ * @returns {String} A formula fragment, "" for none
+ */
+export function beyondRangeDamage(weapon, range, vacuum) {
+  if (vacuum || (range !== "beyond" && range !== "beyond+")) return "";
+  const ammo = weapon?.system?.ammoType;
+  return ammo === "kinetic" || ammo === "rail" ? "-1d10" : "";
+}
+
+/**
+ * Why a weapon may not be fired at a distance: no point-blank within 2 m, no close within 10 m.
+ * @param {Number} distance - The distance in metres
+ * @param {Object} [traits] - The weapon's automated traits
+ * @returns {String|null} The localization key of the reason, null when it may
+ */
+export function rangeRefusal(distance, traits = {}) {
+  if (traits?.noClose?.value && distance <= 10) return "ep2e.item.weapon.table.trait.noCloseAndPointBlank";
+  if (traits?.noPointBlank?.value && distance <= 2) return "ep2e.item.weapon.table.trait.noPointBlank";
+  return null;
+}
+
 // An attack's target count that stands for any number of targets. Kept as 0, since a card's flags
 // cannot hold Infinity.
 export const ANY_TARGETS = 0;

@@ -187,6 +187,46 @@ export function tokenGap(a, b, grid) {
 }
 
 /**
+ * The gap between a token and a point on the canvas, from the token's edge, in the scene's units.
+ * @param {Object} token - A token, with bounds {x, y, width, height} in pixels
+ * @param {Object} point - Canvas coordinates
+ * @param {Object} grid - size (pixels per square) and distance (units per square)
+ * @returns {Number} The gap, 0 when the point lies on the token
+ */
+export function pointGap(token, point, grid) {
+  const gapX = Math.max(0, token.bounds.x - point.x, point.x - (token.bounds.x + token.bounds.width));
+  const gapY = Math.max(0, token.bounds.y - point.y, point.y - (token.bounds.y + token.bounds.height));
+  return Math.hypot(gapX, gapY) / (Number(grid?.size) || 1) * (Number(grid?.distance) || 1);
+}
+
+/**
+ * The token an actor acts from on the viewed scene: one of its tokens the user controls, else its
+ * first one there.
+ * @param {Actor} actor - The actor
+ * @returns {Object|null} The token placeable, or null when it has none on the scene
+ */
+export function attackerToken(actor) {
+  if (!actor || !globalThis.canvas?.ready) return null;
+  const tokens = actor.getActiveTokens?.(true) ?? [];
+  return tokens.find(token => token.controlled) ?? tokens[0] ?? null;
+}
+
+/**
+ * Draws the line a measured attack shows while picking, from the attacker's token to the cursor.
+ * @param {Object} graphics - The PIXI graphics to draw into, cleared first
+ * @param {Object} from - The attacker's token
+ * @param {Object} point - The cursor, in canvas coordinates
+ * @returns {void}
+ */
+function drawMeasureLine(graphics, from, point) {
+  const pixel = 1 / (globalThis.canvas?.stage?.scale?.x || 1);
+  const origin = from.center ?? { x: from.bounds.x + from.bounds.width / 2, y: from.bounds.y + from.bounds.height / 2 };
+  graphics.clear();
+  graphics.lineStyle(4 * pixel, 0x000000, 0.5).moveTo(origin.x, origin.y).lineTo(point.x, point.y);
+  graphics.lineStyle(2 * pixel, Number.parseInt(TARGET_COLOR.replace("#", ""), 16), 1).moveTo(origin.x, origin.y).lineTo(point.x, point.y);
+}
+
+/**
  * Minimises every open document sheet, so the canvas is free to pick targets on.
  * @returns {Function} Restores the sheets it minimised
  */
@@ -212,11 +252,13 @@ export function sheetsAside() {
  *   (Infinity for any number); within: how far, in scene units, a further target may be from the
  *   nearest marked one; refuse: refuse(token) returns the notice for a token that may not be
  *   picked, or nothing; marker: marker(token, point, {icon, color}) draws a mark and returns what
- *   removes it
+ *   removes it; measure: { from, describe(distance, token) } draws a line from the token from to the
+ *   cursor and shows what describe says about the distance - to the token under the cursor (passed
+ *   along), else to the cursor itself
  * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
  *   cancelled
  */
-export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, within = null, refuse = null, marker = drawTargetMarker } = {}) {
+export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, within = null, refuse = null, marker = drawTargetMarker, measure = null } = {}) {
   const board = document.getElementById("board");
   if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
   ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
@@ -227,7 +269,14 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
     const marked = new Map();
     const label = document.createElement("div");
     label.className = "ep-targeting-counter";
-    const refresh = () => { label.innerHTML = targetLabel({ multi, left: limit - marked.size, marked: marked.size }); };
+    const range = document.createElement("span");
+    range.className = "ep-targeting-range";
+    const line = measure?.from && globalThis.PIXI ? new PIXI.Graphics() : null;
+    if (line) canvas.controls?.addChild?.(line);
+    const refresh = () => {
+      label.innerHTML = targetLabel({ multi, left: limit - marked.size, marked: marked.size });
+      if (measure?.from) label.querySelector(".ep-targeting-count")?.append(document.createElement("br"), range);
+    };
     const unmark = token => {
       marked.get(token)?.();
       marked.delete(token);
@@ -240,6 +289,7 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
       document.removeEventListener("pointermove", onMove, true);
       document.removeEventListener("keydown", onKey, true);
       cursor.remove();
+      line?.destroy();
       for (const token of Array.from(marked.keys())) unmark(token);
       label.remove();
       restoreSheets();
@@ -274,6 +324,12 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
     const onMove = event => {
       label.style.left = `${event.clientX}px`;
       label.style.top = `${event.clientY}px`;
+      if (!measure?.from) return;
+      const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+      const hovered = tokenAt(point, canvas.tokens.placeables);
+      const distance = hovered && hovered !== measure.from ? tokenGap(measure.from, hovered, canvas.grid) : pointGap(measure.from, point, canvas.grid);
+      range.textContent = measure.describe?.(distance, hovered && hovered !== measure.from ? hovered : null) ?? "";
+      if (line) drawMeasureLine(line, measure.from, point);
     };
     const onKey = event => {
       if (event.key !== "Escape") return;
@@ -298,12 +354,35 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
 // cancelled.
 
 /**
+ * The distances to the targets an attack dialog measured, in the order they were picked.
+ * @param {Object} options - The dialog's values
+ * @returns {Number[]} Metres per target, empty when nothing was measured
+ */
+export function measuredDistances(options) {
+  return String(options?.measuredRanges || "").split(",").filter(entry => entry !== "").map(Number).filter(Number.isFinite);
+}
+
+/**
+ * Keeps the distances to the picked targets in the attack dialog, in the order the targets were
+ * picked, and lets the attack set what follows from them, such as the distance entry.
+ * @param {HTMLFormElement} form - The dialog's form
+ * @param {Number[]} distances - The distance to each target, in scene units
+ * @param {Object} picking - What attackPicking returned; applyMeasured(form, distances) is optional
+ * @returns {void}
+ */
+function writeMeasured(form, distances, picking) {
+  const field = form?.elements?.measuredRanges;
+  if (field) field.value = distances.map(distance => Math.round(distance * 10) / 10).join(",");
+  picking.applyMeasured?.(form, distances);
+}
+
+/**
  * Wires an attack dialog's target picking to its primary button, whose label follows how many
  * targets the chosen options strike. Confirming enough targets rolls straight away; cancelling or
  * too few brings the dialog back.
  * @param {HTMLElement} root - The dialog's element
  * @param {Object} dialog - The dialog, to hide while picking
- * @param {Object|null} picking - What attackPicking returned
+ * @param {Object|null} picking - What attackPicking returned; measure(form) may name what to measure from
  * @param {Object} [seams] - pick, replaced in tests
  * @returns {void}
  */
@@ -332,10 +411,12 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     const modal = element?.open && element.matches?.(":modal");
     element?.close?.();
     if (element?.style) element.style.display = "none";
-    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...(picking.refuse ? { refuse: picking.refuse } : {}), ...picking.cursor });
+    const measure = picking.measure?.(form) ?? null;
+    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...(picking.refuse ? { refuse: picking.refuse } : {}), ...(measure ? { measure } : {}), ...picking.cursor });
     const actors = (tokens ?? []).map(token => token.actor).filter(Boolean);
     if (actors.length >= minimum) {
       input.value = actors.map(actor => actor.uuid).join(",");
+      if (measure?.from) writeMeasured(form, tokens.filter(token => token.actor).map(token => tokenGap(measure.from, token, canvas.grid)), picking);
       picked = true;
       button.click();
       return;

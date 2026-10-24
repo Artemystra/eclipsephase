@@ -1,6 +1,6 @@
 import { damageValueCalc } from "../../module/common/general-sheet-functions.js";
 import { applySuccessTierBonus, takeDamage, applyDamage } from "../../module/rolls/damage.js";
-import { damageFormula } from "../../module/rolls/damage-formula.js";
+import { damageFormula, dropDice } from "../../module/rolls/damage-formula.js";
 import { resetWorld, makeActor } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -275,5 +275,19 @@ describe("applyDamage", () => {
     expect(actor.system.physical.wounds).toBe(2);
     expect(actor.system.health.physical.value).toBe(3 * threshold - 1);
     expect(update).toHaveBeenCalledTimes(1);
+  });
+});
+
+
+describe("a die less", () => {
+  test("-1d10 DV takes a die away (Core p.207) rather than rolling one to subtract, and never below none", () => {
+    expect(["2d10+6", "2d10 + 6", "3d10+12", "1d10+1d6+2", "1d10", "1d6+2"].map(formula => dropDice(formula, 10, 1))).toEqual(["1d10+6", "1d10 + 6", "2d10+12", "1d6+2", "0", "1d6+2"]);
+    expect(dropDice("1d10+1d10+6", 10, 2)).toBe("6");
+  });
+
+  test("a damage formula reads an extra like -1d10 as a die less, after the extras that add dice, and before a critical doubles it", () => {
+    expect(damageFormula({ base: "2d10+6", extras: ["-1d10"] }, 3)).toBe("1d10+6");
+    expect(damageFormula({ base: "2d10+6", extras: ["+1d10", "-1d10"] }, 3)).toBe("1d10+6+1d10");
+    expect(damageFormula({ base: "2d10+6", extras: ["-1d10"] }, 7)).toBe("2*(1d10+6)");
   });
 });

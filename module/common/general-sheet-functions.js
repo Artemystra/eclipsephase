@@ -1299,6 +1299,7 @@ export function buildRollContext(outputData, actorWhole, options, itemData){
       biomorphTarget: isChecked(options?.biomorphTarget),
       touchOnly: isChecked(options?.touchOnly),
       range: options?.range || "",
+      vacuum: isChecked(options?.vacuum),
       rollMode: outputData?.rollMode || ""
     },
     item: {
@@ -1350,6 +1351,7 @@ export function legacyRollContext(dataset = {}){
       biomorphTarget: dataset.biomorphtarget === "true",
       touchOnly: dataset.touchonly === "true",
       range: "",
+      vacuum: false,
       rollMode: dataset.rollmode ?? ""
     },
     item: {

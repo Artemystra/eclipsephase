@@ -1,4 +1,4 @@
-import { attackArmorUsed, defaultArmorUsed, parseRangeText, parseRangeArea, parseAreaText, munitionArea, weaponDataRepairs, needsMunitionChoice, sameMunition, munitionLabel, chooseMunition } from "../../module/common/weapon-functions.js";
+import { attackArmorUsed, defaultArmorUsed, parseRangeText, parseRangeArea, parseAreaText, munitionArea, weaponDataRepairs, needsMunitionChoice, sameMunition, munitionLabel, chooseMunition, rangeBand, beyondRangeDamage, rangeRefusal, weaponRange } from "../../module/common/weapon-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { registerPayloadSource, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, makeItem, registerSystemPacks, resetWorld } from "../setup/factories.js";
@@ -182,5 +182,47 @@ describe("a munition arriving on a sheet", () => {
     await mergeOrCreateItem(actor, withPayload("Mono"));
 
     expect(actor.items.filter(item => item.type === "ammo").map(item => [item.system.payload.loaded[0].name, item.system.quantity])).toEqual([["Grin", 2], ["Mono", 1]]);
+  });
+});
+
+
+describe("the range a weapon is fired at (Core p.207)", () => {
+  test("each distance falls into its category, beyond range costing -10 per multiple of the range with no cap", () => {
+    const at = (distance, range, traits) => { const band = rangeBand(distance, range, traits); return [band.band, band.modifier, band.select]; };
+
+    expect(at(1, 50)).toEqual(["pointBlank", 10, "pointBlank"]);
+    expect(at(2, 50)).toEqual(["pointBlank", 10, "pointBlank"]);
+    expect(at(5, 50)).toEqual(["close", 0, "none"]);
+    expect(at(30, 50)).toEqual(["range", -10, "range"]);
+    expect(at(51, 50)).toEqual(["beyond", -20, "beyond"]);
+    expect(at(101, 50)).toEqual(["beyond", -30, "beyond+"]);
+    expect(at(200, 50)).toEqual(["beyond", -40, "beyond+"]);
+  });
+
+  test("a long weapon gains nothing at point-blank, a short one is beyond range before close ends, and one without a rating never is", () => {
+    expect(rangeBand(1, 50, { long: { value: true } }).modifier).toBe(0);
+    expect(rangeBand(8, 5)).toMatchObject({ band: "beyond", modifier: -20 });
+    expect(rangeBand(500, null)).toMatchObject({ band: "range", modifier: -10 });
+  });
+
+  test("kinetic and rail weapons lose a d10 beyond range, unless in vacuum; beams and seekers never do", () => {
+    const of = ammoType => ({ system: { ammoType } });
+
+    expect([beyondRangeDamage(of("kinetic"), "beyond", false), beyondRangeDamage(of("rail"), "beyond+", false)]).toEqual(["-1d10", "-1d10"]);
+    expect([beyondRangeDamage(of("kinetic"), "beyond", true), beyondRangeDamage(of("kinetic"), "range", false)]).toEqual(["", ""]);
+    expect([beyondRangeDamage(of("beam"), "beyond", false), beyondRangeDamage(of("seeker"), "beyond", false)]).toEqual(["", ""]);
+  });
+
+  test("a weapon that cannot fire at point-blank or close refuses targets that near", () => {
+    expect(rangeRefusal(2, { noPointBlank: { value: true } })).toBe("ep2e.item.weapon.table.trait.noPointBlank");
+    expect(rangeRefusal(3, { noPointBlank: { value: true } })).toBeNull();
+    expect(rangeRefusal(10, { noClose: { value: true } })).toBe("ep2e.item.weapon.table.trait.noCloseAndPointBlank");
+    expect(rangeRefusal(11, { noClose: { value: true } })).toBeNull();
+  });
+
+  test("the range rating comes from the mode fired, read as metres", () => {
+    const weapon = { system: { mode1: { range: 30 }, mode2: { range: "150m" } } };
+
+    expect([weaponRange({ weapon, weaponMode: "1" }), weaponRange({ weapon, weaponMode: "2" }), weaponRange(null)]).toEqual([30, 150, null]);
   });
 });
