@@ -1,0 +1,31 @@
+<div class="ep-migration contentBoxMargin">
+    <div class="flexrow subheader">
+        <h3 class="subheader dialog">{{localize "ep2e.migration.notice.subheader"}}</h3>
+    </div>
+    <div class="form-group listBackgroundMain ep-migration-body">
+        <h2 class="ep-migration-title">{{title}}</h2>
+        <p class="footnote">{{localize "ep2e.migration.notice.backup"}}</p>
+        {{#if intro}}<p>{{{intro}}}</p>{{/if}}
+        {{#if bullets.length}}
+        <div class="ep-migration-bullets">
+            <ul>
+                {{#each bullets as |bullet|}}<li>{{{bullet}}}</li>{{/each}}
+            </ul>
+        </div>
+        {{/if}}
+        {{#if comments.length}}
+        <ul class="footnote ep-migration-comments">
+            {{#each comments as |comment|}}<li>{{{comment}}}</li>{{/each}}
+        </ul>
+        {{/if}}
+        {{#if extra}}<p>{{{extra}}}</p>{{/if}}
+        <div class="ep-migration-reach">
+            <p>{{localize "ep2e.migration.notice.reachOut"}}</p>
+            <div class="ep-migration-links">
+                <a class="ep-social ep-social-github" href="{{links.github}}" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>GitHub</a>
+                <a class="ep-social ep-social-kofi" href="{{links.kofi}}" target="_blank" rel="noopener"><span class="ep-social-kofi-icon"></span>Ko-fi</a>
+                <a class="ep-social ep-social-discord" href="{{links.discord}}" target="_blank" rel="noopener"><i class="fa-brands fa-discord"></i>Discord</a>
+            </div>
+        </div>
+    </div>
+</div>

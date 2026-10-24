@@ -697,8 +697,7 @@ Hooks.once("ready", async function() {
   }
   else if (before27) {
     endMigration = false;
-    const messageCopy = "ep2e.migration.27";
-    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 900);
+    let migration = await update.migrationNotice("2.7");
 
     if (migration.cancelled) return;
     startMigration = migration.start;

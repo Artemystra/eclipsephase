@@ -2158,7 +2158,15 @@
       "done": "<label class='resource-label'>Divirta-se combatendo a TITAN e resgatando o universo, ou fazendo o que bem entender!</i></p></label>",
       "legacy": "<label class='resource-label'>Obrigado por jogar Eclipse Phase com o nosso sistema. Para garantir a integridade geral do arquivo nas próximas atualizações, pedimos que você migre seus dados para a estrutura mais recente, com a atualização 0.8.1.<p/><p/><b>Isto é necessário para implementar recursos ainda mais legais do que já temos (como a localização), e levará apenas alguns segundos.</b><p/><p/> Obrigado e tenha um ótimo jogo!<p><i>Nota: Por favor, note que as drogas foram refeitas. Apenas puxe-as novamente do compêndio e exclua as antigas.</i></p></label>",
       "0861": "<label class='resource-label'><p>Atualizamos a estrutura dos itens para permitir que futuras migrações sejam acionadas somente se o seu item estiver em uma versão específica.<p/><p><b>Isso evita que fichas de personagens e itens causem problemas quando estiver acionando uma migração.</b><p/><p>Por favor, migre para esta versão o mais breve possível para nos ajudar a estabilizar os dados do seu personagem<p/> <p>Obrigado e tenha um ótimo jogo!</p></label>",
-      "09": "<label class='resource-label'><p>Animais Inteligentes e Veículos sofreram uma grande reformulação.<p/><p><b>Esta migração destina-se a atualizar todos os drones/veículos/animais inteligentes em qualquer ficha, para que sejam compatíveis com o novo sistema.</b><p/><p>Por favor, migre para esta versão o mais breve possível para aproveitar as últimas atualizações, <b>mas não se esqueça de fazer o backup de seu mundo em caso de falhas no jogo!</b><p/> <p>Obrigado e tenha um ótimo jogo!</p></label>"
+      "09": "<label class='resource-label'><p>Animais Inteligentes e Veículos sofreram uma grande reformulação.<p/><p><b>Esta migração destina-se a atualizar todos os drones/veículos/animais inteligentes em qualquer ficha, para que sejam compatíveis com o novo sistema.</b><p/><p>Por favor, migre para esta versão o mais breve possível para aproveitar as últimas atualizações, <b>mas não se esqueça de fazer o backup de seu mundo em caso de falhas no jogo!</b><p/> <p>Obrigado e tenha um ótimo jogo!</p></label>",
+      "notice": {
+        "windowTitle": "Migração pendente",
+        "subheader": "Ei, agente, você tem uma mensagem de Laph",
+        "backup": "IMPORTANTE: Até aqui seus dados não foram atualizados nem alterados. Se ainda não salvou seu mundo, feche sem migrar e crie um backup para não perder dados durante a migração.",
+        "reachOut": "Não deixe de entrar em contato, agente!",
+        "migrate": "Migrar agora!",
+        "close": "Fechar sem migrar"
+      }
     },
     "systemMessage": {
       "general": {

@@ -1,4 +1,4 @@
-import { forEachActor, forEachItem, postNotice } from "../../module/common/migration.js";
+import { forEachActor, forEachItem, postNotice, noticeText, migrationNotice, MIGRATION_NOTES, SUPPORT_LINKS } from "../../module/common/migration.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 /**
@@ -175,5 +175,28 @@ describe("postNotice", () => {
     const posted = await postNotice(actor, "ep2e.spike.notice");
 
     expect(posted).toBe(false);
+  });
+});
+
+describe("the migration notice", () => {
+  test("a release text sets **words** in bold and keeps any markup of its own as plain text", () => {
+    expect(noticeText("The **Duration** runs <now>")).toBe("The <b>Duration</b> runs &lt;now&gt;");
+  });
+
+  test("the dialog shows the release's title, every bullet and the support links, and answers whether to migrate", async () => {
+    let content = "";
+    const realWait = foundry.applications.api.DialogV2.wait;
+    foundry.applications.api.DialogV2.wait = async config => { content = config.content; return { start: true }; };
+    try {
+      const answer = await migrationNotice("2.7");
+
+      expect(answer).toEqual({ start: true });
+      expect(content).toContain(MIGRATION_NOTES["2.7"].title);
+      expect(content.match(/<li>/g)).toHaveLength(MIGRATION_NOTES["2.7"].bullets.length);
+      expect(content).toContain(SUPPORT_LINKS.kofi);
+      expect(content).toContain("ep2e.migration.notice.backup");
+    } finally {
+      foundry.applications.api.DialogV2.wait = realWait;
+    }
   });
 });
