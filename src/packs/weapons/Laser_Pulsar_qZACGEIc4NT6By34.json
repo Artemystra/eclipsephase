@@ -135,7 +135,7 @@
     },
     "mode1": {
       "name": "Lethal",
-      "range": "100m",
+      "range": 100,
       "d10": 2,
       "d6": null,
       "bonus": 2,
@@ -220,11 +220,16 @@
           "value": false,
           "number": null
         }
+      },
+      "area": {
+        "kind": "none",
+        "radius": null,
+        "reduction": null
       }
     },
     "mode2": {
       "name": "Stun",
-      "range": "100m (AoE 1m)",
+      "range": 100,
       "d10": null,
       "d6": 1,
       "bonus": null,
@@ -309,6 +314,11 @@
           "value": false,
           "number": null
         }
+      },
+      "area": {
+        "kind": "uniform",
+        "radius": 1,
+        "reduction": null
       }
     }
   },

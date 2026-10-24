@@ -1051,7 +1051,8 @@
             "none": "无",
             "kinetic": "动能",
             "energy": "能量",
-            "mental": "精神"
+            "mental": "精神",
+            "asWeapon": "同武器"
           },
           "firingMode": {
             "label": "射击模式",
@@ -1126,6 +1127,39 @@
             "silencer": "Silencer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazine"
+          },
+          "area": {
+            "none": "无范围",
+            "uniform": "均匀",
+            "centered": "中心",
+            "radius": "半径",
+            "reduction": "每米伤害值递减"
+          },
+          "size": {
+            "label": "尺寸",
+            "baseline": "微型导弹",
+            "standard": "迷你导弹",
+            "missile": "标准导弹",
+            "select": "选择"
+          },
+          "trigger": {
+            "label": "引信",
+            "impact": "触发",
+            "airburst": "空爆",
+            "delayed": "延时（计时、信号、近炸）"
+          },
+          "payload": {
+            "delivery": {
+              "label": "载荷投放方式",
+              "inside": "目标体内",
+              "contact": "接触",
+              "cloud": "云雾"
+            },
+            "enabled": "带有载荷",
+            "select": "选择载荷",
+            "sources": {
+              "drugs": "药物与毒素"
+            }
           }
         }
       },
@@ -1835,6 +1869,16 @@
         "fewerHeadline": "目标少于剂量",
         "fewerCopy": "该武器会散布 {max} 剂。确定只选择 {count} 个目标吗？",
         "fewerConfirm": "确认"
+      },
+      "selectPayload": {
+        "header": "选择载荷",
+        "copy": "这种弹药携带哪种物质？",
+        "none": "载荷合集中没有可以这种方式投放的物质。"
+      },
+      "selectMunition": {
+        "header": "准备弹药",
+        "copy": "这种弹药携带哪种物质？",
+        "noPayload": "无载荷"
       }
     },
     "chat": {
@@ -2157,7 +2201,8 @@
         "backup": "重要：目前你的数据尚未更新或更改。如果你还没有保存世界，请先不迁移并关闭此对话框，创建备份，以免迁移时丢失数据。",
         "reachOut": "别忘了联系我们，特工！",
         "migrate": "立即迁移！",
-        "close": "不迁移并关闭"
+        "close": "不迁移并关闭",
+        "unreadableRanges": "以下武器射程无法识别为米数，已保持原样。请在武器表中以数字填写：<br>{list}"
       }
     },
     "systemMessage": {

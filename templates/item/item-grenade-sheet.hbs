@@ -26,7 +26,20 @@
     </nav>
 
     <section class="item-sheet-body" style="min-height: 240px; height: fit-content;">
-        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details" style="margin-top: 25px;">
+        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
+            <div class="item contentBox" data-item-id="{{item.id}}" data-item-name="{{item.name}}" style="padding-bottom: 5px;">
+                <div class="flexrow">
+                    <div class="alignRight flexGrowThreeQuarter">
+                        <div class="flexrow alignCenter wantToKnowMore" style="margin-right: 10px;">
+                            <i class="fa-regular fa-shield-halved awesomeIcon icon-small" style="max-width: fit-content;"></i>
+                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</span>
+                            <select class="input-large" name="system.armorused" data-type="String">
+                                {{selectOptions config.grenadeArmorVector selected=item.system.armorused localize=true}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {{> systems/eclipsephase/templates/item/partials/grenade-details.hbs item=item itemType="grenade"}}
         </div>
 

@@ -54,12 +54,19 @@
         "value": false
       }
     },
-    "armorused": [
-      "none",
-      "none"
-    ],
+    "armorused": "kinetic",
     "quantity": 1,
-    "armorUsed": "kinetic"
+    "area": {
+      "kind": "none",
+      "radius": null,
+      "reduction": null
+    },
+    "payload": {
+      "enabled": false,
+      "delivery": "",
+      "loaded": []
+    },
+    "trigger": "impact"
   },
   "ownership": {
     "default": 0,

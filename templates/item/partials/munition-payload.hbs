@@ -1,0 +1,20 @@
+{{!-- What a munition can carry besides its own effect: whether it carries anything, which substance, and how it reaches the target. Every field stays in place and is greyed out while it does not apply. --}}
+<div class="flexrow flex-between listBackground munition-fields" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--mainBackground) 2px;">
+    <div class="flexrow alignCenter" style="max-width: fit-content;">
+        <input type="checkbox" id="payload-enabled-{{item._id}}" name="system.payload.enabled" {{checked item.system.payload.enabled}}/>
+        <label for="payload-enabled-{{item._id}}" class="noMargin">{{localize "ep2e.item.weapon.table.payload.enabled"}}</label>
+    </div>
+    <div class="flexrow alignCenter wantToKnowMore" style="max-width: 170px;">
+        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.payload.select"}}</span>
+        <button type="button" class="munition-payload-select truncate" data-action="selectPayload"{{#unless item.system.payload.enabled}} disabled{{/unless}}>
+            <i class="fa-regular fa-flask"></i> {{#if item.system.payload.loaded.length}}{{item.system.payload.loaded.0.name}}{{else}}{{localize "ep2e.item.weapon.table.payload.select"}}{{/if}}
+        </button>
+    </div>
+    <div class="flexrow alignCenter wantToKnowMore tooltip-opens-left" style="max-width: 160px;">
+        <i class="fa-regular fa-person-rays awesomeIcon icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
+        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.payload.delivery.label"}}</span>
+        <select name="system.payload.delivery" data-type="String"{{#unless item.system.payload.enabled}} disabled{{/unless}}>
+            {{selectOptions config.payloadDelivery selected=item.system.payload.delivery blank="" localize=true}}
+        </select>
+    </div>
+</div>

@@ -54,17 +54,24 @@
         "value": false
       }
     },
-    "armorused": [
-      "none",
-      "none"
-    ],
+    "armorused": "none",
     "quantity": 1,
-    "armorUsed": "none",
     "mode1": {
       "d10": null,
       "d6": null,
       "bonus": null
-    }
+    },
+    "area": {
+      "kind": "uniform",
+      "radius": 50,
+      "reduction": null
+    },
+    "payload": {
+      "enabled": false,
+      "delivery": "",
+      "loaded": []
+    },
+    "trigger": "impact"
   },
   "ownership": {
     "default": 0,

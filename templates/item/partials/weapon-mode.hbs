@@ -54,7 +54,8 @@
             <div class="flexrow alignCenter wantToKnowMore">
                 <i class="fa-regular fa-arrows-left-right awesomeIcon" style="font-size: 18px; max-width: 55px; flex: 0; margin-right: 5px;"></i>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}</span>
-                <input class="input-large" type="text" name="system.mode1.range" value="{{item.system.mode1.range}}" placeholder="e.g. 120m"/>  
+                <input onFocus="this.select()" class="input-small alignCenter" type="number" min="0" name="system.mode1.range" value="{{item.system.mode1.range}}" placeholder="120"/>
+                <label class="noMargin" style="flex: 0;">m</label>  
             </div>
         {{/if}}
             <div class="wantToKnowMore" style="display: flex; align-items: center;">
@@ -244,7 +245,8 @@
             <div class="flexrow alignCenter wantToKnowMore">
                 <i class="fa-regular fa-arrows-left-right awesomeIcon" style="font-size: 18px; max-width: 55px; flex: 0; margin-right: 5px;"></i>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}</span>
-                <input class="input-large" type="text" name="system.mode2.range" value="{{item.system.mode2.range}}" placeholder="e.g. 120m"/>  
+                <input onFocus="this.select()" class="input-small alignCenter" type="number" min="0" name="system.mode2.range" value="{{item.system.mode2.range}}" placeholder="120"/>
+                <label class="noMargin" style="flex: 0;">m</label>  
             </div>
         {{/if}}
             <div class="wantToKnowMore" style="display: flex; align-items: center;">

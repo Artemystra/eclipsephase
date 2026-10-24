@@ -56,6 +56,38 @@ describe("compendium sources", () => {
     expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);
   });
 
+  test("every ranged weapon mode carries its range in metres and a structured area", () => {
+    const offenders = documents.filter(({ data }) => data.type === "rangedWeapon").flatMap(({ pack, file, data }) => ["mode1", "mode2"]
+      .filter(mode => !(data.system[mode].range === null || (typeof data.system[mode].range === "number" && data.system[mode].range > 0))
+        || !["none", "uniform", "centered"].includes(data.system[mode].area?.kind))
+      .map(mode => `${pack}/${file} ${mode}`));
+    expect(offenders).toEqual([]);
+  });
+
+  test("every munition carries a structured area and a payload, a seeker asks for its size and a grenade has none, and one that carries a payload says how it arrives", () => {
+    const offenders = documents.filter(({ data }) => data.type === "ammo" || data.type === "grenade").filter(({ data }) => {
+      const system = data.system;
+      return !["none", "uniform", "centered"].includes(system.area?.kind)
+        || (system.area.kind === "uniform" && !(system.area.radius > 0))
+        || (system.area.kind === "centered" && !(system.area.reduction > 0))
+        || (data.type === "grenade" ? "size" in system : !["select", "baseline", "standard", "missile"].includes(system.size))
+        || (data.type === "ammo" && system.type === "seeker" && system.size !== "select")
+        || typeof system.payload?.enabled !== "boolean"
+        || (system.payload.enabled && !["inside", "contact", "cloud"].includes(system.payload.delivery));
+    });
+    expect(offenders.map(({ pack, file }) => `${pack}/${file}`)).toEqual([]);
+  });
+
+  test("every grenade and seeker names the armour its damage meets (Core p.213), under the key the schema reads", () => {
+    const munitions = documents.filter(({ data }) => data.type === "grenade" || (data.type === "ammo" && data.system.type === "seeker"));
+    const offenders = munitions.filter(({ data }) => !["energy", "kinetic", "none"].includes(data.system.armorused) || "armorUsed" in data.system);
+    expect(offenders.map(({ pack, file }) => `${pack}/${file}`)).toEqual([]);
+    expect(Object.fromEntries(munitions.filter(({ data }) => ["Plasmaburst", "HEAP", "Stun"].includes(data.name)).map(({ data }) => [`${data.type}:${data.name}`, data.system.armorused]))).toEqual({
+      "ammo:Plasmaburst": "energy", "ammo:HEAP": "kinetic", "ammo:Stun": "kinetic",
+      "grenade:Plasmaburst": "energy", "grenade:HEAP": "kinetic", "grenade:Stun": "kinetic"
+    });
+  });
+
   test("every document carries a name and an id", () => {
     const offenders = documents.filter(({ data }) => !data.name || !data._id);
     expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);

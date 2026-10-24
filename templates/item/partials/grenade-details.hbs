@@ -1,7 +1,7 @@
-<div class="tab details" data-group="primary" data-tab="details">
+<div class="tab details munition-fields" data-group="primary" data-tab="details">
 
     <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
-        <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0;">
+        <div class="flexrow flex-between listBackground" style="background-color: var(--pitchBorder); margin: 0;">
 
             {{#if (eq item.system.traits.noDamage.value true)}}
             <div class="wantToKnowMore" style="display: flex; align-items: center;">
@@ -17,31 +17,19 @@
             <div class="wantToKnowMore" style="display: flex; align-items: center;">
                 <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
-                <input class="input-xs"type="number" name="system.dv.d10" value="{{item.system.dv.d10}}" placeholder="0"/>
+                <input onFocus="this.select()" class="input-xs" type="number" name="system.dv.d10" value="{{item.system.dv.d10}}" placeholder="0"/>
                 <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
-                <input class="input-xs"type="number" name="system.dv.d6" value="{{item.system.dv.d6}}" placeholder="0"/>
+                <input onFocus="this.select()" class="input-xs" type="number" name="system.dv.d6" value="{{item.system.dv.d6}}" placeholder="0"/>
                 <i class="fas fa-plus awesomeIcon"></i>
-                <input class="input-xs"type="number" name="system.dv.bonus" value="{{item.system.dv.bonus}}" placeholder="0"/>
+                <input onFocus="this.select()" class="input-xs" type="number" name="system.dv.bonus" value="{{item.system.dv.bonus}}" placeholder="0"/>
             </div>
             {{/if}}
-            <div class="flexrow alignCenter wantToKnowMore" style="margin-left: 10px;">
-                <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small icon-space"/>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</span>
-                <select class="input-large" name="system.armorUsed" data-type="String">
-                    {{selectOptions config.grenadeArmorVector selected=item.system.armorUsed localize=true}}
-                </select>                         
-            </div>
-            <div class="flexrow alignRight wantToKnowMore" style="margin-left: 20px;">
-                <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-small icon-space"/>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.effectArea"}}</span>
-                <input class="alignCenter" type="text" name="system.areaeffect" value="{{item.system.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
-            </div>
-            <div class="flexrow flex-group-center wantToKnowMore" style="max-width: 75px;">
+            <div class="flexrow alignCenter wantToKnowMore" style="max-width: 75px;">
                 <img src="systems/eclipsephase/resources/icons/quantity.webp" class="icon-small icon-space"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.quantity"}}</span>
-                <input class="alignCenter input-xs" type="number" name="system.quantity" value="{{item.system.quantity}}" placeholder="e.g. 12"/>
+                <input onFocus="this.select()" class="alignCenter input-xs" type="number" name="system.quantity" value="{{item.system.quantity}}" placeholder="e.g. 12"/>
             </div>
-            <div class="wantToKnowMore flexrow alignRight" style="max-width: 130px;">
+            <div class="wantToKnowMore flexrow alignCenter tooltip-opens-left" style="max-width: 130px;">
                 <i class="fa-regular fa-coins awesomeIcon icon-small alignCenter" style="font-size: 18px;"></i>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span>
                 <select name="system.cost" data-type="String">
@@ -49,6 +37,45 @@
                 </select>
             </div>
         </div>
+        <div class="flexrow flex-between listBackground" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--mainBackground) 2px;">
+            <div class="flexrow alignCenter wantToKnowMore" style="max-width: 150px;">
+                <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-small icon-space"/>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.effectArea"}}</span>
+                <select name="system.area.kind" data-type="String">
+                    {{selectOptions config.areaKinds selected=item.system.area.kind localize=true}}
+                </select>
+            </div>
+            <div class="flexrow alignCenter wantToKnowMore" style="max-width: 80px;">
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.area.radius"}}</span>
+                <input onFocus="this.select()" class="alignCenter input-xs" type="number" min="0" name="system.area.radius" value="{{item.system.area.radius}}" placeholder="10"{{#unless (eq item.system.area.kind "uniform")}} disabled{{/unless}}/>
+                <label class="noMargin">m</label>
+            </div>
+            <div class="flexrow alignCenter wantToKnowMore" style="max-width: 100px;">
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.area.reduction"}}</span>
+                <label class="noMargin">-</label>
+                <input onFocus="this.select()" class="alignCenter input-xs" type="number" min="0" name="system.area.reduction" value="{{item.system.area.reduction}}" placeholder="2"{{#unless (eq item.system.area.kind "centered")}} disabled{{/unless}}/>
+                <label class="noMargin">DV/m</label>
+            </div>
+            {{#if (eq item.type "ammo")}}
+            <div class="flexrow alignCenter wantToKnowMore tooltip-opens-left" style="max-width: 170px;">
+                <i class="fa-regular fa-up-right-and-down-left-from-center awesomeIcon icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.size.label"}}</span>
+                <select name="system.size" data-type="String">
+                    {{selectOptions config.munitionSizes selected=item.system.size localize=true}}
+                </select>
+            </div>
+            {{/if}}
+            {{#if (eq item.type "grenade")}}
+            <div class="flexrow alignCenter wantToKnowMore tooltip-opens-left" style="max-width: 130px;">
+                <i class="fa-regular fa-stopwatch awesomeIcon icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.trigger.label"}}</span>
+                <select name="system.trigger" data-type="String">
+                    {{selectOptions config.grenadeTriggers selected=item.system.trigger localize=true}}
+                </select>
+            </div>
+            {{/if}}
+        </div>
+        {{> systems/eclipsephase/templates/item/partials/munition-payload.hbs item=item config=config}}
     </div>
 </div>
 {{> systems/eclipsephase/templates/item/partials/item-traits.hbs item=item}}

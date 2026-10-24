@@ -1,6 +1,6 @@
-import { itemReduction, listSelection, gmList } from "./general-sheet-functions.js";
+import { itemReduction, listSelection, gmList, searchableListSelection } from "./general-sheet-functions.js";
 import { damageValueCalc } from "./general-sheet-functions.js";
-import { dosesRemaining, isAmmoPack } from "./drugs.js";
+import { dosesRemaining, isAmmoPack, payloadCandidates } from "./drugs.js";
 
 const DRUG_CHOICE = "drug-";
 /**
@@ -101,6 +101,188 @@ export function attackArmorUsed(weapon, mode = "1") {
   const ammo = weapon?.system?.ammoSelected?.armorused;
   if (ammo === "energy" || ammo === "kinetic" || ammo === "none") return ammo;
   return weapon?.system?.[`mode${mode}`]?.armorused || defaultArmorUsed(weapon);
+}
+
+// An area that is none.
+export const NO_AREA = { kind: "none", radius: null, reduction: null };
+
+/**
+ * A weapon range in metres, read from a number or from text like "75m" or "100m (AoE 1m)".
+ * @param {*} value - The stored range
+ * @returns {Number|null} The metres, null when there is none or it cannot be read
+ */
+export function parseRangeText(value) {
+  if (typeof value === "number") return Number.isFinite(value) && value > 0 ? value : null;
+  const match = String(value ?? "").trim().match(/^(\d+(?:[.,]\d+)?)\s*m?(?![a-z])/i);
+  return match ? Number(match[1].replace(",", ".")) : null;
+}
+
+/**
+ * The area a range text names in its "(AoE 1m)" suffix, as a uniform blast.
+ * @param {*} value - The stored range
+ * @returns {Object|null} The area, null when the text names none
+ */
+export function parseRangeArea(value) {
+  const match = String(value ?? "").match(/AoE\s*(\d+(?:[.,]\d+)?)\s*m?/i);
+  return match ? { kind: "uniform", radius: Number(match[1].replace(",", ".")), reduction: null } : null;
+}
+
+/**
+ * An area effect read from text like "Uniform (50 m)" or "Centered (-2 DV/m)" (Core p.213).
+ * @param {*} value - The stored text
+ * @returns {Object} kind ("uniform", "centered" or "none"), radius in metres, reduction in DV per metre
+ */
+export function parseAreaText(value) {
+  const text = String(value ?? "");
+  const uniform = text.match(/uniform\s*\(\s*(\d+(?:[.,]\d+)?)/i);
+  if (uniform) return { kind: "uniform", radius: Number(uniform[1].replace(",", ".")), reduction: null };
+  const centered = text.match(/cent(?:ere|re)d\s*\(\s*[-–]?\s*(\d+)\s*DV/i);
+  if (centered) return { kind: "centered", radius: null, reduction: Number(centered[1]) };
+  return { ...NO_AREA };
+}
+
+/**
+ * A munition's area once its size is applied (Core p.213, baseline = minigrenades and
+ * micromissiles): standard grenades and minimissiles double a uniform radius and add +1d10 to a
+ * centred blast; standard missiles double both the uniform radius and a centred blast's damage.
+ * @param {Object} system - The ammunition's or grenade's system data
+ * @returns {Object} kind, radius, reduction, plus damage ("+1d10" or "") and damageMultiplier
+ */
+export function munitionArea(system) {
+  const area = { ...NO_AREA, ...(system?.area ?? {}), damage: "", damageMultiplier: 1 };
+  const size = system?.size;
+  if (size !== "standard" && size !== "missile") return area;
+  if (area.kind === "uniform" && area.radius) area.radius *= 2;
+  if (area.kind === "centered") {
+    if (size === "standard") area.damage = "+1d10";
+    else area.damageMultiplier = 2;
+  }
+  return area;
+}
+
+/**
+ * An area as the damage card names it, e.g. "Uniform (10 m)" or "Centered (-2 DV/m)".
+ * @param {Object} area - kind, radius and reduction
+ * @returns {String} The label, "" for no area
+ */
+export function areaText(area) {
+  if (area?.kind === "uniform") return `${game.i18n.localize("ep2e.item.weapon.table.area.uniform")} (${area.radius ?? "?"} m)`;
+  if (area?.kind === "centered") return `${game.i18n.localize("ep2e.item.weapon.table.area.centered")} (-${area.reduction ?? 2} DV/m)`;
+  return "";
+}
+
+// The seeker sizes a munition can be chosen as (Core p.213), baseline being the micromissile.
+const SEEKER_SIZES = ["baseline", "standard", "missile"];
+
+/**
+ * What is still open on a munition before it lands on a sheet: a seeker whose size reads "select",
+ * and a payload that is switched on but carries nothing yet.
+ * @param {String} type - The item type
+ * @param {Object} system - The item's system data
+ * @returns {Object} size and payload, each true when it still has to be chosen
+ */
+export function needsMunitionChoice(type, system) {
+  if (type !== "ammo" && type !== "grenade") return { size: false, payload: false };
+  return {
+    size: type === "ammo" && system?.type === "seeker" && system?.size === "select",
+    payload: system?.payload?.enabled === true && !system.payload.loaded?.length
+  };
+}
+
+/**
+ * Whether two munitions of one name are the same thing to stack: same size (none counts as the
+ * baseline) and same payload.
+ * @param {Object} a - One munition's system data
+ * @param {Object} b - The other's
+ * @returns {Boolean} True when they stack
+ */
+export function sameMunition(a, b) {
+  const payload = system => system?.payload?.enabled ? system.payload.loaded?.[0]?.uuid ?? "" : "";
+  return (a?.size || "baseline") === (b?.size || "baseline") && payload(a) === payload(b);
+}
+
+/**
+ * A munition as a list row names it beyond its name: a seeker's size and the payload it carries.
+ * @param {String} type - The item type
+ * @param {Object} system - The item's system data
+ * @returns {String} The label, "" when there is nothing to add
+ */
+export function munitionLabel(type, system) {
+  const parts = [];
+  if (type === "ammo" && system?.type === "seeker" && SEEKER_SIZES.includes(system.size)) parts.push(game.i18n.localize(`ep2e.item.weapon.table.size.${system.size}`));
+  if (system?.payload?.enabled && system.payload.loaded?.[0]?.name) parts.push(system.payload.loaded[0].name);
+  return parts.join(" · ");
+}
+
+/**
+ * Settles what a munition still leaves open, on its data before it is created: asks a seeker's size
+ * and a switched-on payload's substance in one dialog. Choosing no payload switches it off. Anything
+ * else, and a munition with nothing open, passes through unasked.
+ * @param {Object} itemData - The incoming item's source data, changed in place
+ * @returns {Promise<Boolean>} False when the choice was cancelled
+ */
+export async function chooseMunition(itemData) {
+  const system = itemData?.system;
+  const open = needsMunitionChoice(itemData?.type, system);
+  if (!open.size && !open.payload) return true;
+
+  const entries = [];
+  if (open.payload) {
+    entries.push({ id: "none", label: game.i18n.localize("ep2e.dialog.selectMunition.noPayload") });
+    for (const entry of await payloadCandidates(system.payload.delivery)) entries.push({ id: entry.uuid, label: entry.name });
+  }
+  const sizeChoice = open.size
+    ? { label: "ep2e.item.weapon.table.size.label", options: SEEKER_SIZES.map(id => ({ id, label: `ep2e.item.weapon.table.size.${id}` })) }
+    : null;
+  const result = await searchableListSelection(entries, "ep2e.dialog.selectMunition.header", open.payload ? "ep2e.dialog.selectMunition.copy" : "", { sizeChoice });
+  if (!result || result.cancelled) return false;
+
+  if (open.size) system.size = SEEKER_SIZES.includes(result.size) ? result.size : "baseline";
+  if (open.payload) {
+    const chosen = entries.find(entry => entry.id === result.selection && entry.id !== "none");
+    if (chosen) system.payload.loaded = [{ uuid: chosen.id, name: chosen.label }];
+    else system.payload.enabled = false;
+  }
+  return true;
+}
+
+// The armour types a munition can name.
+const ARMOR_TYPES = ["energy", "kinetic", "none"];
+
+/**
+ * What a weapon, ammunition or grenade written before 2.8.5 needs to fit its schema: ranges in
+ * metres, an area read from its text, and a munition's armour type out of the key the old sheet
+ * wrote. Values that already fit are left out.
+ * @param {String} type - The item type
+ * @param {Object} system - The item's system data
+ * @returns {Object} The repairs, as system paths to values
+ */
+export function weaponDataRepairs(type, system) {
+  const repairs = {};
+  if (!system) return repairs;
+  if (type === "rangedWeapon") {
+    for (const mode of ["mode1", "mode2"]) {
+      const data = system[mode];
+      if (!data) continue;
+      const range = data.range;
+      if (range !== null && range !== undefined && typeof range !== "number") {
+        repairs[`${mode}.range`] = parseRangeText(range);
+        const area = parseRangeArea(range);
+        if (area && (!data.area || data.area.kind === "none")) repairs[`${mode}.area`] = area;
+      }
+    }
+  }
+  if (type === "ammo" || type === "grenade") {
+    if ((!system.area || system.area.kind === "none") && system.areaeffect) {
+      const area = parseAreaText(system.areaeffect);
+      if (area.kind !== "none") repairs.area = area;
+    }
+  }
+  if ((type === "ammo" || type === "grenade") && !ARMOR_TYPES.includes(system.armorused)) {
+    if (ARMOR_TYPES.includes(system.armorUsed)) repairs.armorused = system.armorUsed;
+    else if (type === "grenade") repairs.armorused = "none";
+  }
+  return repairs;
 }
 
 // An attack's target count that stands for any number of targets. Kept as 0, since a card's flags
@@ -552,11 +734,12 @@ export async function reloadWeapon(html, actor) {
         }
 
         traits = ammoSelected.system.traits;
-        ammoSelected.system.areaeffect ? traits["effectRadius"] = {
+        const loadedArea = munitionArea(ammoSelected.system);
+        if (loadedArea.kind !== "none") traits["effectRadius"] = {
           "name": "ep2e.item.weapon.table.trait.effectRadius",
           "value": true,
-          "radius": ammoSelected.system.areaeffect
-        } : null;
+          "radius": areaText(loadedArea)
+        };
 
         calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, traits, "ammo");
 
@@ -598,7 +781,9 @@ export async function reloadWeapon(html, actor) {
             "system.ammoSelected.dvModifier.calculated": dv,
             "system.ammoSelected.traits": ammoType != "chemical" ? traits : {},
             "system.ammoSelected.dose": null,
-            "system.ammoSelected.armorused": ammoSelected.system?.armorused ?? ""
+            "system.ammoSelected.armorused": ammoSelected.system?.armorused ?? "",
+            "system.ammoSelected.area": loadedArea,
+            "system.ammoSelected.payload": ammoSelected.system?.payload?.enabled ? foundry.utils.deepClone(ammoSelected.system.payload) : null
           };
           Hooks.callAll("eclipsephase.weaponLoaded", { actor, weapon, ammo: ammoSelected, ammoType, update: loaded });
           weaponUpdate.push(loaded);

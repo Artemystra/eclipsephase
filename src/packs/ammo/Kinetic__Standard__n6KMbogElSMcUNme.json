@@ -84,7 +84,18 @@
       }
     },
     "armorused": null,
-    "quantity": 1
+    "quantity": 1,
+    "area": {
+      "kind": "none",
+      "radius": null,
+      "reduction": null
+    },
+    "size": "baseline",
+    "payload": {
+      "enabled": false,
+      "delivery": "",
+      "loaded": []
+    }
   },
   "effects": [],
   "folder": "op6PJBnpKfHv5C7J",

@@ -2,7 +2,7 @@ import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } fr
 
 // The version of the last migration step: what a world is stamped with once it has climbed the whole
 // ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
-const LATEST_MIGRATION = "2.8";
+const LATEST_MIGRATION = "2.8.5";
 
 
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
@@ -332,7 +332,60 @@ describe("the 2.8 armour type per weapon mode", () => {
     const rendered = await runLadderFrom("2.7");
 
     expect(rendered).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8");
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+});
+
+describe("the 2.8.5 ranges, areas and munitions", () => {
+  afterEach(() => {
+    game.items.clear();
+    game.actors.clear();
+    game.packs.clear();
+  });
+
+  test("ranges turn into metres, area texts into areas, old armour keys into the read one, and munitions get their compendium payload", async () => {
+    registerSystemPacks();
+    const actor = makeActor({ type: "character", items: [
+      { _id: "pul1", name: "Laser Pulsar", type: "rangedWeapon", system: { ammoType: "beam", mode1: { range: "100m", armorused: "energy" }, mode2: { range: "100m (AoE 1m)", armorused: "energy" } } },
+      { _id: "gre1", name: "Plasmaburst", type: "grenade", system: { areaeffect: "Centered (-2DV/m)", armorused: ["none", "none"], armorUsed: "energy" } },
+      { _id: "spl1", name: "Splash", type: "ammo", system: { type: "seeker", areaeffect: "Uniform (10 m)", armorused: null, armorUsed: "none" } },
+      { _id: "cap1", name: "Capsule (Kinetic)", type: "ammo", system: { type: "kinetic" } }
+    ] });
+
+    const rendered = await runLadderFrom("2.8");
+
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.8.5");
+    const source = id => actor.items.get(id)._source.system;
+    expect([source("pul1").mode1.range, source("pul1").mode2.range, source("pul1").mode2.area]).toEqual([100, 100, { kind: "uniform", radius: 1, reduction: null }]);
+    expect([source("gre1").area, source("gre1").armorused]).toEqual([{ kind: "centered", radius: null, reduction: 2 }, "energy"]);
+    expect([source("spl1").area.radius, source("spl1").armorused, source("spl1").payload.enabled, source("spl1").payload.delivery]).toEqual([10, "none", true, "contact"]);
+    expect([source("cap1").payload.enabled, source("cap1").payload.delivery]).toEqual([true, "inside"]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8.5");
+  });
+
+  test("a range that cannot be read stays as written and is listed to the GM", async () => {
+    const actor = makeActor({ name: "Sava", type: "character", items: [
+      { _id: "thr1", name: "Throwing Knife", type: "rangedWeapon", system: { mode1: { range: "SOM", armorused: "kinetic" }, mode2: { range: "", armorused: "kinetic" } } },
+      { _id: "gun1", name: "Pistol", type: "rangedWeapon", system: { mode1: { range: "30m", armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    await runLadderFrom("2.8");
+
+    expect(actor.items.get("thr1")._source.system.mode1.range).toBe("SOM");
+    expect(actor.items.get("thr1")._source.system.mode2.range).toBeNull();
+    const notices = global.__ep.createdMessages.filter(message => String(message.content).includes("Throwing Knife"));
+    expect(notices.map(message => message.content)).toEqual([expect.stringContaining("Sava: Throwing Knife (SOM)")]);
+  });
+
+  test("a world whose weapons already carry metres is stamped without being asked", async () => {
+    makeActor({ type: "character", items: [
+      { _id: "gun1", name: "Pistol", type: "rangedWeapon", system: { mode1: { range: 30, armorused: "kinetic" }, mode2: { range: null, armorused: "kinetic" } } }
+    ] });
+
+    const rendered = await runLadderFrom("2.8");
+
+    expect(rendered).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8.5");
   });
 });
 

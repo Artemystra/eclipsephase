@@ -56,7 +56,17 @@
     },
     "armorused": "energy",
     "quantity": 1,
-    "armorUsed": "energy"
+    "area": {
+      "kind": "uniform",
+      "radius": 10,
+      "reduction": null
+    },
+    "payload": {
+      "enabled": false,
+      "delivery": "",
+      "loaded": []
+    },
+    "trigger": "impact"
   },
   "ownership": {
     "default": 0,

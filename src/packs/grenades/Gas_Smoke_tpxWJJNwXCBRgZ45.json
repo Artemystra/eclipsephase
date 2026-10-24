@@ -54,12 +54,19 @@
         "value": false
       }
     },
-    "armorused": [
-      "none",
-      "none"
-    ],
+    "armorused": "none",
     "quantity": 1,
-    "armorUsed": "none"
+    "area": {
+      "kind": "uniform",
+      "radius": 20,
+      "reduction": null
+    },
+    "payload": {
+      "enabled": true,
+      "delivery": "cloud",
+      "loaded": []
+    },
+    "trigger": "impact"
   },
   "ownership": {
     "default": 0,

@@ -320,6 +320,36 @@ Four things are worth knowing before you build one:
 `getStrainFamily(id)`, `listStrainFamilies()` and `hasStrainFamily(id)` are on `api.registry` too,
 for reading the registry back.
 
+### `registerPayloadSource(packId, definition)` (2.8.5)
+
+Offers a compendium's substances as payloads for ammunition and grenades - the "Select payload"
+button of a munition sheet lists every drug from every registered source that fits the payload's
+delivery (inside the target = injection, on contact = dermal, cloud = inhalation; electronic drugs
+never fit).
+
+```js
+api.registry.registerPayloadSource("my-module.nanoswarms", {
+  label: "my-module.payload.sources.swarms",   // a localization key
+  filter: item => item.system.drugType === "nano"   // optional: which entries count
+});
+```
+
+The system registers `eclipsephase.drugs-and-toxins`. `listPayloadSources()` returns the registered
+sources as `{ packId, label, filter }`.
+
+A munition that arrives on a sheet with something still open - a seeker whose size reads `select`,
+or a payload switched on without a substance - asks for both in one dialog. A module that takes
+items in by its own drop handler (a shop, say) calls the same step before creating the item, the
+way it calls `api.drugs.chooseDrugForm` for drugs:
+
+```js
+if (!(await api.actors.chooseMunition(itemData))) return;   // cancelled: create nothing
+const label = api.actors.munitionLabel(item.type, item.system);   // "Minimissile · Grin", for a list row
+const { size, payload } = api.actors.needsMunitionChoice(item.type, item.system);   // still open?
+```
+
+`api.actors.mergeOrCreateItem` stacks munitions only with the same size and payload.
+
 ## Drugs and doses
 
 A drug is an Item of type `drug`. Taking a dose puts one ActiveEffect on the actor; everything the

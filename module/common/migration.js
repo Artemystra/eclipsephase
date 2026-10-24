@@ -1,6 +1,6 @@
 import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
-import { defaultArmorUsed } from "./weapon-functions.js";
+import { defaultArmorUsed, weaponDataRepairs } from "./weapon-functions.js";
 
 // The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
 // only its own English text - a title, an introduction, the bullets of what changed and footnote
@@ -41,6 +41,15 @@ export const MIGRATION_NOTES = {
       "That's not all, though. Beside ranged, we also have a full range of melee updates, GM quality of life hacks and much more in the quiver so to speak.",
       "All of the original book weapons should be updated with this migration dialog, when it comes to homebrew weapons we tried to anticipate that energy weapons might do energy damage... but everything else just is kinetic. So you might want to check on these items!",
       "Grenades and cone weapons: Well we're working very hard on these. But due to their nature we're still struggling a bit on how to represent them on the canvas. But fret not: We're Firewall. We will get there. Eventually..."
+    ],
+    comments: []
+  },
+  "2.8.5": {
+    title: "Draft: Areas and ranges",
+    intro: "Draft text - to be written before the release.",
+    bullets: [
+      "Weapon ranges become numbers in metres, so the system can measure them for you.",
+      "Ammunition and grenades get a structured area effect, a size and room for payloads."
     ],
     comments: []
   }
@@ -3062,6 +3071,104 @@ export async function migrationPre28(startMigration) {
     filter: item => item.type === "aspect",
     includeCompendiums: true
   });
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  return { endMigration: true };
+}
+
+// The system compendiums that carry ammunition and grenades.
+const _ep285_MUNITION_PACKS = ["eclipsephase.ammo", "eclipsephase.grenades"];
+
+/**
+ * The armour type and payload each munition in the system compendiums names, by type and name.
+ * @returns {Promise<Map<String, Object>>} armorused and payload, per "type:name"
+ */
+async function _ep285_munitions() {
+  const catalogue = new Map();
+  for (const id of _ep285_MUNITION_PACKS) {
+    const pack = game.packs.get(id);
+    if (!pack) continue;
+    for (const munition of await pack.getDocuments()) {
+      if (munition.type !== "ammo" && munition.type !== "grenade") continue;
+      const source = munition._source?.system ?? munition.system ?? {};
+      catalogue.set(`${munition.type}:${munition.name}`, { armorused: source.armorused, payload: source.payload });
+    }
+  }
+  return catalogue;
+}
+
+/**
+ * What a weapon, ammunition or grenade placed before 2.8.5 needs: ranges in metres, areas read from
+ * their text, a munition's armour type out of the key the old sheet wrote, and what its compendium
+ * namesake says about armour and payload where the item says nothing. A range that cannot be
+ * read is left as it is and reported instead.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep285_munitions read
+ * @returns {Object|null} update (item update or null) and unreadable (the ranges left as text)
+ */
+export function _ep285_weaponUpdate(item, catalogue) {
+  if (!["rangedWeapon", "ammo", "grenade"].includes(item.type)) return null;
+  const source = item._source?.system ?? item.system ?? {};
+  const update = {};
+  const unreadable = [];
+  for (const [path, value] of Object.entries(weaponDataRepairs(item.type, source))) {
+    if (path.endsWith(".range") && value === null) {
+      const text = String(foundry.utils.getProperty(source, path) ?? "").trim();
+      if (text) unreadable.push(text);
+      if (text) continue;
+    }
+    update[`system.${path}`] = value;
+  }
+  const namesake = catalogue.get(`${item.type}:${item.name}`);
+  if (namesake) {
+    if (item.type === "ammo" && !source.armorused && !("system.armorused" in update) && namesake.armorused) update["system.armorused"] = namesake.armorused;
+    if (!source.payload?.enabled && namesake.payload?.enabled) update["system.payload"] = foundry.utils.deepClone(namesake.payload);
+  }
+  if (!Object.keys(update).length && !unreadable.length) return null;
+  return { update: Object.keys(update).length ? update : null, unreadable };
+}
+
+/**
+ * Whether any weapon, ammunition or grenade in the world still carries text where 2.8.5 reads a
+ * number or a structured area.
+ * @returns {Promise<Boolean>} True when at least one item needs work
+ */
+export async function migrationPre285Needed() {
+  const needs = item => _ep285_weaponUpdate(item, new Map())?.update != null;
+  return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
+}
+
+/**
+ * Turns every weapon range in the world into metres and every munition's area text into a
+ * structured area, fixes the munitions' armour type and fills payloads from the system
+ * compendiums: the world's own items, every actor's embedded ones and the world's item
+ * compendiums. Ranges that cannot be read are listed to the GM in one message.
+ * @param {Boolean} startMigration - Whether the user confirmed the migration
+ * @returns {Promise<Object>} Whether the closing notice is due
+ */
+export async function migrationPre285(startMigration) {
+  const latestUpdate = "2.8.5";
+  if (!startMigration) return { endMigration: false };
+
+  const catalogue = await _ep285_munitions();
+  const unreadable = [];
+  await forEachItem(async item => {
+    const result = _ep285_weaponUpdate(item, catalogue);
+    if (!result) return;
+    if (result.update) await item.update(result.update);
+    for (const text of result.unreadable) unreadable.push(`${item.parent?.name ? `${item.parent.name}: ` : ""}${item.name} (${text})`);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => ["rangedWeapon", "ammo", "grenade"].includes(item.type),
+    includeCompendiums: true
+  });
+
+  if (unreadable.length) {
+    await ChatMessage.create({
+      whisper: game.users.filter(user => user.isGM).map(user => user.id),
+      content: game.i18n.format("ep2e.migration.notice.unreadableRanges", { list: unreadable.map(entry => Handlebars.escapeExpression(entry)).join("<br>") })
+    });
+  }
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };

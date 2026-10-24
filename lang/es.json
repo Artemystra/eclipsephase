@@ -1052,7 +1052,8 @@
             "none": "None",
             "kinetic": "Kinetic",
             "energy": "Energy",
-            "mental": "Mental"
+            "mental": "Mental",
+            "asWeapon": "Como el arma"
           },
           "firingMode": {
             "label": "Firing Mode",
@@ -1127,6 +1128,39 @@
             "silencer": "Silencer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazine"
+          },
+          "area": {
+            "none": "Sin área",
+            "uniform": "Uniforme",
+            "centered": "Centrada",
+            "radius": "Radio",
+            "reduction": "Reducción de VD por metro"
+          },
+          "size": {
+            "label": "Tamaño",
+            "baseline": "Micromisil",
+            "standard": "Minimisil",
+            "missile": "Misil estándar",
+            "select": "Elegir"
+          },
+          "trigger": {
+            "label": "Detonador",
+            "impact": "Impacto",
+            "airburst": "Explosión aérea",
+            "delayed": "Retardado (temporizador, señal, proximidad)"
+          },
+          "payload": {
+            "delivery": {
+              "label": "Entrega de la carga",
+              "inside": "Dentro del objetivo",
+              "contact": "Por contacto",
+              "cloud": "Nube"
+            },
+            "enabled": "Tiene carga",
+            "select": "Elegir carga",
+            "sources": {
+              "drugs": "Drogas y toxinas"
+            }
           }
         }
       },
@@ -1828,6 +1862,16 @@
         "fewerHeadline": "Menos objetivos que dosis",
         "fewerCopy": "El arma reparte {max} dosis. ¿Seguro que quieres seleccionar solo {count} objetivos?",
         "fewerConfirm": "Confirmar"
+      },
+      "selectPayload": {
+        "header": "Elegir carga",
+        "copy": "¿Qué sustancia lleva esta munición?",
+        "none": "Ninguna sustancia de los compendios de carga puede administrarse así."
+      },
+      "selectMunition": {
+        "header": "Preparar munición",
+        "copy": "¿Qué sustancia lleva esta munición?",
+        "noPayload": "Sin carga"
       }
     },
     "chat": {
@@ -2150,7 +2194,8 @@
         "backup": "IMPORTANTE: Hasta ahora tus datos no se han actualizado ni modificado. Si aún no has guardado tu mundo, cierra sin migrar y crea una copia de seguridad para no perder datos durante la migración.",
         "reachOut": "¡No olvides ponerte en contacto, agente!",
         "migrate": "¡Migrar ahora!",
-        "close": "Cerrar sin migrar"
+        "close": "Cerrar sin migrar",
+        "unreadableRanges": "Estos alcances de armas no se pudieron leer como metros y se dejaron como estaban. Introdúcelos como número en la hoja del arma:<br>{list}"
       }
     },
     "systemMessage": {

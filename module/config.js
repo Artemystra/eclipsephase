@@ -278,6 +278,31 @@ eclipsephase.grenadeArmorVector = {
     energy: "ep2e.item.weapon.table.armorUsed.energy"
 }
 
+eclipsephase.areaKinds = {
+    none: "ep2e.item.weapon.table.area.none",
+    uniform: "ep2e.item.weapon.table.area.uniform",
+    centered: "ep2e.item.weapon.table.area.centered"
+}
+
+eclipsephase.munitionSizes = {
+    select: "ep2e.item.weapon.table.size.select",
+    baseline: "ep2e.item.weapon.table.size.baseline",
+    standard: "ep2e.item.weapon.table.size.standard",
+    missile: "ep2e.item.weapon.table.size.missile"
+}
+
+eclipsephase.grenadeTriggers = {
+    impact: "ep2e.item.weapon.table.trigger.impact",
+    airburst: "ep2e.item.weapon.table.trigger.airburst",
+    delayed: "ep2e.item.weapon.table.trigger.delayed"
+}
+
+eclipsephase.payloadDelivery = {
+    inside: "ep2e.item.weapon.table.payload.delivery.inside",
+    contact: "ep2e.item.weapon.table.payload.delivery.contact",
+    cloud: "ep2e.item.weapon.table.payload.delivery.cloud"
+}
+
 eclipsephase.rangedAmmoType = {
     beam: "ep2e.item.weapon.table.ammoUsed.beam",
     kinetic: "ep2e.item.weapon.table.ammoUsed.kinetic",

@@ -848,14 +848,15 @@ export function itemToggle(html, item) {
   }
 
 /**
- * Asks for one entry out of a list long enough to need a filter: a search field above a list that
- * narrows as the user types. Enter takes the first entry still shown.
+ * The searchable list with its whole answer, for a dialog that asks for more than the entry, such
+ * as a size chosen above the list.
  * @param {Object[]} entries - id and label per entry
  * @param {String} header - The dialog title's localization key
  * @param {String} copy - The explanation's localization key
- * @returns {Promise<String|null>} The chosen id, or null when cancelled or nothing was chosen
+ * @param {Object} [extras] - Further template data, e.g. sizeChoice for a size select above the list
+ * @returns {Promise<Object>} selection (and size when asked), or cancelled
  */
-  export async function selectFromSearchableList(entries, header, copy) {
+  export async function searchableListSelection(entries, header, copy, extras = {}) {
     const renderHook = (event, dialog) => {
       const root = dialog.element;
       const filter = root.querySelector('input[name="Filter"]');
@@ -874,10 +875,23 @@ export function itemToggle(html, item) {
       filter.focus();
     };
 
-    const result = await listSelection(entries, "searchableList", 320, header, "", copy, renderHook);
+    return listSelection(entries, "searchableList", 320, header, "", copy, renderHook, extras);
+  }
+
+/**
+ * Asks for one entry out of a list long enough to need a filter: a search field above a list that
+ * narrows as the user types. Enter takes the first entry still shown.
+ * @param {Object[]} entries - id and label per entry
+ * @param {String} header - The dialog title's localization key
+ * @param {String} copy - The explanation's localization key
+ * @returns {Promise<String|null>} The chosen id, or null when cancelled or nothing was chosen
+ */
+  export async function selectFromSearchableList(entries, header, copy) {
+    const result = await searchableListSelection(entries, header, copy);
     if (result?.cancelled) return null;
     return result?.selection || null;
   }
+
 
 /**
  * The actor of the token the user has selected on the canvas.
@@ -902,12 +916,13 @@ export async function pickActorFromList(actors, header, copy) {
   function listSelectionOutcome(form) {
     let returnValue;
 
-    if (form?.ItemSelect) {
-      const result = { selection: form.ItemSelect.value };
+    if (form?.ItemSelect || form?.SizeSelect) {
+      const result = { selection: form.ItemSelect?.value ?? "" };
       // Only present when a dialog embeds a nested body-picker dropdown next to a radio option
       // (e.g. the Ego/Morph trait dialog's "Morph" option) - absent for every other radio-only caller.
       if (form?.BodySelect) result.body = form.BodySelect.value;
       if (form?.ExtraOption) result.extraOption = form.ExtraOption.checked === true;
+      if (form?.SizeSelect) result.size = form.SizeSelect.value;
       return result;
     }
 
@@ -1563,7 +1578,8 @@ export async function mergeOrCreateItem(actor, itemData) {
   const existing = actor.items.find(i =>
     i.type === itemData.type &&
     i.name === itemData.name &&
-    (i.type !== "drug" || sameDrugForm(i.system, itemData.system))
+    (i.type !== "drug" || sameDrugForm(i.system, itemData.system)) &&
+    ((i.type !== "ammo" && i.type !== "grenade") || WEAPON.sameMunition(i.system, itemData.system))
   );
 
   if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {

@@ -2,6 +2,7 @@ import {
   registerRollSource, getRollSource,
   registerPoolOption, applicablePoolOptions,
   registerSlot, slotEntries, renderSlot, renderPoolOptions,
+  registerPayloadSource, listPayloadSources,
   resetRegistry
 } from "../../module/api/registry.js";
 import { resetWorld } from "../setup/factories.js";
@@ -118,5 +119,19 @@ describe("slots", () => {
   test("a missing partial is skipped instead of breaking the render", () => {
     registerSlot("s", { template: "never-loaded.html" });
     expect(renderSlot("s", {})).toEqual("");
+  });
+});
+
+describe("payload sources", () => {
+  beforeEach(() => { resetRegistry(); resetWorld(); });
+
+  test("a registered compendium is listed with its label and filter, and a second registration of it is refused", () => {
+    const filter = item => item.system.drugType === "nano";
+
+    expect(registerPayloadSource("my-module.swarms", { label: "my.label", filter })).toBe(true);
+    expect(registerPayloadSource("my-module.swarms", {})).toBe(false);
+    expect(registerPayloadSource("", {})).toBe(false);
+    expect(registerPayloadSource("my-module.other", { filter: "nano" })).toBe(false);
+    expect(listPayloadSources()).toEqual([{ packId: "my-module.swarms", label: "my.label", filter }]);
   });
 });

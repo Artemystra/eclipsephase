@@ -20,8 +20,12 @@ import {
   sameDrugForm,
   VECTOR_KEYS,
   DOSES_PER_PACK,
-  DURATION_UNITS
+  DURATION_UNITS,
+  payloadFits,
+  choosePayload
 } from "../../module/common/drugs.js";
+import { registerPayloadSource, resetRegistry } from "../../module/api/registry.js";
+import { registerSystemPacks, resetWorld } from "../setup/factories.js";
 
 const PACK_DIR = path.resolve(__dirname, "../../src/packs/drugs-and-toxins");
 
@@ -732,5 +736,45 @@ describe("Randomizer", () => {
   test("applies on its own on every social test, as the book's 'at any given time' says", () => {
     const randomizer = packDrugs().find(drug => drug.name === "Randomizer");
     expect(randomizer.system.rollOptions).toEqual([expect.objectContaining({ random: true, automatic: true })]);
+  });
+});
+
+describe("a munition's payload", () => {
+  beforeEach(() => { resetRegistry(); resetWorld(); game.packs.clear(); });
+
+  test("a substance fits a delivery when it comes in the form that delivery needs, and electronic ones never fit", () => {
+    const oral = { oral: true };
+    const patch = { dermal: true };
+    const sprayable = { inhalation: true, injection: true };
+
+    expect([payloadFits(patch, "contact"), payloadFits(patch, "inside"), payloadFits(sprayable, "cloud"), payloadFits(sprayable, "inside")]).toEqual([true, false, true, true]);
+    expect([payloadFits(oral, undefined), payloadFits(patch, undefined), payloadFits({ ...patch, drugType: "electronic" }, "contact")]).toEqual([false, true, false]);
+  });
+
+  test("the choice lists only fitting drugs of the registered sources, and stores the chosen one's uuid and name", async () => {
+    registerSystemPacks();
+    registerPayloadSource("eclipsephase.drugs-and-toxins");
+    const pack = game.packs.get("eclipsephase.drugs-and-toxins");
+    const injectable = (await pack.getDocuments()).filter(entry => entry.type === "drug" && payloadFits(entry.system, "inside"));
+    const offered = [];
+    const realWait = foundry.applications.api.DialogV2.wait;
+    foundry.applications.api.DialogV2.wait = async ({ content }) => {
+      offered.push(...Array.from(String(content).matchAll(/<option[^>]*value="([^"]+)"/g), match => match[1]));
+      return { selection: injectable[0].uuid };
+    };
+    try {
+      expect(await choosePayload("inside")).toEqual({ uuid: injectable[0].uuid, name: injectable[0].name });
+    } finally {
+      foundry.applications.api.DialogV2.wait = realWait;
+    }
+    expect(new Set(offered)).toEqual(new Set(injectable.map(entry => entry.uuid)));
+  });
+
+  test("without a fitting substance the user is told so and nothing is chosen", async () => {
+    const warn = jest.spyOn(ui.notifications, "warn").mockImplementation(() => {});
+
+    expect(await choosePayload("inside")).toBeNull();
+    expect(warn).toHaveBeenCalledWith("ep2e.dialog.selectPayload.none");
+    warn.mockRestore();
   });
 });

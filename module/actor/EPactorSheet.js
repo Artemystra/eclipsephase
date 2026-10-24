@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js";
 import { registerCommonHandlers,tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { healthBarChange } from "../rolls/health.js";
-import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
+import { weaponPreparation,reloadWeapon, chooseMunition } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
 import { drugVector, isAmmoPack, dosesRemaining, chooseDrugForm, selectDoseRecipient } from "../common/drugs.js";
@@ -1232,6 +1232,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     }
 
     if (!(await chooseDrugForm(itemData))) return null;
+    if (!(await chooseMunition(itemData))) return null;
 
     itemModel.updated = game.system.version;
 

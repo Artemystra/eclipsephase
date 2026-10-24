@@ -45,13 +45,15 @@ import {
   registerPoolOption,
   registerSlot,
   registerRezSpendOptions,
-  registerTaskResultText
+  registerTaskResultText,
+  registerPayloadSource,
+  listPayloadSources
 } from "./registry.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
 import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget } from "../rolls/attacks.js";
 import { tokenAt, pickTokensOnCanvas, drawTargetMarker } from "../common/targeting.js";
-import { chemicalDoses } from "../common/weapon-functions.js";
+import { chemicalDoses, chooseMunition, needsMunitionChoice, munitionLabel } from "../common/weapon-functions.js";
 import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
 import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 
@@ -91,6 +93,9 @@ export const actors = {
   applyFrame,
   transferItemBetweenActors,
   mergeOrCreateItem,
+  chooseMunition,
+  needsMunitionChoice,
+  munitionLabel,
   requestGMItemTransfer,
   tempEffectCreation,
   tempEffectDeletion
@@ -151,6 +156,8 @@ export const migration = {
  */
 export const registry = {
   registerRollSource,
+  registerPayloadSource,
+  listPayloadSources,
   registerPoolOption,
   registerSlot,
   registerRezSpendOptions,

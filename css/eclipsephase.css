@@ -3315,6 +3315,24 @@ button.epTextlink:hover{
   opacity: 1;
 }
 
+/* Munition sheets: tooltips on one line so they clear the field they explain, and fields that do not apply stay in place, greyed out. */
+.munition-fields .wantToKnowMore .tooltipText {
+  white-space: nowrap;
+}
+
+.munition-fields input:disabled,
+.munition-fields select:disabled,
+.munition-fields button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.munition-fields .munition-payload-select {
+  max-width: 150px;
+  margin: 0;
+  font-size: 12px;
+}
+
 .psiDamageFields .wantToKnowMore .tooltipText {
   position: fixed;
   top: auto;

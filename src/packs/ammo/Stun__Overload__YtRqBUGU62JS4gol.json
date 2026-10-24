@@ -83,9 +83,19 @@
         "value": false
       }
     },
-    "armorused": null,
+    "armorused": "none",
     "quantity": 1,
-    "armorUsed": "kinetic"
+    "area": {
+      "kind": "uniform",
+      "radius": 10,
+      "reduction": null
+    },
+    "size": "select",
+    "payload": {
+      "enabled": false,
+      "delivery": "",
+      "loaded": []
+    }
   },
   "effects": [],
   "flags": {},

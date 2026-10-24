@@ -1,6 +1,7 @@
 const rollSources = new Map();
 const poolOptions = [];
 const slots = new Map();
+const payloadSources = new Map();
 
 /**
  * Reports a rejected registration without throwing, so one broken module cannot stop the system
@@ -40,6 +41,31 @@ export function registerRollSource(id, definition = {}) {
  */
 export function getRollSource(id) {
   return rollSources.get(id);
+}
+
+/**
+ * Registers a compendium a munition's payload may be chosen from, so a module can offer its own
+ * substances next to the system's drugs and toxins.
+ * @param {String} packId - The compendium's collection id, e.g. "eclipsephase.drugs-and-toxins"
+ * @param {Object} [definition] - May hold label (a localization key) and filter(item) deciding which entries count
+ * @returns {Boolean} Whether the source was registered
+ * @since 2.8.5
+ */
+export function registerPayloadSource(packId, definition = {}) {
+  if (typeof packId !== "string" || !packId) return reject("A payload source", "its pack id must be a non-empty string");
+  if (payloadSources.has(packId)) return reject(`Payload source "${packId}"`, "that pack is already registered");
+  if (definition.filter !== undefined && typeof definition.filter !== "function") return reject(`Payload source "${packId}"`, "filter must be a function");
+  payloadSources.set(packId, definition);
+  return true;
+}
+
+/**
+ * The compendiums a munition's payload may be chosen from.
+ * @returns {Object[]} Entries of packId, label and filter
+ * @since 2.8.5
+ */
+export function listPayloadSources() {
+  return Array.from(payloadSources, ([packId, definition]) => ({ packId, ...definition }));
 }
 
 /**
@@ -218,6 +244,7 @@ export function resetRegistry() {
   rollSources.clear();
   poolOptions.length = 0;
   slots.clear();
+  payloadSources.clear();
   taskResultText = null;
   rezSpendOptions = null;
 }

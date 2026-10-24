@@ -1074,7 +1074,8 @@
             "none": "Keine",
             "kinetic": "Kinetisch",
             "energy": "Energie",
-            "mental": "Mental"
+            "mental": "Mental",
+            "asWeapon": "Wie Waffe"
           },
           "firingMode": {
             "label": "Feuermodus",
@@ -1148,6 +1149,39 @@
             "silencer": "Schalldämpfer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazin"
+          },
+          "area": {
+            "none": "Keine Fläche",
+            "uniform": "Gleichmäßig",
+            "centered": "Zentriert",
+            "radius": "Radius",
+            "reduction": "SW-Abzug pro Meter"
+          },
+          "size": {
+            "label": "Größe",
+            "baseline": "Mikrorakete",
+            "standard": "Minirakete",
+            "missile": "Standardrakete",
+            "select": "Auswählen"
+          },
+          "trigger": {
+            "label": "Zünder",
+            "impact": "Aufschlag",
+            "airburst": "Luftdetonation",
+            "delayed": "Verzögert (Timer, Signal, Annäherung)"
+          },
+          "payload": {
+            "delivery": {
+              "label": "Abgabe der Ladung",
+              "inside": "Im Ziel",
+              "contact": "Bei Kontakt",
+              "cloud": "Wolke"
+            },
+            "enabled": "Hat Ladung",
+            "select": "Ladung wählen",
+            "sources": {
+              "drugs": "Drogen und Toxine"
+            }
           }
         }
       },
@@ -1870,6 +1904,16 @@
         "fewerHeadline": "Weniger Ziele als Dosen",
         "fewerCopy": "Die Waffe verteilt {max} Dosen. Willst du wirklich nur {count} Ziele auswählen?",
         "fewerConfirm": "Bestätigen"
+      },
+      "selectPayload": {
+        "header": "Ladung wählen",
+        "copy": "Welchen Wirkstoff trägt diese Munition?",
+        "none": "Kein Wirkstoff in den Ladungs-Kompendien lässt sich so abgeben."
+      },
+      "selectMunition": {
+        "header": "Munition vorbereiten",
+        "copy": "Welchen Wirkstoff trägt diese Munition?",
+        "noPayload": "Keine Ladung"
       }
     },
     "chat": {
@@ -2187,7 +2231,8 @@
         "backup": "WICHTIG: Bis hierher wurden deine Daten weder aktualisiert noch verändert. Falls du deine Welt noch nicht gesichert hast, schließe diesen Dialog ohne Migration und lege eine Sicherung an, damit bei der Migration nichts verloren geht.",
         "reachOut": "Melde dich gern, Agent!",
         "migrate": "Jetzt migrieren!",
-        "close": "Ohne Migration schließen"
+        "close": "Ohne Migration schließen",
+        "unreadableRanges": "Diese Waffenreichweiten ließen sich nicht als Meter lesen und blieben unverändert. Bitte trag sie im Waffenbogen als Zahl ein:<br>{list}"
       }
     },
     "systemMessage": {

@@ -56,7 +56,17 @@
     },
     "armorused": "kinetic",
     "quantity": 1,
-    "armorUsed": "kinetic"
+    "area": {
+      "kind": "centered",
+      "radius": null,
+      "reduction": 2
+    },
+    "payload": {
+      "enabled": false,
+      "delivery": "",
+      "loaded": []
+    },
+    "trigger": "impact"
   },
   "ownership": {
     "default": 0,

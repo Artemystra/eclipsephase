@@ -213,15 +213,27 @@
 
     {{else if (eq dialogType "searchableList")}}
 
+        {{#if sizeChoice}}
+        <div class="flexrow" style="align-items: center; gap: 8px; padding: 10px 0 0 0;">
+            <label for="sizeSelect" style="flex: 0 0 auto;">{{localize sizeChoice.label}}</label>
+            <select name="SizeSelect" id="sizeSelect">
+                {{#each sizeChoice.options}}
+                <option value="{{id}}">{{localize label}}</option>
+                {{/each}}
+            </select>
+        </div>
+        {{/if}}
         {{#if copy}}
             <div style="padding: 10px 0;">{{localize copy}}</div>
         {{/if}}
+        {{#if objectList.length}}
         <input type="search" name="Filter" placeholder="{{localize 'ep2e.dialog.selectDoseNpc.search'}}" autocomplete="off" style="width: 100%; margin-bottom: 8px;">
         <select name="ItemSelect" size="10" style="width: 100%; height: auto; margin-bottom: 10px;">
             {{#each objectList}}
             <option value="{{id}}">{{label}}</option>
             {{/each}}
         </select>
+        {{/if}}
 
     {{else if (eq dialogType "selectBody")}}
 

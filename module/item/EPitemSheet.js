@@ -1,6 +1,7 @@
 import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText } from "../common/general-sheet-functions.js";
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
 import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
+import { choosePayload } from "../common/drugs.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -23,9 +24,21 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       height: 415
     },
     actions: {
-      editImage: this._onEditImage
+      editImage: this._onEditImage,
+      selectPayload: this._onSelectPayload
     }
   };
+
+  /**
+   * Picks the substance a munition carries as its payload.
+   * @returns {Promise<void>} Resolves once the choice is stored or cancelled
+   */
+  static async _onSelectPayload() {
+    const payload = this.document.system.payload;
+    if (!payload?.enabled) return;
+    const chosen = await choosePayload(payload.delivery);
+    if (chosen) await this.document.update({ "system.payload.loaded": [chosen] });
+  }
 
   // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders (see EPactorSheet.js)
   static PARTS = {

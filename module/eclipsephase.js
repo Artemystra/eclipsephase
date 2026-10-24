@@ -17,7 +17,7 @@ import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
-import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
+import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./rolls/pools.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
@@ -199,6 +199,7 @@ Hooks.once('init', async function() {
   effectsPrep.registerExpiryCleanup();
   registerTargetedAttackHooks();
   registerDrugHooks();
+  registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
   registerWeaponAttacks();
   registerSleightAttacks();
   CONFIG.Item.documentClass = EPitem;
@@ -253,6 +254,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/chat/partials/card-header.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
+    "systems/eclipsephase/templates/item/partials/munition-payload.hbs",
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
     "systems/eclipsephase/templates/item/partials/movement-grid.hbs",
@@ -406,6 +408,7 @@ Hooks.once("ready", async function() {
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
   let before28 = foundry.utils.isNewerVersion("2.8", gameVersion);
+  let before285 = foundry.utils.isNewerVersion("2.8.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -717,6 +720,19 @@ Hooks.once("ready", async function() {
 
     let Migration28 = await update.migrationPre28(startMigration);
     endMigration = endMigration || Migration28["endMigration"];
+  }
+
+  if (before285 && !(await update.migrationPre285Needed())) {
+    await game.settings.set("eclipsephase", "migrationVersion", "2.8.5");
+  }
+  else if (before285) {
+    let migration = await update.migrationNotice("2.8.5");
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration285 = await update.migrationPre285(startMigration);
+    endMigration = endMigration || Migration285["endMigration"];
   }
 
     if(endMigration){

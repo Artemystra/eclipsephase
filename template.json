@@ -634,6 +634,8 @@
         "name": "",
         "dose": null,
         "armorused": "",
+        "area": { "kind": "none", "radius": null, "reduction": null },
+        "payload": null,
         "dvModifier": {
           "d10": null,
           "d6": null,
@@ -756,6 +758,7 @@
       "mode1": {
         "name": "",
         "range": null,
+        "area": { "kind": "none", "radius": null, "reduction": null },
         "d10": null,
         "d6": null,
         "bonus": null,
@@ -845,6 +848,7 @@
       "mode2": {
         "name": "",
         "range": null,
+        "area": { "kind": "none", "radius": null, "reduction": null },
         "d10": null,
         "d6": null,
         "bonus": null,
@@ -938,6 +942,9 @@
         "buyable"
       ],
       "areaeffect": null,
+      "area": { "kind": "none", "radius": null, "reduction": null },
+      "trigger": "impact",
+      "payload": { "enabled": false, "delivery": "", "loaded": [] },
       "dv": {
         "d10": null,
         "d6": null,
@@ -986,6 +993,9 @@
       ],
       "type": null,
       "areaeffect": null,
+      "area": { "kind": "none", "radius": null, "reduction": null },
+      "size": "baseline",
+      "payload": { "enabled": false, "delivery": "", "loaded": [] },
       "dv": {
         "d10": null,
         "d6": null,
