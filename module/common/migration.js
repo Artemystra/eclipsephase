@@ -2845,6 +2845,16 @@ export const MIGRATION_NOTES = {
       "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
     ],
     comments: []
+  },
+  "2.8": {
+    title: "Know Your Armor",
+    intro: "Lasers burn, bullets punch, and some things just soak through your clothes. Every weapon mode now says which armor its damage meets:",
+    bullets: [
+      "Each weapon mode has an **Armor Used** field in its header: **Energy**, **Kinetic** or **None**.",
+      "Weapons already on your sheets get the value of their compendium namesake. Weapons of your own get Energy for beam weapons and Kinetic for everything else - check the ones that should differ.",
+      "Psi now meets **mental armor**: Psi Armor sleights already on your sheets learn to report it."
+    ],
+    comments: []
   }
 };
 

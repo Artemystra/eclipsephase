@@ -710,8 +710,7 @@ Hooks.once("ready", async function() {
     await game.settings.set("eclipsephase", "migrationVersion", "2.8");
   }
   else if (before28) {
-    const messageCopy = "ep2e.migration.28";
-    let migration = await migrationStart(false, messageHeadline, messageCopy, 900);
+    let migration = await update.migrationNotice("2.8");
 
     if (migration.cancelled) return;
     startMigration = migration.start;

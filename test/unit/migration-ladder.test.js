@@ -318,7 +318,7 @@ describe("the 2.8 armour type per weapon mode", () => {
 
     const rendered = await runLadderFrom("2.7");
 
-    expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.28");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.8");
     expect(actor.items.get("frz1")._source.system.mode1.armorused).toBe("none");
     expect(actor.items.get("own1")._source.system.mode1.armorused).toBe("energy");
     expect(actor.items.get("set1")._source.system.mode1.armorused).toBe("kinetic");
