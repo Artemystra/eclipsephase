@@ -88,6 +88,9 @@
       "ammo": "Munition",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "Sperrfeuer"
     }
   },
   "ep2e": {
@@ -2005,7 +2008,9 @@
         "chooseTarget": "Ziel wählen",
         "rollDamage": "Schaden würfeln",
         "damageWithoutTarget": "Schaden ohne Ziel",
-        "damageReady": "Schaden durch {weapon}"
+        "damageReady": "Schaden durch {weapon}",
+        "suppressiveArea": "Sperrfeuer ({name})",
+        "suppressiveNote": "Sperrfeuer gelegt: Wer sich im Kegel bewegt, muss sich verteidigen."
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -2021,13 +2026,17 @@
             "hit": "Betroffen",
             "half": "Betroffen",
             "none": "Widerstanden"
-          }
+          },
+          "cover": "In Deckung gegangen",
+          "remainCover": "In Deckung geblieben"
         },
         "severalTargets": "Mehrere Ziele",
         "resist": "Widerstehen (WIL)",
         "yield": "Nicht widerstehen",
         "lockedOut": "Kritisch: Das Async ist aus diesem Geist ausgesperrt, bis es sich erholt.",
-        "touchLabel": "{name} durch Berührung"
+        "touchLabel": "{name} durch Berührung",
+        "cover": "In Deckung gegangen",
+        "remainCover": "Bleibt in Deckung"
       },
       "poolSpent": {
         "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
@@ -2303,7 +2312,22 @@
         "range": "Reichweite",
         "beyond": "Jenseits der Reichweite"
       },
-      "outOfTouch": "{name} ist außerhalb der Reichweite einer Berührung (2 m)."
+      "outOfTouch": "{name} ist außerhalb der Reichweite einer Berührung (2 m).",
+      "areaName": "Fläche",
+      "outsideArea": "Dieser Token liegt außerhalb der Fläche.",
+      "tooMany": "Dieser Angriff trifft auf diese Entfernung höchstens {max} Ziele."
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Angriffskarte",
+            "hint": "Die Chatnachricht des Sperrfeuers, zu dem diese Fläche gehört."
+          }
+        }
+      }
     }
   }
 }

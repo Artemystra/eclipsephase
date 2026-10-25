@@ -29,6 +29,11 @@
       }
     ]
   },
+  "documentTypes": {
+    "RegionBehavior": {
+      "suppressive": {}
+    }
+  },
   "esmodules": [
     "module/eclipsephase.js",
     "module/effects.js"

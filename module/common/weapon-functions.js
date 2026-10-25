@@ -342,6 +342,12 @@ export function rangeRefusal(distance, traits = {}) {
   return null;
 }
 
+// How wide suppressive fire's cone is at its far end, in metres (Core p.207); its length is the shooter's to choose.
+export const SUPPRESSIVE_WIDTH = 20;
+
+// The most targets a cone reaches (Core p.218).
+export const CONE_MAX_TARGETS = 3;
+
 // An attack's target count that stands for any number of targets. Kept as 0, since a card's flags
 // cannot hold Infinity.
 export const ANY_TARGETS = 0;

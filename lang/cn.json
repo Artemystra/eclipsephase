@@ -88,6 +88,9 @@
       "ammo": "Ammo",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "压制射击"
     }
   },
   "ep2e": {
@@ -1970,7 +1973,9 @@
         "chooseTarget": "选择目标",
         "rollDamage": "投掷伤害",
         "damageWithoutTarget": "无目标伤害",
-        "damageReady": "{weapon} 造成的伤害"
+        "damageReady": "{weapon} 造成的伤害",
+        "suppressiveArea": "压制射击（{name}）",
+        "suppressiveNote": "压制射击已展开：在锥形范围内移动者必须防御。"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -1986,13 +1991,17 @@
             "hit": "受影响",
             "half": "受影响",
             "none": "已抵抗"
-          }
+          },
+          "cover": "已进入掩体",
+          "remainCover": "留在了掩体中"
         },
         "severalTargets": "多个目标",
         "resist": "抵抗（意志）",
         "yield": "不抵抗",
         "lockedOut": "大成功：异能者在恢复前无法再进入此心智。",
-        "touchLabel": "{name}（接触）"
+        "touchLabel": "{name}（接触）",
+        "cover": "已进入掩体",
+        "remainCover": "留在掩体中"
       },
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",
@@ -2274,7 +2283,22 @@
         "range": "射程内",
         "beyond": "超出射程"
       },
-      "outOfTouch": "{name}超出接触范围（2 米）。"
+      "outOfTouch": "{name}超出接触范围（2 米）。",
+      "areaName": "范围",
+      "outsideArea": "该标记在范围之外。",
+      "tooMany": "此攻击在该距离最多命中 {max} 个目标。"
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "攻击卡",
+            "hint": "此区域对应的压制射击聊天消息。"
+          }
+        }
+      }
     }
   }
 }

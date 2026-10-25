@@ -20,7 +20,10 @@ registerCard("taskCard", {
     poolSpent,
     targets: (state, { names, uuids = [] }) => ({ ...state, targets: uuids.map((uuid, index) => ({ uuid, name: names[index] ?? "", outcome: null })) }),
     defence: (state, { uuid, outcome, kind = "dodge" }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, outcome, kind } : target) }),
-    damageOffered: state => ({ ...state, damageOffered: true })
+    damageOffered: state => ({ ...state, damageOffered: true }),
+    updateTarget: (state, { uuid, ...change }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, ...change } : target) }),
+    addTarget: (state, { uuid, name, hidden = false }) => ({ ...state, targets: [...(state.targets ?? []), { uuid, name: name ?? "", outcome: null, hidden }] }),
+    targetDamageOffered: (state, { uuid }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, damageOffered: true } : target) })
   }
 });
 
@@ -54,7 +57,8 @@ export function damageCardState(message) {
 export function taskCardView(state) {
   const view = { ...state.data };
   if (state.spent) view.poolSpent = game.i18n.format(`ep2e.chat.poolSpent.${state.spent.usageType}`, { name: state.spent.spender, pool: game.i18n.localize(state.spent.poolName) });
-  if (state.targets?.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: state.targets.map(targetWithOutcome(state)).join(", ") });
+  const shown = (state.targets ?? []).filter(target => !target.hidden);
+  if (shown.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: shown.map(targetWithOutcome(state)).join(", ") });
   view.defended = (state.targets ?? []).some(target => target.outcome);
   return view;
 }

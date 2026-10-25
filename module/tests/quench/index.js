@@ -10,6 +10,7 @@ import { durationRunOut } from "../../common/time.js";
 import { applyTargetedAttack } from "../../rolls/attacks.js";
 import { registerChatCardBatch } from "./chat-cards.js";
 import { registerHealthBatch } from "./health.js";
+import { registerAreasBatch } from "./areas.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
@@ -68,6 +69,7 @@ function skipDialogOptions(overrides = {}) {
 Hooks.on("quenchReady", quench => {
   registerChatCardBatch(quench);
   registerHealthBatch(quench);
+  registerAreasBatch(quench);
 
   quench.registerBatch("eclipsephase.core.actors", context => {
     const { describe, it, assert } = context;
@@ -580,9 +582,9 @@ Hooks.on("quenchReady", quench => {
     }
 
     describe("forcing a dose on an unwilling target", function () {
-      it("a hit offers the target button, and the dose stays in the pack until a target is picked", async function () {
+      it("a hit rolled without targets offers no target button, and the dose stays in the pack", async function () {
         await attackWithFace(5, async (actor, drug, attack) => {
-          assert.include(attack.content, "targetedAttack");
+          assert.notInclude(attack.content, "targetedAttack");
           assert.isFalse(attack.getFlag("eclipsephase", "roll").targetedAttack.delivered);
           assert.strictEqual(drug.system.usagesUsed, 0);
         });
@@ -608,12 +610,11 @@ Hooks.on("quenchReady", quench => {
         });
       });
 
-      it("a miss a pool spend turns into a hit shows the target button on the same card, and posts no other", async function () {
+      it("a miss a pool spend turns into a hit stays one card, still without a target button when rolled without targets", async function () {
         await attackWithFace(91, async (actor, drug, attack, before) => {
-          assert.notInclude(attack.content, "targetedAttack", "the flipped 19 must not count before the pool is spent");
           await spendPoolOn(attack);
-          await waitUntil(() => game.messages.get(attack.id).content.includes("targetedAttack"));
-          assert.include(game.messages.get(attack.id).content, "ep-pool-spent");
+          await waitUntil(() => game.messages.get(attack.id).content.includes("ep-pool-spent"));
+          assert.notInclude(game.messages.get(attack.id).content, "targetedAttack");
           assert.strictEqual(otherNewCards(before, attack).length, 0);
           assert.strictEqual(drug.system.usagesUsed, 0);
         });

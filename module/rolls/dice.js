@@ -221,7 +221,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 async function defineRoll(dataset, actorWhole){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'vacuum', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -395,6 +395,15 @@ export class TaskRoll {
    */
   addModifier(modifier) {
     this.modifiers.push(modifier)
+  }
+
+  /**
+   * Keeps only the modifiers a test allows, such as suppressive fire's range and wounds.
+   * @param {Function} keep - keep(modifier) for those that stay
+   * @returns {void}
+   */
+  keepModifiers(keep) {
+    this._modifiers = this.modifiers.filter(keep)
   }
 
   /**
@@ -763,6 +772,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             if(modifier instanceof TaskRollModifier) task.addModifier(modifier)
             else if(modifier?.text) task.addModifier(new TaskRollModifier(modifier.text, modifier.value, modifier.comment))
         }
+        if (options.attackMode === "suppressive") task.keepModifiers(modifier => modifier.underSuppression === true)
 
         await task.performRoll()
 
@@ -928,12 +938,50 @@ const result = await foundry.applications.api.DialogV2.wait({
         }
 
         wirePreRollTargets(root, dialog, picking);
+        wireSuppressiveFields(root);
     },
     ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
     ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
 });
 
 return result ?? { cancelled: true };
+}
+
+/**
+ * Marks the modifiers added since a point as those suppressive fire keeps: it takes no modifiers
+ * but range and wounds (Core p.207).
+ * @param {TaskRoll} task - The roll
+ * @param {Number} from - How many modifiers it had before them
+ * @returns {void}
+ */
+function markUnderSuppression(task, from) {
+    for (const modifier of task.modifiers.slice(from)) modifier.underSuppression = true
+}
+
+// The attack dialog's fields that still count under suppressive fire: the mode, the distance, what
+// the damage depends on, and how the roll is shown. Every other field is a modifier the fire ignores
+// (Core p.207) - a pool point spent before the roll included; one spent on the card still counts.
+const SUPPRESSIVE_FIELDS = new Set(["attackMode", "range", "vacuum", "biomorphTarget", "ammoEffect", "rollMode", "preTargets", "measuredRanges", "placedArea"]);
+
+/**
+ * Greys out the attack dialog's modifiers while suppressive fire is chosen, as its roll ignores them.
+ * Fields the dialog shows disabled anyway stay so.
+ * @param {HTMLElement} root - The dialog's element
+ * @returns {void}
+ */
+export function wireSuppressiveFields(root) {
+    const mode = root?.querySelector?.('select[name="attackMode"]')
+    if (!mode?.form) return
+    const fields = Array.from(mode.form.elements).filter(field => field.name && field.type !== "hidden" && field.tagName !== "BUTTON" && !SUPPRESSIVE_FIELDS.has(field.name) && !field.disabled)
+    const sync = () => {
+        const suppressive = mode.value === "suppressive"
+        for (const field of fields) {
+            field.disabled = suppressive
+            field.closest(".form-group")?.classList.toggle("ep-field-suppressed", suppressive)
+        }
+    }
+    mode.addEventListener("change", sync)
+    sync()
 }
 
 /**
@@ -997,11 +1045,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     // Jamming" block further down already applies the real body's own stashed ownBodyWoundMod
     // instead, so counting both here would double it up. Trauma is NOT suppressed - it's ego-level,
     // not body-level, so it applies regardless of which body is rolling.
+    const woundsFrom = task.modifiers.length
     if(wounds > 0 && rolledFrom !== "vehicleSkill" && !isOwnBodyJammingRoll)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
 
     if(trauma > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
+    markUnderSuppression(task, woundsFrom)
 
     if(rollType === "psi"){
         const strainFamily = psi.actorStrainFamily(actorWhole)
@@ -1144,6 +1194,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.sizeXL";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
+    const rangeFrom = task.modifiers.length
     const measured = rolledFrom === "rangedWeapon" && !weaponTraits?.automatedEffects?.steady?.value ? measuredDistances(options) : []
     if (measured.length) {
         const farthest = Math.max(...measured)
@@ -1188,6 +1239,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
     }
+
+    markUnderSuppression(task, rangeFrom)
 
     if (options.coverDefender === "minor") {
         modValue = -10

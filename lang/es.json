@@ -88,6 +88,9 @@
       "ammo": "Ammo",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "Fuego de supresión"
     }
   },
   "ep2e": {
@@ -1963,7 +1966,9 @@
         "chooseTarget": "Elegir objetivo",
         "rollDamage": "Tirar daño",
         "damageWithoutTarget": "Daño sin objetivo",
-        "damageReady": "Daño de {weapon}"
+        "damageReady": "Daño de {weapon}",
+        "suppressiveArea": "Fuego de supresión ({name})",
+        "suppressiveNote": "Fuego de supresión: quien se mueva dentro del cono debe defenderse."
       },
       "defence": {
         "headline": "Defenderse de {weapon}",
@@ -1979,13 +1984,17 @@
             "hit": "Afectado",
             "half": "Afectado",
             "none": "Resistido"
-          }
+          },
+          "cover": "Se puso a cubierto",
+          "remainCover": "Permaneció a cubierto"
         },
         "severalTargets": "Varios objetivos",
         "resist": "Resistir (VOL)",
         "yield": "No resistir",
         "lockedOut": "Crítico: el async queda bloqueado de esta mente hasta que se recupere.",
-        "touchLabel": "{name} por toque"
+        "touchLabel": "{name} por toque",
+        "cover": "Se puso a cubierto",
+        "remainCover": "Permanece a cubierto"
       },
       "poolSpent": {
         "swapped": "{name} gastó un punto de {pool} para intercambiar los dados",
@@ -2267,7 +2276,22 @@
         "range": "Alcance",
         "beyond": "Fuera de alcance"
       },
-      "outOfTouch": "{name} está fuera del alcance de un toque (2 m)."
+      "outOfTouch": "{name} está fuera del alcance de un toque (2 m).",
+      "areaName": "Área",
+      "outsideArea": "Esa ficha está fuera del área.",
+      "tooMany": "Este ataque alcanza como mucho {max} objetivos a esa distancia."
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Tarjeta de ataque",
+            "hint": "El mensaje de chat del fuego de supresión al que pertenece esta área."
+          }
+        }
+      }
     }
   }
 }

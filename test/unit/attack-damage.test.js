@@ -1,12 +1,12 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
-import { MELEE_CURSOR, wirePreRollTargets } from "../../module/common/targeting.js";
+import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
 import { weaponPreparation, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
-import { RollCheck } from "../../module/rolls/dice.js";
+import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -467,7 +467,6 @@ describe("picking the targets in the attack dialog", () => {
   }
 
   const RIFLE = attackPicking({ rolledFrom: "rangedWeapon", weapon: { weapon: { type: "rangedWeapon", system: { ammoType: "kinetic" } } } });
-  const SHREDDER = attackPicking({ rolledFrom: "rangedWeapon", weapon: { weapon: { type: "rangedWeapon", system: { ammoType: "spray" } } } });
 
   test("a roll with no weapon and no attack of its own picks no targets; melee picks one with the slash", () => {
     expect(attackPicking({ rolledFrom: "skill", weapon: null, flags: {} })).toBeNull();
@@ -476,12 +475,12 @@ describe("picking the targets in the attack dialog", () => {
     expect(melee.count(null)).toBe(1);
   });
 
-  test("the pick button names one target or several, as the chosen mode and range strike", () => {
+  test("the pick button names one target or several, as the chosen mode strikes", () => {
     const { root, button } = dialogRoot();
-    wirePreRollTargets(root, null, SHREDDER, { pick: async () => null });
+    wirePreRollTargets(root, null, RIFLE, { pick: async () => null });
 
     expect(button.querySelector("span").textContent).toBe("ep2e.chat.attack.chooseTarget");
-    choose(root, "range", "range");
+    choose(root, "attackMode", "burstTargets");
     expect(button.querySelector("span").textContent).toBe("ep2e.roll.dialog.ranged.attacker.pickTargets");
     expect(button.querySelector("i")).not.toBeNull();
   });
@@ -558,6 +557,110 @@ describe("picking the targets in the attack dialog", () => {
     }
   });
 
+  describe("an area placed before the targets", () => {
+    const square = x => ({ x, y: 0, width: 100, height: 100 });
+
+    /**
+     * An attack dialog whose picking places an area first, with stand-ins for the area and the picker.
+     * @param {Object} overrides - place, pick, area (the zone the picking names)
+     * @returns {Promise<Object>} root, element, and the tokens in and outside the area
+     */
+    async function fireArea({ place, pick, area = { kind: "circle", radius: 20, from: {}, max: 3, within: 1 } }) {
+      const root = document.createElement("div");
+      root.innerHTML = `<form><select name="range"><option value="none">c</option><option value="beyond">b</option></select>
+        <input type="hidden" name="preTargets" value=""><input type="hidden" name="measuredRanges" value=""><input type="hidden" name="placedArea" value="">
+        <button data-action="pickTargets"><span>Pick</span></button></form>`;
+      const element = dialogWindow();
+      const inside = { actor: { uuid: "Actor.ana" }, bounds: square(300) };
+      const outside = { actor: { uuid: "Actor.bo" }, bounds: square(900) };
+      global.canvas = { grid: { size: 100, distance: 1 }, tokens: { placeables: [area.from, inside, outside] } };
+      const picking = { cursor: {}, refuse: null, count: () => 3, minimum: () => 1, area: () => area };
+      wirePreRollTargets(root, { element }, picking, { place, pick });
+      root.querySelector("button").click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      return { root, element, inside, outside };
+    }
+
+    afterEach(() => { delete global.canvas; });
+
+    test("only tokens in the area can be picked", async () => {
+      const pick = jest.fn(async () => null);
+      const { inside, outside } = await fireArea({ place: async () => ({ polygon: { contains: x => x < 500 } }), pick });
+
+      const options = pick.mock.calls[0][0];
+      expect(options).toMatchObject({ multi: true, max: 3, within: 1 });
+      expect(options.refuse(inside)).toBeNull();
+      expect(options.refuse(outside)).toBe("ep2e.targeting.outsideArea");
+    });
+
+    test("an area cancelled brings the dialog back without picking", async () => {
+      const pick = jest.fn();
+      const { element } = await fireArea({ place: async () => null, pick });
+
+      expect(pick).not.toHaveBeenCalled();
+      expect(element.open).toBe(true);
+    });
+
+    test("open sheets stay minimised while the area is placed and its targets picked, and come back afterwards", async () => {
+      const Sheet = class {};
+      const sheet = Object.assign(new Sheet(), { rendered: true, minimized: false, minimize: jest.fn(), maximize: jest.fn() });
+      const realApi = foundry.applications.api;
+      const realInstances = foundry.applications.instances;
+      foundry.applications.api = { ...realApi, DocumentSheetV2: Sheet };
+      foundry.applications.instances = new Map([["sheet", sheet]]);
+      const seen = [];
+      try {
+        await fireArea({
+          place: async options => { seen.push(["place", sheet.minimize.mock.calls.length, options.asideSheets]); return { polygon: { contains: () => true } }; },
+          pick: async () => { seen.push(["pick", sheet.maximize.mock.calls.length]); return null; }
+        });
+      } finally {
+        foundry.applications.api = realApi;
+        foundry.applications.instances = realInstances;
+      }
+
+      expect(seen).toEqual([["place", 1, false], ["pick", 0]]);
+      expect(sheet.maximize).toHaveBeenCalledTimes(1);
+    });
+
+    test("an area that takes no targets, such as suppressive fire, is kept in the dialog, its length counted as the distance, and rolls at once", async () => {
+      const pick = jest.fn();
+      const placed = { kind: "cone", origin: { x: 1, y: 2 }, radius: 40, angle: 28, rotation: 90 };
+      const { root } = await fireArea({ place: async () => placed, pick, area: { kind: "cone", radius: 20, width: 20, from: {}, max: 0 } });
+
+      expect(pick).not.toHaveBeenCalled();
+      expect(JSON.parse(root.querySelector('input[name="placedArea"]').value)).toEqual(placed);
+      expect(root.querySelector('input[name="measuredRanges"]').value).toBe("40");
+    });
+  });
+
+  describe("a cone weapon", () => {
+    const SHREDDER_RANGED = { weapon: { type: "rangedWeapon", system: { ammoType: "spray", mode1: { range: 25 } } }, weaponMode: "1" };
+
+    test("picks up to three targets within a metre of each other, and its measured range decides how many it may strike (Core p.218)", () => {
+      const picking = attackPicking({ rolledFrom: "rangedWeapon", weapon: SHREDDER_RANGED });
+      const at = range => ({ elements: { attackMode: { value: "single" }, range: { value: range } } });
+
+      expect(picking.area).toBeUndefined();
+      expect(picking.count(at("none"))).toBe(3);
+      expect([picking.allowed(at("none")), picking.allowed(at("range")), picking.allowed(at("beyond"))]).toEqual([1, 2, 3]);
+    });
+
+    test("more targets than its range allows bring the dialog back with a notice", async () => {
+      const root = document.createElement("div");
+      root.innerHTML = `<form><select name="range"><option value="none">c</option></select><input type="hidden" name="preTargets" value=""><button data-action="pickTargets"><span>Pick</span></button></form>`;
+      const element = dialogWindow();
+      const picking = { cursor: {}, refuse: null, count: () => 3, minimum: () => 1, allowed: () => 1 };
+      wirePreRollTargets(root, { element }, picking, { pick: async () => [{ actor: { uuid: "Actor.ana" } }, { actor: { uuid: "Actor.cy" } }] });
+      root.querySelector("button").click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(root.querySelector('input[name="preTargets"]').value).toBe("");
+      expect(element.open).toBe(true);
+      expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooMany"));
+    });
+  });
+
   test("cancelling, or too few for the mode, brings the dialog back without rolling", async () => {
     const { root, button, counter } = dialogRoot();
     const element = dialogWindow();
@@ -575,6 +678,245 @@ describe("picking the targets in the attack dialog", () => {
     expect(element.open).toBe(true);
     expect(element.style.display).toBe("");
     expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooFew"));
+  });
+});
+
+describe("suppressive fire (Core p.207)", () => {
+  /**
+   * Lays down suppressive fire with an assault rifle, the d100 showing the given value.
+   * @param {Number} die - The d100 result
+   * @param {Object} [options] - Further dialog values
+   * @returns {Promise<Object>} The shooter and the roll card
+   */
+  async function suppress(die, options = {}) {
+    const actor = armed("Assault_Rifle_2gtjv5LMnBnWEPBb.json");
+    await actor.items.get("gun1").update({ "system.ammoMin": 60, "system.ammoMax": 60 });
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+    seedRolls([die]);
+    await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, attackMode: "suppressive", ...options } }, weapon, "rangedWeapon");
+    return { actor, card: createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1) };
+  }
+
+  test("its roll takes no modifier but range and wounds", async () => {
+    const { card } = await suppress(30, { range: "range", aim: "quick", calledShot: true, globalMod: 20 });
+
+    expect(card.getFlag("eclipsephase", "taskCard").data.modifiers.map(modifier => modifier.text)).toEqual(["ep2e.roll.announce.combat.ranged.range"]);
+  });
+
+  test("whoever moves in the cone joins the targets once and defends; never the shooter, and nobody when the roll missed", async () => {
+    const { actor, card } = await suppress(30);
+    const target = armoured("Bo");
+
+    expect(card.content).toContain("ep2e.chat.attack.suppressiveNote");
+    expect(await strikeUnderSuppression(card, target)).toHaveLength(1);
+    expect(await strikeUnderSuppression(card, target)).toBeNull();
+    expect(await strikeUnderSuppression(card, actor)).toBeNull();
+    expect(card.getFlag("eclipsephase", "taskCard").targets.map(entry => entry.name)).toEqual(["Bo"]);
+
+    const missed = await suppress(95);
+    expect(await strikeUnderSuppression(missed.card, armoured("Cy"))).toBeNull();
+  });
+
+  test("each target struck gets a damage card of their own, as from a single shot; one who got away gets none", async () => {
+    const { card } = await suppress(3);
+    const bo = armoured("Bo");
+    const cy = armoured("Cy");
+
+    await strikeUnderSuppression(card, bo);
+    await defend(bo, 95);
+    await until(() => damageCards().length === 1);
+    await strikeUnderSuppression(card, cy);
+    await defend(cy, 4);
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(damageCards().map(damage => damage.getFlag("eclipsephase", "damageCard").targets.map(target => target.name))).toEqual([["Bo"]]);
+  });
+
+  test("someone in the cone when their turn begins may move into cover instead of dodging; someone who moved in may not", async () => {
+    const { card } = await suppress(30);
+    const bo = armoured("Bo");
+    const cy = armoured("Cy");
+    const region = { getFlag: () => ({ suppressive: true, messageId: card.id }), tokens: new Set() };
+    const boToken = { actor: bo };
+    region.tokens.add(boToken);
+
+    await suppressOnTurn(boToken, { regions: [region] });
+    await suppressOnTurn({ actor: cy }, { regions: [region] });
+    const boCard = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+    await strikeUnderSuppression(card, cy);
+    const cyCard = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+
+    expect(boCard.content).toContain("defenceCover");
+    expect(cyCard.content).not.toContain("defenceCover");
+    expect(await takeCover(cyCard, cy.uuid)).toBe(false);
+    expect(await takeCover(boCard, bo.uuid)).toBe(true);
+    await new Promise(resolve => setTimeout(resolve, 20));
+    expect(boCard.getFlag("eclipsephase", "attackDefence").entries[0]).toMatchObject({ outcome: "none", cover: "moved" });
+    expect(boCard.content).toContain("ep2e.chat.defence.outcome.cover");
+    expect(damageCards()).toHaveLength(0);
+  });
+
+  test("someone behind a wall still defends, but only the GM sees their cards, and the attack card does not name them", async () => {
+    const { card } = await suppress(3);
+    const hidden = armoured("Zenobia");
+    const gm = { id: "gm1", _id: "gm1", isGM: true, active: false };
+    jest.spyOn(game.users, "filter").mockImplementation(test => [gm].filter(test));
+
+    await strikeUnderSuppression(card, hidden, { hidden: true });
+    const defence = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+    await defend(hidden, 95);
+    await until(() => damageCards().length);
+
+    expect(defence.whisper).toEqual(["gm1"]);
+    expect(damageCards().at(-1).whisper).toEqual(["gm1"]);
+    expect(card.content).not.toContain("Zenobia");
+  });
+
+  test("behind a wall the card offers to remain in cover, also to someone who moved there; stepping into the open replaces it, and not the other way round", async () => {
+    const { card } = await suppress(3);
+    const hider = armoured("Zenobia");
+    const defenceCards = () => createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence"));
+
+    await strikeUnderSuppression(card, hider, { hidden: true });
+    const shadowCard = defenceCards().at(-1);
+    expect(shadowCard.content).toContain("ep2e.chat.defence.remainCover");
+
+    await strikeUnderSuppression(card, hider);
+    const openCard = defenceCards().at(-1);
+    expect(game.messages.get(shadowCard.id)).toBeUndefined();
+    expect(openCard.id).not.toBe(shadowCard.id);
+    expect(openCard.content).not.toContain("defenceCover");
+    expect(card.getFlag("eclipsephase", "taskCard").targets).toEqual([expect.objectContaining({ name: "Zenobia", hidden: false, defenceMessageId: openCard.id })]);
+
+    expect(await strikeUnderSuppression(card, hider, { hidden: true })).toBeNull();
+    expect(defenceCards().at(-1).id).toBe(openCard.id);
+  });
+
+  test("a player's character behind a wall keeps the choice to remain in cover, but in the open: the card and the name are public", async () => {
+    const { card } = await suppress(3);
+    const player = armoured("Wren");
+    Object.defineProperty(player, "hasPlayerOwner", { value: true });
+
+    await strikeUnderSuppression(card, player, { hidden: true });
+    const defence = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+
+    expect(defence.content).toContain("ep2e.chat.defence.remainCover");
+    expect(defence.whisper ?? []).toEqual([]);
+    expect(card.content).toContain("Wren");
+  });
+
+  test("the centre of a token decides which part of the cone it stands in, so one in a narrow strip behind a wall counts as behind it", () => {
+    const open = { getFlag: () => ({ attackId: "a1", part: "open" }), testPoint: ({ x }) => x < 500 };
+    const shadow = { getFlag: () => ({ attackId: "a1", part: "shadow" }) };
+    const scene = { grid: { size: 100 }, regions: [open, shadow] };
+    const token = x => ({ x, y: 0, width: 1, height: 1, elevation: 0 });
+
+    expect(inOpenPart({ attackId: "a1", part: "shadow" }, token(380), scene)).toBe(true);
+    expect(inOpenPart({ attackId: "a1", part: "open" }, token(460), scene)).toBe(false);
+    expect(inOpenPart({ attackId: "gone", part: "shadow" }, token(0), scene)).toBe(false);
+  });
+
+  test("on a square grid an area is whole squares, by their centres: open ones red, those behind walls yellow, and rows joined", () => {
+    global.canvas = { dimensions: { distancePixels: 100 } };
+    const grid = { size: 100, getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }), getTopLeftPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }) };
+    try {
+      const area = { kind: "circle", origin: { x: 250, y: 250 }, radius: 1, polygon: { contains: x => x < 300 } };
+      const { open, shadow } = areaSquares(area, grid);
+      expect(open).toEqual(expect.arrayContaining([{ i: 2, j: 1 }, { i: 2, j: 2 }, { i: 1, j: 2 }, { i: 3, j: 2 }]));
+      expect(shadow).toEqual([{ i: 2, j: 3 }]);
+      expect(areaSquares(area, grid, new Set(["2,3"])).shadow).toEqual([]);
+      expect(squareShapes([{ i: 2, j: 1 }, { i: 2, j: 2 }, { i: 2, j: 4 }], grid)).toEqual([
+        { type: "rectangle", x: 100, y: 200, width: 200, height: 100 },
+        { type: "rectangle", x: 400, y: 200, width: 100, height: 100 }
+      ]);
+      expect([shapeContains({ kind: "cone", origin: { x: 0, y: 0 }, radius: 5, angle: 90, rotation: 0 }, { x: 300, y: 100 }), shapeContains({ kind: "cone", origin: { x: 0, y: 0 }, radius: 5, angle: 90, rotation: 0 }, { x: -300, y: 0 })]).toEqual([true, false]);
+    } finally {
+      delete global.canvas;
+    }
+  });
+
+  test("fire that missed is laid in grey and strikes nobody; a pool point that turns it into a hit lays it red and yellow instead", async () => {
+    const created = [];
+    const deleted = [];
+    const regions = [];
+    const scene = { id: "scene1", regions, createEmbeddedDocuments: async (type, data) => { for (const entry of data) regions.push({ ...entry, id: `r${regions.length}`, getFlag: (scope, key) => entry.flags.eclipsephase[key] }); created.push(...data); return data; }, deleteEmbeddedDocuments: async (type, ids) => { deleted.push(...ids); } };
+    global.canvas = { scene, level: null, dimensions: { distancePixels: 100 } };
+    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 100, 0, 100, 100] }) } } };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    try {
+      const { card } = await suppress(95);
+      const placedArea = JSON.stringify({ kind: "cone", origin: { x: 0, y: 0 }, radius: 24, angle: 45, rotation: 0 });
+      created.length = 0;
+      await layDownSuppression({ actor: { name: "Ana" }, message: card, outputData: { alternatives: card.getFlag("eclipsephase", "roll").alternatives }, flags: { targetedAttack: { id: "a1", actorUuid: "Actor.ana", suppressive: true } }, options: { placedArea } });
+      expect(created.map(entry => [entry.color, entry.flags.eclipsephase.area.part])).toEqual([["#999999", "spent"]]);
+      expect(await strikeUnderSuppression(card, armoured("Bo"))).toBeNull();
+
+      created.length = 0;
+      await reviveSuppression({ targetedAttack: { id: "a1", actorUuid: "Actor.ana", suppressive: true } }, 3);
+      expect(deleted).toEqual(["r0"]);
+      expect(created.map(entry => entry.flags.eclipsephase.area.part)).toEqual(["open", "shadow"]);
+    } finally {
+      delete global.canvas;
+    }
+  });
+
+  test("when the combat ends, every suppressive fire on its scene ends with it, removed by the active GM alone", async () => {
+    const region = (id, flag) => ({ id, isOwner: true, getFlag: () => flag });
+    const deleted = [];
+    const regions = [region("r1", { suppressive: true, part: "open" }), region("r2", { suppressive: true, part: "spent" }), region("r3", { attackId: "blast" })];
+    regions.get = id => regions.find(entry => entry.id === id);
+    const scene = { id: "scene1", regions, deleteEmbeddedDocuments: async (type, ids) => { deleted.push(...ids); } };
+    const realUser = game.user;
+    try {
+      game.user = { ...realUser, isGM: true, isActiveGM: false };
+      expect(await endSuppression({ scene })).toBe(0);
+      game.user = { ...realUser, isGM: true, isActiveGM: true };
+      expect(await endSuppression({ scene })).toBe(2);
+    } finally {
+      game.user = realUser;
+    }
+    expect(deleted).toEqual(["r1", "r2"]);
+  });
+
+  test("the attack dialog greys out what suppressive fire ignores, and leaves alone what was disabled anyway", () => {
+    const document = new JSDOM("").window.document;
+    const root = document.createElement("div");
+    root.innerHTML = `<form><select name="attackMode"><option value="single">s</option><option value="suppressive">x</option></select>
+      <div class="form-group"><input type="checkbox" name="aim"></div><input type="checkbox" name="smartlink" disabled>
+      <select name="range"><option value="none">c</option></select><input type="checkbox" name="vacuum"></form>`;
+    const field = name => root.querySelector(`[name="${name}"]`);
+    wireSuppressiveFields(root);
+
+    field("attackMode").value = "suppressive";
+    field("attackMode").dispatchEvent(new document.defaultView.Event("change"));
+    expect([field("aim").disabled, field("range").disabled, field("vacuum").disabled]).toEqual([true, false, false]);
+    expect(field("aim").closest(".form-group").classList.contains("ep-field-suppressed")).toBe(true);
+
+    field("attackMode").value = "single";
+    field("attackMode").dispatchEvent(new document.defaultView.Event("change"));
+    expect([field("aim").disabled, field("smartlink").disabled]).toEqual([false, true]);
+  });
+
+  test("the cone it was placed in is left whole, one colour at every spot - the open part red, the part behind walls yellow - both answering to the roll card", async () => {
+    const created = [];
+    global.canvas = { scene: { id: "scene1", createEmbeddedDocuments: async (type, data) => { created.push(...data); return data; } }, level: null, dimensions: { distancePixels: 100 } };
+    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 100, 0, 100, 100] }) } } };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    try {
+      const { card } = await suppress(30);
+      const context = { actor: { name: "Ana" }, message: card, outputData: { alternatives: card.getFlag("eclipsephase", "roll").alternatives }, flags: { targetedAttack: { id: "a1", actorUuid: "Actor.ana", suppressive: true } }, options: { placedArea: JSON.stringify({ kind: "cone", origin: { x: 0, y: 0 }, radius: 24, angle: 45, rotation: 0 }) } };
+      created.length = 0;
+      await layDownSuppression(context);
+    } finally {
+      delete global.canvas;
+    }
+
+    expect(created).toHaveLength(2);
+    expect(created[0]).toMatchObject({ color: "#db2a2a", shapes: [{ type: "polygon" }], flags: { eclipsephase: { area: { part: "open", attackId: "a1", actorUuid: "Actor.ana", suppressive: true, radius: 24 } } } });
+    expect(created[1]).toMatchObject({ color: "#f2c94c", shapes: [{ type: "cone", angle: 45, rotation: 0 }, { type: "polygon", hole: true }], flags: { eclipsephase: { area: { part: "shadow" } } } });
+    for (const region of created) expect(region.behaviors).toEqual([expect.objectContaining({ type: SUPPRESSIVE_BEHAVIOR, system: { messageId: expect.any(String) } })]);
   });
 });
 

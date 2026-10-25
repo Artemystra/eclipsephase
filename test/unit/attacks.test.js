@@ -5,7 +5,7 @@ import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload,
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, measuredDistances, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
@@ -728,5 +728,81 @@ describe("marking targets on the canvas", () => {
     expect(during[0]).toContain(encodeURIComponent("#123456"));
     expect(during[0]).toContain("!important");
     expect(cursorRules()).toEqual([]);
+  });
+});
+
+
+describe("areas on the canvas", () => {
+  afterEach(() => { delete global.canvas; });
+
+  /**
+   * A token stand-in covering a square.
+   * @param {String} name - Its name
+   * @param {Number} x - Its left edge
+   * @returns {Object} The token
+   */
+  const token = (name, x) => ({ name, bounds: { x, y: 0, width: 100, height: 100 } });
+
+  test("a token is in an area when its centre or an inset corner is; one only grazing its edge is not", () => {
+    const area = { contains: (x, y) => x <= 150 && y >= 0 };
+
+    expect(tokensInArea(area, [token("Ana", 0), token("Bo", 100), token("Cy", 145)]).map(entry => entry.name)).toEqual(["Ana", "Bo"]);
+  });
+
+  test("something flying comes down at the full distance, or short of the first wall in its way", () => {
+    const origin = { x: 0, y: 0 };
+    const free = scatterPoint(origin, 0, 500, () => null);
+    const walled = scatterPoint(origin, 0, 500, () => ({ x: 200, y: 0 }), 5);
+    const atOnce = scatterPoint(origin, Math.PI / 2, 500, () => ({ x: 0, y: 2 }), 5);
+
+    expect(free).toEqual({ point: { x: 500, y: 0 }, blocked: false });
+    expect(walled.point.x).toBeCloseTo(195);
+    expect(walled.blocked).toBe(true);
+    expect(atOnce.point.x).toBeCloseTo(0);
+    expect(atOnce.point.y).toBeCloseTo(0);
+  });
+
+  test("a cone keeps its far end as wide as asked: 20 m across at 24 m is about 49 degrees, and a cone too short for that width opens to 180", () => {
+    expect(coneAngleForWidth(24, 20)).toBeCloseTo(49.25, 1);
+    expect(coneAngleForWidth(100, 20)).toBeCloseTo(11.48, 1);
+    expect(coneAngleForWidth(8, 20)).toBe(180);
+  });
+
+  test("scene units become pixels by the scene's own scale", () => {
+    global.canvas = { dimensions: { distancePixels: 50 } };
+
+    expect(unitsToPixels(10)).toBe(500);
+  });
+
+  test("an area is left as a Region in the shape walls cut it to, by the GM for a user who may not create one", async () => {
+    const created = [];
+    const scene = { id: "scene1", regions: [], createEmbeddedDocuments: async (type, data) => { created.push(...data); return data; } };
+    global.canvas = { scene, level: null };
+    const canCreate = jest.fn(() => true);
+    CONFIG.Region = { documentClass: { canUserCreate: canCreate } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    const area = { kind: "circle", origin: { x: 1, y: 2 }, radius: 10, polygon: { points: [0, 0, 10, 0, 10, 10] } };
+
+    await createAreaRegion(area, { flags: { attackId: "a1" } });
+    expect(created[0]).toMatchObject({ name: "ep2e.targeting.areaName", shapes: [{ type: "polygon", points: [0, 0, 10, 0, 10, 10] }], flags: { eclipsephase: { [AREA_FLAG]: { kind: "circle", radius: 10, attackId: "a1" } } } });
+
+    canCreate.mockReturnValue(false);
+    game.users.activeGM = { id: "gm" };
+    const emit = jest.spyOn(game.socket, "emit");
+    expect(await createAreaRegion(area)).toBeNull();
+    expect(emit).toHaveBeenCalledWith("system.eclipsephase", expect.objectContaining({ action: "createAreaRegion", sceneId: "scene1" }));
+    expect(created).toHaveLength(1);
+    delete game.users.activeGM;
+  });
+
+  test("only the areas asked for are cleared, and nothing that is no area", async () => {
+    const region = (id, flag) => ({ id, isOwner: true, getFlag: () => flag });
+    const deleted = [];
+    const regions = [region("r1", { attackId: "a1" }), region("r2", { attackId: "a2" }), region("r3", undefined)];
+    regions.get = id => regions.find(entry => entry.id === id);
+    const scene = { id: "scene1", regions, deleteEmbeddedDocuments: async (type, ids) => { deleted.push(...ids); } };
+
+    expect(await clearAreas(flag => flag.attackId === "a1", scene)).toBe(1);
+    expect(deleted).toEqual(["r1"]);
   });
 });

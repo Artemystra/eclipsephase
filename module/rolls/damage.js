@@ -3,7 +3,7 @@ import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, is
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
-import { registerAttackEffect, followUpVisibility, outcomeLabel } from "./attacks.js";
+import { registerAttackEffect, followUpVisibility, outcomeLabel, gmWhisper } from "./attacks.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
 import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
 import { registerSocketActions, relayToActiveGM, runOrRelay } from "../common/socket.js";
@@ -338,6 +338,7 @@ export function detectWeaponAttack(context) {
   return {
     targets,
     area: isConeWeapon(selected.weapon),
+    suppressive: context.options?.attackMode === "suppressive",
     within: targets > 1 ? 1 : null,
     labelKey: "ep2e.chat.attack.chooseTarget",
     cursor: context.rolledFrom === "ccWeapon" ? MELEE_CURSOR : {},
@@ -378,7 +379,14 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
   const settle = async () => {
     await updateCard(card, "taskCard", "defence", { uuid, outcome, kind });
     const state = card.getFlag("eclipsephase", "taskCard");
-    if (!damageReady(state) || card.getFlag("eclipsephase", "roll")?.targetedAttack?.effect !== "damage") return null;
+    const attack = card.getFlag("eclipsephase", "roll")?.targetedAttack;
+    if (attack?.suppressive) {
+      const target = (state.targets ?? []).find(entry => entry.uuid === uuid);
+      if (!target || target.outcome === "none" || target.damageOffered) return null;
+      await updateCard(card, "taskCard", "targetDamageOffered", { uuid });
+      return postDamageCard(card, [target]);
+    }
+    if (!damageReady(state) || attack?.effect !== "damage") return null;
     await updateCard(card, "taskCard", "damageOffered");
     return postDamageCard(card, state.targets);
   };
@@ -394,7 +402,7 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
 async function postDamageCard(card, targets) {
   const context = card.getFlag("eclipsephase", "roll");
   const actors = (await Promise.all(targets.map(target => fromUuid(target.uuid)))).filter(Boolean);
-  const { whisper, blind } = followUpVisibility(card, actors);
+  const { whisper, blind } = targets.some(target => target.hidden) ? { whisper: gmWhisper(), blind: false } : followUpVisibility(card, actors);
   const state = { attackMessageId: card.id, actorUuid: context.actorUuid, weaponName: context.targetedAttack.weaponName, targets, data: null, lines: [] };
   return ChatMessage.create({
     speaker: card.speaker,

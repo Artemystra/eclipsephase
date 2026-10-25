@@ -1,0 +1,204 @@
+import { areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion, createShadowedArea, clearAreas, AREA_FLAG } from "../../common/targeting.js";
+import { waitUntil, withTempActor, seedDice, restoreDice, uniformForFace, suppressDice3d, restoreDice3d } from "./helpers.js";
+import { RollCheck } from "../../rolls/dice.js";
+import { weaponPreparation } from "../../common/weapon-functions.js";
+import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression } from "../../rolls/attacks.js";
+
+// Areas on a real canvas: walls of a scratch scene cut a blast and a cone off and stop what flies at
+// them, and an area left as a Region can be cleared again. The scene is viewed while the batch runs
+// and removed afterwards; the scene viewed before comes back.
+
+// The scratch scene: 30 x 30 squares of 100 pixels, a metre each, no padding, so canvas coordinates
+// are scene coordinates. One wall runs from top to bottom at x = 1500.
+const SCENE = { name: "Quench Areas", width: 3000, height: 3000, padding: 0, grid: { size: 100, distance: 1, units: "m" } };
+const WALL_X = 1500;
+
+/**
+ * A token stand-in covering a square whose top left corner is at a point.
+ * @param {Number} x - Its left edge
+ * @param {Number} y - Its top edge
+ * @returns {Object} The token
+ */
+function square(x, y) {
+  return { bounds: { x, y, width: 100, height: 100 } };
+}
+
+/**
+ * Registers the areas batch.
+ * @param {Object} quench - Quench's registry
+ * @returns {void}
+ */
+export function registerAreasBatch(quench) {
+  quench.registerBatch("eclipsephase.areas", context => {
+    const { describe, it, before, after, assert } = context;
+    let scene;
+    let previous;
+
+    before(async function () {
+      this.timeout(30000);
+      previous = canvas.scene;
+      scene = await Scene.create(SCENE);
+      await scene.createEmbeddedDocuments("Wall", [{ c: [WALL_X, 0, WALL_X, 3000] }]);
+      await scene.view();
+      await waitUntil(() => canvas.ready && canvas.scene?.id === scene.id && canvas.walls.placeables.length === 1, 15000);
+    });
+
+    after(async function () {
+      this.timeout(30000);
+      if (previous) await previous.view();
+      if (scene) await scene.delete();
+    });
+
+    describe("walls cut an area off", function () {
+      it("a blast reaches what lies open around it, but not what is behind the wall", function () {
+        const polygon = areaPolygon({ x: 1000, y: 1500 }, { radius: 10 });
+
+        assert.isTrue(polygon.contains(1200, 1500), "in front of the wall");
+        assert.isTrue(polygon.contains(1000, 2300), "open to the side");
+        assert.isFalse(polygon.contains(1800, 1500), "behind the wall");
+        assert.isFalse(polygon.contains(1000, 2700), "beyond the radius");
+      });
+
+      it("the tokens in a blast are those in front of the wall", function () {
+        const polygon = areaPolygon({ x: 1000, y: 1500 }, { radius: 10 });
+        const near = square(1100, 1450);
+        const behind = square(1600, 1450);
+
+        assert.deepEqual(tokensInArea(polygon, [near, behind]), [near]);
+      });
+
+      it("a cone covers the side it faces and not the other", function () {
+        const polygon = areaPolygon({ x: 1000, y: 1500 }, { radius: 5, angle: 45, rotation: 180 });
+
+        assert.isTrue(polygon.contains(700, 1500), "in the cone");
+        assert.isFalse(polygon.contains(1300, 1500), "behind its tip");
+        assert.isFalse(polygon.contains(700, 1200), "beside the cone");
+      });
+    });
+
+    describe("what flies stops at the first wall", function () {
+      it("something thrown at the wall comes down just short of it, thrown away from it the full distance", function () {
+        const towards = scatterPoint({ x: 1000, y: 1500 }, 0, 1000, wallBetween, 5);
+        const away = scatterPoint({ x: 1000, y: 1500 }, Math.PI, 500, wallBetween, 5);
+
+        assert.isTrue(towards.blocked);
+        assert.approximately(towards.point.x, WALL_X - 5, 2);
+        assert.isFalse(away.blocked);
+        assert.approximately(away.point.x, 500, 1);
+      });
+    });
+
+    describe("an area left in the scene", function () {
+      it("is a Region in the wall-cut shape, and clearing it removes it", async function () {
+        this.timeout(15000);
+        const origin = { x: 1000, y: 1500 };
+        const region = await createAreaRegion({ kind: "circle", origin, radius: 10, polygon: areaPolygon(origin, { radius: 10 }) }, { name: "Quench Blast", flags: { attackId: "quench" } });
+
+        assert.strictEqual(region.shapes[0].type, "polygon");
+        assert.strictEqual(region.getFlag("eclipsephase", AREA_FLAG).attackId, "quench");
+        assert.isTrue(region.testPoint({ x: 1200, y: 1500, elevation: 0 }), "in front of the wall");
+        assert.isFalse(region.testPoint({ x: 1800, y: 1500, elevation: 0 }), "behind the wall");
+
+        assert.strictEqual(await clearAreas(flag => flag.attackId === "quench", scene), 1);
+        assert.isUndefined(scene.regions.get(region.id));
+      });
+    });
+
+    describe("suppressive fire's cone", function () {
+      it("makes a token that moves into it defend against the roll, once", async function () {
+        this.timeout(40000);
+        const rifle = { name: "Quench Rifle", type: "rangedWeapon", system: { active: true, ammoType: "kinetic", ammoMin: 60, ammoMax: 60, mode1: { d10: 2, d6: 0, bonus: 2, range: 150, firingMode: "saBFfa", armorused: "kinetic" } } };
+        const posted = new Set(game.messages.contents.map(message => message.id));
+        suppressDice3d();
+        try {
+          await withTempActor({ type: "character", name: "Quench Gunner", system: { skillsVig: { guns: { value: 60 } } }, items: [rifle] }, shooter => withTempActor({ type: "npc", name: "Quench Runner" }, async runner => {
+            await waitUntil(() => shooter.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+            const weapon = await weaponPreparation(shooter, "guns", "rangedWeapon", shooter.items.find(item => item.name === "Quench Rifle").id);
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, shooter.system, shooter, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "suppressive" } }, weapon, "rangedWeapon");
+            restoreDice();
+            const card = game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "taskCard")).at(-1);
+            assert.isTrue(card.getFlag("eclipsephase", "roll").targetedAttack.suppressive);
+
+            const origin = { x: 1000, y: 1500 };
+            const region = await createAreaRegion({ kind: "circle", origin, radius: 5, polygon: areaPolygon(origin, { radius: 5 }) }, {
+              name: "Quench Suppression",
+              flags: { attackId: "quench", suppressive: true, actorUuid: shooter.uuid },
+              behaviors: [{ type: SUPPRESSIVE_BEHAVIOR, name: "Quench Suppression", system: { messageId: card.id } }]
+            });
+            const [token] = await scene.createEmbeddedDocuments("Token", [{ actorId: runner.id, name: "Quench Runner", x: 200, y: 200 }]);
+            const defences = () => game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "attackDefence"));
+
+            await token.update({ x: 900, y: 1400 });
+            await waitUntil(() => defences().length === 1, 10000);
+            await token.update({ x: 1000, y: 1400 });
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            assert.strictEqual(defences().length, 1, "once per burst");
+            assert.deepEqual(game.messages.get(card.id).getFlag("eclipsephase", "taskCard").targets.map(target => target.name), ["Quench Runner"]);
+            await clearAreas(flag => flag.attackId === "quench", scene);
+            assert.isUndefined(scene.regions.get(region.id));
+            await token.delete();
+          }));
+        } finally {
+          restoreDice3d();
+          restoreDice();
+          const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+          if (mine.length) await ChatMessage.deleteDocuments(mine);
+        }
+      });
+
+      it("a token stepping from a yellow square behind a ledge onto the red one beside it gets the open card in place of the yellow one", async function () {
+        this.timeout(40000);
+        const rifle = { name: "Quench Rifle", type: "rangedWeapon", system: { active: true, ammoType: "kinetic", ammoMin: 60, ammoMax: 60, mode1: { d10: 2, d6: 0, bonus: 2, range: 150, firingMode: "saBFfa", armorused: "kinetic" } } };
+        const posted = new Set(game.messages.contents.map(message => message.id));
+        suppressDice3d();
+        try {
+          await withTempActor({ type: "character", name: "Quench Gunner", system: { skillsVig: { guns: { value: 60 } } }, items: [rifle] }, shooter => withTempActor({ type: "npc", name: "Quench Runner" }, async runner => {
+            await waitUntil(() => shooter.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+            const weapon = await weaponPreparation(shooter, "guns", "rangedWeapon", shooter.items.find(item => item.name === "Quench Rifle").id);
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, shooter.system, shooter, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "suppressive" } }, weapon, "rangedWeapon");
+            restoreDice();
+            const card = game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "taskCard")).at(-1);
+
+            const [ledge] = await scene.createEmbeddedDocuments("Wall", [{ c: [700, 1200, 900, 1200] }]);
+            await waitUntil(() => canvas.walls.placeables.length === 2, 5000);
+            const origin = { x: 550, y: 1050 };
+            const regions = await createShadowedArea({ kind: "circle", origin, radius: 8, polygon: areaPolygon(origin, { radius: 8 }) }, {
+              name: "Quench Suppression",
+              flags: { attackId: "quench-strip", messageId: card.id, actorUuid: shooter.uuid, suppressive: true },
+              behaviors: [{ type: SUPPRESSIVE_BEHAVIOR, name: "Quench Suppression", system: { messageId: card.id } }]
+            });
+            assert.deepEqual(regions.map(region => region.getFlag("eclipsephase", AREA_FLAG).part).sort(), ["open", "shadow"]);
+            const open = regions.find(region => region.getFlag("eclipsephase", AREA_FLAG).part === "open");
+            assert.isFalse(open.testPoint({ x: 950, y: 1250, elevation: 0 }), "the square below the ledge is behind it, yellow");
+            assert.isTrue(open.testPoint({ x: 1050, y: 1250, elevation: 0 }), "the square beside it is red");
+
+            const [token] = await scene.createEmbeddedDocuments("Token", [{ actorId: runner.id, name: "Quench Runner", x: 900, y: 1200 }]);
+            const defences = () => game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "attackDefence"));
+            await strikeUnderSuppression(card, token.actor, { hidden: true });
+            const shadowCard = defences()[0];
+            assert.include(shadowCard.content, "defenceCover", "behind the ledge: remain in cover");
+            assert.isNotEmpty(shadowCard.whisper, "behind the ledge, an NPC's card is for the GM");
+
+            await token.update({ x: 1000, y: 1200 });
+            await waitUntil(() => !game.messages.get(shadowCard.id) && defences().length === 1, 10000);
+            const openCard = defences()[0];
+            assert.notInclude(openCard.content, "defenceCover", "stepped into the open: dodge only");
+            assert.isEmpty(openCard.whisper ?? [], "in the open the card is public");
+
+            await ledge.delete();
+            await clearAreas(flag => flag.attackId === "quench-strip", scene);
+            await token.delete();
+          }));
+        } finally {
+          restoreDice3d();
+          restoreDice();
+          const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+          if (mine.length) await ChatMessage.deleteDocuments(mine);
+        }
+      });
+    });
+  }, { displayName: "Eclipse Phase: Areas" });
+}

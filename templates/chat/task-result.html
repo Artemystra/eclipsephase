@@ -172,6 +172,8 @@
 
   {{#if (and rollContext.targetedAttack targetNames)}}
    <p class="ep-attack-targets">{{targetNames}}</p>
+  {{else if rollContext.targetedAttack.suppressive}}
+   <p class="footnote">{{localize "ep2e.chat.attack.suppressiveNote"}}</p>
   {{else if (and rollContext.targetedAttack.preTargets (eq resultClass "success"))}}
   {{else if (and rollContext.targetedAttack (eq resultClass "success") (eq rollContext.targetedAttack.effect "damage"))}}
    <div class="chatControls">

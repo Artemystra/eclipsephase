@@ -89,6 +89,32 @@ order they were marked, or `null`.
   ranged attacks and psi-gamma sleights measure this way from the attacker's token
   (`api.ui.attackerToken(actor)`).
 
+Areas (2.8.5) - a blast's circle, a cone - are Foundry Regions, so they stay in the scene for
+everyone to see:
+
+- `api.ui.placeArea({ kind, radius, angle, width, from, color, name })` lets the user place one at the
+  cursor with the core's Region placement. A `"circle"` follows the cursor and snaps to the grid
+  unless Shift is held; a `"cone"` keeps its tip on the token `from` and turns towards the cursor -
+  given a `width`, its length follows the cursor too and its angle keeps the far end that wide.
+  `radius` is in scene units. It resolves to `{ kind, origin, radius, angle, rotation, polygon }`,
+  or `null` when cancelled; nothing is created yet.
+- `api.ui.areaPolygon(origin, { radius, angle, rotation })` is the part of a circle or cone walls do
+  not cut off, seen from its centre or tip; `api.ui.tokensInArea(polygon, tokens)` the tokens whose
+  centre or an inset corner lies in it.
+- `api.ui.createShadowedArea(area, { name, flags, behaviors, spent, exclude })` leaves an area whole
+  in the scene, one colour at every spot: the part walls do not cover in red, the part behind walls
+  in yellow, so the GM can still rule that a thin wall or a window lets it through - or, with
+  `spent`, all of it in grey. On a square grid the parts are whole squares, by their centres
+  (`api.ui.areaSquares`, `api.ui.squareShapes`); `exclude` leaves squares (`"i,j"`) out. Every part
+  carries the behaviors; their area flag's `part` is `"open"`, `"shadow"` or `"spent"`.
+- `api.ui.createAreaRegion(area, { color, name, flags })` leaves the wall-cut area in the scene as a
+  Region whose `flags.eclipsephase.area` holds `kind`, `origin`, `radius` and your `flags`;
+  `api.ui.clearAreas(match, scene)` removes the areas `match(areaFlag)` accepts. Users who may not
+  create or delete Regions have the active GM do it.
+- `api.ui.scatterPoint(origin, angle, distance, collide, backoff)` is where something flying from
+  `origin` (radians, pixels) comes down: the full distance, or `backoff` pixels short of the first
+  wall `collide(from, to)` reports - by default `api.ui.wallBetween`, the first movement-blocking wall.
+
 `selectedTokenActor()` is the actor of the user's selected token, and
 `pickActorFromList(actors, header, copy)` asks for one actor from a list the user can filter by
 typing.
@@ -544,6 +570,25 @@ or three for a burst or full auto at several targets (at least two, within a met
 by range for a cone, any number for suppressive fire, and as many as "Number of targets" names for
 melee, where each target is attacked on its own. A sleight takes one, two with the Additional
 Target push.
+
+A cone weapon picks up to three targets, each within a meter of one already picked; once the
+distance is measured, its range category decides how many it may strike - one at point-blank or
+close, two at range, three beyond (Core p.218) - and more are refused with a notice. Suppressive
+fire (2.8.5) places a cone from the shooter's token whose length the shooter chooses and which is
+20 meters across at its end (Core p.207), left whole in the scene with its part behind walls in
+yellow - or in grey when the roll missed, which strikes nobody, until a pool point turns it into a
+hit; its length counts as the distance, and it rolls at once
+with no modifier but range and wounds. The cone stays in the scene as a Region with the system's
+`suppressive` behavior: whoever moves in it - never the shooter, once per burst, and only when the
+roll hit - joins the attack card's targets and defends from a card of their own; so does whoever
+stands in it when their turn begins; a token's centre decides which part it stands in. Someone in
+the yellow part may "Remain in Cover" instead of dodging, and for someone no player owns only the
+GMs see the cards - the attack card does not name them; in the red part,
+only someone already there when their turn begins may have "Moved into Cover" (`takeCover`: no
+roll, no damage). Stepping from yellow into red while the yellow card is open replaces it with the
+red one. Each one struck gets a damage card of their own, as from a single shot. While suppressive
+fire is chosen, the attack dialog greys out the modifiers it ignores. The cone is removed when the shooter's next
+turn begins, or when the combat ends. The attack record carries `suppressive: true`.
 
 ### Defending
 

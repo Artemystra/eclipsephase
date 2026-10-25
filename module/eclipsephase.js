@@ -21,12 +21,13 @@ import { registerRegistryHelpers, registerRollSource, registerPoolOption, regist
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./rolls/pools.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
-import { registerTargetedAttackHooks } from "./rolls/attacks.js";
+import { registerTargetedAttackHooks, registerSuppressiveFire } from "./rolls/attacks.js";
 import { registerCardSocket } from "./common/chat-cards.js";
 import { postWareSetupCard } from "./rolls/modifiers.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
+import { registerAreaSocket } from "./common/targeting.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -202,6 +203,7 @@ Hooks.once('init', async function() {
   registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
   registerWeaponAttacks();
   registerSleightAttacks();
+  registerSuppressiveFire();
   registerPsiTouch();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
@@ -856,6 +858,7 @@ Hooks.once("ready", () => {
   registerDoseSocket();
   registerCardSocket();
   registerWeaponAttackSocket();
+  registerAreaSocket();
 });
 
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll

@@ -3,9 +3,9 @@ import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds } from "../common/morp-functions.js";
 import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, tokenGap, MELEE_CURSOR } from "../common/targeting.js";
-import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
-import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal } from "../common/weapon-functions.js";
+import { pickTokensOnCanvas, attackerToken, tokenGap, areaPolygon, createShadowedArea, clearAreas, MELEE_CURSOR } from "../common/targeting.js";
+import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
+import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
 // the hit from a button on the attack card, and every target's owner rolls a defence from a card of
@@ -17,7 +17,7 @@ const EFFECTS = new Map();
 
 registerCard("attackDefence", {
   render: renderDefenceCard,
-  mutations: { markOutcome: (state, { targetUuid, outcome, lockedOut = false }) => ({ ...state, entries: state.entries.map(entry => entry.uuid === targetUuid ? { ...entry, outcome, lockedOut } : entry) }) }
+  mutations: { markOutcome: (state, { targetUuid, outcome, lockedOut = false, cover = false }) => ({ ...state, entries: state.entries.map(entry => entry.uuid === targetUuid ? { ...entry, outcome, lockedOut, cover } : entry) }) }
 });
 
 /**
@@ -238,7 +238,8 @@ export function renderDefenceCard(state) {
     effectLabel: state.attack.effectLabel ?? "",
     melee: state.attack.defence === "melee",
     several: state.entries.length > 1,
-    entries: state.entries.map(entry => ({ ...entry, outcomeLabel: outcomeLabel(entry.outcome, state.attack.defence) })),
+    entries: state.entries.map(entry => ({ ...entry, outcomeLabel: entry.cover ? game.i18n.localize(entry.cover === "remain" ? "ep2e.chat.defence.outcome.remainCover" : "ep2e.chat.defence.outcome.cover") : outcomeLabel(entry.outcome, state.attack.defence) })),
+    cover: state.attack.coverOption ? game.i18n.localize(state.attack.coverOption === "remain" ? "ep2e.chat.defence.remainCover" : "ep2e.chat.defence.cover") : "",
     will: state.attack.defence === "will",
     icon: state.attack.defence === "will" ? "fa-brain" : "fa-crosshairs",
     rollAll: state.attack.defence === "ranged" && remaining.length > 1,
@@ -261,6 +262,14 @@ export function followUpVisibility(origin, targets = []) {
 }
 
 /**
+ * Every GM, online or not, for a card no player may see - such as one about someone behind a wall.
+ * @returns {String[]} The GMs' user ids
+ */
+export function gmWhisper() {
+  return (game.users?.filter(user => user.isGM) ?? []).map(user => user.id);
+}
+
+/**
  * Who a defence card speaks as: its one defender, or "several targets" when it holds more.
  * @param {Actor[]} targets - The targets on the card
  * @returns {Object} The speaker
@@ -274,9 +283,10 @@ export function defenceSpeaker(targets) {
  * attack card was, and always by that owner, who has to roll from it.
  * @param {Object} attack - The attack, delivered
  * @param {Actor[]} targets - Who it struck
+ * @param {Object} [options] - gmOnly: whisper the cards to the GMs alone
  * @returns {Promise<ChatMessage[]>} The cards
  */
-export async function postDefenceCards(attack, targets) {
+export async function postDefenceCards(attack, targets, { gmOnly = false } = {}) {
   const origin = attack.messageId ? game.messages.get(attack.messageId) ?? null : null;
   const cards = [];
   for (const group of defenceGroups(targets)) {
@@ -284,7 +294,7 @@ export async function postDefenceCards(attack, targets) {
     cards.push(await ChatMessage.create({
       speaker: defenceSpeaker(group.targets),
       content: await renderCard("attackDefence", state),
-      whisper: followUpVisibility(origin, group.targets).whisper,
+      whisper: gmOnly ? gmWhisper() : followUpVisibility(origin, group.targets).whisper,
       flags: { eclipsephase: { attackDefence: state } }
     }));
   }
@@ -384,8 +394,26 @@ export function defenceOutcome(attack, { passed, result, value, behindCover = fa
  * @param {Object} [options] - lockedOut: the target won with a critical success against psi
  * @returns {Promise<Boolean>} What updateCard reported
  */
-export function markDefenceRolled(message, targetUuid, outcome, { lockedOut = false } = {}) {
-  return updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome, lockedOut });
+export function markDefenceRolled(message, targetUuid, outcome, { lockedOut = false, cover = false } = {}) {
+  return updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome, lockedOut, cover });
+}
+
+/**
+ * A target caught in suppressive fire who takes cover instead of dodging (Core p.207): moving into
+ * it on their turn, or staying behind the wall they are behind. The fire misses them, without a roll.
+ * @param {ChatMessage} message - The defence card
+ * @param {String} targetUuid - The target
+ * @returns {Promise<Boolean>} True once noted, false when it was not this user's to choose
+ */
+export async function takeCover(message, targetUuid) {
+  const state = message?.getFlag?.("eclipsephase", "attackDefence");
+  const entry = state?.entries?.find(candidate => candidate.uuid === targetUuid);
+  if (!entry || entry.outcome || !state.attack.coverOption) return false;
+  const target = await fromUuid(targetUuid);
+  if (!target?.isOwner) return false;
+  await markDefenceRolled(message, targetUuid, "none", { cover: state.attack.coverOption });
+  await EFFECTS.get(state.attack.effect)?.resolve?.(state.attack, target, "none", { kind: "cover" });
+  return true;
 }
 
 /**
@@ -465,6 +493,7 @@ export function registerTargetedAttackHooks() {
 
   Hooks.on("eclipsephase.postRoll", context => {
     exposeAttacker(context);
+    if (context?.flags?.targetedAttack?.suppressive && context.message) layDownSuppression(context);
     if (context?.flags?.targetedAttack?.preTargets?.length && context.message) return deliverToChosen(context.message);
   });
 
@@ -561,6 +590,237 @@ function rangedMeasuring(rollContext) {
   };
 }
 
+// The Region behavior suppressive fire leaves: whoever moves in its cone has to defend.
+export const SUPPRESSIVE_BEHAVIOR = "suppressive";
+
+/**
+ * Leaves suppressive fire's cone in the scene once it is rolled, as Regions that make whoever moves
+ * inside defend against the roll: red in the open, yellow behind walls, grey when the roll missed.
+ * @param {Object} context - The roll context at postRoll
+ * @returns {Promise<Object[]|null>} The Regions, null when there is no cone, empty when the GM creates them
+ */
+export async function layDownSuppression(context) {
+  const placed = (() => { try { return JSON.parse(context.options?.placedArea || "null"); } catch { return null; } })();
+  if (!placed?.origin) return null;
+  const attack = context.flags.targetedAttack;
+  return laySuppression(placed, { attackId: attack.id, messageId: context.message.id, actorUuid: attack.actorUuid, actorName: context.actor?.name ?? "", spent: !isHit(context.outputData?.alternatives?.originalResult) });
+}
+
+/**
+ * Lays suppressive fire's cone as Regions: red and yellow when its roll hit, grey when it missed -
+ * then it strikes nobody (Core p.207 knows no stray rounds), and on a square grid it leaves out the
+ * squares a hitting burst already covers.
+ * @param {Object} placed - kind, origin, radius, angle, rotation
+ * @param {Object} options - attackId, messageId, actorUuid, actorName; spent: the roll missed
+ * @returns {Promise<Object[]>} The Regions, empty when the GM creates them
+ */
+async function laySuppression(placed, { attackId, messageId, actorUuid, actorName, spent }) {
+  const name = game.i18n.format("ep2e.chat.attack.suppressiveArea", { name: actorName });
+  return createShadowedArea({ ...placed, polygon: areaPolygon(placed.origin, placed) }, {
+    name,
+    spent,
+    exclude: spent ? squaresUnderFire(canvas.scene) : new Set(),
+    flags: { attackId, messageId, actorUuid, suppressive: true },
+    behaviors: [{ type: SUPPRESSIVE_BEHAVIOR, name, system: { messageId } }]
+  });
+}
+
+/**
+ * The grid squares a hitting suppressive fire covers on a scene.
+ * @param {Scene} scene - The scene
+ * @returns {Set<String>} The squares, as "i,j"
+ */
+function squaresUnderFire(scene) {
+  const squares = new Set();
+  const grid = canvas.grid;
+  if (!grid?.isSquare) return squares;
+  for (const region of Array.from(scene?.regions ?? [])) {
+    const flag = region.getFlag?.("eclipsephase", "area");
+    if (!flag?.suppressive || flag.part === "spent") continue;
+    for (const shape of region.shapes ?? []) {
+      if (shape.type !== "rectangle") continue;
+      for (let y = shape.y + grid.size / 2; y < shape.y + shape.height; y += grid.size) {
+        for (let x = shape.x + grid.size / 2; x < shape.x + shape.width; x += grid.size) {
+          const { i, j } = grid.getOffset({ x, y });
+          squares.add(`${i},${j}`);
+        }
+      }
+    }
+  }
+  return squares;
+}
+
+/**
+ * Turns suppressive fire that missed into fire that strikes, once a pool point turns its roll into a
+ * hit: the grey cone gives way to the red and yellow one.
+ * @param {Object} context - The roll card's context, as the poolResult hook hands it on
+ * @param {Number} newResult - The result after the spend
+ * @returns {Promise<Object[]|null>} The new Regions, or null when nothing changes
+ */
+export async function reviveSuppression(context, newResult) {
+  const attack = context?.targetedAttack;
+  if (!attack?.suppressive || !isHit(newResult)) return null;
+  const spent = Array.from(canvas.scene?.regions ?? []).find(region => region.getFlag?.("eclipsephase", "area")?.attackId === attack.id && region.getFlag("eclipsephase", "area").part === "spent");
+  if (!spent) return null;
+  const flag = spent.getFlag("eclipsephase", "area");
+  await clearAreas(other => other.attackId === attack.id, canvas.scene);
+  const actor = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
+  return laySuppression({ kind: flag.kind, origin: flag.origin, radius: flag.radius, angle: flag.angle, rotation: flag.rotation }, { attackId: attack.id, messageId: flag.messageId, actorUuid: attack.actorUuid, actorName: actor?.name ?? "", spent: false });
+}
+
+/**
+ * Makes someone in suppressive fire's cone defend against its roll (Core p.207): once per burst,
+ * when the roll hit, never the shooter. They join the attack card's targets and get a defence card;
+ * a hit deals a single shot's damage. Behind a wall they may stay in cover instead of dodging, and
+ * only the GM sees the cards of someone no player owns; in the open, only someone already there when
+ * their turn begins may move into cover. Someone whose card from behind a wall is still open who then steps into the open
+ * gets the open card in its place.
+ * @param {ChatMessage} card - The suppressive fire's roll card
+ * @param {Actor} actor - Who is in the cone
+ * @param {Object} [options] - onTurn: their turn begins in the cone; hidden: they stand in its part
+ *   behind walls
+ * @returns {Promise<ChatMessage[]|null>} The defence cards, or null when nothing is due
+ */
+export function strikeUnderSuppression(card, actor, { onTurn = false, hidden = false } = {}) {
+  return inOrder(`suppress:${card?.id}`, async () => {
+    const context = card?.getFlag?.("eclipsephase", "roll");
+    const attack = context?.targetedAttack;
+    if (!attack?.suppressive || !actor || actor.uuid === attack.actorUuid) return null;
+    if (!isHit(spentOrOriginalResult(context))) return null;
+    const known = (card.getFlag("eclipsephase", "taskCard")?.targets ?? []).find(target => target.uuid === actor.uuid);
+    if (known && !(known.shadow && !hidden && !known.outcome)) return null;
+    const secret = hidden && !actor.hasPlayerOwner;
+    if (known) {
+      await game.messages.get(known.defenceMessageId)?.delete();
+      await updateCard(card, "taskCard", "updateTarget", { uuid: actor.uuid, shadow: false, hidden: false });
+    }
+    else await updateCard(card, "taskCard", "addTarget", { uuid: actor.uuid, name: actor.name, hidden: secret });
+    if (!known) await updateCard(card, "taskCard", "updateTarget", { uuid: actor.uuid, shadow: hidden });
+    const coverOption = hidden ? "remain" : onTurn ? "moved" : false;
+    const cards = await postDefenceCards({ ...attack, delivered: true, roll: attackRoll(card), messageId: card.id, coverOption }, [actor], { gmOnly: secret });
+    await updateCard(card, "taskCard", "updateTarget", { uuid: actor.uuid, defenceMessageId: cards[0]?.id ?? null });
+    return cards;
+  });
+}
+
+/**
+ * Whether a token stands in an area's open part rather than behind walls, by its centre: a token
+ * touching both parts - such as one in a narrow strip behind a wall - counts where its centre is.
+ * A token that is moving is looked at where its move ends - the token itself still stands where it
+ * started when Foundry reports the move.
+ * @param {Object} flag - The area flag of either part, with attackId and part
+ * @param {Object} token - The token, or the position it moves to: x, y, width and height in squares, elevation
+ * @param {Scene} scene - Its scene
+ * @returns {Boolean} True in the open part
+ */
+export function inOpenPart(flag, token, scene) {
+  const open = Array.from(scene?.regions ?? []).find(region => {
+    const other = region.getFlag?.("eclipsephase", "area");
+    return other?.attackId === flag?.attackId && other?.part === "open";
+  });
+  if (!open) return flag?.part !== "shadow";
+  const size = Number(scene?.grid?.size) || 100;
+  const centre = { x: token.x + (token.width ?? 1) * size / 2, y: token.y + (token.height ?? 1) * size / 2 };
+  return open.testPoint({ x: centre.x, y: centre.y, elevation: token.elevation ?? 0 });
+}
+
+/**
+ * Gives a token whose turn begins inside suppressive fire's cones a defence card for each, with the
+ * choice to take cover - for the GM's eyes only when it stands behind a wall and no player owns it.
+ * Its centre decides which part it stands in.
+ * @param {TokenDocument} token - The token whose turn begins
+ * @param {Scene} scene - Its scene
+ * @returns {Promise<void>} Resolves once the cards are posted
+ */
+export async function suppressOnTurn(token, scene) {
+  const actor = token?.actor;
+  if (!actor) return;
+  const handled = new Set();
+  for (const region of Array.from(scene?.regions ?? [])) {
+    const flag = region.getFlag?.("eclipsephase", "area");
+    if (!flag?.suppressive || handled.has(flag.attackId) || !region.tokens?.has?.(token)) continue;
+    handled.add(flag.attackId);
+    const card = game.messages.get(flag.messageId);
+    if (card) await strikeUnderSuppression(card, actor, { onTurn: true, hidden: !inOpenPart(flag, token, scene) });
+  }
+}
+
+/**
+ * Ends every suppressive fire on a combat's scene when the combat ends: its cones only last until
+ * the shooter's next turn, and without a combat no turn comes. Done on the active GM's client.
+ * @param {Combat} combat - The combat that ended
+ * @returns {Promise<Number>} How many Regions were removed
+ */
+export function endSuppression(combat) {
+  if (!game.user.isActiveGM) return Promise.resolve(0);
+  return clearAreas(flag => flag.suppressive === true, combat?.scene ?? canvas?.scene);
+}
+
+/**
+ * Registers what suppressive fire needs in the scene: its Region behavior, which acts on the active
+ * GM's client, the end of its cone when the shooter's next turn begins or the combat ends, and a
+ * defence card for whoever stands in a cone when their turn begins.
+ * @returns {void}
+ */
+export function registerSuppressiveFire() {
+  const Base = foundry.data.regionBehaviors.RegionBehaviorType;
+  class SuppressiveFireBehaviorType extends Base {
+    static LOCALIZATION_PREFIXES = ["BEHAVIOR.TYPES.suppressive", "BEHAVIOR.TYPES.base"];
+
+    /**
+     * The roll card the behavior answers to.
+     * @returns {Object} The schema
+     */
+    static defineSchema() {
+      return { messageId: new foundry.data.fields.StringField({ required: true, blank: true }) };
+    }
+
+    /**
+     * Sends a token that moved in the cone to its defence.
+     * @param {Object} event - The Region event
+     * @returns {Promise<void>} Resolves once noted
+     */
+    static async onMove(event) {
+      if (!game.user.isActiveGM) return;
+      const card = game.messages.get(this.messageId);
+      const token = event.data?.token;
+      const position = event.data?.movement?.destination ?? token;
+      if (card && token?.actor) await strikeUnderSuppression(card, token.actor, { hidden: !inOpenPart(this.region?.getFlag?.("eclipsephase", "area"), position, this.region?.parent) });
+    }
+
+    static events = {
+      [CONST.REGION_EVENTS.TOKEN_MOVE_IN]: SuppressiveFireBehaviorType.onMove,
+      [CONST.REGION_EVENTS.TOKEN_MOVE_WITHIN]: SuppressiveFireBehaviorType.onMove
+    };
+  }
+  CONFIG.RegionBehavior.dataModels[SUPPRESSIVE_BEHAVIOR] = SuppressiveFireBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[SUPPRESSIVE_BEHAVIOR] = "fa-solid fa-person-rifle";
+  Hooks.on("eclipsephase.poolResult", ({ context, newResult }) => reviveSuppression(context, newResult));
+  Hooks.on("deleteCombat", combat => endSuppression(combat));
+  Hooks.on("combatTurnChange", async combat => {
+    const actor = combat?.combatant?.actor;
+    if (!game.user.isActiveGM || !actor) return;
+    const scene = combat.scene ?? canvas?.scene;
+    await clearAreas(flag => flag.suppressive === true && flag.actorUuid === actor.uuid, scene);
+    await suppressOnTurn(combat.combatant.token, scene);
+  });
+}
+
+/**
+ * The cone suppressive fire covers, placed from the shooter's token: as long as the shooter chooses
+ * and 20 metres across at its end (Core p.207). Nobody is picked, the roll comes at once - its
+ * length counts as the range - and whoever moves in the cone later has to defend.
+ * @param {Object} rollContext - The roll context
+ * @returns {Function} area(form)
+ */
+function suppressiveArea(rollContext) {
+  return form => {
+    const from = attackerToken(rollContext.actor);
+    if (!from || form?.elements?.attackMode?.value !== "suppressive") return null;
+    return { kind: "cone", radius: SUPPRESSIVE_WIDTH, width: SUPPRESSIVE_WIDTH, from, max: 0 };
+  };
+}
+
 /**
  * What a psi-gamma sleight measures while its targets are picked: the distance from the async's
  * token with its psi range category (Core p.276), doubled against asyncs and by the Increased Range
@@ -588,7 +848,8 @@ function psiMeasuring(rollContext) {
  * @param {Object} rollContext - The roll context the dialog is shown for
  * @returns {Object|null} cursor; refuse, the picker's refusal of unsuitable targets; count(form), the targets the chosen options strike (Infinity
  *   for any number); minimum(form), the fewest a mode needs; refuseFor(form), the refusal as the dialog now stands - a touch
- *   reaches no farther than point-blank; measure(form) and applyMeasured(form, distances) where the attack is measured
+ *   reaches no farther than point-blank; measure(form) and applyMeasured(form, distances) where the attack is measured;
+ *   allowed(form), for a cone, how many of the picked targets its measured range lets it strike (Core p.218)
  */
 export function attackPicking(rollContext) {
   const preset = rollContext?.flags?.targetedAttack;
@@ -607,12 +868,15 @@ export function attackPicking(rollContext) {
     refuse,
     refuseFor: form => form?.elements?.touchOnly?.checked ? refuseAny(refuse, refuseBeyondTouch(rollContext.actor)) : refuse,
     ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured } : {}),
+    ...(ranged && !isConeWeapon(weapon) ? { area: suppressiveArea(rollContext) } : {}),
     count: form => {
       if (preset) return preset.targets === ANY_TARGETS ? Infinity : preset.targets ?? 1;
       if (rolledFrom !== "rangedWeapon") return meleeTargets(form);
+      if (isConeWeapon(weapon)) return CONE_MAX_TARGETS;
       const count = attackTargetCount(weapon, { attackMode: form?.elements?.attackMode?.value, range: form?.elements?.range?.value });
       return count === ANY_TARGETS ? Infinity : count;
     },
+    ...(ranged && isConeWeapon(weapon) ? { allowed: form => attackTargetCount(weapon, { attackMode: form?.elements?.attackMode?.value, range: form?.elements?.range?.value }) } : {}),
     minimum: form => rolledFrom === "ccWeapon" && !preset ? meleeTargets(form) : minimumTargets(form?.elements?.attackMode?.value)
   };
 }

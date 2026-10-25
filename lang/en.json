@@ -89,6 +89,9 @@
       "ammo": "Ammo",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "Suppressive Fire"
     }
   },
   "ep2e": {
@@ -2033,7 +2036,9 @@
         "chooseTarget": "Choose target",
         "rollDamage": "Roll damage",
         "damageWithoutTarget": "Damage without target",
-        "damageReady": "Damage from the {weapon}"
+        "damageReady": "Damage from the {weapon}",
+        "suppressiveArea": "Suppressive fire ({name})",
+        "suppressiveNote": "Suppressive fire laid down: whoever moves inside the cone has to defend."
       },
       "defence": {
         "headline": "Defend against the {weapon}",
@@ -2049,13 +2054,17 @@
             "hit": "Affected",
             "half": "Affected",
             "none": "Resisted"
-          }
+          },
+          "cover": "Moved into cover",
+          "remainCover": "Remained in cover"
         },
         "severalTargets": "Several targets",
         "resist": "Resist (WIL)",
         "yield": "Don't resist",
         "lockedOut": "Critical: the async is locked out of this mind until they recharge.",
-        "touchLabel": "{name} by touch"
+        "touchLabel": "{name} by touch",
+        "cover": "Moved into Cover",
+        "remainCover": "Remains in Cover"
       },
       "poolSpent": {
         "swapped": "{name} used a {pool} point to swap the dice",
@@ -2355,7 +2364,22 @@
         "range": "Range",
         "beyond": "Beyond Range"
       },
-      "outOfTouch": "{name} is beyond the reach of a touch (2 m)."
+      "outOfTouch": "{name} is beyond the reach of a touch (2 m).",
+      "areaName": "Area",
+      "outsideArea": "That token is outside the area.",
+      "tooMany": "This attack strikes at most {max} targets at that range."
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Attack card",
+            "hint": "The chat message of the suppressive fire this area answers to."
+          }
+        }
+      }
     }
   }
 }

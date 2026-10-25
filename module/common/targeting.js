@@ -1,6 +1,8 @@
 import { escapeText } from "./general-sheet-functions.js";
+import { registerSocketActions, relayToActiveGM } from "./socket.js";
 
-// Picking targets on the canvas: the cursor, the marks, the shapes they are drawn in, and the
+// Picking targets and areas on the canvas: the cursor, the marks, the shapes they are drawn in, the
+// areas a blast or a cone covers, and the
 // attack dialog's pick button. Free of rules - what an attack strikes is the caller's business.
 
 // The shapes the target picker can draw besides Font Awesome icons, traced from the system's own
@@ -377,17 +379,30 @@ function writeMeasured(form, distances, picking) {
 }
 
 /**
+ * Brings an attack dialog back after picking was cancelled or came to nothing.
+ * @param {HTMLElement} element - The dialog's window
+ * @param {Boolean} modal - Whether it was shown as a modal
+ * @returns {void}
+ */
+function showAgain(element, modal) {
+  if (element?.style) element.style.display = "";
+  if (element && !element.open) modal ? element.showModal() : element.show?.();
+}
+
+/**
  * Wires an attack dialog's target picking to its primary button, whose label follows how many
  * targets the chosen options strike. Confirming enough targets rolls straight away; cancelling or
  * too few brings the dialog back.
  * @param {HTMLElement} root - The dialog's element
  * @param {Object} dialog - The dialog, to hide while picking
  * @param {Object|null} picking - What attackPicking returned; measure(form) may name what to measure
- *   from, refuseFor(form) the refusal as the dialog stands at picking
- * @param {Object} [seams] - pick, replaced in tests
+ *   from, refuseFor(form) the refusal as the dialog stands at picking, area(form) an area to place
+ *   first - only tokens in it can be picked; an area that takes no targets (max 0) is kept in the
+ *   dialog's placedArea and rolls at once; allowed(form), once measured, how many may be struck
+ * @param {Object} [seams] - pick and place, replaced in tests
  * @returns {void}
  */
-export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnCanvas } = {}) {
+export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnCanvas, place = placeArea } = {}) {
   const button = root?.querySelector?.('button[data-action="pickTargets"]');
   const input = root?.querySelector?.('input[name="preTargets"]');
   if (!picking || !button || !input) return;
@@ -413,20 +428,381 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     element?.close?.();
     if (element?.style) element.style.display = "none";
     const measure = picking.measure?.(form) ?? null;
-    const refuse = picking.refuseFor ? picking.refuseFor(form) : picking.refuse;
-    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...(refuse ? { refuse } : {}), ...(measure ? { measure } : {}), ...picking.cursor });
+    let refuse = picking.refuseFor ? picking.refuseFor(form) : picking.refuse;
+    const zone = picking.area?.(form) ?? null;
+    let options = { multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null };
+    const restoreSheets = zone ? sheetsAside() : () => {};
+    if (zone) {
+      const area = await place({ ...zone, asideSheets: false });
+      if (!area) {
+        restoreSheets();
+        return showAgain(element, modal);
+      }
+      if (!zone.max) {
+        const field = form?.elements?.placedArea;
+        if (field) field.value = JSON.stringify({ kind: area.kind, origin: area.origin, radius: area.radius, angle: area.angle, rotation: area.rotation });
+        writeMeasured(form, [area.radius], picking);
+        restoreSheets();
+        picked = true;
+        button.click();
+        return;
+      }
+      const inside = tokensInArea(area.polygon, canvas.tokens.placeables.filter(token => token !== zone.from));
+      const outside = token => (inside.includes(token) ? null : game.i18n.localize("ep2e.targeting.outsideArea"));
+      const before = refuse;
+      refuse = before ? token => outside(token) ?? before(token) : outside;
+      options = { multi: zone.max > 1, max: zone.max, within: zone.within ?? null };
+    }
+    const tokens = await pick({ ...options, ...(refuse ? { refuse } : {}), ...(measure ? { measure } : {}), ...picking.cursor });
+    restoreSheets();
     const actors = (tokens ?? []).map(token => token.actor).filter(Boolean);
     if (actors.length >= minimum) {
-      input.value = actors.map(actor => actor.uuid).join(",");
       if (measure?.from) writeMeasured(form, tokens.filter(token => token.actor).map(token => tokenGap(measure.from, token, canvas.grid)), picking);
+      const allowed = picking.allowed?.(form) ?? Infinity;
+      if (actors.length > allowed) {
+        ui.notifications.warn(game.i18n.format("ep2e.targeting.tooMany", { max: allowed }));
+        return showAgain(element, modal);
+      }
+      input.value = actors.map(actor => actor.uuid).join(",");
       picked = true;
       button.click();
       return;
     }
     if (actors.length) ui.notifications.warn(game.i18n.format("ep2e.targeting.tooFew", { min: minimum }));
-    if (element?.style) element.style.display = "";
-    if (element && !element.open) modal ? element.showModal() : element.show?.();
+    showAgain(element, modal);
   }, true);
 
   sync();
+}
+
+// Areas on the canvas - a blast's circle, a cone - are Foundry Regions, placed at the cursor with the
+// core's own placement and kept in the scene for everyone to see. Walls cut an area off: what lies
+// behind a wall from its centre is not in it.
+
+// The flag an area's Region carries, naming what placed it.
+export const AREA_FLAG = "area";
+
+// A wall-cut polygon faces down at rotation 0, as a light does; a cone shape faces right.
+const SWEEP_FACING = 90;
+
+/**
+ * Scene units as canvas pixels.
+ * @param {Number} units - A distance in scene units, metres for the system
+ * @returns {Number} The pixels
+ */
+export function unitsToPixels(units) {
+  return (Number(units) || 0) * (Number(globalThis.canvas?.dimensions?.distancePixels) || 1);
+}
+
+/**
+ * The part of a circle or cone that walls do not cut off, seen from its centre or tip: what blocks
+ * movement blocks the blast too.
+ * @param {Object} origin - The centre or tip, in canvas coordinates
+ * @param {Object} options - radius in scene units; angle in degrees for a cone (360 for a circle);
+ *   rotation in degrees, which way a cone faces, 0 pointing right as for a cone shape
+ * @returns {Object} The polygon, with contains(x, y) and points
+ */
+export function areaPolygon(origin, { radius, angle = 360, rotation = 0 } = {}) {
+  return CONFIG.Canvas.polygonBackends.move.create(origin, { type: "move", radius: unitsToPixels(radius), angle, rotation: rotation - SWEEP_FACING });
+}
+
+/**
+ * The tokens an area covers: those whose centre or one of their corners, set a little inward, lies
+ * in it.
+ * @param {Object} polygon - The area, with contains(x, y)
+ * @param {Object[]} tokens - The canvas tokens
+ * @returns {Object[]} The tokens in the area
+ */
+export function tokensInArea(polygon, tokens) {
+  return tokens.filter(token => {
+    const { x, y, width, height } = token.bounds;
+    const inset = Math.min(width, height) * 0.1;
+    const points = [[x + width / 2, y + height / 2], [x + inset, y + inset], [x + width - inset, y + inset], [x + inset, y + height - inset], [x + width - inset, y + height - inset]];
+    return points.some(([px, py]) => polygon.contains(px, py));
+  });
+}
+
+/**
+ * Where something flying from a point in a direction comes down: the full distance, or short of the
+ * first wall in its way, where it stops.
+ * @param {Object} origin - Where it starts, in canvas coordinates
+ * @param {Number} angle - The direction, in radians, 0 pointing right
+ * @param {Number} distance - How far, in pixels
+ * @param {Function} [collide] - collide(from, to) returns the first wall hit between them, or null
+ * @param {Number} [backoff] - How far short of a wall it stops, in pixels
+ * @returns {Object} point, and blocked when a wall stopped it
+ */
+export function scatterPoint(origin, angle, distance, collide = wallBetween, backoff = 5) {
+  const end = { x: origin.x + Math.cos(angle) * distance, y: origin.y + Math.sin(angle) * distance };
+  const hit = collide(origin, end);
+  if (!hit) return { point: end, blocked: false };
+  const travelled = Math.max(0, Math.hypot(hit.x - origin.x, hit.y - origin.y) - backoff);
+  return { point: { x: origin.x + Math.cos(angle) * travelled, y: origin.y + Math.sin(angle) * travelled }, blocked: true };
+}
+
+/**
+ * The first wall that blocks movement between two points.
+ * @param {Object} from - A point in canvas coordinates
+ * @param {Object} to - Another point
+ * @returns {Object|null} Where it is hit, or null when nothing is in the way
+ */
+export function wallBetween(from, to) {
+  return CONFIG.Canvas.polygonBackends.move.testCollision(from, to, { type: "move", mode: "closest" }) ?? null;
+}
+
+/**
+ * The angle a cone needs to be a given width at its far end.
+ * @param {Number} length - How far it reaches, in scene units
+ * @param {Number} width - How wide it is at its end, in scene units
+ * @returns {Number} The angle in degrees, at most 180
+ */
+export function coneAngleForWidth(length, width) {
+  return length * 2 <= width ? 180 : 2 * Math.asin(width / (2 * length)) * 180 / Math.PI;
+}
+
+/**
+ * Lets the user place an area at the cursor with the core's Region placement: a circle follows the
+ * cursor (snapping to the grid unless Shift is held), a cone keeps its tip on a token and turns
+ * towards the cursor - with a width, its length follows the cursor too and its angle keeps the far end
+ * that wide. A left click places it, a right click or Escape cancels - Escape is caught here,
+ * so it does not close a window that is waiting on the placement instead. Open sheets are minimised
+ * meanwhile, as when picking targets.
+ * @param {Object} options - kind ("circle" or "cone"); radius in scene units; angle in degrees for a
+ *   cone; width in scene units for a cone whose length the user chooses; from, the token a cone starts
+ *   at; color; name, "Area" when none is given; asideSheets: false
+ *   when the caller keeps the sheets minimised itself
+ * @returns {Promise<Object|null>} kind, origin, radius, angle, rotation and the wall-cut polygon, or
+ *   null when cancelled
+ */
+export async function placeArea({ kind = "circle", radius, angle = 45, width = null, from = null, color = TARGET_COLOR, name = "", asideSheets = true } = {}) {
+  if (!globalThis.canvas?.ready) return null;
+  const cone = kind === "cone";
+  const tip = cone ? (from?.center ?? null) : null;
+  if (cone && !tip) return null;
+  const pixels = unitsToPixels(radius);
+  if (cone && width) angle = coneAngleForWidth(radius, width);
+  const shape = cone
+    ? { type: "cone", x: tip.x, y: tip.y, radius: pixels, angle, rotation: 0, curvature: "round" }
+    : { type: "circle", x: 0, y: 0, radius: pixels };
+  const restoreSheets = asideSheets ? sheetsAside() : () => {};
+  const onKey = event => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    canvas.regions._cancelPlacement();
+  };
+  document.addEventListener("keydown", onKey, true);
+  const placed = await canvas.regions.placeRegion({
+    name: name || game.i18n.localize("ep2e.targeting.areaName"), color, shapes: [shape], highlightMode: "coverage", displayMeasurements: true,
+    visibility: CONST.REGION_VISIBILITY.ALWAYS, levels: canvas.level ? [canvas.level.id] : []
+  }, {
+    create: false,
+    allowRotation: false,
+    onMove: cone ? ({ shape: placing, position }) => {
+      const rotation = Math.atan2(position.y - tip.y, position.x - tip.x) * 180 / Math.PI;
+      if (!width) {
+        placing.updateSource({ x: tip.x, y: tip.y, rotation });
+        return false;
+      }
+      const length = Math.max(1, Math.hypot(position.x - tip.x, position.y - tip.y) / unitsToPixels(1));
+      placing.updateSource({ x: tip.x, y: tip.y, rotation, radius: unitsToPixels(length), angle: coneAngleForWidth(length, width) });
+      return false;
+    } : undefined
+  }).finally(() => {
+    document.removeEventListener("keydown", onKey, true);
+    restoreSheets();
+  });
+  const final = placed?.shapes?.[0];
+  if (!final) return null;
+  const origin = { x: final.x, y: final.y };
+  const rotation = cone ? final.rotation : 0;
+  const reach = cone && width ? final.radius / unitsToPixels(1) : radius;
+  const spread = cone ? (width ? final.angle : angle) : 360;
+  return { kind, origin, radius: reach, angle: spread, rotation, polygon: areaPolygon(origin, { radius: reach, angle: spread, rotation }) };
+}
+
+// The colour of an area's part behind walls: struck only if the GM says so.
+export const SHADOW_COLOR = "#f2c94c";
+
+/**
+ * The data of a Region for an area: in the shape walls cut it to, or whole.
+ * @param {Object} area - kind, origin, radius, angle, rotation and the wall-cut polygon
+ * @param {Object} options - color; name; flags; behaviors; whole: the full shape rather than the cut one
+ * @returns {Object|null} The Region data, or null for an area too small to draw
+ */
+function areaRegionData(area, { color, name, flags = {}, behaviors = [], whole = false }) {
+  const cone = area.kind === "cone";
+  const pixels = unitsToPixels(area.radius);
+  let shape;
+  if (whole) shape = cone
+    ? { type: "cone", x: area.origin.x, y: area.origin.y, radius: pixels, angle: area.angle, rotation: area.rotation, curvature: "round" }
+    : { type: "circle", x: area.origin.x, y: area.origin.y, radius: pixels };
+  else {
+    const points = Array.from(area.polygon?.points ?? []);
+    if (points.length < 6) return null;
+    shape = { type: "polygon", points };
+  }
+  return {
+    name: name || game.i18n.localize("ep2e.targeting.areaName"), color, highlightMode: "coverage", visibility: CONST.REGION_VISIBILITY.ALWAYS,
+    levels: canvas.level ? [canvas.level.id] : [],
+    shapes: [shape],
+    behaviors,
+    flags: { eclipsephase: { [AREA_FLAG]: { kind: area.kind, origin: area.origin, radius: area.radius, angle: area.angle ?? 360, rotation: area.rotation ?? 0, ...flags } } }
+  };
+}
+
+/**
+ * Creates Regions on the viewed scene, or has the active GM create them for a user who may not.
+ * @param {Object[]} data - The Regions' data
+ * @returns {Promise<Object[]>} The Regions, empty when the GM creates them
+ */
+async function createRegions(data) {
+  if (CONFIG.Region.documentClass.canUserCreate(game.user)) return (await canvas.scene.createEmbeddedDocuments("Region", data)) ?? [];
+  relayToActiveGM("createAreaRegion", { sceneId: canvas.scene.id, data });
+  return [];
+}
+
+/**
+ * Leaves an area in the scene for everyone to see: a Region in the shape walls cut it to. A user who
+ * may not create Regions has the active GM create it.
+ * @param {Object} area - What placeArea returned, or the same fields
+ * @param {Object} [options] - color; name ("Area" when none is given); behaviors, Region behaviors it
+ *   carries; flags, kept under the area flag, such as the attack it
+ *   belongs to
+ * @returns {Promise<Object|null>} The Region, or null when the GM creates it
+ */
+export async function createAreaRegion(area, { color = TARGET_COLOR, name = "", flags = {}, behaviors = [] } = {}) {
+  const data = areaRegionData(area, { color, name, flags, behaviors });
+  if (!data) return null;
+  return (await createRegions([data]))[0] ?? null;
+}
+
+// The colour of an area that strikes nobody, such as suppressive fire that missed.
+export const SPENT_COLOR = "#999999";
+
+/**
+ * Whether a point lies in an area's whole shape, walls aside.
+ * @param {Object} area - kind, origin, radius, angle, rotation
+ * @param {Object} point - Canvas coordinates
+ * @returns {Boolean} True inside
+ */
+export function shapeContains(area, point) {
+  const dx = point.x - area.origin.x;
+  const dy = point.y - area.origin.y;
+  if (Math.hypot(dx, dy) > unitsToPixels(area.radius)) return false;
+  if (area.kind !== "cone" || (area.angle ?? 360) >= 360) return true;
+  const facing = Math.atan2(dy, dx) * 180 / Math.PI;
+  const off = ((facing - (area.rotation ?? 0)) % 360 + 540) % 360 - 180;
+  return Math.abs(off) <= area.angle / 2;
+}
+
+/**
+ * The grid squares an area covers, whole or not at all: a square belongs to it when its centre lies in
+ * the area's shape, and is open when its centre lies in the part walls do not cover.
+ * @param {Object} area - kind, origin, radius, angle, rotation and the wall-cut polygon
+ * @param {Object} grid - The square grid, with getOffset, getCenterPoint and getTopLeftPoint
+ * @param {Set<String>} [exclude] - Squares to leave out, as "i,j"
+ * @returns {Object} open and shadow, each a list of { i, j }
+ */
+export function areaSquares(area, grid, exclude = new Set()) {
+  const reach = unitsToPixels(area.radius);
+  const first = grid.getOffset({ x: area.origin.x - reach, y: area.origin.y - reach });
+  const last = grid.getOffset({ x: area.origin.x + reach, y: area.origin.y + reach });
+  const squares = { open: [], shadow: [] };
+  for (let i = first.i; i <= last.i; i++) {
+    for (let j = first.j; j <= last.j; j++) {
+      if (exclude.has(`${i},${j}`)) continue;
+      const centre = grid.getCenterPoint({ i, j });
+      if (!shapeContains(area, centre)) continue;
+      (area.polygon?.contains(centre.x, centre.y) ? squares.open : squares.shadow).push({ i, j });
+    }
+  }
+  return squares;
+}
+
+/**
+ * Grid squares as Region rectangles, the squares of a row joined into one.
+ * @param {Object[]} squares - { i, j } each
+ * @param {Object} grid - The square grid, with getTopLeftPoint and size
+ * @returns {Object[]} The rectangle shapes
+ */
+export function squareShapes(squares, grid) {
+  const rows = new Map();
+  for (const { i, j } of squares) rows.set(i, [...(rows.get(i) ?? []), j]);
+  const shapes = [];
+  for (const [i, columns] of rows) {
+    columns.sort((a, b) => a - b);
+    let start = columns[0];
+    for (let index = 1; index <= columns.length; index++) {
+      if (columns[index] === columns[index - 1] + 1) continue;
+      const corner = grid.getTopLeftPoint({ i, j: start });
+      shapes.push({ type: "rectangle", x: corner.x, y: corner.y, width: (columns[index - 1] - start + 1) * grid.size, height: grid.size });
+      start = columns[index];
+    }
+  }
+  return shapes;
+}
+
+/**
+ * Leaves an area in the scene whole, in one colour at every spot: the part walls do not cover in red,
+ * the part behind walls in yellow, so the GM can still rule that a thin wall or a window lets it
+ * through - or, for an area that strikes nobody, all of it in grey. On a square grid the parts are
+ * whole squares; squares to exclude are left out. Every part carries the behaviors; their flag's part
+ * ("open", "shadow" or "spent") tells them apart.
+ * @param {Object} area - What placeArea returned, or the same fields
+ * @param {Object} [options] - name; flags; behaviors; spent: grey, striking nobody; exclude: squares
+ *   ("i,j") to leave out
+ * @returns {Promise<Object[]>} The Regions, empty when the GM creates them
+ */
+export async function createShadowedArea(area, { name = "", flags = {}, behaviors = [], spent = false, exclude = new Set() } = {}) {
+  const grid = canvas.grid;
+  const part = (key, color, shapes) => {
+    const data = areaRegionData(area, { color, name, flags: { ...flags, part: key }, behaviors, whole: true });
+    if (shapes) data.shapes = shapes;
+    return data;
+  };
+  if (grid?.isSquare) {
+    const { open, shadow } = areaSquares(area, grid, exclude);
+    const parts = spent
+      ? [[ "spent", SPENT_COLOR, [...open, ...shadow] ]]
+      : [[ "open", MARK_COLOR, open ], [ "shadow", SHADOW_COLOR, shadow ]];
+    return createRegions(parts.filter(([, , squares]) => squares.length).map(([key, color, squares]) => part(key, color, squareShapes(squares, grid))));
+  }
+  if (spent) return createRegions([part("spent", SPENT_COLOR)]);
+  const open = areaRegionData(area, { color: MARK_COLOR, name, flags: { ...flags, part: "open" }, behaviors });
+  const shadow = part("shadow", SHADOW_COLOR);
+  if (open) shadow.shapes.push({ ...open.shapes[0], hole: true });
+  return createRegions([open, shadow].filter(Boolean));
+}
+
+/**
+ * Removes the areas of a scene that match, such as those an attack left. A user who may not delete
+ * them has the active GM do it.
+ * @param {Function} [match] - match(areaFlag) for the areas to remove; all areas by default
+ * @param {Object} [scene] - The scene, the viewed one by default
+ * @returns {Promise<Number>} How many were removed here
+ */
+export async function clearAreas(match = () => true, scene = globalThis.canvas?.scene) {
+  const ids = Array.from(scene?.regions ?? []).filter(region => {
+    const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
+    return flag && match(flag);
+  }).map(region => region.id);
+  if (!ids.length) return 0;
+  if (game.user.isGM || ids.every(id => scene.regions.get(id)?.isOwner)) {
+    await scene.deleteEmbeddedDocuments("Region", ids);
+    return ids.length;
+  }
+  relayToActiveGM("clearAreaRegions", { sceneId: scene.id, ids });
+  return 0;
+}
+
+/**
+ * Lets the active GM create and remove areas for users who may not.
+ * @returns {void}
+ */
+export function registerAreaSocket() {
+  registerSocketActions({
+    createAreaRegion: ({ sceneId, data }) => game.scenes.get(sceneId)?.createEmbeddedDocuments("Region", Array.isArray(data) ? data : [data]),
+    clearAreaRegions: ({ sceneId, ids }) => game.scenes.get(sceneId)?.deleteEmbeddedDocuments("Region", ids)
+  });
 }

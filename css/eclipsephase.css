@@ -3316,6 +3316,11 @@ button.epTextlink:hover{
 }
 
 /* Munition sheets: tooltips on one line so they clear the field they explain, and fields that do not apply stay in place, greyed out. */
+/* An attack dialog's modifier that suppressive fire ignores. */
+.ep-field-suppressed {
+  opacity: 0.4;
+}
+
 .munition-fields .wantToKnowMore .tooltipText {
   white-space: nowrap;
 }
