@@ -1,9 +1,10 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, renderDefenceCard, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
+import { scatterSide } from "../../module/rolls/cards.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
-import { weaponPreparation, grenadePreparation, blastReach, weaponRange, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
@@ -629,7 +630,7 @@ describe("picking the targets in the attack dialog", () => {
       const { root } = await fireArea({ place: async () => placed, pick, area: { kind: "cone", radius: 20, width: 20, from: {}, max: 0 } });
 
       expect(pick).not.toHaveBeenCalled();
-      expect(JSON.parse(root.querySelector('input[name="placedArea"]').value)).toEqual(placed);
+      expect(JSON.parse(root.querySelector('input[name="placedArea"]').value)).toEqual({ ...placed, from: null });
       expect(root.querySelector('input[name="measuredRanges"]').value).toBe("40");
     });
   });
@@ -1116,7 +1117,7 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     regions = [];
     const grid = { isSquare: true, size: 100, distance: 1, getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }), getTopLeftPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }) };
     global.canvas = { ready: true, grid, level: null, dimensions: { distancePixels: 100 }, tokens: { placeables: tokens }, scene: { id: "scene1", regions, createEmbeddedDocuments: async (type, data) => { regions.push(...data); return data; } } };
-    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 900, 0, 900, 900], contains: x => x < 900 }) } } };
+    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 900, 0, 900, 900], contains: x => x < 900 }), testCollision: () => null } } };
     CONFIG.Region = { documentClass: { canUserCreate: () => true } };
     global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
   }
@@ -1128,10 +1129,10 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
    * @param {Object} [options] - Further dialog values; origin, where it is placed (null for none)
    * @returns {Promise<Object>} The attack card
    */
-  async function hurl(actor, die, { origin = { x: 550, y: 550 }, ...options } = {}) {
+  async function hurl(actor, die, { origin = { x: 550, y: 550 }, from = { x: 50, y: 550 }, ...options } = {}) {
     const weapon = grenadePreparation(actor, "gren1");
     seedRolls([die]);
-    const placedArea = origin ? JSON.stringify({ kind: "circle", origin, radius: 0 }) : "";
+    const placedArea = origin ? JSON.stringify({ kind: "circle", origin, radius: 0, from }) : "";
     await RollCheck({ type: "skill", key: "athletics", name: "athletics", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, placedArea, trigger: "impact", ...options } }, weapon, "grenade");
     return createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1);
   }
@@ -1312,6 +1313,22 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     await until(() => regions.length === 0);
     expect(regions).toHaveLength(0);
 
+    const combat = game.combat;
+    game.combat = { started: true };
+    try {
+      await hurl(thrower(STUN), 30);
+      await until(() => defenceCards().length === 2);
+      seedRolls([95]);
+      await rollDefence(defenceCards().at(-1), bo.uuid, "dodge", DODGE);
+      await until(() => damageCards().length);
+      seedRolls([5]);
+      await rollAttackDamage(damageCards().at(-1));
+      await until(() => regions.length === 0);
+      expect(regions).toHaveLength(0);
+    } finally {
+      game.combat = combat;
+    }
+
     await hurl(thrower("Gas_Smoke_tpxWJJNwXCBRgZ45.json"), 30);
     await new Promise(resolve => realTimeout(resolve, 20));
     expect(regions.length).toBeGreaterThan(0);
@@ -1341,6 +1358,73 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     expect(Object.fromEntries(card.getFlag("eclipsephase", "taskCard").targets.map(target => [target.name, target.outcome]))).toEqual({ Bo: "none", Cy: "none", Dee: "hit" });
     const covers = defenceCards().flatMap(message => message.getFlag("eclipsephase", "attackDefence").entries.map(entry => [entry.name, entry.cover || null]));
     expect(Object.fromEntries(covers)).toEqual({ Bo: "inCover", Cy: "spared", Dee: null });
+  });
+
+  test("a scatter turns 3.6 degrees a point of the d100 clockwise from the line of the throw, and goes a d10 metres, doubled for each superior failure", () => {
+    const east = 0;
+    const turn = direction => Math.round(scatterOffset(direction, 4, 0, east).angle * 180 / Math.PI);
+
+    expect([turn(100), turn(25), turn(50), turn(75), turn(37)]).toEqual([0, 90, 180, 270, 133]);
+    expect([scatterOffset(1, 4, 0, east).distance, scatterOffset(1, 4, 1, east).distance, scatterOffset(1, 4, 2, east).distance]).toEqual([4, 8, 16]);
+    expect([superiorFailures(70), superiorFailures(66), superiorFailures(34), superiorFailures(33), superiorFailures(99)]).toEqual([0, 1, 1, 2, 0]);
+    expect([scatterSide(0), scatterSide(90), scatterSide(180), scatterSide(270)]).toEqual(["ep2e.chat.attack.scatterAhead", 'ep2e.chat.attack.scatterRight {"degrees":90}', "ep2e.chat.attack.scatterBack", 'ep2e.chat.attack.scatterLeft {"degrees":90}']);
+  });
+
+  test("a throw that missed offers to scatter: it lands where the dice send it, the area it was aimed at turns grey, the pool can no longer change it, and it deals its plain damage", async () => {
+    const actor = thrower(FRAG);
+    const bo = armoured("Bo", { energy: 0, kinetic: 0 });
+    scene([tokenAt(bo, 5, 8)]);
+
+    const card = await hurl(actor, 70);
+    expect(regions).toHaveLength(0);
+    expect(card.content).toContain('data-action="blastScatter"');
+
+    await scatterBlast(card, { rollDice: async () => ({ direction: 100, metres: 3 }) });
+    await until(() => defenceCards().length);
+
+    expect(regions.map(region => region.flags.eclipsephase.area.part).sort()).toEqual(["open", "shadow", "spent"]);
+    expect(regions.find(region => region.flags.eclipsephase.area.part === "open").flags.eclipsephase.area.origin).toEqual({ x: 850, y: 550 });
+    expect(card.content).toContain("ep2e.chat.attack.scattered");
+    expect(card.content).not.toContain('data-action="blastScatter"');
+    expect(card.getFlag("eclipsephase", "taskCard").targets.map(target => [target.name, Math.floor(target.distance)])).toEqual([["Bo", 0]]);
+    expect(await scatterBlast(card, { rollDice: async () => ({ direction: 1, metres: 1 }) })).toBeNull();
+
+    seedRolls([95]);
+    await rollDefence(defenceCards()[0], bo.uuid, "dodge", DODGE);
+    await until(() => damageCards().length);
+    seedRolls([20]);
+    await rollAttackDamage(damageCards()[0]);
+    expect(bo.system.health.physical.value).toBe(20);
+  });
+
+  test("a grenade set to go off later scatters even on a hit; one on impact goes off where it hit", async () => {
+    const actor = thrower(STUN);
+    scene([]);
+
+    const delayed = await hurl(actor, 30, { trigger: "delayed" });
+    expect(regions).toHaveLength(0);
+    expect(delayed.content).toContain('data-action="blastScatter"');
+
+    const impact = await hurl(actor, 30);
+    expect(impact.content).not.toContain('data-action="blastScatter"');
+    expect(regions.length).toBeGreaterThan(0);
+  });
+
+  test("a seeker missile loaded in a launcher is fired as a blast: its size adds to its damage and to how far a centred blast reaches", async () => {
+    const actor = armed("Seeker_Pistol_gmwT5X2MW70ywgS2.json");
+    const frag = loadPackItem("ammo/TMP_Frag_k6RLHDnQl1ZYNpG0.json");
+    await actor.items.get("gun1").update({ "system.ammoSelected": { ...actor.items.get("gun1").system.ammoSelected, name: "TMP Frag", dvModifier: { ...frag.system.dv }, traits: frag.system.traits, armorused: "kinetic", area: munitionArea({ ...frag.system, size: "standard" }) } });
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+
+    expect(weapon.blast).toMatchObject({ kind: "centered", reduction: 2, maxDamage: 46, damage: "+1d10" });
+    expect(formulaMax(weapon.weaponDamage)).toBe(36);
+    const attack = detectWeaponAttack({ rolledFrom: "rangedWeapon", weapon, options: { placedArea: JSON.stringify({ origin: { x: 1, y: 1 } }) } });
+    expect(attack).toMatchObject({ targets: ANY_TARGETS, area: true, blast: { kind: "centered", radius: 23, origin: { x: 1, y: 1 } }, payload: { armorUsed: "kinetic" } });
+    expect(attackPicking({ rolledFrom: "rangedWeapon", actor, weapon }).label()).toBe("ep2e.roll.dialog.throw.place");
+
+    const damage = await weaponDamage({ actorUuid: actor.uuid, rolledFrom: "rangedWeapon", item: { weaponId: "gun1", weaponMode: "1" }, options: { attackMode: "single", range: "range" } }, 3);
+    expect(damage.roll.formula).toContain("1d10");
+    expect(damage.roll.formula.match(/d10/g)).toHaveLength(2);
   });
 
   test("the defence card says how far from the centre each target stands and whether a dodge gets them clear", () => {

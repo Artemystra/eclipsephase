@@ -170,12 +170,18 @@
       </div>
   {{/if}}
 
+  {{#if scatterNote}}<p class="footnote">{{scatterNote}}</p>{{/if}}
   {{#if (and rollContext.targetedAttack targetNames)}}
    <p class="ep-attack-targets">{{targetNames}}</p>
   {{else if rollContext.targetedAttack.suppressive}}
    <p class="footnote">{{localize "ep2e.chat.attack.suppressiveNote"}}</p>
   {{else if rollContext.targetedAttack.blast.origin}}
    {{#if blastLaid}}<p class="footnote">{{localize "ep2e.chat.attack.blastNote"}}</p>{{/if}}
+   {{#unless blastLaid}}{{#if (or (ne resultClass "success") (eq rollContext.targetedAttack.blast.trigger "delayed"))}}
+   <div class="chatControls ep-chat-stack">
+     <button type="button" class="chatButton blastScatter ownerOnlyControl ep-chat-primary" data-action="blastScatter" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.scatter"}}</button>
+   </div>
+   {{/if}}{{/unless}}
   {{else if (and rollContext.targetedAttack.preTargets (eq resultClass "success"))}}
   {{else if (and rollContext.targetedAttack (eq resultClass "success") (eq rollContext.targetedAttack.effect "damage"))}}
    <div class="chatControls">

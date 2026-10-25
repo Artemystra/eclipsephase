@@ -1608,7 +1608,8 @@
           "reduction": "Perda de VD",
           "note": "Todos na explosão precisam se defender. Reduzir a explosão custa uma ação rápida.",
           "place": "Posicionar explosão",
-          "noneLeft": "{name}: nenhuma restante para arremessar."
+          "noneLeft": "{name}: nenhuma restante para arremessar.",
+          "blastHeadline": "Explosão"
         }
       },
       "successType": {
@@ -1992,7 +1993,14 @@
         "suppressiveArea": "Fogo de supressão ({name})",
         "suppressiveNote": "Fogo de supressão: quem se mover dentro do cone precisa se defender.",
         "blastArea": "Explosão ({name})",
-        "blastNote": "A explosão está marcada no mapa."
+        "blastNote": "A explosão está marcada no mapa.",
+        "scatter": "Dispersar",
+        "scattered": "Dispersão {side}, {distance} m.",
+        "scatteredWall": "Dispersão {side}, {distance} m - parou diante de uma parede.",
+        "scatterAhead": "em frente",
+        "scatterBack": "para trás",
+        "scatterRight": "{degrees}° para a direita",
+        "scatterLeft": "{degrees}° para a esquerda"
       },
       "defence": {
         "headline": "Defender-se de {weapon}",

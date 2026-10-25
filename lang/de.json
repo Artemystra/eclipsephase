@@ -1627,7 +1627,8 @@
           "reduction": "SW-Verlust",
           "note": "Alle in der Explosion müssen sich verteidigen. Die Explosion herunterzuregeln kostet eine schnelle Aktion.",
           "place": "Explosion platzieren",
-          "noneLeft": "{name}: keine mehr zum Werfen übrig."
+          "noneLeft": "{name}: keine mehr zum Werfen übrig.",
+          "blastHeadline": "Explosion"
         }
       },
       "successType": {
@@ -2020,7 +2021,14 @@
         "suppressiveArea": "Sperrfeuer ({name})",
         "suppressiveNote": "Sperrfeuer gelegt: Wer sich im Kegel bewegt, muss sich verteidigen.",
         "blastArea": "Explosion ({name})",
-        "blastNote": "Die Explosion ist auf der Karte markiert."
+        "blastNote": "Die Explosion ist auf der Karte markiert.",
+        "scatter": "Streuen",
+        "scattered": "Gestreut {side}, {distance} m.",
+        "scatteredWall": "Gestreut {side}, {distance} m - an einer Wand gestoppt.",
+        "scatterAhead": "geradeaus",
+        "scatterBack": "zurück",
+        "scatterRight": "{degrees}° nach rechts",
+        "scatterLeft": "{degrees}° nach links"
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",

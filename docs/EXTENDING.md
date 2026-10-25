@@ -603,10 +603,21 @@ centre, and lets half through to anyone else (Core p.218); a centred blast loses
 the way to each target, by whole meters. Someone behind a wall or with a hidden token whom no player owns is the GMs' alone
 on every card. A token counts by the squares it stands on, as the blast is drawn, or on a scene
 without squares by its centre. A blast that catches nobody, or that everyone it caught gets away
-from, goes again; one that struck someone goes once the damage is rolled outside combat, and in
-combat when the thrower's next turn begins or the combat ends. A blast without damage, such as
-smoke, stays until then. The attack record carries `blast: { kind, radius, reduction, origin,
-trigger, harmless }`; `api.ui.blastTargets(area, tokens)` lists whom a blast catches, each with
+from, goes again, as does one that struck someone once its damage is rolled. A blast without
+damage, such as smoke, stays until the thrower's next turn begins or the combat ends. While a blast
+is placed, a line from the thrower's or shooter's token to the cursor shows the distance and its
+range category. A seeker missile loaded in a launcher is fired the same way, with Guns
+and the launcher's range; its size adds to its damage and to how far a centred blast reaches.
+
+A blast that missed - or one set to go off later, even on a hit (Core p.212) - offers "Scatter" on
+its card instead (Core p.218): a d100 turns it 3.6 degrees a point clockwise from the line of the
+throw (00 straight on beyond the aim, 25 to its right, 50 back towards the thrower, 75 to its left),
+a d10 is how many meters it goes, doubled for each superior failure, and it comes down short of the
+first wall in its way. It goes off there with its plain damage, the area it was aimed at left in
+grey, and pool points can no longer change the roll. A pool point that turns the miss into a hit
+first sets it off where it was aimed. The attack record carries `blast: { kind, radius, reduction,
+origin, from, trigger, harmless }` - `from` being where it was thrown or fired from - and, once
+scattered, `scatter: { direction, degrees, distance, blocked }`; `api.ui.blastTargets(area, tokens)` lists whom a blast catches, each with
 `distance`, `nearEdge`, `shadow` and `secret`. `api.attacks.postDefenceCards(attack, targets,
 { gmOnly, details })` keeps `details.get(uuid)` on that target's entry. A grenade without a blast
 is thrown at one target like a shot.

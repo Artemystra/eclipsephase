@@ -77,6 +77,8 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
     
   }
 
+  const blast = seekerBlast(weapon, weaponDamage);
+  if (blast) selection.blast = blast;
   return selection
 }
 
@@ -398,6 +400,39 @@ export function blastReach(blast, dial = {}) {
     return { kind: "centered", radius: (Number(blast.maxDamage) || 0) / reduction, reduction };
   }
   return { kind: "none", radius: 0, reduction: 0 };
+}
+
+/**
+ * The most a damage formula can roll: every die at its highest, flat values added or taken off.
+ * @param {String} formula - e.g. "3d10+6" or "1d10+2d6-1"
+ * @returns {Number} The highest total, 0 for a formula without dice or numbers, or for a label
+ */
+export function formulaMax(formula) {
+  const text = String(formula ?? "").replace(/\s/g, "");
+  if (!/^[\dd+-]*$/.test(text)) return 0;
+  let total = 0;
+  for (const [, sign, count, faces, flat] of text.matchAll(/([+-]?)(?:(\d*)d(\d+)|(\d+))/g)) {
+    const value = faces ? (Number(count) || 1) * Number(faces) : Number(flat);
+    total += sign === "-" ? -value : value;
+  }
+  return Math.max(0, total);
+}
+
+/**
+ * The blast a ranged weapon fires when the munition loaded carries one - a seeker missile (Core
+ * p.212): its area once its size is applied, reaching as a grenade's does, set off on impact.
+ * @param {Item} weapon - The weapon
+ * @param {String} weaponDamage - The damage the weapon deals with the munition, as a formula
+ * @returns {Object|null} kind, radius, reduction, maxDamage, trigger, and the size's damage and
+ *   damageMultiplier; null for a weapon whose munition has no blast
+ */
+export function seekerBlast(weapon, weaponDamage) {
+  if (weapon?.type !== "rangedWeapon") return null;
+  const area = weapon.system?.ammoSelected?.area;
+  if (area?.kind !== "uniform" && area?.kind !== "centered") return null;
+  const multiplier = Number(area.damageMultiplier) || 1;
+  const maxDamage = (formulaMax(weaponDamage) + formulaMax(area.damage)) * multiplier;
+  return { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage, trigger: "impact", damage: area.damage || "", damageMultiplier: multiplier };
 }
 
 /**

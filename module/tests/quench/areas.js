@@ -2,7 +2,7 @@ import { areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion,
 import { waitUntil, withTempActor, seedDice, restoreDice, uniformForFace, suppressDice3d, restoreDice3d } from "./helpers.js";
 import { RollCheck } from "../../rolls/dice.js";
 import { weaponPreparation, grenadePreparation } from "../../common/weapon-functions.js";
-import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression } from "../../rolls/attacks.js";
+import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression, scatterBlast } from "../../rolls/attacks.js";
 
 // Areas on a real canvas: walls of a scratch scene cut a blast and a cone off and stop what flies at
 // them, and an area left as a Region can be cleared again. The scene is viewed while the batch runs
@@ -231,6 +231,77 @@ export function registerAreasBatch(quench) {
             await clearAreas(flag => flag.blast === true, scene);
             await token.delete();
           }));
+        } finally {
+          restoreDice3d();
+          restoreDice();
+          const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+          if (mine.length) await ChatMessage.deleteDocuments(mine);
+        }
+      });
+
+      it("that misses scatters straight on towards the wall and comes down short of it, the area it was aimed at left in grey", async function () {
+        this.timeout(40000);
+        const stun = { name: "Quench Stun", type: "grenade", system: { active: true, quantity: 2, dv: { d10: null, d6: 1, bonus: 2 }, area: { kind: "uniform", radius: 3, reduction: null }, armorused: "kinetic", trigger: "impact" } };
+        const posted = new Set(game.messages.contents.map(message => message.id));
+        suppressDice3d();
+        try {
+          await withTempActor({ type: "character", name: "Quench Thrower", items: [stun] }, async thrower => {
+            await waitUntil(() => thrower.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+            const weapon = grenadePreparation(thrower, thrower.items.find(item => item.name === "Quench Stun").id);
+            seedDice([uniformForFace(95, 100)]);
+            await RollCheck({ type: "skill", key: "athletics", name: "Athletics", rollvalue: 60, pooltype: "Vigor" }, thrower.system, thrower, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "impact", placedArea: JSON.stringify({ kind: "circle", origin: { x: 1250, y: 1450 }, radius: 0, from: { x: 250, y: 1450 } }) } }, weapon, "grenade");
+            restoreDice();
+            const card = game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "taskCard")).at(-1);
+            assert.include(card.content, "blastScatter");
+
+            await scatterBlast(card, { rollDice: async () => ({ direction: 100, metres: 10 }) });
+            const flags = () => scene.regions.map(region => region.getFlag("eclipsephase", AREA_FLAG)).filter(flag => flag?.blast);
+            await waitUntil(() => flags().some(flag => flag.part === "spent"), 10000);
+
+            const landed = flags().find(flag => flag.part !== "spent").origin;
+            assert.isBelow(landed.x, WALL_X, "short of the wall");
+            assert.isAbove(landed.x, WALL_X - 20, "right at it");
+            assert.isTrue(game.messages.get(card.id).getFlag("eclipsephase", "taskCard").scatter.blocked, "the card notes the wall");
+            await clearAreas(flag => flag.blast === true, scene);
+          });
+        } finally {
+          restoreDice3d();
+          restoreDice();
+          const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+          if (mine.length) await ChatMessage.deleteDocuments(mine);
+        }
+      });
+
+      it("scatters a d10 metres doubled per superior failure, turned clockwise by the d100 from the line of the throw: 00 on, 25 right, 50 back, 75 left", async function () {
+        this.timeout(60000);
+        const stun = { name: "Quench Scatter", type: "grenade", system: { active: true, quantity: 9, dv: { d10: null, d6: 1, bonus: 2 }, area: { kind: "uniform", radius: 1, reduction: null }, armorused: "kinetic", trigger: "impact" } };
+        const origin = { x: 1250, y: 1450 };
+        const cases = [
+          { die: 95, direction: 100, metres: 2, at: { x: 1450, y: 1450 } },
+          { die: 50, direction: 50, metres: 3, at: { x: 650, y: 1450 } },
+          { die: 20, direction: 50, metres: 3, at: { x: 50, y: 1450 } },
+          { die: 95, direction: 25, metres: 3, at: { x: 1250, y: 1750 } },
+          { die: 95, direction: 75, metres: 3, at: { x: 1250, y: 1150 } }
+        ];
+        const posted = new Set(game.messages.contents.map(message => message.id));
+        suppressDice3d();
+        try {
+          await withTempActor({ type: "character", name: "Quench Thrower", items: [stun] }, async thrower => {
+            await waitUntil(() => thrower.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+            for (const { die, direction, metres, at } of cases) {
+              const weapon = grenadePreparation(thrower, thrower.items.find(item => item.name === "Quench Scatter").id);
+              seedDice([uniformForFace(die, 100)]);
+              await RollCheck({ type: "skill", key: "athletics", name: "Athletics", rollvalue: 10, pooltype: "Vigor" }, thrower.system, thrower, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "impact", placedArea: JSON.stringify({ kind: "circle", origin, radius: 0, from: { x: 250, y: 1450 } }) } }, weapon, "grenade");
+              restoreDice();
+              const card = game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "taskCard")).at(-1);
+              await scatterBlast(card, { rollDice: async () => ({ direction, metres }) });
+              const landed = () => scene.regions.map(region => region.getFlag("eclipsephase", AREA_FLAG)).find(flag => flag?.blast && flag.part !== "spent" && flag.messageId === card.id);
+              await waitUntil(() => landed(), 10000);
+              assert.approximately(landed().origin.x, at.x, 1, `d100 ${direction}, die ${die}: x`);
+              assert.approximately(landed().origin.y, at.y, 1, `d100 ${direction}, die ${die}: y`);
+              await clearAreas(flag => flag.messageId === card.id, scene);
+            }
+          });
         } finally {
           restoreDice3d();
           restoreDice();

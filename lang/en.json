@@ -1653,7 +1653,8 @@
           "reduction": "DV Loss",
           "note": "Everyone in the blast has to defend. Dialling the blast back takes a quick action.",
           "place": "Place blast",
-          "noneLeft": "{name}: none left to throw."
+          "noneLeft": "{name}: none left to throw.",
+          "blastHeadline": "Blast"
         }
       },
       "successType": {
@@ -2048,7 +2049,14 @@
         "suppressiveArea": "Suppressive fire ({name})",
         "suppressiveNote": "Suppressive fire laid down: whoever moves inside the cone has to defend.",
         "blastArea": "Blast ({name})",
-        "blastNote": "The blast is marked on the map."
+        "blastNote": "The blast is marked on the map.",
+        "scatter": "Scatter",
+        "scattered": "Scattered {side}, {distance} m.",
+        "scatteredWall": "Scattered {side}, {distance} m - stopped short at a wall.",
+        "scatterAhead": "straight on",
+        "scatterBack": "straight back",
+        "scatterRight": "{degrees}° to the right",
+        "scatterLeft": "{degrees}° to the left"
       },
       "defence": {
         "headline": "Defend against the {weapon}",

@@ -23,7 +23,7 @@ registerCard("taskCard", {
     damageOffered: state => ({ ...state, damageOffered: true }),
     updateTarget: (state, { uuid, ...change }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, ...change } : target) }),
     addTarget: (state, { uuid, name, hidden = false }) => ({ ...state, targets: [...(state.targets ?? []), { uuid, name: name ?? "", outcome: null, hidden }] }),
-    blastTargets: (state, { targets }) => ({ ...state, blastLaid: true, targets: targets.map(target => ({ ...target, outcome: null })) }),
+    blastTargets: (state, { targets, scatter = null }) => ({ ...state, blastLaid: true, scatter, targets: targets.map(target => ({ ...target, outcome: null })) }),
     targetDamageOffered: (state, { uuid }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, damageOffered: true } : target) })
   }
 });
@@ -60,9 +60,24 @@ export function taskCardView(state) {
   if (state.spent) view.poolSpent = game.i18n.format(`ep2e.chat.poolSpent.${state.spent.usageType}`, { name: state.spent.spender, pool: game.i18n.localize(state.spent.poolName) });
   const shown = (state.targets ?? []).filter(target => !target.hidden);
   if (shown.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: shown.map(targetWithOutcome(state)).join(", ") });
-  view.defended = (state.targets ?? []).some(target => target.outcome);
+  view.defended = (state.targets ?? []).some(target => target.outcome) || !!state.scatter;
   view.blastLaid = state.blastLaid === true;
+  if (state.scatter) view.scatterNote = game.i18n.format(state.scatter.blocked ? "ep2e.chat.attack.scatteredWall" : "ep2e.chat.attack.scattered", { side: scatterSide(state.scatter.degrees), distance: state.scatter.distance });
   return view;
+}
+
+/**
+ * Which way a blast scattered, seen along the line of the throw: straight on, straight back, or so
+ * many degrees to the right or the left.
+ * @param {Number} degrees - Degrees clockwise from straight on
+ * @returns {String} The words
+ */
+export function scatterSide(degrees) {
+  const turn = ((Number(degrees) || 0) % 360 + 360) % 360;
+  if (turn === 0) return game.i18n.localize("ep2e.chat.attack.scatterAhead");
+  if (turn === 180) return game.i18n.localize("ep2e.chat.attack.scatterBack");
+  const off = Math.round((turn < 180 ? turn : 360 - turn) * 10) / 10;
+  return game.i18n.format(turn < 180 ? "ep2e.chat.attack.scatterRight" : "ep2e.chat.attack.scatterLeft", { degrees: off });
 }
 
 /**

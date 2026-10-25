@@ -3,7 +3,7 @@ import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds } from "../common/morp-functions.js";
 import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, clearAreas, shapeContains, unitsToPixels, MELEE_CURSOR } from "../common/targeting.js";
+import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
 
@@ -873,11 +873,17 @@ function suppressiveArea(rollContext) {
  * @returns {Function} area(form)
  */
 function blastArea(rollContext) {
+  const range = weaponRange(rollContext.weapon);
+  const traits = rollContext.weapon?.weaponTraits?.automatedEffects ?? {};
   return form => {
     const reach = blastReach(rollContext.weapon?.blast, { radius: form?.elements?.blastRadius?.value, reduction: form?.elements?.blastReduction?.value });
     if (!(reach.radius > 0)) return null;
     const from = attackerToken(rollContext.actor);
-    return { kind: "circle", radius: reach.radius, max: 0, distance: area => (from ? pointGap(from, area.origin, canvas.grid) : null) };
+    return {
+      kind: "circle", radius: reach.radius, max: 0, from,
+      measure: from ? { from, describe: distance => distanceText(distance, rangeBand(distance, range, traits)) } : null,
+      distance: area => (from ? pointGap(from, area.origin, canvas.grid) : null)
+    };
   };
 }
 
@@ -949,11 +955,9 @@ export function blastTargets(area, tokens, grid = canvas.grid) {
 }
 
 /**
- * Sets a thrown grenade off where it was placed, once its attack card shows a hit - straight after
- * the roll, or when a pool point turns a miss into one. Its area is left in the scene, red in the
- * open and yellow behind walls, and everyone in it defends: halved Fray, a dodge clearing them only
- * at the blast's edge or in cover (Core p.218). A thrower caught in their own blast is warned and
- * defends like anyone else.
+ * Sets a thrown grenade or a fired seeker off where it was placed, once its attack card shows a hit -
+ * straight after the roll, or when a pool point turns a miss into one. One set to go off later
+ * scatters even on a hit (Core p.212), as does one that missed: its card offers the scatter instead.
  * @param {ChatMessage} message - The attack card
  * @returns {Promise<Object[]|null>} Who was caught, or null when nothing went off
  */
@@ -962,27 +966,127 @@ export function detonateBlast(message) {
     const context = message?.getFlag?.("eclipsephase", "roll");
     const attack = context?.targetedAttack;
     const blast = attack?.blast;
-    if (!blast?.origin || attack.delivered || !isHit(spentOrOriginalResult(context))) return null;
+    if (!blast?.origin || attack.delivered || blast.trigger === "delayed" || !isHit(spentOrOriginalResult(context))) return null;
     const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
     if (attacker && !attacker.isOwner) return null;
-    const area = { kind: "circle", origin: blast.origin, radius: blast.radius, angle: 360, rotation: 0 };
-    area.polygon = areaPolygon(area.origin, area);
-    await createShadowedArea(area, { name: game.i18n.format("ep2e.chat.attack.blastArea", { name: attack.weaponName }), flags: { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, blast: true } });
-    const caught = blast.harmless ? [] : blastTargets(area, canvas.tokens?.placeables ?? []);
-    if (!caught.length) clearBlast(attack, BLAST_LINGER);
-    const own = caught.find(entry => entry.actor.uuid === attack.actorUuid);
-    if (own) ui.notifications.warn(game.i18n.format("ep2e.targeting.ownBlast", { name: own.actor.name }));
-    const names = caught.map(entry => entry.actor.name);
-    const roll = attackRoll(message);
-    const delivered = { "flags.eclipsephase.roll.targetedAttack.delivered": true, "flags.eclipsephase.roll.targetedAttack.targetNames": names, "flags.eclipsephase.roll.targetedAttack.roll": roll };
-    await updateCard(message, "taskCard", "blastTargets", { targets: caught.map(entry => ({ uuid: entry.actor.uuid, name: entry.actor.name, hidden: entry.secret, shadow: entry.shadow, distance: entry.distance })) }, { extra: delivered });
-    const sent = { ...attack, delivered: true, targetNames: names, roll, messageId: message.id };
-    const details = new Map(caught.map(entry => [entry.actor.uuid, { distance: entry.distance, nearEdge: entry.nearEdge, shadow: entry.shadow }]));
-    const open = caught.filter(entry => !entry.secret).map(entry => entry.actor);
-    const secret = caught.filter(entry => entry.secret).map(entry => entry.actor);
-    if (open.length) await postDefenceCards(sent, open, { details });
-    if (secret.length) await postDefenceCards(sent, secret, { gmOnly: true, details });
-    return caught;
+    return setOffBlast(message, attack, blast.origin);
+  });
+}
+
+/**
+ * Sets a blast off at a point: its area is left in the scene, red in the open and yellow behind
+ * walls, and everyone in it defends - halved Fray, a dodge clearing them only at the blast's edge or
+ * in cover (Core p.218). A thrower caught in their own blast is warned and defends like anyone else.
+ * A blast that scattered leaves the area it was aimed at in grey.
+ * @param {ChatMessage} message - The attack card
+ * @param {Object} attack - The attack
+ * @param {Object} origin - Where it goes off, in canvas coordinates
+ * @param {Object} [scatter] - How it scattered: direction, degrees, distance, blocked
+ * @returns {Promise<Object[]>} Who was caught
+ */
+async function setOffBlast(message, attack, origin, scatter = null) {
+  const blast = attack.blast;
+  const area = { kind: "circle", origin, radius: blast.radius, angle: 360, rotation: 0 };
+  area.polygon = areaPolygon(area.origin, area);
+  const name = game.i18n.format("ep2e.chat.attack.blastArea", { name: attack.weaponName });
+  const flags = { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, blast: true };
+  await createShadowedArea(area, { name, flags });
+  if (scatter) {
+    const aimed = { kind: "circle", origin: blast.origin, radius: blast.radius, angle: 360, rotation: 0 };
+    aimed.polygon = areaPolygon(aimed.origin, aimed);
+    await createShadowedArea(aimed, { name, flags, spent: true, exclude: coveredSquares(area) });
+  }
+  const caught = blast.harmless ? [] : blastTargets(area, canvas.tokens?.placeables ?? []);
+  if (!caught.length) clearBlast(attack, BLAST_LINGER);
+  const own = caught.find(entry => entry.actor.uuid === attack.actorUuid);
+  if (own) ui.notifications.warn(game.i18n.format("ep2e.targeting.ownBlast", { name: own.actor.name }));
+  const names = caught.map(entry => entry.actor.name);
+  const roll = attackRoll(message);
+  const delivered = { "flags.eclipsephase.roll.targetedAttack.delivered": true, "flags.eclipsephase.roll.targetedAttack.targetNames": names, "flags.eclipsephase.roll.targetedAttack.roll": roll, ...(scatter ? { "flags.eclipsephase.roll.targetedAttack.scatter": scatter } : {}) };
+  await updateCard(message, "taskCard", "blastTargets", { targets: caught.map(entry => ({ uuid: entry.actor.uuid, name: entry.actor.name, hidden: entry.secret, shadow: entry.shadow, distance: entry.distance })), scatter }, { extra: delivered });
+  const sent = { ...attack, delivered: true, targetNames: names, roll, messageId: message.id, ...(scatter ? { scatter } : {}) };
+  const details = new Map(caught.map(entry => [entry.actor.uuid, { distance: entry.distance, nearEdge: entry.nearEdge, shadow: entry.shadow }]));
+  const open = caught.filter(entry => !entry.secret).map(entry => entry.actor);
+  const secret = caught.filter(entry => entry.secret).map(entry => entry.actor);
+  if (open.length) await postDefenceCards(sent, open, { details });
+  if (secret.length) await postDefenceCards(sent, secret, { gmOnly: true, details });
+  return caught;
+}
+
+/**
+ * The grid squares an area covers, open or behind walls, so that another area can leave them out.
+ * @param {Object} area - kind, origin, radius and the wall-cut polygon
+ * @returns {Set<String>} The squares, as "i,j"; none on a scene without squares
+ */
+function coveredSquares(area) {
+  const grid = canvas.grid;
+  if (!grid?.isSquare) return new Set();
+  const { open, shadow } = areaSquares(area, grid);
+  return new Set([...open, ...shadow].map(({ i, j }) => `${i},${j}`));
+}
+
+/**
+ * How many superior failures a failed roll has: one at 66 or less, two at 33 or less.
+ * @param {Number} value - The die
+ * @returns {Number} 0, 1 or 2
+ */
+export function superiorFailures(value) {
+  const die = Number(value) || 0;
+  if (die >= 99) return 0;
+  return die <= 33 ? 2 : die <= 66 ? 1 : 0;
+}
+
+/**
+ * Where a blast scatters to (Core p.218), from the d100 and d10 rolled for it: the d100 turns it 3.6
+ * degrees a point clockwise from the line of the throw - 00 straight on beyond the aim, 25 to its
+ * right, 50 back towards the thrower, 75 to its left - and the d10 is how many metres, doubled for
+ * each superior failure.
+ * @param {Number} direction - The d100, 1 to 100
+ * @param {Number} metres - The d10
+ * @param {Number} superior - Superior failures
+ * @param {Number} bearing - The line of the throw, in radians, 0 pointing right
+ * @returns {Object} angle in radians, degrees off the line of the throw, and distance in metres
+ */
+export function scatterOffset(direction, metres, superior, bearing) {
+  const degrees = (Number(direction) % 100) * 3.6;
+  return { angle: bearing + degrees * Math.PI / 180, degrees: Math.round(degrees * 10) / 10, distance: (Number(metres) || 0) * 2 ** superior };
+}
+
+/**
+ * Rolls the d100 and the d10 a scatter needs, shown as dice where the table shows them.
+ * @returns {Promise<Object>} direction and metres
+ */
+async function rollScatterDice() {
+  const roll = await new Roll("1d100 + 1d10").evaluate();
+  await game.dice3d?.showForRoll?.(roll, game.user, true);
+  const [direction, metres] = roll.dice.map(die => die.total);
+  return { direction, metres };
+}
+
+/**
+ * Scatters a blast that missed, or that was set to go off later, from its card (Core p.218): it
+ * comes down where the d100 and d10 send it - short of the first wall in the way - and goes off
+ * there; the area it was aimed at is left in grey. Pool points can no longer change the roll then.
+ * @param {ChatMessage} message - The attack card
+ * @param {Object} [seams] - rollDice, replaced in tests
+ * @returns {Promise<Object[]|null>} Who was caught, or null when nothing scattered
+ */
+export function scatterBlast(message, { rollDice = rollScatterDice } = {}) {
+  return inOrder(`blast:${message?.id}`, async () => {
+    const context = message?.getFlag?.("eclipsephase", "roll");
+    const attack = context?.targetedAttack;
+    const blast = attack?.blast;
+    if (!blast?.origin || attack.delivered) return null;
+    const hit = isHit(spentOrOriginalResult(context));
+    if (hit && blast.trigger !== "delayed") return null;
+    const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
+    if (attacker && !attacker.isOwner) return null;
+    const { direction, metres } = await rollDice();
+    const from = blast.from ?? attackerToken(attacker)?.center ?? null;
+    const bearing = from && (from.x !== blast.origin.x || from.y !== blast.origin.y) ? Math.atan2(blast.origin.y - from.y, blast.origin.x - from.x) : -Math.PI / 2;
+    const offset = scatterOffset(direction, metres, hit ? 0 : superiorFailures(attackRoll(message).value), bearing);
+    const landing = scatterPoint(blast.origin, offset.angle, unitsToPixels(offset.distance));
+    return setOffBlast(message, attack, landing.point, { direction, degrees: offset.degrees, distance: offset.distance, blocked: landing.blocked });
   });
 }
 
@@ -1028,7 +1132,7 @@ export function attackPicking(rollContext) {
   if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon" || rolledFrom === "grenade"))) return null;
   if (preset?.preTargets?.length) return null;
   const thrown = !preset && rolledFrom === "grenade";
-  const blast = thrown && rollContext.weapon?.blast?.kind && rollContext.weapon.blast.kind !== "none";
+  const blast = !preset && (thrown || rolledFrom === "rangedWeapon") && !!rollContext.weapon?.blast?.kind && rollContext.weapon.blast.kind !== "none";
   const ranged = !preset && (rolledFrom === "rangedWeapon" || thrown) ? rangedMeasuring(rollContext) : null;
   const refuse = refuseAny(refuseUnsuitable(preset?.unsuitable), ranged?.refuse);
   const area = blast ? blastArea(rollContext) : ranged && !thrown && !isConeWeapon(weapon) ? suppressiveArea(rollContext) : null;

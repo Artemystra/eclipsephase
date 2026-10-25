@@ -1,6 +1,6 @@
-import { weaponPreparation, grenadePreparation, blastReach, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
-import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, diceFormula } from "../common/general-sheet-functions.js";
-import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
+import { weaponPreparation, grenadePreparation, blastReach, formulaMax, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
+import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
 import { registerAttackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast } from "./attacks.js";
@@ -31,7 +31,8 @@ export async function prepareWeapon(data, result, preparedContext) {
 
 /**
  * The damage a weapon attack deals, rolled but not posted: on a hit the weapon's damage with the
- * firing mode's dice and the success tier's bonus, on a miss the damage a weapon deals even then.
+ * firing mode's dice and the success tier's bonus, on a miss the damage a weapon deals even then. A
+ * blast that missed and scattered goes off where it lands with its plain damage (Core p.218).
  * @param {Object} context - The attack's roll context
  * @param {Number} rollResult - The attack's result tier
  * @returns {Promise<Object|null>} actor, message (the card's data) and roll (false for a weapon
@@ -44,9 +45,10 @@ export async function weaponDamage(context, rollResult) {
   const weaponSelected = rolledFrom === "grenade" ? grenadePreparation(actorWhole, context.item.weaponId) ?? context.targetedAttack?.thrown ?? null : await weaponPreparation(actorWhole, skillKey, rolledFrom, context.item.weaponId, context.item.weaponMode);
   if (!weaponSelected) return null;
 
-  if (isHit(rollResult)) {
-    const modeDice = modeDamage(context.options.attackMode) + coneDamage(weaponSelected.weapon, context.options.range) + beyondRangeDamage(weaponSelected.weapon, context.options.range, isChecked(context.options.vacuum));
-    return { actor: actorWhole, ...(await hitDamage(actorWhole, weaponSelected, rollResult, modeDice, context.options.biomorphTarget, context.options.touchOnly)) };
+  const result = !isHit(rollResult) && context.targetedAttack?.scatter ? TASK_RESULT.SUCCESS : rollResult;
+  if (isHit(result)) {
+    const modeDice = modeDamage(context.options.attackMode) + coneDamage(weaponSelected.weapon, context.options.range) + beyondRangeDamage(weaponSelected.weapon, context.options.range, isChecked(context.options.vacuum)) + (weaponSelected.blast?.damage ?? "");
+    return { actor: actorWhole, ...(await hitDamage(actorWhole, weaponSelected, result, modeDice, context.options.biomorphTarget, context.options.touchOnly)) };
   }
   if (!weaponSelected.weaponTraits.automatedEffects.dvOnMiss) return null;
 
@@ -89,7 +91,8 @@ async function hitDamage(actorWhole, weaponSelected, rollResult, modeDice, biomo
   const rollFormula = damageFormula({
     base: weaponDamage,
     extras: [modeDice, meleeDamageMod, biomorphTarget ? " + 1d6" : ""],
-    halved: !!weaponSelected.weaponTraits.automatedEffects.dvHalved
+    halved: !!weaponSelected.weaponTraits.automatedEffects.dvHalved,
+    multiplier: Number(weaponSelected.blast?.damageMultiplier) || 1
   }, rollResult);
 
   const message = {
@@ -330,7 +333,7 @@ export function renderDamageCard(state) {
  * @returns {Object|null} The attack's data, or null when the roll is no such attack
  */
 export function detectWeaponAttack(context) {
-  if (context.rolledFrom === "grenade") return detectThrow(context);
+  if (context.rolledFrom === "grenade" || (context.rolledFrom === "rangedWeapon" && context.weapon?.blast)) return detectThrow(context);
   if (context.rolledFrom !== "rangedWeapon" && context.rolledFrom !== "ccWeapon") return null;
   const selected = context.weapon;
   if (!selected?.weapon || chemicalDoses(selected.weaponTraits)) return null;
@@ -351,10 +354,11 @@ export function detectWeaponAttack(context) {
 }
 
 /**
- * The attack a thrown grenade carries, with what its damage needs once the last grenade of the stack
- * is gone. A grenade with a blast strikes whoever is in it once it goes off where it was placed - without a placed blast the roll is narrative and offers only its damage;
- * a blast without damage, such as smoke, is still laid but strikes nobody. A grenade without a blast
- * strikes the one target picked.
+ * The attack a thrown grenade or a fired seeker carries, with what a grenade's damage needs once the
+ * last grenade of the stack is gone. A blast strikes whoever is in it once it goes off where it was
+ * placed - without a placed blast the roll is narrative and offers only its damage; a blast without
+ * damage, such as smoke, is still laid but strikes nobody. A grenade without a blast strikes the one
+ * target picked.
  * @param {Object} context - The roll context at preRoll
  * @returns {Object|null} The attack's data, or null for a grenade that neither blasts nor damages
  */
@@ -362,15 +366,15 @@ export function detectThrow(context) {
   const selected = context.weapon;
   if (!selected?.weapon) return null;
   const options = context.options ?? {};
-  const harmless = !!selected.weaponTraits?.automatedEffects?.noDamage || !diceFormula(selected.weapon.system?.dv);
+  const grenade = context.rolledFrom === "grenade";
+  const harmless = !!selected.weaponTraits?.automatedEffects?.noDamage || !formulaMax(selected.weaponDamage);
   const reach = blastReach(selected.blast, { radius: options.blastRadius, reduction: options.blastReduction });
   const placed = (() => { try { return JSON.parse(options.placedArea || "null"); } catch { return null; } })();
-  const blast = reach.kind !== "none" ? { ...reach, origin: placed?.origin ?? null, trigger: options.trigger || selected.blast?.trigger || "impact", harmless } : null;
+  const blast = reach.kind !== "none" ? { ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger: options.trigger || selected.blast?.trigger || "impact", harmless } : null;
   if (!blast && harmless) return null;
-  const armorUsed = selected.weapon.system?.armorused;
-  const thrown = { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade" };
+  const armorUsed = grenade ? selected.weapon.system?.armorused : attackArmorUsed(selected.weapon, selected.weaponMode || "1");
   return {
-    thrown,
+    ...(grenade ? { thrown: { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade" } } : {}),
     targets: blast ? ANY_TARGETS : 1,
     area: !!blast,
     ...(blast ? { blast } : {}),
@@ -592,7 +596,7 @@ export async function rollAttackDamage(card) {
     const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", reduction: Number(attack.blast?.reduction) || 0, targets: state.targets };
     if (game.user.isGM) await applyAttackDamage(request);
     else relayToActiveGM("applyAttackDamage", request);
-    if (!game.combat?.started) await clearBlast(attack);
+    await clearBlast(attack);
     return total;
   } finally {
     ROLLING.delete(card.id);

@@ -1601,7 +1601,8 @@
           "reduction": "伤害值递减",
           "note": "爆炸范围内的所有人都必须防御。调低爆炸需要一个快速动作。",
           "place": "放置爆炸",
-          "noneLeft": "{name}：没有可投掷的了。"
+          "noneLeft": "{name}：没有可投掷的了。",
+          "blastHeadline": "爆炸"
         }
       },
       "successType": {
@@ -1985,7 +1986,14 @@
         "suppressiveArea": "压制射击（{name}）",
         "suppressiveNote": "压制射击已展开：在锥形范围内移动者必须防御。",
         "blastArea": "爆炸（{name}）",
-        "blastNote": "爆炸已在地图上标出。"
+        "blastNote": "爆炸已在地图上标出。",
+        "scatter": "散布",
+        "scattered": "散布：{side}，{distance} 米。",
+        "scatteredWall": "散布：{side}，{distance} 米——在墙前停下。",
+        "scatterAhead": "正前方",
+        "scatterBack": "正后方",
+        "scatterRight": "向右 {degrees}°",
+        "scatterLeft": "向左 {degrees}°"
       },
       "defence": {
         "headline": "防御 {weapon}",

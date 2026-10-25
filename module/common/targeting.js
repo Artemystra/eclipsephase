@@ -441,7 +441,7 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
       }
       if (!zone.max) {
         const field = form?.elements?.placedArea;
-        if (field) field.value = JSON.stringify({ kind: area.kind, origin: area.origin, radius: area.radius, angle: area.angle, rotation: area.rotation });
+        if (field) field.value = JSON.stringify({ kind: area.kind, origin: area.origin, radius: area.radius, angle: area.angle, rotation: area.rotation, from: zone.from?.center ?? null });
         const distance = zone.distance ? zone.distance(area) : area.radius;
         if (Number.isFinite(distance)) writeMeasured(form, [distance], picking);
         restoreSheets();
@@ -563,6 +563,36 @@ export function coneAngleForWidth(length, width) {
 }
 
 /**
+ * Shows, while the cursor moves, a line from a token to it and what a measure says of the distance,
+ * in a label beside the cursor.
+ * @param {Object} measure - from, the token; describe(distance), the text for a distance in scene units
+ * @returns {Function} Stops measuring and removes the line and the label
+ */
+function measureFrom({ from, describe }) {
+  const label = document.createElement("div");
+  label.className = "ep-targeting-counter";
+  const range = document.createElement("span");
+  range.className = "ep-targeting-range";
+  label.append(range);
+  document.body.append(label);
+  const line = globalThis.PIXI ? new PIXI.Graphics() : null;
+  if (line) canvas.controls?.addChild?.(line);
+  const onMove = event => {
+    label.style.left = `${event.clientX}px`;
+    label.style.top = `${event.clientY}px`;
+    const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+    range.textContent = describe?.(pointGap(from, point, canvas.grid)) ?? "";
+    if (line) drawMeasureLine(line, from, point);
+  };
+  document.addEventListener("pointermove", onMove, true);
+  return () => {
+    document.removeEventListener("pointermove", onMove, true);
+    line?.destroy();
+    label.remove();
+  };
+}
+
+/**
  * Lets the user place an area at the cursor with the core's Region placement: a circle follows the
  * cursor (snapping to the grid unless Shift is held), a cone keeps its tip on a token and turns
  * towards the cursor - with a width, its length follows the cursor too and its angle keeps the far end
@@ -572,11 +602,12 @@ export function coneAngleForWidth(length, width) {
  * @param {Object} options - kind ("circle" or "cone"); radius in scene units; angle in degrees for a
  *   cone; width in scene units for a cone whose length the user chooses; from, the token a cone starts
  *   at; color; name, "Area" when none is given; asideSheets: false
- *   when the caller keeps the sheets minimised itself
+ *   when the caller keeps the sheets minimised itself; measure: { from, describe(distance) } draws a
+ *   line from the token from to the cursor and shows what describe says of the distance
  * @returns {Promise<Object|null>} kind, origin, radius, angle, rotation and the wall-cut polygon, or
  *   null when cancelled
  */
-export async function placeArea({ kind = "circle", radius, angle = 45, width = null, from = null, color = TARGET_COLOR, name = "", asideSheets = true } = {}) {
+export async function placeArea({ kind = "circle", radius, angle = 45, width = null, from = null, color = TARGET_COLOR, name = "", asideSheets = true, measure = null } = {}) {
   if (!globalThis.canvas?.ready) return null;
   const cone = kind === "cone";
   const tip = cone ? (from?.center ?? null) : null;
@@ -594,6 +625,7 @@ export async function placeArea({ kind = "circle", radius, angle = 45, width = n
     canvas.regions._cancelPlacement();
   };
   document.addEventListener("keydown", onKey, true);
+  const stopMeasuring = measure?.from ? measureFrom(measure) : () => {};
   const placed = await canvas.regions.placeRegion({
     name: name || game.i18n.localize("ep2e.targeting.areaName"), color, shapes: [shape], highlightMode: "coverage", displayMeasurements: true,
     visibility: CONST.REGION_VISIBILITY.ALWAYS, levels: canvas.level ? [canvas.level.id] : []
@@ -612,6 +644,7 @@ export async function placeArea({ kind = "circle", radius, angle = 45, width = n
     } : undefined
   }).finally(() => {
     document.removeEventListener("keydown", onKey, true);
+    stopMeasuring();
     restoreSheets();
   });
   const final = placed?.shapes?.[0];

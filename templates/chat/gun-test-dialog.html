@@ -41,9 +41,9 @@
                         <input type="checkbox" name="superiorPosition"  id="supposition">
                         <label class="resource-label" for="supposition">{{localize "ep2e.roll.dialog.ranged.attacker.superiorPosition"}}</label>
                     </div>
-                    <div class="form-group listBackgroundMain{{#if (eq rolledFrom "grenade")}} ep-field-suppressed{{/if}}">
+                    <div class="form-group listBackgroundMain{{#if rollContext.weapon.blast}} ep-field-suppressed{{/if}}">
                         <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.label"}}:</label>
-                        <select name="attackMode"  style="max-width: 140px;"{{#if (eq rolledFrom "grenade")}} disabled{{/if}}>
+                        <select name="attackMode"  style="max-width: 140px;"{{#if rollContext.weapon.blast}} disabled{{/if}}>
                             <option value="single">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.single"}}</option>
                             <option value="burst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.burst"}}</option>
                             <option value="wBurst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wBurst"}}</option>
@@ -152,7 +152,7 @@
             </div>
         </div>
         <div class="dialogWrapperRight">
-            {{#unless (and (eq rolledFrom "grenade") (ne rollContext.weapon.blast.kind "none"))}}
+            {{#unless (and rollContext.weapon.blast (ne rollContext.weapon.blast.kind "none"))}}
             <div class="flexrow subheader">
                 <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.defenderHeadline"}}</h3>
             </div>
@@ -184,9 +184,9 @@
                 <label class="resource-label" for="hidden">{{localize "ep2e.roll.dialog.ranged.defender.isHidden"}}</label>
             </div>
             {{/unless}}
-            {{#if (eq rolledFrom "grenade")}}
+            {{#if rollContext.weapon.blast}}
             <div class="flexrow subheader">
-                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.throw.headline"}}</h3>
+                <h3 class="subheader dialog">{{#if (eq rolledFrom "grenade")}}{{localize "ep2e.roll.dialog.throw.headline"}}{{else}}{{localize "ep2e.roll.dialog.throw.blastHeadline"}}{{/if}}</h3>
             </div>
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog" for="trigger">{{localize "ep2e.item.weapon.table.trigger.label"}}:</label>
