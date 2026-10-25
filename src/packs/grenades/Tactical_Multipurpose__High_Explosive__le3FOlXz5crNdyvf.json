@@ -11,7 +11,7 @@
   "_id": "le3FOlXz5crNdyvf",
   "system": {
     "additionalSystems": {},
-    "description": "Knockdown (10 meter radius)",
+    "description": "<p>TMP devices can be set to detonate in either fragmentation or high-explosive mode. High-explosive seekers/grenades create a destructive shock and heat wave.</p><p><i>Knockdown (10 meter radius)</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -29,17 +29,17 @@
         "value": false
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "name": "ep2e.item.weapon.table.trait.blinding",
         "value": false
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {
         "name": "ep2e.item.weapon.table.trait.knockdown",
-        "value": false,
-        "radius": null
+        "value": true,
+        "radius": 10
       },
       "noDamage": {
         "name": "ep2e.item.weapon.table.trait.noDamage",

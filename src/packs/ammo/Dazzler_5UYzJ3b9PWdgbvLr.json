@@ -6,7 +6,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "Dazzlers are spinning laser devices, designed to blind targets and defeat surveillance. Anyone within line of sight in the radius of effect (50 meters) who is not equipped with anti-glare mods must succeed in a REF Check or be blinded ▶226 for 1 action turn, +1 per superior failure. A critical failure results in permanent blindness (until repaired/healed). Any visual light/infrared cameras are overloaded for the dazzler’s duration. Unless set to a timed deactivation, dazzlers continue to blind for 1 hour or until wirelessly turned off or physically destroyed (DUR 10, AV 5/10).",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>Dazzlers are spinning laser devices, designed to blind targets and defeat surveillance. Anyone within line of sight in the radius of effect (50 meters) who is not equipped with anti-glare mods must succeed in a REF Check or be blinded ▶226 for 1 action turn, +1 per superior failure. A critical failure results in permanent blindness (until repaired/healed). Any visual light/infrared cameras are overloaded for the dazzler’s duration. Unless set to a timed deactivation, dazzlers continue to blind for 1 hour or until wirelessly turned off or physically destroyed (DUR 10, AV 5/10).</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

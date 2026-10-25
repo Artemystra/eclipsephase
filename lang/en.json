@@ -1646,6 +1646,14 @@
         "psi": {
           "touch": "Touch (+20)",
           "willing": "Willing target (no resistance)"
+        },
+        "throw": {
+          "headline": "Throw",
+          "radius": "Blast radius",
+          "reduction": "DV Loss",
+          "note": "Everyone in the blast has to defend. Dialling the blast back takes a quick action.",
+          "place": "Place blast",
+          "noneLeft": "{name}: none left to throw."
         }
       },
       "successType": {
@@ -2038,7 +2046,9 @@
         "damageWithoutTarget": "Damage without target",
         "damageReady": "Damage from the {weapon}",
         "suppressiveArea": "Suppressive fire ({name})",
-        "suppressiveNote": "Suppressive fire laid down: whoever moves inside the cone has to defend."
+        "suppressiveNote": "Suppressive fire laid down: whoever moves inside the cone has to defend.",
+        "blastArea": "Blast ({name})",
+        "blastNote": "The blast is marked on the map."
       },
       "defence": {
         "headline": "Defend against the {weapon}",
@@ -2056,7 +2066,9 @@
             "none": "Resisted"
           },
           "cover": "Moved into cover",
-          "remainCover": "Remained in cover"
+          "remainCover": "Remained in cover",
+          "spared": "not reached",
+          "inCover": "in cover"
         },
         "severalTargets": "Several targets",
         "resist": "Resist (WIL)",
@@ -2064,7 +2076,12 @@
         "lockedOut": "Critical: the async is locked out of this mind until they recharge.",
         "touchLabel": "{name} by touch",
         "cover": "Moved into Cover",
-        "remainCover": "Remains in Cover"
+        "remainCover": "Remains in Cover",
+        "blastDistance": "{distance} m from the centre",
+        "blastEdge": "at the edge: a successful dodge clears it",
+        "blastBehindWall": "behind a wall: a successful dodge clears it",
+        "inCover": "In Cover",
+        "spareRest": "Resolve Rest Without Roll"
       },
       "poolSpent": {
         "swapped": "{name} used a {pool} point to swap the dice",
@@ -2083,7 +2100,8 @@
         "amountDamage": "{value} damage",
         "amountWounds": "{value} wounds",
         "amountStress": "{value} stress",
-        "amountTraumas": "{value} traumas"
+        "amountTraumas": "{value} traumas",
+        "blastFalloff": "{name} ({distance} m, -{falloff} DV)"
       },
       "psiTouch": {
         "headline": "Psi Touch-Attack ({sleight})",
@@ -2367,7 +2385,8 @@
       "outOfTouch": "{name} is beyond the reach of a touch (2 m).",
       "areaName": "Area",
       "outsideArea": "That token is outside the area.",
-      "tooMany": "This attack strikes at most {max} targets at that range."
+      "tooMany": "This attack strikes at most {max} targets at that range.",
+      "ownBlast": "{name} is caught in their own blast."
     }
   },
   "BEHAVIOR": {

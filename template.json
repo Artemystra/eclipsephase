@@ -956,11 +956,11 @@
           "value": false
         },
         "blinding": {
-          "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+          "name": "ep2e.item.weapon.table.trait.blinding",
           "value": false
         },
         "disablesRadio": {
-          "name": "ep2e.item.weapon.table.accessory.Gyromount",
+          "name": "ep2e.item.weapon.table.trait.disablesRadio",
           "value": false
         },
         "knockdown": {

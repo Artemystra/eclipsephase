@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "TMP devices can be set to detonate in either fragmentation or high-explosive mode. High-explosive seekers/grenades create a destructive shock and\nheat wave.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>TMP devices can be set to detonate in either fragmentation or high-explosive mode. High-explosive seekers/grenades create a destructive shock and heat wave.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

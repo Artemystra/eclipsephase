@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "Stun seekers/grenades can also be set into “overload mode,” inflicting an all-out sensory assault for a full minute. In addition to blinding glare, the device releases nausea-inducing malodorants and infrasonic frequencies that trigger unpleasant emotional responses (anxiety, uneasiness, extreme sorrow, revulsion, and fear).",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>Stun seekers/grenades can also be set into “overload mode,” inflicting an all-out sensory assault for a full minute. In addition to blinding glare, the device releases nausea-inducing malodorants and infrasonic frequencies that trigger unpleasant emotional responses (anxiety, uneasiness, extreme sorrow, revulsion, and fear).</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

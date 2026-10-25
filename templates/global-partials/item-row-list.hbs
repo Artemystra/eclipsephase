@@ -10,6 +10,11 @@
             <img src="{{item.img}}" alt="{{item.name}}" width="24" height="24"/>
             <i class="fas fa-syringe item-image-zoom-icon"></i>
         </div>
+        {{else if item.system.canThrow}}
+        <div class="item-image flex-group-left input-small item-image-zoomable task-check" data-type="skill" data-key="athletics" data-name="{{localize 'ep2e.skills.vigorSkills.athletics'}}" data-rolledfrom="grenade" data-weaponid="{{item._id}}">
+            <img src="{{item.img}}" alt="{{item.name}}" width="24" height="24"/>
+            <i class="fas fa-bomb item-image-zoom-icon"></i>
+        </div>
         {{else}}
         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" alt="{{item.name}}" width="24" height="24"/></div>
         {{/if}}

@@ -1601,6 +1601,14 @@
         "psi": {
           "touch": "Toque (+20)",
           "willing": "Alvo voluntário (sem resistência)"
+        },
+        "throw": {
+          "headline": "Arremesso",
+          "radius": "Raio da explosão",
+          "reduction": "Perda de VD",
+          "note": "Todos na explosão precisam se defender. Reduzir a explosão custa uma ação rápida.",
+          "place": "Posicionar explosão",
+          "noneLeft": "{name}: nenhuma restante para arremessar."
         }
       },
       "successType": {
@@ -1982,7 +1990,9 @@
         "damageWithoutTarget": "Dano sem alvo",
         "damageReady": "Dano de {weapon}",
         "suppressiveArea": "Fogo de supressão ({name})",
-        "suppressiveNote": "Fogo de supressão: quem se mover dentro do cone precisa se defender."
+        "suppressiveNote": "Fogo de supressão: quem se mover dentro do cone precisa se defender.",
+        "blastArea": "Explosão ({name})",
+        "blastNote": "A explosão está marcada no mapa."
       },
       "defence": {
         "headline": "Defender-se de {weapon}",
@@ -2000,7 +2010,9 @@
             "none": "Resistiu"
           },
           "cover": "Foi para a cobertura",
-          "remainCover": "Permaneceu na cobertura"
+          "remainCover": "Permaneceu na cobertura",
+          "spared": "não atingido",
+          "inCover": "em cobertura"
         },
         "severalTargets": "Vários alvos",
         "resist": "Resistir (VON)",
@@ -2008,7 +2020,12 @@
         "lockedOut": "Crítico: o async fica bloqueado desta mente até se recuperar.",
         "touchLabel": "{name} por toque",
         "cover": "Foi para a cobertura",
-        "remainCover": "Permanece na cobertura"
+        "remainCover": "Permanece na cobertura",
+        "blastDistance": "a {distance} m do centro",
+        "blastEdge": "na borda: esquivar com sucesso a evita",
+        "blastBehindWall": "atrás de uma parede: esquivar com sucesso a evita",
+        "inCover": "Em cobertura",
+        "spareRest": "Resolver o resto sem rolagem"
       },
       "poolSpent": {
         "swapped": "{name} usou um ponto de {pool} para trocar os dados",
@@ -2027,7 +2044,8 @@
         "amountDamage": "{value} de dano",
         "amountWounds": "{value} ferimentos",
         "amountStress": "{value} de estresse",
-        "amountTraumas": "{value} traumas"
+        "amountTraumas": "{value} traumas",
+        "blastFalloff": "{name} ({distance} m, -{falloff} VD)"
       },
       "psiTouch": {
         "headline": "Ataque psi de toque ({sleight})",
@@ -2294,7 +2312,8 @@
       "outOfTouch": "{name} está fora do alcance de um toque (2 m).",
       "areaName": "Área",
       "outsideArea": "Esse token está fora da área.",
-      "tooMany": "Este ataque atinge no máximo {max} alvos a essa distância."
+      "tooMany": "Este ataque atinge no máximo {max} alvos a essa distância.",
+      "ownBlast": "{name} está na própria explosão."
     }
   },
   "BEHAVIOR": {

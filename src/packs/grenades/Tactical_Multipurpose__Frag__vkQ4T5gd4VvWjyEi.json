@@ -11,7 +11,7 @@
   "_id": "vkQ4T5gd4VvWjyEi",
   "system": {
     "additionalSystems": {},
-    "description": "Knockdown (5 meter radius)",
+    "description": "<p>TMP devices can be set to detonate in either fragmentation or high-explosive mode. Fragmentation explosives spread a cloud of lethal flechettes over the area of effect.</p><p><i>Knockdown (5 meter radius)</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -29,17 +29,17 @@
         "value": false
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "name": "ep2e.item.weapon.table.trait.blinding",
         "value": false
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {
         "name": "ep2e.item.weapon.table.trait.knockdown",
-        "value": false,
-        "radius": null
+        "value": true,
+        "radius": 5
       },
       "noDamage": {
         "name": "ep2e.item.weapon.table.trait.noDamage",

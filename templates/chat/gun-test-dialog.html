@@ -9,7 +9,12 @@
             </div>
             <div class="grid grid-2col" style="margin: 0;">
                 <div>
-                    {{#if (ne traits.automatedEffects.noSmartlink.value true)}}
+                    {{#if (eq rolledFrom "grenade")}}
+                    <div class="form-group listBackgroundMain ep-field-suppressed">
+                        <input type="checkbox" disabled name="smartlink" id="smartlink">
+                        <label class="resource-label" for="smartlink">{{localize "ep2e.roll.dialog.ranged.attacker.smartLinkLabel"}}</label>
+                    </div>
+                    {{else if (ne traits.automatedEffects.noSmartlink.value true)}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" checked name="smartlink" id="smartlink">
                         <label class="resource-label" for="smartlink">{{localize "ep2e.roll.dialog.ranged.attacker.smartLinkLabel"}}</label>
@@ -36,9 +41,9 @@
                         <input type="checkbox" name="superiorPosition"  id="supposition">
                         <label class="resource-label" for="supposition">{{localize "ep2e.roll.dialog.ranged.attacker.superiorPosition"}}</label>
                     </div>
-                    <div class="form-group listBackgroundMain">
+                    <div class="form-group listBackgroundMain{{#if (eq rolledFrom "grenade")}} ep-field-suppressed{{/if}}">
                         <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.label"}}:</label>
-                        <select name="attackMode"  style="max-width: 140px;">
+                        <select name="attackMode"  style="max-width: 140px;"{{#if (eq rolledFrom "grenade")}} disabled{{/if}}>
                             <option value="single">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.single"}}</option>
                             <option value="burst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.burst"}}</option>
                             <option value="wBurst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wBurst"}}</option>
@@ -110,8 +115,8 @@
                         <input type="checkbox" name="calledShot" id="calledshot">
                         <label class="resource-label" for="calledshot">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
                     </div>
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="vacuum" id="vacuum">
+                    <div class="form-group listBackgroundMain{{#if (eq rolledFrom "grenade")}} ep-field-suppressed{{/if}}">
+                        <input type="checkbox" name="vacuum" id="vacuum"{{#if (eq rolledFrom "grenade")}} disabled{{/if}}>
                         <label class="resource-label" for="vacuum">{{localize "ep2e.roll.dialog.ranged.attacker.vacuum"}}</label>
                     </div>
                     <div class="form-group listBackgroundMain">
@@ -147,6 +152,7 @@
             </div>
         </div>
         <div class="dialogWrapperRight">
+            {{#unless (and (eq rolledFrom "grenade") (ne rollContext.weapon.blast.kind "none"))}}
             <div class="flexrow subheader">
                 <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.defenderHeadline"}}</h3>
             </div>
@@ -177,6 +183,36 @@
                 <input type="checkbox" name="hiddenDefender" id="hidden">
                 <label class="resource-label" for="hidden">{{localize "ep2e.roll.dialog.ranged.defender.isHidden"}}</label>
             </div>
+            {{/unless}}
+            {{#if (eq rolledFrom "grenade")}}
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.throw.headline"}}</h3>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog" for="trigger">{{localize "ep2e.item.weapon.table.trigger.label"}}:</label>
+                <select class="input-largePlus" name="trigger" id="trigger">
+                    <option value="impact"{{#if (eq rollContext.weapon.blast.trigger "impact")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.impact"}}</option>
+                    <option value="airburst"{{#if (eq rollContext.weapon.blast.trigger "airburst")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.airburst"}}</option>
+                    <option value="delayed"{{#if (eq rollContext.weapon.blast.trigger "delayed")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.delayed"}}</option>
+                </select>
+            </div>
+            {{#if (eq rollContext.weapon.blast.kind "uniform")}}
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog" for="blastRadius">{{localize "ep2e.roll.dialog.throw.radius"}}:</label>
+                <input type="number" class="input-small" name="blastRadius" id="blastRadius" min="1" max="{{rollContext.weapon.blast.radius}}" value="{{rollContext.weapon.blast.radius}}" onFocus="this.select()">
+                <label class="resource-label">m</label>
+            </div>
+            {{else if (eq rollContext.weapon.blast.kind "centered")}}
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog" for="blastReduction">{{localize "ep2e.roll.dialog.throw.reduction"}}:</label>
+                <input type="number" class="input-small" name="blastReduction" id="blastReduction" min="{{rollContext.weapon.blast.reduction}}" max="20" value="{{rollContext.weapon.blast.reduction}}" onFocus="this.select()">
+                <label class="resource-label">DV/m</label>
+            </div>
+            {{/if}}
+            {{#if (ne rollContext.weapon.blast.kind "none")}}
+            <p class="footnote">{{localize "ep2e.roll.dialog.throw.note"}}</p>
+            {{/if}}
+            {{/if}}
         </div>
     </div>
     {{#if (gt specialEffects 0)}}

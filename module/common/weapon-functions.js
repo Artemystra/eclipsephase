@@ -1,4 +1,4 @@
-import { itemReduction, listSelection, gmList, searchableListSelection } from "./general-sheet-functions.js";
+import { itemReduction, listSelection, gmList, searchableListSelection, diceFormula } from "./general-sheet-functions.js";
 import { damageValueCalc } from "./general-sheet-functions.js";
 import { dosesRemaining, isAmmoPack, payloadCandidates } from "./drugs.js";
 
@@ -251,8 +251,8 @@ const ARMOR_TYPES = ["energy", "kinetic", "none"];
 
 /**
  * What a weapon, ammunition or grenade written before 2.8.5 needs to fit its schema: ranges in
- * metres, an area read from its text, and a munition's armour type out of the key the old sheet
- * wrote. Values that already fit are left out.
+ * metres, an area read from its text, a munition's armour type out of the key the old sheet wrote,
+ * and a grenade's traits named after themselves. Values that already fit are left out.
  * @param {String} type - The item type
  * @param {Object} system - The item's system data
  * @returns {Object} The repairs, as system paths to values
@@ -282,15 +282,23 @@ export function weaponDataRepairs(type, system) {
     if (ARMOR_TYPES.includes(system.armorUsed)) repairs.armorused = system.armorUsed;
     else if (type === "grenade") repairs.armorused = "none";
   }
+  if (type === "grenade") {
+    for (const [key, trait] of Object.entries(system.traits ?? {})) {
+      const name = `ep2e.item.weapon.table.trait.${key}`;
+      if (trait && trait.name !== name) repairs[`traits.${key}.name`] = name;
+    }
+  }
   return repairs;
 }
 
 /**
- * The range a weapon is fired at, in metres: the chosen mode's range rating.
+ * The range a weapon is fired at, in metres: the chosen mode's range rating, or for a grenade how
+ * far its thrower throws it.
  * @param {Object} weaponSelected - The roll's weapon, with weapon and weaponMode
  * @returns {Number|null} The metres, null for a weapon without one
  */
 export function weaponRange(weaponSelected) {
+  if (weaponSelected?.rolledFrom === "grenade") return Number(weaponSelected.range) > 0 ? Number(weaponSelected.range) : null;
   const mode = weaponSelected?.weaponMode ?? "1";
   return parseRangeText(weaponSelected?.weapon?.system?.[`mode${mode}`]?.range);
 }
@@ -340,6 +348,100 @@ export function rangeRefusal(distance, traits = {}) {
   if (traits?.noClose?.value && distance <= 10) return "ep2e.item.weapon.table.trait.noCloseAndPointBlank";
   if (traits?.noPointBlank?.value && distance <= 2) return "ep2e.item.weapon.table.trait.noPointBlank";
   return null;
+}
+
+// The grenade traits the roll accounts for, and those its hit brings, as a weapon's are sorted.
+const GRENADE_AUTOMATED = ["noDamage"];
+const GRENADE_EFFECTS = ["armorPiercing", "blinding", "disablesRadio", "knockdown", "pain", "shock", "noDamage"];
+
+// The steepest a centred blast can be dialled back to, in DV per metre (Core p.212).
+export const MAX_BLAST_REDUCTION = 20;
+
+/**
+ * A grenade's active traits, sorted as traitSubSetConstructor sorts a weapon's.
+ * @param {Object} system - The grenade's system data
+ * @returns {Object} automatedEffects, confirmationEffects and additionalEffects
+ */
+export function grenadeTraits(system) {
+  const active = Object.entries(system?.traits ?? {}).filter(([, trait]) => trait?.value);
+  const pick = keys => Object.fromEntries(active.filter(([key]) => keys.includes(key)));
+  return { automatedEffects: pick(GRENADE_AUTOMATED), confirmationEffects: {}, additionalEffects: pick(GRENADE_EFFECTS) };
+}
+
+/**
+ * The most damage a damage value can roll.
+ * @param {Object} dv - d10, d6 and bonus
+ * @returns {Number} The highest total
+ */
+export function maxDamage(dv) {
+  return (Number(dv?.d10) || 0) * 10 + (Number(dv?.d6) || 0) * 6 + (Number(dv?.bonus) || 0);
+}
+
+/**
+ * How far a blast reaches (Core p.212, p.218): a uniform blast as far as its radius, a centred one
+ * until its damage has fallen to nothing - its highest damage over what it loses per metre. Dialled
+ * back, a uniform blast reaches only the radius chosen, a centred one loses more per metre, up to 20.
+ * @param {Object} blast - kind ("uniform", "centered" or "none"), radius, reduction and maxDamage
+ * @param {Object} [dial] - radius and reduction chosen in the throw dialog
+ * @returns {Object} kind, radius in metres and reduction per metre (0 for a uniform blast)
+ */
+export function blastReach(blast, dial = {}) {
+  if (blast?.kind === "uniform") {
+    const full = Number(blast.radius) || 0;
+    const chosen = Number(dial.radius);
+    return { kind: "uniform", radius: chosen > 0 ? Math.min(full, chosen) : full, reduction: 0 };
+  }
+  if (blast?.kind === "centered") {
+    const base = Number(blast.reduction) || 2;
+    const chosen = Number(dial.reduction);
+    const reduction = chosen > 0 ? Math.min(MAX_BLAST_REDUCTION, Math.max(base, chosen)) : base;
+    return { kind: "centered", radius: (Number(blast.maxDamage) || 0) / reduction, reduction };
+  }
+  return { kind: "none", radius: 0, reduction: 0 };
+}
+
+/**
+ * A grenade made ready to throw, in the shape weaponPreparation gives a weapon: thrown with Athletics
+ * as far as its thrower's SOM in metres (Core p.209), with the blast the grenade carries.
+ * @param {Actor} actor - The thrower
+ * @param {String} itemId - The grenade
+ * @returns {Object|null} The selection, or null when the actor has no such grenade
+ */
+export function grenadePreparation(actor, itemId) {
+  const grenade = actor?.items?.get(itemId);
+  if (grenade?.type !== "grenade") return null;
+  const area = munitionArea(grenade.system);
+  return {
+    weapon: grenade,
+    weaponID: grenade.id,
+    weaponName: grenade.name,
+    weaponDamage: diceFormula(grenade.system.dv) || "ep2e.item.weapon.table.noDamage",
+    weaponType: "thrown",
+    rolledFrom: "grenade",
+    currentAmmo: Number(grenade.system.quantity) || 0,
+    weaponTraits: grenadeTraits(grenade.system),
+    weaponMode: "1",
+    range: Number(actor.system?.aptitudes?.som?.value) || null,
+    blast: { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage: maxDamage(grenade.system.dv), trigger: grenade.system.trigger || "impact" }
+  };
+}
+
+/**
+ * Takes a thrown grenade off its stack; the last one thrown takes the stack with it, as any
+ * consumable used up.
+ * @param {Actor} actor - The thrower
+ * @param {Object} selected - What grenadePreparation returned
+ * @returns {Promise<Item|null>} The updated grenade, or null once the stack is gone
+ */
+export async function spendGrenade(actor, selected) {
+  const grenade = actor?.items?.get(selected?.weaponID);
+  if (!grenade) return null;
+  const left = (Number(grenade.system.quantity) || 0) - 1;
+  if (left < 1) {
+    await actor.deleteEmbeddedDocuments("Item", [grenade.id]);
+    return null;
+  }
+  return grenade.update({ "system.quantity": left });
 }
 
 // How wide suppressive fire's cone is at its far end, in metres (Core p.207); its length is the shooter's to choose.

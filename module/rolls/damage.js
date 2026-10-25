@@ -1,13 +1,13 @@
-import { weaponPreparation, coneDamage, beyondRangeDamage, ATTACK_MODES, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
-import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, diceFormula } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
-import { registerAttackEffect, followUpVisibility, outcomeLabel, gmWhisper } from "./attacks.js";
+import { registerAttackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast } from "./attacks.js";
+import { MELEE_CURSOR } from "../common/targeting.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
 import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
 import { registerSocketActions, relayToActiveGM, runOrRelay } from "../common/socket.js";
-import { MELEE_CURSOR } from "../common/targeting.js";
 export { applySuccessTierBonus } from "./damage-formula.js";
 
 // Damage: what a weapon or sleight rolls, how it reaches an actor as damage or stress, and an
@@ -41,7 +41,7 @@ export async function weaponDamage(context, rollResult) {
   const actorWhole = await fromUuid(context.actorUuid);
   const rolledFrom = context.rolledFrom;
   const skillKey = rolledFrom === "ccWeapon" ? "melee" : "guns";
-  const weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, context.item.weaponId, context.item.weaponMode);
+  const weaponSelected = rolledFrom === "grenade" ? grenadePreparation(actorWhole, context.item.weaponId) ?? context.targetedAttack?.thrown ?? null : await weaponPreparation(actorWhole, skillKey, rolledFrom, context.item.weaponId, context.item.weaponMode);
   if (!weaponSelected) return null;
 
   if (isHit(rollResult)) {
@@ -330,6 +330,7 @@ export function renderDamageCard(state) {
  * @returns {Object|null} The attack's data, or null when the roll is no such attack
  */
 export function detectWeaponAttack(context) {
+  if (context.rolledFrom === "grenade") return detectThrow(context);
   if (context.rolledFrom !== "rangedWeapon" && context.rolledFrom !== "ccWeapon") return null;
   const selected = context.weapon;
   if (!selected?.weapon || chemicalDoses(selected.weaponTraits)) return null;
@@ -344,6 +345,39 @@ export function detectWeaponAttack(context) {
     cursor: context.rolledFrom === "ccWeapon" ? MELEE_CURSOR : {},
     payload: {
       armorUsed: attackArmorUsed(selected.weapon, selected.weaponMode || "1"),
+      armorPiercing: !!selected.weaponTraits?.additionalEffects?.armorPiercing?.value
+    }
+  };
+}
+
+/**
+ * The attack a thrown grenade carries, with what its damage needs once the last grenade of the stack
+ * is gone. A grenade with a blast strikes whoever is in it once it goes off where it was placed - without a placed blast the roll is narrative and offers only its damage;
+ * a blast without damage, such as smoke, is still laid but strikes nobody. A grenade without a blast
+ * strikes the one target picked.
+ * @param {Object} context - The roll context at preRoll
+ * @returns {Object|null} The attack's data, or null for a grenade that neither blasts nor damages
+ */
+export function detectThrow(context) {
+  const selected = context.weapon;
+  if (!selected?.weapon) return null;
+  const options = context.options ?? {};
+  const harmless = !!selected.weaponTraits?.automatedEffects?.noDamage || !diceFormula(selected.weapon.system?.dv);
+  const reach = blastReach(selected.blast, { radius: options.blastRadius, reduction: options.blastReduction });
+  const placed = (() => { try { return JSON.parse(options.placedArea || "null"); } catch { return null; } })();
+  const blast = reach.kind !== "none" ? { ...reach, origin: placed?.origin ?? null, trigger: options.trigger || selected.blast?.trigger || "impact", harmless } : null;
+  if (!blast && harmless) return null;
+  const armorUsed = selected.weapon.system?.armorused;
+  const thrown = { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade" };
+  return {
+    thrown,
+    targets: blast ? ANY_TARGETS : 1,
+    area: !!blast,
+    ...(blast ? { blast } : {}),
+    labelKey: "ep2e.chat.attack.chooseTarget",
+    cursor: {},
+    payload: {
+      armorUsed: armorUsed === "energy" || armorUsed === "kinetic" ? armorUsed : "none",
       armorPiercing: !!selected.weaponTraits?.additionalEffects?.armorPiercing?.value
     }
   };
@@ -386,6 +420,8 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
       await updateCard(card, "taskCard", "targetDamageOffered", { uuid });
       return postDamageCard(card, [target]);
     }
+    const settled = (state.targets ?? []).length && state.targets.every(target => target.outcome);
+    if (settled && attack?.blast && state.targets.every(target => target.outcome === "none")) await clearBlast(attack);
     if (!damageReady(state) || attack?.effect !== "damage") return null;
     await updateCard(card, "taskCard", "damageOffered");
     return postDamageCard(card, state.targets);
@@ -402,7 +438,8 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
 async function postDamageCard(card, targets) {
   const context = card.getFlag("eclipsephase", "roll");
   const actors = (await Promise.all(targets.map(target => fromUuid(target.uuid)))).filter(Boolean);
-  const { whisper, blind } = targets.some(target => target.hidden) ? { whisper: gmWhisper(), blind: false } : followUpVisibility(card, actors);
+  const shown = actors.filter(actor => !targets.find(target => target.uuid === actor.uuid)?.hidden);
+  const { whisper, blind } = targets.length && targets.every(target => target.hidden) ? { whisper: gmWhisper(), blind: false } : followUpVisibility(card, shown);
   const state = { attackMessageId: card.id, actorUuid: context.actorUuid, weaponName: context.targetedAttack.weaponName, targets, data: null, lines: [] };
   return ChatMessage.create({
     speaker: card.speaker,
@@ -414,16 +451,19 @@ async function postDamageCard(card, targets) {
 }
 
 /**
- * What one target takes of an attack's damage: half of it when they only partly dodged, less the
- * armour it meets - halved by armour piercing. Halves round up.
+ * What one target takes of an attack's damage: less what a centred blast loses on its way to them,
+ * half of that when they only partly dodged, less the armour it meets - halved by armour piercing.
+ * Halves round up.
  * @param {Number} total - The damage rolled
  * @param {String} outcome - "hit" or "half"
  * @param {Number} armor - The target's armour value against it
  * @param {Boolean} [armorPiercing] - The attack pierces armour
+ * @param {Number} [falloff] - The damage lost to distance from a blast's centre
  * @returns {Object} share (before armour), armor (as counted) and dealt
  */
-export function damageAgainst(total, outcome, armor, armorPiercing = false) {
-  const share = outcome === "half" ? Math.ceil(total / 2) : total;
+export function damageAgainst(total, outcome, armor, armorPiercing = false, falloff = 0) {
+  const reaching = Math.max(0, total - falloff);
+  const share = outcome === "half" ? Math.ceil(reaching / 2) : reaching;
   const counted = armorPiercing ? Math.ceil(armor / 2) : armor;
   return { share, armor: counted, dealt: Math.max(0, share - counted) };
 }
@@ -490,25 +530,40 @@ function highlighted(key, value) {
  * Puts an attack's damage on every target its card names, as the active GM: each takes its share
  * less its armour, and the damage card lists what each one took.
  * @param {Object} request - cardId (the damage card), total, armorUsed, armorPiercing, damageTarget
- *   ("physical" or "mental", for stress) and targets ({ uuid, name, outcome } each)
+ *   ("physical" or "mental", for stress), reduction (DV a centred blast loses per metre) and targets
+ *   ({ uuid, name, outcome, and distance and hidden in a blast } each)
  * @returns {Promise<Array<String|Object>>} The lines written onto the card
  */
-export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", targets }) {
+export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, targets }) {
   const lines = [];
   for (const target of targets) {
     if (target.outcome === "none") {
-      lines.push(attackDamageLine(target));
+      lines.push(secretLine(target, attackDamageLine(target)));
       continue;
     }
     const actor = await fromUuid(target.uuid);
     if (!actor) continue;
-    const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing);
+    const falloff = reduction && Number.isFinite(target.distance) ? reduction * Math.floor(target.distance) : 0;
+    const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing, falloff);
     const result = await applyDamage(actor, against.dealt, { target: damageTarget });
-    lines.push(attackDamageLine({ ...target, name: actor.name }, { ...against, ...result, armorUsed, damageTarget }));
+    const name = falloff ? game.i18n.format("ep2e.chat.damage.blastFalloff", { name: actor.name, distance: Math.floor(target.distance), falloff }) : actor.name;
+    lines.push(secretLine(target, attackDamageLine({ ...target, name }, { ...against, ...result, armorUsed, damageTarget })));
   }
   const card = game.messages.get(cardId);
   if (card) await updateCard(card, "damageCard", "applied", { lines });
   return lines;
+}
+
+/**
+ * A damage line about a target only the GM may know of - one behind a wall that no player owns: shown
+ * to its owners alone, with nothing in its place for anyone else.
+ * @param {Object} target - The target, with hidden
+ * @param {String|Object} line - What attackDamageLine returned
+ * @returns {String|Object} The line, kept from the others when the target is hidden
+ */
+function secretLine(target, line) {
+  if (!target.hidden) return line;
+  return typeof line === "string" ? { uuid: target.uuid, detail: escapeText(line), summary: "", secret: true } : { ...line, summary: "", secret: true };
 }
 
 /**
@@ -534,9 +589,10 @@ export async function rollAttackDamage(card) {
     await updateCard(card, "damageCard", "rolled", { data: storable(shown) });
 
     const total = Number(shown.total) || 0;
-    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", targets: state.targets };
+    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", reduction: Number(attack.blast?.reduction) || 0, targets: state.targets };
     if (game.user.isGM) await applyAttackDamage(request);
     else relayToActiveGM("applyAttackDamage", request);
+    if (!game.combat?.started) await clearBlast(attack);
     return total;
   } finally {
     ROLLING.delete(card.id);

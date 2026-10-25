@@ -19,13 +19,23 @@
       {{#if ../several}}<p class="ep-defence-name">{{entry.name}}</p>{{/if}}
       <button type="button" class="chatButton defenceRoll ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceRoll" data-kind="dodge" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.dodge"}}</button>
       <button type="button" class="chatButton defenceRoll ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceRoll" data-kind="parry" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.parry"}}</button>
+      {{else if entry.staysInCover}}
+      {{#if ../several}}<p class="ep-defence-name">{{entry.name}}</p>{{/if}}
+      <div class="ep-defence-pair">
+        <button type="button" class="chatButton defenceRoll ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceRoll" data-kind="dodge" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.dodge"}}</button>
+        <button type="button" class="chatButton defenceCover ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceCover" data-target-uuid="{{entry.uuid}}">{{localize "ep2e.chat.defence.inCover"}}</button>
+      </div>
       {{else}}
       {{#if ../cover}}
       <button type="button" class="chatButton defenceCover ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceCover" data-target-uuid="{{entry.uuid}}">{{../cover}}</button>
       {{/if}}
       <button type="button" class="chatButton defenceRoll ep-chat-secondary ownerOnlyControl" data-actor-uuid="{{entry.uuid}}" data-action="defenceRoll" data-kind="dodge" data-target-uuid="{{entry.uuid}}">{{#if ../several}}{{entry.name}}{{else}}{{localize "ep2e.chat.defence.dodge"}}{{/if}}</button>
       {{/if}}
+      {{#if entry.note}}<p class="ep-defence-note">{{entry.note}}</p>{{/if}}
     {{/each}}
+    {{#if spareRest}}
+    <button type="button" class="chatButton defenceSpare ep-chat-secondary gmOnlyControl" data-action="defenceSpare">{{localize "ep2e.chat.defence.spareRest"}}</button>
+    {{/if}}
     {{#if rollAll}}
     <button type="button" class="chatButton defenceRollAll ep-chat-primary ownerOnlyControl" data-actor-uuid="{{rollAllUuid}}" data-action="defenceRollAll">{{localize "ep2e.chat.defence.rollAll"}}</button>
     {{/if}}

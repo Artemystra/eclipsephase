@@ -1,9 +1,9 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, renderDefenceCard, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
-import { registerWeaponAttacks, detectWeaponAttack, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
+import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
-import { weaponPreparation, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, weaponRange, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
@@ -1076,5 +1076,291 @@ describe("a melee attack at several targets", () => {
 
     expect(picking.count(form)).toBe(3);
     expect(picking.minimum(form)).toBe(3);
+  });
+});
+
+describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
+  const FRAG = "Tactical_Multipurpose__Frag__vkQ4T5gd4VvWjyEi.json";
+  const STUN = "Stun_7YLUqmPxMXi2BuJn.json";
+  let regions;
+
+  /**
+   * A thrower holding a stack of compendium grenades.
+   * @param {String} file - The grenade's source file in the grenades compendium
+   * @returns {Actor} The thrower
+   */
+  function thrower(file) {
+    const grenade = { ...loadPackItem(`grenades/${file}`), _id: "gren1" };
+    grenade.system = { ...grenade.system, active: true, quantity: 2 };
+    return makeActor({ type: "character", name: "Thrower", system: { aptitudes: { som: { value: 15 } } }, items: [grenade] });
+  }
+
+  /**
+   * A token stand-in on a square grid of 100 pixels a metre.
+   * @param {Actor} actor - Its actor
+   * @param {Number} i - Its row
+   * @param {Number} j - Its column
+   * @returns {Object} The token
+   */
+  function tokenAt(actor, i, j) {
+    return { actor, bounds: { x: j * 100, y: i * 100, width: 100, height: 100 } };
+  }
+
+  /**
+   * Sets up a scene of 100-pixel squares a metre each, whose wall-cut blast is everything left of
+   * x = 900, with the given tokens on it.
+   * @param {Object[]} tokens - The tokens
+   * @returns {void}
+   */
+  function scene(tokens) {
+    regions = [];
+    const grid = { isSquare: true, size: 100, distance: 1, getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }), getTopLeftPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }) };
+    global.canvas = { ready: true, grid, level: null, dimensions: { distancePixels: 100 }, tokens: { placeables: tokens }, scene: { id: "scene1", regions, createEmbeddedDocuments: async (type, data) => { regions.push(...data); return data; } } };
+    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 900, 0, 900, 900], contains: x => x < 900 }) } } };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+  }
+
+  /**
+   * Throws the grenade at a point, the d100 showing the given value.
+   * @param {Actor} actor - The thrower
+   * @param {Number} die - The d100 result
+   * @param {Object} [options] - Further dialog values; origin, where it is placed (null for none)
+   * @returns {Promise<Object>} The attack card
+   */
+  async function hurl(actor, die, { origin = { x: 550, y: 550 }, ...options } = {}) {
+    const weapon = grenadePreparation(actor, "gren1");
+    seedRolls([die]);
+    const placedArea = origin ? JSON.stringify({ kind: "circle", origin, radius: 0 }) : "";
+    await RollCheck({ type: "skill", key: "athletics", name: "athletics", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, placedArea, trigger: "impact", ...options } }, weapon, "grenade");
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1);
+  }
+
+  /**
+   * The defence cards posted so far.
+   * @returns {Object[]} The cards
+   */
+  function defenceCards() {
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence"));
+  }
+
+  afterEach(() => {
+    delete global.canvas;
+  });
+
+  test("a grenade is thrown with Athletics as far as the thrower's SOM in metres, and the throw takes it off its stack", async () => {
+    scene([]);
+    const actor = thrower(FRAG);
+    const weapon = grenadePreparation(actor, "gren1");
+
+    expect(weaponRange(weapon)).toBe(15);
+    await hurl(actor, 95);
+    expect(actor.items.get("gren1").system.quantity).toBe(1);
+  });
+
+  test("a blast reaches its radius or, centred, as far as its highest damage lasts; dialled back, less", () => {
+    const frag = grenadePreparation(thrower(FRAG), "gren1").blast;
+    const stun = grenadePreparation(thrower(STUN), "gren1").blast;
+
+    expect(blastReach(frag)).toEqual({ kind: "centered", radius: 18, reduction: 2 });
+    expect(blastReach(frag, { reduction: 6 })).toEqual({ kind: "centered", radius: 6, reduction: 6 });
+    expect(blastReach(frag, { reduction: 50 }).reduction).toBe(20);
+    expect(blastReach(frag, { reduction: 1 }).reduction).toBe(2);
+    expect(blastReach(stun, { radius: 4 })).toEqual({ kind: "uniform", radius: 4, reduction: 0 });
+    expect(blastReach(stun, { radius: 40 }).radius).toBe(10);
+  });
+
+  test("on a hit it goes off where it was placed: the area is laid red and yellow, and everyone in it defends, the thrower too with a warning", async () => {
+    const actor = thrower(STUN);
+    const bo = armoured("Bo");
+    const far = armoured("Far");
+    scene([tokenAt(actor, 5, 6), tokenAt(bo, 5, 5), tokenAt(far, 5, 20)]);
+
+    const card = await hurl(actor, 30);
+    await until(() => defenceCards().length);
+
+    expect(regions.map(region => region.flags.eclipsephase.area.part)).toEqual(["open", "shadow"]);
+    expect(regions[0].flags.eclipsephase.area).toMatchObject({ blast: true, actorUuid: actor.uuid });
+    expect(card.getFlag("eclipsephase", "taskCard").targets.map(target => target.name).sort()).toEqual(["Bo", "Thrower"]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.ownBlast"));
+    expect(defenceCards().flatMap(message => message.getFlag("eclipsephase", "attackDefence").entries.map(entry => entry.name)).sort()).toEqual(["Bo", "Thrower"]);
+  });
+
+  test("a throw that misses sets nothing off, nor does one that was not placed", async () => {
+    const actor = thrower(STUN);
+    scene([tokenAt(armoured("Bo"), 5, 5)]);
+
+    await hurl(actor, 95);
+    const narrative = await hurl(actor, 30, { origin: null });
+
+    expect(regions).toEqual([]);
+    expect(defenceCards()).toEqual([]);
+    expect(narrative.content).toContain("data-action=\"weaponDamage\"");
+  });
+
+  test("a successful dodge clears someone at the edge or behind a wall from the centre, and lets half through to anyone else", async () => {
+    const actor = thrower(STUN);
+    const middle = armoured("Middle");
+    const edge = armoured("Edge");
+    const behind = armoured("Behind");
+    scene([tokenAt(middle, 5, 6), tokenAt(edge, 5, 14), tokenAt(behind, 6, 10)]);
+
+    const card = await hurl(actor, 30);
+    await until(() => defenceCards().length === 2);
+    for (const target of [middle, edge, behind]) {
+      const defence = defenceCards().find(message => message.getFlag("eclipsephase", "attackDefence").entries.some(entry => entry.uuid === target.uuid));
+      seedRolls([4]);
+      await rollDefence(defence, target.uuid, "dodge", DODGE);
+    }
+    await until(() => card.getFlag("eclipsephase", "taskCard").targets.every(target => target.outcome));
+
+    const outcomes = Object.fromEntries(card.getFlag("eclipsephase", "taskCard").targets.map(target => [target.name, target.outcome]));
+    expect(outcomes).toEqual({ Middle: "half", Edge: "none", Behind: "none" });
+  });
+
+  test("someone behind a wall whom no player owns is the GM's alone: their defence card, their line on the damage card, and not named on the attack card", async () => {
+    const actor = thrower(FRAG);
+    const seen = armoured("Seen");
+    const hidden = armoured("Zenobia");
+    const gm = { id: "gm1", _id: "gm1", isGM: true, active: false };
+    jest.spyOn(game.users, "filter").mockImplementation(test => [gm].filter(test));
+    scene([tokenAt(seen, 5, 6), tokenAt(hidden, 5, 10)]);
+
+    const card = await hurl(actor, 30);
+    await until(() => defenceCards().length === 2);
+    const secretCard = defenceCards().find(message => message.getFlag("eclipsephase", "attackDefence").entries[0].uuid === hidden.uuid);
+    seedRolls([95]);
+    await rollDefence(secretCard, hidden.uuid, "dodge", DODGE);
+    seedRolls([95]);
+    await rollDefence(defenceCards().find(message => message !== secretCard), seen.uuid, "dodge", DODGE);
+    await until(() => damageCards().length);
+    seedRolls([5, 5, 5]);
+    await rollAttackDamage(damageCards()[0]);
+
+    expect(secretCard.whisper).toEqual(["gm1"]);
+    expect(card.content).not.toContain("Zenobia");
+    expect(damageCards()[0].whisper ?? []).toEqual([]);
+    const secretLine = damageCards()[0].getFlag("eclipsephase", "damageCard").lines.find(line => line.uuid === hidden.uuid);
+    expect(secretLine).toMatchObject({ secret: true, summary: "" });
+  });
+
+  test("a centred blast loses its DV per metre on the way to each target, by whole metres from the centre", async () => {
+    const actor = thrower(FRAG);
+    const near = armoured("Near", { energy: 0, kinetic: 0 });
+    const away = armoured("Away", { energy: 0, kinetic: 0 });
+    scene([tokenAt(near, 5, 5), tokenAt(away, 5, 8)]);
+
+    await hurl(actor, 30);
+    await until(() => defenceCards().length);
+    for (const target of [near, away]) {
+      seedRolls([95]);
+      await rollDefence(defenceCards().find(message => message.getFlag("eclipsephase", "attackDefence").entries.some(entry => entry.uuid === target.uuid)), target.uuid, "dodge", DODGE);
+    }
+    await until(() => damageCards().length);
+    seedRolls([25]);
+    await rollAttackDamage(damageCards()[0]);
+
+    expect(near.system.health.physical.value).toBe(25);
+    expect(away.system.health.physical.value).toBe(19);
+  });
+
+  test("a token beside a blast is not in it: on a square grid its squares count by their centres, as the blast is drawn, and elsewhere its centre", () => {
+    scene([]);
+    const area = { kind: "circle", origin: { x: 550, y: 550 }, radius: 10, polygon: { contains: () => true } };
+    const beside = { bounds: { x: 1555, y: 500, width: 100, height: 100 } };
+    const touching = { bounds: { x: 1520, y: 500, width: 100, height: 100 } };
+
+    expect(blastPosition(beside, area, canvas.grid)).toBeNull();
+    expect(blastPosition(touching, area, canvas.grid)).toMatchObject({ distance: 10, nearEdge: true });
+    expect(blastPosition(touching, area, { isSquare: false, size: 100, distance: 1 })).toBeNull();
+  });
+
+  test("the last grenade thrown takes its stack with it, and its damage is still rolled", async () => {
+    const actor = thrower(FRAG);
+    await actor.items.get("gren1").update({ "system.quantity": 1 });
+    const bo = armoured("Bo", { energy: 0, kinetic: 0 });
+    scene([tokenAt(bo, 5, 5)]);
+
+    await hurl(actor, 30);
+    await until(() => defenceCards().length);
+    seedRolls([95]);
+    await rollDefence(defenceCards()[0], bo.uuid, "dodge", DODGE);
+    await until(() => damageCards().length);
+    seedRolls([20]);
+    await rollAttackDamage(damageCards()[0]);
+
+    expect(actor.items.get("gren1")).toBeUndefined();
+    expect(bo.system.health.physical.value).toBe(20);
+  });
+
+  test("a blast that catches nobody, or that everyone it caught got away from, is cleared; one that leaves smoke stays", async () => {
+    const realTimeout = global.setTimeout;
+    jest.spyOn(global, "setTimeout").mockImplementation((callback, delay, ...rest) => realTimeout(callback, delay >= 3000 ? 0 : delay, ...rest));
+    const bo = armoured("Bo");
+    scene([tokenAt(bo, 5, 10)]);
+    regions.get = id => regions.find(region => region.id === id);
+    canvas.scene.createEmbeddedDocuments = async (type, data) => { data.forEach(entry => regions.push({ ...entry, id: `r${regions.length}`, isOwner: true, getFlag: (scope, key) => entry.flags.eclipsephase[key] })); return data; };
+    canvas.scene.deleteEmbeddedDocuments = async (type, ids) => { for (const id of ids) regions.splice(regions.findIndex(region => region.id === id), 1); };
+
+    await hurl(thrower(STUN), 30, { origin: { x: 2550, y: 2550 } });
+    await until(() => regions.length === 0);
+    expect(regions).toHaveLength(0);
+
+    await hurl(thrower(STUN), 30);
+    await until(() => defenceCards().length);
+    await takeCover(defenceCards()[0], bo.uuid);
+    await until(() => regions.length === 0);
+    expect(regions).toHaveLength(0);
+
+    await hurl(thrower("Gas_Smoke_tpxWJJNwXCBRgZ45.json"), 30);
+    await new Promise(resolve => realTimeout(resolve, 20));
+    expect(regions.length).toBeGreaterThan(0);
+  });
+
+  test("against a blast someone behind a wall may dodge or stay in cover without a roll, someone in the open only dodges, and the GM may spare the rest", async () => {
+    const actor = thrower(STUN);
+    const bo = armoured("Bo");
+    const cy = armoured("Cy");
+    const dee = armoured("Dee");
+    scene([tokenAt(bo, 5, 10), tokenAt(cy, 5, 6), tokenAt(dee, 5, 5)]);
+
+    const card = await hurl(actor, 30);
+    await until(() => defenceCards().length === 2);
+    const cardFor = target => defenceCards().find(message => message.getFlag("eclipsephase", "attackDefence").entries.some(entry => entry.uuid === target.uuid));
+    expect(cardFor(bo).content).toContain(`data-action="defenceCover" data-target-uuid="${bo.uuid}"`);
+    expect(cardFor(cy).content).not.toContain("data-action=\"defenceCover\"");
+    expect(cardFor(cy).content).toContain('data-action="defenceSpare"');
+    expect(await takeCover(cardFor(cy), cy.uuid)).toBe(false);
+
+    expect(await takeCover(cardFor(bo), bo.uuid)).toBe(true);
+    seedRolls([95]);
+    await rollDefence(cardFor(dee), dee.uuid, "dodge", DODGE);
+    expect(await spareRemaining(cardFor(cy))).toBe(1);
+    await until(() => card.getFlag("eclipsephase", "taskCard").targets.every(target => target.outcome));
+
+    expect(Object.fromEntries(card.getFlag("eclipsephase", "taskCard").targets.map(target => [target.name, target.outcome]))).toEqual({ Bo: "none", Cy: "none", Dee: "hit" });
+    const covers = defenceCards().flatMap(message => message.getFlag("eclipsephase", "attackDefence").entries.map(entry => [entry.name, entry.cover || null]));
+    expect(Object.fromEntries(covers)).toEqual({ Bo: "inCover", Cy: "spared", Dee: null });
+  });
+
+  test("the defence card says how far from the centre each target stands and whether a dodge gets them clear", () => {
+    expect(blastNote({ distance: 3.6, nearEdge: false, shadow: false })).toBe('ep2e.chat.defence.blastDistance {"distance":3}');
+    expect(blastNote({ distance: 9.5, nearEdge: true, shadow: false })).toContain("ep2e.chat.defence.blastEdge");
+    expect(blastNote({ distance: 2, nearEdge: false, shadow: true })).toContain("ep2e.chat.defence.blastBehindWall");
+    expect(blastNote({})).toBe("");
+  });
+
+  test("a grenade without a blast is thrown at one picked target like a shot; one without damage still blasts but strikes nobody", () => {
+    const heap = thrower(FRAG);
+    heap.items.get("gren1").system.area = { kind: "none", radius: null, reduction: null };
+    const smoke = thrower("Gas_Smoke_tpxWJJNwXCBRgZ45.json");
+    const heapAttack = detectThrow({ rolledFrom: "grenade", weapon: grenadePreparation(heap, "gren1"), options: {} });
+    const smokeAttack = detectThrow({ rolledFrom: "grenade", weapon: grenadePreparation(smoke, "gren1"), options: { placedArea: JSON.stringify({ origin: { x: 1, y: 1 } }) } });
+
+    expect(heapAttack).toMatchObject({ targets: 1, area: false, payload: { armorUsed: "kinetic" } });
+    expect(heapAttack.blast).toBeUndefined();
+    expect(smokeAttack).toMatchObject({ targets: ANY_TARGETS, area: true, blast: { kind: "uniform", radius: 20, harmless: true, origin: { x: 1, y: 1 } } });
+    expect(attackPicking({ rolledFrom: "grenade", actor: heap, weapon: grenadePreparation(heap, "gren1") }).area).toBeUndefined();
+    expect(attackPicking({ rolledFrom: "grenade", actor: smoke, weapon: grenadePreparation(smoke, "gren1") }).label()).toBe("ep2e.roll.dialog.throw.place");
   });
 });

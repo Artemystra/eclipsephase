@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "These munitions release a burst of plasma upon detonation that causes searing heat and fire damage across the area of effect without the devastating shockwaves of explosions that might rebound in an enclosed environment and/or breach a habitat’s infrastructure.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>These munitions release a burst of plasma upon detonation that causes searing heat and fire damage across the area of effect without the devastating shockwaves of explosions that might rebound in an enclosed environment and/or breach a habitat’s infrastructure.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

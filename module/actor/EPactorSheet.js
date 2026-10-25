@@ -789,6 +789,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             switch (item.type) {
               case 'grenade':
               itemModel.slotName = "ep2e.item.general.table.slot.grenade";
+              itemModel.canThrow = true;
               break;
               case 'ammo':
               itemModel.slotName = "ep2e.item.general.table.slot.ammo";
@@ -966,6 +967,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     SHEET.registerEffectHandlers(html, this.actor);
     SHEET.registerCommonHandlers(html, this.actor);
+    SHEET.followingTooltips(html, html);
 
     // Hide native window header and wire custom title bar instead
     const windowHeader = html.querySelector('.window-header');

@@ -166,6 +166,30 @@ export function timedEffectData({ name, img, span, flags = {}, changes = [], sta
 }
 
 /**
+ * Shows the tooltips inside an area centred above the mouse pointer, 10 pixels up, instead of at a
+ * fixed spot where they cover what lies above. They are fixed in place, so the sheet's frame does not
+ * clip them; a zoomed sheet is its own frame of reference, which the position is scaled into.
+ * @param {HTMLElement} root - The sheet's element
+ * @param {HTMLElement|null} area - The part of the sheet whose tooltips follow the pointer
+ * @returns {void}
+ */
+export function followingTooltips(root, area) {
+  if (!root || !area) return;
+  for (const holder of area.querySelectorAll(".wantToKnowMore, .wantToKnowMoreFixed")) {
+    const tip = holder.querySelector(":scope > .tooltipText");
+    if (!tip) continue;
+    tip.classList.add("ep-tooltip-follow");
+    holder.addEventListener("mousemove", event => {
+      const frame = root.getBoundingClientRect();
+      const zoomed = getComputedStyle(root).transform !== "none";
+      const scale = zoomed && root.offsetWidth ? frame.width / root.offsetWidth : 1;
+      tip.style.left = `${zoomed ? (event.clientX - frame.left) / scale : event.clientX}px`;
+      tip.style.top = `${(zoomed ? (event.clientY - frame.top) / scale : event.clientY) - 10}px`;
+    });
+  }
+}
+
+/**
  * Animation handlers for character sheets
  * @param {Object} html 
  * @param {Object} callerobj 
@@ -1114,6 +1138,14 @@ export async function pickActorFromList(actors, header, copy) {
 
         rolledFrom = weaponSelected.rolledFrom
 
+      }
+      else if (rolledFrom === "grenade") {
+        weaponSelected = WEAPON.grenadePreparation(actorWhole, weaponID)
+        if (!weaponSelected) return;
+        if (weaponSelected.currentAmmo < 1) {
+          ui.notifications.warn(game.i18n.format("ep2e.roll.dialog.throw.noneLeft", { name: weaponSelected.weaponName }));
+          return;
+        }
       }
 
       DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)

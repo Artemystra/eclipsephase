@@ -1,7 +1,7 @@
 import { areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion, createShadowedArea, clearAreas, AREA_FLAG } from "../../common/targeting.js";
 import { waitUntil, withTempActor, seedDice, restoreDice, uniformForFace, suppressDice3d, restoreDice3d } from "./helpers.js";
 import { RollCheck } from "../../rolls/dice.js";
-import { weaponPreparation } from "../../common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation } from "../../common/weapon-functions.js";
 import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression } from "../../rolls/attacks.js";
 
 // Areas on a real canvas: walls of a scratch scene cut a blast and a cone off and stop what flies at
@@ -190,6 +190,45 @@ export function registerAreasBatch(quench) {
 
             await ledge.delete();
             await clearAreas(flag => flag.attackId === "quench-strip", scene);
+            await token.delete();
+          }));
+        } finally {
+          restoreDice3d();
+          restoreDice();
+          const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+          if (mine.length) await ChatMessage.deleteDocuments(mine);
+        }
+      });
+    });
+
+    describe("a thrown grenade", function () {
+      it("goes off where it was placed, red in front of the wall and yellow behind it, and an NPC behind the wall defends from a card only the GM sees", async function () {
+        this.timeout(40000);
+        const frag = { name: "Quench Frag", type: "grenade", system: { active: true, quantity: 2, dv: { d10: 3, d6: null, bonus: 6 }, area: { kind: "centered", radius: null, reduction: 2 }, armorused: "kinetic", trigger: "impact" } };
+        const posted = new Set(game.messages.contents.map(message => message.id));
+        const defences = () => game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "attackDefence"));
+        suppressDice3d();
+        try {
+          await withTempActor({ type: "character", name: "Quench Thrower", items: [frag] }, thrower => withTempActor({ type: "npc", name: "Quench Bystander" }, async bystander => {
+            await waitUntil(() => thrower.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+            const [token] = await scene.createEmbeddedDocuments("Token", [{ actorId: bystander.id, name: "Quench Bystander", x: 1600, y: 1400 }]);
+            await waitUntil(() => canvas.tokens.placeables.some(placeable => placeable.document.id === token.id), 5000);
+            const weapon = grenadePreparation(thrower, thrower.items.find(item => item.name === "Quench Frag").id);
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ type: "skill", key: "athletics", name: "Athletics", rollvalue: 60, pooltype: "Vigor" }, thrower.system, thrower, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "impact", placedArea: JSON.stringify({ kind: "circle", origin: { x: 1250, y: 1450 }, radius: 0 }) } }, weapon, "grenade");
+            restoreDice();
+            await waitUntil(() => defences().length === 1, 10000);
+
+            const parts = scene.regions.filter(region => region.getFlag("eclipsephase", AREA_FLAG)?.blast).map(region => region.getFlag("eclipsephase", AREA_FLAG).part).sort();
+            assert.deepEqual(parts, ["open", "shadow"]);
+            const entry = defences()[0].getFlag("eclipsephase", "attackDefence").entries[0];
+            assert.strictEqual(entry.uuid, token.actor.uuid, "the token's own actor, an NPC token being unlinked");
+            assert.isTrue(entry.shadow, "behind the wall from the centre");
+            assert.strictEqual(Math.floor(entry.distance), 4);
+            assert.isNotEmpty(defences()[0].whisper, "an NPC behind the wall is the GM's to see");
+            assert.strictEqual(thrower.items.find(item => item.name === "Quench Frag").system.quantity, 1);
+
+            await clearAreas(flag => flag.blast === true, scene);
             await token.delete();
           }));
         } finally {

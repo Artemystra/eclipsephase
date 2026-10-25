@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "A design only available for seekers (not grenades), HEAP warheads use high explosives to blast a path for a penetrating tungsten-alloy round. HEAP rounds have no blast radius, but are very effective at penetrating armor.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>A design only available for seekers (not grenades), HEAP warheads use high explosives to blast a path for a penetrating tungsten-alloy round. HEAP rounds have no blast radius, but are very effective at penetrating armor.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

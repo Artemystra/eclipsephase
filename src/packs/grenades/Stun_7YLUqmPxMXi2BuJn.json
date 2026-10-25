@@ -11,7 +11,7 @@
   "_id": "7YLUqmPxMXi2BuJn",
   "system": {
     "additionalSystems": {},
-    "description": "Blinding, Knockdown, Shock, Pain (overload)",
+    "description": "<p>These enhanced versions of flashbangs release a concussive blast and a cloud of rubber “stingballs” designed to stun targets and knock them off their feet. This blast also releases a blinding flash and a deafening thunderclap. Treat as a shock effect ▶219.</p><p>Stun seekers/grenades can also be set into “overload mode,” inflicting an all-out sensory assault for a full minute. In addition to blinding glare, the device releases nausea-inducing malodorants and infrasonic frequencies that trigger unpleasant emotional responses (anxiety, uneasiness, extreme sorrow, revulsion, and fear).</p><p><i>Blinding, Knockdown, Shock, Pain (overload)</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -29,16 +29,16 @@
         "value": false
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
-        "value": false
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": true
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {
         "name": "ep2e.item.weapon.table.trait.knockdown",
-        "value": false,
+        "value": true,
         "radius": null
       },
       "noDamage": {
@@ -51,7 +51,7 @@
       },
       "shock": {
         "name": "ep2e.item.weapon.table.trait.shock",
-        "value": false
+        "value": true
       }
     },
     "armorused": "kinetic",

@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "Splash devices spread a contained substance (a drug, chemical, nanoswarm, paint, etc.) over a 10-meter blast radius when they detonate. Each contains 5 doses of a toxin/drug (targets are affected by 1 dose) or 1 nanoswarm.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>Splash devices spread a contained substance (a drug, chemical, nanoswarm, paint, etc.) over a 10-meter blast radius when they detonate. Each contains 5 doses of a toxin/drug (targets are affected by 1 dose) or 1 nanoswarm.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

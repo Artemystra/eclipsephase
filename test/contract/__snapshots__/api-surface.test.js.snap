@@ -95,6 +95,7 @@ Object {
     "areaPolygon": [Function],
     "areaSquares": [Function],
     "attackerToken": [Function],
+    "blastTargets": [Function],
     "clearAreas": [Function],
     "confirmation": [Function],
     "createAreaRegion": [Function],

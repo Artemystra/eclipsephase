@@ -84,8 +84,18 @@ describe("compendium sources", () => {
     expect(offenders.map(({ pack, file }) => `${pack}/${file}`)).toEqual([]);
     expect(Object.fromEntries(munitions.filter(({ data }) => ["Plasmaburst", "HEAP", "Stun"].includes(data.name)).map(({ data }) => [`${data.type}:${data.name}`, data.system.armorused]))).toEqual({
       "ammo:Plasmaburst": "energy", "ammo:HEAP": "kinetic", "ammo:Stun": "kinetic",
-      "grenade:Plasmaburst": "energy", "grenade:HEAP": "kinetic", "grenade:Stun": "kinetic"
+      "grenade:Plasmaburst": "energy", "grenade:Stun": "kinetic"
     });
+  });
+
+  test("seekers say they are fired from a launcher, grenades do not, and HEAP comes only as a seeker (Core p.212)", () => {
+    const notice = "Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.";
+    const seekers = documents.filter(({ data }) => data.type === "ammo" && data.system.type === "seeker");
+    const grenades = documents.filter(({ data }) => data.type === "grenade");
+
+    expect(seekers.length).toBeGreaterThan(0);
+    expect(seekers.filter(({ data }) => !data.system.description.startsWith(`<p><b>${notice}</b></p>`)).map(({ file }) => file)).toEqual([]);
+    expect(grenades.filter(({ data }) => data.system.description.includes(notice) || data.name === "HEAP").map(({ file }) => file)).toEqual([]);
   });
 
   test("every document carries a name and an id", () => {

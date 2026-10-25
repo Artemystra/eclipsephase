@@ -11,7 +11,7 @@
   "_id": "gwgkDkl0M4PlsG1U",
   "system": {
     "additionalSystems": {},
-    "description": "Armor-Piercing, Knockdown",
+    "description": "<p>Thermobaric munitions disperse a cloud of aerosol explosive over an area and then ignite, literally setting the air on fire, generating a devastating pressure wave, and sucking the oxygen out of the area.</p><p><i>Armor-Piercing, Knockdown</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -26,19 +26,19 @@
     "traits": {
       "armorPiercing": {
         "name": "ep2e.item.weapon.table.trait.armorPiercing",
-        "value": false
+        "value": true
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "name": "ep2e.item.weapon.table.trait.blinding",
         "value": false
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {
         "name": "ep2e.item.weapon.table.trait.knockdown",
-        "value": false,
+        "value": true,
         "radius": null
       },
       "noDamage": {

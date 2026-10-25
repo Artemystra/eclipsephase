@@ -1620,6 +1620,14 @@
         "psi": {
           "touch": "Berührung (+20)",
           "willing": "Freiwilliges Ziel (kein Widerstand)"
+        },
+        "throw": {
+          "headline": "Wurf",
+          "radius": "Explosionsradius",
+          "reduction": "SW-Verlust",
+          "note": "Alle in der Explosion müssen sich verteidigen. Die Explosion herunterzuregeln kostet eine schnelle Aktion.",
+          "place": "Explosion platzieren",
+          "noneLeft": "{name}: keine mehr zum Werfen übrig."
         }
       },
       "successType": {
@@ -2010,7 +2018,9 @@
         "damageWithoutTarget": "Schaden ohne Ziel",
         "damageReady": "Schaden durch {weapon}",
         "suppressiveArea": "Sperrfeuer ({name})",
-        "suppressiveNote": "Sperrfeuer gelegt: Wer sich im Kegel bewegt, muss sich verteidigen."
+        "suppressiveNote": "Sperrfeuer gelegt: Wer sich im Kegel bewegt, muss sich verteidigen.",
+        "blastArea": "Explosion ({name})",
+        "blastNote": "Die Explosion ist auf der Karte markiert."
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -2028,7 +2038,9 @@
             "none": "Widerstanden"
           },
           "cover": "In Deckung gegangen",
-          "remainCover": "In Deckung geblieben"
+          "remainCover": "In Deckung geblieben",
+          "spared": "nicht erreicht",
+          "inCover": "in Deckung"
         },
         "severalTargets": "Mehrere Ziele",
         "resist": "Widerstehen (WIL)",
@@ -2036,7 +2048,12 @@
         "lockedOut": "Kritisch: Das Async ist aus diesem Geist ausgesperrt, bis es sich erholt.",
         "touchLabel": "{name} durch Berührung",
         "cover": "In Deckung gegangen",
-        "remainCover": "Bleibt in Deckung"
+        "remainCover": "Bleibt in Deckung",
+        "blastDistance": "{distance} m vom Zentrum",
+        "blastEdge": "am Rand: erfolgreiches Ausweichen reicht",
+        "blastBehindWall": "hinter einer Wand: erfolgreiches Ausweichen reicht",
+        "inCover": "In Deckung",
+        "spareRest": "Rest ohne Wurf auflösen"
       },
       "poolSpent": {
         "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
@@ -2055,7 +2072,8 @@
         "amountDamage": "{value} Schaden",
         "amountWounds": "{value} Wunden",
         "amountStress": "{value} Stress",
-        "amountTraumas": "{value} Traumata"
+        "amountTraumas": "{value} Traumata",
+        "blastFalloff": "{name} ({distance} m, -{falloff} SW)"
       },
       "psiTouch": {
         "headline": "Psi-Berührungsangriff ({sleight})",
@@ -2315,7 +2333,8 @@
       "outOfTouch": "{name} ist außerhalb der Reichweite einer Berührung (2 m).",
       "areaName": "Fläche",
       "outsideArea": "Dieser Token liegt außerhalb der Fläche.",
-      "tooMany": "Dieser Angriff trifft auf diese Entfernung höchstens {max} Ziele."
+      "tooMany": "Dieser Angriff trifft auf diese Entfernung höchstens {max} Ziele.",
+      "ownBlast": "{name} steht in der eigenen Explosion."
     }
   },
   "BEHAVIOR": {

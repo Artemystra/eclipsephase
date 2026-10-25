@@ -221,7 +221,7 @@ api.registry.registerRollSource("myRoll", {
 });
 ```
 
-The core system registers `rangedWeapon` and `ccWeapon` this way.
+The core system registers `rangedWeapon`, `ccWeapon` and `grenade` (Athletics, 2.8.5) this way.
 
 ### `registerPoolOption(definition)`
 
@@ -590,10 +590,33 @@ red one. Each one struck gets a damage card of their own, as from a single shot.
 fire is chosen, the attack dialog greys out the modifiers it ignores. The cone is removed when the shooter's next
 turn begins, or when the combat ends. The attack record carries `suppressive: true`.
 
+A grenade (2.8.5) is thrown from the sheet with Athletics (roll source `grenade`) as far as the
+thrower's SOM in meters (Core p.209); the throw takes it off its stack. Its dialog is the ranged
+one with the trigger, and for a grenade with a blast the radius (uniform) or the DV lost per meter
+(centred, up to 20) to dial it back (Core p.212). "Place blast" places the blast's circle at the
+cursor - a centred blast reaches as far as its highest damage lasts - and the throw's distance from
+the thrower's token counts as the range. Once the roll hits, the blast goes off there: its area is
+left in the scene in red and yellow as suppressive fire's is, and everyone with a token in it - the
+thrower too, with a warning - joins the attack card's targets and defends with halved Fray. A
+successful dodge clears someone within a meter of the blast's edge or behind a wall from its
+centre, and lets half through to anyone else (Core p.218); a centred blast loses its DV per meter on
+the way to each target, by whole meters. Someone behind a wall or with a hidden token whom no player owns is the GMs' alone
+on every card. A token counts by the squares it stands on, as the blast is drawn, or on a scene
+without squares by its centre. A blast that catches nobody, or that everyone it caught gets away
+from, goes again; one that struck someone goes once the damage is rolled outside combat, and in
+combat when the thrower's next turn begins or the combat ends. A blast without damage, such as
+smoke, stays until then. The attack record carries `blast: { kind, radius, reduction, origin,
+trigger, harmless }`; `api.ui.blastTargets(area, tokens)` lists whom a blast catches, each with
+`distance`, `nearEdge`, `shadow` and `secret`. `api.attacks.postDefenceCards(attack, targets,
+{ gmOnly, details })` keeps `details.get(uuid)` on that target's entry. A grenade without a blast
+is thrown at one target like a shot.
+
 ### Defending
 
 The defence follows from the attack: against a ranged attack Fray, halved, with "Dodge behind
-cover" against an area attack; against a melee attack Fray in full or a parry with Melee; against a
+cover" against an area attack - someone behind a wall from a blast's centre may instead stay "In
+Cover" without a roll, and the GM may resolve the rest without a roll,
+sparing them; against a melee attack Fray in full or a parry with Melee; against a
 sleight a WIL Check (Moxie pool), on half WIL against a pushed Power. A ranged card also rolls the
 rest at once, without a dialog. Every defence dialog offers "Full defense" (+30). A target may
 choose not to resist a sleight: `api.attacks.yieldDefence(message, targetUuid)` - the card's "Don't

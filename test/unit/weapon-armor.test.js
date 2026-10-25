@@ -95,6 +95,14 @@ describe("ranges and areas read from the text older items carry", () => {
     expect(grenade.system.area).toEqual({ kind: "centered", radius: null, reduction: 2 });
     expect(grenade.system.armorused).toBe("kinetic");
   });
+
+  test("a grenade's traits read under their own names, though older data stored the names of weapon accessories", () => {
+    const grenade = makeItem({ type: "grenade", system: { traits: { blinding: { name: "ep2e.item.weapon.table.accessory.extendedMagazine", value: true } } } });
+
+    expect(grenade.system.traits.blinding.name).toBe("ep2e.item.weapon.table.trait.blinding");
+    expect(grenade.system.traits.disablesRadio.name).toBe("ep2e.item.weapon.table.trait.disablesRadio");
+    expect(weaponDataRepairs("grenade", { armorused: "none", area: { kind: "none" }, traits: { shock: { name: "ep2e.item.weapon.table.trait.shock" } } })).toEqual({});
+  });
 });
 
 

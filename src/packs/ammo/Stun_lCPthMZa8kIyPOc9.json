@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "These enhanced versions of flashbangs release a concussive blast and a cloud of rubber “stingballs” designed to stun targets and knock them off their feet. This blast also releases a blinding flash and a deafening thunderclap. Treat as a shock effect ▶219.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>These enhanced versions of flashbangs release a concussive blast and a cloud of rubber “stingballs” designed to stun targets and knock them off their feet. This blast also releases a blinding flash and a deafening thunderclap. Treat as a shock effect ▶219.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

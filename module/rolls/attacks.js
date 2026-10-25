@@ -3,9 +3,9 @@ import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds } from "../common/morp-functions.js";
 import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, tokenGap, areaPolygon, createShadowedArea, clearAreas, MELEE_CURSOR } from "../common/targeting.js";
+import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, clearAreas, shapeContains, unitsToPixels, MELEE_CURSOR } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
-import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
+import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
 // the hit from a button on the attack card, and every target's owner rolls a defence from a card of
@@ -45,13 +45,13 @@ export function attackEffect(effect) {
 
 /**
  * How a target defends against an attack rolled from a source: a sleight with WIL (Core p.276), a
- * ranged attack by dodging, a melee attack by dodging or parrying.
+ * ranged attack or a thrown grenade by dodging, a melee attack by dodging or parrying.
  * @param {String} rolledFrom - The attack roll's source
  * @returns {String} "will", "ranged" or "melee"
  */
 export function defenceKind(rolledFrom) {
   if (rolledFrom === "psiSleight") return "will";
-  return rolledFrom === "rangedWeapon" ? "ranged" : "melee";
+  return rolledFrom === "rangedWeapon" || rolledFrom === "grenade" ? "ranged" : "melee";
 }
 
 /**
@@ -226,6 +226,9 @@ export function outcomeLabel(outcome, defence) {
   return game.i18n.localize(defence === "will" ? `ep2e.chat.defence.outcome.will.${outcome}` : `ep2e.chat.defence.outcome.${outcome}`);
 }
 
+// What a defence card calls a target that got out of the way without a roll.
+const COVER_LABELS = { moved: "ep2e.chat.defence.outcome.cover", remain: "ep2e.chat.defence.outcome.remainCover", inCover: "ep2e.chat.defence.outcome.inCover", spared: "ep2e.chat.defence.outcome.spared" };
+
 /**
  * Renders a defence card from its state.
  * @param {Object} state - The card's attackDefence flag
@@ -238,13 +241,27 @@ export function renderDefenceCard(state) {
     effectLabel: state.attack.effectLabel ?? "",
     melee: state.attack.defence === "melee",
     several: state.entries.length > 1,
-    entries: state.entries.map(entry => ({ ...entry, outcomeLabel: entry.cover ? game.i18n.localize(entry.cover === "remain" ? "ep2e.chat.defence.outcome.remainCover" : "ep2e.chat.defence.outcome.cover") : outcomeLabel(entry.outcome, state.attack.defence) })),
+    entries: state.entries.map(entry => ({ ...entry, note: blastNote(entry), staysInCover: state.attack.area === true && entry.shadow === true, outcomeLabel: entry.cover ? game.i18n.localize(COVER_LABELS[entry.cover] ?? COVER_LABELS.moved) : outcomeLabel(entry.outcome, state.attack.defence) })),
+    spareRest: state.attack.area === true && remaining.length > 0,
     cover: state.attack.coverOption ? game.i18n.localize(state.attack.coverOption === "remain" ? "ep2e.chat.defence.remainCover" : "ep2e.chat.defence.cover") : "",
     will: state.attack.defence === "will",
     icon: state.attack.defence === "will" ? "fa-brain" : "fa-crosshairs",
     rollAll: state.attack.defence === "ranged" && remaining.length > 1,
     rollAllUuid: remaining[0]?.uuid ?? ""
   });
+}
+
+/**
+ * What a defence card notes about where a target stands in a blast: how far from its centre, and
+ * whether a dodge gets it clear - at the blast's edge or behind a wall from its centre (Core p.218).
+ * @param {Object} entry - The card's entry, with distance, nearEdge and shadow for a blast
+ * @returns {String} The note, "" for a target not in a blast
+ */
+export function blastNote(entry) {
+  if (!Number.isFinite(entry?.distance)) return "";
+  const where = game.i18n.format("ep2e.chat.defence.blastDistance", { distance: Math.floor(entry.distance) });
+  const clear = entry.shadow ? "ep2e.chat.defence.blastBehindWall" : entry.nearEdge ? "ep2e.chat.defence.blastEdge" : "";
+  return clear ? `${where} · ${game.i18n.localize(clear)}` : where;
 }
 
 /**
@@ -283,14 +300,15 @@ export function defenceSpeaker(targets) {
  * attack card was, and always by that owner, who has to roll from it.
  * @param {Object} attack - The attack, delivered
  * @param {Actor[]} targets - Who it struck
- * @param {Object} [options] - gmOnly: whisper the cards to the GMs alone
+ * @param {Object} [options] - gmOnly: whisper the cards to the GMs alone; details: a Map of target
+ *   uuid to fields kept on its entry, such as where it stands in a blast
  * @returns {Promise<ChatMessage[]>} The cards
  */
-export async function postDefenceCards(attack, targets, { gmOnly = false } = {}) {
+export async function postDefenceCards(attack, targets, { gmOnly = false, details = new Map() } = {}) {
   const origin = attack.messageId ? game.messages.get(attack.messageId) ?? null : null;
   const cards = [];
   for (const group of defenceGroups(targets)) {
-    const state = { attack, entries: group.targets.map(target => ({ uuid: target.uuid, name: target.name, outcome: null })) };
+    const state = { attack, entries: group.targets.map(target => ({ uuid: target.uuid, name: target.name, outcome: null, ...(details.get(target.uuid) ?? {}) })) };
     cards.push(await ChatMessage.create({
       speaker: defenceSpeaker(group.targets),
       content: await renderCard("attackDefence", state),
@@ -399,8 +417,9 @@ export function markDefenceRolled(message, targetUuid, outcome, { lockedOut = fa
 }
 
 /**
- * A target caught in suppressive fire who takes cover instead of dodging (Core p.207): moving into
- * it on their turn, or staying behind the wall they are behind. The fire misses them, without a roll.
+ * A target who takes cover instead of dodging, without a roll: caught in suppressive fire, moving
+ * into cover on their turn or staying behind the wall they are behind (Core p.207); or standing
+ * behind a wall from a blast's centre, where whoever defends them may rule the wall holds.
  * @param {ChatMessage} message - The defence card
  * @param {String} targetUuid - The target
  * @returns {Promise<Boolean>} True once noted, false when it was not this user's to choose
@@ -408,12 +427,31 @@ export function markDefenceRolled(message, targetUuid, outcome, { lockedOut = fa
 export async function takeCover(message, targetUuid) {
   const state = message?.getFlag?.("eclipsephase", "attackDefence");
   const entry = state?.entries?.find(candidate => candidate.uuid === targetUuid);
-  if (!entry || entry.outcome || !state.attack.coverOption) return false;
+  const cover = state?.attack?.coverOption || (state?.attack?.area === true && entry?.shadow === true ? "inCover" : null);
+  if (!entry || entry.outcome || !cover) return false;
   const target = await fromUuid(targetUuid);
   if (!target?.isOwner) return false;
-  await markDefenceRolled(message, targetUuid, "none", { cover: state.attack.coverOption });
+  await markDefenceRolled(message, targetUuid, "none", { cover });
   await EFFECTS.get(state.attack.effect)?.resolve?.(state.attack, target, "none", { kind: "cover" });
   return true;
+}
+
+/**
+ * The GM's ruling that the targets still to defend against an area attack are not reached at all -
+ * a wall too thick, a door shut in time: each is noted unharmed without a roll.
+ * @param {ChatMessage} message - The defence card
+ * @returns {Promise<Number>} How many were spared, 0 when it is not the GM's to rule
+ */
+export async function spareRemaining(message) {
+  const state = message?.getFlag?.("eclipsephase", "attackDefence");
+  if (!game.user.isGM || !state?.attack?.area) return 0;
+  const remaining = state.entries.filter(entry => !entry.outcome);
+  for (const entry of remaining) {
+    await markDefenceRolled(message, entry.uuid, "none", { cover: "spared" });
+    const target = await fromUuid(entry.uuid);
+    if (target) await EFFECTS.get(state.attack.effect)?.resolve?.(state.attack, target, "none", { kind: "cover" });
+  }
+  return remaining.length;
 }
 
 /**
@@ -494,12 +532,15 @@ export function registerTargetedAttackHooks() {
   Hooks.on("eclipsephase.postRoll", context => {
     exposeAttacker(context);
     if (context?.flags?.targetedAttack?.suppressive && context.message) layDownSuppression(context);
+    if (context?.flags?.targetedAttack?.blast?.origin && context.message) return detonateBlast(context.message);
     if (context?.flags?.targetedAttack?.preTargets?.length && context.message) return deliverToChosen(context.message);
   });
 
   Hooks.on("eclipsephase.poolResult", ({ context }) => {
     const message = context?.messageId ? game.messages.get(context.messageId) : null;
-    if (message?.getFlag?.("eclipsephase", "roll")?.targetedAttack?.preTargets?.length) return deliverToChosen(message);
+    const attack = message?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
+    if (attack?.blast?.origin) return detonateBlast(message);
+    if (attack?.preTargets?.length) return deliverToChosen(message);
   });
 
   settleOnRoll("attackDefence", async (defence, passed, { byPool, result, value }) => {
@@ -508,7 +549,8 @@ export function registerTargetedAttackHooks() {
     if (!state) return;
     const origin = state.attack.messageId ? game.messages.get(state.attack.messageId) : null;
     const attack = origin ? { ...state.attack, roll: attackRoll(origin) } : state.attack;
-    const outcome = defenceOutcome(attack, { passed, result, value, behindCover: defence.behindCover });
+    const entry = state.entries.find(candidate => candidate.uuid === defence.targetUuid);
+    const outcome = defenceOutcome(attack, { passed, result, value, behindCover: defence.behindCover || entry?.nearEdge === true || entry?.shadow === true });
     const lockedOut = attack.defence === "will" && outcome === "none" && isCriticalSuccess(result);
     await markDefenceRolled(card, defence.targetUuid, outcome, { lockedOut });
     const target = await fromUuid(defence.targetUuid);
@@ -746,20 +788,22 @@ export async function suppressOnTurn(token, scene) {
 }
 
 /**
- * Ends every suppressive fire on a combat's scene when the combat ends: its cones only last until
- * the shooter's next turn, and without a combat no turn comes. Done on the active GM's client.
+ * Ends every suppressive fire and clears every blast on a combat's scene when the combat ends: they
+ * only last until their attacker's next turn, and without a combat no turn comes. Done on the
+ * active GM's client.
  * @param {Combat} combat - The combat that ended
  * @returns {Promise<Number>} How many Regions were removed
  */
 export function endSuppression(combat) {
   if (!game.user.isActiveGM) return Promise.resolve(0);
-  return clearAreas(flag => flag.suppressive === true, combat?.scene ?? canvas?.scene);
+  return clearAreas(flag => flag.suppressive === true || flag.blast === true, combat?.scene ?? canvas?.scene);
 }
 
 /**
  * Registers what suppressive fire needs in the scene: its Region behavior, which acts on the active
  * GM's client, the end of its cone when the shooter's next turn begins or the combat ends, and a
- * defence card for whoever stands in a cone when their turn begins.
+ * defence card for whoever stands in a cone when their turn begins. A blast's area goes at the
+ * same time.
  * @returns {void}
  */
 export function registerSuppressiveFire() {
@@ -801,7 +845,7 @@ export function registerSuppressiveFire() {
     const actor = combat?.combatant?.actor;
     if (!game.user.isActiveGM || !actor) return;
     const scene = combat.scene ?? canvas?.scene;
-    await clearAreas(flag => flag.suppressive === true && flag.actorUuid === actor.uuid, scene);
+    await clearAreas(flag => (flag.suppressive === true || flag.blast === true) && flag.actorUuid === actor.uuid, scene);
     await suppressOnTurn(combat.combatant.token, scene);
   });
 }
@@ -819,6 +863,127 @@ function suppressiveArea(rollContext) {
     if (!from || form?.elements?.attackMode?.value !== "suppressive") return null;
     return { kind: "cone", radius: SUPPRESSIVE_WIDTH, width: SUPPRESSIVE_WIDTH, from, max: 0 };
   };
+}
+
+/**
+ * The blast a grenade is thrown to make, placed at the cursor before the roll: as wide as the throw
+ * dialog dials it, the throw's distance measured from the thrower's token to its centre. Nobody is
+ * picked - whoever stands in it once it goes off has to defend.
+ * @param {Object} rollContext - The roll context
+ * @returns {Function} area(form)
+ */
+function blastArea(rollContext) {
+  return form => {
+    const reach = blastReach(rollContext.weapon?.blast, { radius: form?.elements?.blastRadius?.value, reduction: form?.elements?.blastReduction?.value });
+    if (!(reach.radius > 0)) return null;
+    const from = attackerToken(rollContext.actor);
+    return { kind: "circle", radius: reach.radius, max: 0, distance: area => (from ? pointGap(from, area.origin, canvas.grid) : null) };
+  };
+}
+
+/**
+ * Where a token stands in a blast. On a square grid it counts by the squares it stands on, as the
+ * blast is drawn: a square is in the blast when its centre is, so a token beside the blast is not;
+ * elsewhere its centre counts.
+ * @param {Object} token - The token, with bounds in pixels
+ * @param {Object} area - The blast: origin, radius and the wall-cut polygon
+ * @param {Object} grid - The scene's grid
+ * @returns {Object|null} distance from the centre in metres, nearEdge (within a metre of the edge)
+ *   and shadow (behind a wall from the centre), or null when it is not in the blast
+ */
+export function blastPosition(token, area, grid) {
+  const { x, y, width, height } = token.bounds;
+  let centre = { x: x + width / 2, y: y + height / 2 };
+  let squares = [centre];
+  if (grid?.isSquare) {
+    const points = [];
+    for (let py = y + grid.size / 2; py < y + height; py += grid.size) {
+      for (let px = x + grid.size / 2; px < x + width; px += grid.size) points.push({ x: px, y: py });
+    }
+    squares = (points.length ? points : [centre]).map(point => grid.getCenterPoint(grid.getOffset(point)));
+    centre = grid.getCenterPoint(grid.getOffset(centre));
+  }
+  const inside = squares.filter(point => shapeContains(area, point));
+  if (!inside.length) return null;
+  const distance = Math.min(...inside.map(point => Math.hypot(point.x - area.origin.x, point.y - area.origin.y))) / unitsToPixels(1);
+  const shadow = area.polygon ? !area.polygon.contains(centre.x, centre.y) : false;
+  return { distance, nearEdge: area.radius - distance <= 1, shadow };
+}
+
+// How long a blast that caught nobody stays in sight before it goes, in milliseconds.
+const BLAST_LINGER = 3000;
+
+/**
+ * Clears a blast's area once it has done its work. A blast that leaves something behind, such as
+ * smoke, stays.
+ * @param {Object} attack - The attack, with id and blast
+ * @param {Number} [delay] - How long to wait first, in milliseconds
+ * @returns {Promise<Number>} How many Regions were removed
+ */
+export async function clearBlast(attack, delay = 0) {
+  if (!attack?.blast || attack.blast.harmless) return 0;
+  if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+  return clearAreas(flag => flag.attackId === attack.id && flag.blast === true);
+}
+
+/**
+ * Who a blast catches: every actor with a token in it, each counted once where it stands nearest the
+ * centre. Someone behind a wall from the centre, or whose token is hidden, whom no player owns is the
+ * GM's to see alone.
+ * @param {Object} area - The blast: origin, radius and the wall-cut polygon
+ * @param {Object[]} tokens - The canvas tokens
+ * @param {Object} [grid] - The scene's grid
+ * @returns {Object[]} actor, distance, nearEdge, shadow and secret each
+ */
+export function blastTargets(area, tokens, grid = canvas.grid) {
+  const caught = new Map();
+  for (const token of tokens) {
+    const actor = token.actor;
+    const position = actor ? blastPosition(token, area, grid) : null;
+    if (!position) continue;
+    const known = caught.get(actor.uuid);
+    if (known && known.distance <= position.distance) continue;
+    caught.set(actor.uuid, { actor, ...position, secret: (position.shadow || token.document?.hidden === true) && !actor.hasPlayerOwner });
+  }
+  return Array.from(caught.values());
+}
+
+/**
+ * Sets a thrown grenade off where it was placed, once its attack card shows a hit - straight after
+ * the roll, or when a pool point turns a miss into one. Its area is left in the scene, red in the
+ * open and yellow behind walls, and everyone in it defends: halved Fray, a dodge clearing them only
+ * at the blast's edge or in cover (Core p.218). A thrower caught in their own blast is warned and
+ * defends like anyone else.
+ * @param {ChatMessage} message - The attack card
+ * @returns {Promise<Object[]|null>} Who was caught, or null when nothing went off
+ */
+export function detonateBlast(message) {
+  return inOrder(`blast:${message?.id}`, async () => {
+    const context = message?.getFlag?.("eclipsephase", "roll");
+    const attack = context?.targetedAttack;
+    const blast = attack?.blast;
+    if (!blast?.origin || attack.delivered || !isHit(spentOrOriginalResult(context))) return null;
+    const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
+    if (attacker && !attacker.isOwner) return null;
+    const area = { kind: "circle", origin: blast.origin, radius: blast.radius, angle: 360, rotation: 0 };
+    area.polygon = areaPolygon(area.origin, area);
+    await createShadowedArea(area, { name: game.i18n.format("ep2e.chat.attack.blastArea", { name: attack.weaponName }), flags: { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, blast: true } });
+    const caught = blast.harmless ? [] : blastTargets(area, canvas.tokens?.placeables ?? []);
+    if (!caught.length) clearBlast(attack, BLAST_LINGER);
+    const own = caught.find(entry => entry.actor.uuid === attack.actorUuid);
+    if (own) ui.notifications.warn(game.i18n.format("ep2e.targeting.ownBlast", { name: own.actor.name }));
+    const names = caught.map(entry => entry.actor.name);
+    const roll = attackRoll(message);
+    const delivered = { "flags.eclipsephase.roll.targetedAttack.delivered": true, "flags.eclipsephase.roll.targetedAttack.targetNames": names, "flags.eclipsephase.roll.targetedAttack.roll": roll };
+    await updateCard(message, "taskCard", "blastTargets", { targets: caught.map(entry => ({ uuid: entry.actor.uuid, name: entry.actor.name, hidden: entry.secret, shadow: entry.shadow, distance: entry.distance })) }, { extra: delivered });
+    const sent = { ...attack, delivered: true, targetNames: names, roll, messageId: message.id };
+    const details = new Map(caught.map(entry => [entry.actor.uuid, { distance: entry.distance, nearEdge: entry.nearEdge, shadow: entry.shadow }]));
+    const open = caught.filter(entry => !entry.secret).map(entry => entry.actor);
+    const secret = caught.filter(entry => entry.secret).map(entry => entry.actor);
+    if (open.length) await postDefenceCards(sent, open, { details });
+    if (secret.length) await postDefenceCards(sent, secret, { gmOnly: true, details });
+    return caught;
+  });
 }
 
 /**
@@ -849,7 +1014,8 @@ function psiMeasuring(rollContext) {
  * @returns {Object|null} cursor; refuse, the picker's refusal of unsuitable targets; count(form), the targets the chosen options strike (Infinity
  *   for any number); minimum(form), the fewest a mode needs; refuseFor(form), the refusal as the dialog now stands - a touch
  *   reaches no farther than point-blank; measure(form) and applyMeasured(form, distances) where the attack is measured;
- *   allowed(form), for a cone, how many of the picked targets its measured range lets it strike (Core p.218)
+ *   allowed(form), for a cone, how many of the picked targets its measured range lets it strike (Core p.218);
+ *   area(form) and label(form) for a grenade's blast, placed instead of picking targets
  */
 export function attackPicking(rollContext) {
   const preset = rollContext?.flags?.targetedAttack;
@@ -859,18 +1025,23 @@ export function attackPicking(rollContext) {
     const unsuitable = refuseUnsuitable(PSI_UNSUITABLE);
     return { cursor: PSI_CURSOR, refuse: unsuitable, refuseFor: form => form?.elements?.psiTouch?.checked ? refuseAny(unsuitable, refuseBeyondTouch(rollContext.actor)) : unsuitable, measure: psiMeasuring(rollContext), count: form => form?.elements?.push?.value === "target" && !form?.elements?.psiTouch?.checked ? 2 : 1, minimum: () => 1 };
   }
-  if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"))) return null;
+  if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon" || rolledFrom === "grenade"))) return null;
   if (preset?.preTargets?.length) return null;
-  const ranged = !preset && rolledFrom === "rangedWeapon" ? rangedMeasuring(rollContext) : null;
+  const thrown = !preset && rolledFrom === "grenade";
+  const blast = thrown && rollContext.weapon?.blast?.kind && rollContext.weapon.blast.kind !== "none";
+  const ranged = !preset && (rolledFrom === "rangedWeapon" || thrown) ? rangedMeasuring(rollContext) : null;
   const refuse = refuseAny(refuseUnsuitable(preset?.unsuitable), ranged?.refuse);
+  const area = blast ? blastArea(rollContext) : ranged && !thrown && !isConeWeapon(weapon) ? suppressiveArea(rollContext) : null;
   return {
     cursor: preset?.cursor ?? (rolledFrom === "ccWeapon" ? MELEE_CURSOR : {}),
     refuse,
     refuseFor: form => form?.elements?.touchOnly?.checked ? refuseAny(refuse, refuseBeyondTouch(rollContext.actor)) : refuse,
     ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured } : {}),
-    ...(ranged && !isConeWeapon(weapon) ? { area: suppressiveArea(rollContext) } : {}),
+    ...(area ? { area } : {}),
+    ...(blast ? { label: () => "ep2e.roll.dialog.throw.place" } : {}),
     count: form => {
       if (preset) return preset.targets === ANY_TARGETS ? Infinity : preset.targets ?? 1;
+      if (thrown) return 1;
       if (rolledFrom !== "rangedWeapon") return meleeTargets(form);
       if (isConeWeapon(weapon)) return CONE_MAX_TARGETS;
       const count = attackTargetCount(weapon, { attackMode: form?.elements?.attackMode?.value, range: form?.elements?.range?.value });

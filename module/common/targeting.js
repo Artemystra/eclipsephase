@@ -398,7 +398,8 @@ function showAgain(element, modal) {
  * @param {Object|null} picking - What attackPicking returned; measure(form) may name what to measure
  *   from, refuseFor(form) the refusal as the dialog stands at picking, area(form) an area to place
  *   first - only tokens in it can be picked; an area that takes no targets (max 0) is kept in the
- *   dialog's placedArea and rolls at once; allowed(form), once measured, how many may be struck
+ *   dialog's placedArea and rolls at once, measured by its distance(area) or else its length;
+ *   allowed(form), once measured, how many may be struck; label(form), the button's own label
  * @param {Object} [seams] - pick and place, replaced in tests
  * @returns {void}
  */
@@ -411,7 +412,7 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
   let picked = false;
 
   const sync = () => {
-    label.textContent = game.i18n.localize(picking.count(form) === 1 ? "ep2e.chat.attack.chooseTarget" : "ep2e.roll.dialog.ranged.attacker.pickTargets");
+    label.textContent = game.i18n.localize(picking.label?.(form) ?? (picking.count(form) === 1 ? "ep2e.chat.attack.chooseTarget" : "ep2e.roll.dialog.ranged.attacker.pickTargets"));
   };
   form?.addEventListener("change", sync);
   form?.addEventListener("input", sync);
@@ -441,7 +442,8 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
       if (!zone.max) {
         const field = form?.elements?.placedArea;
         if (field) field.value = JSON.stringify({ kind: area.kind, origin: area.origin, radius: area.radius, angle: area.angle, rotation: area.rotation });
-        writeMeasured(form, [area.radius], picking);
+        const distance = zone.distance ? zone.distance(area) : area.radius;
+        if (Number.isFinite(distance)) writeMeasured(form, [distance], picking);
         restoreSheets();
         picked = true;
         button.click();

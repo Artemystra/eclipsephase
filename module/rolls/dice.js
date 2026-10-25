@@ -8,7 +8,7 @@ import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOption
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
 import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
 import { attackPicking, chosenTargets } from "./attacks.js";
-import { ATTACK_MODES, weaponRange, rangeBand } from "../common/weapon-functions.js";
+import { ATTACK_MODES, weaponRange, rangeBand, spendGrenade } from "../common/weapon-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -218,10 +218,10 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
     return calcPool
 }
 
-async function defineRoll(dataset, actorWhole){
+async function defineRoll(dataset, actorWhole, rolledFrom){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -259,6 +259,11 @@ async function defineRoll(dataset, actorWhole){
         default:
             template = TASK_CHECK_DIALOG_TEMPLATE
           break;
+    }
+
+    if (rolledFrom === "grenade") {
+        template = GUNS_TASK_DIALOG
+        templateSize = {width: 1086}
     }
 
     return {type, title, template, templateSize, names, sleight}
@@ -658,7 +663,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let proceed
     let options = {}
     let specName = dataset.specname || "";
-    let roll = await defineRoll(dataset, actorWhole)
+    let roll = await defineRoll(dataset, actorWhole, rolledFrom)
 
     // Brain/nervous-system rules, plus Psi's jamming block
     if (roll.type === "psi" && dataset.itemid) {
@@ -809,6 +814,8 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(rolledFrom === "rangedWeapon")
         proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)
+        else if (rolledFrom === "grenade")
+        await spendGrenade(actorWhole, weaponSelected)
 
         if(proceed === "cancel")
             return
@@ -1195,7 +1202,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
     const rangeFrom = task.modifiers.length
-    const measured = rolledFrom === "rangedWeapon" && !weaponTraits?.automatedEffects?.steady?.value ? measuredDistances(options) : []
+    const measured = (rolledFrom === "rangedWeapon" || rolledFrom === "grenade") && !weaponTraits?.automatedEffects?.steady?.value ? measuredDistances(options) : []
     if (measured.length) {
         const farthest = Math.max(...measured)
         const band = rangeBand(farthest, weaponRange(weaponSelected), weaponTraits?.automatedEffects)

@@ -1,4 +1,4 @@
-import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText } from "../common/general-sheet-functions.js";
+import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText, followingTooltips } from "../common/general-sheet-functions.js";
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
 import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
 import { choosePayload } from "../common/drugs.js";
@@ -397,6 +397,7 @@ async _onRender(context, options) {
   const html = this.element;
   const item = this.document;
   if (!html) return;
+  followingTooltips(html, html);
 
   const windowHeader = html.querySelector('.window-header');
   if (windowHeader) windowHeader.style.display = 'none';

@@ -323,6 +323,13 @@ function registerCoreRollSources() {
       poolType: "Vigor"
     })
   });
+  registerRollSource("grenade", {
+    skillRoll: actorSystem => ({
+      rollvalue: actorSystem.skillsVig?.athletics?.roll,
+      specname: actorSystem.skillsVig?.athletics?.specname,
+      poolType: "Vigor"
+    })
+  });
   registerPoolOption({
     value: "ignoreInfection",
     label: "ep2e.roll.dialog.ignoreInfection",

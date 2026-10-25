@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "Thermobaric munitions disperse a cloud of aerosol explosive over an area and then ignite, literally setting the air on fire, generating a devastating pressure wave, and sucking the oxygen out of the area.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>Thermobaric munitions disperse a cloud of aerosol explosive over an area and then ignite, literally setting the air on fire, generating a devastating pressure wave, and sucking the oxygen out of the area.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",

@@ -4299,6 +4299,35 @@ li:has(.ep-system-notice) .message-header {
   text-align: center;
 }
 
+/* A sheet tooltip shown centred above the mouse pointer, outside the sheet's clipping. */
+.wantToKnowMore .tooltipText.ep-tooltip-follow,
+.wantToKnowMoreFixed .tooltipText.ep-tooltip-follow,
+.wantToKnowMore.tooltip-opens-left .tooltipText.ep-tooltip-follow {
+  position: fixed;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+/* Dodging in the open or from behind cover, side by side. */
+.ep-defence-card .ep-defence-pair {
+  display: flex;
+  gap: 10px;
+}
+
+.ep-defence-card .ep-defence-pair button {
+  flex: 1;
+}
+
+/* Where a target stands in a blast, above its defence. */
+.ep-defence-card .ep-defence-note {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
+}
+
 /* The migration notice: a release's own text between the fixed parts, its bullets scrolling inside the dialog. */
 .ep-migration .ep-migration-body {
   flex-direction: column;

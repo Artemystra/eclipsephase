@@ -23,6 +23,7 @@ registerCard("taskCard", {
     damageOffered: state => ({ ...state, damageOffered: true }),
     updateTarget: (state, { uuid, ...change }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, ...change } : target) }),
     addTarget: (state, { uuid, name, hidden = false }) => ({ ...state, targets: [...(state.targets ?? []), { uuid, name: name ?? "", outcome: null, hidden }] }),
+    blastTargets: (state, { targets }) => ({ ...state, blastLaid: true, targets: targets.map(target => ({ ...target, outcome: null })) }),
     targetDamageOffered: (state, { uuid }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, damageOffered: true } : target) })
   }
 });
@@ -60,6 +61,7 @@ export function taskCardView(state) {
   const shown = (state.targets ?? []).filter(target => !target.hidden);
   if (shown.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: shown.map(targetWithOutcome(state)).join(", ") });
   view.defended = (state.targets ?? []).some(target => target.outcome);
+  view.blastLaid = state.blastLaid === true;
   return view;
 }
 

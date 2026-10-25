@@ -1594,6 +1594,14 @@
         "psi": {
           "touch": "接触（+20）",
           "willing": "自愿目标（不抵抗）"
+        },
+        "throw": {
+          "headline": "投掷",
+          "radius": "爆炸半径",
+          "reduction": "伤害值递减",
+          "note": "爆炸范围内的所有人都必须防御。调低爆炸需要一个快速动作。",
+          "place": "放置爆炸",
+          "noneLeft": "{name}：没有可投掷的了。"
         }
       },
       "successType": {
@@ -1975,7 +1983,9 @@
         "damageWithoutTarget": "无目标伤害",
         "damageReady": "{weapon} 造成的伤害",
         "suppressiveArea": "压制射击（{name}）",
-        "suppressiveNote": "压制射击已展开：在锥形范围内移动者必须防御。"
+        "suppressiveNote": "压制射击已展开：在锥形范围内移动者必须防御。",
+        "blastArea": "爆炸（{name}）",
+        "blastNote": "爆炸已在地图上标出。"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -1993,7 +2003,9 @@
             "none": "已抵抗"
           },
           "cover": "已进入掩体",
-          "remainCover": "留在了掩体中"
+          "remainCover": "留在了掩体中",
+          "spared": "未被波及",
+          "inCover": "在掩体中"
         },
         "severalTargets": "多个目标",
         "resist": "抵抗（意志）",
@@ -2001,7 +2013,12 @@
         "lockedOut": "大成功：异能者在恢复前无法再进入此心智。",
         "touchLabel": "{name}（接触）",
         "cover": "已进入掩体",
-        "remainCover": "留在掩体中"
+        "remainCover": "留在掩体中",
+        "blastDistance": "距中心 {distance} 米",
+        "blastEdge": "在边缘：闪避成功即可避开",
+        "blastBehindWall": "在墙后：闪避成功即可避开",
+        "inCover": "在掩体中",
+        "spareRest": "其余无需掷骰直接结算"
       },
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",
@@ -2020,7 +2037,8 @@
         "amountDamage": "{value} 伤害",
         "amountWounds": "{value} 创伤",
         "amountStress": "{value} 压力",
-        "amountTraumas": "{value} 心理创伤"
+        "amountTraumas": "{value} 心理创伤",
+        "blastFalloff": "{name}（{distance} 米，-{falloff} DV）"
       },
       "psiTouch": {
         "headline": "灵能接触攻击（{sleight}）",
@@ -2286,7 +2304,8 @@
       "outOfTouch": "{name}超出接触范围（2 米）。",
       "areaName": "范围",
       "outsideArea": "该标记在范围之外。",
-      "tooMany": "此攻击在该距离最多命中 {max} 个目标。"
+      "tooMany": "此攻击在该距离最多命中 {max} 个目标。",
+      "ownBlast": "{name} 身处自己的爆炸之中。"
     }
   },
   "BEHAVIOR": {

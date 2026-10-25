@@ -11,7 +11,7 @@
   "_id": "NcUAV7QnVSoBB9NU",
   "system": {
     "additionalSystems": {},
-    "description": "Blinding",
+    "description": "<p>Dazzlers are spinning laser devices, designed to blind targets and defeat surveillance. Anyone within line of sight in the radius of effect (50 meters) who is not equipped with anti-glare mods must succeed in a REF Check or be blinded ▶226 for 1 action turn, +1 per superior failure. A critical failure results in permanent blindness (until repaired/healed). Any visual light/infrared cameras are overloaded for the dazzler’s duration. Unless set to a timed deactivation, dazzlers continue to blind for 1 hour or until wirelessly turned off or physically destroyed (DUR 10, AV 5/10).</p><p><i>Blinding</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -29,11 +29,11 @@
         "value": false
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
-        "value": false
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": true
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {
@@ -43,7 +43,7 @@
       },
       "noDamage": {
         "name": "ep2e.item.weapon.table.trait.noDamage",
-        "value": false
+        "value": true
       },
       "pain": {
         "name": "ep2e.item.weapon.table.trait.pain",

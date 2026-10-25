@@ -11,7 +11,7 @@
   "_id": "TYkCA8IMLU93etHz",
   "system": {
     "additionalSystems": {},
-    "description": "Armor-Piercing",
+    "description": "<p>These munitions release a burst of plasma upon detonation that causes searing heat and fire damage across the area of effect without the devastating shockwaves of explosions that might rebound in an enclosed environment and/or breach a habitat’s infrastructure.</p><p><i>Armor-Piercing</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -26,14 +26,14 @@
     "traits": {
       "armorPiercing": {
         "name": "ep2e.item.weapon.table.trait.armorPiercing",
-        "value": false
+        "value": true
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "name": "ep2e.item.weapon.table.trait.blinding",
         "value": false
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {

@@ -11,7 +11,7 @@
   "_id": "eXXBBl2NCEnduzOu",
   "system": {
     "additionalSystems": {},
-    "description": "DV / Armor / Cost as payload",
+    "description": "<p>Splash devices spread a contained substance (a drug, chemical, nanoswarm, paint, etc.) over a 10-meter blast radius when they detonate. Each contains 5 doses of a toxin/drug (targets are affected by 1 dose) or 1 nanoswarm.</p><p><i>DV / Armor / Cost as payload</i></p>",
     "active": true,
     "displayCategory": "gear",
     "updated": "",
@@ -29,11 +29,11 @@
         "value": false
       },
       "blinding": {
-        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "name": "ep2e.item.weapon.table.trait.blinding",
         "value": false
       },
       "disablesRadio": {
-        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
         "value": false
       },
       "knockdown": {
@@ -43,7 +43,7 @@
       },
       "noDamage": {
         "name": "ep2e.item.weapon.table.trait.noDamage",
-        "value": false
+        "value": true
       },
       "pain": {
         "name": "ep2e.item.weapon.table.trait.pain",
