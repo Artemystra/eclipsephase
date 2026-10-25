@@ -12,7 +12,7 @@ import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
-import  { registerPsiEffectSocket, registerSleightAttacks } from "./rolls/psi.js"
+import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
 import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
@@ -202,6 +202,7 @@ Hooks.once('init', async function() {
   registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
   registerWeaponAttacks();
   registerSleightAttacks();
+  registerPsiTouch();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;

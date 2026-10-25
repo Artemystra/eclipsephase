@@ -1984,7 +1984,8 @@
         "severalTargets": "Varios objetivos",
         "resist": "Resistir (VOL)",
         "yield": "No resistir",
-        "lockedOut": "Crítico: el async queda bloqueado de esta mente hasta que se recupere."
+        "lockedOut": "Crítico: el async queda bloqueado de esta mente hasta que se recupere.",
+        "touchLabel": "{name} por toque"
       },
       "poolSpent": {
         "swapped": "{name} gastó un punto de {pool} para intercambiar los dados",
@@ -2004,6 +2005,15 @@
         "amountWounds": "{value} heridas",
         "amountStress": "{value} de estrés",
         "amountTraumas": "{value} traumas"
+      },
+      "psiTouch": {
+        "headline": "Ataque psi de toque ({sleight})",
+        "touched": "{target} ha sido tocado",
+        "avoided": "{target} esquivó el toque",
+        "missed": "El toque no alcanzó a {target}",
+        "useTouch": "Usar {sleight} por toque (+20)",
+        "usePointBlank": "Usar {sleight} a quemarropa (+10)",
+        "used": "El truco psi ya se ha usado."
       }
     },
     "rule": {
@@ -2256,7 +2266,8 @@
         "close": "Cerca",
         "range": "Alcance",
         "beyond": "Fuera de alcance"
-      }
+      },
+      "outOfTouch": "{name} está fuera del alcance de un toque (2 m)."
     }
   }
 }

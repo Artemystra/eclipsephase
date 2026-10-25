@@ -1,12 +1,13 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
+import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat, RollCheck, isHit } from "./dice.js";
 import * as pools from "./pools.js";
-import { gmList, prepareRecipients, inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
+import { gmList, prepareRecipients, inheritChatVisibility, readRollContext, isChecked } from "../common/general-sheet-functions.js";
 import { effectRuleKey } from "../common/general-helper-functions.js";
 import { getStrainFamily, listStrainFamilies } from "./strain-families.js";
 import { durationRunOut } from "../common/time.js";
 import { strainSubstrate } from "../common/morp-functions.js";
-import { registerAttackEffect } from "./attacks.js";
+import { registerAttackEffect, chosenTargets } from "./attacks.js";
+import { registerCard, renderCard, updateCard, storable } from "../common/chat-cards.js";
 import { measuredDistances } from "../common/targeting.js";
 import { noteDefence } from "./damage.js";
 
@@ -544,5 +545,179 @@ export function registerSleightAttacks() {
     registerAttackEffect("sleight", {
         detect: context => detectSleightAttack(context, { damaging: false }),
         resolve: noteDefence
+    });
+}
+
+// A sleight used by touch on someone who would rather not be touched (Core p.276): the async first
+// lands a touch-only melee attack (+20, no damage) that the target may Fray against; a card then
+// offers the sleight at touch range (+20), or, when the touch failed, at point-blank (+10).
+export const PSI_TOUCH_TEMPLATE = "systems/eclipsephase/templates/chat/psi-touch.html";
+
+// The outcomes after which a touch card offers its sleight: touched, or avoided or missed, which
+// leave point-blank.
+const TOUCH_SETTLED = ["touched", "avoided", "missed"];
+
+registerCard("psiTouch", {
+    render: renderTouchCard,
+    mutations: { used: state => ({ ...state, used: true }) }
+});
+
+/**
+ * Draws the card that follows a touch attack: what became of the touch, and the sleight to use.
+ * @param {Object} state - The card's psiTouch flag
+ * @returns {Promise<String>} The markup
+ */
+export function renderTouchCard(state) {
+    const outcome = state.outcome;
+    return foundry.applications.handlebars.renderTemplate(PSI_TOUCH_TEMPLATE, {
+        headline: game.i18n.format("ep2e.chat.psiTouch.headline", { sleight: state.sleightName }),
+        status: game.i18n.format(`ep2e.chat.psiTouch.${outcome}`, { target: state.targetName }),
+        button: TOUCH_SETTLED.includes(outcome)
+            ? game.i18n.format(outcome === "touched" ? "ep2e.chat.psiTouch.useTouch" : "ep2e.chat.psiTouch.usePointBlank", { sleight: state.sleightName })
+            : "",
+        used: state.used === true,
+        actorUuid: state.actorUuid
+    });
+}
+
+/**
+ * Whether a sleight's roll has to start with a touch attack: a psi-gamma sleight with Touch ticked,
+ * aimed at a target who is not willing, and not already past its touch.
+ * @param {Object} rollContext - The roll context
+ * @param {Object} values - What the dialog returned
+ * @returns {Boolean} True when the touch comes first
+ */
+export function touchComesFirst(rollContext, values) {
+    return !!gammaSleight(rollContext) && isChecked(values?.psiTouch) && !isChecked(values?.willing)
+        && values?.touchSettled !== true && chosenTargets(values).length > 0;
+}
+
+/**
+ * Starts a sleight with its touch attack: a melee test at +20 against the picked target, who gets
+ * the usual card to defend from. The melee dialog is shown with the target already chosen. The
+ * sleight's own dialog values ride along, so it can be used afterwards without asking again.
+ * @param {Object} rollContext - The sleight's roll context
+ * @param {Object} values - What the sleight's dialog returned
+ * @returns {Promise<Boolean>} True when the touch attack was started
+ */
+export async function startTouch(rollContext, values) {
+    if (!touchComesFirst(rollContext, values)) return false;
+    const actor = rollContext.actor;
+    const sleight = gammaSleight(rollContext);
+    const [target] = chosenTargets(values);
+    const dataset = {
+        name: game.i18n.localize("ep2e.skills.vigorSkills.melee"),
+        key: "melee",
+        type: "skill",
+        rollvalue: actor.system.skillsVig?.melee?.roll ?? 0,
+        pooltype: "Vigor",
+        contextFlags: {
+            targetedAttack: {
+                effect: "touch",
+                targets: 1,
+                area: false,
+                labelKey: "",
+                weaponName: sleight.name,
+                effectLabel: game.i18n.format("ep2e.chat.defence.touchLabel", { name: sleight.name }),
+                cursor: PSI_CURSOR,
+                unsuitable: PSI_UNSUITABLE,
+                preTargets: [target],
+                payload: { sleightName: sleight.name, dataset: storable(rollContext.dataset), options: storable(values) }
+            }
+        }
+    };
+    await RollCheck(dataset, actor.system, actor, {}, null, "skill");
+    return true;
+}
+
+/**
+ * The card that follows a touch attack, once posted.
+ * @param {Object} attack - The touch attack
+ * @returns {ChatMessage|undefined} The card
+ */
+function touchCardFor(attack) {
+    return game.messages.find(message => message.getFlag?.("eclipsephase", "psiTouch")?.attackId === attack.id);
+}
+
+/**
+ * Sets the card that follows a touch attack, posting it the first time. It is seen as the sleight's
+ * own roll would be - public, private or blind as chosen in the sleight's dialog - not as the melee
+ * test, so the touch does not give the psi away.
+ * @param {Object} attack - The touch attack
+ * @param {ChatMessage|null} card - The attack card, whose speaker the follow-up shares
+ * @param {Object} change - outcome ("touched", "avoided" or "missed") and the target
+ * @returns {Promise<ChatMessage|Boolean>} The card posted, or whether it was changed
+ */
+export async function setTouchCard(attack, card, { outcome, target }) {
+    const existing = touchCardFor(attack);
+    if (existing) return updateCard(existing, "psiTouch", "merge", { outcome });
+    const state = {
+        attackId: attack.id,
+        actorUuid: attack.actorUuid,
+        sleightName: attack.payload?.sleightName ?? attack.weaponName,
+        targetUuid: target?.uuid ?? "",
+        targetName: target?.name ?? "",
+        outcome,
+        used: false,
+        dataset: attack.payload?.dataset ?? {},
+        options: attack.payload?.options ?? {}
+    };
+    const { blind, recipientList } = inheritChatVisibility(null, state.options.rollMode);
+    return ChatMessage.create({
+        speaker: card?.speaker ?? ChatMessage.getSpeaker(),
+        content: await renderCard("psiTouch", state),
+        whisper: recipientList.length ? recipientList : null,
+        blind,
+        flags: { eclipsephase: { psiTouch: state } }
+    });
+}
+
+/**
+ * Uses the sleight a touch card offers, once: at touch range when the touch landed, at point-blank
+ * when it did not, with the dialog values chosen before the touch.
+ * @param {ChatMessage} message - The touch card
+ * @returns {Promise<Boolean>} True when the sleight was rolled
+ */
+export async function useSleightAfterTouch(message) {
+    const state = message?.getFlag?.("eclipsephase", "psiTouch");
+    if (!state || state.used || !TOUCH_SETTLED.includes(state.outcome)) return false;
+    const actor = await fromUuid(state.actorUuid);
+    if (!actor?.isOwner) return false;
+    await updateCard(message, "psiTouch", "used");
+    const touched = state.outcome === "touched";
+    await RollCheck(state.dataset, actor.system, actor, {
+        skipDialog: true,
+        presetOptions: { ...state.options, psiTouch: touched, measuredRanges: touched ? "" : "2", preTargets: state.targetUuid, touchSettled: true }
+    }, null, "psiSleight");
+    return true;
+}
+
+/**
+ * Lets touch attacks lead to their sleight. A melee test rolled with Touch Attack unticked is no
+ * touch: it carries no attack, and no card follows. Once the target has defended, a card offers it at touch
+ * range or at point-blank, and changes when a pool point turns the defence around. A touch attack
+ * that misses offers point-blank at once; a pool point that turns it into a hit takes that card
+ * back, and the defence brings a new one.
+ * @returns {void}
+ */
+export function registerPsiTouch() {
+    Hooks.on("eclipsephase.preRoll", context => {
+        if (context?.flags?.targetedAttack?.effect === "touch" && !isChecked(context.options?.touchOnly)) delete context.flags.targetedAttack;
+    });
+    registerAttackEffect("touch", {
+        resolve: async (attack, target, outcome) => {
+            await setTouchCard(attack, game.messages.get(attack.messageId) ?? null, { outcome: outcome === "hit" ? "touched" : "avoided", target });
+        }
+    });
+    Hooks.on("eclipsephase.postRoll", async context => {
+        const attack = context?.flags?.targetedAttack;
+        if (attack?.effect !== "touch" || !context.message) return;
+        const target = attack.preTargets?.[0] ? await fromUuid(attack.preTargets[0]) : null;
+        if (!isHit(context.outputData?.alternatives?.originalResult)) await setTouchCard(attack, context.message, { outcome: "missed", target });
+    });
+    Hooks.on("eclipsephase.poolResult", async ({ context, newResult }) => {
+        const attack = context?.targetedAttack;
+        if (attack?.effect !== "touch" || !isHit(newResult)) return;
+        await touchCardFor(attack)?.delete();
     });
 }

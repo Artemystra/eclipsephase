@@ -2054,7 +2054,8 @@
         "severalTargets": "Several targets",
         "resist": "Resist (WIL)",
         "yield": "Don't resist",
-        "lockedOut": "Critical: the async is locked out of this mind until they recharge."
+        "lockedOut": "Critical: the async is locked out of this mind until they recharge.",
+        "touchLabel": "{name} by touch"
       },
       "poolSpent": {
         "swapped": "{name} used a {pool} point to swap the dice",
@@ -2074,6 +2075,15 @@
         "amountWounds": "{value} wounds",
         "amountStress": "{value} stress",
         "amountTraumas": "{value} traumas"
+      },
+      "psiTouch": {
+        "headline": "Psi Touch-Attack ({sleight})",
+        "touched": "{target} was touched",
+        "avoided": "{target} avoided the touch",
+        "missed": "The touch missed {target}",
+        "useTouch": "Use {sleight} by touch (+20)",
+        "usePointBlank": "Use {sleight} at point-blank (+10)",
+        "used": "The sleight has been used."
       }
     },
     "rule": {
@@ -2344,7 +2354,8 @@
         "close": "Close",
         "range": "Range",
         "beyond": "Beyond Range"
-      }
+      },
+      "outOfTouch": "{name} is beyond the reach of a touch (2 m)."
     }
   }
 }

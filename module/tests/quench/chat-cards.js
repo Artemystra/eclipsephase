@@ -303,5 +303,114 @@ export function registerChatCardBatch(quench) {
         })));
       });
     });
+
+    describe("a psi touch attack and the pool points that turn it around", function () {
+      const SENSE = { name: "Quench Sense", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } } };
+      const PUBLIC = { rollMode: "public", usePool: "", globalMod: 0 };
+
+      /**
+       * Starts a sleight by touch at a target, answering the touch's melee dialog with the values given.
+       * @param {Actor} caster - The async
+       * @param {Actor} target - The target
+       * @param {Object} melee - What the melee dialog answers
+       * @param {Number} die - The melee test's d100
+       * @returns {Promise<ChatMessage>} The melee test's card
+       */
+      async function touchAt(caster, target, melee, die) {
+        const wait = foundry.applications.api.DialogV2.wait;
+        foundry.applications.api.DialogV2.wait = async () => ({ ...PUBLIC, ...melee });
+        try {
+          seedDice([uniformForFace(die, 100)]);
+          await RollCheck({ name: "Psi", key: "psi", type: "psi", rollvalue: 70, itemid: caster.items.find(item => item.name === "Quench Sense").id, pooltype: "Moxie" }, caster.system, caster, { skipDialog: true, presetOptions: { ...PUBLIC, psiTouch: true, preTargets: target.uuid } }, null, "psiSleight");
+        } finally {
+          foundry.applications.api.DialogV2.wait = wait;
+        }
+        return newestWith("taskCard");
+      }
+
+      /**
+       * Spends a pool point on a roll card, swapping its die.
+       * @param {ChatMessage} card - The roll card
+       * @returns {Promise<void>} Resolves once spent
+       */
+      async function flip(card) {
+        const row = document.createElement("li");
+        row.dataset.messageId = card.id;
+        const button = document.createElement("button");
+        button.dataset.usepool = "pool";
+        row.append(button);
+        await usePoolFromChat({ currentTarget: button });
+      }
+
+      /**
+       * The touch card the current test posted.
+       * @returns {ChatMessage|undefined} The card
+       */
+      function touchCard() {
+        return newestWith("psiTouch");
+      }
+
+      const async = () => ({ type: "character", name: "Quench Async", system: { skillsVig: { melee: { value: 40 } }, pools: { vigor: { value: 2 } } }, items: [SENSE] });
+      const mind = () => ({ type: "character", name: "Quench Mind", system: { aptitudes: { ref: { value: 20 } }, skillsVig: { fray: { value: 30 } }, pools: { vigor: { value: 2 } } } });
+
+      it("a defence the target turns around with a pool point turns the card from touched to avoided", async function () {
+        this.timeout(30000);
+        await keepingOnly(() => withTempActor(async(), caster => withTempActor(mind(), async target => {
+          await waitUntil(() => caster.getFlag("eclipsephase", "defaultMorphAdded") && target.getFlag("eclipsephase", "defaultMorphAdded"));
+          await touchAt(caster, target, { touchOnly: true }, 5);
+          await waitUntil(() => newestWith("attackDefence"), 8000);
+          assert.isUndefined(touchCard(), "no card before the defence");
+
+          seedDice([uniformForFace(91, 100)]);
+          await rollDefence(newestWith("attackDefence"), target.uuid, "dodge", { skipDialog: true, presetOptions: { ...PUBLIC } });
+          await waitUntil(() => touchCard()?.getFlag("eclipsephase", "psiTouch").outcome === "touched", 8000);
+          const card = touchCard();
+
+          await flip(newestWith("taskCard"));
+          await waitUntil(() => game.messages.get(card.id)?.getFlag("eclipsephase", "psiTouch").outcome === "avoided", 8000);
+
+          const after = game.messages.get(card.id);
+          assert.include(after.content, game.i18n.format("ep2e.chat.psiTouch.usePointBlank", { sleight: "Quench Sense" }));
+          assert.isTrue(cardShape(after).root);
+          return after;
+        })));
+      });
+
+      it("a touch that misses shows its card at once; a pool point that turns it into a hit takes it back, and the defence brings a new one", async function () {
+        this.timeout(30000);
+        await keepingOnly(() => withTempActor(async(), caster => withTempActor(mind(), async target => {
+          await waitUntil(() => caster.getFlag("eclipsephase", "defaultMorphAdded") && target.getFlag("eclipsephase", "defaultMorphAdded"));
+          const attack = await touchAt(caster, target, { touchOnly: true }, 91);
+          await waitUntil(() => touchCard()?.getFlag("eclipsephase", "psiTouch").outcome === "missed", 8000);
+          const missed = touchCard();
+
+          await flip(attack);
+          await waitUntil(() => !game.messages.get(missed.id), 8000);
+          await waitUntil(() => newestWith("attackDefence"), 8000);
+          seedDice([uniformForFace(95, 100)]);
+          await rollDefence(newestWith("attackDefence"), target.uuid, "dodge", { skipDialog: true, presetOptions: { ...PUBLIC } });
+          await waitUntil(() => touchCard()?.getFlag("eclipsephase", "psiTouch").outcome === "touched", 8000);
+
+          const after = touchCard();
+          assert.notStrictEqual(after.id, missed.id);
+          assert.include(after.content, game.i18n.format("ep2e.chat.psiTouch.useTouch", { sleight: "Quench Sense" }));
+          return after;
+        })));
+      });
+
+      it("a melee test with Touch Attack unticked is no touch: no defence and no touch card", async function () {
+        this.timeout(30000);
+        await keepingOnly(() => withTempActor(async(), caster => withTempActor(mind(), async target => {
+          await waitUntil(() => caster.getFlag("eclipsephase", "defaultMorphAdded") && target.getFlag("eclipsephase", "defaultMorphAdded"));
+          const card = await touchAt(caster, target, { touchOnly: false }, 5);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          assert.isUndefined(newestWith("attackDefence"));
+          assert.isUndefined(touchCard());
+          assert.isUndefined(card.getFlag("eclipsephase", "roll")?.targetedAttack);
+          return null;
+        })));
+      });
+    });
   }, { displayName: "Eclipse Phase: Chat cards" });
 }

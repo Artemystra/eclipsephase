@@ -382,7 +382,8 @@ function writeMeasured(form, distances, picking) {
  * too few brings the dialog back.
  * @param {HTMLElement} root - The dialog's element
  * @param {Object} dialog - The dialog, to hide while picking
- * @param {Object|null} picking - What attackPicking returned; measure(form) may name what to measure from
+ * @param {Object|null} picking - What attackPicking returned; measure(form) may name what to measure
+ *   from, refuseFor(form) the refusal as the dialog stands at picking
  * @param {Object} [seams] - pick, replaced in tests
  * @returns {void}
  */
@@ -412,7 +413,8 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     element?.close?.();
     if (element?.style) element.style.display = "none";
     const measure = picking.measure?.(form) ?? null;
-    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...(picking.refuse ? { refuse: picking.refuse } : {}), ...(measure ? { measure } : {}), ...picking.cursor });
+    const refuse = picking.refuseFor ? picking.refuseFor(form) : picking.refuse;
+    const tokens = await pick({ multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null, ...(refuse ? { refuse } : {}), ...(measure ? { measure } : {}), ...picking.cursor });
     const actors = (tokens ?? []).map(token => token.actor).filter(Boolean);
     if (actors.length >= minimum) {
       input.value = actors.map(actor => actor.uuid).join(",");

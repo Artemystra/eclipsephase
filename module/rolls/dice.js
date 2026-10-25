@@ -684,6 +684,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     if(values.cancelled)
         return
 
+    if (roll.type === "psi" && await psi.startTouch(rollContext, values))
+        return
+
     for (let entry in values){
         options[entry] = values[entry] || false
     }

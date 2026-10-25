@@ -1991,7 +1991,8 @@
         "severalTargets": "多个目标",
         "resist": "抵抗（意志）",
         "yield": "不抵抗",
-        "lockedOut": "大成功：异能者在恢复前无法再进入此心智。"
+        "lockedOut": "大成功：异能者在恢复前无法再进入此心智。",
+        "touchLabel": "{name}（接触）"
       },
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",
@@ -2011,6 +2012,15 @@
         "amountWounds": "{value} 创伤",
         "amountStress": "{value} 压力",
         "amountTraumas": "{value} 心理创伤"
+      },
+      "psiTouch": {
+        "headline": "灵能接触攻击（{sleight}）",
+        "touched": "{target}已被接触",
+        "avoided": "{target}躲开了接触",
+        "missed": "接触未能命中{target}",
+        "useTouch": "以接触施展{sleight}（+20）",
+        "usePointBlank": "在抵近距离施展{sleight}（+10）",
+        "used": "灵能技已施展。"
       }
     },
     "rule": {
@@ -2263,7 +2273,8 @@
         "close": "近距",
         "range": "射程内",
         "beyond": "超出射程"
-      }
+      },
+      "outOfTouch": "{name}超出接触范围（2 米）。"
     }
   }
 }

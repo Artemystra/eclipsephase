@@ -1,12 +1,12 @@
 import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, yieldDefence, defenceDataset, attackPicking } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { registerWeaponAttacks, rollAttackDamage } from "../../module/rolls/damage.js";
-import { registerSleightAttacks, detectSleightAttack, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "../../module/rolls/psi.js";
+import { registerSleightAttacks, registerPsiTouch, touchComesFirst, useSleightAfterTouch, detectSleightAttack, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "../../module/rolls/psi.js";
 import { targetKinds, CYBERBRAIN_MARKER } from "../../module/common/morp-functions.js";
 import { _ep28_missingPsiArmorMarker } from "../../module/common/migration.js";
 import { RollCheck } from "../../module/rolls/dice.js";
 import { resetStrainFamilies, registerCoreStrainFamilies } from "../../module/rolls/strain-families.js";
-import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
+import { makeActor, resetWorld, seedRolls, seedDialogs, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 const PUBLIC = { rollMode: "public", usePool: "", globalMod: 0 };
@@ -255,5 +255,132 @@ describe("the Psi Armor sleight's marker", () => {
     expect(_ep28_missingPsiArmorMarker(old).changes).toEqual([expect.objectContaining({ key: "system.mods.psiArmor", value: "true" })]);
     expect(_ep28_missingPsiArmorMarker({ ...current, effects: current.effects.map(effect => ({ ...effect, changes: effect.system.changes })) })).toBeNull();
     expect(_ep28_missingPsiArmorMarker({ type: "aspect", name: "Psychic Stab", effects: [] })).toBeNull();
+  });
+});
+
+
+describe("a sleight used by touch on someone unwilling (Core p.276)", () => {
+  beforeEach(() => registerPsiTouch());
+
+  /**
+   * The card that follows the touch attack.
+   * @returns {Object|undefined} The card
+   */
+  function touchCard() {
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "psiTouch")).at(-1);
+  }
+
+  /**
+   * The psi tests rolled so far, without the touch attacks.
+   * @returns {Object[]} The cards
+   */
+  function psiTests() {
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.rolledFrom === "psiSleight");
+  }
+
+  test("the touch comes first only for a ticked touch at a picked target who is not willing, and only once", () => {
+    const context = { rolledFrom: "psiSleight", actor: async(), dataset: { itemid: "sense1" } };
+
+    expect(touchComesFirst(context, { psiTouch: true, preTargets: "Actor.ana" })).toBe(true);
+    expect(touchComesFirst(context, { psiTouch: true, preTargets: "Actor.ana", willing: true })).toBe(false);
+    expect(touchComesFirst(context, { psiTouch: true, preTargets: false })).toBe(false);
+    expect(touchComesFirst(context, { psiTouch: false, preTargets: "Actor.ana" })).toBe(false);
+    expect(touchComesFirst(context, { psiTouch: true, preTargets: "Actor.ana", touchSettled: true })).toBe(false);
+  });
+
+  test("a touched target lets the sleight be used once at +20, with the choices made before the touch; the card comes after the defence, seen as the sleight would be", async () => {
+    const actor = async();
+    const target = mind("Ana");
+
+    seedDialogs({ ...PUBLIC, touchOnly: true });
+    const attack = await cast(actor, "sense1", 5, { psiTouch: true, preTargets: target.uuid, push: "duration", rollMode: "private" });
+    await until(() => defenceCards().length);
+
+    expect(attack.getFlag("eclipsephase", "roll")).toMatchObject({ rolledFrom: "skill", targetedAttack: { effect: "touch", preTargets: [target.uuid] } });
+    expect(attack.getFlag("eclipsephase", "taskCard").data.modifiers).toContainEqual(expect.objectContaining({ text: "ep2e.roll.announce.combat.melee.touchOnly" }));
+    expect(psiTests()).toHaveLength(0);
+    expect(touchCard()).toBeUndefined();
+
+    seedRolls([99]);
+    await rollDefence(defenceCards().at(-1), target.uuid, "dodge", { skipDialog: true, presetOptions: { ...PUBLIC } });
+    await until(() => touchCard()?.getFlag("eclipsephase", "psiTouch").outcome === "touched");
+    expect(attack.whisper ?? []).toEqual([]);
+    expect(touchCard().whisper.length).toBeGreaterThan(0);
+
+    seedRolls([20]);
+    expect(await useSleightAfterTouch(touchCard())).toBe(true);
+    expect(await useSleightAfterTouch(touchCard())).toBe(false);
+    const sleight = psiTests().at(-1);
+    expect(psiTests()).toHaveLength(1);
+    expect(sleight.getFlag("eclipsephase", "roll").options.push).toBe("duration");
+    expect(sleight.getFlag("eclipsephase", "taskCard").data.modifiers.map(modifier => [modifier.text, Number(modifier.value)])).toContainEqual(["ep2e.roll.announce.psi.touch", 20]);
+  });
+
+  test("a touch that misses offers the sleight at point-blank straight away", async () => {
+    const actor = async();
+    const target = mind("Ana");
+
+    seedDialogs({ ...PUBLIC, touchOnly: true });
+    await cast(actor, "sense1", 95, { psiTouch: true, preTargets: target.uuid });
+    await until(() => touchCard());
+
+    expect(touchCard().getFlag("eclipsephase", "psiTouch").outcome).toBe("missed");
+    expect(defenceCards()).toHaveLength(0);
+    seedRolls([20]);
+    await useSleightAfterTouch(touchCard());
+    const modifiers = psiTests().at(-1).getFlag("eclipsephase", "taskCard").data.modifiers;
+    expect(modifiers.map(modifier => [String(modifier.text).split(" ")[0], Number(modifier.value)])).toContainEqual(["ep2e.roll.announce.psi.range", 10]);
+    expect(modifiers).not.toContainEqual(expect.objectContaining({ text: "ep2e.roll.announce.psi.touch" }));
+  });
+
+  test("a target who avoids the touch leaves the sleight at point-blank", async () => {
+    const actor = async();
+    const target = makeActor({ type: "character", name: "Ana", system: { activeMorph: "morph1", aptitudes: { ref: { value: 25 }, wil: { value: 15 } } }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } }] });
+    seedDialogs({ ...PUBLIC, touchOnly: true });
+    await cast(actor, "sense1", 5, { psiTouch: true, preTargets: target.uuid });
+    await until(() => defenceCards().length);
+
+    seedRolls([10]);
+    await rollDefence(defenceCards().at(-1), target.uuid, "dodge", { skipDialog: true, presetOptions: { ...PUBLIC } });
+    await until(() => touchCard()?.getFlag("eclipsephase", "psiTouch").outcome === "avoided");
+
+    expect(touchCard().content).toContain("ep2e.chat.psiTouch.usePointBlank");
+    seedRolls([20]);
+    expect(await useSleightAfterTouch(touchCard())).toBe(true);
+    expect(psiTests().at(-1).getFlag("eclipsephase", "taskCard").data.modifiers.map(modifier => String(modifier.text).split(" ")[0])).toContain("ep2e.roll.announce.psi.range");
+  });
+
+  test("without Touch there is never a touch attack, however near the target stands", async () => {
+    const target = mind("Ana");
+
+    await cast(async(), "sense1", 30, { preTargets: target.uuid, measuredRanges: "0" });
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(touchCard()).toBeUndefined();
+    expect(createdMessages.some(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack?.effect === "touch")).toBe(false);
+    expect(psiTests()).toHaveLength(1);
+  });
+
+  test("a melee test with Touch Attack unticked is no touch: no defence, no card, nothing that names the sleight", async () => {
+    const target = mind("Ana");
+    seedDialogs({ ...PUBLIC, touchOnly: false });
+
+    const before = createdMessages.length;
+    await cast(async(), "sense1", 5, { psiTouch: true, preTargets: target.uuid });
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(defenceCards()).toHaveLength(0);
+    expect(touchCard()).toBeUndefined();
+    expect(createdMessages.slice(before).some(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack)).toBe(false);
+    expect(psiTests()).toHaveLength(0);
+  });
+
+  test("a willing target is touched without an attack", async () => {
+    const target = mind("Ana");
+
+    await cast(async(), "sense1", 30, { psiTouch: true, willing: true, preTargets: target.uuid });
+
+    expect(touchCard()).toBeUndefined();
+    expect(psiTests()).toHaveLength(1);
   });
 });

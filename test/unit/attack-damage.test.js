@@ -540,6 +540,24 @@ describe("picking the targets in the attack dialog", () => {
     expect(root.querySelector('select[name="range"]').value).toBe("beyond");
   });
 
+  test("a touch, in melee or for a sleight, reaches no farther than point-blank from the attacker's token", () => {
+    const square = x => ({ x, y: 0, width: 100, height: 100 });
+    const origin = { bounds: square(0) };
+    const actor = { getActiveTokens: () => [origin] };
+    const near = { bounds: square(300), actor: { name: "Ana" } };
+    const far = { bounds: square(400), actor: { name: "Bo" } };
+    const melee = attackPicking({ rolledFrom: "ccWeapon", actor, weapon: { weapon: { type: "ccWeapon", system: {} } } });
+    const touching = { elements: { touchOnly: { checked: true } } };
+    global.canvas = { ready: true, grid: { size: 100, distance: 1 } };
+    try {
+      expect(melee.refuseFor(touching)(near)).toBeNull();
+      expect(melee.refuseFor(touching)(far)).toContain("ep2e.targeting.outOfTouch");
+      expect(melee.refuseFor({ elements: {} })?.(far) ?? null).toBeNull();
+    } finally {
+      delete global.canvas;
+    }
+  });
+
   test("cancelling, or too few for the mode, brings the dialog back without rolling", async () => {
     const { root, button, counter } = dialogRoot();
     const element = dialogWindow();

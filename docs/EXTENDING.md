@@ -626,6 +626,14 @@ cyberbrain picked before the roll (once the roll has landed, the modifier can no
   (`api.attacks.chemicalDoses(weaponTraits)` tells whether a weapon fires chemicals). The weapon
   keeps a copy of the drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it
   once the pack is used up. `forceDose` sets up a melee attack carrying a dose.
+- `"touch"` (2.8.5) - a psi-gamma sleight with Touch ticked at a target who is not willing starts
+  with a touch-only melee attack (+20, no damage; Core p.276); its melee dialog opens with the target
+  already chosen and Touch Attack ticked. Once the target has defended - at once, when the touch
+  misses - a card under `flags.eclipsephase.psiTouch` offers the sleight once, with the dialog
+  choices made before: at touch range (+20) after a landed touch, at point-blank (+10) after a
+  missed or avoided one. The card is seen as the sleight's own roll would be (public, private or
+  blind), not as the melee test. A touch, in melee or for a sleight, refuses targets farther than
+  point-blank while picking (`refuseFor(form)` on what `attackPicking` returns).
 
 ## Chat message context
 
@@ -640,7 +648,7 @@ card's `[data-message-id]`). The returned object:
   actorUuid, userId, rolledFrom, rollType,
   pool: { skillPoolValue, flexPoolValue, updatePoolPath, updateFlexPath, poolType },
   alternatives: { usageType, result, value, originalResult, resultClass, resultText },
-  options: { push, attackMode, biomorphTarget, touchOnly, range, rollMode },
+  options: { push, attackMode, biomorphTarget, touchOnly, range, vacuum, rollMode },
   item: { weaponId, weaponMode, sleightId, damageTarget },
   messageId
 }

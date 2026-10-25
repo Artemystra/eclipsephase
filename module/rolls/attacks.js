@@ -507,6 +507,22 @@ function refuseAny(...checks) {
   return active.length ? token => active.map(check => check(token)).find(Boolean) ?? null : null;
 }
 
+// How far a touch reaches: point-blank (Core p.205, p.276).
+const TOUCH_REACH = 2;
+
+/**
+ * A picker's refusal of targets out of a touch's reach, measured from the attacker's token.
+ * @param {Actor} actor - The attacker
+ * @returns {Function} refuse(token) for pickTokensOnCanvas
+ */
+function refuseBeyondTouch(actor) {
+  return token => {
+    const origin = attackerToken(actor);
+    if (!origin || token === origin || tokenGap(origin, token, canvas.grid) <= TOUCH_REACH) return null;
+    return game.i18n.format("ep2e.targeting.outOfTouch", { name: token.actor?.name ?? token.name ?? "" });
+  };
+}
+
 /**
  * The distance as the picker shows it: metres and the category with its modifier.
  * @param {Number} distance - The distance in metres
@@ -567,23 +583,29 @@ function psiMeasuring(rollContext) {
 /**
  * How an attack dialog picks its targets, or null for a roll that is no attack: a roll with a
  * weapon, a psi-gamma sleight, or one that brings an attack of its own, such as a forced dose.
- * Ranged weapons and sleights measure the distance from the attacker's token while picking.
+ * Ranged weapons and sleights measure the distance from the attacker's token while picking. An attack
+ * that brings its targets already, such as a touch for a sleight, picks none.
  * @param {Object} rollContext - The roll context the dialog is shown for
  * @returns {Object|null} cursor; refuse, the picker's refusal of unsuitable targets; count(form), the targets the chosen options strike (Infinity
- *   for any number); minimum(form), the fewest a mode needs; measure(form) and applyMeasured(form, distances) where the attack is measured
+ *   for any number); minimum(form), the fewest a mode needs; refuseFor(form), the refusal as the dialog now stands - a touch
+ *   reaches no farther than point-blank; measure(form) and applyMeasured(form, distances) where the attack is measured
  */
 export function attackPicking(rollContext) {
   const preset = rollContext?.flags?.targetedAttack;
   const weapon = rollContext?.weapon?.weapon ?? null;
   const rolledFrom = rollContext?.rolledFrom;
   if (!preset && gammaSleight(rollContext)) {
-    return { cursor: PSI_CURSOR, refuse: refuseUnsuitable(PSI_UNSUITABLE), measure: psiMeasuring(rollContext), count: form => form?.elements?.push?.value === "target" ? 2 : 1, minimum: () => 1 };
+    const unsuitable = refuseUnsuitable(PSI_UNSUITABLE);
+    return { cursor: PSI_CURSOR, refuse: unsuitable, refuseFor: form => form?.elements?.psiTouch?.checked ? refuseAny(unsuitable, refuseBeyondTouch(rollContext.actor)) : unsuitable, measure: psiMeasuring(rollContext), count: form => form?.elements?.push?.value === "target" && !form?.elements?.psiTouch?.checked ? 2 : 1, minimum: () => 1 };
   }
   if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"))) return null;
+  if (preset?.preTargets?.length) return null;
   const ranged = !preset && rolledFrom === "rangedWeapon" ? rangedMeasuring(rollContext) : null;
+  const refuse = refuseAny(refuseUnsuitable(preset?.unsuitable), ranged?.refuse);
   return {
     cursor: preset?.cursor ?? (rolledFrom === "ccWeapon" ? MELEE_CURSOR : {}),
-    refuse: refuseAny(refuseUnsuitable(preset?.unsuitable), ranged?.refuse),
+    refuse,
+    refuseFor: form => form?.elements?.touchOnly?.checked ? refuseAny(refuse, refuseBeyondTouch(rollContext.actor)) : refuse,
     ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured } : {}),
     count: form => {
       if (preset) return preset.targets === ANY_TARGETS ? Infinity : preset.targets ?? 1;

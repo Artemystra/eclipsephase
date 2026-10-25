@@ -103,6 +103,13 @@ export async function addChatListeners(html) {
     }
 
 
+    const psiTouchUse = event.target.closest("button.psiTouchUse");
+    if (psiTouchUse) {
+      const message = game.messages.get(psiTouchUse.closest("[data-message-id]")?.dataset.messageId);
+      if (message) psiFunctions.useSleightAfterTouch(message);
+      return;
+    }
+
     const attackDamage = event.target.closest("button.attackDamage");
     if (attackDamage) {
       const message = game.messages.get(attackDamage.closest("[data-message-id]")?.dataset.messageId);

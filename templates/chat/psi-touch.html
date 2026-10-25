@@ -1,0 +1,12 @@
+{{!-- The card that follows a touch attack for a sleight: what became of the touch, and the sleight to use after it. --}}
+<div class="alignCenter ep-psi-touch-card">
+  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon="fa-hand" color="--iconBlue" text=headline open=true}}
+  <div class="chatControls ep-chat-stack">
+    <p class="ep-defence-outcome">{{status}}</p>
+    {{#if used}}
+    <p class="footnote">{{localize "ep2e.chat.psiTouch.used"}}</p>
+    {{else if button}}
+    <button type="button" class="chatButton psiTouchUse ownerOnlyControl ep-chat-primary" data-action="psiTouchUse" data-actor-uuid="{{actorUuid}}">{{button}}</button>
+    {{/if}}
+  </div>
+</div>

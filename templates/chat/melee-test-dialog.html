@@ -41,12 +41,12 @@
             {{#if (eq traits.confirmationEffects.touchOnly.value true)}}
                 <div class="form-group listBackgroundMain">
                     <input type="checkbox" name="touchOnly" id="touchOnly">
-                    <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
+                    <label class="resource-label" for="touchOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
                 </div>
             {{else if (ne rolledFrom "ccWeapon")}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="touchOnly" id="touchOnly">
-                    <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
+                    <input type="checkbox" name="touchOnly" id="touchOnly"{{#if (eq rollContext.flags.targetedAttack.effect "touch")}} checked{{/if}}>
+                    <label class="resource-label" for="touchOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
                 </div>
             {{/if}}
         </div>
