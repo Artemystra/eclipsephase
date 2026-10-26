@@ -193,8 +193,24 @@
                 <select class="input-largePlus" name="trigger" id="trigger">
                     <option value="impact"{{#if (eq rollContext.weapon.blast.trigger "impact")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.impact"}}</option>
                     <option value="airburst"{{#if (eq rollContext.weapon.blast.trigger "airburst")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.airburst"}}</option>
-                    <option value="delayed"{{#if (eq rollContext.weapon.blast.trigger "delayed")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.delayed"}}</option>
+                    <option value="timer"{{#if (eq rollContext.weapon.blast.trigger "timer")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.timer"}}</option>
+                    <option value="signal"{{#if (eq rollContext.weapon.blast.trigger "signal")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.signal"}}</option>
+                    <option value="proximity"{{#if (eq rollContext.weapon.blast.trigger "proximity")}} selected{{/if}}>{{localize "ep2e.item.weapon.table.trigger.proximity"}}</option>
                 </select>
+            </div>
+            <div class="form-group listBackgroundMain ep-trigger-field" data-trigger="timer">
+                <label class="resource-labelDialog" for="timerValue">{{localize "ep2e.roll.dialog.throw.timer"}}:</label>
+                <input type="number" class="input-small" name="timerValue" id="timerValue" min="1" value="1" onFocus="this.select()">
+                <select name="timerUnit" style="max-width: 100px;">
+                    <option value="rounds">{{localize "ep2e.roll.dialog.throw.unit.rounds"}}</option>
+                    <option value="seconds">{{localize "ep2e.roll.dialog.throw.unit.seconds"}}</option>
+                    <option value="minutes">{{localize "ep2e.roll.dialog.throw.unit.minutes"}}</option>
+                </select>
+            </div>
+            <div class="form-group listBackgroundMain ep-trigger-field" data-trigger="proximity">
+                <label class="resource-labelDialog" for="proximityRadius">{{localize "ep2e.roll.dialog.throw.proximity"}}:</label>
+                <input type="number" class="input-small" name="proximityRadius" id="proximityRadius" min="1" max="3" value="3" onFocus="this.select()">
+                <label class="resource-label">m</label>
             </div>
             {{#if (eq rollContext.weapon.blast.kind "uniform")}}
             <div class="form-group listBackgroundMain">

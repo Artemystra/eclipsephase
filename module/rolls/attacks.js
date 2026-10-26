@@ -3,9 +3,9 @@ import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds } from "../common/morp-functions.js";
 import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR } from "../common/targeting.js";
+import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
-import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
+import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
 // the hit from a button on the attack card, and every target's owner rolls a defence from a card of
@@ -668,28 +668,18 @@ async function laySuppression(placed, { attackId, messageId, actorUuid, actorNam
 }
 
 /**
- * The grid squares a hitting suppressive fire covers on a scene.
+ * The grid cells a hitting suppressive fire covers on a scene.
  * @param {Scene} scene - The scene
- * @returns {Set<String>} The squares, as "i,j"
+ * @returns {Set<String>} The cells, as "i,j"
  */
 function squaresUnderFire(scene) {
-  const squares = new Set();
-  const grid = canvas.grid;
-  if (!grid?.isSquare) return squares;
+  const cells = new Set();
   for (const region of Array.from(scene?.regions ?? [])) {
     const flag = region.getFlag?.("eclipsephase", "area");
     if (!flag?.suppressive || flag.part === "spent") continue;
-    for (const shape of region.shapes ?? []) {
-      if (shape.type !== "rectangle") continue;
-      for (let y = shape.y + grid.size / 2; y < shape.y + shape.height; y += grid.size) {
-        for (let x = shape.x + grid.size / 2; x < shape.x + shape.width; x += grid.size) {
-          const { i, j } = grid.getOffset({ x, y });
-          squares.add(`${i},${j}`);
-        }
-      }
-    }
+    for (const cell of flag.cells ?? []) cells.add(cell);
   }
-  return squares;
+  return cells;
 }
 
 /**
@@ -888,8 +878,8 @@ function blastArea(rollContext) {
 }
 
 /**
- * Where a token stands in a blast. On a square grid it counts by the squares it stands on, as the
- * blast is drawn: a square is in the blast when its centre is, so a token beside the blast is not;
+ * Where a token stands in a blast. On a square or hex grid it counts by the cells it stands on, as
+ * the blast is drawn: a cell is in the blast when its centre is, so a token beside the blast is not;
  * elsewhere its centre counts.
  * @param {Object} token - The token, with bounds in pixels
  * @param {Object} area - The blast: origin, radius and the wall-cut polygon
@@ -901,12 +891,15 @@ export function blastPosition(token, area, grid) {
   const { x, y, width, height } = token.bounds;
   let centre = { x: x + width / 2, y: y + height / 2 };
   let squares = [centre];
-  if (grid?.isSquare) {
+  if (hasCells(grid)) {
+    const occupied = token.document?.getOccupiedGridSpaceOffsets?.() ?? [];
     const points = [];
-    for (let py = y + grid.size / 2; py < y + height; py += grid.size) {
-      for (let px = x + grid.size / 2; px < x + width; px += grid.size) points.push({ x: px, y: py });
+    if (!occupied.length && grid.isSquare) {
+      for (let py = y + grid.size / 2; py < y + height; py += grid.size) {
+        for (let px = x + grid.size / 2; px < x + width; px += grid.size) points.push({ x: px, y: py });
+      }
     }
-    squares = (points.length ? points : [centre]).map(point => grid.getCenterPoint(grid.getOffset(point)));
+    squares = occupied.length ? occupied.map(offset => grid.getCenterPoint(offset)) : (points.length ? points : [centre]).map(point => grid.getCenterPoint(grid.getOffset(point)));
     centre = grid.getCenterPoint(grid.getOffset(centre));
   }
   const inside = squares.filter(point => shapeContains(area, point));
@@ -966,7 +959,7 @@ export function detonateBlast(message) {
     const context = message?.getFlag?.("eclipsephase", "roll");
     const attack = context?.targetedAttack;
     const blast = attack?.blast;
-    if (!blast?.origin || attack.delivered || blast.trigger === "delayed" || !isHit(spentOrOriginalResult(context))) return null;
+    if (!blast?.origin || attack.delivered || attack.armed || blast.delayed || !isHit(spentOrOriginalResult(context))) return null;
     const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
     if (attacker && !attacker.isOwner) return null;
     return setOffBlast(message, attack, blast.origin);
@@ -1020,7 +1013,7 @@ async function setOffBlast(message, attack, origin, scatter = null) {
  */
 function coveredSquares(area) {
   const grid = canvas.grid;
-  if (!grid?.isSquare) return new Set();
+  if (!hasCells(grid)) return new Set();
   const { open, shadow } = areaSquares(area, grid);
   return new Set([...open, ...shadow].map(({ i, j }) => `${i},${j}`));
 }
@@ -1076,9 +1069,9 @@ export function scatterBlast(message, { rollDice = rollScatterDice } = {}) {
     const context = message?.getFlag?.("eclipsephase", "roll");
     const attack = context?.targetedAttack;
     const blast = attack?.blast;
-    if (!blast?.origin || attack.delivered) return null;
+    if (!blast?.origin || attack.delivered || attack.armed) return null;
     const hit = isHit(spentOrOriginalResult(context));
-    if (hit && blast.trigger !== "delayed") return null;
+    if (hit && !blast.delayed) return null;
     const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
     if (attacker && !attacker.isOwner) return null;
     const { direction, metres } = await rollDice();
@@ -1086,8 +1079,416 @@ export function scatterBlast(message, { rollDice = rollScatterDice } = {}) {
     const bearing = from && (from.x !== blast.origin.x || from.y !== blast.origin.y) ? Math.atan2(blast.origin.y - from.y, blast.origin.x - from.x) : -Math.PI / 2;
     const offset = scatterOffset(direction, metres, hit ? 0 : superiorFailures(attackRoll(message).value), bearing);
     const landing = scatterPoint(blast.origin, offset.angle, unitsToPixels(offset.distance));
-    return setOffBlast(message, attack, landing.point, { direction, degrees: offset.degrees, distance: offset.distance, blocked: landing.blocked });
+    const scatter = { direction, degrees: offset.degrees, distance: offset.distance, blocked: landing.blocked };
+    return blast.delayed ? armBlast(message, attack, landing.point, scatter) : setOffBlast(message, attack, landing.point, scatter);
   });
+}
+
+// The Region behavior a proximity trigger leaves: whoever moves within its reach sets the blast off.
+export const PROXIMITY_BEHAVIOR = "proximity";
+
+// A proximity sensor's colour while it is still arming; once live it shows in the target colour.
+const ARMING_COLOR = "#99fbf4";
+
+/**
+ * The users who own an actor, for something lying in the scene that only they and the GMs see.
+ * @param {Actor|null} actor - The actor
+ * @returns {String[]} Their user ids
+ */
+function ownerIds(actor) {
+  return Array.from(game.users ?? []).filter(user => !user.isGM && actor?.testUserPermission?.(user, "OWNER")).map(user => user.id);
+}
+
+/**
+ * Who sees an explosive an actor left lying armed: its owners and the GMs, and everyone else as the
+ * world's "Show Traps" setting allows - the traps of all, of player characters only, or of none.
+ * @param {Actor|null} actor - Who left it
+ * @returns {Object} The Region ownership
+ */
+export function trapOwnership(actor) {
+  const levels = CONST.DOCUMENT_OWNERSHIP_LEVELS;
+  const ownership = { default: levels.NONE };
+  for (const id of ownerIds(actor)) ownership[id] = levels.OWNER;
+  const show = game.settings.get("eclipsephase", "showTraps");
+  if (show === "all" || (show === "players" && actor?.hasPlayerOwner)) ownership.default = levels.OBSERVER;
+  return ownership;
+}
+
+/**
+ * Brings every armed explosive in the world in line with the "Show Traps" setting. Done by the
+ * active GM.
+ * @returns {Promise<void>} Resolves once updated
+ */
+export async function applyTrapVisibility() {
+  if (!game.user.isActiveGM) return;
+  for (const scene of Array.from(game.scenes ?? [])) {
+    const updates = Array.from(scene.regions ?? []).filter(region => region.getFlag?.("eclipsephase", AREA_FLAG)?.armed)
+      .map(region => ({ _id: region.id, ownership: trapOwnership(fromUuidSync(region.getFlag("eclipsephase", AREA_FLAG).actorUuid)) }));
+    if (updates.length) await scene.updateEmbeddedDocuments("Region", updates);
+  }
+}
+
+/**
+ * The combat running on the viewed scene, if it has begun.
+ * @returns {Combat|null} The combat
+ */
+function sceneCombat() {
+  const combat = game.combat;
+  if (!combat?.started) return null;
+  return !combat.scene || combat.scene.id === canvas.scene?.id ? combat : null;
+}
+
+/**
+ * Leaves a blast with a delayed trigger lying where it came down, armed (Core p.212): a mark on its
+ * square that only its thrower's owners and the GMs see, and for a proximity trigger the reach of its
+ * sensor, pale until it is live three action turns later. A timer counts down in the combat's rounds,
+ * to the end of the thrower's turn, or on the world clock outside combat; a signal waits for its
+ * owner. The blast itself appears only when it goes off.
+ * @param {ChatMessage} message - The attack card
+ * @param {Object} attack - The attack
+ * @param {Object} landing - Where it came down, in canvas coordinates; on a grid it lies in the
+ *   middle of that cell
+ * @param {Object} [scatter] - How it scattered on its way there
+ * @returns {Promise<null>} Resolves once it lies armed
+ */
+async function armBlast(message, attack, landing, scatter = null) {
+  const blast = attack.blast;
+  const point = cellCentre(landing);
+  const actor = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
+  const combat = sceneCombat();
+  const now = Number(game.time?.worldTime) || 0;
+  const turn = Number(CONFIG.time?.roundTime) || 3;
+  const due = blast.trigger === "timer"
+    ? (combat ? { combatId: combat.id, round: combat.round + blast.timer.rounds } : { at: now + blast.timer.seconds })
+    : blast.trigger === "proximity"
+      ? (combat ? { combatId: combat.id, round: combat.round + PROXIMITY_ARMING } : { at: now + PROXIMITY_ARMING * turn })
+      : {};
+  const armed = { point, sceneId: canvas.scene?.id ?? null, trigger: blast.trigger, sensor: blast.sensor ?? null, timer: blast.timer ?? null, ...due };
+  const name = attack.weaponName;
+  const flags = { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, armed: true, trigger: blast.trigger, point, ...due };
+  const ownership = trapOwnership(actor);
+  await createPrivateArea(spotShapes(point), { name, flags: { ...flags, part: "marker" }, ownership });
+  if (blast.trigger === "proximity") {
+    await createPrivateArea(wholeShapes({ kind: "circle", origin: point, radius: blast.sensor }), {
+      name, color: ARMING_COLOR, ownership,
+      flags: { ...flags, part: "sensor", live: false },
+      behaviors: [{ type: PROXIMITY_BEHAVIOR, name, system: { messageId: message.id } }]
+    });
+  }
+  const extra = { "flags.eclipsephase.roll.targetedAttack.armed": armed, ...(scatter ? { "flags.eclipsephase.roll.targetedAttack.scatter": scatter } : {}) };
+  await updateCard(message, "taskCard", "armed", { armed: { ...armed, actorName: actor?.name ?? "" }, scatter }, { extra });
+  return null;
+}
+
+/**
+ * Sets an armed blast off where it lies - by its timer or its sensor, or by whoever owns it, or the
+ * GM, choosing to. Its scene has to be the one in view.
+ * @param {ChatMessage} message - The attack card
+ * @returns {Promise<Object[]|null>} Who was caught, or null when nothing went off
+ */
+export function detonateArmed(message) {
+  return inOrder(`blast:${message?.id}`, async () => {
+    const attack = message?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
+    if (!attack?.armed || attack.delivered || attack.defused) return null;
+    const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
+    if (!game.user.isGM && !attacker?.isOwner) return null;
+    if (attack.armed.sceneId && canvas.scene?.id !== attack.armed.sceneId) {
+      ui.notifications.warn(game.i18n.localize("ep2e.targeting.armedElsewhere"));
+      return null;
+    }
+    await clearAreas(flag => flag.attackId === attack.id && flag.armed === true);
+    return setOffBlast(message, attack, attack.armed.point, attack.scatter ?? null);
+  });
+}
+
+/**
+ * Takes an armed blast away without it going off: defused, picked up, or simply never set off.
+ * @param {ChatMessage} message - The attack card
+ * @returns {Promise<Boolean>} True once it is gone
+ */
+export function defuseArmed(message) {
+  return inOrder(`blast:${message?.id}`, async () => {
+    const attack = message?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
+    if (!attack?.armed || attack.delivered || attack.defused) return false;
+    const attacker = attack.actorUuid ? await fromUuid(attack.actorUuid) : null;
+    if (!game.user.isGM && !attacker?.isOwner) return false;
+    const scene = game.scenes?.get?.(attack.armed.sceneId) ?? canvas.scene;
+    await clearAreas(flag => flag.attackId === attack.id && flag.armed === true, scene);
+    await updateCard(message, "taskCard", "defused", {}, { extra: { "flags.eclipsephase.roll.targetedAttack.defused": true } });
+    return true;
+  });
+}
+
+/**
+ * The explosives an actor has lying armed, on any scene.
+ * @param {Actor} actor - The actor
+ * @param {Object[]} [scenes] - The scenes to look in, all by default
+ * @returns {Object[]} messageId, name, place (trigger and scene, as words) and here (on the viewed
+ *   scene) of each
+ */
+export function armedExplosives(actor, scenes = Array.from(game.scenes ?? [])) {
+  if (!actor) return [];
+  const found = [];
+  for (const scene of scenes) {
+    for (const region of Array.from(scene.regions ?? [])) {
+      const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
+      if (!flag?.armed || flag.part !== "marker" || flag.actorUuid !== actor.uuid) continue;
+      const trigger = game.i18n.localize(`ep2e.item.weapon.table.trigger.${flag.trigger}`);
+      found.push({ messageId: flag.messageId, name: region.name, place: game.i18n.format("ep2e.sideCar.armed.place", { trigger, scene: scene.name }), here: scene.id === globalThis.canvas?.scene?.id });
+    }
+  }
+  return found;
+}
+
+/**
+ * Opens the sheet of an armed explosive: the grenade itself while its thrower still has it, else a
+ * copy of it as it was thrown; for a seeker, its launcher.
+ * @param {ChatMessage} message - The attack card
+ * @returns {Object|null} The sheet, or null when there is nothing to show
+ */
+export function openArmedItem(message) {
+  const context = message?.getFlag?.("eclipsephase", "roll");
+  const actor = context?.actorUuid ? fromUuidSync(context.actorUuid) : null;
+  const owned = actor?.items?.get?.(context?.item?.weaponId);
+  const item = owned ?? (context?.targetedAttack?.thrown?.item ? new CONFIG.Item.documentClass(context.targetedAttack.thrown.item) : null);
+  return item?.sheet?.render(true) ?? null;
+}
+
+/**
+ * Moves the view to an armed explosive lying on the viewed scene, with the open sheets minimised so
+ * that it can be seen.
+ * @param {ChatMessage} message - The attack card
+ * @returns {Promise<Boolean>} True once panned, false for one on another scene
+ */
+export async function panToArmed(message) {
+  const armed = message?.getFlag?.("eclipsephase", "roll")?.targetedAttack?.armed;
+  if (!armed?.point || armed.sceneId !== canvas.scene?.id) return false;
+  sheetsAside();
+  await canvas.animatePan({ x: armed.point.x, y: armed.point.y });
+  return true;
+}
+
+// The icon an armed explosive shows over its mark, by trigger; a proximity trigger shows the clock until it is live.
+const ARMED_ICONS = { timer: "fa-clock", signal: "fa-tower-broadcast", proximity: "fa-satellite-dish" };
+
+/**
+ * How long until something an armed explosive waits for: in a combat the turns left, outside it the
+ * seconds or minutes on the world clock.
+ * @param {Object} flag - The mark's area flag, with combatId and round, or at
+ * @param {Combat|null} combat - The combat on the scene
+ * @param {Boolean} [short] - The number alone with its unit's letter, as shown beside the icon
+ * @returns {String} The words
+ */
+export function armedCountdown(flag, combat, short = false) {
+  if (flag.combatId) {
+    const turns = Math.max(0, flag.round - (Number(combat?.round) || 0));
+    return short ? `${turns}` : game.i18n.format("ep2e.chat.attack.countdownTurns", { count: turns });
+  }
+  const seconds = Math.max(0, Math.ceil((Number(flag.at) || 0) - (Number(game.time?.worldTime) || 0)));
+  if (seconds >= 120) return short ? `${Math.ceil(seconds / 60)}m` : game.i18n.format("ep2e.chat.attack.countdownMinutes", { count: Math.ceil(seconds / 60) });
+  return short ? `${seconds}s` : game.i18n.format("ep2e.chat.attack.countdownSeconds", { count: seconds });
+}
+
+/**
+ * The icon over an armed explosive's mark and what hovering it tells: whose it is - "(You)" for a
+ * player's own - and for a timer or a proximity sensor still arming, how long until then, which also
+ * stands as a number beside the icon.
+ * @param {Object} flag - The mark's area flag
+ * @param {Object|null} sensor - The flag of its proximity sensor
+ * @param {Combat|null} combat - The combat on the scene
+ * @returns {Object} icon, text, and count for a countdown
+ */
+export function armedIcon(flag, sensor, combat) {
+  const actor = flag.actorUuid ? fromUuidSync(flag.actorUuid) : null;
+  const own = !game.user.isGM && actor?.isOwner;
+  const owner = own ? game.i18n.format("ep2e.chat.attack.armedYours", { name: actor?.name ?? "" }) : actor?.name ?? "";
+  if (flag.trigger === "signal") return { icon: ARMED_ICONS.signal, text: game.i18n.format("ep2e.chat.attack.armedBy", { name: owner }) };
+  if (flag.trigger === "proximity" && sensor?.live) return { icon: ARMED_ICONS.proximity, text: game.i18n.format("ep2e.chat.attack.armedLive", { name: owner }) };
+  const timing = flag.trigger === "proximity" && sensor ? sensor : flag;
+  const key = flag.trigger === "proximity" ? "ep2e.chat.attack.armedArming" : "ep2e.chat.attack.armedTimer";
+  return { icon: ARMED_ICONS.timer, text: game.i18n.format(key, { name: owner, time: armedCountdown(timing, combat) }), count: armedCountdown(timing, combat, true) };
+}
+
+let armedLayer = null;
+let mapTip = null;
+
+/**
+ * Shows a short text beside the pointer on the canvas, centred above it.
+ * @param {Object} event - The pointer event, with clientX and clientY
+ * @param {String} text - The text
+ * @returns {void}
+ */
+function showMapTip(event, text) {
+  mapTip?.remove();
+  mapTip = document.createElement("div");
+  mapTip.className = "ep-map-tip";
+  mapTip.textContent = text;
+  mapTip.style.left = `${event.clientX}px`;
+  mapTip.style.top = `${event.clientY - 10}px`;
+  document.body.append(mapTip);
+}
+
+/**
+ * Removes the text shown beside the pointer.
+ * @returns {void}
+ */
+function hideMapTip() {
+  mapTip?.remove();
+  mapTip = null;
+}
+
+/**
+ * Draws an icon above every armed explosive's mark this user may see on the viewed scene - a clock
+ * with the turns or time left for a timer or a sensor still arming, a remote for a signal, a sensor
+ * once live - and tells on hover whose it is and how long until it goes off or is live.
+ * @returns {void}
+ */
+export function drawArmedIcons() {
+  hideMapTip();
+  armedLayer?.destroy({ children: true });
+  armedLayer = null;
+  if (!globalThis.canvas?.ready || !globalThis.PIXI || !canvas.controls) return;
+  armedLayer = new PIXI.Container();
+  armedLayer.eventMode = "passive";
+  canvas.controls.addChild(armedLayer);
+  const combat = sceneCombat();
+  const sensors = new Map(armedOnScene("sensor").map(({ flag }) => [flag.attackId, flag]));
+  const size = (Number(canvas.grid?.size) || 100) * 0.6;
+  for (const { region, flag } of armedOnScene("marker")) {
+    if (region.object && !region.object.isVisible) continue;
+    const shown = armedIcon(flag, sensors.get(flag.attackId) ?? null, combat);
+    if (!shown || !flag.point) continue;
+    const above = { x: flag.point.x, y: spotTop(flag.point) - size / 2 };
+    const sprite = PIXI.Sprite.from(iconImage(shown.icon, TARGET_COLOR));
+    sprite.anchor.set(0.5);
+    sprite.width = size;
+    sprite.height = size;
+    sprite.position.set(above.x, above.y);
+    sprite.eventMode = "static";
+    sprite.cursor = "help";
+    sprite.on("pointerover", event => showMapTip(event, armedIcon(flag, sensors.get(flag.attackId) ?? null, sceneCombat()).text));
+    sprite.on("pointerout", hideMapTip);
+    armedLayer.addChild(sprite);
+    if (!shown.count) continue;
+    const count = new PIXI.Text(shown.count, { fontFamily: "Signika, sans-serif", fontSize: size * 0.5, fontWeight: "bold", fill: 0xffffff, stroke: 0x000000, strokeThickness: 4 });
+    count.anchor.set(0, 0.5);
+    count.position.set(above.x + size / 2 + 4, above.y);
+    armedLayer.addChild(count);
+  }
+}
+
+/**
+ * The armed explosives on the viewed scene of one part, each with its Region and area flag.
+ * @param {String} part - "marker" or "sensor"
+ * @returns {Object[]} region and flag of each
+ */
+function armedOnScene(part) {
+  return Array.from(canvas.scene?.regions ?? []).map(region => ({ region, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.armed && flag.part === part);
+}
+
+/**
+ * Sets off the timers that are due and brings the proximity sensors that are ready live, on the
+ * viewed scene: in a combat once its round comes - a timer at the end of its thrower's turn in that
+ * round - and outside combat on the world clock. Done on the active GM's client.
+ * @param {Object} [moment] - combat, and prior ({ round, combatantId }), the turn that just ended
+ * @returns {Promise<void>} Resolves once done
+ */
+export async function tickArmed({ combat = null, prior = null } = {}) {
+  if (!game.user.isActiveGM) return;
+  const now = Number(game.time?.worldTime) || 0;
+  const reached = flag => {
+    if (flag.combatId) {
+      if (!combat || combat.id !== flag.combatId) return false;
+      if (flag.part === "sensor") return combat.round >= flag.round;
+      const ended = combat.combatants?.get?.(prior?.combatantId)?.actor?.uuid;
+      const throwerFights = Array.from(combat.combatants ?? []).some(combatant => combatant.actor?.uuid === flag.actorUuid);
+      return (prior?.round > flag.round) || (prior?.round === flag.round && ended === flag.actorUuid) || (!throwerFights && combat.round > flag.round);
+    }
+    return Number.isFinite(flag.at) && now >= flag.at;
+  };
+  for (const { region, flag } of armedOnScene("sensor")) {
+    if (!flag.live && reached(flag)) await region.update({ color: TARGET_COLOR, [`flags.eclipsephase.${AREA_FLAG}.live`]: true });
+  }
+  for (const { flag } of armedOnScene("marker")) {
+    if (flag.trigger !== "timer" || !reached(flag)) continue;
+    const message = game.messages.get(flag.messageId);
+    if (message) await detonateArmed(message);
+  }
+}
+
+/**
+ * Moves the armed explosives a combat counts down onto the world clock when the combat ends, so
+ * their time still runs: what is left of their rounds, three seconds each.
+ * @param {Combat} combat - The combat that ended
+ * @returns {Promise<void>} Resolves once moved
+ */
+export async function armedAfterCombat(combat) {
+  if (!game.user.isActiveGM) return;
+  const now = Number(game.time?.worldTime) || 0;
+  const turn = Number(CONFIG.time?.roundTime) || 3;
+  for (const part of ["marker", "sensor"]) {
+    for (const { region, flag } of armedOnScene(part)) {
+      if (flag.combatId !== combat?.id) continue;
+      const left = Math.max(0, flag.round - combat.round + 1);
+      await region.update({ [`flags.eclipsephase.${AREA_FLAG}.combatId`]: null, [`flags.eclipsephase.${AREA_FLAG}.at`]: now + left * turn });
+      const message = part === "marker" ? game.messages.get(flag.messageId) : null;
+      const armed = message?.getFlag?.("eclipsephase", "taskCard")?.armed;
+      if (armed) await updateCard(message, "taskCard", "armed", { armed: { ...armed, combatId: null, round: null, at: now + left * turn }, scatter: message.getFlag("eclipsephase", "taskCard").scatter ?? null });
+    }
+  }
+}
+
+/**
+ * Registers what armed explosives need: the proximity sensor's Region behavior, which acts on the
+ * active GM's client for a token moving within its reach once it is live; timers and sensors counting
+ * down with the combat's turns and the world clock; and the sheets of their owners kept up to date.
+ * @returns {void}
+ */
+export function registerArmedBlasts() {
+  const Base = foundry.data.regionBehaviors.RegionBehaviorType;
+  class ProximityTriggerBehaviorType extends Base {
+    static LOCALIZATION_PREFIXES = ["BEHAVIOR.TYPES.proximity", "BEHAVIOR.TYPES.base"];
+
+    /**
+     * The attack card the sensor answers to.
+     * @returns {Object} The schema
+     */
+    static defineSchema() {
+      return { messageId: new foundry.data.fields.StringField({ required: true, blank: true }) };
+    }
+
+    /**
+     * Sets the blast off once something moves within the live sensor's reach.
+     * @param {Object} event - The Region event
+     * @returns {Promise<void>} Resolves once done
+     */
+    static async onMove(event) {
+      if (!game.user.isActiveGM || !this.region?.getFlag?.("eclipsephase", AREA_FLAG)?.live) return;
+      const card = game.messages.get(this.messageId);
+      if (card) await detonateArmed(card);
+    }
+
+    static events = {
+      [CONST.REGION_EVENTS.TOKEN_MOVE_IN]: ProximityTriggerBehaviorType.onMove,
+      [CONST.REGION_EVENTS.TOKEN_MOVE_WITHIN]: ProximityTriggerBehaviorType.onMove
+    };
+  }
+  CONFIG.RegionBehavior.dataModels[PROXIMITY_BEHAVIOR] = ProximityTriggerBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[PROXIMITY_BEHAVIOR] = "fa-solid fa-satellite-dish";
+  Hooks.on("combatTurnChange", (combat, prior) => tickArmed({ combat, prior }));
+  Hooks.on("updateWorldTime", () => tickArmed({ combat: sceneCombat() }));
+  Hooks.on("canvasReady", () => tickArmed({ combat: sceneCombat() }));
+  Hooks.on("deleteCombat", combat => armedAfterCombat(combat));
+  const refreshOwner = region => {
+    const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
+    if (!flag?.armed || flag.part !== "marker") return;
+    const sheet = fromUuidSync(flag.actorUuid)?.sheet;
+    if (sheet?.rendered) sheet.render();
+  };
+  Hooks.on("createRegion", refreshOwner);
+  Hooks.on("deleteRegion", refreshOwner);
+  const redraw = foundry.utils.debounce(drawArmedIcons, 50);
+  for (const hook of ["canvasReady", "createRegion", "updateRegion", "deleteRegion", "updateWorldTime", "updateCombat", "deleteCombat"]) Hooks.on(hook, redraw);
 }
 
 /**

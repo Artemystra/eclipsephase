@@ -2,7 +2,8 @@ import { areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion,
 import { waitUntil, withTempActor, seedDice, restoreDice, uniformForFace, suppressDice3d, restoreDice3d } from "./helpers.js";
 import { RollCheck } from "../../rolls/dice.js";
 import { weaponPreparation, grenadePreparation } from "../../common/weapon-functions.js";
-import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression, scatterBlast } from "../../rolls/attacks.js";
+import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression, scatterBlast, trapOwnership } from "../../rolls/attacks.js";
+import { TARGET_COLOR } from "../../common/targeting.js";
 
 // Areas on a real canvas: walls of a scratch scene cut a blast and a cone off and stop what flies at
 // them, and an area left as a Region can be cleared again. The scene is viewed while the batch runs
@@ -302,6 +303,49 @@ export function registerAreasBatch(quench) {
               await clearAreas(flag => flag.messageId === card.id, scene);
             }
           });
+        } finally {
+          restoreDice3d();
+          restoreDice();
+          const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+          if (mine.length) await ChatMessage.deleteDocuments(mine);
+        }
+      });
+
+      it("set to a proximity trigger lies armed, seen only by its owners and the GM, and goes off when a token moves within its live sensor", async function () {
+        this.timeout(40000);
+        const frag = { name: "Quench Mine", type: "grenade", system: { active: true, quantity: 2, dv: { d10: 3, d6: null, bonus: 6 }, area: { kind: "centered", radius: null, reduction: 2 }, armorused: "kinetic", trigger: "proximity" } };
+        const posted = new Set(game.messages.contents.map(message => message.id));
+        const defences = () => game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "attackDefence"));
+        suppressDice3d();
+        try {
+          await withTempActor({ type: "character", name: "Quench Thrower", items: [frag] }, thrower => withTempActor({ type: "npc", name: "Quench Walker" }, async walker => {
+            await waitUntil(() => thrower.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+            const [token] = await scene.createEmbeddedDocuments("Token", [{ actorId: walker.id, name: "Quench Walker", x: 200, y: 1400 }]);
+            const weapon = grenadePreparation(thrower, thrower.items.find(item => item.name === "Quench Mine").id);
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ type: "skill", key: "athletics", name: "Athletics", rollvalue: 60, pooltype: "Vigor" }, thrower.system, thrower, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "proximity", proximityRadius: 2, placedArea: JSON.stringify({ kind: "circle", origin: { x: 950, y: 1450 }, radius: 0, from: { x: 250, y: 1450 } }) } }, weapon, "grenade");
+            restoreDice();
+            const card = game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "taskCard")).at(-1);
+            await scatterBlast(card, { rollDice: async () => ({ direction: 100, metres: 0 }) });
+            const armed = part => scene.regions.find(region => region.getFlag("eclipsephase", AREA_FLAG)?.messageId === card.id && region.getFlag("eclipsephase", AREA_FLAG).part === part);
+            await waitUntil(() => armed("sensor"), 10000);
+
+            assert.strictEqual(armed("marker").visibility, CONST.REGION_VISIBILITY.OBSERVER, "only observers see the mark");
+            assert.strictEqual(armed("marker").ownership.default, trapOwnership(thrower).default, "others see it as Show Traps allows");
+            await token.update({ x: 900, y: 1400 });
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            assert.isOk(armed("marker"), "a sensor that is not live yet does not set it off");
+
+            await token.update({ x: 200, y: 1400 });
+            await armed("sensor").update({ color: TARGET_COLOR, [`flags.eclipsephase.${AREA_FLAG}.live`]: true });
+            await token.update({ x: 1000, y: 1400 });
+            await waitUntil(() => defences().length === 1, 10000);
+            assert.isUndefined(armed("marker"), "the mark is gone once it went off");
+            assert.strictEqual(defences()[0].getFlag("eclipsephase", "attackDefence").entries[0].uuid, token.actor.uuid);
+
+            await clearAreas(flag => flag.messageId === card.id, scene);
+            await token.delete();
+          }));
         } finally {
           restoreDice3d();
           restoreDice();

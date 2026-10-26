@@ -1,3 +1,4 @@
+import { armedExplosives, detonateArmed, defuseArmed, openArmedItem, panToArmed } from "../rolls/attacks.js";
 import { eclipsephase } from "../config.js";
 import { registerCommonHandlers,tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
@@ -902,6 +903,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.program = program;
       actor.gear = gear;
       actor.consumable = consumable;
+      actor.armedExplosives = armedExplosives(actor);
       actor.gearActive = gear.filter(item => item.system.active);
       actor.consumableActive = actor.type === "character" ? consumable.filter(item => item.system.active) : consumable;
       actor.knowSkill = know;
@@ -968,6 +970,17 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     SHEET.registerEffectHandlers(html, this.actor);
     SHEET.registerCommonHandlers(html, this.actor);
     SHEET.followingTooltips(html, html);
+    for (const control of html.querySelectorAll(".ep-armed-detonate, .ep-armed-defuse, .ep-armed-open, .ep-armed-locate")) {
+      control.addEventListener("click", event => {
+        event.preventDefault();
+        const message = game.messages.get(control.dataset.messageId);
+        if (!message) return;
+        if (control.classList.contains("ep-armed-detonate")) detonateArmed(message);
+        else if (control.classList.contains("ep-armed-defuse")) defuseArmed(message);
+        else if (control.classList.contains("ep-armed-open")) openArmedItem(message);
+        else panToArmed(message);
+      });
+    }
 
     // Hide native window header and wire custom title bar instead
     const windowHeader = html.querySelector('.window-header');

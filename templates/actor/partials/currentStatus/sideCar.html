@@ -42,4 +42,20 @@
         {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
     {{/if}}
     {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
+    {{#if actor.armedExplosives.length}}
+    <div class="sideCarBox armedSideCar">
+        <div style=" margin-bottom: 20px;">
+            <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.armed.headline"}}</label>
+        </div>
+        {{#each actor.armedExplosives as |armed|}}
+        <div class="item flexrow flex-group-center offHand ep-armed-row" data-message-id="{{armed.messageId}}">
+            <a class="ep-armed-open" data-message-id="{{armed.messageId}}"><i class="far fa-eye awesomeIcon"></i></a>
+            <label class="truncate alignLeft" style="flex: 3;"><strong>{{armed.name}}</strong></label>
+            <a class="ep-armed-locate{{#unless armed.here}} ep-armed-elsewhere{{/unless}}" data-message-id="{{armed.messageId}}" data-tooltip="{{armed.place}}"><i class="fa-solid fa-location-crosshairs awesomeIcon"></i></a>
+            <a class="ep-armed-defuse" data-message-id="{{armed.messageId}}" data-tooltip="{{localize 'ep2e.chat.attack.defuse'}}"><i class="fa-solid fa-hand awesomeIcon"></i></a>
+            <a class="ep-armed-detonate" data-message-id="{{armed.messageId}}" data-tooltip="{{localize 'ep2e.chat.attack.detonate'}}"><i class="fa-solid fa-explosion awesomeIcon"></i></a>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
 </div>

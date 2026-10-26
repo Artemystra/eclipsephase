@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laphs Spezialbräu",
       "hint": "Macht Dinge die Laph in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
+    },
+    "showTraps": {
+      "name": "Fallen anzeigen",
+      "hint": "Ob Spieler:innen die scharfen Sprengsätze - Zeitzünder, Fernzünder, Näherungsminen - sehen dürfen, die Mitspieler:innen oder Gegner auf der Karte hinterlassen. Besitzer:innen und die SL sehen sie immer.",
+      "none": "Keine",
+      "all": "Alle",
+      "players": "Nur Fallen von Spieler:innen"
     }
   },
   "TYPES": {
@@ -966,6 +973,10 @@
       "consumables": {
         "headline": "Konsumgüter",
         "noConsumablesSubheadline": "Keine ausgerüstet"
+      },
+      "armed": {
+        "headline": "Scharfe Sprengsätze",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
@@ -1171,7 +1182,9 @@
             "label": "Zünder",
             "impact": "Aufschlag",
             "airburst": "Luftdetonation",
-            "delayed": "Verzögert (Timer, Signal, Annäherung)"
+            "timer": "Timer",
+            "signal": "Signal (Fernzündung)",
+            "proximity": "Annäherung"
           },
           "payload": {
             "delivery": {
@@ -1628,7 +1641,14 @@
           "note": "Alle in der Explosion müssen sich verteidigen. Die Explosion herunterzuregeln kostet eine schnelle Aktion.",
           "place": "Explosion platzieren",
           "noneLeft": "{name}: keine mehr zum Werfen übrig.",
-          "blastHeadline": "Explosion"
+          "blastHeadline": "Explosion",
+          "timer": "Explodiert nach",
+          "unit": {
+            "rounds": "Runden",
+            "seconds": "Sekunden",
+            "minutes": "Minuten"
+          },
+          "proximity": "Sensorreichweite"
         }
       },
       "successType": {
@@ -2028,7 +2048,22 @@
         "scatterAhead": "geradeaus",
         "scatterBack": "zurück",
         "scatterRight": "{degrees}° nach rechts",
-        "scatterLeft": "{degrees}° nach links"
+        "scatterLeft": "{degrees}° nach links",
+        "armedTimerRound": "Scharf: explodiert am Ende von {name}s Zug in Runde {round}.",
+        "armedTimerClock": "Scharf: der Timer läuft auf der Weltuhr.",
+        "armedSignal": "Scharf: explodiert, wenn der Besitzer das Signal gibt.",
+        "armedProximity": "Scharf: explodiert, wenn jemand näher als {reach} m kommt - aktiv nach 3 Aktionszügen.",
+        "detonate": "Zünden",
+        "defuse": "Entschärfen",
+        "defusedNote": "Entschärft, sie geht nicht mehr los.",
+        "countdownTurns": "{count} Züge",
+        "countdownSeconds": "{count} s",
+        "countdownMinutes": "{count} min",
+        "armedBy": "{name} · Fernzündung",
+        "armedLive": "{name} · Sensor aktiv",
+        "armedArming": "{name} · Sensor aktiv in {time}",
+        "armedTimer": "{name} · explodiert in {time}",
+        "armedYours": "{name} (Du)"
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -2342,7 +2377,8 @@
       "areaName": "Fläche",
       "outsideArea": "Dieser Token liegt außerhalb der Fläche.",
       "tooMany": "Dieser Angriff trifft auf diese Entfernung höchstens {max} Ziele.",
-      "ownBlast": "{name} steht in der eigenen Explosion."
+      "ownBlast": "{name} steht in der eigenen Explosion.",
+      "armedElsewhere": "Dieser Sprengsatz liegt in einer anderen Szene - zeige zuerst diese Szene an."
     }
   },
   "BEHAVIOR": {
@@ -2352,6 +2388,14 @@
           "messageId": {
             "label": "Angriffskarte",
             "hint": "Die Chatnachricht des Sperrfeuers, zu dem diese Fläche gehört."
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Angriffskarte",
+            "hint": "Die Chatnachricht des Sprengsatzes, zu dem dieser Sensor gehört."
           }
         }
       }

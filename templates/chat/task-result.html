@@ -177,7 +177,14 @@
    <p class="footnote">{{localize "ep2e.chat.attack.suppressiveNote"}}</p>
   {{else if rollContext.targetedAttack.blast.origin}}
    {{#if blastLaid}}<p class="footnote">{{localize "ep2e.chat.attack.blastNote"}}</p>{{/if}}
-   {{#unless blastLaid}}{{#if (or (ne resultClass "success") (eq rollContext.targetedAttack.blast.trigger "delayed"))}}
+   {{#if armedNote}}<p class="footnote">{{armedNote}}</p>{{/if}}
+   {{#if lying}}
+   <div class="chatControls ep-chat-stack">
+     <button type="button" class="chatButton armedDefuse ownerOnlyControl ep-chat-secondary" data-action="armedDefuse" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.defuse"}}</button>
+     <button type="button" class="chatButton armedDetonate ownerOnlyControl ep-chat-primary" data-action="armedDetonate" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.detonate"}}</button>
+   </div>
+   {{/if}}
+   {{#unless (or blastLaid armedNote)}}{{#if (or (ne resultClass "success") rollContext.targetedAttack.blast.delayed)}}
    <div class="chatControls ep-chat-stack">
      <button type="button" class="chatButton blastScatter ownerOnlyControl ep-chat-primary" data-action="blastScatter" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.attack.scatter"}}</button>
    </div>

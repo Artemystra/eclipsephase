@@ -1,4 +1,4 @@
-import { weaponPreparation, grenadePreparation, blastReach, formulaMax, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
@@ -370,11 +370,16 @@ export function detectThrow(context) {
   const harmless = !!selected.weaponTraits?.automatedEffects?.noDamage || !formulaMax(selected.weaponDamage);
   const reach = blastReach(selected.blast, { radius: options.blastRadius, reduction: options.blastReduction });
   const placed = (() => { try { return JSON.parse(options.placedArea || "null"); } catch { return null; } })();
-  const blast = reach.kind !== "none" ? { ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger: options.trigger || selected.blast?.trigger || "impact", harmless } : null;
+  const trigger = options.trigger || selected.blast?.trigger || "impact";
+  const blast = reach.kind !== "none" ? {
+    ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger, harmless, delayed: isDelayedTrigger(trigger),
+    ...(trigger === "timer" ? { timer: { value: Number(options.timerValue) || 1, unit: options.timerUnit || "rounds", ...timerSpan(options.timerValue || 1, options.timerUnit || "rounds") } } : {}),
+    ...(trigger === "proximity" ? { sensor: Math.min(PROXIMITY_REACH, Math.max(1, Number(options.proximityRadius) || PROXIMITY_REACH)) } : {})
+  } : null;
   if (!blast && harmless) return null;
   const armorUsed = grenade ? selected.weapon.system?.armorused : attackArmorUsed(selected.weapon, selected.weaponMode || "1");
   return {
-    ...(grenade ? { thrown: { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade" } } : {}),
+    ...(grenade ? { thrown: { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade", item: selected.weapon.toObject?.() ?? null } } : {}),
     targets: blast ? ANY_TARGETS : 1,
     area: !!blast,
     ...(blast ? { blast } : {}),

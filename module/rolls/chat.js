@@ -5,7 +5,7 @@ import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "./modifiers.js";
-import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, scatterBlast } from "./attacks.js";
+import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, scatterBlast, detonateArmed, defuseArmed } from "./attacks.js";
 
 /**
  * Hides GM info from players
@@ -135,6 +135,20 @@ export async function addChatListeners(html) {
     if (defenceCover) {
       const message = game.messages.get(defenceCover.closest("[data-message-id]")?.dataset.messageId);
       if (message) takeCover(message, defenceCover.dataset.targetUuid);
+      return;
+    }
+
+    const armedDetonate = event.target.closest("button.armedDetonate");
+    if (armedDetonate) {
+      const message = game.messages.get(armedDetonate.closest("[data-message-id]")?.dataset.messageId);
+      if (message) detonateArmed(message);
+      return;
+    }
+
+    const armedDefuse = event.target.closest("button.armedDefuse");
+    if (armedDefuse) {
+      const message = game.messages.get(armedDefuse.closest("[data-message-id]")?.dataset.messageId);
+      if (message) defuseArmed(message);
       return;
     }
 

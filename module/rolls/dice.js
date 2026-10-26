@@ -221,7 +221,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 async function defineRoll(dataset, actorWhole, rolledFrom){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'timerValue', 'timerUnit', 'proximityRadius', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -946,12 +946,48 @@ const result = await foundry.applications.api.DialogV2.wait({
 
         wirePreRollTargets(root, dialog, picking);
         wireSuppressiveFields(root);
+        wireTriggerFields(root);
     },
     ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
     ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
 });
 
 return result ?? { cancelled: true };
+}
+
+/**
+ * Greys out the throw dialog's fields that belong to another trigger than the one chosen: the
+ * timer's span, the proximity sensor's reach. A timer is set in rounds during a combat - named, with
+ * nothing to choose - and in seconds or minutes outside one.
+ * @param {HTMLElement} root - The dialog's element
+ * @returns {void}
+ */
+export function wireTriggerFields(root) {
+    const trigger = root?.querySelector?.('select[name="trigger"]')
+    if (!trigger) return
+    const groups = Array.from(root.querySelectorAll(".ep-trigger-field"))
+    const unit = root.querySelector('select[name="timerUnit"]')
+    if (unit) {
+        const fighting = !!game.combat?.started
+        for (const option of unit.options) option.hidden = fighting ? option.value !== "rounds" : option.value === "rounds"
+        unit.value = fighting ? "rounds" : "seconds"
+        unit.hidden = fighting
+        if (fighting) {
+            const word = document.createElement("label")
+            word.className = "resource-label"
+            word.textContent = game.i18n.localize("ep2e.roll.dialog.throw.unit.rounds")
+            unit.after(word)
+        }
+    }
+    const sync = () => {
+        for (const group of groups) {
+            const off = group.dataset.trigger !== trigger.value
+            group.classList.toggle("ep-field-suppressed", off)
+            for (const field of group.querySelectorAll("input, select")) field.disabled = off
+        }
+    }
+    trigger.addEventListener("change", sync)
+    sync()
 }
 
 /**

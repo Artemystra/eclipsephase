@@ -648,6 +648,7 @@ const SETTING_DEFAULTS = {
   editAll: false,
   GMmenu: true,
   migrationVersion: "newInstall",
+  showTraps: "players",
   superBrew: false
 };
 

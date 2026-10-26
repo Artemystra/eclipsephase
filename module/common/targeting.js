@@ -732,17 +732,19 @@ export function shapeContains(area, point) {
 }
 
 /**
- * The grid squares an area covers, whole or not at all: a square belongs to it when its centre lies in
- * the area's shape, and is open when its centre lies in the part walls do not cover.
+ * The grid cells - squares or hexagons - an area covers, whole or not at all: a cell belongs to it
+ * when its centre lies in the area's shape, and is open when its centre lies in the part walls do not
+ * cover.
  * @param {Object} area - kind, origin, radius, angle, rotation and the wall-cut polygon
- * @param {Object} grid - The square grid, with getOffset, getCenterPoint and getTopLeftPoint
- * @param {Set<String>} [exclude] - Squares to leave out, as "i,j"
+ * @param {Object} grid - The grid, with getOffset and getCenterPoint
+ * @param {Set<String>} [exclude] - Cells to leave out, as "i,j"
  * @returns {Object} open and shadow, each a list of { i, j }
  */
 export function areaSquares(area, grid, exclude = new Set()) {
-  const reach = unitsToPixels(area.radius);
-  const first = grid.getOffset({ x: area.origin.x - reach, y: area.origin.y - reach });
-  const last = grid.getOffset({ x: area.origin.x + reach, y: area.origin.y + reach });
+  const reach = unitsToPixels(area.radius) + (grid.isSquare ? 0 : Number(grid.size) || 0);
+  const corners = [grid.getOffset({ x: area.origin.x - reach, y: area.origin.y - reach }), grid.getOffset({ x: area.origin.x + reach, y: area.origin.y + reach })];
+  const first = { i: Math.min(corners[0].i, corners[1].i), j: Math.min(corners[0].j, corners[1].j) };
+  const last = { i: Math.max(corners[0].i, corners[1].i), j: Math.max(corners[0].j, corners[1].j) };
   const squares = { open: [], shadow: [] };
   for (let i = first.i; i <= last.i; i++) {
     for (let j = first.j; j <= last.j; j++) {
@@ -779,10 +781,22 @@ export function squareShapes(squares, grid) {
 }
 
 /**
+ * Grid cells as Region shapes: squares as rectangles, those of a row joined into one; hexagons as
+ * polygons.
+ * @param {Object[]} cells - { i, j } each
+ * @param {Object} grid - The grid
+ * @returns {Object[]} The shapes
+ */
+export function cellShapes(cells, grid) {
+  if (grid.isSquare) return squareShapes(cells, grid);
+  return cells.map(cell => ({ type: "polygon", points: grid.getVertices(cell).flatMap(vertex => [vertex.x, vertex.y]) }));
+}
+
+/**
  * Leaves an area in the scene whole, in one colour at every spot: the part walls do not cover in red,
  * the part behind walls in yellow, so the GM can still rule that a thin wall or a window lets it
- * through - or, for an area that strikes nobody, all of it in grey. On a square grid the parts are
- * whole squares; squares to exclude are left out. Every part carries the behaviors; their flag's part
+ * through - or, for an area that strikes nobody, all of it in grey. On a square or hex grid the
+ * parts are whole cells, noted in their flag's cells; cells to exclude are left out. Every part carries the behaviors; their flag's part
  * ("open", "shadow" or "spent") tells them apart.
  * @param {Object} area - What placeArea returned, or the same fields
  * @param {Object} [options] - name; flags; behaviors; spent: grey, striking nobody; exclude: squares
@@ -796,18 +810,97 @@ export async function createShadowedArea(area, { name = "", flags = {}, behavior
     if (shapes) data.shapes = shapes;
     return data;
   };
-  if (grid?.isSquare) {
+  if (hasCells(grid)) {
     const { open, shadow } = areaSquares(area, grid, exclude);
     const parts = spent
       ? [[ "spent", SPENT_COLOR, [...open, ...shadow] ]]
       : [[ "open", MARK_COLOR, open ], [ "shadow", SHADOW_COLOR, shadow ]];
-    return createRegions(parts.filter(([, , squares]) => squares.length).map(([key, color, squares]) => part(key, color, squareShapes(squares, grid))));
+    return createRegions(parts.filter(([, , cells]) => cells.length).map(([key, color, cells]) => {
+      const data = part(key, color, cellShapes(cells, grid));
+      data.flags.eclipsephase[AREA_FLAG].cells = cells.map(({ i, j }) => `${i},${j}`);
+      return data;
+    }));
   }
   if (spent) return createRegions([part("spent", SPENT_COLOR)]);
   const open = areaRegionData(area, { color: MARK_COLOR, name, flags: { ...flags, part: "open" }, behaviors });
   const shadow = part("shadow", SHADOW_COLOR);
   if (open) shadow.shapes.push({ ...open.shapes[0], hole: true });
   return createRegions([open, shadow].filter(Boolean));
+}
+
+/**
+ * Whether the viewed scene has cells - squares or hexagons - that things lie in.
+ * @param {Object} [grid] - The scene's grid
+ * @returns {Boolean} True on a square or hex grid
+ */
+export function hasCells(grid = globalThis.canvas?.grid) {
+  return !!grid && (grid.isSquare || grid.isHexagonal) && typeof grid.getOffset === "function";
+}
+
+/**
+ * The middle of the grid cell a point lies in, or the point itself on a scene without cells.
+ * @param {Object} point - Canvas coordinates
+ * @returns {Object} The point it settles on
+ */
+export function cellCentre(point) {
+  const grid = canvas.grid;
+  return hasCells(grid) ? grid.getCenterPoint(grid.getOffset(point)) : point;
+}
+
+/**
+ * The top edge of the spot a point lies on: its cell's highest corner, or half a metre above it on a
+ * scene without cells.
+ * @param {Object} point - Canvas coordinates
+ * @returns {Number} The y coordinate
+ */
+export function spotTop(point) {
+  const grid = canvas.grid;
+  if (!hasCells(grid)) return point.y - unitsToPixels(0.5);
+  if (grid.isSquare) return grid.getTopLeftPoint(grid.getOffset(point)).y;
+  return Math.min(...grid.getVertices(grid.getOffset(point)).map(vertex => vertex.y));
+}
+
+/**
+ * The shapes of an area seen only as whole cells, walls aside: on a grid the cells whose centre lies
+ * in it, elsewhere its circle.
+ * @param {Object} area - kind "circle", origin and radius in scene units
+ * @returns {Object[]} The Region shapes
+ */
+export function wholeShapes(area) {
+  const grid = canvas.grid;
+  if (!hasCells(grid)) return [{ type: "circle", x: area.origin.x, y: area.origin.y, radius: unitsToPixels(area.radius) }];
+  const { open, shadow } = areaSquares({ ...area, polygon: null }, grid);
+  return cellShapes([...open, ...shadow], grid);
+}
+
+/**
+ * The shape of the spot a point lies on: its grid cell, or a circle half a metre across a scene
+ * without cells.
+ * @param {Object} point - Canvas coordinates
+ * @returns {Object[]} The Region shapes
+ */
+export function spotShapes(point) {
+  const grid = canvas.grid;
+  if (!hasCells(grid)) return [{ type: "circle", x: point.x, y: point.y, radius: unitsToPixels(0.5) }];
+  return cellShapes([grid.getOffset(point)], grid);
+}
+
+/**
+ * Leaves an area in the scene that only some users and the GMs see - those its ownership names as
+ * observers or owners.
+ * @param {Object[]} shapes - The Region shapes
+ * @param {Object} options - name; color; flags, kept under the area flag; behaviors; ownership, the
+ *   Region's ownership
+ * @returns {Promise<Object[]>} The Region, in a list, empty when the GM creates it
+ */
+export function createPrivateArea(shapes, { name = "", color = TARGET_COLOR, flags = {}, behaviors = [], ownership = { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE } } = {}) {
+  return createRegions([{
+    name: name || game.i18n.localize("ep2e.targeting.areaName"), color, highlightMode: "coverage",
+    visibility: CONST.REGION_VISIBILITY.OBSERVER, ownership,
+    levels: canvas.level ? [canvas.level.id] : [],
+    shapes, behaviors,
+    flags: { eclipsephase: { [AREA_FLAG]: flags } }
+  }]);
 }
 
 /**

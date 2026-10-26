@@ -23,7 +23,9 @@ registerCard("taskCard", {
     damageOffered: state => ({ ...state, damageOffered: true }),
     updateTarget: (state, { uuid, ...change }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, ...change } : target) }),
     addTarget: (state, { uuid, name, hidden = false }) => ({ ...state, targets: [...(state.targets ?? []), { uuid, name: name ?? "", outcome: null, hidden }] }),
-    blastTargets: (state, { targets, scatter = null }) => ({ ...state, blastLaid: true, scatter, targets: targets.map(target => ({ ...target, outcome: null })) }),
+    blastTargets: (state, { targets, scatter = null }) => ({ ...state, blastLaid: true, scatter: scatter ?? state.scatter ?? null, targets: targets.map(target => ({ ...target, outcome: null })) }),
+    armed: (state, { armed, scatter = null }) => ({ ...state, armed, scatter }),
+    defused: state => ({ ...state, defused: true }),
     targetDamageOffered: (state, { uuid }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, damageOffered: true } : target) })
   }
 });
@@ -51,19 +53,35 @@ export function damageCardState(message) {
 
 /**
  * The data a task card is drawn from: what it was rolled with, plus the note on a spent pool point
- * and the targets an attack was applied to.
+ * and the targets an attack was applied to - a blast's are named on the cards that follow instead.
  * @param {Object} state - The taskCard flag
  * @returns {Object} The template data
  */
 export function taskCardView(state) {
   const view = { ...state.data };
   if (state.spent) view.poolSpent = game.i18n.format(`ep2e.chat.poolSpent.${state.spent.usageType}`, { name: state.spent.spender, pool: game.i18n.localize(state.spent.poolName) });
-  const shown = (state.targets ?? []).filter(target => !target.hidden);
+  const shown = state.blastLaid ? [] : (state.targets ?? []).filter(target => !target.hidden);
   if (shown.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: shown.map(targetWithOutcome(state)).join(", ") });
   view.defended = (state.targets ?? []).some(target => target.outcome) || !!state.scatter;
   view.blastLaid = state.blastLaid === true;
+  view.lying = !!state.armed && !view.blastLaid && !state.defused;
+  if (view.lying) view.armedNote = armedNote(state.armed);
+  if (state.defused) view.armedNote = game.i18n.localize("ep2e.chat.attack.defusedNote");
   if (state.scatter) view.scatterNote = game.i18n.format(state.scatter.blocked ? "ep2e.chat.attack.scatteredWall" : "ep2e.chat.attack.scattered", { side: scatterSide(state.scatter.degrees), distance: state.scatter.distance });
   return view;
+}
+
+/**
+ * What an attack card says of a blast lying armed: when it goes off.
+ * @param {Object} armed - trigger; round and actorName for a timer in a combat; sensor for a
+ *   proximity trigger
+ * @returns {String} The note
+ */
+export function armedNote(armed) {
+  if (armed.trigger === "timer" && Number.isFinite(armed.round)) return game.i18n.format("ep2e.chat.attack.armedTimerRound", { name: armed.actorName, round: armed.round });
+  if (armed.trigger === "timer") return game.i18n.localize("ep2e.chat.attack.armedTimerClock");
+  if (armed.trigger === "proximity") return game.i18n.format("ep2e.chat.attack.armedProximity", { reach: armed.sensor });
+  return game.i18n.localize("ep2e.chat.attack.armedSignal");
 }
 
 /**

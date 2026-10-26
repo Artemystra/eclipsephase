@@ -294,7 +294,9 @@ eclipsephase.munitionSizes = {
 eclipsephase.grenadeTriggers = {
     impact: "ep2e.item.weapon.table.trigger.impact",
     airburst: "ep2e.item.weapon.table.trigger.airburst",
-    delayed: "ep2e.item.weapon.table.trigger.delayed"
+    timer: "ep2e.item.weapon.table.trigger.timer",
+    signal: "ep2e.item.weapon.table.trigger.signal",
+    proximity: "ep2e.item.weapon.table.trigger.proximity"
 }
 
 eclipsephase.payloadDelivery = {

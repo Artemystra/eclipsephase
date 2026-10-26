@@ -4320,6 +4320,27 @@ li:has(.ep-system-notice) .message-header {
   flex: 1;
 }
 
+/* A short text over the canvas, centred above the pointer, such as whose an armed explosive is. */
+.ep-map-tip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  z-index: 1000;
+  padding: 3px 8px;
+  border: 2px solid var(--highlightBackground);
+  border-radius: 6px;
+  background-color: var(--focusBackground);
+  color: var(--mainText);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Locating an armed explosive on another scene: there is nowhere to move the view to, but hovering still names the place. */
+.ep-armed-row .ep-armed-elsewhere {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* Where a target stands in a blast, above its defence. */
 .ep-defence-card .ep-defence-note {
   margin: 0;

@@ -254,7 +254,8 @@ const ARMOR_TYPES = ["energy", "kinetic", "none"];
 /**
  * What a weapon, ammunition or grenade written before 2.8.5 needs to fit its schema: ranges in
  * metres, an area read from its text, a munition's armour type out of the key the old sheet wrote,
- * and a grenade's traits named after themselves. Values that already fit are left out.
+ * a grenade's traits named after themselves, and its old "delayed" trigger read as a timer. Values that
+ * already fit are left out.
  * @param {String} type - The item type
  * @param {Object} system - The item's system data
  * @returns {Object} The repairs, as system paths to values
@@ -284,6 +285,7 @@ export function weaponDataRepairs(type, system) {
     if (ARMOR_TYPES.includes(system.armorUsed)) repairs.armorused = system.armorUsed;
     else if (type === "grenade") repairs.armorused = "none";
   }
+  if (type === "grenade" && system.trigger === "delayed") repairs.trigger = "timer";
   if (type === "grenade") {
     for (const [key, trait] of Object.entries(system.traits ?? {})) {
       const name = `ep2e.item.weapon.table.trait.${key}`;
@@ -358,6 +360,38 @@ const GRENADE_EFFECTS = ["armorPiercing", "blinding", "disablesRadio", "knockdow
 
 // The steepest a centred blast can be dialled back to, in DV per metre (Core p.212).
 export const MAX_BLAST_REDUCTION = 20;
+
+// The triggers that leave a blast lying until it goes off, and so let it scatter even on a hit (Core p.212).
+export const DELAYED_TRIGGERS = ["timer", "signal", "proximity"];
+
+// How far a proximity trigger's sensor reaches, in metres, and how many action turns it takes to arm (Core p.212).
+export const PROXIMITY_REACH = 3;
+export const PROXIMITY_ARMING = 3;
+
+/**
+ * Whether a trigger leaves its blast lying until it goes off.
+ * @param {String} trigger - The trigger
+ * @returns {Boolean} True for a timer, a signal or a proximity trigger
+ */
+export function isDelayedTrigger(trigger) {
+  return DELAYED_TRIGGERS.includes(trigger);
+}
+
+/**
+ * How long a timer runs, in action turns and in seconds: a turn is the system's round time (3
+ * seconds), and seconds or minutes count as the whole turns they reach into. A timer runs at least
+ * one turn - it goes off at the end of the next one (Core p.212).
+ * @param {Number} value - The number set
+ * @param {String} unit - "rounds", "seconds" or "minutes"
+ * @returns {Object} rounds and seconds
+ */
+export function timerSpan(value, unit) {
+  const turn = Number(globalThis.CONFIG?.time?.roundTime) || 3;
+  const amount = Math.max(0, Number(value) || 0);
+  const seconds = unit === "minutes" ? amount * 60 : unit === "seconds" ? amount : amount * turn;
+  const rounds = Math.max(1, Math.ceil(seconds / turn));
+  return { rounds, seconds: Math.max(seconds, turn) };
+}
 
 /**
  * A grenade's active traits, sorted as traitSubSetConstructor sorts a weapon's.

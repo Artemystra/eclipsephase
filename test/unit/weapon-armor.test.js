@@ -102,6 +102,7 @@ describe("ranges and areas read from the text older items carry", () => {
     expect(grenade.system.traits.blinding.name).toBe("ep2e.item.weapon.table.trait.blinding");
     expect(grenade.system.traits.disablesRadio.name).toBe("ep2e.item.weapon.table.trait.disablesRadio");
     expect(weaponDataRepairs("grenade", { armorused: "none", area: { kind: "none" }, traits: { shock: { name: "ep2e.item.weapon.table.trait.shock" } } })).toEqual({});
+    expect(weaponDataRepairs("grenade", { armorused: "none", area: { kind: "none" }, trigger: "delayed" })).toEqual({ trigger: "timer" });
   });
 });
 

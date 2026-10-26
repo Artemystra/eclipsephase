@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laph's Special Brew",
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
+    },
+    "showTraps": {
+      "name": "Show Traps",
+      "hint": "Whether players may see the armed explosives - timers, remote charges, proximity mines - their fellow players or their opponents left lying on the map. Their owners and the GM always see them.",
+      "none": "None",
+      "all": "All",
+      "players": "Traps of Players Only"
     }
   },
   "TYPES": {
@@ -979,6 +986,10 @@
       "consumables": {
         "headline": "Consumables",
         "noConsumablesSubheadline": "None Equipped"
+      },
+      "armed": {
+        "headline": "Armed Explosives",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
@@ -1187,7 +1198,9 @@
             "label": "Trigger",
             "impact": "Impact",
             "airburst": "Airburst",
-            "delayed": "Delayed (timer, signal, proximity)"
+            "timer": "Timer",
+            "signal": "Signal (remote)",
+            "proximity": "Proximity"
           },
           "payload": {
             "delivery": {
@@ -1654,7 +1667,14 @@
           "note": "Everyone in the blast has to defend. Dialling the blast back takes a quick action.",
           "place": "Place blast",
           "noneLeft": "{name}: none left to throw.",
-          "blastHeadline": "Blast"
+          "blastHeadline": "Blast",
+          "timer": "Goes off after",
+          "unit": {
+            "rounds": "Rounds",
+            "seconds": "Seconds",
+            "minutes": "Minutes"
+          },
+          "proximity": "Sensor reach"
         }
       },
       "successType": {
@@ -2056,7 +2076,22 @@
         "scatterAhead": "straight on",
         "scatterBack": "straight back",
         "scatterRight": "{degrees}° to the right",
-        "scatterLeft": "{degrees}° to the left"
+        "scatterLeft": "{degrees}° to the left",
+        "armedTimerRound": "Armed: goes off at the end of {name}'s turn in round {round}.",
+        "armedTimerClock": "Armed: the timer runs on the world clock.",
+        "armedSignal": "Armed: goes off when its owner sends the signal.",
+        "armedProximity": "Armed: goes off when someone comes within {reach} m - live after 3 action turns.",
+        "detonate": "Detonate",
+        "defuse": "Defuse",
+        "defusedNote": "Defused, it will not go off.",
+        "countdownTurns": "{count} turns",
+        "countdownSeconds": "{count} s",
+        "countdownMinutes": "{count} min",
+        "armedBy": "{name} · remote",
+        "armedLive": "{name} · sensor live",
+        "armedArming": "{name} · sensor live in {time}",
+        "armedTimer": "{name} · goes off in {time}",
+        "armedYours": "{name} (You)"
       },
       "defence": {
         "headline": "Defend against the {weapon}",
@@ -2394,7 +2429,8 @@
       "areaName": "Area",
       "outsideArea": "That token is outside the area.",
       "tooMany": "This attack strikes at most {max} targets at that range.",
-      "ownBlast": "{name} is caught in their own blast."
+      "ownBlast": "{name} is caught in their own blast.",
+      "armedElsewhere": "That explosive lies on another scene - view that scene first."
     }
   },
   "BEHAVIOR": {
@@ -2404,6 +2440,14 @@
           "messageId": {
             "label": "Attack card",
             "hint": "The chat message of the suppressive fire this area answers to."
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Attack card",
+            "hint": "The chat message of the explosive this sensor belongs to."
           }
         }
       }

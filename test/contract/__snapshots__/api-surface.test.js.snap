@@ -27,6 +27,8 @@ Object {
     "applyTargetedAttack": [Function],
     "chemicalDoses": [Function],
     "defenceOutcome": [Function],
+    "defuseArmed": [Function],
+    "detonateArmed": [Function],
     "followUpVisibility": [Function],
     "postDefenceCards": [Function],
     "registerAttackEffect": [Function],

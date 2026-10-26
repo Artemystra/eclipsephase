@@ -56,7 +56,7 @@ api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, d
               // runningDoses, drugBlockingPsi, drugPsiPenalties
 api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence,
               // defenceOutcome, chemicalDoses, followUpVisibility, yieldDefence,
-              // unsuitableTarget
+              // unsuitableTarget, detonateArmed, defuseArmed
 ```
 
 `api.drugs` is described in "Drugs and doses" below.
@@ -104,8 +104,9 @@ everyone to see:
 - `api.ui.createShadowedArea(area, { name, flags, behaviors, spent, exclude })` leaves an area whole
   in the scene, one colour at every spot: the part walls do not cover in red, the part behind walls
   in yellow, so the GM can still rule that a thin wall or a window lets it through - or, with
-  `spent`, all of it in grey. On a square grid the parts are whole squares, by their centres
-  (`api.ui.areaSquares`, `api.ui.squareShapes`); `exclude` leaves squares (`"i,j"`) out. Every part
+  `spent`, all of it in grey. On a square or hex grid the parts are whole cells, by their centres
+  (`api.ui.areaSquares` lists them, `api.ui.squareShapes` joins squares into rectangles), and each
+  part's flag names its `cells`; `exclude` leaves cells (`"i,j"`) out. Every part
   carries the behaviors; their area flag's `part` is `"open"`, `"shadow"` or `"spent"`.
 - `api.ui.createAreaRegion(area, { color, name, flags })` leaves the wall-cut area in the scene as a
   Region whose `flags.eclipsephase.area` holds `kind`, `origin`, `radius` and your `flags`;
@@ -608,6 +609,22 @@ damage, such as smoke, stays until the thrower's next turn begins or the combat 
 is placed, a line from the thrower's or shooter's token to the cursor shows the distance and its
 range category. A seeker missile loaded in a launcher is fired the same way, with Guns
 and the launcher's range; its size adds to its damage and to how far a centred blast reaches.
+
+A grenade or seeker set to go off later - a timer (rounds, seconds or minutes, at least one action
+turn of three seconds), a signal, or a proximity trigger reaching up to 3 meters - lies armed where
+it comes down (2.8.5): a mark on its square (a Region with `visibility: OBSERVER` and its own
+ownership) that its thrower's owners and the GMs see, and other players as the world setting "Show
+Traps" allows - all traps, those of player characters only (the default), or none. A proximity
+trigger adds its sensor in the target colour, pale until it is live three action turns later; the
+system's `proximity` Region behavior sets it off when a token moves within a live sensor. An icon
+above the mark - a clock with the turns or time left, a remote, a sensor - tells on hover whose it is
+("(You)" for a player's own) and how long until it goes off or is live. A timer is set in rounds during a combat and goes off at the end of its thrower's
+turn; outside combat it is set in seconds or minutes and runs on the world clock, onto which ending
+the combat moves it. The attack card and the sheet's sidecar list "Armed Explosives" offer to
+detonate or defuse it (`api.attacks.detonateArmed(message)`, `api.attacks.defuseArmed(message)`); the
+sidecar also opens its sheet and moves the view to it, with the open sheets minimised. The blast appears only when it goes off, and
+its attack card then leaves naming whom it caught to the cards that follow. The attack record carries `armed: { point, sceneId, trigger,
+sensor, timer, combatId, round, at }` while it lies, and `defused: true` once taken away.
 
 A blast that missed - or one set to go off later, even on a hit (Core p.212) - offers "Scatter" on
 its card instead (Core p.218): a d100 turns it 3.6 degrees a point clockwise from the line of the

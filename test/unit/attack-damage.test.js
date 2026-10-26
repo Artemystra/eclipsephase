@@ -1,14 +1,15 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, PROXIMITY_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
+import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
-import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
-import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
+import { makeActor, resetWorld, seedRolls, loadPackItem, setSetting } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 const SINGLE_SHOT = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "single" } };
@@ -1401,7 +1402,7 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     const actor = thrower(STUN);
     scene([]);
 
-    const delayed = await hurl(actor, 30, { trigger: "delayed" });
+    const delayed = await hurl(actor, 30, { trigger: "timer" });
     expect(regions).toHaveLength(0);
     expect(delayed.content).toContain('data-action="blastScatter"');
 
@@ -1446,5 +1447,235 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     expect(smokeAttack).toMatchObject({ targets: ANY_TARGETS, area: true, blast: { kind: "uniform", radius: 20, harmless: true, origin: { x: 1, y: 1 } } });
     expect(attackPicking({ rolledFrom: "grenade", actor: heap, weapon: grenadePreparation(heap, "gren1") }).area).toBeUndefined();
     expect(attackPicking({ rolledFrom: "grenade", actor: smoke, weapon: grenadePreparation(smoke, "gren1") }).label()).toBe("ep2e.roll.dialog.throw.place");
+  });
+
+  describe("set to go off later (Core p.212)", () => {
+    /**
+     * Turns the stand-in scene's Regions into documents that can be read, updated and deleted, as
+     * the armed explosives need.
+     * @returns {void}
+     */
+    function documentRegions() {
+      const wrap = entry => {
+        const region = { ...entry, id: `r${regions.length}`, isOwner: true, getFlag: (scope, key) => region.flags.eclipsephase[key], update: async change => { for (const [path, value] of Object.entries(change)) foundry.utils.setProperty(region, path, value); return region; } };
+        return region;
+      };
+      regions.get = id => regions.find(region => region.id === id);
+      canvas.scene.createEmbeddedDocuments = async (type, data) => { data.forEach(entry => regions.push(wrap(entry))); return data; };
+      canvas.scene.deleteEmbeddedDocuments = async (type, ids) => { for (const id of ids) regions.splice(regions.findIndex(region => region.id === id), 1); };
+      game.scenes.get = id => (id === canvas.scene.id ? canvas.scene : undefined);
+    }
+
+    /**
+     * Throws and scatters a grenade with a delayed trigger, so that it lies armed.
+     * @param {Actor} actor - The thrower
+     * @param {Object} options - The dialog's values
+     * @returns {Promise<Object>} The attack card
+     */
+    async function lay(actor, options) {
+      const card = await hurl(actor, 30, options);
+      await scatterBlast(card, { rollDice: async () => ({ direction: 100, metres: 1 }) });
+      return card;
+    }
+
+    const parts = () => regions.map(region => region.flags.eclipsephase.area.part).sort();
+
+    beforeEach(() => {
+      game.user.isActiveGM = true;
+    });
+
+    afterEach(() => {
+      delete game.user.isActiveGM;
+      game.time.worldTime = 0;
+    });
+
+    test("a timer runs whole action turns of three seconds, at least one", () => {
+      expect([timerSpan(2, "rounds"), timerSpan(10, "seconds"), timerSpan(1, "minutes"), timerSpan(0, "rounds")]).toEqual([
+        { rounds: 2, seconds: 6 }, { rounds: 4, seconds: 10 }, { rounds: 20, seconds: 60 }, { rounds: 1, seconds: 3 }
+      ]);
+    });
+
+    test("it lies armed where it came down: a mark only its thrower's owners and the GM see, and no blast until it goes off", async () => {
+      const actor = thrower(FRAG);
+      scene([tokenAt(armoured("Bo"), 5, 6)]);
+      documentRegions();
+
+      const card = await lay(actor, { trigger: "signal" });
+
+      expect(parts()).toEqual(["marker"]);
+      expect(regions[0]).toMatchObject({ visibility: CONST.REGION_VISIBILITY.OBSERVER, ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE } });
+      expect(defenceCards()).toHaveLength(0);
+      expect(card.content).toContain("ep2e.chat.attack.armedSignal");
+      expect(card.content).toContain('data-action="armedDetonate"');
+      expect(card.content).not.toContain('data-action="blastScatter"');
+      expect(armedExplosives(actor, [canvas.scene])).toEqual([expect.objectContaining({ messageId: card.id, name: "Tactical Multipurpose (Frag)", here: true })]);
+    });
+
+    test("whether other players see an armed explosive follows Show Traps: all, players' only, or none - its owners and the GM always do", async () => {
+      const levels = CONST.DOCUMENT_OWNERSHIP_LEVELS;
+      const player = thrower(FRAG);
+      Object.defineProperty(player, "hasPlayerOwner", { value: true });
+      const npc = armoured("Grunt");
+      const seen = (actor, show) => {
+        setSetting("eclipsephase", "showTraps", show);
+        return trapOwnership(actor).default;
+      };
+
+      expect([seen(player, "all"), seen(player, "players"), seen(player, "none")]).toEqual([levels.OBSERVER, levels.OBSERVER, levels.NONE]);
+      expect([seen(npc, "all"), seen(npc, "players"), seen(npc, "none")]).toEqual([levels.OBSERVER, levels.NONE, levels.NONE]);
+    });
+
+    test("hovering an armed explosive tells whose it is - '(You)' for a player's own - and how long until it goes off, which also stands as a number beside its icon", () => {
+      const actor = thrower(FRAG);
+      game.time.worldTime = 100;
+      const flag = trigger => ({ trigger, actorUuid: actor.uuid, at: 130 });
+      const user = game.user.isGM;
+
+      expect(armedIcon(flag("timer"), null, null)).toEqual({ icon: "fa-clock", count: "30s", text: 'ep2e.chat.attack.armedTimer {"name":"Thrower","time":"ep2e.chat.attack.countdownSeconds {\\"count\\":30}"}' });
+      expect(armedCountdown({ combatId: "fight", round: 5 }, { round: 3 })).toBe('ep2e.chat.attack.countdownTurns {"count":2}');
+      expect(armedCountdown({ combatId: "fight", round: 5 }, { round: 3 }, true)).toBe("2");
+      expect(armedCountdown({ at: 400 }, null, true)).toBe("5m");
+      expect(armedIcon(flag("proximity"), { at: 130, live: false }, null)).toMatchObject({ icon: "fa-clock", count: "30s" });
+      expect(armedIcon(flag("proximity"), { live: true }, null)).toMatchObject({ icon: "fa-satellite-dish" });
+      expect(armedIcon(flag("signal"), null, null).count).toBeUndefined();
+      game.user.isGM = false;
+      try {
+        expect(armedIcon(flag("signal"), null, null)).toEqual({ icon: "fa-tower-broadcast", text: 'ep2e.chat.attack.armedBy {"name":"ep2e.chat.attack.armedYours {\\"name\\":\\"Thrower\\"}"}' });
+      } finally {
+        game.user.isGM = user;
+      }
+    });
+
+    test("once a blast went off, its attack card leaves naming whom it caught to the cards that follow", async () => {
+      scene([tokenAt(armoured("Bo"), 5, 5)]);
+      const card = await hurl(thrower(STUN), 30);
+      await until(() => defenceCards().length);
+
+      expect(card.content).not.toContain("ep-attack-targets");
+      expect(card.getFlag("eclipsephase", "taskCard").targets.map(target => target.name)).toEqual(["Bo"]);
+    });
+
+    test("on a square grid it lies in the middle of the square it came down in, never across several", async () => {
+      scene([]);
+      documentRegions();
+      const card = await hurl(thrower(FRAG), 30, { trigger: "signal", origin: { x: 560, y: 520 } });
+      await scatterBlast(card, { rollDice: async () => ({ direction: 100, metres: 1 }) });
+
+      expect(regions[0].flags.eclipsephase.area.point).toEqual({ x: 650, y: 550 });
+      expect(regions[0].shapes).toEqual([{ type: "rectangle", x: 600, y: 500, width: 100, height: 100 }]);
+    });
+
+    test("on a hex grid it lies in its hexagon, the mark filling it and its icon resting on top of it", () => {
+      const hex = [[0, -58], [50, -29], [50, 29], [0, 58], [-50, 29], [-50, -29]];
+      global.canvas = { grid: { isSquare: false, isHexagonal: true, size: 100, getOffset: ({ x, y }) => ({ i: Math.round(y / 100), j: Math.round(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }), getVertices: ({ i, j }) => hex.map(([x, y]) => ({ x: j * 100 + x, y: i * 100 + y })) }, dimensions: { distancePixels: 100 } };
+
+      expect(cellCentre({ x: 230, y: 180 })).toEqual({ x: 200, y: 200 });
+      expect(spotShapes({ x: 230, y: 180 })).toEqual([{ type: "polygon", points: [200, 142, 250, 171, 250, 229, 200, 258, 150, 229, 150, 171] }]);
+      expect(spotTop({ x: 200, y: 200 })).toBe(142);
+      expect(wholeShapes({ kind: "circle", origin: { x: 200, y: 200 }, radius: 1 })).toHaveLength(5);
+    });
+
+    test("on a hex grid a blast is drawn in whole hexagons, red in the open and yellow behind walls, and a token counts by the hexagons it stands on", async () => {
+      const hex = [[0, -58], [50, -29], [50, 29], [0, 58], [-50, 29], [-50, -29]];
+      const created = [];
+      global.canvas = {
+        grid: { isSquare: false, isHexagonal: true, size: 100, getOffset: ({ x, y }) => ({ i: Math.round(y / 100), j: Math.round(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }), getVertices: ({ i, j }) => hex.map(([x, y]) => ({ x: j * 100 + x, y: i * 100 + y })) },
+        dimensions: { distancePixels: 100 }, level: null,
+        scene: { id: "scene1", createEmbeddedDocuments: async (type, data) => { created.push(...data); return data; } }
+      };
+      CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+      global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+      const area = { kind: "circle", origin: { x: 500, y: 500 }, radius: 1, polygon: { contains: x => x < 550 } };
+
+      await createShadowedArea(area, { name: "Blast", flags: { attackId: "a1" } });
+
+      expect(created.map(region => [region.flags.eclipsephase.area.part, region.shapes.length, region.shapes.every(shape => shape.type === "polygon")])).toEqual([["open", 4, true], ["shadow", 1, true]]);
+      expect(created[1].flags.eclipsephase.area.cells).toEqual(["5,6"]);
+      const token = { bounds: { x: 560, y: 450, width: 100, height: 100 }, document: { getOccupiedGridSpaceOffsets: () => [{ i: 5, j: 6 }] } };
+      expect(blastPosition(token, area, canvas.grid)).toMatchObject({ distance: 1, nearEdge: true, shadow: true });
+      expect(blastPosition({ ...token, document: { getOccupiedGridSpaceOffsets: () => [{ i: 5, j: 7 }] } }, area, canvas.grid)).toBeNull();
+    });
+
+    test("a signal sets it off when its owner chooses, once; one defused never goes off", async () => {
+      const actor = thrower(FRAG);
+      const bo = armoured("Bo");
+      scene([tokenAt(bo, 5, 6)]);
+      documentRegions();
+
+      const card = await lay(actor, { trigger: "signal" });
+      await detonateArmed(card);
+      await until(() => defenceCards().length);
+      expect(parts()).toEqual(["open", "shadow", "spent"]);
+      expect(defenceCards()[0].getFlag("eclipsephase", "attackDefence").entries[0].uuid).toBe(bo.uuid);
+      expect(await detonateArmed(card)).toBeNull();
+
+      const second = await lay(thrower(FRAG), { trigger: "signal" });
+      expect(await defuseArmed(second)).toBe(true);
+      expect(await detonateArmed(second)).toBeNull();
+      expect(second.content).toContain("ep2e.chat.attack.defusedNote");
+    });
+
+    test("a timer in combat goes off at the end of its thrower's turn in the round it was set for", async () => {
+      const actor = thrower(FRAG);
+      scene([]);
+      documentRegions();
+      const combatants = new Map([["c1", { actor }], ["c2", { actor: armoured("Other") }]]);
+      const combat = { id: "fight", started: true, round: 2, scene: null, combatants };
+      combatants[Symbol.iterator] = function* () { yield* combatants.values(); };
+      const previous = game.combat;
+      game.combat = combat;
+      try {
+        await lay(actor, { trigger: "timer", timerValue: 1, timerUnit: "rounds" });
+        expect(regions[0].flags.eclipsephase.area).toMatchObject({ part: "marker", combatId: "fight", round: 3 });
+
+        await tickArmed({ combat, prior: { round: 2, combatantId: "c1" } });
+        await tickArmed({ combat: { ...combat, round: 3 }, prior: { round: 3, combatantId: "c2" } });
+        expect(parts()).toEqual(["marker"]);
+
+        await tickArmed({ combat: { ...combat, round: 3 }, prior: { round: 3, combatantId: "c1" } });
+        expect(parts()).not.toContain("marker");
+        expect(parts()).toContain("spent");
+      } finally {
+        game.combat = previous;
+      }
+    });
+
+    test("a timer outside combat goes off on the world clock, and one a combat counted down keeps running when the combat ends", async () => {
+      const actor = thrower(FRAG);
+      scene([]);
+      documentRegions();
+
+      await lay(actor, { trigger: "timer", timerValue: 1, timerUnit: "minutes" });
+      game.time.worldTime = 59;
+      await tickArmed();
+      expect(parts()).toEqual(["marker"]);
+      game.time.worldTime = 60;
+      await tickArmed();
+      expect(parts()).not.toContain("marker");
+
+      regions.length = 0;
+      const combat = { id: "fight", started: true, round: 4, scene: null, combatants: new Map() };
+      regions.push({ id: "m1", flags: { eclipsephase: { area: { armed: true, part: "marker", trigger: "timer", combatId: "fight", round: 6, messageId: "none" } } }, getFlag(scope, key) { return this.flags.eclipsephase[key]; }, async update(change) { for (const [path, value] of Object.entries(change)) foundry.utils.setProperty(this, path, value); } });
+      await armedAfterCombat(combat);
+      expect(regions[0].flags.eclipsephase.area).toMatchObject({ combatId: null, at: 60 + 3 * 3 });
+    });
+
+    test("a proximity trigger's sensor reaches as far as set, at most 3 m, and is live - in the target colour - only after three action turns", async () => {
+      const actor = thrower(FRAG);
+      scene([]);
+      documentRegions();
+
+      await lay(actor, { trigger: "proximity", proximityRadius: 9 });
+      const sensor = regions.find(region => region.flags.eclipsephase.area.part === "sensor");
+      expect(sensor.flags.eclipsephase.area).toMatchObject({ live: false, at: 9 });
+      expect(sensor.behaviors).toEqual([expect.objectContaining({ type: PROXIMITY_BEHAVIOR })]);
+      expect(sensor.color).not.toBe("#00f5e4");
+      const covered = sensor.shapes.reduce((sum, shape) => sum + shape.width * shape.height, 0) / 10000;
+      expect(covered).toBe(29);
+
+      game.time.worldTime = 9;
+      await tickArmed();
+      expect(sensor).toMatchObject({ color: "#00f5e4", flags: { eclipsephase: { area: { live: true } } } });
+    });
   });
 });

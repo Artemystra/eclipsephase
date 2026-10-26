@@ -21,7 +21,7 @@ import { registerRegistryHelpers, registerRollSource, registerPoolOption, regist
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./rolls/pools.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
-import { registerTargetedAttackHooks, registerSuppressiveFire } from "./rolls/attacks.js";
+import { registerTargetedAttackHooks, registerSuppressiveFire, registerArmedBlasts, applyTrapVisibility } from "./rolls/attacks.js";
 import { registerCardSocket } from "./common/chat-cards.js";
 import { postWareSetupCard } from "./rolls/modifiers.js";
 import { api } from "./api/index.js";
@@ -64,6 +64,21 @@ async function registerSystemSettings() {
     hint: 'SETTINGS.restReset.hint',
     type: Boolean,
     default: false
+  });
+
+  game.settings.register("eclipsephase", "showTraps", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.showTraps.name",
+    hint: "SETTINGS.showTraps.hint",
+    type: String,
+    default: "players",
+    choices: {
+      none: "SETTINGS.showTraps.none",
+      all: "SETTINGS.showTraps.all",
+      players: "SETTINGS.showTraps.players"
+    },
+    onChange: () => applyTrapVisibility()
   });
 
    // Register initiative rule
@@ -204,6 +219,7 @@ Hooks.once('init', async function() {
   registerWeaponAttacks();
   registerSleightAttacks();
   registerSuppressiveFire();
+  registerArmedBlasts();
   registerPsiTouch();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;

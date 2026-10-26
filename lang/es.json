@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laph's Special Brew",
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
+    },
+    "showTraps": {
+      "name": "Mostrar trampas",
+      "hint": "Si los jugadores pueden ver los explosivos armados - temporizadores, cargas remotas, minas de proximidad - que sus compañeros o sus oponentes dejan en el mapa. Sus dueños y el DJ siempre los ven.",
+      "none": "Ninguna",
+      "all": "Todas",
+      "players": "Solo trampas de jugadores"
     }
   },
   "TYPES": {
@@ -954,6 +961,10 @@
       "consumables": {
         "headline": "Consumables",
         "noConsumablesSubheadline": "None Equipped"
+      },
+      "armed": {
+        "headline": "Explosivos armados",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
@@ -1150,7 +1161,9 @@
             "label": "Detonador",
             "impact": "Impacto",
             "airburst": "Explosión aérea",
-            "delayed": "Retardado (temporizador, señal, proximidad)"
+            "timer": "Temporizador",
+            "signal": "Señal (remota)",
+            "proximity": "Proximidad"
           },
           "payload": {
             "delivery": {
@@ -1595,7 +1608,14 @@
           "note": "Todos en la explosión deben defenderse. Reducir la explosión cuesta una acción rápida.",
           "place": "Colocar explosión",
           "noneLeft": "{name}: no quedan para lanzar.",
-          "blastHeadline": "Explosión"
+          "blastHeadline": "Explosión",
+          "timer": "Estalla tras",
+          "unit": {
+            "rounds": "Asaltos",
+            "seconds": "Segundos",
+            "minutes": "Minutos"
+          },
+          "proximity": "Alcance del sensor"
         }
       },
       "successType": {
@@ -1986,7 +2006,22 @@
         "scatterAhead": "de frente",
         "scatterBack": "hacia atrás",
         "scatterRight": "{degrees}° a la derecha",
-        "scatterLeft": "{degrees}° a la izquierda"
+        "scatterLeft": "{degrees}° a la izquierda",
+        "armedTimerRound": "Armado: estalla al final del turno de {name} en el asalto {round}.",
+        "armedTimerClock": "Armado: el temporizador corre en el reloj del mundo.",
+        "armedSignal": "Armado: estalla cuando su dueño envía la señal.",
+        "armedProximity": "Armado: estalla cuando alguien se acerca a menos de {reach} m - activo tras 3 turnos de acción.",
+        "detonate": "Detonar",
+        "defuse": "Desactivar",
+        "defusedNote": "Desactivado, ya no estallará.",
+        "countdownTurns": "{count} turnos",
+        "countdownSeconds": "{count} s",
+        "countdownMinutes": "{count} min",
+        "armedBy": "{name} · remoto",
+        "armedLive": "{name} · sensor activo",
+        "armedArming": "{name} · sensor activo en {time}",
+        "armedTimer": "{name} · estalla en {time}",
+        "armedYours": "{name} (Tú)"
       },
       "defence": {
         "headline": "Defenderse de {weapon}",
@@ -2306,7 +2341,8 @@
       "areaName": "Área",
       "outsideArea": "Esa ficha está fuera del área.",
       "tooMany": "Este ataque alcanza como mucho {max} objetivos a esa distancia.",
-      "ownBlast": "{name} está atrapado en su propia explosión."
+      "ownBlast": "{name} está atrapado en su propia explosión.",
+      "armedElsewhere": "Ese explosivo está en otra escena - muestra esa escena primero."
     }
   },
   "BEHAVIOR": {
@@ -2316,6 +2352,14 @@
           "messageId": {
             "label": "Tarjeta de ataque",
             "hint": "El mensaje de chat del fuego de supresión al que pertenece esta área."
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Tarjeta de ataque",
+            "hint": "El mensaje de chat del explosivo al que pertenece este sensor."
           }
         }
       }

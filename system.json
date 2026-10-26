@@ -31,7 +31,8 @@
   },
   "documentTypes": {
     "RegionBehavior": {
-      "suppressive": {}
+      "suppressive": {},
+      "proximity": {}
     }
   },
   "esmodules": [

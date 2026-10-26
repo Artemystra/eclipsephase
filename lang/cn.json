@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laph's Special Brew",
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
+    },
+    "showTraps": {
+      "name": "显示陷阱",
+      "hint": "玩家是否可以看到队友或对手留在地图上的已武装爆炸物——定时、遥控、近炸地雷。其持有者和主持人始终可见。",
+      "none": "无",
+      "all": "全部",
+      "players": "仅玩家的陷阱"
     }
   },
   "TYPES": {
@@ -953,6 +960,10 @@
       "consumables": {
         "headline": "消耗品",
         "noConsumablesSubheadline": "没有消耗品"
+      },
+      "armed": {
+        "headline": "已武装的爆炸物",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
@@ -1149,7 +1160,9 @@
             "label": "引信",
             "impact": "触发",
             "airburst": "空爆",
-            "delayed": "延时（计时、信号、近炸）"
+            "timer": "定时",
+            "signal": "信号（遥控）",
+            "proximity": "近炸"
           },
           "payload": {
             "delivery": {
@@ -1602,7 +1615,14 @@
           "note": "爆炸范围内的所有人都必须防御。调低爆炸需要一个快速动作。",
           "place": "放置爆炸",
           "noneLeft": "{name}：没有可投掷的了。",
-          "blastHeadline": "爆炸"
+          "blastHeadline": "爆炸",
+          "timer": "爆炸时间",
+          "unit": {
+            "rounds": "轮",
+            "seconds": "秒",
+            "minutes": "分钟"
+          },
+          "proximity": "感应范围"
         }
       },
       "successType": {
@@ -1993,7 +2013,22 @@
         "scatterAhead": "正前方",
         "scatterBack": "正后方",
         "scatterRight": "向右 {degrees}°",
-        "scatterLeft": "向左 {degrees}°"
+        "scatterLeft": "向左 {degrees}°",
+        "armedTimerRound": "已武装：在第 {round} 轮 {name} 的回合结束时爆炸。",
+        "armedTimerClock": "已武装：定时器按世界时钟运行。",
+        "armedSignal": "已武装：由持有者发出信号时爆炸。",
+        "armedProximity": "已武装：有人进入 {reach} 米内时爆炸——3 个行动回合后生效。",
+        "detonate": "引爆",
+        "defuse": "拆除",
+        "defusedNote": "已拆除，不会再爆炸。",
+        "countdownTurns": "{count} 回合",
+        "countdownSeconds": "{count} 秒",
+        "countdownMinutes": "{count} 分钟",
+        "armedBy": "{name} · 遥控",
+        "armedLive": "{name} · 感应器已激活",
+        "armedArming": "{name} · 感应器将在 {time} 后激活",
+        "armedTimer": "{name} · 将在 {time} 后爆炸",
+        "armedYours": "{name}（你）"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -2313,7 +2348,8 @@
       "areaName": "范围",
       "outsideArea": "该标记在范围之外。",
       "tooMany": "此攻击在该距离最多命中 {max} 个目标。",
-      "ownBlast": "{name} 身处自己的爆炸之中。"
+      "ownBlast": "{name} 身处自己的爆炸之中。",
+      "armedElsewhere": "该爆炸物位于另一个场景——请先查看该场景。"
     }
   },
   "BEHAVIOR": {
@@ -2323,6 +2359,14 @@
           "messageId": {
             "label": "攻击卡",
             "hint": "此区域对应的压制射击聊天消息。"
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "攻击卡",
+            "hint": "此感应器所属爆炸物的聊天消息。"
           }
         }
       }
