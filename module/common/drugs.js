@@ -407,35 +407,31 @@ export async function chooseDrugForm(itemData) {
   return true;
 }
 
-// The form a payload must come in for each way it reaches the target (Core p.211-212, p.219): a
-// capsule injects it, a splash spreads it on the skin, a gas cloud is breathed in.
-export const PAYLOAD_VECTORS = { inside: "injection", contact: "dermal", cloud: "inhalation" };
-
 /**
- * Whether a substance can be a munition's payload delivered this way: it is offered in the form
- * the delivery needs, or in any form a munition can carry when the delivery is not set yet.
+ * Whether a substance can be a munition's payload in its vector - the one way the munition brings
+ * it into the target (Core p.211-212): offered in that form, or in any form while the munition has
+ * no vector set yet.
  * @param {Object} system - The substance's system data
- * @param {String} [delivery] - "inside", "contact" or "cloud"
+ * @param {String} [vector] - "oral", "injection", "inhalation" or "dermal"
  * @returns {Boolean} True when it fits
  */
-export function payloadFits(system, delivery) {
+export function payloadFits(system, vector) {
   if (!system || system.drugType === "electronic") return false;
-  const vector = PAYLOAD_VECTORS[delivery];
-  return vector ? system[vector] === true : AMMO_VECTOR_KEYS.some(key => system[key] === true);
+  return VECTOR_KEYS.includes(vector) ? system[vector] === true : VECTOR_KEYS.some(key => system[key] === true);
 }
 
 /**
- * The substances of every registered payload source that fit a delivery, by name.
- * @param {String} [delivery] - "inside", "contact" or "cloud"
+ * The substances of every registered payload source that fit a vector, by name.
+ * @param {String} [vector] - "oral", "injection", "inhalation" or "dermal"
  * @returns {Promise<Item[]>} The fitting substances
  */
-export async function payloadCandidates(delivery) {
+export async function payloadCandidates(vector) {
   const candidates = [];
   for (const source of listPayloadSources()) {
     const pack = game.packs.get(source.packId);
     if (!pack) continue;
     for (const entry of await pack.getDocuments()) {
-      if (entry.type !== "drug" || !payloadFits(entry.system, delivery)) continue;
+      if (entry.type !== "drug" || !payloadFits(entry.system, vector)) continue;
       if (source.filter && !source.filter(entry)) continue;
       candidates.push(entry);
     }
@@ -445,12 +441,12 @@ export async function payloadCandidates(delivery) {
 
 /**
  * Lets the user pick a munition's payload from every registered payload source, offering only
- * substances that fit the delivery.
- * @param {String} [delivery] - "inside", "contact" or "cloud"
+ * substances that fit its vector.
+ * @param {String} [vector] - "oral", "injection", "inhalation" or "dermal"
  * @returns {Promise<Object|null>} uuid and name of the substance, or null when cancelled or nothing fits
  */
-export async function choosePayload(delivery) {
-  const candidates = await payloadCandidates(delivery);
+export async function choosePayload(vector) {
+  const candidates = await payloadCandidates(vector);
   if (!candidates.length) {
     ui.notifications.warn(game.i18n.localize("ep2e.dialog.selectPayload.none"));
     return null;

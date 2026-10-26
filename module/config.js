@@ -299,10 +299,11 @@ eclipsephase.grenadeTriggers = {
     proximity: "ep2e.item.weapon.table.trigger.proximity"
 }
 
-eclipsephase.payloadDelivery = {
-    inside: "ep2e.item.weapon.table.payload.delivery.inside",
-    contact: "ep2e.item.weapon.table.payload.delivery.contact",
-    cloud: "ep2e.item.weapon.table.payload.delivery.cloud"
+eclipsephase.payloadVectors = {
+    oral: "ep2e.item.drug.table.applicationVectors.oralLabel",
+    injection: "ep2e.item.drug.table.applicationVectors.injectionLabel",
+    inhalation: "ep2e.item.drug.table.applicationVectors.inhalationLabel",
+    dermal: "ep2e.item.drug.table.applicationVectors.dermalLabel"
 }
 
 eclipsephase.rangedAmmoType = {

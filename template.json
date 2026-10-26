@@ -944,7 +944,7 @@
       "areaeffect": null,
       "area": { "kind": "none", "radius": null, "reduction": null },
       "trigger": "impact",
-      "payload": { "enabled": false, "delivery": "", "loaded": [] },
+      "payload": { "enabled": false, "vector": "", "loaded": [] },
       "dv": {
         "d10": null,
         "d6": null,
@@ -995,7 +995,7 @@
       "areaeffect": null,
       "area": { "kind": "none", "radius": null, "reduction": null },
       "size": "baseline",
-      "payload": { "enabled": false, "delivery": "", "loaded": [] },
+      "payload": { "enabled": false, "vector": "", "loaded": [] },
       "dv": {
         "d10": null,
         "d6": null,

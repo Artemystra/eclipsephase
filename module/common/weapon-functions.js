@@ -231,7 +231,7 @@ export async function chooseMunition(itemData) {
   const entries = [];
   if (open.payload) {
     entries.push({ id: "none", label: game.i18n.localize("ep2e.dialog.selectMunition.noPayload") });
-    for (const entry of await payloadCandidates(system.payload.delivery)) entries.push({ id: entry.uuid, label: entry.name });
+    for (const entry of await payloadCandidates(system.payload.vector)) entries.push({ id: entry.uuid, label: entry.name });
   }
   const sizeChoice = open.size
     ? { label: "ep2e.item.weapon.table.size.label", options: SEEKER_SIZES.map(id => ({ id, label: `ep2e.item.weapon.table.size.${id}` })) }
@@ -251,11 +251,15 @@ export async function chooseMunition(itemData) {
 // The armour types a munition can name.
 const ARMOR_TYPES = ["energy", "kinetic", "none"];
 
+// The vector each delivery a payload named before its vector was chosen stands for: a capsule
+// injects it, a splash spreads it on the skin, a gas cloud is breathed in.
+const LEGACY_DELIVERY = { inside: "injection", contact: "dermal", cloud: "inhalation" };
+
 /**
  * What a weapon, ammunition or grenade written before 2.8.5 needs to fit its schema: ranges in
  * metres, an area read from its text, a munition's armour type out of the key the old sheet wrote,
- * a grenade's traits named after themselves, and its old "delayed" trigger read as a timer. Values that
- * already fit are left out.
+ * a grenade's traits named after themselves, its old "delayed" trigger read as a timer, and a
+ * payload's old delivery read as its vector. Values that already fit are left out.
  * @param {String} type - The item type
  * @param {Object} system - The item's system data
  * @returns {Object} The repairs, as system paths to values
@@ -286,6 +290,7 @@ export function weaponDataRepairs(type, system) {
     else if (type === "grenade") repairs.armorused = "none";
   }
   if (type === "grenade" && system.trigger === "delayed") repairs.trigger = "timer";
+  if ((type === "ammo" || type === "grenade") && system.payload && !system.payload.vector && LEGACY_DELIVERY[system.payload.delivery]) repairs["payload.vector"] = LEGACY_DELIVERY[system.payload.delivery];
   if (type === "grenade") {
     for (const [key, trait] of Object.entries(system.traits ?? {})) {
       const name = `ep2e.item.weapon.table.trait.${key}`;

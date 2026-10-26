@@ -103,12 +103,14 @@ describe("ranges and areas read from the text older items carry", () => {
     expect(grenade.system.traits.disablesRadio.name).toBe("ep2e.item.weapon.table.trait.disablesRadio");
     expect(weaponDataRepairs("grenade", { armorused: "none", area: { kind: "none" }, traits: { shock: { name: "ep2e.item.weapon.table.trait.shock" } } })).toEqual({});
     expect(weaponDataRepairs("grenade", { armorused: "none", area: { kind: "none" }, trigger: "delayed" })).toEqual({ trigger: "timer" });
+    expect(weaponDataRepairs("ammo", { type: "kinetic", area: { kind: "none" }, payload: { enabled: true, delivery: "inside" } })).toEqual({ "payload.vector": "injection" });
+    expect(weaponDataRepairs("grenade", { armorused: "none", area: { kind: "none" }, payload: { enabled: true, delivery: "cloud", vector: "inhalation" } })).toEqual({});
   });
 });
 
 
 describe("a munition arriving on a sheet", () => {
-  const seeker = (size, payload = {}) => ({ name: "Splash", type: "ammo", system: { type: "seeker", size, payload: { enabled: false, delivery: "contact", loaded: [], ...payload } } });
+  const seeker = (size, payload = {}) => ({ name: "Splash", type: "ammo", system: { type: "seeker", size, payload: { enabled: false, vector: "dermal", loaded: [], ...payload } } });
 
   /**
    * Answers the next munition dialog and records what it offered.
@@ -184,7 +186,7 @@ describe("a munition arriving on a sheet", () => {
 
   test("a sheet keeps munitions with different payloads apart and stacks the same one", async () => {
     const actor = makeActor({ type: "character" });
-    const withPayload = name => ({ name: "Capsule (Kinetic)", type: "ammo", system: { type: "kinetic", quantity: 1, payload: { enabled: true, delivery: "inside", loaded: [{ uuid: `Compendium.${name}`, name }] } } });
+    const withPayload = name => ({ name: "Capsule (Kinetic)", type: "ammo", system: { type: "kinetic", quantity: 1, payload: { enabled: true, vector: "injection", loaded: [{ uuid: `Compendium.${name}`, name }] } } });
 
     await mergeOrCreateItem(actor, withPayload("Grin"));
     await mergeOrCreateItem(actor, withPayload("Grin"));

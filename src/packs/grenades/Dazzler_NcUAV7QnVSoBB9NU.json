@@ -68,7 +68,7 @@
     },
     "payload": {
       "enabled": false,
-      "delivery": "",
+      "vector": "",
       "loaded": []
     },
     "trigger": "impact"

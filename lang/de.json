@@ -1187,17 +1187,12 @@
             "proximity": "Annäherung"
           },
           "payload": {
-            "delivery": {
-              "label": "Abgabe der Ladung",
-              "inside": "Im Ziel",
-              "contact": "Bei Kontakt",
-              "cloud": "Wolke"
-            },
             "enabled": "Hat Ladung",
             "select": "Ladung wählen",
             "sources": {
               "drugs": "Drogen und Toxine"
-            }
+            },
+            "vector": "Vektor der Ladung"
           }
         }
       },

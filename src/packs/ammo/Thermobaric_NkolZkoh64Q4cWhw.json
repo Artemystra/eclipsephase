@@ -93,7 +93,7 @@
     "size": "select",
     "payload": {
       "enabled": false,
-      "delivery": "",
+      "vector": "",
       "loaded": []
     }
   },

@@ -17,7 +17,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "areaeffect": "Uniform (20)",
+    "areaeffect": "Uniform (10 m)",
     "dv": {
       "d10": null,
       "d6": null,
@@ -58,12 +58,12 @@
     "quantity": 1,
     "area": {
       "kind": "uniform",
-      "radius": 20,
+      "radius": 10,
       "reduction": null
     },
     "payload": {
       "enabled": true,
-      "delivery": "cloud",
+      "vector": "inhalation",
       "loaded": []
     },
     "trigger": "impact"

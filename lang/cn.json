@@ -1165,17 +1165,12 @@
             "proximity": "近炸"
           },
           "payload": {
-            "delivery": {
-              "label": "载荷投放方式",
-              "inside": "目标体内",
-              "contact": "接触",
-              "cloud": "云雾"
-            },
             "enabled": "带有载荷",
             "select": "选择载荷",
             "sources": {
               "drugs": "药物与毒素"
-            }
+            },
+            "vector": "载荷途径"
           }
         }
       },

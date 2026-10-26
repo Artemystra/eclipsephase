@@ -63,7 +63,7 @@
     },
     "payload": {
       "enabled": true,
-      "delivery": "contact",
+      "vector": "dermal",
       "loaded": []
     },
     "trigger": "impact"

@@ -94,7 +94,7 @@
     "size": "baseline",
     "payload": {
       "enabled": false,
-      "delivery": "",
+      "vector": "",
       "loaded": []
     }
   },

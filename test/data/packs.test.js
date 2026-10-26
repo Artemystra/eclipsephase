@@ -73,7 +73,8 @@ describe("compendium sources", () => {
         || (data.type === "grenade" ? "size" in system : !["select", "baseline", "standard", "missile"].includes(system.size))
         || (data.type === "ammo" && system.type === "seeker" && system.size !== "select")
         || typeof system.payload?.enabled !== "boolean"
-        || (system.payload.enabled && !["inside", "contact", "cloud"].includes(system.payload.delivery));
+        || (system.payload.enabled && !["oral", "injection", "inhalation", "dermal"].includes(system.payload.vector))
+        || "delivery" in system.payload;
     });
     expect(offenders.map(({ pack, file }) => `${pack}/${file}`)).toEqual([]);
   });

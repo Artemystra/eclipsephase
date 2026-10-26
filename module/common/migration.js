@@ -3099,8 +3099,9 @@ async function _ep285_munitions() {
 
 /**
  * What a weapon, ammunition or grenade placed before 2.8.5 needs: ranges in metres, areas read from
- * their text, a munition's armour type out of the key the old sheet wrote, and what its compendium
- * namesake says about armour and payload where the item says nothing. A range that cannot be
+ * their text, a munition's armour type out of the key the old sheet wrote, its payload's vector in
+ * place of the delivery it named, and what its compendium namesake says about armour and payload
+ * where the item says nothing. A range that cannot be
  * read is left as it is and reported instead.
  * @param {Item} item - The item
  * @param {Map<String, Object>} catalogue - What _ep285_munitions read
@@ -3119,6 +3120,7 @@ export function _ep285_weaponUpdate(item, catalogue) {
     }
     update[`system.${path}`] = value;
   }
+  if (source.payload && "delivery" in source.payload) update["system.payload.delivery"] = new foundry.data.operators.ForcedDeletion();
   const namesake = catalogue.get(`${item.type}:${item.name}`);
   if (namesake) {
     if (item.type === "ammo" && !source.armorused && !("system.armorused" in update) && namesake.armorused) update["system.armorused"] = namesake.armorused;

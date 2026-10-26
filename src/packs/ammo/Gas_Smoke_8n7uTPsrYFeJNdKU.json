@@ -93,7 +93,7 @@
     "size": "select",
     "payload": {
       "enabled": true,
-      "delivery": "cloud",
+      "vector": "inhalation",
       "loaded": []
     }
   },

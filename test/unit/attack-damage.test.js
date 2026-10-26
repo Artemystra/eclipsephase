@@ -1444,7 +1444,7 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
 
     expect(heapAttack).toMatchObject({ targets: 1, area: false, payload: { armorUsed: "kinetic" } });
     expect(heapAttack.blast).toBeUndefined();
-    expect(smokeAttack).toMatchObject({ targets: ANY_TARGETS, area: true, blast: { kind: "uniform", radius: 20, harmless: true, origin: { x: 1, y: 1 } } });
+    expect(smokeAttack).toMatchObject({ targets: ANY_TARGETS, area: true, blast: { kind: "uniform", radius: 10, harmless: true, origin: { x: 1, y: 1 } } });
     expect(attackPicking({ rolledFrom: "grenade", actor: heap, weapon: grenadePreparation(heap, "gren1") }).area).toBeUndefined();
     expect(attackPicking({ rolledFrom: "grenade", actor: smoke, weapon: grenadePreparation(smoke, "gren1") }).label()).toBe("ep2e.roll.dialog.throw.place");
   });

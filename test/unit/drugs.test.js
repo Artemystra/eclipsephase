@@ -742,20 +742,20 @@ describe("Randomizer", () => {
 describe("a munition's payload", () => {
   beforeEach(() => { resetRegistry(); resetWorld(); game.packs.clear(); });
 
-  test("a substance fits a delivery when it comes in the form that delivery needs, and electronic ones never fit", () => {
-    const oral = { oral: true };
+  test("a substance fits a payload when it comes in the payload's one vector - any of the four while none is set - and electronic ones never fit", () => {
+    const pill = { oral: true };
     const patch = { dermal: true };
     const sprayable = { inhalation: true, injection: true };
 
-    expect([payloadFits(patch, "contact"), payloadFits(patch, "inside"), payloadFits(sprayable, "cloud"), payloadFits(sprayable, "inside")]).toEqual([true, false, true, true]);
-    expect([payloadFits(oral, undefined), payloadFits(patch, undefined), payloadFits({ ...patch, drugType: "electronic" }, "contact")]).toEqual([false, true, false]);
+    expect([payloadFits(patch, "dermal"), payloadFits(patch, "injection"), payloadFits(sprayable, "inhalation"), payloadFits(sprayable, "injection"), payloadFits(pill, "oral"), payloadFits(pill, "inhalation")]).toEqual([true, false, true, true, true, false]);
+    expect([payloadFits(pill, undefined), payloadFits(patch, ""), payloadFits({ ...patch, drugType: "electronic" }, "dermal")]).toEqual([true, true, false]);
   });
 
   test("the choice lists only fitting drugs of the registered sources, and stores the chosen one's uuid and name", async () => {
     registerSystemPacks();
     registerPayloadSource("eclipsephase.drugs-and-toxins");
     const pack = game.packs.get("eclipsephase.drugs-and-toxins");
-    const injectable = (await pack.getDocuments()).filter(entry => entry.type === "drug" && payloadFits(entry.system, "inside"));
+    const injectable = (await pack.getDocuments()).filter(entry => entry.type === "drug" && payloadFits(entry.system, "injection"));
     const offered = [];
     const realWait = foundry.applications.api.DialogV2.wait;
     foundry.applications.api.DialogV2.wait = async ({ content }) => {
@@ -763,7 +763,7 @@ describe("a munition's payload", () => {
       return { selection: injectable[0].uuid };
     };
     try {
-      expect(await choosePayload("inside")).toEqual({ uuid: injectable[0].uuid, name: injectable[0].name });
+      expect(await choosePayload("injection")).toEqual({ uuid: injectable[0].uuid, name: injectable[0].name });
     } finally {
       foundry.applications.api.DialogV2.wait = realWait;
     }

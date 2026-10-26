@@ -1203,17 +1203,12 @@
             "proximity": "Proximity"
           },
           "payload": {
-            "delivery": {
-              "label": "Payload delivery",
-              "inside": "Inside the target",
-              "contact": "On contact",
-              "cloud": "Cloud"
-            },
             "enabled": "Has payload",
             "select": "Select payload",
             "sources": {
               "drugs": "Drugs and Toxins"
-            }
+            },
+            "vector": "Payload vector"
           }
         }
       },

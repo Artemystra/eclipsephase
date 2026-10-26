@@ -93,7 +93,7 @@
     "size": "baseline",
     "payload": {
       "enabled": true,
-      "delivery": "contact",
+      "vector": "dermal",
       "loaded": []
     }
   },

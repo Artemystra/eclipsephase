@@ -355,9 +355,10 @@ for reading the registry back.
 ### `registerPayloadSource(packId, definition)` (2.8.5)
 
 Offers a compendium's substances as payloads for ammunition and grenades - the "Select payload"
-button of a munition sheet lists every drug from every registered source that fits the payload's
-delivery (inside the target = injection, on contact = dermal, cloud = inhalation; electronic drugs
-never fit).
+button of a munition sheet lists every drug from every registered source that comes in the
+payload's vector - `system.payload.vector`, one of oral, injection, inhalation and dermal; while it
+is unset, any form fits, and electronic drugs never do. Munitions written before 2.8.5 named a
+delivery instead (inside, contact, cloud), read as injection, dermal and inhalation.
 
 ```js
 api.registry.registerPayloadSource("my-module.nanoswarms", {

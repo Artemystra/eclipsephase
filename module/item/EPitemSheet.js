@@ -36,7 +36,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
   static async _onSelectPayload() {
     const payload = this.document.system.payload;
     if (!payload?.enabled) return;
-    const chosen = await choosePayload(payload.delivery);
+    const chosen = await choosePayload(payload.vector);
     if (chosen) await this.document.update({ "system.payload.loaded": [chosen] });
   }
 

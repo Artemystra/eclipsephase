@@ -358,9 +358,19 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
     const source = id => actor.items.get(id)._source.system;
     expect([source("pul1").mode1.range, source("pul1").mode2.range, source("pul1").mode2.area]).toEqual([100, 100, { kind: "uniform", radius: 1, reduction: null }]);
     expect([source("gre1").area, source("gre1").armorused]).toEqual([{ kind: "centered", radius: null, reduction: 2 }, "energy"]);
-    expect([source("spl1").area.radius, source("spl1").armorused, source("spl1").payload.enabled, source("spl1").payload.delivery]).toEqual([10, "none", true, "contact"]);
-    expect([source("cap1").payload.enabled, source("cap1").payload.delivery]).toEqual([true, "inside"]);
+    expect([source("spl1").area.radius, source("spl1").armorused, source("spl1").payload.enabled, source("spl1").payload.vector]).toEqual([10, "none", true, "dermal"]);
+    expect([source("cap1").payload.enabled, source("cap1").payload.vector]).toEqual([true, "injection"]);
     expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8.5");
+  });
+
+  test("a payload that named its delivery names its vector instead, and the old key is gone", async () => {
+    const actor = makeActor({ type: "character", items: [
+      { _id: "gas1", name: "Homebrew Gas", type: "grenade", system: { armorused: "none", area: { kind: "uniform", radius: 10, reduction: null }, payload: { enabled: true, delivery: "cloud", loaded: [] } } }
+    ] });
+
+    await runLadderFrom("2.8");
+
+    expect(actor.items.get("gas1")._source.system.payload).toEqual({ enabled: true, vector: "inhalation", loaded: [] });
   });
 
   test("a range that cannot be read stays as written and is listed to the GM", async () => {

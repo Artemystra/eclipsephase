@@ -1166,17 +1166,12 @@
             "proximity": "Proximidade"
           },
           "payload": {
-            "delivery": {
-              "label": "Entrega da carga",
-              "inside": "Dentro do alvo",
-              "contact": "Por contato",
-              "cloud": "Nuvem"
-            },
             "enabled": "Tem carga",
             "select": "Escolher carga",
             "sources": {
               "drugs": "Drogas e toxinas"
-            }
+            },
+            "vector": "Vetor da carga"
           }
         }
       },
