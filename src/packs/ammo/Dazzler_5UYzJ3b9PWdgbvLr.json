@@ -96,7 +96,8 @@
       "enabled": false,
       "vector": "",
       "loaded": []
-    }
+    },
+    "cloud": false
   },
   "effects": [],
   "flags": {},

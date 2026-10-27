@@ -4299,6 +4299,50 @@ li:has(.ep-system-notice) .message-header {
   text-align: center;
 }
 
+/* A cloud in the time panel's environment section: its colour before its name. */
+.ep-time-panel .ep-time-cloud-swatch {
+  flex: 0 0 10px;
+  height: 10px;
+  margin: 0 6px 0 2px;
+  border-radius: 2px;
+  border: 1px solid var(--pitchBorder);
+}
+
+/* A munition's area and payload rows: every field as wide as it needs, spread across the row. */
+.ep-natural-row {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ep-natural-row > * {
+  flex: 0 0 auto;
+  max-width: none !important;
+  flex-wrap: nowrap;
+  gap: 5px;
+}
+
+.ep-natural-row > * > :not(.tooltipText) {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.ep-natural-row select {
+  width: auto;
+}
+
+/* A munition's cloud colour: for a colour of its own a small swatch beside the choice, which keeps
+   its place while unused, so the row does not shift. */
+.munition-fields .ep-cloud-custom-unused {
+  visibility: hidden;
+}
+
+.ep-natural-row .ep-cloud-custom {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+
 /* A sheet tooltip shown centred above the mouse pointer, outside the sheet's clipping. */
 .wantToKnowMore .tooltipText.ep-tooltip-follow,
 .wantToKnowMoreFixed .tooltipText.ep-tooltip-follow,

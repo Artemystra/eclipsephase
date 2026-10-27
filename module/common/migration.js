@@ -3091,7 +3091,7 @@ async function _ep285_munitions() {
     for (const munition of await pack.getDocuments()) {
       if (munition.type !== "ammo" && munition.type !== "grenade") continue;
       const source = munition._source?.system ?? munition.system ?? {};
-      catalogue.set(`${munition.type}:${munition.name}`, { armorused: source.armorused, payload: source.payload });
+      catalogue.set(`${munition.type}:${munition.name}`, { armorused: source.armorused, payload: source.payload, cloud: source.cloud === true, cloudColor: source.cloudColor });
     }
   }
   return catalogue;
@@ -3100,8 +3100,8 @@ async function _ep285_munitions() {
 /**
  * What a weapon, ammunition or grenade placed before 2.8.5 needs: ranges in metres, areas read from
  * their text, a munition's armour type out of the key the old sheet wrote, its payload's vector in
- * place of the delivery it named, and what its compendium namesake says about armour and payload
- * where the item says nothing. A range that cannot be
+ * place of the delivery it named, and what its compendium namesake says about armour, payload and
+ * forming a cloud where the item says nothing. A range that cannot be
  * read is left as it is and reported instead.
  * @param {Item} item - The item
  * @param {Map<String, Object>} catalogue - What _ep285_munitions read
@@ -3125,6 +3125,10 @@ export function _ep285_weaponUpdate(item, catalogue) {
   if (namesake) {
     if (item.type === "ammo" && !source.armorused && !("system.armorused" in update) && namesake.armorused) update["system.armorused"] = namesake.armorused;
     if (!source.payload?.enabled && namesake.payload?.enabled) update["system.payload"] = foundry.utils.deepClone(namesake.payload);
+    if (namesake.cloud && source.cloud !== true) {
+      update["system.cloud"] = true;
+      if (namesake.cloudColor && !source.cloudColor) update["system.cloudColor"] = foundry.utils.deepClone(namesake.cloudColor);
+    }
   }
   if (!Object.keys(update).length && !unreadable.length) return null;
   return { update: Object.keys(update).length ? update : null, unreadable };

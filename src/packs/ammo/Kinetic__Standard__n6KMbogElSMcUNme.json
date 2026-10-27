@@ -95,7 +95,8 @@
       "enabled": false,
       "vector": "",
       "loaded": []
-    }
+    },
+    "cloud": false
   },
   "effects": [],
   "folder": "op6PJBnpKfHv5C7J",

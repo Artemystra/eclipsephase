@@ -2,7 +2,9 @@ import { areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion,
 import { waitUntil, withTempActor, seedDice, restoreDice, uniformForFace, suppressDice3d, restoreDice3d } from "./helpers.js";
 import { RollCheck } from "../../rolls/dice.js";
 import { weaponPreparation, grenadePreparation } from "../../common/weapon-functions.js";
-import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression, scatterBlast, trapOwnership } from "../../rolls/attacks.js";
+import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression, scatterBlast, trapOwnership, rollDefence } from "../../rolls/attacks.js";
+import { rollAttackDamage } from "../../rolls/damage.js";
+import { activeDoseFor } from "../../common/doses.js";
 import { TARGET_COLOR } from "../../common/targeting.js";
 
 // Areas on a real canvas: walls of a scratch scene cut a blast and a cone off and stop what flies at
@@ -13,6 +15,57 @@ import { TARGET_COLOR } from "../../common/targeting.js";
 // are scene coordinates. One wall runs from top to bottom at x = 1500.
 const SCENE = { name: "Quench Areas", width: 3000, height: 3000, padding: 0, grid: { size: 100, distance: 1, units: "m" } };
 const WALL_X = 1500;
+
+// A successful dodge, rolled without its dialog.
+const DODGE = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, rangedFray: true, behindCover: false } };
+
+/**
+ * Throws a grenade at a point of the scratch scene with two NPCs in its 6 metre blast - one a metre
+ * from the centre, one 4 metres out, 2 metres short of the edge - and lets both dodge successfully.
+ * Their tokens are linked, so each stands for its own actor, and are removed whatever happens.
+ * @param {Object} scene - The scratch scene
+ * @param {Object} grenade - The grenade's data
+ * @param {Function} check - check({ inner, edge, outcomes, posted }) once both have defended
+ * @returns {Promise<void>} Resolves once checked and cleaned up
+ */
+async function dodgeInBlast(scene, grenade, check) {
+  const posted = new Set(game.messages.contents.map(message => message.id));
+  const defences = () => game.messages.contents.filter(message => !posted.has(message.id) && message.getFlag("eclipsephase", "attackDefence"));
+  const dodger = name => ({ type: "npc", name, system: { aptitudes: { ref: { value: 20 } }, skillsVig: { fray: { value: 80 } } } });
+  let tokens = [];
+  suppressDice3d();
+  try {
+    await withTempActor({ type: "character", name: "Quench Thrower", items: [grenade] }, thrower => withTempActor(dodger("Quench Inner"), inner => withTempActor(dodger("Quench Edge"), async edge => {
+      await waitUntil(() => thrower.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+      tokens = await scene.createEmbeddedDocuments("Token", [
+        { actorId: inner.id, actorLink: true, name: inner.name, x: 800, y: 1400 },
+        { actorId: edge.id, actorLink: true, name: edge.name, x: 1100, y: 1400 }
+      ]);
+      const ids = tokens.map(token => token.id);
+      await waitUntil(() => canvas.tokens.placeables.filter(placeable => ids.includes(placeable.document.id)).length === 2, 5000);
+      const weapon = grenadePreparation(thrower, thrower.items.find(item => item.name === grenade.name).id);
+      seedDice([uniformForFace(30, 100)]);
+      await RollCheck({ type: "skill", key: "athletics", name: "Athletics", rollvalue: 60, pooltype: "Vigor" }, thrower.system, thrower, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "impact", placedArea: JSON.stringify({ kind: "circle", origin: { x: 750, y: 1450 }, radius: 0 }) } }, weapon, "grenade");
+      await waitUntil(() => defences().length === 1, 10000);
+      seedDice([uniformForFace(2, 100)]);
+      await rollDefence(defences()[0], inner.uuid, "dodge", DODGE);
+      await rollDefence(defences()[0], edge.uuid, "dodge", DODGE);
+      restoreDice();
+      const entries = () => game.messages.get(defences()[0].id).getFlag("eclipsephase", "attackDefence").entries;
+      await waitUntil(() => entries().every(entry => entry.outcome), 10000);
+      const outcomes = Object.fromEntries(entries().map(entry => [entry.uuid === inner.uuid ? "inner" : entry.uuid === edge.uuid ? "edge" : entry.uuid, { outcome: entry.outcome, nearEdge: entry.nearEdge }]));
+      await check({ inner, edge, outcomes, posted });
+    })));
+  } finally {
+    restoreDice3d();
+    restoreDice();
+    await clearAreas(flag => flag.blast === true, scene);
+    const left = tokens.map(token => token.id).filter(id => scene.tokens.has(id));
+    if (left.length) await scene.deleteEmbeddedDocuments("Token", left);
+    const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
+    if (mine.length) await ChatMessage.deleteDocuments(mine);
+  }
+}
 
 /**
  * A token stand-in covering a square whose top left corner is at a point.
@@ -309,6 +362,33 @@ export function registerAreasBatch(quench) {
           const mine = game.messages.contents.filter(message => !posted.has(message.id)).map(message => message.id);
           if (mine.length) await ChatMessage.deleteDocuments(mine);
         }
+      });
+
+      it("dodged inside its blast still strikes for half the damage, dodged within 2 metres of the edge it misses", async function () {
+        this.timeout(40000);
+        const frag = { name: "Quench Uniform", type: "grenade", system: { active: true, quantity: 2, dv: { d10: 2, d6: null, bonus: 10 }, area: { kind: "uniform", radius: 6, reduction: null }, armorused: "kinetic", trigger: "impact" } };
+        await dodgeInBlast(scene, frag, async ({ inner, edge, outcomes, posted }) => {
+          assert.deepEqual(outcomes, { inner: { outcome: "half", nearEdge: false }, edge: { outcome: "none", nearEdge: true } });
+          const damageCard = () => game.messages.contents.find(message => !posted.has(message.id) && message.getFlag("eclipsephase", "damageCard"));
+          await waitUntil(() => damageCard(), 8000);
+          await rollAttackDamage(damageCard());
+          await waitUntil(() => game.messages.get(damageCard().id).getFlag("eclipsephase", "damageCard").lines.length, 8000);
+          const total = game.messages.get(damageCard().id).getFlag("eclipsephase", "damageCard").data.total;
+          assert.isAtMost(Math.abs(inner.system.health.physical.value - total / 2), 0.5, "half the damage");
+          assert.strictEqual(edge.system.health.physical.value, 0, "none at the edge");
+        });
+      });
+
+      it("a splash grenade dodged inside its blast still gives its whole dose, dodged within 2 metres of the edge none", async function () {
+        this.timeout(40000);
+        const source = (await game.packs.get("eclipsephase.grenades").getDocument("eXXBBl2NCEnduzOu")).toObject();
+        const splash = { ...source, name: "Quench Splash", system: { ...source.system, active: true, quantity: 2, area: { ...source.system.area, radius: 6 }, trigger: "impact", payload: { ...source.system.payload, enabled: true, loaded: [{ uuid: "Compendium.eclipsephase.drugs-and-toxins.Item.jo3GAYGK409hcV16", name: "Aggro" }] } } };
+        delete splash._id;
+        await dodgeInBlast(scene, splash, async ({ inner, edge, outcomes }) => {
+          assert.deepEqual(outcomes, { inner: { outcome: "half", nearEdge: false }, edge: { outcome: "none", nearEdge: true } });
+          await waitUntil(() => activeDoseFor(inner, "Aggro"), 8000);
+          assert.isNull(activeDoseFor(edge, "Aggro"));
+        });
       });
 
       it("set to a proximity trigger lies armed, seen only by its owners and the GM, and goes off when a token moves within its live sensor", async function () {

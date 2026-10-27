@@ -95,6 +95,11 @@
       "enabled": true,
       "vector": "inhalation",
       "loaded": []
+    },
+    "cloud": true,
+    "cloudColor": {
+      "kind": "smoke",
+      "custom": "#ffffff"
     }
   },
   "effects": [],

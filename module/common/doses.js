@@ -642,9 +642,10 @@ async function undoAttackDose(actor, defenceId) {
 }
 
 /**
- * Carries out what an attack's dose does to one target after their defence: the full dose on a
- * hit, half of it when they only partly dodged, nothing when they got away. The dose meets the
- * target's body and their defensive ware as any unwilling dose does.
+ * Carries out what an attack's dose does to one target after their defence: a dose takes hold whole
+ * or not at all (Core p.209: each target is hit with one dose) - a target struck gets it, also one
+ * who dodged inside an area and still took half its damage; one who got away gets none. The
+ * dose meets the target's body and their defensive ware as any unwilling dose does.
  * @param {Object} attack - The attack, with its payload
  * @param {Actor} target - The target
  * @param {String} outcome - "hit", "half" or "none"
@@ -661,16 +662,15 @@ export async function doseFromAttack(attack, target, outcome, { byPool = false, 
     await postCard(target, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
     return null;
   }
-  let data = foundry.utils.deepClone(payload.data);
+  const data = foundry.utils.deepClone(payload.data);
   data.flags.eclipsephase.dose.defenceId = defenceId;
-  if (outcome === "half") data = defendedDoseData(data, { halve: true, by: [], checkBonus: false });
   const defended = await defendDose(target, data, { willing: false, ask: false });
   return letDoseIn(target, { ...defended, name: payload.name });
 }
 
 /**
  * Gives a target the dose a munition's payload carries, in full - a dose takes hold or it does not:
- * any strike lets it in, only a target who got away entirely is spared. The substance is read from
+ * a target struck gets it, also one who dodged inside an area; one who got away does not. The substance is read from
  * where the payload names it. A pool spend that turns the defence around takes it back.
  * @param {Object} attack - The attack, with dose ({ uuid, name })
  * @param {Actor} target - The target
@@ -683,7 +683,7 @@ export async function doseFromPayload(attack, target, outcome, { byPool = false,
   if (outcome === "none" || !attack?.dose?.uuid) return null;
   const substance = await fromUuid(attack.dose.uuid);
   if (substance?.type !== "drug") return null;
-  return doseFromAttack({ payload: chemicalPayload(substance) }, target, "hit", { defenceId });
+  return doseFromAttack({ payload: chemicalPayload(substance) }, target, outcome, { defenceId });
 }
 
 /**
@@ -704,7 +704,7 @@ export function registerChemicalAttacks() {
       const payload = weaponPayload(context.actor, context.weapon?.weapon);
       const effectInfo = payload ? { label: game.i18n.localize("ep2e.chat.defence.payloadLabel"), text: payload.name, uuid: payload.data?.origin ?? "" } : null;
       const targets = attackTargetCount(context.weapon?.weapon, context.options ?? {});
-      return { targets, area: true, within: targets > 1 ? 1 : null, payload, labelKey: "ep2e.chat.attack.applyDose", ...(effectInfo ? { effectInfo } : {}) };
+      return { targets, area: false, within: targets > 1 ? 1 : null, payload, labelKey: "ep2e.chat.attack.applyDose", ...(effectInfo ? { effectInfo } : {}) };
     },
     ready(attack) {
       if (attack.payload?.data) return true;

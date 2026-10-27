@@ -89,6 +89,13 @@ describe("compendium sources", () => {
     });
   });
 
+  test("every munition says whether it forms a cloud, and the gas and smoke munitions do (Core p.212)", () => {
+    const munitions = documents.filter(({ data }) => data.type === "grenade" || data.type === "ammo");
+
+    expect(munitions.filter(({ data }) => typeof data.system.cloud !== "boolean").map(({ file }) => file)).toEqual([]);
+    expect(munitions.filter(({ data }) => data.system.cloud).map(({ data }) => `${data.type}:${data.name}`).sort()).toEqual(["ammo:Gas/Smoke", "grenade:Gas/Smoke"]);
+  });
+
   test("seekers say they are fired from a launcher, grenades do not, and HEAP comes only as a seeker (Core p.212)", () => {
     const notice = "Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.";
     const seekers = documents.filter(({ data }) => data.type === "ammo" && data.system.type === "seeker");

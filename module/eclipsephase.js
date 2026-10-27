@@ -980,8 +980,9 @@ Hooks.on('renderSceneControls', (app, html) => {
 });
 
 // Everything that changes what the panel shows: the clock itself, effects coming and going, and
-// the scene in view or its tokens changing, since a GM's list covers the unlinked tokens on it.
-for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected", "canvasReady", "createToken", "deleteToken"]) {
+// the scene in view or its tokens changing, since a GM's list covers the unlinked tokens on it, and
+// its clouds coming, going or counting down.
+for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected", "canvasReady", "createToken", "deleteToken", "createRegion", "updateRegion", "deleteRegion", "updateCombat"]) {
   Hooks.on(hook, () => EPtimePanel.refresh());
 }
 

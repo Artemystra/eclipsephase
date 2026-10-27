@@ -299,6 +299,13 @@ eclipsephase.grenadeTriggers = {
     proximity: "ep2e.item.weapon.table.trigger.proximity"
 }
 
+eclipsephase.cloudColors = {
+    smoke: "ep2e.item.weapon.table.cloudColor.smoke",
+    toxin: "ep2e.item.weapon.table.cloudColor.toxin",
+    drug: "ep2e.item.weapon.table.cloudColor.drug",
+    custom: "ep2e.item.weapon.table.cloudColor.custom"
+}
+
 eclipsephase.payloadVectors = {
     oral: "ep2e.item.drug.table.applicationVectors.oralLabel",
     injection: "ep2e.item.drug.table.applicationVectors.injectionLabel",

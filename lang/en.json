@@ -1203,12 +1203,21 @@
             "proximity": "Proximity"
           },
           "payload": {
-            "enabled": "Has payload",
+            "enabled": "Payload",
             "select": "Select payload",
             "sources": {
               "drugs": "Drugs and Toxins"
             },
-            "vector": "Payload vector"
+            "vector": "Payload vector",
+            "choose": "Select",
+            "smoke": "Smoke"
+          },
+          "cloud": "Forms a cloud",
+          "cloudColor": {
+            "smoke": "Smoke",
+            "toxin": "Toxin",
+            "drug": "Drug",
+            "custom": "Custom"
           }
         }
       },
@@ -2089,7 +2098,11 @@
         "armedLive": "{name} · sensor live",
         "armedArming": "{name} · sensor live in {time}",
         "armedTimer": "{name} · goes off in {time}",
-        "armedYours": "{name} (You)"
+        "armedYours": "{name} (You)",
+        "gasArea": "Gas ({name})",
+        "smokeArea": "Smoke ({name})",
+        "gasNote": "The gas cloud lies for 3 action turns: whoever is in it, comes into it or begins their turn in it breathes the dose in.",
+        "smokeNote": "The smoke lies for 3 minutes and hides whatever is in or behind it (-20)."
       },
       "defence": {
         "headline": "Defend against the {weapon}",
@@ -2329,7 +2342,9 @@
         "day3": "+3 Days",
         "day7": "+7 Days",
         "beats": "{beats} Beats"
-      }
+      },
+      "sectionEnvironment": "Environment",
+      "locateCloud": "Show on map"
     },
     "migration": {
       "28": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Know Your Armor<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Lasers burn, bullets punch, and some things just soak through your clothes. Every weapon mode now says which armor its damage meets:</p><ul><li>Each weapon mode has an <b>Armor Used</b> field right after its damage: <b>Energy</b>, <b>Kinetic</b> or <b>None</b>.</li><li>Weapons already on your sheets get the value of their compendium namesake. Weapons of your own get Energy for beam weapons and Kinetic for everything else - check the ones that should differ.</li><li>Psi now meets <b>mental armor</b>: Psi Armor sleights already on your sheets learn to report it.</li></ul></span>",
@@ -2429,7 +2444,7 @@
       "outOfTouch": "{name} is beyond the reach of a touch (2 m).",
       "areaName": "Area",
       "outsideArea": "That token is outside the area.",
-      "tooMany": "This attack strikes at most {max} targets at that range.",
+      "tooMany": "At this range, this attack strikes at most {max} targets.",
       "ownBlast": "{name} is caught in their own blast.",
       "armedElsewhere": "That explosive lies on another scene - view that scene first."
     }
@@ -2449,6 +2464,14 @@
           "messageId": {
             "label": "Attack card",
             "hint": "The chat message of the explosive this sensor belongs to."
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Attack card",
+            "hint": "The chat message of the gas this cloud belongs to."
           }
         }
       }

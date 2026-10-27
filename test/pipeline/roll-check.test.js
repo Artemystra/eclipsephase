@@ -1,4 +1,4 @@
-import { RollCheck, TaskRollModifier, resolveSkillRollValue } from "../../module/rolls/dice.js";
+import { RollCheck, TaskRollModifier, resolveSkillRollValue, DIALOG_FIELDS } from "../../module/rolls/dice.js";
 import { registerRollSource, registerPoolOption, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
 
@@ -542,5 +542,19 @@ describe("a drug option that applies on its own", () => {
 
     expect(dialogData.doseOptions).toEqual([]);
     expect(global.__ep.createdMessages[0].content).toContain("ep2e.item.drug.rollOptions.randomizerSocial");
+  });
+});
+
+describe("the fields of the roll dialogs", () => {
+  test("every field a roll dialog names is one the roll reads, so none is silently ignored", () => {
+    const fs = require("fs");
+    const path = require("path");
+    const dialogs = ["gun-test-dialog.html", "melee-test-dialog.html", "skill-test-dialog.html", "partials/general-modifiers.html"];
+    const unread = dialogs.flatMap(file => {
+      const markup = fs.readFileSync(path.join(__dirname, "../../templates/chat", file), "utf8");
+      return Array.from(markup.matchAll(/\bname="([^"{]+)"/g), match => match[1]).filter(name => !DIALOG_FIELDS.includes(name)).map(name => `${file}: ${name}`);
+    });
+
+    expect(unread).toEqual([]);
   });
 });

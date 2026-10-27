@@ -254,9 +254,11 @@ export function sheetsAside() {
  *   (Infinity for any number); within: how far, in scene units, a further target may be from the
  *   nearest marked one; refuse: refuse(token) returns the notice for a token that may not be
  *   picked, or nothing; marker: marker(token, point, {icon, color}) draws a mark and returns what
- *   removes it; measure: { from, describe(distance, token) } draws a line from the token from to the
- *   cursor and shows what describe says about the distance - to the token under the cursor (passed
- *   along), else to the cursor itself
+ *   removes it; measure: { from, describe(distance, token), limit(distance) } draws a line from the
+ *   token from to the cursor and shows what describe says about the distance - to the token under
+ *   the cursor (passed along), else to the cursor itself; limit, when given, is how many targets may
+ *   be marked when the farthest of them stands that far away, and the counter counts down from it
+ *   for the marked targets together with the token under the cursor, or the cursor itself
  * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
  *   cancelled
  */
@@ -275,8 +277,16 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
     range.className = "ep-targeting-range";
     const line = measure?.from && globalThis.PIXI ? new PIXI.Graphics() : null;
     if (line) canvas.controls?.addChild?.(line);
+    let pointed = null;
+    const capFor = (tokens, extra = null) => {
+      if (!measure?.limit) return limit;
+      const distances = tokens.map(token => tokenGap(measure.from, token, canvas.grid));
+      if (Number.isFinite(extra)) distances.push(extra);
+      if (!distances.length) return limit;
+      return Math.min(limit, measure.limit(Math.max(...distances)));
+    };
     const refresh = () => {
-      label.innerHTML = targetLabel({ multi, left: limit - marked.size, marked: marked.size });
+      label.innerHTML = targetLabel({ multi, left: Math.max(0, capFor(Array.from(marked.keys()), pointed) - marked.size), marked: marked.size });
       if (measure?.from) label.querySelector(".ep-targeting-count")?.append(document.createElement("br"), range);
     };
     const unmark = token => {
@@ -313,6 +323,7 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
         marked.set(token, marker(token, point, { icon, color: markColor }));
       }
       else if (marked.size >= limit) ui.notifications.warn(game.i18n.format("ep2e.targeting.limitReached", { max: limit }));
+      else if (marked.size >= capFor([...marked.keys(), token])) ui.notifications.warn(game.i18n.format("ep2e.targeting.tooMany", { max: capFor([...marked.keys(), token]) }));
       else if (Number.isFinite(within) && marked.size && Array.from(marked.keys()).every(other => tokenGap(token, other, canvas.grid) > within)) {
         ui.notifications.warn(game.i18n.format("ep2e.targeting.tooFar", { within }));
       }
@@ -330,6 +341,10 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
       const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
       const hovered = tokenAt(point, canvas.tokens.placeables);
       const distance = hovered && hovered !== measure.from ? tokenGap(measure.from, hovered, canvas.grid) : pointGap(measure.from, point, canvas.grid);
+      if (measure.limit) {
+        pointed = hovered && marked.has(hovered) ? null : distance;
+        refresh();
+      }
       range.textContent = measure.describe?.(distance, hovered && hovered !== measure.from ? hovered : null) ?? "";
       if (line) drawMeasureLine(line, measure.from, point);
     };
@@ -399,7 +414,8 @@ function showAgain(element, modal) {
  *   from, refuseFor(form) the refusal as the dialog stands at picking, area(form) an area to place
  *   first - only tokens in it can be picked; an area that takes no targets (max 0) is kept in the
  *   dialog's placedArea and rolls at once, measured by its distance(area) or else its length;
- *   allowed(form), once measured, how many may be struck; label(form), the button's own label
+ *   allowed(form), once measured, how many may be struck; label(form), the button's own label;
+ *   applySight(form, tokens), what the picked targets' visibility sets in the dialog
  * @param {Object} [seams] - pick and place, replaced in tests
  * @returns {void}
  */
@@ -460,6 +476,7 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     const actors = (tokens ?? []).map(token => token.actor).filter(Boolean);
     if (actors.length >= minimum) {
       if (measure?.from) writeMeasured(form, tokens.filter(token => token.actor).map(token => tokenGap(measure.from, token, canvas.grid)), picking);
+      picking.applySight?.(form, tokens.filter(token => token.actor));
       const allowed = picking.allowed?.(form) ?? Infinity;
       if (actors.length > allowed) {
         ui.notifications.warn(game.i18n.format("ep2e.targeting.tooMany", { max: allowed }));
@@ -904,6 +921,111 @@ export function createPrivateArea(shapes, { name = "", color = TARGET_COLOR, fla
 }
 
 /**
+ * The outer edges of a set of grid cells: every cell side that no other cell of the set shares.
+ * @param {Object[]} cells - The cells, as { i, j }
+ * @param {Object} grid - The scene's grid
+ * @returns {Number[][]} The edges, as [x1, y1, x2, y2]
+ */
+export function outlineEdges(cells, grid) {
+  const edges = new Map();
+  const corner = vertex => `${Math.round(vertex.x)},${Math.round(vertex.y)}`;
+  for (const cell of cells) {
+    const vertices = grid.getVertices(cell);
+    vertices.forEach((vertex, index) => {
+      const next = vertices[(index + 1) % vertices.length];
+      const key = [corner(vertex), corner(next)].sort().join("|");
+      const known = edges.get(key);
+      if (known) known.count++;
+      else edges.set(key, { count: 1, line: [vertex.x, vertex.y, next.x, next.y] });
+    });
+  }
+  return Array.from(edges.values()).filter(edge => edge.count === 1).map(edge => edge.line);
+}
+
+/**
+ * The line a cloud's Region is outlined with: the outer edges of its cells on the grid it was laid
+ * on, its wall-cut shape without one, or - once the grid has changed - the circle it spreads to.
+ * @param {Object} region - The cloud's Region
+ * @param {Object} [grid] - The scene's grid
+ * @returns {Object} edges, or points of a closed shape, or circle { x, y, radius }
+ */
+export function cloudOutline(region, grid = globalThis.canvas?.grid) {
+  const flag = region?.getFlag?.("eclipsephase", AREA_FLAG) ?? {};
+  const sameGrid = (flag.gridType ?? null) === (grid?.type ?? null);
+  if (sameGrid && Array.isArray(flag.cells) && flag.cells.length && hasCells(grid)) {
+    return { edges: outlineEdges(flag.cells.map(cell => { const [i, j] = cell.split(",").map(Number); return { i, j }; }), grid) };
+  }
+  if (sameGrid && Array.isArray(flag.points) && flag.points.length >= 6) return { points: flag.points };
+  if (flag.origin && Number.isFinite(Number(flag.radius))) return { circle: { x: flag.origin.x, y: flag.origin.y, radius: unitsToPixels(flag.radius) } };
+  const shape = Array.from(region?.shapes ?? [])[0];
+  if (shape?.type === "polygon") return { points: Array.from(shape.points ?? []) };
+  if (shape?.type === "circle") return { circle: { x: shape.x, y: shape.y, radius: shape.radius } };
+  return { edges: [] };
+}
+
+// How untinted smoke's fog light is drawn: Foundry's "Invert Absorption" coloration, without luminosity.
+const SMOKE_LIGHT = { coloration: 9, luminosity: 0 };
+
+/**
+ * Leaves a cloud in the scene, as far as walls let it spread from where it bursts: whole cells on a
+ * grid, the wall-cut shape elsewhere. The Region itself shows only on the Region layer; the cloud is
+ * drawn as an outline in its colour. A cloud can also lie under a swirling fog light for as long as it
+ * lies, tinted, or untinted as smoke with inverted absorption and no luminosity.
+ * @param {Object} area - kind "circle", origin, radius and the wall-cut polygon
+ * @param {Object} options - name; color; flags, kept under the area flag; behaviors; fog: add the
+ *   fog light; fogColor: its tint, none by default
+ * @returns {Promise<Object[]>} The Region, in a list, empty when the GM creates it
+ */
+export async function createCloudArea(area, { name = "", color = TARGET_COLOR, flags = {}, behaviors = [], fog = false, fogColor = null } = {}) {
+  const grid = canvas.grid;
+  let shapes;
+  let cells = null;
+  let points = null;
+  if (hasCells(grid)) {
+    const open = areaSquares(area, grid).open;
+    cells = open.map(({ i, j }) => `${i},${j}`);
+    shapes = cellShapes(open, grid);
+  }
+  else {
+    points = Array.from(area.polygon?.points ?? []);
+    shapes = points.length >= 6 ? [{ type: "polygon", points }] : [{ type: "circle", x: area.origin.x, y: area.origin.y, radius: unitsToPixels(area.radius) }];
+  }
+  if (!shapes.length) return [];
+  const regions = await createRegions([{
+    name: name || game.i18n.localize("ep2e.targeting.areaName"), color, highlightMode: "coverage", visibility: CONST.REGION_VISIBILITY.LAYER,
+    levels: canvas.level ? [canvas.level.id] : [], shapes, behaviors,
+    flags: { eclipsephase: { [AREA_FLAG]: { kind: area.kind, origin: area.origin, radius: area.radius, color, gridType: grid?.type ?? null, ...(cells ? { cells } : {}), ...(points?.length >= 6 ? { points } : {}), ...flags } } }
+  }]);
+  if (fog) {
+    const smoke = fogColor ? {} : SMOKE_LIGHT;
+    const light = { x: area.origin.x, y: area.origin.y, config: { dim: area.radius, bright: 0, color: fogColor, ...smoke, animation: { type: "fog", speed: 3, intensity: 8 } }, flags: { eclipsephase: { [AREA_FLAG]: { ...flags } } } };
+    if (CONFIG.AmbientLight?.documentClass?.canUserCreate?.(game.user)) await canvas.scene.createEmbeddedDocuments("AmbientLight", [light]);
+    else relayToActiveGM("createCloudLight", { sceneId: canvas.scene.id, data: light });
+  }
+  return regions;
+}
+
+/**
+ * Removes the fog lights of a scene's smoke that match.
+ * @param {Function} match - match(areaFlag) for the lights to remove
+ * @param {Object} [scene] - The scene, the viewed one by default
+ * @returns {Promise<Number>} How many were removed here
+ */
+export async function clearCloudLights(match, scene = globalThis.canvas?.scene) {
+  const ids = Array.from(scene?.lights ?? []).filter(light => {
+    const flag = light.getFlag?.("eclipsephase", AREA_FLAG);
+    return flag && match(flag);
+  }).map(light => light.id);
+  if (!ids.length) return 0;
+  if (game.user.isGM) {
+    await scene.deleteEmbeddedDocuments("AmbientLight", ids);
+    return ids.length;
+  }
+  relayToActiveGM("clearCloudLights", { sceneId: scene.id, ids });
+  return 0;
+}
+
+/**
  * Removes the areas of a scene that match, such as those an attack left. A user who may not delete
  * them has the active GM do it.
  * @param {Function} [match] - match(areaFlag) for the areas to remove; all areas by default
@@ -931,6 +1053,8 @@ export async function clearAreas(match = () => true, scene = globalThis.canvas?.
 export function registerAreaSocket() {
   registerSocketActions({
     createAreaRegion: ({ sceneId, data }) => game.scenes.get(sceneId)?.createEmbeddedDocuments("Region", Array.isArray(data) ? data : [data]),
-    clearAreaRegions: ({ sceneId, ids }) => game.scenes.get(sceneId)?.deleteEmbeddedDocuments("Region", ids)
+    clearAreaRegions: ({ sceneId, ids }) => game.scenes.get(sceneId)?.deleteEmbeddedDocuments("Region", ids),
+    createCloudLight: ({ sceneId, data }) => game.scenes.get(sceneId)?.createEmbeddedDocuments("AmbientLight", [data]),
+    clearCloudLights: ({ sceneId, ids }) => game.scenes.get(sceneId)?.deleteEmbeddedDocuments("AmbientLight", ids)
   });
 }

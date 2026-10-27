@@ -1166,12 +1166,21 @@
             "proximity": "Proximidade"
           },
           "payload": {
-            "enabled": "Tem carga",
+            "enabled": "Carga",
             "select": "Escolher carga",
             "sources": {
               "drugs": "Drogas e toxinas"
             },
-            "vector": "Vetor da carga"
+            "vector": "Vetor da carga",
+            "choose": "Escolher",
+            "smoke": "Fumaça"
+          },
+          "cloud": "Forma uma nuvem",
+          "cloudColor": {
+            "smoke": "Fumaça",
+            "toxin": "Toxina",
+            "drug": "Droga",
+            "custom": "Próprio"
           }
         }
       },
@@ -2033,7 +2042,11 @@
         "armedLive": "{name} · sensor ativo",
         "armedArming": "{name} · sensor ativo em {time}",
         "armedTimer": "{name} · explode em {time}",
-        "armedYours": "{name} (Você)"
+        "armedYours": "{name} (Você)",
+        "gasArea": "Gás ({name})",
+        "smokeArea": "Fumaça ({name})",
+        "gasNote": "A nuvem de gás dura 3 turnos de ação: quem estiver nela, entrar ou começar o turno nela inala a dose.",
+        "smokeNote": "A fumaça dura 3 minutos e esconde o que estiver dentro ou atrás (-20)."
       },
       "defence": {
         "headline": "Defender-se de {weapon}",
@@ -2273,7 +2286,9 @@
         "day3": "+3 dias",
         "day7": "+7 dias",
         "beats": "{beats} beats"
-      }
+      },
+      "sectionEnvironment": "Ambiente",
+      "locateCloud": "Mostrar no mapa"
     },
     "migration": {
       "armorBoundNotice": "<p><b>Atualização de Armadura:</b> {count} item(ns) de Armadura deste personagem foram automaticamente vinculados a <b>{body}</b>, já que a Armadura agora pertence a um corpo específico em vez de simplesmente ficar no seu inventário. Use o botão de reatribuir ao lado de um item de Armadura (na aba Morfo) para movê-lo para outro corpo quando quiser.</p>",
@@ -2356,7 +2371,7 @@
       "outOfTouch": "{name} está fora do alcance de um toque (2 m).",
       "areaName": "Área",
       "outsideArea": "Esse token está fora da área.",
-      "tooMany": "Este ataque atinge no máximo {max} alvos a essa distância.",
+      "tooMany": "Neste alcance, este ataque atinge no máximo {max} alvos.",
       "ownBlast": "{name} está na própria explosão.",
       "armedElsewhere": "Esse explosivo está em outra cena - mostre essa cena primeiro."
     }
@@ -2376,6 +2391,14 @@
           "messageId": {
             "label": "Cartão de ataque",
             "hint": "A mensagem de chat do explosivo a que este sensor pertence."
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Cartão de ataque",
+            "hint": "A mensagem de chat do gás a que esta nuvem pertence."
           }
         }
       }

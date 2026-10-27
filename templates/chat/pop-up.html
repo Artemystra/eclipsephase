@@ -187,7 +187,7 @@
                     </div>
                 </div>
                 {{#if payload.enabled}}
-                <div class="ep-payload-tag"><i class="fa-regular fa-flask"></i> {{#if payload.loaded.length}}{{payload.loaded.0.name}}{{else}}{{localize "ep2e.roll.dialog.throw.noPayload"}}{{/if}}</div>
+                <div class="ep-payload-tag"><i class="fa-regular fa-flask"></i> {{#if payload.loaded.length}}{{payload.loaded.0.name}}{{else if cloud}}{{localize "ep2e.item.weapon.table.payload.smoke"}}{{else}}{{localize "ep2e.roll.dialog.throw.noPayload"}}{{/if}}</div>
                 {{/if}}
                 <div class="itemDescription" style="display: flex; flex-wrap: wrap;">
                   {{localize description}}

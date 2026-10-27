@@ -217,11 +217,17 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 
     return calcPool
 }
+
+/**
+ * The fields a roll dialog's values are read from, by their form names: a field the form names
+ * otherwise is never read.
+ */
+export const DIALOG_FIELDS = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'timerValue', 'timerUnit', 'proximityRadius', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"];
 
 async function defineRoll(dataset, actorWhole, rolledFrom){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'timerValue', 'timerUnit', 'proximityRadius', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = [...DIALOG_FIELDS]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -1322,7 +1328,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
 
-    if (options.defenderHidden) {
+    if (options.hiddenDefender) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.defHidden";
         task.addModifier(new TaskRollModifier(announce, modValue))

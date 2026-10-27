@@ -1,4 +1,4 @@
-import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, munitionDose, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, munitionDose, cloudColor, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
@@ -386,11 +386,15 @@ export function detectThrow(context) {
   const harmless = !!selected.weaponTraits?.automatedEffects?.noDamage || !formulaMax(selected.weaponDamage);
   const munition = grenade ? selected.weapon.system?.payload : selected.weapon.system?.ammoSelected?.payload;
   const dose = munitionDose(munition, !harmless);
+  const clouds = (grenade ? selected.weapon.system?.cloud : selected.weapon.system?.ammoSelected?.cloud) === true && munition?.enabled === true;
+  const breathed = munition?.enabled && munition.vector === "inhalation" ? munition.loaded?.[0] : null;
+  const color = cloudColor(grenade ? selected.weapon.system?.cloudColor : selected.weapon.system?.ammoSelected?.cloudColor);
+  const cloud = clouds ? (breathed?.uuid ? { kind: "gas", uuid: breathed.uuid, name: breathed.name ?? "", color } : { kind: "smoke", color }) : null;
   const reach = blastReach(selected.blast, { radius: options.blastRadius, reduction: options.blastReduction });
   const placed = (() => { try { return JSON.parse(options.placedArea || "null"); } catch { return null; } })();
   const trigger = options.trigger || selected.blast?.trigger || "impact";
   const blast = reach.kind !== "none" ? {
-    ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger, harmless, delayed: isDelayedTrigger(trigger), lingers: harmless && !dose,
+    ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger, harmless, delayed: isDelayedTrigger(trigger), lingers: !!cloud, ...(cloud ? { cloud } : {}),
     ...(trigger === "timer" ? { timer: { value: Number(options.timerValue) || 1, unit: options.timerUnit || "rounds", ...timerSpan(options.timerValue || 1, options.timerUnit || "rounds") } } : {}),
     ...(trigger === "proximity" ? { sensor: Math.min(PROXIMITY_REACH, Math.max(1, Number(options.proximityRadius) || PROXIMITY_REACH)) } : {})
   } : null;

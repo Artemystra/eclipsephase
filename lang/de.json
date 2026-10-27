@@ -1187,12 +1187,21 @@
             "proximity": "Annäherung"
           },
           "payload": {
-            "enabled": "Hat Ladung",
+            "enabled": "Nutzlast",
             "select": "Ladung wählen",
             "sources": {
               "drugs": "Drogen und Toxine"
             },
-            "vector": "Vektor der Ladung"
+            "vector": "Vektor der Ladung",
+            "choose": "Wählen",
+            "smoke": "Rauch"
+          },
+          "cloud": "Bildet eine Wolke",
+          "cloudColor": {
+            "smoke": "Rauch",
+            "toxin": "Toxin",
+            "drug": "Droge",
+            "custom": "Eigene"
           }
         }
       },
@@ -2061,7 +2070,11 @@
         "armedLive": "{name} · Sensor aktiv",
         "armedArming": "{name} · Sensor aktiv in {time}",
         "armedTimer": "{name} · explodiert in {time}",
-        "armedYours": "{name} (Du)"
+        "armedYours": "{name} (Du)",
+        "gasArea": "Gas ({name})",
+        "smokeArea": "Rauch ({name})",
+        "gasNote": "Die Gaswolke liegt 3 Aktionszüge: Wer darin steht, hineinläuft oder seinen Zug darin beginnt, atmet die Dosis ein.",
+        "smokeNote": "Der Rauch liegt 3 Minuten und verbirgt, was darin oder dahinter ist (-20)."
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -2301,7 +2314,9 @@
         "day3": "+3 Tage",
         "day7": "+7 Tage",
         "beats": "{beats} Beats"
-      }
+      },
+      "sectionEnvironment": "Umgebung",
+      "locateCloud": "Auf der Karte zeigen"
     },
     "migration": {
       "armorBoundNotice": "<p><b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände dieses Charakters wurden automatisch an <b>{body}</b> gebunden, da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Nutze den Zuweisen-Button neben einem Rüstungsgegenstand (im Morph-Tab), um ihn jederzeit einem anderen Körper zuzuweisen.</p>",
@@ -2377,7 +2392,7 @@
       "outOfTouch": "{name} ist außerhalb der Reichweite einer Berührung (2 m).",
       "areaName": "Fläche",
       "outsideArea": "Dieser Token liegt außerhalb der Fläche.",
-      "tooMany": "Dieser Angriff trifft auf diese Entfernung höchstens {max} Ziele.",
+      "tooMany": "Auf diese Reichweite trifft dieser Angriff höchstens {max} Ziele.",
       "ownBlast": "{name} steht in der eigenen Explosion.",
       "armedElsewhere": "Dieser Sprengsatz liegt in einer anderen Szene - zeige zuerst diese Szene an."
     }
@@ -2397,6 +2412,14 @@
           "messageId": {
             "label": "Angriffskarte",
             "hint": "Die Chatnachricht des Sprengsatzes, zu dem dieser Sensor gehört."
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Angriffskarte",
+            "hint": "Die Chatnachricht des Gases, zu dem diese Wolke gehört."
           }
         }
       }

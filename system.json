@@ -32,7 +32,8 @@
   "documentTypes": {
     "RegionBehavior": {
       "suppressive": {},
-      "proximity": {}
+      "proximity": {},
+      "cloud": {}
     }
   },
   "esmodules": [

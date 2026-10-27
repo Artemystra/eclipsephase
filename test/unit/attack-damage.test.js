@@ -1,11 +1,11 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, PROXIMITY_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
-import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea } from "../../module/common/targeting.js";
+import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cloudOutline } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
-import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
@@ -1278,6 +1278,14 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     expect(blastPosition(touching, area, { isSquare: false, size: 100, distance: 1 })).toBeNull();
   });
 
+  test("a dodge gets out of a blast within 2 metres of its edge, not further in", () => {
+    scene([]);
+    const area = { kind: "circle", origin: { x: 550, y: 550 }, radius: 10, polygon: { contains: () => true } };
+
+    expect(blastPosition({ bounds: { x: 1300, y: 500, width: 100, height: 100 } }, area, canvas.grid)).toMatchObject({ distance: 8, nearEdge: true });
+    expect(blastPosition({ bounds: { x: 1200, y: 500, width: 100, height: 100 } }, area, canvas.grid)).toMatchObject({ distance: 7, nearEdge: false });
+  });
+
   test("the last grenade thrown takes its stack with it, and its damage is still rolled", async () => {
     const actor = thrower(FRAG);
     await actor.items.get("gren1").update({ "system.quantity": 1 });
@@ -1764,7 +1772,7 @@ describe("a munition's payload (Core p.211-212)", () => {
     expect(activeDoseFor(hard, "Aggro")).toBeFalsy();
   });
 
-  test("a splash grenade deals no damage but gives everyone it catches the dose - half a hit is a whole dose - and is cleared once all have defended", async () => {
+  test("a splash grenade deals no damage, gives its whole dose to someone who dodges but stays inside it, and is cleared once all have defended", async () => {
     const drug = aggro();
     const grenade = { ...loadPackItem("grenades/Splash_eXXBBl2NCEnduzOu.json"), _id: "gren1" };
     grenade.system = { ...grenade.system, active: true, quantity: 2, payload: { ...grenade.system.payload, loaded: [{ uuid: drug.uuid, name: drug.name }] } };
@@ -1784,9 +1792,10 @@ describe("a munition's payload (Core p.211-212)", () => {
       await until(() => defence());
       seedRolls([4]);
       await rollDefence(defence(), middle.uuid, "dodge", DODGE);
-      await until(() => activeDoseFor(middle, "Aggro") && regions.length === 0);
+      await until(() => defence().getFlag("eclipsephase", "attackDefence").entries[0].outcome && regions.length === 0);
 
       expect(defence().getFlag("eclipsephase", "attackDefence").entries[0].outcome).toBe("half");
+      await until(() => activeDoseFor(middle, "Aggro"));
       expect(activeDoseFor(middle, "Aggro")).toBeTruthy();
       expect(regions).toHaveLength(0);
       expect(damageCards()).toHaveLength(0);
@@ -1853,5 +1862,222 @@ describe("taking a hit without a roll", () => {
     expect(order).toEqual([...order].sort((a, b) => a - b));
     expect(defence.content).not.toContain("ep2e.chat.defence.soak<");
     expect(await soakRemaining(defence)).toBe(2);
+  });
+});
+describe("the ranged dialog's attacker and defender modifiers", () => {
+  test("an attacker in cover, a hidden defender and impaired sight each change the roll", async () => {
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+    seedRolls([30]);
+    await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, coverAttacker: true, hiddenDefender: true, visualImpairment: "major" } }, weapon, "rangedWeapon");
+    const card = createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1);
+    const modifiers = card.getFlag("eclipsephase", "taskCard").data.modifiers.map(modifier => [modifier.text, Number(modifier.value)]);
+
+    expect(modifiers).toEqual(expect.arrayContaining([["ep2e.roll.announce.combat.ranged.coverAttacker", -10], ["ep2e.roll.announce.combat.ranged.defHidden", -30], ["ep2e.roll.announce.combat.ranged.visImpMaj", -20]]));
+  });
+});
+
+describe("clouds of gas and smoke (Core p.212)", () => {
+  let regions;
+  let lights;
+
+  /**
+   * A scene of 100-pixel squares a metre each, whose Regions and lights can be read, updated and
+   * removed, and where the GM may create both.
+   * @param {Object[]} tokens - The tokens on it
+   * @returns {void}
+   */
+  function cloudScene(tokens) {
+    regions = [];
+    lights = [];
+    const grid = { isSquare: true, size: 100, distance: 1, getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }), getTopLeftPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }), getVertices: ({ i, j }) => [[0, 0], [100, 0], [100, 100], [0, 100]].map(([x, y]) => ({ x: j * 100 + x, y: i * 100 + y })) };
+    const wrap = entry => {
+      const region = { ...entry, id: `r${regions.length}`, isOwner: true, getFlag: (scope, key) => region.flags.eclipsephase[key], update: async change => { for (const [path, value] of Object.entries(change)) foundry.utils.setProperty(region, path, value); return region; }, testPoint: ({ x, y }) => region.shapes.some(shape => x >= shape.x && x < shape.x + shape.width && y >= shape.y && y < shape.y + shape.height) };
+      return region;
+    };
+    regions.get = id => regions.find(region => region.id === id);
+    const scene = {
+      id: "scene1", regions, lights,
+      createEmbeddedDocuments: async (type, data) => { if (type === "AmbientLight") lights.push(...data.map((entry, index) => ({ ...entry, id: `l${index}`, getFlag: (scope, key) => entry.flags.eclipsephase[key] }))); else data.forEach(entry => regions.push(wrap(entry))); return data; },
+      deleteEmbeddedDocuments: async (type, ids) => { const list = type === "AmbientLight" ? lights : regions; for (const id of ids) list.splice(list.findIndex(entry => entry.id === id), 1); }
+    };
+    global.canvas = { ready: true, grid, level: null, dimensions: { distancePixels: 100 }, tokens: { placeables: tokens }, scene };
+    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 2000, 0, 2000, 2000], contains: () => true }), testCollision: () => null } } };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    CONFIG.AmbientLight = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { LAYER: 0, ALWAYS: 2 };
+  }
+
+  /**
+   * Throws the Gas/Smoke grenade from the compendium, as gas when a drug is loaded into it.
+   * @param {Item} [drug] - The inhaled payload
+   * @param {Object} [color] - The grenade's cloud colour
+   * @param {Boolean} [enabled] - Whether its payload is switched on
+   * @returns {Promise<Object>} The attack card
+   */
+  async function release(drug = null, color = undefined, enabled = true) {
+    const grenade = { ...loadPackItem("grenades/Gas_Smoke_tpxWJJNwXCBRgZ45.json"), _id: "gren1" };
+    grenade.system = { ...grenade.system, active: true, quantity: 2, ...(color ? { cloudColor: color } : {}), payload: { ...grenade.system.payload, enabled, loaded: drug ? [{ uuid: drug.uuid, name: drug.name }] : [] } };
+    const actor = makeActor({ type: "character", name: "Thrower", system: { aptitudes: { som: { value: 15 } } }, items: [grenade] });
+    seedRolls([30]);
+    await RollCheck({ type: "skill", key: "athletics", name: "athletics", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "impact", placedArea: JSON.stringify({ kind: "circle", origin: { x: 550, y: 550 }, radius: 0 }) } }, grenadePreparation(actor, "gren1"), "grenade");
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1);
+  }
+
+  /**
+   * A drug to breathe in, findable by its uuid.
+   * @returns {Item} Aggro
+   */
+  function inhaled() {
+    const drug = makeItem({ ...loadPackItem("drugs-and-toxins/Aggro_jo3GAYGK409hcV16.json"), _id: "aggro2" });
+    global.__ep.uuidRegistry.set(drug.uuid, drug);
+    return drug;
+  }
+
+  beforeEach(() => { game.user.isActiveGM = true; });
+  afterEach(() => { delete global.canvas; delete game.user.isActiveGM; game.time.worldTime = 0; });
+
+  test("smoke lies for 3 minutes under a swirling fog without colour, strikes nobody, and goes when its time is up", async () => {
+    cloudScene([{ actor: armoured("Bo"), bounds: { x: 500, y: 500, width: 100, height: 100 } }]);
+    const card = await release();
+    await until(() => lights.length);
+
+    expect(regions.map(region => region.flags.eclipsephase.area)).toEqual([expect.objectContaining({ cloud: "smoke", at: 180 })]);
+    expect(lights).toEqual([expect.objectContaining({ x: 550, y: 550, config: { dim: 10, bright: 0, color: null, coloration: 9, luminosity: 0, animation: { type: "fog", speed: 3, intensity: 8 } } })]);
+    expect(createdMessages.some(message => message.getFlag?.("eclipsephase", "attackDefence"))).toBe(false);
+    expect(card.content).toContain("ep2e.chat.attack.smokeNote");
+
+    game.time.worldTime = 179;
+    await tickArmed();
+    expect(regions).toHaveLength(1);
+    game.time.worldTime = 180;
+    await tickArmed();
+    expect([regions.length, lights.length]).toEqual([0, 0]);
+  });
+
+  test("gas gives everyone in it its dose without a defence, and anyone who comes in later once, then disperses after 3 action turns", async () => {
+    const drug = inhaled();
+    const inside = armoured("Inside");
+    const later = armoured("Later");
+    cloudScene([{ actor: inside, bounds: { x: 500, y: 500, width: 100, height: 100 } }]);
+    await release(drug);
+    await until(() => activeDoseFor(inside, "Aggro"));
+
+    const cloud = regions[0];
+    expect(cloud.flags.eclipsephase.area).toMatchObject({ cloud: "gas", dosed: [inside.uuid], at: 9 });
+    expect(cloud.behaviors).toEqual([expect.objectContaining({ type: CLOUD_BEHAVIOR })]);
+    await until(() => lights.length);
+    expect(lights).toHaveLength(1);
+    expect(createdMessages.some(message => message.getFlag?.("eclipsephase", "attackDefence"))).toBe(false);
+
+    expect(await gasReaches(cloud, later)).toBe(true);
+    expect(await gasReaches(cloud, later)).toBe(false);
+    expect(await gasReaches(cloud, inside)).toBe(false);
+    expect(activeDoseFor(later, "Aggro")).toBeTruthy();
+
+    game.time.worldTime = 9;
+    await tickArmed();
+    expect([regions.length, lights.length]).toEqual([0, 0]);
+  });
+
+  test("a munition whose payload is switched off forms no cloud", async () => {
+    cloudScene([]);
+    const card = await release(null, undefined, false);
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(card.getFlag("eclipsephase", "roll")?.targetedAttack?.blast?.cloud ?? null).toBeNull();
+    expect(regions.filter(region => region.flags.eclipsephase.area.cloud)).toHaveLength(0);
+  });
+
+  test("a cloud's Region shows only on the Region layer and keeps its cells and colour for its outline, under a fog in its colour", async () => {
+    cloudScene([]);
+    await release(inhaled(), { kind: "drug", custom: "#ffffff" });
+    await until(() => lights.length);
+
+    expect(regions[0].visibility).toBe(0);
+    expect(regions[0].flags.eclipsephase.area).toMatchObject({ color: CLOUD_COLORS.drug, cells: expect.arrayContaining(["5,5"]) });
+    expect(cloudOutline(regions[0]).edges.length).toBeGreaterThan(0);
+    expect(lights[0].config.color).toBe(CLOUD_COLORS.drug);
+  });
+
+  test("the time panel lists the clouds on the scene with their time left, and ending one clears it with its fog", async () => {
+    cloudScene([]);
+    await release(null, { kind: "custom", custom: "#123456" });
+    await until(() => lights.length);
+    game.time.worldTime = 60;
+
+    const rows = cloudsOnScene();
+    expect(rows).toEqual([expect.objectContaining({ color: "#123456", origin: { x: 550, y: 550 }, remaining: 'ep2e.chat.attack.countdownMinutes {"count":2}' })]);
+    game.user.isGM = true;
+    expect(await endCloud(rows[0].attackId)).toBe(true);
+    expect([regions.length, lights.length, cloudsOnScene()]).toEqual([0, 0, []]);
+    delete game.user.isGM;
+  });
+
+  test("smoke between the attacker and a target, or on either, sets the attack dialog's sight to major impairment", async () => {
+    const shooterActor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    const shooter = { actor: shooterActor, center: { x: 1950, y: 1950 }, bounds: { x: 1900, y: 1900, width: 100, height: 100 } };
+    shooterActor.getActiveTokens = () => [shooter];
+    cloudScene([shooter]);
+    await release();
+    await until(() => regions.length);
+    const weapon = await weaponPreparation(shooterActor, "guns", "rangedWeapon", "gun1");
+    const picking = pickingFor({ rolledFrom: "rangedWeapon", actor: shooterActor, weapon });
+    const form = sight => ({ elements: { visualImpairment: { value: sight } } });
+
+    expect(smokeBetween({ x: 150, y: 550 }, { x: 1950, y: 550 })).toBe(true);
+    expect(smokeBetween({ x: 150, y: 1950 }, { x: 1950, y: 1950 })).toBe(false);
+    const through = form("none");
+    picking.applySight(through, [{ center: { x: 150, y: 550 } }]);
+    const clear = form("none");
+    picking.applySight(clear, [{ center: { x: 1950, y: 150 } }]);
+    const blind = form("blind");
+    picking.applySight(blind, [{ center: { x: 150, y: 550 } }]);
+    expect([through.elements.visualImpairment.value, clear.elements.visualImpairment.value, blind.elements.visualImpairment.value]).toEqual(["major", "none", "blind"]);
+  });
+});
+
+describe("cloud colours and outlines", () => {
+  afterEach(() => { delete global.canvas; });
+
+  test("a cloud with nothing loaded is named smoke wherever its payload is shown", () => {
+    const empty = { enabled: true, vector: "inhalation", loaded: [] };
+    expect([loadedPayloadName(empty, true), loadedPayloadName(empty, false)]).toEqual(["ep2e.item.weapon.table.payload.smoke", "ep2e.roll.dialog.throw.noPayload"]);
+    expect(payloadInfo(empty, true)).toEqual({ name: "ep2e.item.weapon.table.payload.smoke", vector: "" });
+    expect(payloadInfo(empty, false)).toEqual({ empty: true });
+  });
+
+  test("a cloud is drawn in its kind's colour, or in a colour of its own when that is a valid one", () => {
+    expect([cloudColor({ kind: "smoke" }), cloudColor({ kind: "toxin" }), cloudColor({ kind: "drug" })]).toEqual([CLOUD_COLORS.smoke, CLOUD_COLORS.toxin, CLOUD_COLORS.drug]);
+    expect(cloudColor({ kind: "custom", custom: "#ab12cd" })).toBe("#ab12cd");
+    expect([cloudColor({ kind: "custom", custom: "red" }), cloudColor(undefined)]).toEqual([CLOUD_COLORS.smoke, CLOUD_COLORS.smoke]);
+  });
+
+  test("loading a substance turns a cloud green for a toxin and purple for a drug, but leaves a colour of its own", async () => {
+    const toxin = makeItem({ _id: "tox1", name: "Toxin", type: "drug", system: { category: "toxin" } });
+    const drug = makeItem({ _id: "drg1", name: "Drug", type: "drug", system: { category: "drug" } });
+    for (const item of [toxin, drug]) global.__ep.uuidRegistry.set(item.uuid, item);
+
+    expect(await payloadCloudKind({ cloud: true, cloudColor: { kind: "smoke" } }, toxin.uuid)).toBe("toxin");
+    expect(await payloadCloudKind({ cloud: true, cloudColor: { kind: "toxin" } }, drug.uuid)).toBe("drug");
+    expect(await payloadCloudKind({ cloud: true, cloudColor: { kind: "custom" } }, drug.uuid)).toBeNull();
+    expect(await payloadCloudKind({ cloud: false }, drug.uuid)).toBeNull();
+  });
+
+  test("the outline of cells is every side no other cell shares, on squares and on hexes", () => {
+    const square = { isSquare: true, getVertices: ({ i, j }) => [[0, 0], [100, 0], [100, 100], [0, 100]].map(([x, y]) => ({ x: j * 100 + x, y: i * 100 + y })) };
+    expect(outlineEdges([{ i: 0, j: 0 }, { i: 0, j: 1 }], square)).toHaveLength(6);
+    expect(outlineEdges([{ i: 0, j: 0 }, { i: 0, j: 1 }, { i: 1, j: 0 }, { i: 1, j: 1 }], square)).toHaveLength(8);
+
+    const hex = [[0, -50], [43.3, -25], [43.3, 25], [0, 50], [-43.3, 25], [-43.3, -25]];
+    const hexGrid = { isHexagonal: true, getVertices: ({ i, j }) => hex.map(([x, y]) => ({ x: j * 86.6 + x, y: i * 100 + y })) };
+    expect(outlineEdges([{ i: 0, j: 0 }, { i: 0, j: 1 }], hexGrid)).toHaveLength(10);
+  });
+
+  test("without cells a cloud is outlined by its wall-cut shape, and once the grid changed by its circle", () => {
+    global.canvas = { grid: { type: 0, isSquare: false, isHexagonal: false }, dimensions: { distancePixels: 100 } };
+    const region = flag => ({ shapes: [], getFlag: () => ({ cloud: "smoke", origin: { x: 5, y: 6 }, radius: 2, ...flag }) });
+    expect(cloudOutline(region({ gridType: 0, points: [0, 0, 10, 0, 10, 10] }))).toEqual({ points: [0, 0, 10, 0, 10, 10] });
+    expect(cloudOutline(region({ gridType: 1, cells: ["0,0"] }))).toEqual({ circle: { x: 5, y: 6, radius: 200 } });
   });
 });

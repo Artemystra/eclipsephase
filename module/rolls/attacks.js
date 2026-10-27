@@ -3,9 +3,9 @@ import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds } from "../common/morp-functions.js";
 import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells } from "../common/targeting.js";
+import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
-import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH } from "../common/weapon-functions.js";
+import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
 // the hit from a button on the attack card, and every target's owner rolls a defence from a card of
@@ -442,8 +442,8 @@ export async function rollRemainingDefences(message) {
 }
 
 /**
- * What a defence does to the attack. A failed defence lets it hit. Against an area attack a
- * successful dodge still lets half through, unless the defender was behind cover (Core p.218).
+ * What a defence does to the attack. A failed defence lets it hit. Against a blast a successful
+ * dodge still lets half through, unless the defender was behind cover or at its edge (Core p.218).
  * Otherwise it is an opposed test (Core p.202): when both succeed, a critical success beats one that
  * is not, and between equals the higher die wins - a tie goes to the defender.
  * @param {Object} attack - The attack, with roll ({ value, result }) once its targets were chosen
@@ -679,9 +679,10 @@ function distanceText(distance, band) {
 /**
  * What a ranged attack measures while its targets are picked: the distance from the attacker's
  * token, shown with its range category, and the farthest picked target's category set as the
- * dialog's distance. Targets the weapon cannot be fired at so close are refused.
+ * dialog's distance. A cone weapon also keeps to how many targets it strikes at that distance. Targets the weapon cannot be fired at so close are refused, and smoke between the
+ * attacker and a target - or on either - sets the dialog's sight to major impairment (Core p.212).
  * @param {Object} rollContext - The roll context
- * @returns {Object} measure(form), applyMeasured(form, distances) and refuse(token)
+ * @returns {Object} measure(form), applyMeasured(form, distances), applySight(form, tokens) and refuse(token)
  */
 function rangedMeasuring(rollContext) {
   const range = weaponRange(rollContext.weapon);
@@ -690,11 +691,23 @@ function rangedMeasuring(rollContext) {
   return {
     measure: () => {
       const origin = from();
-      return origin ? { from: origin, describe: distance => distanceText(distance, rangeBand(distance, range, traits)) } : null;
+      if (!origin) return null;
+      if (!isConeWeapon(rollContext.weapon?.weapon)) return { from: origin, describe: distance => distanceText(distance, rangeBand(distance, range, traits)) };
+      return {
+        from: origin,
+        limit: distance => attackTargetCount(rollContext.weapon.weapon, { range: rangeBand(distance, range, traits).select }),
+        describe: distance => distanceText(distance, rangeBand(distance, range, traits))
+      };
     },
     applyMeasured: (form, distances) => {
       const select = form?.elements?.range;
       if (select && distances.length) select.value = rangeBand(Math.max(...distances), range, traits).select;
+    },
+    applySight: (form, tokens) => {
+      const origin = from();
+      const sight = form?.elements?.visualImpairment;
+      if (!origin || !sight || !["none", "minor"].includes(sight.value)) return;
+      if (tokens.some(token => smokeBetween(origin.center, token.center))) sight.value = "major";
     },
     refuse: token => {
       const origin = from();
@@ -955,7 +968,7 @@ function blastArea(rollContext) {
  * @param {Object} token - The token, with bounds in pixels
  * @param {Object} area - The blast: origin, radius and the wall-cut polygon
  * @param {Object} grid - The scene's grid
- * @returns {Object|null} distance from the centre in metres, nearEdge (within a metre of the edge)
+ * @returns {Object|null} distance from the centre in metres, nearEdge (within BLAST_EDGE metres of the edge)
  *   and shadow (behind a wall from the centre), or null when it is not in the blast
  */
 export function blastPosition(token, area, grid) {
@@ -977,8 +990,11 @@ export function blastPosition(token, area, grid) {
   if (!inside.length) return null;
   const distance = Math.min(...inside.map(point => Math.hypot(point.x - area.origin.x, point.y - area.origin.y))) / unitsToPixels(1);
   const shadow = area.polygon ? !area.polygon.contains(centre.x, centre.y) : false;
-  return { distance, nearEdge: area.radius - distance <= 1, shadow };
+  return { distance, nearEdge: area.radius - distance <= BLAST_EDGE, shadow };
 }
+
+// How far from a blast's edge, in metres, a successful dodge gets someone out of it altogether.
+export const BLAST_EDGE = 2;
 
 // How long a blast that caught nobody stays in sight before it goes, in milliseconds.
 const BLAST_LINGER = 3000;
@@ -1050,6 +1066,7 @@ export function detonateBlast(message) {
  */
 async function setOffBlast(message, attack, origin, scatter = null) {
   const blast = attack.blast;
+  if (blast.cloud) return releaseCloud(message, attack, origin, scatter);
   const area = { kind: "circle", origin, radius: blast.radius, angle: 360, rotation: 0 };
   area.polygon = areaPolygon(area.origin, area);
   const name = game.i18n.format("ep2e.chat.attack.blastArea", { name: attack.weaponName });
@@ -1075,6 +1092,101 @@ async function setOffBlast(message, attack, origin, scatter = null) {
   if (open.length) await postDefenceCards(sent, open, { details });
   if (secret.length) await postDefenceCards(sent, secret, { gmOnly: true, details });
   return caught;
+}
+
+// The Region behavior a gas cloud leaves: whoever moves into it breathes its dose in.
+export const CLOUD_BEHAVIOR = "cloud";
+
+// How long a cloud lies, in action turns (Core p.212): gas disperses after 3, smoke after 3 minutes.
+export const CLOUD_TURNS = { gas: 3, smoke: 60 };
+
+/**
+ * When a cloud released now will be gone: in a combat at the end of its thrower's turn so many rounds
+ * on, outside it on the world clock.
+ * @param {String} kind - "gas" or "smoke"
+ * @returns {Object} combatId and round, or at
+ */
+function cloudLasts(kind) {
+  const combat = sceneCombat();
+  const turns = CLOUD_TURNS[kind] ?? 3;
+  if (combat) return { combatId: combat.id, round: combat.round + turns };
+  return { at: (Number(game.time?.worldTime) || 0) + turns * (Number(CONFIG.time?.roundTime) || 3) };
+}
+
+/**
+ * Releases a gas or smoke munition's cloud where it bursts (Core p.212). It spreads as far as walls
+ * let it and lies for its time. Gas gives everyone standing in it its dose; whoever comes into it
+ * later, or begins their turn in it, breathes it in too - once per cloud. Smoke hides sight through it.
+ * Both lie under a swirling fog, tinted in the cloud's colour unless that is plain smoke. Nobody
+ * defends against either.
+ * @param {ChatMessage} message - The attack card
+ * @param {Object} attack - The attack, with blast.cloud
+ * @param {Object} origin - Where it bursts
+ * @param {Object} [scatter] - How it scattered on its way there
+ * @returns {Promise<Object[]>} Who breathed the gas in, empty for smoke
+ */
+async function releaseCloud(message, attack, origin, scatter = null) {
+  const blast = attack.blast;
+  const kind = blast.cloud.kind;
+  const area = { kind: "circle", origin, radius: blast.radius, angle: 360, rotation: 0 };
+  area.polygon = areaPolygon(area.origin, area);
+  const name = game.i18n.format(`ep2e.chat.attack.${kind}Area`, { name: attack.weaponName });
+  const flags = { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, cloud: kind, dosed: [], ...cloudLasts(kind) };
+  const caught = kind === "gas" ? blastTargets(area, canvas.tokens?.placeables ?? []).filter(entry => !entry.shadow) : [];
+  flags.dosed = caught.map(entry => entry.actor.uuid);
+  const behaviors = kind === "gas" ? [{ type: CLOUD_BEHAVIOR, name, system: { messageId: message.id } }] : [];
+  const color = blast.cloud.color ?? (kind === "gas" ? CLOUD_COLORS.toxin : CLOUD_COLORS.smoke);
+  await createCloudArea(area, { name, color, flags, behaviors, fog: true, fogColor: color === CLOUD_COLORS.smoke ? null : color });
+  const extra = { "flags.eclipsephase.roll.targetedAttack.delivered": true, ...(scatter ? { "flags.eclipsephase.roll.targetedAttack.scatter": scatter } : {}) };
+  await updateCard(message, "taskCard", "blastTargets", { targets: [], scatter }, { extra });
+  for (const entry of caught) await breatheIn(blast.cloud, entry.actor);
+  return caught.map(entry => entry.actor);
+}
+
+/**
+ * Gives someone a gas cloud's dose, through their breath.
+ * @param {Object} cloud - The cloud: uuid and name of its substance
+ * @param {Actor} actor - Who breathes it in
+ * @returns {Promise<*>} What giving the dose reported
+ */
+function breatheIn(cloud, actor) {
+  return EFFECTS.get("payload")?.resolve?.({ dose: { uuid: cloud.uuid, name: cloud.name } }, actor, "hit");
+}
+
+/**
+ * Lets someone who comes into a gas cloud, or begins their turn in it, breathe its dose in - once per
+ * cloud. Done by the active GM.
+ * @param {Object} region - The cloud's Region
+ * @param {Actor} actor - Who is in it
+ * @returns {Promise<Boolean>} True when a dose was given
+ */
+export async function gasReaches(region, actor) {
+  const flag = region?.getFlag?.("eclipsephase", AREA_FLAG);
+  if (!game.user.isActiveGM || flag?.cloud !== "gas" || !actor || (flag.dosed ?? []).includes(actor.uuid)) return false;
+  await region.update({ [`flags.eclipsephase.${AREA_FLAG}.dosed`]: [...(flag.dosed ?? []), actor.uuid] });
+  const attack = game.messages.get(flag.messageId)?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
+  if (!attack?.blast?.cloud?.uuid) return false;
+  await breatheIn(attack.blast.cloud, actor);
+  return true;
+}
+
+/**
+ * Whether smoke lies between two points or on either of them, on the viewed scene: what hides a
+ * target from sight (Core p.212).
+ * @param {Object} from - A point in canvas coordinates
+ * @param {Object} to - Another
+ * @returns {Boolean} True when smoke is in the way
+ */
+export function smokeBetween(from, to) {
+  const smoke = Array.from(canvas.scene?.regions ?? []).filter(region => region.getFlag?.("eclipsephase", AREA_FLAG)?.cloud === "smoke");
+  if (!smoke.length || !from || !to) return false;
+  const step = (Number(canvas.grid?.size) || 100) / 4;
+  const steps = Math.max(1, Math.ceil(Math.hypot(to.x - from.x, to.y - from.y) / step));
+  for (let index = 0; index <= steps; index++) {
+    const point = { x: from.x + (to.x - from.x) * index / steps, y: from.y + (to.y - from.y) * index / steps, elevation: 0 };
+    if (smoke.some(region => region.testPoint(point))) return true;
+  }
+  return false;
 }
 
 /**
@@ -1381,6 +1493,9 @@ export function armedIcon(flag, sensor, combat) {
 }
 
 let armedLayer = null;
+
+// The outlines of the viewed scene's clouds.
+let cloudLayer = null;
 let mapTip = null;
 
 /**
@@ -1416,7 +1531,7 @@ function hideMapTip() {
  */
 export function drawArmedIcons() {
   hideMapTip();
-  armedLayer?.destroy({ children: true });
+  if (armedLayer && !armedLayer.destroyed) armedLayer.destroy({ children: true });
   armedLayer = null;
   if (!globalThis.canvas?.ready || !globalThis.PIXI || !canvas.controls) return;
   armedLayer = new PIXI.Container();
@@ -1449,6 +1564,34 @@ export function drawArmedIcons() {
 }
 
 /**
+ * Draws the outline of every cloud on the viewed scene in its colour, for everyone: the cloud's
+ * Region itself only shows on the Region layer.
+ * @returns {void}
+ */
+export function drawCloudOutlines() {
+  if (cloudLayer && !cloudLayer.destroyed) cloudLayer.destroy({ children: true });
+  cloudLayer = null;
+  if (!globalThis.canvas?.ready || !globalThis.PIXI) return;
+  const parent = canvas.interface ?? canvas.controls;
+  if (!parent) return;
+  const clouds = Array.from(canvas.scene?.regions ?? []).filter(region => region.getFlag?.("eclipsephase", AREA_FLAG)?.cloud);
+  if (!clouds.length) return;
+  cloudLayer = new PIXI.Graphics();
+  cloudLayer.eventMode = "none";
+  const width = Math.max(2, (Number(canvas.grid?.size) || 100) / 25);
+  for (const region of clouds) {
+    const flag = region.getFlag("eclipsephase", AREA_FLAG);
+    const color = Number(`0x${String(flag.color ?? region.color ?? CLOUD_COLORS.smoke).replace("#", "").slice(0, 6)}`);
+    cloudLayer.lineStyle({ width, color, alpha: 0.9 });
+    const outline = cloudOutline(region);
+    for (const [x1, y1, x2, y2] of outline.edges ?? []) cloudLayer.moveTo(x1, y1).lineTo(x2, y2);
+    if (outline.points?.length >= 6) cloudLayer.drawPolygon(outline.points);
+    if (outline.circle) cloudLayer.drawCircle(outline.circle.x, outline.circle.y, outline.circle.radius);
+  }
+  parent.addChild(cloudLayer);
+}
+
+/**
  * The armed explosives on the viewed scene of one part, each with its Region and area flag.
  * @param {String} part - "marker" or "sensor"
  * @returns {Object[]} region and flag of each
@@ -1458,9 +1601,10 @@ function armedOnScene(part) {
 }
 
 /**
- * Sets off the timers that are due and brings the proximity sensors that are ready live, on the
- * viewed scene: in a combat once its round comes - a timer at the end of its thrower's turn in that
- * round - and outside combat on the world clock. Done on the active GM's client.
+ * Sets off the timers that are due, brings the proximity sensors that are ready live and lets the
+ * clouds whose time is up disperse, on the viewed scene: in a combat once its round comes - at the
+ * end of the thrower's turn in that round - and outside combat on the world clock. Done on the
+ * active GM's client.
  * @param {Object} [moment] - combat, and prior ({ round, combatantId }), the turn that just ended
  * @returns {Promise<void>} Resolves once done
  */
@@ -1485,11 +1629,59 @@ export async function tickArmed({ combat = null, prior = null } = {}) {
     const message = game.messages.get(flag.messageId);
     if (message) await detonateArmed(message);
   }
+  const gone = Array.from(canvas.scene?.regions ?? []).map(region => region.getFlag?.("eclipsephase", AREA_FLAG)).filter(flag => flag?.cloud && reached({ ...flag, part: "marker" }));
+  for (const flag of gone) {
+    await clearAreas(other => other.attackId === flag.attackId && !!other.cloud);
+    await clearCloudLights(other => other.attackId === flag.attackId);
+  }
 }
 
 /**
- * Moves the armed explosives a combat counts down onto the world clock when the combat ends, so
- * their time still runs: what is left of their rounds, three seconds each.
+ * The clouds lying on a scene, as the time panel lists them: name, colour and how long each still lies.
+ * @param {Scene} [scene] - The scene, the viewed one by default
+ * @returns {Object[]} attackId, name, color, origin and remaining of each
+ */
+export function cloudsOnScene(scene = globalThis.canvas?.scene) {
+  const seen = new Set();
+  const rows = [];
+  for (const region of Array.from(scene?.regions ?? [])) {
+    const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
+    if (!flag?.cloud || seen.has(flag.attackId)) continue;
+    seen.add(flag.attackId);
+    const combat = flag.combatId ? game.combats?.get?.(flag.combatId) ?? null : null;
+    rows.push({ attackId: flag.attackId, name: region.name, color: flag.color ?? region.color ?? CLOUD_COLORS.smoke, origin: flag.origin ?? null, remaining: armedCountdown(flag, combat) });
+  }
+  return rows.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Lets a cloud disperse at once, with its fog light. For the GM.
+ * @param {String} attackId - The attack that released it
+ * @returns {Promise<Boolean>} True when it was cleared
+ */
+export async function endCloud(attackId) {
+  if (!game.user.isGM || !attackId) return false;
+  await clearAreas(other => other.attackId === attackId && !!other.cloud);
+  await clearCloudLights(other => other.attackId === attackId);
+  return true;
+}
+
+/**
+ * Moves the view to a cloud on the viewed scene, with the sheets out of the way.
+ * @param {String} attackId - The attack that released it
+ * @returns {Promise<Boolean>} True when the view moved
+ */
+export async function panToCloud(attackId) {
+  const origin = cloudsOnScene().find(row => row.attackId === attackId)?.origin;
+  if (!origin) return false;
+  sheetsAside();
+  await canvas.animatePan({ x: origin.x, y: origin.y });
+  return true;
+}
+
+/**
+ * Moves the armed explosives and the clouds a combat counts down onto the world clock when the
+ * combat ends, so their time still runs: what is left of their rounds, three seconds each.
  * @param {Combat} combat - The combat that ended
  * @returns {Promise<void>} Resolves once moved
  */
@@ -1497,6 +1689,12 @@ export async function armedAfterCombat(combat) {
   if (!game.user.isActiveGM) return;
   const now = Number(game.time?.worldTime) || 0;
   const turn = Number(CONFIG.time?.roundTime) || 3;
+  const clouds = Array.from(canvas.scene?.regions ?? []).map(region => ({ region, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.cloud);
+  for (const { region, flag } of clouds) {
+    if (flag.combatId !== combat?.id) continue;
+    const left = Math.max(0, flag.round - combat.round + 1);
+    await region.update({ [`flags.eclipsephase.${AREA_FLAG}.combatId`]: null, [`flags.eclipsephase.${AREA_FLAG}.at`]: now + left * turn });
+  }
   for (const part of ["marker", "sensor"]) {
     for (const { region, flag } of armedOnScene(part)) {
       if (flag.combatId !== combat?.id) continue;
@@ -1510,9 +1708,10 @@ export async function armedAfterCombat(combat) {
 }
 
 /**
- * Registers what armed explosives need: the proximity sensor's Region behavior, which acts on the
- * active GM's client for a token moving within its reach once it is live; timers and sensors counting
- * down with the combat's turns and the world clock; and the sheets of their owners kept up to date.
+ * Registers what armed explosives and clouds need: the proximity sensor's and the gas cloud's Region
+ * behaviors, which act on the active GM's client for a token moving within them - the sensor once it
+ * is live; the gas also for whoever begins their turn in it; timers, sensors and clouds counting down
+ * with the combat's turns and the world clock; and the sheets of their owners kept up to date.
  * @returns {void}
  */
 export function registerArmedBlasts() {
@@ -1546,6 +1745,43 @@ export function registerArmedBlasts() {
   }
   CONFIG.RegionBehavior.dataModels[PROXIMITY_BEHAVIOR] = ProximityTriggerBehaviorType;
   CONFIG.RegionBehavior.typeIcons[PROXIMITY_BEHAVIOR] = "fa-solid fa-satellite-dish";
+
+  class GasCloudBehaviorType extends Base {
+    static LOCALIZATION_PREFIXES = ["BEHAVIOR.TYPES.cloud", "BEHAVIOR.TYPES.base"];
+
+    /**
+     * The attack card the cloud answers to.
+     * @returns {Object} The schema
+     */
+    static defineSchema() {
+      return { messageId: new foundry.data.fields.StringField({ required: true, blank: true }) };
+    }
+
+    /**
+     * Lets whoever moves into the cloud breathe its dose in.
+     * @param {Object} event - The Region event
+     * @returns {Promise<void>} Resolves once done
+     */
+    static async onMove(event) {
+      if (!game.user.isActiveGM) return;
+      const actor = event.data?.token?.actor;
+      if (actor) await gasReaches(this.region, actor);
+    }
+
+    static events = {
+      [CONST.REGION_EVENTS.TOKEN_MOVE_IN]: GasCloudBehaviorType.onMove,
+      [CONST.REGION_EVENTS.TOKEN_MOVE_WITHIN]: GasCloudBehaviorType.onMove
+    };
+  }
+  CONFIG.RegionBehavior.dataModels[CLOUD_BEHAVIOR] = GasCloudBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[CLOUD_BEHAVIOR] = "fa-solid fa-smog";
+  Hooks.on("combatTurnChange", async combat => {
+    const token = combat?.combatant?.token;
+    if (!game.user.isActiveGM || !token?.actor) return;
+    for (const region of Array.from(canvas.scene?.regions ?? [])) {
+      if (region.getFlag?.("eclipsephase", AREA_FLAG)?.cloud === "gas" && region.tokens?.has?.(token)) await gasReaches(region, token.actor);
+    }
+  });
   Hooks.on("combatTurnChange", (combat, prior) => tickArmed({ combat, prior }));
   Hooks.on("updateWorldTime", () => tickArmed({ combat: sceneCombat() }));
   Hooks.on("canvasReady", () => tickArmed({ combat: sceneCombat() }));
@@ -1558,7 +1794,12 @@ export function registerArmedBlasts() {
   };
   Hooks.on("createRegion", refreshOwner);
   Hooks.on("deleteRegion", refreshOwner);
-  const redraw = foundry.utils.debounce(drawArmedIcons, 50);
+  const redraw = foundry.utils.debounce(() => {
+    for (const draw of [drawArmedIcons, drawCloudOutlines]) {
+      try { draw(); }
+      catch (error) { console.error("eclipsephase | drawing on the map failed", error); }
+    }
+  }, 50);
   for (const hook of ["canvasReady", "createRegion", "updateRegion", "deleteRegion", "updateWorldTime", "updateCombat", "deleteCombat"]) Hooks.on(hook, redraw);
 }
 
@@ -1612,7 +1853,7 @@ export function attackPicking(rollContext) {
     cursor: preset?.cursor ?? (rolledFrom === "ccWeapon" ? MELEE_CURSOR : {}),
     refuse,
     refuseFor: form => form?.elements?.touchOnly?.checked ? refuseAny(refuse, refuseBeyondTouch(rollContext.actor)) : refuse,
-    ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured } : {}),
+    ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured, applySight: ranged.applySight } : {}),
     ...(area ? { area } : {}),
     ...(blast ? { label: () => "ep2e.roll.dialog.throw.place" } : {}),
     count: form => {

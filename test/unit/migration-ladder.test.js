@@ -373,6 +373,14 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
     expect(actor.items.get("gas1")._source.system.payload).toEqual({ enabled: true, vector: "inhalation", loaded: [] });
   });
 
+  test("a munition its compendium namesake has form a cloud forms one, in the namesake's colour", async () => {
+    const { _ep285_weaponUpdate } = await import("../../module/common/migration.js");
+    const catalogue = new Map([["grenade:Gas/Smoke", { cloud: true, cloudColor: { kind: "smoke", custom: "#ffffff" } }]]);
+    const item = { type: "grenade", name: "Gas/Smoke", _source: { system: { armorused: "none", area: { kind: "uniform", radius: 10, reduction: null } } } };
+
+    expect(_ep285_weaponUpdate(item, catalogue).update).toMatchObject({ "system.cloud": true, "system.cloudColor": { kind: "smoke", custom: "#ffffff" } });
+  });
+
   test("a range that cannot be read stays as written and is listed to the GM", async () => {
     const actor = makeActor({ name: "Sava", type: "character", items: [
       { _id: "thr1", name: "Throwing Knife", type: "rangedWeapon", system: { mode1: { range: "SOM", armorused: "kinetic" }, mode2: { range: "", armorused: "kinetic" } } },

@@ -71,7 +71,8 @@
       "vector": "",
       "loaded": []
     },
-    "trigger": "impact"
+    "trigger": "impact",
+    "cloud": false
   },
   "ownership": {
     "default": 0,

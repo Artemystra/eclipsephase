@@ -128,7 +128,7 @@ describe("what a chemical weapon delivers", () => {
     const card = await fire(actor, 5);
 
     const attack = card.getFlag("eclipsephase", "roll").targetedAttack;
-    expect(attack).toMatchObject({ effect: "dose", targets: 3, area: true, defence: "ranged", delivered: false });
+    expect(attack).toMatchObject({ effect: "dose", targets: 3, area: false, defence: "ranged", delivered: false });
     expect(attack.payload.name).toBe("Grin");
     expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
     expect(card.content).not.toContain("ep2e.chat.buttonLabel.weaponDamage");
@@ -324,16 +324,16 @@ describe("dodging a sprayer's dose", () => {
     expect(activeDoseFor(victim, "Grin").getFlag("eclipsephase", "dose").defense).toBeUndefined();
   });
 
-  test("a dodge in the open still lets half the dose through", async () => {
+  test("a sprayer's cone is no area: a dodge in the open keeps the dose out entirely", async () => {
     const victim = target("Ana");
     const defence = await sprayed(victim);
 
     seedRolls([5]);
     await rollDefence(defence, victim.uuid, "dodge", DODGE);
-    await until(() => activeDoseFor(victim, "Grin"));
+    await until(() => outcomeOf(victim));
 
-    expect(outcomeOf(victim)).toBe("half");
-    expect(activeDoseFor(victim, "Grin").getFlag("eclipsephase", "dose").defense.halved).toBe(true);
+    expect(outcomeOf(victim)).toBe("none");
+    expect(activeDoseFor(victim, "Grin")).toBeNull();
   });
 
   test("a dodge behind cover keeps the dose out entirely", async () => {
@@ -348,7 +348,7 @@ describe("dodging a sprayer's dose", () => {
     expect(activeDoseFor(victim, "Grin")).toBeNull();
   });
 
-  test("a pool spend that turns a failed dodge into a dodge in the open swaps the full dose for half, with no wear-off card", async () => {
+  test("a pool spend that turns a failed dodge into a successful one takes the dose back, with no wear-off card", async () => {
     const victim = target("Ana");
     const defence = await sprayed(victim);
     seedRolls([95]);
@@ -357,9 +357,10 @@ describe("dodging a sprayer's dose", () => {
     const roll = createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.attackDefence).at(-1);
 
     Hooks.callAll("eclipsephase.poolResult", { context: { ...roll.flags.eclipsephase.roll, messageId: roll.id }, newResult: TASK_RESULT.SUCCESS });
-    await until(() => activeDoseFor(victim, "Grin")?.getFlag("eclipsephase", "dose").defense?.halved);
+    await until(() => outcomeOf(victim) === "none" && !activeDoseFor(victim, "Grin"));
 
-    expect(outcomeOf(victim)).toBe("half");
+    expect(outcomeOf(victim)).toBe("none");
+    expect(activeDoseFor(victim, "Grin")).toBeNull();
     expect(createdMessages.some(message => message.content?.includes("ep2e.chat.dose.endedEarly"))).toBe(false);
   });
 
@@ -625,6 +626,26 @@ describe("marking targets on the canvas", () => {
     expect(pointGap(tokens[0], { x: 50, y: 50 }, { size: 100, distance: 2 })).toBe(0);
     expect(measuredDistances({ measuredRanges: "12.5,3" })).toEqual([12.5, 3]);
     expect(measuredDistances({ measuredRanges: "" })).toEqual([]);
+  });
+
+  test("a measured limit keeps the marks to what the farthest of them allows, and the counter counts down from it, what is under the cursor included", async () => {
+    canvas.grid = { size: 100, distance: 1 };
+    const limit = distance => (distance >= 3 ? 1 : 3);
+    const pick = picking(3, { multi: true, measure: { from: tokens[0], describe: () => "", limit } });
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 450, clientY: 50, bubbles: true }));
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":1');
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 250, clientY: 50, bubbles: true }));
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":3');
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 550, clientY: 50, bubbles: true }));
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":1');
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 250, clientY: 50, bubbles: true }));
+    press(210);
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":2');
+    press(410);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Bo"]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooMany"));
   });
 
   test("a click past the limit marks nothing and says the limit is reached", async () => {

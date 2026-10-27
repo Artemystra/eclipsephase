@@ -441,17 +441,22 @@ export async function payloadCandidates(vector) {
 
 /**
  * Lets the user pick a munition's payload from every registered payload source, offering only
- * substances that fit its vector.
+ * substances that fit its vector, and for a munition that forms a cloud smoke first.
  * @param {String} [vector] - "oral", "injection", "inhalation" or "dermal"
- * @returns {Promise<Object|null>} uuid and name of the substance, or null when cancelled or nothing fits
+ * @param {Object} [options] - smoke: offer smoke, for a cloud
+ * @returns {Promise<Object|null>} uuid and name of the substance, { smoke: true } for smoke, or null
+ *   when cancelled or nothing fits
  */
-export async function choosePayload(vector) {
+export async function choosePayload(vector, { smoke = false } = {}) {
   const candidates = await payloadCandidates(vector);
-  if (!candidates.length) {
+  if (!candidates.length && !smoke) {
     ui.notifications.warn(game.i18n.localize("ep2e.dialog.selectPayload.none"));
     return null;
   }
-  const uuid = await selectFromSearchableList(candidates.map(entry => ({ id: entry.uuid, label: entry.name })), "ep2e.dialog.selectPayload.header", "ep2e.dialog.selectPayload.copy");
+  const entries = candidates.map(entry => ({ id: entry.uuid, label: entry.name }));
+  if (smoke) entries.unshift({ id: "smoke", label: game.i18n.localize("ep2e.item.weapon.table.payload.smoke") });
+  const uuid = await selectFromSearchableList(entries, "ep2e.dialog.selectPayload.header", "ep2e.dialog.selectPayload.copy");
+  if (smoke && uuid === "smoke") return { smoke: true };
   const chosen = candidates.find(entry => entry.uuid === uuid);
   return chosen ? { uuid: chosen.uuid, name: chosen.name } : null;
 }

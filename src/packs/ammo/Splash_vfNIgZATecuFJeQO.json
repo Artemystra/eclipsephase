@@ -95,7 +95,8 @@
       "enabled": true,
       "vector": "dermal",
       "loaded": []
-    }
+    },
+    "cloud": false
   },
   "effects": [],
   "flags": {},

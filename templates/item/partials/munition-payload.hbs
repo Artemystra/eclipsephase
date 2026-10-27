@@ -1,20 +1,28 @@
-{{!-- What a munition can carry besides its own effect: whether it carries anything, which substance, and the one vector it reaches the target by. Every field stays in place and is greyed out while it does not apply. --}}
-<div class="flexrow flex-between listBackground munition-fields" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--mainBackground) 2px;">
-    <div class="flexrow alignCenter" style="max-width: fit-content;">
+{{!-- What a munition can carry besides its own effect: whether it carries anything, which substance, the one vector it reaches the target by, and whether it bursts into a cloud - smoke when nothing is loaded. Every field stays in place and is greyed out while it does not apply. --}}
+<div class="flexrow flex-between listBackground munition-fields ep-natural-row" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--mainBackground) 2px;">
+    <div class="flexrow alignCenter">
         <input type="checkbox" id="payload-enabled-{{item._id}}" name="system.payload.enabled" {{checked item.system.payload.enabled}}/>
         <label for="payload-enabled-{{item._id}}" class="noMargin">{{localize "ep2e.item.weapon.table.payload.enabled"}}</label>
     </div>
-    <div class="flexrow alignCenter wantToKnowMore" style="max-width: 170px;">
+    <div class="flexrow alignCenter wantToKnowMore">
         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.payload.select"}}</span>
         <button type="button" class="munition-payload-select truncate" data-action="selectPayload"{{#unless item.system.payload.enabled}} disabled{{/unless}}>
-            <i class="fa-regular fa-flask"></i> {{#if item.system.payload.loaded.length}}{{item.system.payload.loaded.0.name}}{{else}}{{localize "ep2e.item.weapon.table.payload.select"}}{{/if}}
+            <i class="fa-regular fa-flask"></i> {{#if item.system.payload.loaded.length}}{{item.system.payload.loaded.0.name}}{{else if item.system.cloud}}{{localize "ep2e.item.weapon.table.payload.smoke"}}{{else}}{{localize "ep2e.item.weapon.table.payload.choose"}}{{/if}}
         </button>
     </div>
-    <div class="flexrow alignCenter wantToKnowMore tooltip-opens-left" style="max-width: 160px;">
+    <div class="flexrow alignCenter wantToKnowMore">
         <i class="fa-regular fa-person-rays awesomeIcon icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.payload.vector"}}</span>
         <select name="system.payload.vector" data-type="String"{{#unless item.system.payload.enabled}} disabled{{/unless}}>
             {{selectOptions config.payloadVectors selected=item.system.payload.vector blank="" localize=true}}
         </select>
+    </div>
+    <div class="flexrow alignCenter ep-cloud-toggle">
+        <input type="checkbox" id="cloud-{{item._id}}" name="system.cloud" {{checked item.system.cloud}}{{#unless item.system.payload.enabled}} disabled{{/unless}}/>
+        <label for="cloud-{{item._id}}" class="noMargin">{{localize "ep2e.item.weapon.table.cloud"}}</label>
+        <select class="ep-cloud-color" name="system.cloudColor.kind" data-type="String"{{#unless (and item.system.cloud item.system.payload.enabled)}} disabled{{/unless}}>
+            {{selectOptions config.cloudColors selected=item.system.cloudColor.kind localize=true}}
+        </select>
+        <input type="color" class="ep-cloud-custom{{#unless (eq item.system.cloudColor.kind "custom")}} ep-cloud-custom-unused{{/unless}}" name="system.cloudColor.custom" value="{{item.system.cloudColor.custom}}"{{#unless (and item.system.cloud item.system.payload.enabled)}} disabled{{/unless}}/>
     </div>
 </div>

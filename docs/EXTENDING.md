@@ -600,7 +600,7 @@ cursor - a centred blast reaches as far as its highest damage lasts - and the th
 the thrower's token counts as the range. Once the roll hits, the blast goes off there: its area is
 left in the scene in red and yellow as suppressive fire's is, and everyone with a token in it - the
 thrower too, with a warning - joins the attack card's targets and defends with halved Fray. A
-successful dodge clears someone within a meter of the blast's edge or behind a wall from its
+successful dodge clears someone within 2 meters of the blast's edge (`BLAST_EDGE`, a house rule over the book's one meter) or behind a wall from its
 centre, and lets half through to anyone else (Core p.218); a centred blast loses its DV per meter on
 the way to each target, by whole meters. Someone behind a wall or with a hidden token whom no player owns is the GMs' alone
 on every card. A token counts by the squares it stands on, as the blast is drawn, or on a scene
@@ -614,8 +614,26 @@ and the launcher's range; its size adds to its damage and to how far a centred b
 A munition's payload (2.8.5) comes along with its attack as `dose: { uuid, name, vector, when }`:
 one that deals damage - a capsule round, at half damage - gives it to each target the damage gets
 through the armour of (`when: "dealt"`), one that deals none - a splash round or grenade, marked
-`noDamage: true` - to each target it strikes, a half hit included, since a dose takes hold whole or
-not at all (`when: "struck"`). A gas payload is breathed in from its cloud instead. The dose is
+`noDamage: true` - to each target it strikes (`when: "struck"`). A dose takes hold whole or not at
+all: a `"hit"` or a `"half"` (dodged inside a blast) gives it, a `"none"` (got away) does not; this
+holds for forced doses too. A sprayer's cone is no area: its dodge hits or misses. A munition marked `system.cloud` with its payload switched on - gas and smoke; smoke is such a
+munition with nothing loaded - leaves a cloud
+where it bursts instead of striking (`blast.cloud: { kind: "gas", uuid, name, color }` or `{ kind: "smoke", color }`).
+Its colour comes from `system.cloudColor: { kind, custom }` - `"smoke"`, `"toxin"`, `"drug"` or
+`"custom"` with a colour of its own (`api` callers can resolve it with `cloudColor()` in
+`module/common/weapon-functions.js`); loading a toxin or a drug into a cloud-forming munition sets
+the kind to match unless it is custom. The cloud
+spreads as far as walls let it, as a Region whose area flag carries `cloud`, `color` and, on a grid,
+its `cells`; the Region shows only on the Region layer, and everyone sees its outline drawn in its
+colour - the outer edges of its cells, or its wall-cut shape without a grid. The GM's time panel
+lists the clouds on the viewed scene under "Environment", with their time left, a control to find
+each on the map and one to let it disperse at once. A cloud lies 3 action turns
+(gas) or 3 minutes (smoke), in combat rounds or on the world clock. Gas gives its inhaled dose,
+without a defence, to everyone in it, to whoever comes in (the system's `cloud` Region behavior) and
+to whoever begins their turn in it, once per cloud. Both lie under an AmbientLight with the
+"Swirling Fog" animation, tinted in the cloud's colour unless it is plain smoke, which is drawn with
+"Invert Absorption" and no luminosity; smoke also sets an attack dialog's sight to major impairment (-20) when it lies
+between the attacker and a target or on either (`picking.applySight(form, tokens)`). The dose is
 given through the attack effect `"payload"`, whose `resolve(attack, target, outcome)` the system
 registers; defensive ware applies as for any dose. The attack dialog names the payload loaded.
 

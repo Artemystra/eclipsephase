@@ -176,7 +176,7 @@
   {{else if rollContext.targetedAttack.suppressive}}
    <p class="footnote">{{localize "ep2e.chat.attack.suppressiveNote"}}</p>
   {{else if rollContext.targetedAttack.blast.origin}}
-   {{#if blastLaid}}<p class="footnote">{{localize "ep2e.chat.attack.blastNote"}}</p>{{/if}}
+   {{#if blastLaid}}<p class="footnote">{{#if rollContext.targetedAttack.blast.cloud}}{{localize (concat "ep2e.chat.attack." rollContext.targetedAttack.blast.cloud.kind "Note")}}{{else}}{{localize "ep2e.chat.attack.blastNote"}}{{/if}}</p>{{/if}}
    {{#if armedNote}}<p class="footnote">{{armedNote}}</p>{{/if}}
    {{#if lying}}
    <div class="chatControls ep-chat-stack">

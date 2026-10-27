@@ -82,11 +82,28 @@
             {{#if sections.length}}
             {{#each sections as |section|}}
             <div class="ep-time-section">
-                <div class="flexrow ep-time-section-header{{#if section.collapsible}} ep-time-section-toggle{{/if}}"{{#if section.collapsible}} data-action="toggleThreats"{{/if}}>
+                <div class="flexrow ep-time-section-header{{#if section.collapsible}} ep-time-section-toggle{{/if}}"{{#if section.collapsible}} data-action="{{section.toggle}}"{{/if}}>
                     <label class="resource-label alignLeft">{{localize section.label}}</label>
                     {{#if section.collapsible}}<i class="fas fa-{{#if section.open}}minus{{else}}plus{{/if}} icon-xsmall awesomeIcon alignRight"></i>{{/if}}
                 </div>
                 {{#if section.open}}
+                {{#each section.clouds as |cloud|}}
+                <div class="item flexrow flex-group-center ep-time-effect-row ep-time-cloud-row">
+                    <span class="ep-time-cloud-swatch" style="background-color: {{cloud.color}};"></span>
+                    <label class="truncate alignLeft ep-time-effect-name">{{cloud.name}}</label>
+                    <label class="alignRight ep-time-effect-remaining">{{cloud.remaining}}</label>
+                    <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
+                        <a class="item-control resource-label editWithLabel input-xs alignRight"
+                           data-action="locateCloud"
+                           data-attack-id="{{cloud.attackId}}"
+                           data-tooltip="{{localize 'ep2e.time.locateCloud'}}"><i class="fas fa-crosshairs awesomeIcon"></i></a>
+                        <a class="item-control resource-label editWithLabel input-xs alignRight"
+                           data-action="endCloud"
+                           data-attack-id="{{cloud.attackId}}"
+                           data-tooltip="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+                    </div>
+                </div>
+                {{/each}}
                 {{#each section.groups as |group|}}
                     <div class="ep-time-actor-group">
                         <div class="item flexrow flex-group-center ep-time-actor-row" data-action="toggleActor" data-actor-uuid="{{group.actorUuid}}">

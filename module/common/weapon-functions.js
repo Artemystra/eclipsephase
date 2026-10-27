@@ -79,7 +79,7 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
 
   const blast = seekerBlast(weapon, weaponDamage);
   if (blast) selection.blast = blast;
-  const payload = weapon?.type === "rangedWeapon" ? payloadInfo(weapon.system?.ammoSelected?.payload) : null;
+  const payload = weapon?.type === "rangedWeapon" ? payloadInfo(weapon.system?.ammoSelected?.payload, weapon.system?.ammoSelected?.cloud) : null;
   if (payload) selection.payload = payload;
   return selection
 }
@@ -220,7 +220,8 @@ export function munitionLabel(type, system) {
 
 /**
  * Settles what a munition still leaves open, on its data before it is created: asks a seeker's size
- * and a switched-on payload's substance in one dialog. Choosing no payload switches it off. Anything
+ * and a switched-on payload's substance in one dialog. Choosing no payload switches it off, except on
+ * a munition that forms a cloud, for which it means smoke. Anything
  * else, and a munition with nothing open, passes through unasked.
  * @param {Object} itemData - The incoming item's source data, changed in place
  * @returns {Promise<Boolean>} False when the choice was cancelled
@@ -232,7 +233,7 @@ export async function chooseMunition(itemData) {
 
   const entries = [];
   if (open.payload) {
-    entries.push({ id: "none", label: game.i18n.localize("ep2e.dialog.selectMunition.noPayload") });
+    entries.push({ id: "none", label: game.i18n.localize(system.cloud === true ? "ep2e.item.weapon.table.payload.smoke" : "ep2e.dialog.selectMunition.noPayload") });
     for (const entry of await payloadCandidates(system.payload.vector)) entries.push({ id: entry.uuid, label: entry.name });
   }
   const sizeChoice = open.size
@@ -244,8 +245,12 @@ export async function chooseMunition(itemData) {
   if (open.size) system.size = SEEKER_SIZES.includes(result.size) ? result.size : "baseline";
   if (open.payload) {
     const chosen = entries.find(entry => entry.id === result.selection && entry.id !== "none");
-    if (chosen) system.payload.loaded = [{ uuid: chosen.id, name: chosen.label }];
-    else system.payload.enabled = false;
+    if (chosen) {
+      system.payload.loaded = [{ uuid: chosen.id, name: chosen.label }];
+      const kind = await payloadCloudKind(system, chosen.id);
+      if (kind) system.cloudColor = { ...(system.cloudColor ?? { custom: "#ffffff" }), kind };
+    }
+    else if (system.cloud !== true) system.payload.enabled = false;
   }
   return true;
 }
@@ -459,28 +464,59 @@ export function munitionDose(payload, damaging) {
 }
 
 /**
- * What a munition's payload shows in the attack dialog: its substance and vector, or that nothing is
- * loaded although it could carry something.
+ * What a munition's payload shows in the attack dialog: its substance and vector, smoke for a cloud
+ * with nothing loaded, or that nothing is loaded although it could carry something.
  * @param {Object} payload - The munition's payload
+ * @param {Boolean} [cloud] - Whether the munition forms a cloud
  * @returns {Object|null} name and vector (a localization key), or empty for a payload not loaded; null
  *   for a munition without one
  */
-export function payloadInfo(payload) {
+export function payloadInfo(payload, cloud = false) {
   if (!payload?.enabled) return null;
   const loaded = payload.loaded?.[0];
   const vector = payload.vector ? `ep2e.item.drug.table.applicationVectors.${payload.vector}Label` : "";
-  return loaded?.name ? { name: loaded.name, vector } : { empty: true };
+  if (loaded?.name) return { name: loaded.name, vector };
+  return cloud === true ? { name: game.i18n.localize("ep2e.item.weapon.table.payload.smoke"), vector: "" } : { empty: true };
 }
 
 /**
- * The name a munition's payload shows wherever the munition is listed: its substance, or that none is
- * loaded although it could carry one.
+ * The name a munition's payload shows wherever the munition is listed: its substance, smoke for a
+ * cloud with nothing loaded, or that none is loaded although it could carry one.
  * @param {Object} payload - The munition's payload
+ * @param {Boolean} [cloud] - Whether the munition forms a cloud
  * @returns {String|null} The name or the "no payload" words, null for a munition without one
  */
-export function loadedPayloadName(payload) {
+export function loadedPayloadName(payload, cloud = false) {
   if (!payload?.enabled) return null;
-  return payload.loaded?.[0]?.name || game.i18n.localize("ep2e.roll.dialog.throw.noPayload");
+  if (payload.loaded?.[0]?.name) return payload.loaded[0].name;
+  return game.i18n.localize(cloud === true ? "ep2e.item.weapon.table.payload.smoke" : "ep2e.roll.dialog.throw.noPayload");
+}
+
+// The colours a cloud can be drawn in, by the kind of cloud it is.
+export const CLOUD_COLORS = { smoke: "#e6e6e6", toxin: "#7cc96b", drug: "#c56be0" };
+
+/**
+ * The colour a munition's cloud is drawn in: the kind chosen on the munition, or a colour of its own.
+ * @param {Object} cloudColor - kind ("smoke", "toxin", "drug" or "custom") and custom
+ * @returns {String} The colour
+ */
+export function cloudColor(cloudColor) {
+  if (cloudColor?.kind === "custom" && /^#[0-9a-f]{6}$/i.test(cloudColor.custom ?? "")) return cloudColor.custom;
+  return CLOUD_COLORS[cloudColor?.kind] ?? CLOUD_COLORS.smoke;
+}
+
+/**
+ * The colour a cloud-forming munition takes once a substance is loaded: green for a toxin, purple for
+ * a drug. A munition given a colour of its own keeps it.
+ * @param {Object} system - The munition's system data
+ * @param {String} uuid - The loaded substance
+ * @returns {Promise<String|null>} "toxin" or "drug", or null when the colour stays
+ */
+export async function payloadCloudKind(system, uuid) {
+  if (system?.cloud !== true || system.cloudColor?.kind === "custom" || !uuid) return null;
+  const substance = await fromUuid(uuid);
+  if (substance?.type !== "drug") return null;
+  return substance.system?.category === "toxin" ? "toxin" : "drug";
 }
 
 /**
@@ -539,7 +575,7 @@ export function grenadePreparation(actor, itemId) {
     weaponMode: "1",
     range: Number(actor.system?.aptitudes?.som?.value) || null,
     blast: { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage: maxDamage(grenade.system.dv), trigger: grenade.system.trigger || "impact" },
-    ...(payloadInfo(grenade.system.payload) ? { payload: payloadInfo(grenade.system.payload) } : {})
+    ...(payloadInfo(grenade.system.payload, grenade.system.cloud) ? { payload: payloadInfo(grenade.system.payload, grenade.system.cloud) } : {})
   };
 }
 
@@ -982,7 +1018,7 @@ export async function reloadWeapon(html, actor) {
             traits = ammoType != "chemical" ? ammo.system.traits : {};
             dv = ammoType != "chemical" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
 
-            let ammoEntry = { "id": ammo.id, "name": ammo.name, "traits": traits, "dv": dv, "payload": loadedPayloadName(ammo.system?.payload) };
+            let ammoEntry = { "id": ammo.id, "name": ammo.name, "traits": traits, "dv": dv, "payload": loadedPayloadName(ammo.system?.payload, ammo.system?.cloud) };
             ammoList.push(ammoEntry);
           }
 
@@ -1065,7 +1101,9 @@ export async function reloadWeapon(html, actor) {
             "system.ammoSelected.dose": null,
             "system.ammoSelected.armorused": ammoSelected.system?.armorused ?? "",
             "system.ammoSelected.area": loadedArea,
-            "system.ammoSelected.payload": ammoSelected.system?.payload?.enabled ? foundry.utils.deepClone(ammoSelected.system.payload) : null
+            "system.ammoSelected.payload": ammoSelected.system?.payload?.enabled ? foundry.utils.deepClone(ammoSelected.system.payload) : null,
+            "system.ammoSelected.cloud": ammoSelected.system?.cloud === true,
+            "system.ammoSelected.cloudColor": foundry.utils.deepClone(ammoSelected.system?.cloudColor ?? { kind: "smoke", custom: "#ffffff" })
           };
           Hooks.callAll("eclipsephase.weaponLoaded", { actor, weapon, ammo: ammoSelected, ammoType, update: loaded });
           weaponUpdate.push(loaded);

@@ -636,6 +636,8 @@
         "armorused": "",
         "area": { "kind": "none", "radius": null, "reduction": null },
         "payload": null,
+        "cloud": false,
+        "cloudColor": { "kind": "smoke", "custom": "#ffffff" },
         "dvModifier": {
           "d10": null,
           "d6": null,
@@ -945,6 +947,8 @@
       "area": { "kind": "none", "radius": null, "reduction": null },
       "trigger": "impact",
       "payload": { "enabled": false, "vector": "", "loaded": [] },
+      "cloud": false,
+      "cloudColor": { "kind": "smoke", "custom": "#ffffff" },
       "dv": {
         "d10": null,
         "d6": null,
@@ -996,6 +1000,8 @@
       "area": { "kind": "none", "radius": null, "reduction": null },
       "size": "baseline",
       "payload": { "enabled": false, "vector": "", "loaded": [] },
+      "cloud": false,
+      "cloudColor": { "kind": "smoke", "custom": "#ffffff" },
       "dv": {
         "d10": null,
         "d6": null,

@@ -29,6 +29,15 @@
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.quantity"}}</span>
                 <input onFocus="this.select()" class="alignCenter input-xs" type="number" name="system.quantity" value="{{item.system.quantity}}" placeholder="e.g. 12"/>
             </div>
+            {{#if (eq item.type "grenade")}}
+            <div class="flexrow alignCenter wantToKnowMore" style="max-width: 130px;">
+                <i class="fa-regular fa-stopwatch awesomeIcon icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.trigger.label"}}</span>
+                <select name="system.trigger" data-type="String">
+                    {{selectOptions config.grenadeTriggers selected=item.system.trigger localize=true}}
+                </select>
+            </div>
+            {{/if}}
             <div class="wantToKnowMore flexrow alignCenter tooltip-opens-left" style="max-width: 130px;">
                 <i class="fa-regular fa-coins awesomeIcon icon-small alignCenter" style="font-size: 18px;"></i>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span>
@@ -37,7 +46,7 @@
                 </select>
             </div>
         </div>
-        <div class="flexrow flex-between listBackground" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--mainBackground) 2px;">
+        <div class="flexrow flex-between listBackground ep-natural-row" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--mainBackground) 2px;">
             <div class="flexrow alignCenter wantToKnowMore" style="max-width: 150px;">
                 <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-small icon-space"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.effectArea"}}</span>
@@ -62,15 +71,6 @@
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.size.label"}}</span>
                 <select name="system.size" data-type="String">
                     {{selectOptions config.munitionSizes selected=item.system.size localize=true}}
-                </select>
-            </div>
-            {{/if}}
-            {{#if (eq item.type "grenade")}}
-            <div class="flexrow alignCenter wantToKnowMore tooltip-opens-left" style="max-width: 130px;">
-                <i class="fa-regular fa-stopwatch awesomeIcon icon-small" style="max-width: fit-content; margin-right: 5px;"></i>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.trigger.label"}}</span>
-                <select name="system.trigger" data-type="String">
-                    {{selectOptions config.grenadeTriggers selected=item.system.trigger localize=true}}
                 </select>
             </div>
             {{/if}}

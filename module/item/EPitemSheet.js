@@ -2,6 +2,7 @@ import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, a
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
 import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
 import { choosePayload } from "../common/drugs.js";
+import { payloadCloudKind } from "../common/weapon-functions.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -36,8 +37,16 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
   static async _onSelectPayload() {
     const payload = this.document.system.payload;
     if (!payload?.enabled) return;
-    const chosen = await choosePayload(payload.vector);
-    if (chosen) await this.document.update({ "system.payload.loaded": [chosen] });
+    const cloud = this.document.system.cloud === true;
+    const chosen = await choosePayload(payload.vector, { smoke: cloud });
+    if (!chosen) return;
+    if (chosen.smoke) {
+      const custom = this.document.system.cloudColor?.kind === "custom";
+      await this.document.update({ "system.payload.loaded": [], ...(custom ? {} : { "system.cloudColor.kind": "smoke" }) });
+      return;
+    }
+    const kind = await payloadCloudKind(this.document.system, chosen.uuid);
+    await this.document.update({ "system.payload.loaded": [chosen], ...(kind ? { "system.cloudColor.kind": kind } : {}) });
   }
 
   // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders (see EPactorSheet.js)

@@ -1,3 +1,4 @@
+import { cloudsOnScene, endCloud, panToCloud } from "../rolls/attacks.js";
 import { addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
 import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, isRunningEffect, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
 
@@ -125,6 +126,9 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       toggleEffects: EPtimePanel._onToggleEffects,
       toggleActor: EPtimePanel._onToggleActor,
       toggleThreats: EPtimePanel._onToggleThreats,
+      toggleEnvironment: EPtimePanel._onToggleEnvironment,
+      endCloud: EPtimePanel._onEndCloud,
+      locateCloud: EPtimePanel._onLocateCloud,
       effectInfo: EPtimePanel._onEffectInfo,
       beatsInfo: EPtimePanel._onBeatsInfo,
       toggleFormat: EPtimePanel._onToggleFormat
@@ -159,6 +163,8 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
 
   // Whether the non-player section is expanded, per client and per session.
   #threatsOpen = true;
+
+  #environmentOpen = true;
 
   static #refreshQueued = false;
 
@@ -482,17 +488,48 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   }
 
   /**
-   * The GM's list in two sections: player characters, always open, then everyone else, which can
-   * be collapsed to keep a crowded scene out of the way. A section with nothing running is left out.
-   * @returns {Object[]} The sections, each with its label, collapse state and actor groups
+   * Collapses or expands the environment section of the running-effects list.
+   * @returns {Promise<void>} Resolves once the panel has re-rendered
+   */
+  static async _onToggleEnvironment() {
+    this.#environmentOpen = !this.#environmentOpen;
+    await this.render();
+  }
+
+  /**
+   * Lets a cloud on the viewed scene disperse at once.
+   * @param {PointerEvent} event - The click
+   * @param {HTMLElement} target - The control, with the cloud's attack id
+   * @returns {Promise<void>} Resolves once cleared
+   */
+  static async _onEndCloud(event, target) {
+    await endCloud(target.dataset.attackId);
+  }
+
+  /**
+   * Moves the view to a cloud on the viewed scene.
+   * @param {PointerEvent} event - The click
+   * @param {HTMLElement} target - The control, with the cloud's attack id
+   * @returns {Promise<void>} Resolves once moved
+   */
+  static async _onLocateCloud(event, target) {
+    await panToCloud(target.dataset.attackId);
+  }
+
+  /**
+   * The GM's list in three sections: player characters, always open, then everyone else, then the
+   * environment - the gas and smoke clouds on the viewed scene; the last two can be collapsed to keep
+   * a crowded scene out of the way. A section with nothing running is left out.
+   * @returns {Object[]} The sections, each with its label, toggle, collapse state and actor groups or rows
    */
   #effectSections() {
     const groups = runningEffectGroups().map(group => ({ ...group, open: this.#openActors.has(group.actorUuid) }));
     const sections = [
       { label: "ep2e.time.sectionPlayers", collapsible: false, open: true, groups: groups.filter(group => group.playerCharacter) },
-      { label: "ep2e.time.sectionThreats", collapsible: true, open: this.#threatsOpen, groups: groups.filter(group => !group.playerCharacter) }
+      { label: "ep2e.time.sectionThreats", collapsible: true, toggle: "toggleThreats", open: this.#threatsOpen, groups: groups.filter(group => !group.playerCharacter) },
+      { label: "ep2e.time.sectionEnvironment", collapsible: true, toggle: "toggleEnvironment", open: this.#environmentOpen, groups: [], clouds: cloudsOnScene() }
     ];
-    return sections.filter(section => section.groups.length);
+    return sections.filter(section => section.groups.length || section.clouds?.length);
   }
 
   /**

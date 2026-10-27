@@ -1165,12 +1165,21 @@
             "proximity": "近炸"
           },
           "payload": {
-            "enabled": "带有载荷",
+            "enabled": "载荷",
             "select": "选择载荷",
             "sources": {
               "drugs": "药物与毒素"
             },
-            "vector": "载荷途径"
+            "vector": "载荷途径",
+            "choose": "选择",
+            "smoke": "烟雾"
+          },
+          "cloud": "形成云团",
+          "cloudColor": {
+            "smoke": "烟雾",
+            "toxin": "毒素",
+            "drug": "药物",
+            "custom": "自定义"
           }
         }
       },
@@ -2026,7 +2035,11 @@
         "armedLive": "{name} · 感应器已激活",
         "armedArming": "{name} · 感应器将在 {time} 后激活",
         "armedTimer": "{name} · 将在 {time} 后爆炸",
-        "armedYours": "{name}（你）"
+        "armedYours": "{name}（你）",
+        "gasArea": "毒气（{name}）",
+        "smokeArea": "烟雾（{name}）",
+        "gasNote": "毒气云持续 3 个行动回合：身处其中、进入其中或在其中开始回合的人都会吸入剂量。",
+        "smokeNote": "烟雾持续 3 分钟，遮蔽其中或其后的事物（-20）。"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -2266,7 +2279,9 @@
         "day3": "+3 天",
         "day7": "+7 天",
         "beats": "{beats} Beats"
-      }
+      },
+      "sectionEnvironment": "环境",
+      "locateCloud": "在地图上显示"
     },
     "migration": {
       "armorBoundNotice": "<p><b>护甲更新：</b>这个角色的 {count} 件护甲已自动绑定到 <b>{body}</b>，因为护甲现在归属于特定身体，而不再只是放在物品栏中。可以随时点击护甲旁边的重新分配按钮（在义体页签中）将其转移到其他身体。</p>",
@@ -2348,7 +2363,7 @@
       "outOfTouch": "{name}超出接触范围（2 米）。",
       "areaName": "范围",
       "outsideArea": "该标记在范围之外。",
-      "tooMany": "此攻击在该距离最多命中 {max} 个目标。",
+      "tooMany": "在此距离上，此攻击最多命中 {max} 个目标。",
       "ownBlast": "{name} 身处自己的爆炸之中。",
       "armedElsewhere": "该爆炸物位于另一个场景——请先查看该场景。"
     }
@@ -2368,6 +2383,14 @@
           "messageId": {
             "label": "攻击卡",
             "hint": "此感应器所属爆炸物的聊天消息。"
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "攻击卡",
+            "hint": "此云团所属毒气的聊天消息。"
           }
         }
       }
