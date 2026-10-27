@@ -1238,7 +1238,7 @@
           }
         },
         "mechanics": {
-          "tab": "机制",
+          "tab": "药效",
           "none": "无",
           "checkHeadline": "服用时检定",
           "aptitude": "属性",
@@ -1255,8 +1255,8 @@
           },
           "overTimeHeadline": "持续效果",
           "damage": "每跳伤害",
-          "interval": "每",
-          "ticks": "跳数",
+          "interval": "每跳间隔",
+          "ticks": "最大跳数",
           "ticksTip": "留空：剂量持续期间一直生效",
           "intervals": {
             "turn": "行动回合",
@@ -1269,7 +1269,6 @@
           "healing": "治疗对话框",
           "healingTip": "剂量生效期间，治疗对话框默认选中此附加项",
           "harm": "伤害",
-          "grantsHeadline": "临时特质",
           "grantPack": "合集",
           "grantFolder": "文件夹",
           "grantItem": "物品",
@@ -1281,7 +1280,9 @@
           "grantDescriptionHint": "写在物品自身描述的上方。",
           "grantTitlePlaceholder": "附加标题（可选）",
           "grantDescriptionPlaceholder": "附加描述（可选）",
-          "grantTitleHint": "显示在物品名称后的括号中。"
+          "grantTitleHint": "显示在物品名称后的括号中。",
+          "wearOffHeadline": "消退效果",
+          "addictionHeadline": "成瘾"
         }
       },
       "additionalSkill": {
@@ -1617,7 +1618,9 @@
             "seconds": "秒",
             "minutes": "分钟"
           },
-          "proximity": "感应范围"
+          "proximity": "感应范围",
+          "payload": "载荷",
+          "noPayload": "未装载载荷"
         }
       },
       "successType": {
@@ -2027,10 +2030,9 @@
       },
       "defence": {
         "headline": "防御 {weapon}",
-        "doseLabel": "{name}，每人一剂",
         "dodge": "闪避",
         "parry": "格挡",
-        "rollAll": "一次性投掷其余",
+        "rollAll": "其余闪避",
         "outcome": {
           "hit": "命中",
           "half": "部分闪避：半剂",
@@ -2053,10 +2055,14 @@
         "cover": "已进入掩体",
         "remainCover": "留在掩体中",
         "blastDistance": "距中心 {distance} 米",
-        "blastEdge": "在边缘：闪避成功即可避开",
-        "blastBehindWall": "在墙后：闪避成功即可避开",
-        "inCover": "在掩体中",
-        "spareRest": "其余无需掷骰直接结算"
+        "blastEdge": "在边缘",
+        "inCover": "无伤害",
+        "spareRest": "其余无需掷骰直接结算",
+        "soak": "硬抗伤害",
+        "soakRest": "其余硬抗",
+        "headlineCover": "在障碍物后防御{weapon}",
+        "payloadLabel": "载荷",
+        "doseInfo": "剂量"
       },
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",

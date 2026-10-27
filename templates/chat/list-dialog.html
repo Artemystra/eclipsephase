@@ -100,6 +100,9 @@
                         <div style="display: block;">
                             <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b></label>
                     {{/if}}
+                        {{#if payload}}
+                        <div class="ep-payload-tag"><i class="fa-regular fa-flask"></i> {{payload}}</div>
+                        {{/if}}
                         <div style="display: flex; flex-wrap: wrap;">
                             {{#each traits as |item key|}}
                                 {{#if (eq item.value true)}}

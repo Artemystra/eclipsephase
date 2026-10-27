@@ -230,38 +230,94 @@ export function outcomeLabel(outcome, defence) {
 const COVER_LABELS = { moved: "ep2e.chat.defence.outcome.cover", remain: "ep2e.chat.defence.outcome.remainCover", inCover: "ep2e.chat.defence.outcome.inCover", spared: "ep2e.chat.defence.outcome.spared" };
 
 /**
- * Renders a defence card from its state.
+ * A button on a defence card, as the card's one template draws it.
+ * @param {String} cls - The class its click is known by, e.g. "defenceRoll"
+ * @param {String} label - The localization key of its words
+ * @param {Object} [options] - target (the entry it acts for, also who may press it), kind, primary,
+ *   gm (only the GM sees it), uuid (who may press it when it acts for no one entry)
+ * @returns {Object} The button
+ */
+function defenceButton(cls, label, { target = "", kind = "", primary = false, gm = false, uuid = target } = {}) {
+  return { cls, action: cls, label: game.i18n.localize(label), target, kind, primary, gm, uuid };
+}
+
+/**
+ * The choices one target has on a defence card: resisting or not against psi, dodging or parrying
+ * in melee, dodging a shot - from behind a wall from a blast's centre also staying in cover, and in
+ * suppressive fire the cover the fire allows.
+ * @param {Object} attack - The attack
+ * @param {Object} entry - The target's entry
+ * @returns {Object} pair (one or two secondaries side by side) and primary (one below, or null)
+ */
+function defenceChoices(attack, entry) {
+  const uuid = entry.uuid;
+  if (attack.defence === "will") return { pair: [defenceButton("defenceYield", "ep2e.chat.defence.yield", { target: uuid }), defenceButton("defenceRoll", "ep2e.chat.defence.resist", { target: uuid, kind: "will" })], primary: null };
+  const dodge = defenceButton("defenceRoll", "ep2e.chat.defence.dodge", { target: uuid, kind: "dodge" });
+  if (attack.defence === "melee") return { pair: [dodge, defenceButton("defenceRoll", "ep2e.chat.defence.parry", { target: uuid, kind: "parry" })], primary: null };
+  if (attack.coverOption) return { pair: [defenceButton("defenceCover", attack.coverOption === "remain" ? "ep2e.chat.defence.remainCover" : "ep2e.chat.defence.cover", { target: uuid }), dodge], primary: null };
+  if (attack.area === true && entry.shadow === true) return { pair: [dodge, defenceButton("defenceCover", "ep2e.chat.defence.inCover", { target: uuid })], primary: null };
+  return { pair: [dodge], primary: null };
+}
+
+/**
+ * The choices a defence card offers below its targets: for one target against a weapon, to soak the
+ * damage; for several, to resolve the rest without a roll (the GM's ruling), to soak the rest, and
+ * to dodge the rest last.
+ * @param {Object} attack - The attack
+ * @param {Object[]} entries - The card's entries
+ * @returns {Object[]} The buttons
+ */
+function defenceControls(attack, entries) {
+  const remaining = entries.filter(entry => !entry.outcome);
+  if (attack.defence === "will" || !remaining.length) return [];
+  if (entries.length === 1) return [defenceButton("defenceYield", "ep2e.chat.defence.soak", { target: remaining[0].uuid })];
+  const first = remaining[0].uuid;
+  return [
+    defenceButton("defenceSpare", "ep2e.chat.defence.spareRest", { gm: true }),
+    defenceButton("defenceSoakRest", "ep2e.chat.defence.soakRest", { uuid: first }),
+    ...(remaining.length > 1 || attack.defence === "ranged" ? [defenceButton("defenceRollAll", "ep2e.chat.defence.rollAll", { uuid: first, primary: true })] : [])
+  ];
+}
+
+/**
+ * Renders a defence card from its state: one card for one target or many - each target under its
+ * name with its own choices and a note, and below them the choices for the rest. Its headline says
+ * what to defend against, and when every target on it stands behind a wall, that they do.
  * @param {Object} state - The card's attackDefence flag
  * @returns {Promise<String>} The markup
  */
 export function renderDefenceCard(state) {
-  const remaining = state.entries.filter(entry => !entry.outcome);
+  const attack = state.attack;
+  const behindWalls = state.entries.length > 0 && attack.area === true && state.entries.every(entry => entry.shadow === true);
   return foundry.applications.handlebars.renderTemplate(DEFENCE_TEMPLATE, {
-    headline: game.i18n.format("ep2e.chat.defence.headline", { weapon: state.attack.weaponName }),
-    effectLabel: state.attack.effectLabel ?? "",
-    melee: state.attack.defence === "melee",
-    several: state.entries.length > 1,
-    entries: state.entries.map(entry => ({ ...entry, note: blastNote(entry), staysInCover: state.attack.area === true && entry.shadow === true, outcomeLabel: entry.cover ? game.i18n.localize(COVER_LABELS[entry.cover] ?? COVER_LABELS.moved) : outcomeLabel(entry.outcome, state.attack.defence) })),
-    spareRest: state.attack.area === true && remaining.length > 0,
-    cover: state.attack.coverOption ? game.i18n.localize(state.attack.coverOption === "remain" ? "ep2e.chat.defence.remainCover" : "ep2e.chat.defence.cover") : "",
-    will: state.attack.defence === "will",
-    icon: state.attack.defence === "will" ? "fa-brain" : "fa-crosshairs",
-    rollAll: state.attack.defence === "ranged" && remaining.length > 1,
-    rollAllUuid: remaining[0]?.uuid ?? ""
+    headline: game.i18n.format(behindWalls ? "ep2e.chat.defence.headlineCover" : "ep2e.chat.defence.headline", { weapon: attack.weaponName }),
+    effectLabel: attack.effectLabel ?? "",
+    effectInfo: attack.effectInfo ?? null,
+    icon: attack.defence === "will" ? "fa-brain" : "fa-crosshairs",
+    entries: state.entries.map(entry => ({
+      uuid: entry.uuid,
+      name: entry.name,
+      outcome: entry.outcome,
+      lockedOut: entry.lockedOut,
+      note: blastNote(entry),
+      outcomeLabel: entry.cover ? game.i18n.localize(COVER_LABELS[entry.cover] ?? COVER_LABELS.moved) : outcomeLabel(entry.outcome, attack.defence),
+      ...(entry.outcome ? {} : defenceChoices(attack, entry))
+    })),
+    controls: defenceControls(attack, state.entries)
   });
 }
 
 /**
  * What a defence card notes about where a target stands in a blast: how far from its centre, and
- * whether a dodge gets it clear - at the blast's edge or behind a wall from its centre (Core p.218).
+ * whether at its edge, where a dodge gets it clear (Core p.218). Behind a wall the card's headline
+ * says so instead.
  * @param {Object} entry - The card's entry, with distance, nearEdge and shadow for a blast
  * @returns {String} The note, "" for a target not in a blast
  */
 export function blastNote(entry) {
   if (!Number.isFinite(entry?.distance)) return "";
   const where = game.i18n.format("ep2e.chat.defence.blastDistance", { distance: Math.floor(entry.distance) });
-  const clear = entry.shadow ? "ep2e.chat.defence.blastBehindWall" : entry.nearEdge ? "ep2e.chat.defence.blastEdge" : "";
-  return clear ? `${where} · ${game.i18n.localize(clear)}` : where;
+  return entry.nearEdge && !entry.shadow ? `${where} · ${game.i18n.localize("ep2e.chat.defence.blastEdge")}` : where;
 }
 
 /**
@@ -437,14 +493,14 @@ export async function takeCover(message, targetUuid) {
 }
 
 /**
- * The GM's ruling that the targets still to defend against an area attack are not reached at all -
- * a wall too thick, a door shut in time: each is noted unharmed without a roll.
+ * The GM's ruling that the targets still to defend on a card are not reached at all - a wall too
+ * thick, a door shut in time: each is noted unharmed without a roll.
  * @param {ChatMessage} message - The defence card
  * @returns {Promise<Number>} How many were spared, 0 when it is not the GM's to rule
  */
 export async function spareRemaining(message) {
   const state = message?.getFlag?.("eclipsephase", "attackDefence");
-  if (!game.user.isGM || !state?.attack?.area) return 0;
+  if (!game.user.isGM || !state || state.attack?.defence === "will") return 0;
   const remaining = state.entries.filter(entry => !entry.outcome);
   for (const entry of remaining) {
     await markDefenceRolled(message, entry.uuid, "none", { cover: "spared" });
@@ -455,8 +511,23 @@ export async function spareRemaining(message) {
 }
 
 /**
+ * Lets every target still to defend on a card take the attack without a roll - soaking it - as far
+ * as this user may choose for them.
+ * @param {ChatMessage} message - The defence card
+ * @returns {Promise<Number>} How many took it
+ */
+export async function soakRemaining(message) {
+  const state = message?.getFlag?.("eclipsephase", "attackDefence");
+  let taken = 0;
+  for (const entry of (state?.entries ?? []).filter(candidate => !candidate.outcome)) {
+    if (await yieldDefence(message, entry.uuid)) taken++;
+  }
+  return taken;
+}
+
+/**
  * A target's choice not to resist (Core p.276: a willing target who knows what is happening): the
- * attack lands without a defence roll.
+ * attack lands without a defence roll. Against a weapon this is soaking the damage.
  * @param {ChatMessage} message - The defence card
  * @param {String} targetUuid - The target
  * @returns {Promise<Boolean>} True once noted, false when it was not this user's to choose
@@ -914,13 +985,13 @@ const BLAST_LINGER = 3000;
 
 /**
  * Clears a blast's area once it has done its work. A blast that leaves something behind, such as
- * smoke, stays.
+ * smoke or a gas cloud, stays.
  * @param {Object} attack - The attack, with id and blast
  * @param {Number} [delay] - How long to wait first, in milliseconds
  * @returns {Promise<Number>} How many Regions were removed
  */
 export async function clearBlast(attack, delay = 0) {
-  if (!attack?.blast || attack.blast.harmless) return 0;
+  if (!attack?.blast || attack.blast.lingers) return 0;
   if (delay) await new Promise(resolve => setTimeout(resolve, delay));
   return clearAreas(flag => flag.attackId === attack.id && flag.blast === true);
 }
@@ -989,7 +1060,7 @@ async function setOffBlast(message, attack, origin, scatter = null) {
     aimed.polygon = areaPolygon(aimed.origin, aimed);
     await createShadowedArea(aimed, { name, flags, spent: true, exclude: coveredSquares(area) });
   }
-  const caught = blast.harmless ? [] : blastTargets(area, canvas.tokens?.placeables ?? []);
+  const caught = blast.harmless && !attack.dose ? [] : blastTargets(area, canvas.tokens?.placeables ?? []);
   if (!caught.length) clearBlast(attack, BLAST_LINGER);
   const own = caught.find(entry => entry.actor.uuid === attack.actorUuid);
   if (own) ui.notifications.warn(game.i18n.format("ep2e.targeting.ownBlast", { name: own.actor.name }));

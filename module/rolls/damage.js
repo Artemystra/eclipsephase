@@ -1,9 +1,9 @@
-import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, munitionDose, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
-import { registerAttackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast } from "./attacks.js";
+import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast } from "./attacks.js";
 import { MELEE_CURSOR } from "../common/targeting.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
 import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
@@ -325,8 +325,19 @@ export function renderDamageCard(state) {
 }
 
 /**
- * The attack a weapon roll carries: a weapon that deals damage, fires no chemicals and is not used
- * for a touch only. Ranged weapons pick with the crosshair, melee weapons with the slash. A cone
+ * What a defence card says of the payload an attack brings: its name, with the substance to look up.
+ * @param {String} name - The substance's name
+ * @param {String} [uuid] - The substance
+ * @returns {Object} label, text and uuid for the card's effect box
+ */
+export function payloadEffectInfo(name, uuid = "") {
+  return { label: game.i18n.localize("ep2e.chat.defence.payloadLabel"), text: name, uuid };
+}
+
+/**
+ * The attack a weapon roll carries: a weapon that deals damage or carries a payload, fires no
+ * chemicals and is not used for a touch only - a payload brings its dose along, with or without
+ * damage. Ranged weapons pick with the crosshair, melee weapons with the slash. A cone
  * strikes as an area; a cone or a burst at several targets takes targets within a meter of each
  * other.
  * @param {Object} context - The roll context at preRoll
@@ -337,9 +348,14 @@ export function detectWeaponAttack(context) {
   if (context.rolledFrom !== "rangedWeapon" && context.rolledFrom !== "ccWeapon") return null;
   const selected = context.weapon;
   if (!selected?.weapon || chemicalDoses(selected.weaponTraits)) return null;
-  if (selected.weaponTraits?.automatedEffects?.noDamage || isChecked(context.options?.touchOnly)) return null;
+  if (isChecked(context.options?.touchOnly)) return null;
+  const noDamage = !!selected.weaponTraits?.automatedEffects?.noDamage;
+  const dose = context.rolledFrom === "rangedWeapon" ? munitionDose(selected.weapon.system?.ammoSelected?.payload, !noDamage) : null;
+  if (noDamage && !dose) return null;
   const targets = context.rolledFrom === "rangedWeapon" ? attackTargetCount(selected.weapon, context.options ?? {}) : 1;
   return {
+    ...(dose ? { dose, effectInfo: payloadEffectInfo(dose.name, dose.uuid) } : {}),
+    ...(noDamage ? { noDamage: true } : {}),
     targets,
     area: isConeWeapon(selected.weapon),
     suppressive: context.options?.attackMode === "suppressive",
@@ -368,17 +384,21 @@ export function detectThrow(context) {
   const options = context.options ?? {};
   const grenade = context.rolledFrom === "grenade";
   const harmless = !!selected.weaponTraits?.automatedEffects?.noDamage || !formulaMax(selected.weaponDamage);
+  const munition = grenade ? selected.weapon.system?.payload : selected.weapon.system?.ammoSelected?.payload;
+  const dose = munitionDose(munition, !harmless);
   const reach = blastReach(selected.blast, { radius: options.blastRadius, reduction: options.blastReduction });
   const placed = (() => { try { return JSON.parse(options.placedArea || "null"); } catch { return null; } })();
   const trigger = options.trigger || selected.blast?.trigger || "impact";
   const blast = reach.kind !== "none" ? {
-    ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger, harmless, delayed: isDelayedTrigger(trigger),
+    ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger, harmless, delayed: isDelayedTrigger(trigger), lingers: harmless && !dose,
     ...(trigger === "timer" ? { timer: { value: Number(options.timerValue) || 1, unit: options.timerUnit || "rounds", ...timerSpan(options.timerValue || 1, options.timerUnit || "rounds") } } : {}),
     ...(trigger === "proximity" ? { sensor: Math.min(PROXIMITY_REACH, Math.max(1, Number(options.proximityRadius) || PROXIMITY_REACH)) } : {})
   } : null;
-  if (!blast && harmless) return null;
+  if (!blast && harmless && !dose) return null;
   const armorUsed = grenade ? selected.weapon.system?.armorused : attackArmorUsed(selected.weapon, selected.weaponMode || "1");
   return {
+    ...(dose ? { dose, effectInfo: payloadEffectInfo(dose.name, dose.uuid) } : {}),
+    ...(harmless ? { noDamage: true } : {}),
     ...(grenade ? { thrown: { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade", item: selected.weapon.toObject?.() ?? null } } : {}),
     targets: blast ? ANY_TARGETS : 1,
     area: !!blast,
@@ -395,16 +415,17 @@ export function detectThrow(context) {
 /**
  * Notes a target's defence on the attack card, where the card may be changed and otherwise by the
  * active GM. Any attack on targets can resolve through it; only a damage attack goes on to its
- * damage card.
+ * damage card. A payload that takes hold on striking gives its dose here.
  * @param {Object} attack - The attack
  * @param {Actor} target - The target
  * @param {String} outcome - "hit", "half" or "none"
- * @param {Object} [options] - kind: "dodge" or "parry"
+ * @param {Object} [options] - kind: "dodge" or "parry"; byPool and defenceId, for a payload's dose
  * @returns {Promise<*>} What settling reported, or null when it was sent on
  */
-export function noteDefence(attack, target, outcome, { kind = "dodge" } = {}) {
+export async function noteDefence(attack, target, outcome, { kind = "dodge", byPool = false, defenceId = null } = {}) {
   const card = game.messages.get(attack.messageId);
   if (!card) return null;
+  if (attack.dose?.when === "struck") await attackEffect("payload")?.resolve?.(attack, target, outcome, { byPool, defenceId });
   return runOrRelay(card, "noteAttackDefence", () => settleAttackDefence(card, target.uuid, outcome, kind), { payload: { messageId: card.id, uuid: target.uuid, outcome, kind } });
 }
 
@@ -430,8 +451,8 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
       return postDamageCard(card, [target]);
     }
     const settled = (state.targets ?? []).length && state.targets.every(target => target.outcome);
-    if (settled && attack?.blast && state.targets.every(target => target.outcome === "none")) await clearBlast(attack);
-    if (!damageReady(state) || attack?.effect !== "damage") return null;
+    if (settled && attack?.blast && (attack.noDamage || state.targets.every(target => target.outcome === "none"))) await clearBlast(attack);
+    if (!damageReady(state) || attack?.effect !== "damage" || attack.noDamage) return null;
     await updateCard(card, "taskCard", "damageOffered");
     return postDamageCard(card, state.targets);
   };
@@ -539,11 +560,12 @@ function highlighted(key, value) {
  * Puts an attack's damage on every target its card names, as the active GM: each takes its share
  * less its armour, and the damage card lists what each one took.
  * @param {Object} request - cardId (the damage card), total, armorUsed, armorPiercing, damageTarget
- *   ("physical" or "mental", for stress), reduction (DV a centred blast loses per metre) and targets
- *   ({ uuid, name, outcome, and distance and hidden in a blast } each)
+ *   ("physical" or "mental", for stress), reduction (DV a centred blast loses per metre), dose (a
+ *   payload released once damage gets through) and targets ({ uuid, name, outcome, and distance and
+ *   hidden in a blast } each)
  * @returns {Promise<Array<String|Object>>} The lines written onto the card
  */
-export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, targets }) {
+export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, dose = null, targets }) {
   const lines = [];
   for (const target of targets) {
     if (target.outcome === "none") {
@@ -555,6 +577,7 @@ export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercin
     const falloff = reduction && Number.isFinite(target.distance) ? reduction * Math.floor(target.distance) : 0;
     const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing, falloff);
     const result = await applyDamage(actor, against.dealt, { target: damageTarget });
+    if (dose?.when === "dealt" && against.dealt > 0) await attackEffect("payload")?.resolve?.({ dose }, actor, "hit");
     const name = falloff ? game.i18n.format("ep2e.chat.damage.blastFalloff", { name: actor.name, distance: Math.floor(target.distance), falloff }) : actor.name;
     lines.push(secretLine(target, attackDamageLine({ ...target, name }, { ...against, ...result, armorUsed, damageTarget })));
   }
@@ -598,7 +621,7 @@ export async function rollAttackDamage(card) {
     await updateCard(card, "damageCard", "rolled", { data: storable(shown) });
 
     const total = Number(shown.total) || 0;
-    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", reduction: Number(attack.blast?.reduction) || 0, targets: state.targets };
+    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", reduction: Number(attack.blast?.reduction) || 0, dose: attack.dose ?? null, targets: state.targets };
     if (game.user.isGM) await applyAttackDamage(request);
     else relayToActiveGM("applyAttackDamage", request);
     await clearBlast(attack);

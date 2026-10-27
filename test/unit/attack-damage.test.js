@@ -1,15 +1,16 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, PROXIMITY_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, PROXIMITY_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
 import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
-import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
-import { makeActor, resetWorld, seedRolls, loadPackItem, setSetting } from "../setup/factories.js";
+import { makeActor, makeItem, resetWorld, seedRolls, loadPackItem, setSetting } from "../setup/factories.js";
+import { activeDoseFor } from "../../module/common/doses.js";
 
 const { createdMessages } = global.__ep;
 const SINGLE_SHOT = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "single" } };
@@ -1428,10 +1429,34 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     expect(damage.roll.formula.match(/d10/g)).toHaveLength(2);
   });
 
-  test("the defence card says how far from the centre each target stands and whether a dodge gets them clear", () => {
+  test("one card serves one target and many alike: each under its name with its own choices and note, and the choices for the rest below; behind walls it says so", () => {
+    const attack = { weaponName: "Frag", defence: "ranged", area: true };
+    const entry = (name, more = {}) => ({ uuid: `Actor.${name}`, name, outcome: null, distance: 3, ...more });
+    let markup = "";
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = (path, view) => { markup = view; return ""; };
+    try {
+      renderDefenceCard({ attack, entries: [entry("Bo", { shadow: true }), entry("Cy", { shadow: true })] });
+      expect(markup.headline).toContain("ep2e.chat.defence.headlineCover");
+      expect(markup.entries.map(view => view.pair.map(button => button.cls))).toEqual([["defenceRoll", "defenceCover"], ["defenceRoll", "defenceCover"]]);
+      expect(markup.controls.map(button => [button.cls, button.primary, button.gm])).toEqual([["defenceSpare", false, true], ["defenceSoakRest", false, false], ["defenceRollAll", true, false]]);
+
+      renderDefenceCard({ attack: { ...attack, area: false }, entries: [entry("Bo"), entry("Cy")] });
+      expect(markup.entries.map(view => view.pair.map(button => button.label))).toEqual([["ep2e.chat.defence.dodge"], ["ep2e.chat.defence.dodge"]]);
+
+      renderDefenceCard({ attack: { ...attack, area: false }, entries: [entry("Ana")] });
+      expect(markup.headline).toContain("ep2e.chat.defence.headline");
+      expect(markup.entries[0].pair.map(button => button.cls)).toEqual(["defenceRoll"]);
+      expect(markup.controls.map(button => button.cls)).toEqual(["defenceYield"]);
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+  });
+
+  test("the defence card says how far from the centre each target stands and whether at the edge; behind a wall the headline says so instead", () => {
     expect(blastNote({ distance: 3.6, nearEdge: false, shadow: false })).toBe('ep2e.chat.defence.blastDistance {"distance":3}');
     expect(blastNote({ distance: 9.5, nearEdge: true, shadow: false })).toContain("ep2e.chat.defence.blastEdge");
-    expect(blastNote({ distance: 2, nearEdge: false, shadow: true })).toContain("ep2e.chat.defence.blastBehindWall");
+    expect(blastNote({ distance: 2, nearEdge: true, shadow: true })).toBe('ep2e.chat.defence.blastDistance {"distance":2}');
     expect(blastNote({})).toBe("");
   });
 
@@ -1677,5 +1702,156 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
       await tickArmed();
       expect(sensor).toMatchObject({ color: "#00f5e4", flags: { eclipsephase: { area: { live: true } } } });
     });
+  });
+});
+
+describe("a munition's payload (Core p.211-212)", () => {
+  /**
+   * A drug to load as a payload, findable by its uuid.
+   * @returns {Item} Aggro, from the drugs compendium
+   */
+  function aggro() {
+    const data = loadPackItem("drugs-and-toxins/Aggro_jo3GAYGK409hcV16.json");
+    const drug = makeItem({ ...data, _id: "aggro1" });
+    global.__ep.uuidRegistry.set(drug.uuid, drug);
+    return drug;
+  }
+
+  /**
+   * A shooter whose weapon is loaded with a compendium round carrying a payload.
+   * @param {String} round - The round's source file in the ammunition compendium
+   * @param {Item} drug - The payload
+   * @returns {Actor} The shooter
+   */
+  function loaded(round, drug) {
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    const ammo = loadPackItem(`ammo/${round}`);
+    actor.items.get("gun1").update({ "system.ammoSelected": { ...actor.items.get("gun1").system.ammoSelected, name: ammo.name, traits: ammo.system.traits, dvModifier: { d10: 0, d6: 0, bonus: 0 }, payload: { ...ammo.system.payload, loaded: [{ uuid: drug.uuid, name: drug.name }] } } });
+    return actor;
+  }
+
+  test("a damaging munition releases its dose once damage gets through, one that deals none on striking, and a gas only from its cloud", () => {
+    const payload = vector => ({ enabled: true, vector, loaded: [{ uuid: "Item.x", name: "Grin" }] });
+
+    expect(munitionDose(payload("injection"), true)).toEqual({ uuid: "Item.x", name: "Grin", vector: "injection", when: "dealt" });
+    expect(munitionDose(payload("dermal"), false)).toMatchObject({ when: "struck" });
+    expect(munitionDose(payload("inhalation"), false)).toBeNull();
+    expect(munitionDose({ enabled: true, vector: "dermal", loaded: [] }, false)).toBeNull();
+    expect(munitionDose({ ...payload("dermal"), enabled: false }, false)).toBeNull();
+  });
+
+  test("a capsule round deals half damage and gives its dose only when damage gets through the armour", async () => {
+    const drug = aggro();
+    const shooter = loaded("Capsule__Kinetic__aORsGLyx5SB8Rd86.json", drug);
+    const soft = armoured("Soft", { energy: 0, kinetic: 0 });
+    const hard = armoured("Hard", { energy: 30, kinetic: 30 });
+
+    for (const target of [soft, hard]) {
+      const card = await attack(shooter, "rangedWeapon", 30);
+      expect(card.getFlag("eclipsephase", "roll").targetedAttack.dose).toMatchObject({ uuid: drug.uuid, when: "dealt" });
+      await applyTargetedAttack(card, { pick: async () => [{ actor: target }], confirm: async () => true });
+      const named = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+      expect(named.getFlag("eclipsephase", "attackDefence").attack.effectInfo).toEqual({ label: "ep2e.chat.defence.payloadLabel", text: "Aggro", uuid: drug.uuid });
+      expect(named.content).toContain(`class="ep-effect-info" data-uuid="${drug.uuid}"`);
+      await defend(target, 95);
+      await until(() => damageCards().length);
+      seedRolls([8]);
+      await rollAttackDamage(damageCards().at(-1));
+      createdMessages.length = 0;
+    }
+
+    expect(activeDoseFor(soft, "Aggro")).toBeTruthy();
+    expect(activeDoseFor(hard, "Aggro")).toBeFalsy();
+  });
+
+  test("a splash grenade deals no damage but gives everyone it catches the dose - half a hit is a whole dose - and is cleared once all have defended", async () => {
+    const drug = aggro();
+    const grenade = { ...loadPackItem("grenades/Splash_eXXBBl2NCEnduzOu.json"), _id: "gren1" };
+    grenade.system = { ...grenade.system, active: true, quantity: 2, payload: { ...grenade.system.payload, loaded: [{ uuid: drug.uuid, name: drug.name }] } };
+    const actor = makeActor({ type: "character", name: "Thrower", system: { aptitudes: { som: { value: 15 } } }, items: [grenade] });
+    const middle = armoured("Middle");
+    const regions = [];
+    regions.get = id => regions.find(region => region.id === id);
+    const grid = { isSquare: true, size: 100, distance: 1, getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }), getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }), getTopLeftPoint: ({ i, j }) => ({ x: j * 100, y: i * 100 }) };
+    global.canvas = { ready: true, grid, level: null, dimensions: { distancePixels: 100 }, tokens: { placeables: [{ actor: middle, bounds: { x: 600, y: 500, width: 100, height: 100 } }] }, scene: { id: "scene1", regions, createEmbeddedDocuments: async (type, data) => { data.forEach(entry => regions.push({ ...entry, id: `r${regions.length}`, isOwner: true, getFlag: (scope, key) => entry.flags.eclipsephase[key] })); return data; }, deleteEmbeddedDocuments: async (type, ids) => { for (const id of ids) regions.splice(regions.findIndex(region => region.id === id), 1); } } };
+    CONFIG.Canvas = { ...(CONFIG.Canvas ?? {}), polygonBackends: { move: { create: () => ({ points: [0, 0, 900, 0, 900, 900], contains: () => true }), testCollision: () => null } } };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    try {
+      seedRolls([30]);
+      await RollCheck({ type: "skill", key: "athletics", name: "athletics", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, trigger: "impact", placedArea: JSON.stringify({ kind: "circle", origin: { x: 550, y: 550 }, radius: 0 }) } }, grenadePreparation(actor, "gren1"), "grenade");
+      const defence = () => createdMessages.find(message => message.getFlag?.("eclipsephase", "attackDefence"));
+      await until(() => defence());
+      seedRolls([4]);
+      await rollDefence(defence(), middle.uuid, "dodge", DODGE);
+      await until(() => activeDoseFor(middle, "Aggro") && regions.length === 0);
+
+      expect(defence().getFlag("eclipsephase", "attackDefence").entries[0].outcome).toBe("half");
+      expect(activeDoseFor(middle, "Aggro")).toBeTruthy();
+      expect(regions).toHaveLength(0);
+      expect(damageCards()).toHaveLength(0);
+    } finally {
+      delete global.canvas;
+    }
+  });
+
+  test("a splash round deals no damage but gives its dose to the target it strikes, and none to one who gets away", async () => {
+    const drug = aggro();
+    const shooter = loaded("Splash__Kinetic__tNGDHyC0egGw6dsL.json", drug);
+    const struck = armoured("Struck");
+    const dodger = armoured("Dodger");
+
+    for (const [target, aim, die] of [[struck, 30, 95], [dodger, 5, 8]]) {
+      const card = await attack(shooter, "rangedWeapon", aim);
+      expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ noDamage: true, dose: { when: "struck" } });
+      await applyTargetedAttack(card, { pick: async () => [{ actor: target }], confirm: async () => true });
+      await defend(target, die);
+      await until(() => card.getFlag("eclipsephase", "taskCard").targets[0].outcome);
+    }
+    await until(() => activeDoseFor(struck, "Aggro"));
+
+    expect(activeDoseFor(struck, "Aggro")).toBeTruthy();
+    expect(activeDoseFor(dodger, "Aggro")).toBeFalsy();
+    expect(damageCards()).toHaveLength(0);
+  });
+
+  test("a payload's name shows wherever its munition is listed, or that none is loaded", () => {
+    expect(loadedPayloadName({ enabled: true, loaded: [{ name: "Aggro" }] })).toBe("Aggro");
+    expect(loadedPayloadName({ enabled: true, loaded: [] })).toBe("ep2e.roll.dialog.throw.noPayload");
+    expect(loadedPayloadName({ enabled: false, loaded: [{ name: "Aggro" }] })).toBeNull();
+  });
+});
+
+describe("taking a hit without a roll", () => {
+  test("a target alone on its defence card may soak the damage: the attack lands without a roll", async () => {
+    const target = armoured("Bo");
+    const card = await attack(armed("Medium_Pistol_yWrFfONiXTuWWPpz.json"), "rangedWeapon", 30);
+    await applyTargetedAttack(card, { pick: async () => [{ actor: target }], confirm: async () => true });
+    const defence = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+
+    expect(defence.content).toContain("ep2e.chat.defence.soak");
+    expect(defence.content).not.toContain('data-action="defenceSpare"');
+    expect(await soakRemaining(defence)).toBe(1);
+    await until(() => damageCards().length);
+    expect(card.getFlag("eclipsephase", "taskCard").targets[0].outcome).toBe("hit");
+  });
+
+  test("a card with several targets offers, below their own choices, to resolve the rest without a roll, to soak the rest, and to dodge the rest last", async () => {
+    const bo = armoured("Bo");
+    const cy = armoured("Cy");
+    const actor = armed("Assault_Rifle_2gtjv5LMnBnWEPBb.json");
+    await actor.items.get("gun1").update({ "system.ammoMin": 60, "system.ammoMax": 60 });
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+    seedRolls([30]);
+    await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, attackMode: "burstTargets", range: "range" } }, weapon, "rangedWeapon");
+    const card = createdMessages.filter(message => message.getFlag?.("eclipsephase", "taskCard")).at(-1);
+    await applyTargetedAttack(card, { pick: async () => [{ actor: bo }, { actor: cy }], confirm: async () => true });
+    const defence = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+    const order = ["defenceSpare", "defenceSoakRest", "defenceRollAll"].map(action => defence.content.indexOf(`data-action="${action}"`));
+
+    expect(order.every(index => index > 0)).toBe(true);
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+    expect(defence.content).not.toContain("ep2e.chat.defence.soak<");
+    expect(await soakRemaining(defence)).toBe(2);
   });
 });

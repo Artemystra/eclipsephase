@@ -1,3 +1,4 @@
+import { viewItemSheet } from "../common/general-sheet-functions.js";
 import { moreInfo, registerCommonHandlers } from "../common/general-sheet-functions.js";
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
@@ -5,7 +6,7 @@ import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "./modifiers.js";
-import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, scatterBlast, detonateArmed, defuseArmed } from "./attacks.js";
+import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, soakRemaining, scatterBlast, detonateArmed, defuseArmed } from "./attacks.js";
 
 /**
  * Hides GM info from players
@@ -152,10 +153,23 @@ export async function addChatListeners(html) {
       return;
     }
 
+    const effectInfo = event.target.closest("a.ep-effect-info");
+    if (effectInfo) {
+      viewItemSheet(effectInfo.dataset.uuid);
+      return;
+    }
+
     const blastScatter = event.target.closest("button.blastScatter");
     if (blastScatter) {
       const message = game.messages.get(blastScatter.closest("[data-message-id]")?.dataset.messageId);
       if (message) scatterBlast(message);
+      return;
+    }
+
+    const defenceSoakRest = event.target.closest("button.defenceSoakRest");
+    if (defenceSoakRest) {
+      const message = game.messages.get(defenceSoakRest.closest("[data-message-id]")?.dataset.messageId);
+      if (message) soakRemaining(message);
       return;
     }
 

@@ -198,12 +198,12 @@ describe("picking the targets", () => {
 });
 
 describe("what a defence card names", () => {
-  test("a card for one target leaves the name to the speaker, a card for several names each", async () => {
+  test("a card names every target it is for in a line of its own, one alone as well as several", async () => {
     await aimAt(await fire(await shooter(), 5), [target("Ana")]);
     await aimAt(await fire(await shooter(), 5), [target("Bo"), target("Cy")]);
 
     const [single, several] = defenceCards();
-    expect(single.content).not.toContain(">Ana<");
+    expect(single.content).toContain(">Ana<");
     expect(several.content).toContain(">Bo<");
     expect(several.content).toContain(">Cy<");
   });

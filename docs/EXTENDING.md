@@ -611,6 +611,14 @@ is placed, a line from the thrower's or shooter's token to the cursor shows the 
 range category. A seeker missile loaded in a launcher is fired the same way, with Guns
 and the launcher's range; its size adds to its damage and to how far a centred blast reaches.
 
+A munition's payload (2.8.5) comes along with its attack as `dose: { uuid, name, vector, when }`:
+one that deals damage - a capsule round, at half damage - gives it to each target the damage gets
+through the armour of (`when: "dealt"`), one that deals none - a splash round or grenade, marked
+`noDamage: true` - to each target it strikes, a half hit included, since a dose takes hold whole or
+not at all (`when: "struck"`). A gas payload is breathed in from its cloud instead. The dose is
+given through the attack effect `"payload"`, whose `resolve(attack, target, outcome)` the system
+registers; defensive ware applies as for any dose. The attack dialog names the payload loaded.
+
 A grenade or seeker set to go off later - a timer (rounds, seconds or minutes, at least one action
 turn of three seconds), a signal, or a proximity trigger reaching up to 3 meters - lies armed where
 it comes down (2.8.5): a mark on its square (a Region with `visibility: OBSERVER` and its own
@@ -644,12 +652,14 @@ is thrown at one target like a shot.
 
 The defence follows from the attack: against a ranged attack Fray, halved, with "Dodge behind
 cover" against an area attack - someone behind a wall from a blast's centre may instead stay "In
-Cover" without a roll, and the GM may resolve the rest without a roll,
-sparing them; against a melee attack Fray in full or a parry with Melee; against a
+Cover" without a roll; against a melee attack Fray in full or a parry with Melee; against a
 sleight a WIL Check (Moxie pool), on half WIL against a pushed Power. A ranged card also rolls the
 rest at once, without a dialog. Every defence dialog offers "Full defense" (+30). A target may
 choose not to resist a sleight: `api.attacks.yieldDefence(message, targetUuid)` - the card's "Don't
-resist" button - lets the attack land without a roll. An attack set up with `willing: true` skips
+resist" button - lets the attack land without a roll; against a weapon, a target alone on its card
+may "Soak Damage" the same way. A card with several targets offers, below their own choices,
+"Resolve Rest Without Roll" (the GM's ruling that they are not reached), "Soak Rest" and, last,
+"Dodge Rest". An attack set up with `willing: true` skips
 the defence cards altogether and lands on every target at once.
 
 `api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
@@ -674,6 +684,7 @@ game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
   detect(rollContext) {            // at preRoll: does this roll carry the effect?
     if (!rollContext.weapon?.weapon?.getFlag("my-module", "net")) return null;
     return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {},
+      effectInfo: { label: "Net", text: "Sticky net", uuid: "" },   // optional: the card's box, "label: text", an info icon opening uuid read-only
       cursor: { icon: "fa-spider-web" },       // optional: icon, color, markColor; the crosshair otherwise
       within: null,                             // optional: picker distance for several targets
       unsuitable: ["infomorph"],                // optional: target kinds it cannot strike
@@ -687,7 +698,11 @@ game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
 
 The attack travels in `flags.eclipsephase.roll.targetedAttack` on the attack card:
 `{ id, effect, actorUuid, weaponName, defence, area, targets, within, unsuitable, willing, payload,
-labelKey, effectLabel, cursor, preTargets, delivered, targetNames, roll, messageId }`. `targets: 0`
+labelKey, effectLabel, effectInfo, cursor, preTargets, delivered, targetNames, roll, messageId }`.
+`effectInfo` takes the place of `effectLabel` in the defence card's box when given: "label: text",
+with an info icon that opens the item at `uuid` in a sheet nobody can edit (`api.ui` has no call for
+it; a card button of your own can use the same class `ep-effect-info` with `data-uuid`). A
+munition's payload shows as "Payload: <substance>", a forced dose as "Dose: <drug>". `targets: 0`
 stands for any number. `defence` is `"ranged"`, `"melee"` or `"will"`. `preTargets` lists the actor
 uuids picked in the dialog. A caller can set an attack up itself through
 `dataset.contextFlags.targetedAttack`, as `forceDose` does; its dialog picks targets the same way.

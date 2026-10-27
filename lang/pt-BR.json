@@ -1239,7 +1239,7 @@
           }
         },
         "mechanics": {
-          "tab": "Mecânica",
+          "tab": "Dose",
           "none": "Nenhum",
           "checkHeadline": "Teste ao tomar",
           "aptitude": "Aptidão",
@@ -1256,8 +1256,8 @@
           },
           "overTimeHeadline": "Efeitos ao longo do tempo",
           "damage": "Dano por tique",
-          "interval": "A cada",
-          "ticks": "Tiques",
+          "interval": "Tique a cada",
+          "ticks": "Tiques máx.",
           "ticksTip": "Deixe vazio enquanto a dose durar",
           "intervals": {
             "turn": "Turno de ação",
@@ -1270,7 +1270,6 @@
           "healing": "Diálogo de cura",
           "healingTip": "Enquanto uma dose durar, o diálogo de cura começa com este adicional",
           "harm": "Dano",
-          "grantsHeadline": "Traços temporários",
           "grantPack": "Compêndio",
           "grantFolder": "Pasta",
           "grantItem": "Item",
@@ -1282,7 +1281,9 @@
           "grantDescriptionHint": "Escrito acima da descrição do item.",
           "grantTitlePlaceholder": "Título adicional (opcional)",
           "grantDescriptionPlaceholder": "Descrição adicional (opcional)",
-          "grantTitleHint": "Aparece entre parênteses após o nome do item."
+          "grantTitleHint": "Aparece entre parênteses após o nome do item.",
+          "wearOffHeadline": "Efeito ao passar",
+          "addictionHeadline": "Vício"
         }
       },
       "additionalSkill": {
@@ -1624,7 +1625,9 @@
             "seconds": "Segundos",
             "minutes": "Minutos"
           },
-          "proximity": "Alcance do sensor"
+          "proximity": "Alcance do sensor",
+          "payload": "Carga",
+          "noPayload": "Sem carga"
         }
       },
       "successType": {
@@ -2034,10 +2037,9 @@
       },
       "defence": {
         "headline": "Defender-se de {weapon}",
-        "doseLabel": "{name}, uma dose cada",
         "dodge": "Esquivar",
         "parry": "Aparar",
-        "rollAll": "Rolar o restante de uma vez",
+        "rollAll": "Esquivar o resto",
         "outcome": {
           "hit": "Acerto",
           "half": "Esquiva parcial: meia dose",
@@ -2060,10 +2062,14 @@
         "cover": "Foi para a cobertura",
         "remainCover": "Permanece na cobertura",
         "blastDistance": "a {distance} m do centro",
-        "blastEdge": "na borda: esquivar com sucesso a evita",
-        "blastBehindWall": "atrás de uma parede: esquivar com sucesso a evita",
-        "inCover": "Em cobertura",
-        "spareRest": "Resolver o resto sem rolagem"
+        "blastEdge": "na borda",
+        "inCover": "Sem dano",
+        "spareRest": "Resolver o resto sem rolagem",
+        "soak": "Absorver o dano",
+        "soakRest": "Absorver o resto",
+        "headlineCover": "Defenda-se de {weapon} atrás de um obstáculo",
+        "payloadLabel": "Carga",
+        "doseInfo": "Dose"
       },
       "poolSpent": {
         "swapped": "{name} usou um ponto de {pool} para trocar os dados",

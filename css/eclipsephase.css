@@ -4320,6 +4320,19 @@ li:has(.ep-system-notice) .message-header {
   flex: 1;
 }
 
+/* The substance a munition carries, wherever the munition is listed or looked at. */
+.ep-payload-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  margin: 3px 0 5px 10px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  background-color: var(--pitchBorder);
+  font-size: 12px;
+}
+
 /* A short text over the canvas, centred above the pointer, such as whose an armed explosive is. */
 .ep-map-tip {
   position: fixed;
@@ -4341,7 +4354,67 @@ li:has(.ep-system-notice) .message-header {
   cursor: default;
 }
 
-/* Where a target stands in a blast, above its defence. */
+/* What an attack brings besides the hit, above its targets: a payload, a dose, a touch. */
+.ep-defence-card .ep-effect-box {
+  display: block;
+  margin: 15px 0 0;
+  padding: 10px 0;
+  background-color: var(--pitchBorder);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* A damage value's "+" stands in for a die beside the d10 and d6 icons, so it is as wide as they are. */
+img.icon-xsmall ~ i.fa-plus.awesomeIcon {
+  flex: 0 0 16px;
+  width: 16px;
+  max-width: 16px;
+  text-align: center;
+}
+
+/* A drug's wear-off stress in three columns like the rows above it: label, damage value, empty. */
+.ep-wear-off-row {
+  align-items: center;
+  padding: 5px 0;
+}
+
+.ep-wear-off-row > * {
+  flex: 1 1 0;
+  text-align: center;
+}
+
+/* A defence card: each target a block of its own - name, choices, note 5 px apart - 10 px from the
+   headline and from the next block; the choices for the rest 5 px apart, 10 px below the last
+   block, padded beneath. */
+.ep-defence-card .ep-defence-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.ep-defence-card .ep-defence-entry > * {
+  margin: 0;
+}
+
+.ep-defence-card .ep-defence-entry .ep-defence-name {
+  font-weight: bold;
+}
+
+.ep-defence-card .ep-defence-entry .chatControls {
+  padding: 0 10px;
+}
+
+.ep-defence-card .chatControls.ep-defence-controls {
+  margin-top: 10px;
+  padding: 0 10px 10px;
+}
+
+.ep-defence-card .chatControls.ep-defence-controls .ep-chat-primary {
+  margin-top: 0;
+}
+
+/* Where a target stands in a blast, below its choices. */
 .ep-defence-card .ep-defence-note {
   margin: 0;
   text-align: center;

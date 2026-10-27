@@ -1260,7 +1260,7 @@
           }
         },
         "mechanics": {
-          "tab": "Mechanik",
+          "tab": "Wirkung",
           "none": "Keine",
           "checkHeadline": "Check beim Nehmen",
           "aptitude": "Attribut",
@@ -1277,8 +1277,8 @@
           },
           "overTimeHeadline": "Wirkung über Zeit",
           "damage": "Schaden pro Tick",
-          "interval": "Alle",
-          "ticks": "Ticks",
+          "interval": "Tick alle",
+          "ticks": "Max. Ticks",
           "ticksTip": "Leer lassen: solange die Dosis wirkt",
           "intervals": {
             "turn": "Aktionsrunde",
@@ -1291,7 +1291,6 @@
           "healing": "Heilungsdialog",
           "healingTip": "Solange eine Dosis wirkt, startet der Heilungsdialog mit dieser Ergänzung",
           "harm": "Schaden",
-          "grantsHeadline": "Temporäre Traits",
           "grantPack": "Kompendium",
           "grantFolder": "Ordner",
           "grantItem": "Item",
@@ -1303,7 +1302,9 @@
           "grantDescriptionHint": "Steht über der Beschreibung des Items.",
           "grantTitlePlaceholder": "Zusätzlicher Titel (optional)",
           "grantDescriptionPlaceholder": "Zusätzliche Beschreibung (optional)",
-          "grantTitleHint": "Steht in Klammern hinter dem Namen des Items."
+          "grantTitleHint": "Steht in Klammern hinter dem Namen des Items.",
+          "wearOffHeadline": "Effekt beim Nachlassen",
+          "addictionHeadline": "Sucht"
         }
       },
       "additionalSkill": {
@@ -1643,7 +1644,9 @@
             "seconds": "Sekunden",
             "minutes": "Minuten"
           },
-          "proximity": "Sensorreichweite"
+          "proximity": "Sensorreichweite",
+          "payload": "Ladung",
+          "noPayload": "Keine Ladung geladen"
         }
       },
       "successType": {
@@ -2062,10 +2065,9 @@
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
-        "doseLabel": "{name}, je eine Dosis",
         "dodge": "Ausweichen",
         "parry": "Parieren",
-        "rollAll": "Restliche auf einmal würfeln",
+        "rollAll": "Rest ausweichen",
         "outcome": {
           "hit": "Getroffen",
           "half": "Teilweise ausgewichen: halbe Dosis",
@@ -2088,10 +2090,14 @@
         "cover": "In Deckung gegangen",
         "remainCover": "Bleibt in Deckung",
         "blastDistance": "{distance} m vom Zentrum",
-        "blastEdge": "am Rand: erfolgreiches Ausweichen reicht",
-        "blastBehindWall": "hinter einer Wand: erfolgreiches Ausweichen reicht",
-        "inCover": "In Deckung",
-        "spareRest": "Rest ohne Wurf auflösen"
+        "blastEdge": "am Rand",
+        "inCover": "Kein Schaden",
+        "spareRest": "Rest ohne Wurf auflösen",
+        "soak": "Schaden einstecken",
+        "soakRest": "Rest einstecken",
+        "headlineCover": "Verteidigung gegen {weapon} hinter einem Hindernis",
+        "payloadLabel": "Ladung",
+        "doseInfo": "Dosis"
       },
       "poolSpent": {
         "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",

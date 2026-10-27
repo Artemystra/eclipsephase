@@ -1276,7 +1276,7 @@
           }
         },
         "mechanics": {
-          "tab": "Mechanics",
+          "tab": "Dose",
           "none": "None",
           "checkHeadline": "Check on Taking",
           "aptitude": "Aptitude",
@@ -1293,8 +1293,8 @@
           },
           "overTimeHeadline": "Effects over Time",
           "damage": "Damage per Tick",
-          "interval": "Every",
-          "ticks": "Ticks",
+          "interval": "Ticks Every",
+          "ticks": "Max. Ticks",
           "ticksTip": "Leave empty for as long as the dose runs",
           "intervals": {
             "turn": "Action Turn",
@@ -1307,7 +1307,6 @@
           "healing": "Healing Dialog",
           "healingTip": "While a dose runs, the healing dialog starts on this addition",
           "harm": "Damage",
-          "grantsHeadline": "Temporary Traits",
           "grantPack": "Compendium",
           "grantFolder": "Folder",
           "grantItem": "Item",
@@ -1319,7 +1318,9 @@
           "grantDescriptionHint": "Written above the item's own description.",
           "grantTitlePlaceholder": "Additional title (optional)",
           "grantDescriptionPlaceholder": "Additional description (optional)",
-          "grantTitleHint": "Shown in brackets after the item's name."
+          "grantTitleHint": "Shown in brackets after the item's name.",
+          "wearOffHeadline": "Wear Off Effect",
+          "addictionHeadline": "Addiction"
         }
       },
       "additionalSkill": {
@@ -1669,7 +1670,9 @@
             "seconds": "Seconds",
             "minutes": "Minutes"
           },
-          "proximity": "Sensor reach"
+          "proximity": "Sensor reach",
+          "payload": "Payload",
+          "noPayload": "No payload loaded"
         }
       },
       "successType": {
@@ -2090,10 +2093,9 @@
       },
       "defence": {
         "headline": "Defend against the {weapon}",
-        "doseLabel": "{name}, one dose each",
         "dodge": "Dodge",
         "parry": "Parry",
-        "rollAll": "Roll remaining at once",
+        "rollAll": "Dodge Rest",
         "outcome": {
           "hit": "Hit",
           "half": "Partly dodged: half",
@@ -2116,10 +2118,14 @@
         "cover": "Moved into Cover",
         "remainCover": "Remains in Cover",
         "blastDistance": "{distance} m from the centre",
-        "blastEdge": "at the edge: a successful dodge clears it",
-        "blastBehindWall": "behind a wall: a successful dodge clears it",
-        "inCover": "In Cover",
-        "spareRest": "Resolve Rest Without Roll"
+        "blastEdge": "at the edge",
+        "inCover": "No Damage",
+        "spareRest": "Resolve Rest Without Roll",
+        "soak": "Soak Damage",
+        "soakRest": "Soak Rest",
+        "headlineCover": "Defend against the {weapon} from behind an obstacle",
+        "payloadLabel": "Payload",
+        "doseInfo": "Dose"
       },
       "poolSpent": {
         "swapped": "{name} used a {pool} point to swap the dice",

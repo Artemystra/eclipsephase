@@ -594,7 +594,7 @@ export async function forceDose(actor, item, systemOptions = {}) {
         area: false,
         labelKey: "ep2e.chat.attack.applyDose",
         weaponName: item.name,
-        effectLabel: game.i18n.format("ep2e.chat.defence.doseLabel", { name: item.name }),
+        effectInfo: { label: game.i18n.localize("ep2e.chat.defence.doseInfo"), text: item.name, uuid: item.uuid },
         cursor: DOSE_CURSOR,
         payload: { ...chemicalPayload(item), giverUuid: actor.uuid, itemId: item.id, spend: true }
       }
@@ -669,8 +669,27 @@ export async function doseFromAttack(attack, target, outcome, { byPool = false, 
 }
 
 /**
+ * Gives a target the dose a munition's payload carries, in full - a dose takes hold or it does not:
+ * any strike lets it in, only a target who got away entirely is spared. The substance is read from
+ * where the payload names it. A pool spend that turns the defence around takes it back.
+ * @param {Object} attack - The attack, with dose ({ uuid, name })
+ * @param {Actor} target - The target
+ * @param {String} outcome - "hit", "half" or "none"
+ * @param {Object} [options] - byPool and defenceId, as for doseFromAttack
+ * @returns {Promise<*>} What letting the dose in reported, or null when none was given
+ */
+export async function doseFromPayload(attack, target, outcome, { byPool = false, defenceId = null } = {}) {
+  if (byPool) await undoAttackDose(target, defenceId);
+  if (outcome === "none" || !attack?.dose?.uuid) return null;
+  const substance = await fromUuid(attack.dose.uuid);
+  if (substance?.type !== "drug") return null;
+  return doseFromAttack({ payload: chemicalPayload(substance) }, target, "hit", { defenceId });
+}
+
+/**
  * Lets attacks carry doses: a weapon that fires chemicals keeps a copy of the drug it is loaded
- * with, its hits and a forced dose's hit deliver it to the targets the attacker picks.
+ * with, its hits and a forced dose's hit deliver it to the targets the attacker picks; a munition's
+ * payload is given through the "payload" effect, which a damaging attack calls on.
  * @returns {void}
  */
 export function registerChemicalAttacks() {
@@ -683,9 +702,9 @@ export function registerChemicalAttacks() {
       const doses = chemicalDoses(context.weapon?.weaponTraits);
       if (!doses) return null;
       const payload = weaponPayload(context.actor, context.weapon?.weapon);
-      const effectLabel = payload ? game.i18n.format("ep2e.chat.defence.doseLabel", { name: payload.name }) : "";
+      const effectInfo = payload ? { label: game.i18n.localize("ep2e.chat.defence.payloadLabel"), text: payload.name, uuid: payload.data?.origin ?? "" } : null;
       const targets = attackTargetCount(context.weapon?.weapon, context.options ?? {});
-      return { targets, area: true, within: targets > 1 ? 1 : null, payload, labelKey: "ep2e.chat.attack.applyDose", effectLabel };
+      return { targets, area: true, within: targets > 1 ? 1 : null, payload, labelKey: "ep2e.chat.attack.applyDose", ...(effectInfo ? { effectInfo } : {}) };
     },
     ready(attack) {
       if (attack.payload?.data) return true;
@@ -702,6 +721,7 @@ export function registerChemicalAttacks() {
     },
     resolve: doseFromAttack
   });
+  registerAttackEffect("payload", { resolve: doseFromPayload });
 }
 
 /**

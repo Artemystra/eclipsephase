@@ -79,6 +79,8 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
 
   const blast = seekerBlast(weapon, weaponDamage);
   if (blast) selection.blast = blast;
+  const payload = weapon?.type === "rangedWeapon" ? payloadInfo(weapon.system?.ammoSelected?.payload) : null;
+  if (payload) selection.payload = payload;
   return selection
 }
 
@@ -442,6 +444,46 @@ export function blastReach(blast, dial = {}) {
 }
 
 /**
+ * The dose a munition's payload brings to whoever it strikes (Core p.211-212): its substance, the
+ * vector it enters by, and when it takes hold - a munition that deals damage releases it inside once
+ * the damage gets through the armour (a capsule), one that deals none on striking (a splash). A gas
+ * is breathed in from its cloud instead, not from the strike.
+ * @param {Object} payload - The munition's payload: enabled, vector and loaded
+ * @param {Boolean} damaging - Whether the munition deals damage
+ * @returns {Object|null} uuid, name, vector and when ("dealt" or "struck"), or null for none
+ */
+export function munitionDose(payload, damaging) {
+  const loaded = payload?.enabled ? payload.loaded?.[0] : null;
+  if (!loaded?.uuid || payload.vector === "inhalation") return null;
+  return { uuid: loaded.uuid, name: loaded.name ?? "", vector: payload.vector || "", when: damaging ? "dealt" : "struck" };
+}
+
+/**
+ * What a munition's payload shows in the attack dialog: its substance and vector, or that nothing is
+ * loaded although it could carry something.
+ * @param {Object} payload - The munition's payload
+ * @returns {Object|null} name and vector (a localization key), or empty for a payload not loaded; null
+ *   for a munition without one
+ */
+export function payloadInfo(payload) {
+  if (!payload?.enabled) return null;
+  const loaded = payload.loaded?.[0];
+  const vector = payload.vector ? `ep2e.item.drug.table.applicationVectors.${payload.vector}Label` : "";
+  return loaded?.name ? { name: loaded.name, vector } : { empty: true };
+}
+
+/**
+ * The name a munition's payload shows wherever the munition is listed: its substance, or that none is
+ * loaded although it could carry one.
+ * @param {Object} payload - The munition's payload
+ * @returns {String|null} The name or the "no payload" words, null for a munition without one
+ */
+export function loadedPayloadName(payload) {
+  if (!payload?.enabled) return null;
+  return payload.loaded?.[0]?.name || game.i18n.localize("ep2e.roll.dialog.throw.noPayload");
+}
+
+/**
  * The most a damage formula can roll: every die at its highest, flat values added or taken off.
  * @param {String} formula - e.g. "3d10+6" or "1d10+2d6-1"
  * @returns {Number} The highest total, 0 for a formula without dice or numbers, or for a label
@@ -496,7 +538,8 @@ export function grenadePreparation(actor, itemId) {
     weaponTraits: grenadeTraits(grenade.system),
     weaponMode: "1",
     range: Number(actor.system?.aptitudes?.som?.value) || null,
-    blast: { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage: maxDamage(grenade.system.dv), trigger: grenade.system.trigger || "impact" }
+    blast: { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage: maxDamage(grenade.system.dv), trigger: grenade.system.trigger || "impact" },
+    ...(payloadInfo(grenade.system.payload) ? { payload: payloadInfo(grenade.system.payload) } : {})
   };
 }
 
@@ -939,7 +982,7 @@ export async function reloadWeapon(html, actor) {
             traits = ammoType != "chemical" ? ammo.system.traits : {};
             dv = ammoType != "chemical" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
 
-            let ammoEntry = { "id": ammo.id, "name": ammo.name, "traits": traits, "dv": dv };
+            let ammoEntry = { "id": ammo.id, "name": ammo.name, "traits": traits, "dv": dv, "payload": loadedPayloadName(ammo.system?.payload) };
             ammoList.push(ammoEntry);
           }
 

@@ -166,6 +166,23 @@ export function timedEffectData({ name, img, span, flags = {}, changes = [], sta
 }
 
 /**
+ * Shows an item's sheet that nobody can edit, not even the GM - to look up what a card names, such
+ * as the payload an attack brings. It is a copy of the item, so its own sheet may stay open beside it.
+ * @param {String} uuid - The item
+ * @returns {Promise<Object|null>} The sheet, or null when there is no such item
+ */
+export async function viewItemSheet(uuid) {
+  const item = uuid ? await fromUuid(uuid) : null;
+  if (!(item instanceof Item)) return null;
+  const data = item.toObject();
+  delete data._id;
+  const copy = new CONFIG.Item.documentClass(data);
+  const Sheet = item.sheet?.constructor;
+  if (!Sheet) return null;
+  return new Sheet({ document: copy, editPermission: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER + 1 }).render(true);
+}
+
+/**
  * Shows the tooltips inside an area centred above the mouse pointer, 10 pixels up, instead of at a
  * fixed spot where they cover what lies above. They are fixed in place, so the sheet's frame does not
  * clip them; a zoomed sheet is its own frame of reference, which the position is scaled into.
