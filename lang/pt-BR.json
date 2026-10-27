@@ -1994,7 +1994,8 @@
         "addictionRaisedEgo": "O vício do meu ego em <strong>{name}</strong> sobe para o nível {level}",
         "addictionRaisedBody": "O vício do meu corpo em <strong>{name}</strong> sobe para o nível {level}",
         "addictionRaisedBoth": "O vício do meu ego e do meu corpo em <strong>{name}</strong> sobe para o nível {level}",
-        "unaffected": "{drug} não pode agir no corpo de {name}."
+        "unaffected": "{drug} não pode agir no corpo de {name}.",
+        "sealedOff": "{name} está protegido(a): {drug} não chega pela via {vector}."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

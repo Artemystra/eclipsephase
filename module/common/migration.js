@@ -3134,21 +3134,70 @@ export function _ep285_weaponUpdate(item, catalogue) {
   return { update: Object.keys(update).length ? update : null, unreadable };
 }
 
+// The system compendiums whose masks and suits keep substances out, and the keys their effects set.
+const _ep285_SEAL_PACKS = ["eclipsephase.gear", "eclipsephase.armor", "eclipsephase.ware"];
+const _ep285_SEAL_KEYS = ["system.additionalSystems.airSealed", "system.additionalSystems.skinSealed"];
+
+/**
+ * Whether an effect seals its bearer against a vector.
+ * @param {Object} effect - The effect or its data
+ * @returns {Boolean} True when one of its changes sets a seal
+ */
+function _ep285_seals(effect) {
+  const changes = effect?.system?.changes ?? effect?.changes ?? [];
+  return Array.from(changes).some(change => _ep285_SEAL_KEYS.includes(change.key));
+}
+
+/**
+ * The sealing effects of the masks and suits in the system compendiums, by type and name.
+ * @returns {Promise<Map<String, Object[]>>} The effects' data, per "type:name"
+ */
+async function _ep285_sealCatalogue() {
+  const catalogue = new Map();
+  for (const id of _ep285_SEAL_PACKS) {
+    const pack = game.packs.get(id);
+    if (!pack) continue;
+    for (const item of await pack.getDocuments()) {
+      const seals = Array.from(item.effects ?? []).filter(_ep285_seals).map(effect => {
+        const data = typeof effect.toObject === "function" ? effect.toObject() : foundry.utils.deepClone(effect);
+        delete data._id;
+        return data;
+      });
+      if (seals.length) catalogue.set(`${item.type}:${item.name}`, seals);
+    }
+  }
+  return catalogue;
+}
+
+/**
+ * The sealing effects a mask or suit placed before 2.8.5 lacks, taken from its compendium namesake.
+ * @param {Item} item - The item
+ * @param {Map<String, Object[]>} catalogue - What _ep285_sealCatalogue read
+ * @returns {Object[]} The effects' data to create, empty when it has them or has no namesake
+ */
+export function _ep285_sealEffects(item, catalogue) {
+  const seals = catalogue.get(`${item.type}:${item.name}`);
+  if (!seals || Array.from(item.effects ?? []).some(_ep285_seals)) return [];
+  return seals.map(data => foundry.utils.deepClone(data));
+}
+
 /**
  * Whether any weapon, ammunition or grenade in the world still carries text where 2.8.5 reads a
- * number or a structured area.
+ * number or a structured area, or a mask or suit still lacks the effect that seals its wearer.
  * @returns {Promise<Boolean>} True when at least one item needs work
  */
 export async function migrationPre285Needed() {
-  const needs = item => _ep285_weaponUpdate(item, new Map())?.update != null;
+  const seals = await _ep285_sealCatalogue();
+  const needs = item => _ep285_weaponUpdate(item, new Map())?.update != null || _ep285_sealEffects(item, seals).length > 0;
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
 /**
  * Turns every weapon range in the world into metres and every munition's area text into a
  * structured area, fixes the munitions' armour type and fills payloads from the system
- * compendiums: the world's own items, every actor's embedded ones and the world's item
- * compendiums. Ranges that cannot be read are listed to the GM in one message.
+ * compendiums, and gives masks and suits the effect that seals their wearer: the world's own items,
+ * every actor's embedded ones and the world's item compendiums. Ranges that cannot be read are
+ * listed to the GM in one message.
  * @param {Boolean} startMigration - Whether the user confirmed the migration
  * @returns {Promise<Object>} Whether the closing notice is due
  */
@@ -3166,6 +3215,16 @@ export async function migrationPre285(startMigration) {
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => ["rangedWeapon", "ammo", "grenade"].includes(item.type),
+    includeCompendiums: true
+  });
+
+  const seals = await _ep285_sealCatalogue();
+  await forEachItem(async item => {
+    const effects = _ep285_sealEffects(item, seals);
+    if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => ["gear", "armor", "ware"].includes(item.type),
     includeCompendiums: true
   });
 

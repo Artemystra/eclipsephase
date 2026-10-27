@@ -2022,7 +2022,8 @@
         "addictionRaisedEgo": "Die Sucht meines Egos nach <strong>{name}</strong> steigt auf Stufe {level}",
         "addictionRaisedBody": "Die Sucht meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
         "addictionRaisedBoth": "Die Sucht meines Egos und meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
-        "unaffected": "{drug} kann im Körper von {name} nicht wirken."
+        "unaffected": "{drug} kann im Körper von {name} nicht wirken.",
+        "sealedOff": "{name} ist abgedichtet: {drug} kann nicht per {vector} wirken."
       },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",

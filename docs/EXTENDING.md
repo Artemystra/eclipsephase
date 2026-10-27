@@ -635,7 +635,15 @@ to whoever begins their turn in it, once per cloud. Both lie under an AmbientLig
 "Invert Absorption" and no luminosity; smoke also sets an attack dialog's sight to major impairment (-20) when it lies
 between the attacker and a target or on either (`picking.applySight(form, tokens)`). The dose is
 given through the attack effect `"payload"`, whose `resolve(attack, target, outcome)` the system
-registers; defensive ware applies as for any dose. The attack dialog names the payload loaded.
+registers; defensive ware applies as for any dose. What the target wears can keep a dose out by its
+vector (2.8.5): an item effect setting `system.additionalSystems.airSealed` keeps out what is
+breathed in (a breather), `skinSealed` what touches the skin (with `airSealed`: vacsuits, combat
+armour, the hardsuit), while the item is active; the target gets a card saying so instead of the
+dose. `sealedAgainst(actor, vector)` in `module/common/morp-functions.js` answers it; injected and swallowed
+doses are never kept out this way. A gas cloud notes whom it was kept out from apart from whom it
+dosed (the Region flag's `sealed` and `dosed`); once that seal comes off, `unsealedInClouds(actor)`
+in `module/rolls/attacks.js` (run on actor, item and effect changes) lets the cloud test them again,
+at once when they are still standing in it. The attack dialog names the payload loaded.
 
 A grenade or seeker set to go off later - a timer (rounds, seconds or minutes, at least one action
 turn of three seconds), a signal, or a proximity trigger reaching up to 3 meters - lies armed where

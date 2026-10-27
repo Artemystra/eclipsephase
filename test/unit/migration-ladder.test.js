@@ -381,6 +381,17 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
     expect(_ep285_weaponUpdate(item, catalogue).update).toMatchObject({ "system.cloud": true, "system.cloudColor": { kind: "smoke", custom: "#ffffff" } });
   });
 
+  test("a mask or suit without its seal gets it from its compendium namesake, once", async () => {
+    const { _ep285_sealEffects } = await import("../../module/common/migration.js");
+    const seal = { name: "Sealed", system: { changes: [{ key: "system.additionalSystems.airSealed", value: true, type: "override" }] } };
+    const catalogue = new Map([["armor:Vacsuit (Light)", [seal]]]);
+    const bare = { type: "armor", name: "Vacsuit (Light)", effects: [] };
+
+    expect(_ep285_sealEffects(bare, catalogue)).toEqual([seal]);
+    expect(_ep285_sealEffects({ ...bare, effects: [seal] }, catalogue)).toEqual([]);
+    expect(_ep285_sealEffects({ ...bare, name: "Homebrew Suit" }, catalogue)).toEqual([]);
+  });
+
   test("a range that cannot be read stays as written and is listed to the GM", async () => {
     const actor = makeActor({ name: "Sava", type: "character", items: [
       { _id: "thr1", name: "Throwing Knife", type: "rangedWeapon", system: { mode1: { range: "SOM", armorused: "kinetic" }, mode2: { range: "", armorused: "kinetic" } } },

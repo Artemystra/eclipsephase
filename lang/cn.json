@@ -1987,7 +1987,8 @@
         "addictionRaisedEgo": "我的自我对 <strong>{name}</strong> 的成瘾升至 {level} 级",
         "addictionRaisedBody": "我的身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
         "addictionRaisedBoth": "我的自我和身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
-        "unaffected": "{drug} 无法作用于 {name} 的身体。"
+        "unaffected": "{drug} 无法作用于 {name} 的身体。",
+        "sealedOff": "{name} 已密封，{drug} 无法通过{vector}影响其身体。"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

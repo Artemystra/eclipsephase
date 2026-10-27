@@ -56,6 +56,57 @@
       "showIcon": 1,
       "folder": null,
       "_key": "!items.effects!5rW7sVuAxC3nDqEo.cD3eF4gH5iJ6kL7m"
+    },
+    {
+      "_id": "lT2Hckdko7QFFjC7",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Sealed",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "icons/svg/aura.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.airSealed",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          },
+          {
+            "key": "system.additionalSystems.skinSealed",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 0,
+      "folder": null,
+      "_key": "!items.effects!5rW7sVuAxC3nDqEo.lT2Hckdko7QFFjC7"
     }
   ],
   "system": {

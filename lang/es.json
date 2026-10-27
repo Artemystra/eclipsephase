@@ -1980,7 +1980,8 @@
         "addictionRaisedEgo": "La adicción de mi ego a <strong>{name}</strong> sube al nivel {level}",
         "addictionRaisedBody": "La adicción de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
         "addictionRaisedBoth": "La adicción de mi ego y de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
-        "unaffected": "{drug} no puede actuar en el cuerpo de {name}."
+        "unaffected": "{drug} no puede actuar en el cuerpo de {name}.",
+        "sealedOff": "{name} está sellado(a): {drug} no llega por la vía {vector}."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

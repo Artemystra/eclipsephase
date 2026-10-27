@@ -103,7 +103,9 @@
       "toxinFilters": false,
       "nanophages": false,
       "digestiveSymbiotes": false,
-      "immunizers": false
+      "immunizers": false,
+      "airSealed": false,
+      "skinSealed": false
         },
         "initiative": {
           "value": null,

@@ -5,7 +5,7 @@ import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } fro
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
 import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
-import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER, getBodyBindingInfo } from "./morp-functions.js";
+import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER, getBodyBindingInfo, sealedAgainst } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
 import { chemicalDoses, attackTargetCount } from "./weapon-functions.js";
 import { registerCard, renderCard, updateCard } from "./chat-cards.js";
@@ -650,13 +650,20 @@ async function undoAttackDose(actor, defenceId) {
  * @param {Actor} target - The target
  * @param {String} outcome - "hit", "half" or "none"
  * @param {Object} [options] - byPool: a pool spend changed the defence, so the earlier dose goes;
- *   defenceId: the defence it comes through
+ *   defenceId: the defence it comes through; vector: how it reaches the target, the drug's own by
+ *   default
  * @returns {Promise<Object|null>} What letting the dose in reported, or null when none went in
  */
-export async function doseFromAttack(attack, target, outcome, { byPool = false, defenceId = null } = {}) {
+export async function doseFromAttack(attack, target, outcome, { byPool = false, defenceId = null, vector = null } = {}) {
   if (byPool) await undoAttackDose(target, defenceId);
   const payload = attack.payload;
   if (outcome === "none" || !payload?.data) return null;
+  const reaches = vector ?? payload.data.flags?.eclipsephase?.dose?.vector ?? null;
+  if (sealedAgainst(target, reaches)) {
+    const how = game.i18n.localize(`ep2e.item.drug.table.applicationVectors.${reaches}Label`);
+    await postCard(target, { icon: "fa-mask-ventilator", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.sealedOff", { name: target.name, drug: payload.name, vector: how }) });
+    return null;
+  }
   const substrate = doseSubstrate(target, { system: { drugType: payload.drugType } });
   if (!substrate.allowed) {
     await postCard(target, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
@@ -683,7 +690,7 @@ export async function doseFromPayload(attack, target, outcome, { byPool = false,
   if (outcome === "none" || !attack?.dose?.uuid) return null;
   const substance = await fromUuid(attack.dose.uuid);
   if (substance?.type !== "drug") return null;
-  return doseFromAttack({ payload: chemicalPayload(substance) }, target, outcome, { defenceId });
+  return doseFromAttack({ payload: chemicalPayload(substance) }, target, outcome, { defenceId, vector: attack.dose.vector ?? null });
 }
 
 /**

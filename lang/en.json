@@ -2049,7 +2049,8 @@
         "addictionRaisedEgo": "My ego's addiction to <strong>{name}</strong> grows to level {level}",
         "addictionRaisedBody": "My body's addiction to <strong>{name}</strong> grows to level {level}",
         "addictionRaisedBoth": "My ego's and my body's addiction to <strong>{name}</strong> grows to level {level}",
-        "unaffected": "{drug} cannot act on {name}'s body."
+        "unaffected": "{drug} cannot act on {name}'s body.",
+        "sealedOff": "{name} is sealed against {drug}: it cannot reach them by {vector}."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",

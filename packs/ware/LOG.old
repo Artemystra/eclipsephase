@@ -1,3 +1,5 @@
-2026/10/20-22:00:59.584805 172d73000 Recovering log #193
-2026/10/20-22:00:59.585210 172d73000 Delete type=3 #192
-2026/10/20-22:00:59.585719 172d73000 Delete type=0 #193
+2026/10/27-23:40:58.750539 1712f3000 Delete type=3 #1
+2026/10/27-23:40:58.772322 171b8b000 Level-0 table #5: started
+2026/10/27-23:40:58.772900 171b8b000 Level-0 table #5: 62081 bytes OK
+2026/10/27-23:40:58.772957 171b8b000 Delete type=0 #3
+2026/10/27-23:40:58.772999 171b8b000 Manual compaction at level-0 from '!folders!BqAuWSEWfisfuXXd' @ 72057594037927935 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at (end)

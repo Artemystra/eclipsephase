@@ -96,6 +96,19 @@ describe("compendium sources", () => {
     expect(munitions.filter(({ data }) => data.system.cloud).map(({ data }) => `${data.type}:${data.name}`).sort()).toEqual(["ammo:Gas/Smoke", "grenade:Gas/Smoke"]);
   });
 
+  test("breathers seal the airways, vacsuits, combat armour and the hardsuit the airways and the skin, and nothing else seals", () => {
+    const seals = data => (data.effects ?? []).flatMap(effect => (effect.system?.changes ?? effect.changes ?? []).map(change => change.key)).filter(key => /additionalSystems\.(air|skin)Sealed$/.test(key)).map(key => key.split(".").at(-1)).sort().join("+");
+    const sealed = Object.fromEntries(documents.filter(({ pack, data }) => pack !== "samplecharacters" && pack !== "diemens-homebrew-items" && seals(data)).map(({ data }) => [`${data.type}:${data.name}`, seals(data)]));
+
+    expect(sealed).toEqual({
+      "gear:Breather": "airSealed",
+      "armor:Vacsuit (Light)": "airSealed+skinSealed", "armor:Vacsuit (Standard)": "airSealed+skinSealed",
+      "armor:Light Combat Armor": "airSealed+skinSealed", "armor:Combat Armor": "airSealed+skinSealed", "armor:Heavy Combat Armor": "airSealed+skinSealed",
+      "armor:Hardsuit": "airSealed+skinSealed",
+      "ware:Light Combat Armor": "airSealed+skinSealed", "ware:Heavy Combat Armor": "airSealed+skinSealed"
+    });
+  });
+
   test("seekers say they are fired from a launcher, grenades do not, and HEAP comes only as a seeker (Core p.212)", () => {
     const notice = "Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.";
     const seekers = documents.filter(({ data }) => data.type === "ammo" && data.system.type === "seeker");

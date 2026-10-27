@@ -1,4 +1,4 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
@@ -11,6 +11,7 @@ import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
 import { makeActor, makeItem, resetWorld, seedRolls, loadPackItem, setSetting } from "../setup/factories.js";
 import { activeDoseFor } from "../../module/common/doses.js";
+import { sealedAgainst } from "../../module/common/morp-functions.js";
 
 const { createdMessages } = global.__ep;
 const SINGLE_SHOT = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "single" } };
@@ -2014,6 +2015,43 @@ describe("clouds of gas and smoke (Core p.212)", () => {
     delete game.user.isGM;
   });
 
+  test("a breather or a sealed suit keeps the gas out, with a card that says so", async () => {
+    const drug = inhaled();
+    const masked = armoured("Masked");
+    masked.system.additionalSystems.airSealed = true;
+    cloudScene([{ actor: masked, bounds: { x: 500, y: 500, width: 100, height: 100 } }]);
+    await release(drug);
+    await until(() => createdMessages.some(message => String(message.content).includes("ep2e.chat.dose.sealedOff")));
+
+    expect(activeDoseFor(masked, "Aggro")).toBeNull();
+    expect(regions[0].flags.eclipsephase.area).toMatchObject({ dosed: [], sealed: [masked.uuid] });
+    expect(await gasReaches(regions[0], masked)).toBe(false);
+  });
+
+  test("whom a mask kept out is tested again once it comes off: at once while still in the cloud, otherwise on coming back", async () => {
+    const drug = inhaled();
+    const inside = armoured("Inside");
+    const outside = armoured("Outside");
+    for (const actor of [inside, outside]) actor.system.additionalSystems.airSealed = true;
+    cloudScene([]);
+    await release(drug);
+    await until(() => lights.length);
+    const cloud = regions[0];
+    expect(await gasReaches(cloud, inside)).toBe(true);
+    expect(await gasReaches(cloud, outside)).toBe(true);
+    cloud.tokens = new Set([{ actor: inside }]);
+
+    expect(await unsealedInClouds(inside)).toBe(0);
+    for (const actor of [inside, outside]) actor.system.additionalSystems.airSealed = false;
+    expect(await unsealedInClouds(inside)).toBe(1);
+    expect(await unsealedInClouds(outside)).toBe(1);
+    expect(cloud.flags.eclipsephase.area).toMatchObject({ dosed: [inside.uuid], sealed: [] });
+    expect(activeDoseFor(inside, "Aggro")).toBeTruthy();
+    expect(activeDoseFor(outside, "Aggro")).toBeNull();
+    expect(await gasReaches(cloud, outside)).toBe(true);
+    expect(activeDoseFor(outside, "Aggro")).toBeTruthy();
+  });
+
   test("smoke between the attacker and a target, or on either, sets the attack dialog's sight to major impairment", async () => {
     const shooterActor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
     const shooter = { actor: shooterActor, center: { x: 1950, y: 1950 }, bounds: { x: 1900, y: 1900, width: 100, height: 100 } };
@@ -2079,5 +2117,14 @@ describe("cloud colours and outlines", () => {
     const region = flag => ({ shapes: [], getFlag: () => ({ cloud: "smoke", origin: { x: 5, y: 6 }, radius: 2, ...flag }) });
     expect(cloudOutline(region({ gridType: 0, points: [0, 0, 10, 0, 10, 10] }))).toEqual({ points: [0, 0, 10, 0, 10, 10] });
     expect(cloudOutline(region({ gridType: 1, cells: ["0,0"] }))).toEqual({ circle: { x: 5, y: 6, radius: 200 } });
+  });
+});
+
+describe("masks and sealed suits", () => {
+  test("a sealed airway keeps out what is breathed in, a sealed skin what touches it, and nothing keeps out what is injected or swallowed", () => {
+    const actor = { system: { additionalSystems: { airSealed: true, skinSealed: false } } };
+    expect(["inhalation", "dermal", "injection", "oral", null].map(vector => sealedAgainst(actor, vector))).toEqual([true, false, false, false, false]);
+    actor.system.additionalSystems.skinSealed = true;
+    expect(sealedAgainst(actor, "dermal")).toBe(true);
   });
 });

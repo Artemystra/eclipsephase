@@ -3,7 +3,53 @@
   "type": "gear",
   "flags": {},
   "img": "systems/eclipsephase/resources/icons/technical-support.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "jYeXhiwG7Zr0lVNM",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Breather",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "icons/svg/aura.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.airSealed",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 0,
+      "folder": null,
+      "_key": "!items.effects!20lcsY97gmJcfRCA.jYeXhiwG7Zr0lVNM"
+    }
+  ],
   "_id": "20lcsY97gmJcfRCA",
   "_stats": {
     "coreVersion": "13.346",

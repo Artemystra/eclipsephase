@@ -614,6 +614,21 @@ export function sleevedNervousSystem(actor){
   return bodyNervousSystem(actor, activeJam || actor?.system?.activeMorph);
 }
 
+// The vectors a sealed suit or a mask keeps out, by the flag an item's effect sets on the actor.
+const SEALS = { inhalation: "airSealed", dermal: "skinSealed" };
+
+/**
+ * Whether what the actor wears keeps a substance out that comes by this vector: a breather or a
+ * sealed suit against what is breathed in, a sealed suit against what touches the skin.
+ * @param {Actor} actor - The actor
+ * @param {String|null} vector - "oral", "injection", "inhalation" or "dermal"
+ * @returns {Boolean} True when it cannot reach them that way
+ */
+export function sealedAgainst(actor, vector) {
+  const flag = SEALS[vector];
+  return !!flag && actor?.system?.additionalSystems?.[flag] === true;
+}
+
 // The kind each body counts as when something picks it as a target.
 const MORPH_KINDS = { bio: "biomorph", synth: "synthmorph", info: "infomorph" };
 const CHASSIS_KINDS = { robot: "bot", vehicle: "vehicle", animal: "animal" };

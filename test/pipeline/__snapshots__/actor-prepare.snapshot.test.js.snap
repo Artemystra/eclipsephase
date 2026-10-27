@@ -6,6 +6,7 @@ Object {
   "activeJam": null,
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": true,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -22,6 +23,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": true,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -694,6 +696,7 @@ Object {
   "activeJam": null,
   "activeMorph": "wjoBBYD1ZRDtVMTm",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": false,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -710,6 +713,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": false,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -1382,6 +1386,7 @@ Object {
   "activeJam": null,
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": false,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -1399,6 +1404,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": false,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -2071,6 +2077,7 @@ Object {
   "activeJam": "vehicledrone001",
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": true,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -2099,6 +2106,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": false,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -2771,6 +2779,7 @@ Object {
   "activeJam": null,
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": false,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -2787,6 +2796,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": false,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -3459,6 +3469,7 @@ Object {
   "activeJam": null,
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": false,
     "autoPushSelection": "none",
     "ccEquipped": true,
@@ -3475,6 +3486,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": true,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -4147,6 +4159,7 @@ Object {
   "activeJam": null,
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": false,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -4163,6 +4176,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": false,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {
@@ -4717,6 +4731,7 @@ Object {
   "activeJam": null,
   "activeMorph": "o4auLt59iyV8732k",
   "additionalSystems": Object {
+    "airSealed": false,
     "armorEquipped": false,
     "autoPushSelection": "none",
     "ccEquipped": false,
@@ -4733,6 +4748,7 @@ Object {
     "psiGammaBoosted": false,
     "puppetSocked": Array [],
     "rangedEquipped": false,
+    "skinSealed": false,
     "toxinFilters": false,
   },
   "aptitudes": Object {

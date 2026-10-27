@@ -1,7 +1,7 @@
 import { RollCheck, isCriticalSuccess, isHit } from "./dice.js";
 import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
-import { targetKinds } from "../common/morp-functions.js";
+import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
 import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
 import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
@@ -1116,7 +1116,8 @@ function cloudLasts(kind) {
 /**
  * Releases a gas or smoke munition's cloud where it bursts (Core p.212). It spreads as far as walls
  * let it and lies for its time. Gas gives everyone standing in it its dose; whoever comes into it
- * later, or begins their turn in it, breathes it in too - once per cloud. Smoke hides sight through it.
+ * later, or begins their turn in it, breathes it in too - once per cloud, or again once a mask that
+ * kept it out comes off. Smoke hides sight through it.
  * Both lie under a swirling fog, tinted in the cloud's colour unless that is plain smoke. Nobody
  * defends against either.
  * @param {ChatMessage} message - The attack card
@@ -1131,9 +1132,10 @@ async function releaseCloud(message, attack, origin, scatter = null) {
   const area = { kind: "circle", origin, radius: blast.radius, angle: 360, rotation: 0 };
   area.polygon = areaPolygon(area.origin, area);
   const name = game.i18n.format(`ep2e.chat.attack.${kind}Area`, { name: attack.weaponName });
-  const flags = { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, cloud: kind, dosed: [], ...cloudLasts(kind) };
+  const flags = { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, cloud: kind, dosed: [], sealed: [], ...cloudLasts(kind) };
   const caught = kind === "gas" ? blastTargets(area, canvas.tokens?.placeables ?? []).filter(entry => !entry.shadow) : [];
-  flags.dosed = caught.map(entry => entry.actor.uuid);
+  flags.dosed = caught.filter(entry => !sealedAgainst(entry.actor, "inhalation")).map(entry => entry.actor.uuid);
+  flags.sealed = caught.filter(entry => sealedAgainst(entry.actor, "inhalation")).map(entry => entry.actor.uuid);
   const behaviors = kind === "gas" ? [{ type: CLOUD_BEHAVIOR, name, system: { messageId: message.id } }] : [];
   const color = blast.cloud.color ?? (kind === "gas" ? CLOUD_COLORS.toxin : CLOUD_COLORS.smoke);
   await createCloudArea(area, { name, color, flags, behaviors, fog: true, fogColor: color === CLOUD_COLORS.smoke ? null : color });
@@ -1150,24 +1152,47 @@ async function releaseCloud(message, attack, origin, scatter = null) {
  * @returns {Promise<*>} What giving the dose reported
  */
 function breatheIn(cloud, actor) {
-  return EFFECTS.get("payload")?.resolve?.({ dose: { uuid: cloud.uuid, name: cloud.name } }, actor, "hit");
+  return EFFECTS.get("payload")?.resolve?.({ dose: { uuid: cloud.uuid, name: cloud.name, vector: "inhalation" } }, actor, "hit");
 }
 
 /**
  * Lets someone who comes into a gas cloud, or begins their turn in it, breathe its dose in - once per
- * cloud. Done by the active GM.
+ * cloud. Whom a breather or a sealed suit keeps it out from is noted apart, to be tested again once
+ * that comes off. Done by the active GM.
  * @param {Object} region - The cloud's Region
  * @param {Actor} actor - Who is in it
- * @returns {Promise<Boolean>} True when a dose was given
+ * @returns {Promise<Boolean>} True when the cloud reached them, with its dose or the card that it was kept out
  */
 export async function gasReaches(region, actor) {
   const flag = region?.getFlag?.("eclipsephase", AREA_FLAG);
-  if (!game.user.isActiveGM || flag?.cloud !== "gas" || !actor || (flag.dosed ?? []).includes(actor.uuid)) return false;
-  await region.update({ [`flags.eclipsephase.${AREA_FLAG}.dosed`]: [...(flag.dosed ?? []), actor.uuid] });
+  if (!game.user.isActiveGM || flag?.cloud !== "gas" || !actor || [...(flag.dosed ?? []), ...(flag.sealed ?? [])].includes(actor.uuid)) return false;
+  const list = sealedAgainst(actor, "inhalation") ? "sealed" : "dosed";
+  await region.update({ [`flags.eclipsephase.${AREA_FLAG}.${list}`]: [...(flag[list] ?? []), actor.uuid] });
   const attack = game.messages.get(flag.messageId)?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
   if (!attack?.blast?.cloud?.uuid) return false;
   await breatheIn(attack.blast.cloud, actor);
   return true;
+}
+
+/**
+ * Lets the gas clouds test again whom a breather or a sealed suit kept out, once it no longer does -
+ * taken off, switched off or gone. Whoever is still standing in a cloud breathes it in at once.
+ * Done by the active GM.
+ * @param {Actor} actor - Whose seal may have changed
+ * @returns {Promise<Number>} How many clouds took them off their list
+ */
+export async function unsealedInClouds(actor) {
+  if (!game.user.isActiveGM || !actor || sealedAgainst(actor, "inhalation")) return 0;
+  const scenes = game.scenes?.size ? Array.from(game.scenes) : [canvas.scene].filter(Boolean);
+  let reopened = 0;
+  for (const region of scenes.flatMap(scene => Array.from(scene.regions ?? []))) {
+    const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
+    if (flag?.cloud !== "gas" || !(flag.sealed ?? []).includes(actor.uuid)) continue;
+    await region.update({ [`flags.eclipsephase.${AREA_FLAG}.sealed`]: flag.sealed.filter(uuid => uuid !== actor.uuid) });
+    reopened++;
+    if (Array.from(region.tokens ?? []).some(token => token.actor?.uuid === actor.uuid)) await gasReaches(region, actor);
+  }
+  return reopened;
 }
 
 /**
@@ -1782,6 +1807,20 @@ export function registerArmedBlasts() {
       if (region.getFlag?.("eclipsephase", AREA_FLAG)?.cloud === "gas" && region.tokens?.has?.(token)) await gasReaches(region, token.actor);
     }
   });
+  const resealed = new Set();
+  const checkSeals = foundry.utils.debounce(() => {
+    const actors = Array.from(resealed);
+    resealed.clear();
+    for (const actor of actors) unsealedInClouds(actor);
+  }, 50);
+  const sealMayChange = document => {
+    let actor = document;
+    while (actor && actor.documentName !== "Actor") actor = actor.parent;
+    if (!game.user.isActiveGM || !actor) return;
+    resealed.add(actor);
+    checkSeals();
+  };
+  for (const hook of ["updateActor", "updateItem", "deleteItem", "updateActiveEffect", "deleteActiveEffect"]) Hooks.on(hook, sealMayChange);
   Hooks.on("combatTurnChange", (combat, prior) => tickArmed({ combat, prior }));
   Hooks.on("updateWorldTime", () => tickArmed({ combat: sceneCombat() }));
   Hooks.on("canvasReady", () => tickArmed({ combat: sceneCombat() }));
