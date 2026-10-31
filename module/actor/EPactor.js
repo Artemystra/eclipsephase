@@ -357,8 +357,12 @@ export default class EPactor extends Actor {
   }
 
   _calculateInitiative(actorModel, chiMultiplier) {
-    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value + actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0) + eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0)
-    actorModel.initiative.display = "1d6 + " + (actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0))
+    const felt = (count, ignored, chiIgnored) => Math.max(0, (Number(count) || 0) + (Number(ignored) || 0) + (chiIgnored ? eval(chiIgnored) * chiMultiplier : 0));
+    const penalty = felt(actorModel.physical.wounds, actorModel.mods.woundMod, actorModel.mods.woundChiMod)
+      + felt(actorModel.mental.trauma, actorModel.mods.traumaMod, actorModel.mods.traumaChiMod);
+    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value + actorModel.aptitudes.int.value) / 5) - penalty + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0) + eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0)
+    const shown = actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0);
+    actorModel.initiative.display = shown < 0 ? `1d6 - ${-shown}` : `1d6 + ${shown}`;
   }
 
   _calculatePhysicalHealth(actorModel, morphValues, chiMultiplier){

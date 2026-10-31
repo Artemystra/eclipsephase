@@ -53,6 +53,51 @@ describe("taking damage from the sheet", () => {
   });
 });
 
+describe("initiative under wounds and trauma", () => {
+  /**
+   * The initiative stat of a character with the given harm and modifiers.
+   * @param {Object} harm - Wounds and trauma
+   * @param {Object} [mods] - Values for system.mods
+   * @returns {Object} The prepared initiative data
+   */
+  function initiative({ wounds = 0, trauma = 0 }, mods = {}) {
+    return makeActor({
+      system: {
+        activeMorph: "morph1",
+        physical: { wounds },
+        mental: { trauma },
+        mods
+      },
+      items: [{ _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30 } }]
+    }).system.initiative;
+  }
+
+  test("each wound and each trauma costs one point", () => {
+    const unhurt = initiative({}).value;
+
+    expect(initiative({ wounds: 2 }).value).toEqual(unhurt - 2);
+    expect(initiative({ trauma: 1 }).value).toEqual(unhurt - 1);
+    expect(initiative({ wounds: 2, trauma: 1 }).value).toEqual(unhurt - 3);
+  });
+
+  test("ignored wounds and trauma cost nothing, and spare ignoring gives nothing back", () => {
+    const unhurt = initiative({}).value;
+
+    expect(initiative({ wounds: 2 }, { woundMod: -1 }).value).toEqual(unhurt - 1);
+    expect(initiative({ trauma: 1 }, { traumaMod: -3 }).value).toEqual(unhurt);
+  });
+
+  test("a pain trait doubles the modifier to actions, not the point of initiative", () => {
+    expect(initiative({ wounds: 2 }, { woundMultiplier: 2 }).value).toEqual(initiative({ wounds: 2 }).value);
+  });
+
+  test("the stat shown stays readable below zero", () => {
+    const unhurt = initiative({}).value;
+
+    expect(initiative({ wounds: unhurt + 2 }).display).toEqual("1d6 - 2");
+  });
+});
+
 describe("healing from the sheet", () => {
   test("a full heal clears damage and wounds on the body and posts a card", async () => {
     const actor = hurt();
