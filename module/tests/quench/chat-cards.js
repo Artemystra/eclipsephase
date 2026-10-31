@@ -1,8 +1,10 @@
-import { RollCheck } from "../../rolls/dice.js";
+import { RollCheck, breakdown } from "../../rolls/dice.js";
+import { damageFormula } from "../../rolls/damage-formula.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import { takeDose, offerDose, claimDose, requestUseCheck, rollWearOffStress, demandWillpower, requestAddictionCheck } from "../../common/doses.js";
 import { postDefenceCards, rollRemainingDefences, applyTargetedAttack, rollDefence, yieldDefence } from "../../rolls/attacks.js";
 import { rollAttackDamage } from "../../rolls/damage.js";
+import { lockedOutOf } from "../../rolls/psi.js";
 import { weaponPreparation } from "../../common/weapon-functions.js";
 import { withTempActor, seedDice, restoreDice, uniformForFace, waitUntil, suppressDice3d, restoreDice3d } from "./helpers.js";
 
@@ -280,7 +282,7 @@ export function registerChatCardBatch(quench) {
         })));
       });
 
-      it("a target who resists psi with a critical success locks the async out, and the card says so", async function () {
+      it("a target who resists psi with a critical success locks the async out, the card says so, and the async's recharge lifts it", async function () {
         this.timeout(30000);
         const sense = { name: "Quench Sense", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } } };
         await keepingOnly(() => withTempActor({ type: "goon", name: "Quench Async", items: [sense] }, async caster => withTempActor({ type: "character", name: "Quench Mind", system: { aptitudes: { wil: { value: 15 } } } }, async mind => {
@@ -299,8 +301,90 @@ export function registerChatCardBatch(quench) {
           assert.deepInclude(after.getFlag("eclipsephase", "attackDefence").entries[0], { outcome: "none", lockedOut: true });
           assert.include(after.content, game.i18n.localize("ep2e.chat.defence.lockedOut"));
           assert.isTrue(cardShape(after).root);
+          await waitUntil(() => lockedOutOf(caster, mind), 8000);
+          assert.isTrue(lockedOutOf(caster, mind));
+          Hooks.callAll("eclipsephase.postRest", caster, "short", {});
+          await waitUntil(() => !lockedOutOf(caster, mind), 8000);
+          assert.isFalse(lockedOutOf(caster, mind));
           return after;
         })));
+      });
+
+      it("a sleight that lasts leaves its blueprint on a target who yields, repeated per superior success and timed by the async's WIL, while it does nothing on the async", async function () {
+        this.timeout(30000);
+        const change = { key: "system.mods.globalMod", value: "-10", type: "add", mode: 2 };
+        const spam = { name: "Quench Spam", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", duration: "action", repeatPerSuperior: true, infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } }, effects: [{ name: "Quench Spam", changes: [change], system: { changes: [change] } }] };
+        await keepingOnly(() => withTempActor({ type: "goon", name: "Quench Async", system: { aptitudes: { wil: { value: 20 } } }, items: [spam] }, async caster => withTempActor({ type: "character", name: "Quench Mind" }, async mind => {
+          await waitUntil(() => mind.getFlag("eclipsephase", "defaultMorphAdded"));
+          seedDice([uniformForFace(50, 100)]);
+          await RollCheck({ name: "Psi", key: "psi", type: "psi", rollvalue: 70, itemid: caster.items.find(item => item.name === "Quench Spam").id, pooltype: "Moxie" }, caster.system, caster, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } }, null, "psiSleight");
+          const card = newestWith("taskCard");
+          await applyTargetedAttack(card, { pick: async () => [{ actor: mind }], confirm: async () => true });
+          const defence = newestWith("attackDefence");
+          await yieldDefence(defence, mind.uuid);
+          const landed = () => mind.effects.find(effect => effect.getFlag("eclipsephase", "sleight"));
+          await waitUntil(landed, 8000);
+
+          const span = landed().duration;
+          const seconds = 4 * (Number(CONFIG.time?.roundTime) || 6);
+          assert.isTrue((span.units === "rounds" && span.value === 4) || (span.units === "seconds" && span.value === seconds), JSON.stringify(span));
+          assert.strictEqual(Number(mind.system.mods.globalMod), -20);
+          assert.strictEqual(Number(caster.system.mods.globalMod) || 0, 0);
+          return game.messages.get(defence.id);
+        })));
+      });
+    });
+
+    describe("the dice tray of a damage roll", function () {
+      const CRITICAL = 7;
+
+      /**
+       * What a roll's tray shows, read from the rendered results partial with a real Foundry roll.
+       * @param {String} formula - The roll's formula
+       * @returns {Promise<String[]>} The tray's entries in order, dice as "d"
+       */
+      async function tray(formula) {
+        const roll = await new Roll(formula).evaluate();
+        const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/partials/roll-results.html", { rollType: "rollOutput", diceBreakdown: breakdown(roll), total: roll.total });
+        const body = new DOMParser().parseFromString(html, "text/html").body;
+        return Array.from(body.querySelector(".dicetray").children).map(entry => entry.matches(".tens, .sixes, .hundreds") ? "d" : entry.textContent.trim());
+      }
+
+      it("a critical shows its dice in brackets, times two", async function () {
+        assert.deepEqual(await tray(damageFormula({ base: "1d10+1d6" }, CRITICAL)), ["(", "d", "d", ")", "x2"]);
+      });
+
+      it("a critical's flat bonus stays inside the brackets", async function () {
+        assert.deepEqual(await tray(damageFormula({ base: "1d10+2" }, CRITICAL)), ["(", "d", "+2", ")", "x2"]);
+      });
+
+      it("a critical hit's damage card shows it, and stays in the chat to look at", async function () {
+        this.timeout(30000);
+        const pistol = { name: "Quench Crit Pistol", type: "rangedWeapon", system: { active: true, ammoType: "kinetic", ammoMin: 10, ammoMax: 10, mode1: { d10: 2, d6: 1, bonus: 2, armorused: "kinetic" } } };
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Crit Shooter", system: { skillsVig: { guns: { value: 60 } } }, items: [pistol] }, shooter => withTempActor({ type: "npc", name: "Quench Crit Mark" }, async mark => {
+          await waitUntil(() => shooter.getFlag("eclipsephase", "defaultMorphAdded"));
+          const weapon = await weaponPreparation(shooter, "guns", "rangedWeapon", shooter.items.find(item => item.name === "Quench Crit Pistol").id);
+          seedDice([uniformForFace(11, 100)]);
+          await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, shooter.system, shooter, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "single" } }, weapon, "rangedWeapon");
+          await applyTargetedAttack(newestWith("taskCard"), { pick: async () => [{ actor: mark }], confirm: async () => true });
+
+          seedDice([uniformForFace(95, 100)]);
+          await rollDefence(newestWith("attackDefence"), mark.uuid, "dodge", { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, rangedFray: true, behindCover: false } });
+          await waitUntil(() => newestWith("damageCard"), 8000);
+          const damage = newestWith("damageCard");
+          restoreDice();
+          await rollAttackDamage(damage);
+          await waitUntil(() => game.messages.get(damage.id).getFlag("eclipsephase", "damageCard").lines.length, 8000);
+
+          const after = game.messages.get(damage.id);
+          const factor = new DOMParser().parseFromString(after.content, "text/html").body.querySelector(".ep-dice-factor");
+          assert.strictEqual(factor?.textContent.trim(), "x2");
+          return after;
+        })));
+      });
+
+      it("a roll without a factor has no brackets", async function () {
+        assert.deepEqual(await tray(damageFormula({ base: "2d10+2" }, 3)), ["d", "d", "+2"]);
       });
     });
 

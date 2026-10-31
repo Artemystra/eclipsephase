@@ -202,12 +202,15 @@ export function crossedDayBoundary(before, after) {
 
 /**
  * Whether an effect's duration has run out. Checked on the remaining time as well as on the
- * expired flag, because Foundry reports the change to the actor before it writes that flag.
+ * expired flag, because Foundry reports the change to the actor before it writes that flag. An
+ * effect without a duration runs until it is ended - Foundry 14 still reports its remaining time
+ * as run out, counting a missing value as no time at all.
  * @param {ActiveEffect} effect - The effect to judge
  * @returns {Boolean} True when nothing is left to run
  */
 export function durationRunOut(effect) {
   if (effect?.duration?.expired === true) return true;
+  if (!(Number(effect?.duration?.value) > 0)) return false;
   const remaining = effect?.duration?.remaining;
   return Number.isFinite(remaining) && remaining <= 0;
 }
@@ -215,7 +218,7 @@ export function durationRunOut(effect) {
 // The flags the system puts on its own temporary effects - a wound or trauma being ignored, a chi
 // push, a dose. These end on an event rather than on the clock, so Foundry does not always track
 // them, and the flag is what marks them as running.
-export const TEMP_EFFECT_FLAGS = ["effectKey", "chiPushBoost", "dose"];
+export const TEMP_EFFECT_FLAGS = ["effectKey", "chiPushBoost", "dose", "psiLockOut"];
 
 /**
  * Whether an effect is a running temporary one: anything Foundry tracks a duration for, plus the

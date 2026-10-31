@@ -16,7 +16,18 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "minutes"
+    "duration": "minutes",
+    "rollOptions": [
+      {
+        "id": "basilisk",
+        "label": "ep2e.psi.option.basiliskHacks",
+        "value": 10,
+        "appliesTo": [
+          "int"
+        ]
+      }
+    ],
+    "repeatPerSuperior": true
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

@@ -1,4 +1,7 @@
 const rollSources = new Map();
+const rollBlocks = [];
+const failOptions = [];
+const landingRules = new Map();
 const poolOptions = [];
 const slots = new Map();
 const payloadSources = new Map();
@@ -226,6 +229,99 @@ export function getRezSpendOptions() {
 }
 
 /**
+ * Registers a check that can make a test unusable. A refused test shows the check's text as a toast,
+ * and the sheet shows a warning triangle with that text in place of the test's die.
+ * @param {Function} check - Takes the actor and the roll key, returns the reason or null
+ * @returns {Boolean} True when registered
+ */
+export function registerRollBlock(check) {
+  if (typeof check !== "function") {
+    console.error("Eclipse Phase | registerRollBlock needs a function.");
+    return false;
+  }
+  rollBlocks.push(check);
+  return true;
+}
+
+/**
+ * Why an actor cannot make a test right now.
+ * @param {Actor} actor - The actor
+ * @param {String} key - The roll key, lower case
+ * @returns {String|null} The first check's reason, or null when the test is free
+ */
+export function rollBlockReason(actor, key) {
+  for (const check of rollBlocks) {
+    const reason = check(actor, key);
+    if (reason) return reason;
+  }
+  return null;
+}
+
+/**
+ * Registers a source of failures the GM can put on a task card. The card shows one button per
+ * failure on offer, and none when there is none.
+ * @param {Function} check - Takes the actor and { skillKey, message }, returns entries of id, label,
+ *   result (the tier), note (the card's footnote) and spend (runs when the button is used)
+ * @returns {Boolean} True when registered
+ */
+export function registerFailOption(check) {
+  if (typeof check !== "function") {
+    console.error("Eclipse Phase | registerFailOption needs a function.");
+    return false;
+  }
+  failOptions.push(check);
+  return true;
+}
+
+/**
+ * The failures on offer for a task card.
+ * @param {Actor} actor - The actor
+ * @param {Object} context - skillKey and message
+ * @returns {Object[]} The entries of all sources
+ */
+export function listFailOptions(actor, context = {}) {
+  return failOptions.flatMap(check => check(actor, context) ?? []);
+}
+
+/**
+ * Registers a special effect a sleight can have on landing, offered on the sleight's sheet.
+ * @param {String} id - The value of the sleight's system.landingRule
+ * @param {Object} definition - label (localization key), onLand(context), and optionally instant
+ *   (leaves no timed effect), bindsSkill (the effect carries a chosen skill), onReland(context)
+ *   after a pool point improved the result, choose(context) for the button on its card
+ * @returns {Boolean} True when registered
+ */
+export function registerLandingRule(id, definition = {}) {
+  if (!id || !definition.label || typeof definition.onLand !== "function") {
+    console.error("Eclipse Phase | registerLandingRule needs an id, a label and onLand.", id);
+    return false;
+  }
+  if (landingRules.has(id)) {
+    console.error(`Eclipse Phase | Landing rule "${id}" is already registered.`);
+    return false;
+  }
+  landingRules.set(id, definition);
+  return true;
+}
+
+/**
+ * The definition registered for one landing rule.
+ * @param {String} id - The value of the sleight's system.landingRule
+ * @returns {Object|undefined} The definition, or undefined when nothing is registered
+ */
+export function getLandingRule(id) {
+  return landingRules.get(id);
+}
+
+/**
+ * Every registered landing rule.
+ * @returns {Object[]} id and label per rule
+ */
+export function listLandingRules() {
+  return Array.from(landingRules, ([id, definition]) => ({ id, label: definition.label }));
+}
+
+/**
  * Registers the Handlebars helpers the core templates use to reach the registry.
  * @returns {void}
  */
@@ -244,6 +340,9 @@ export function resetRegistry() {
   rollSources.clear();
   poolOptions.length = 0;
   slots.clear();
+  rollBlocks.length = 0;
+  failOptions.length = 0;
+  landingRules.clear();
   payloadSources.clear();
   taskResultText = null;
   rezSpendOptions = null;

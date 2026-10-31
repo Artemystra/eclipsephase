@@ -126,7 +126,7 @@
                                    data-on-item="{{row.onItem}}"
                                    data-tooltip="{{localize 'ep2e.time.moreInfo'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
                                 {{/if}}
-                                {{#if @root.canControl}}
+                                {{#if row.endable}}
                                 <a class="item-control resource-label editWithLabel input-xs alignRight"
                                    data-action="endEffect"
                                    data-actor-uuid="{{row.actorUuid}}"
@@ -166,6 +166,15 @@
                        data-effect-id="{{row.effectId}}"
                        data-on-item="{{row.onItem}}"
                        data-tooltip="{{localize 'ep2e.time.moreInfo'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
+                    {{/if}}
+                    {{#if row.endable}}
+                    <a class="item-control resource-label editWithLabel input-xs alignRight"
+                       data-action="endEffect"
+                       data-actor-uuid="{{row.actorUuid}}"
+                       data-parent-id="{{row.parentId}}"
+                       data-effect-id="{{row.effectId}}"
+                       data-on-item="{{row.onItem}}"
+                       data-tooltip="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
                     {{/if}}
                 </div>
             </div>

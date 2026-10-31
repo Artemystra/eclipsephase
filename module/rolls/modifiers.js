@@ -69,6 +69,27 @@ export function doseRollOptions(actor, dataset) {
 }
 
 /**
+ * The conditional modifiers the sleights working on the actor offer for this check - Empathic Scan's
+ * bonus to social tests against the one it was used on.
+ * @param {Actor} actor - The rolling actor
+ * @param {Object} dataset - The roll's dataset
+ * @returns {Object[]} One entry per option, as doseRollOptions gives them, with source "sleight"
+ */
+export function sleightRollOptions(actor, dataset) {
+  const keys = checkKeys(actor, dataset);
+  const offered = [];
+  for (const effect of actor?.effects ?? []) {
+    const sleight = effect.getFlag?.("eclipsephase", "sleight");
+    if (!sleight || !effect.active) continue;
+    for (const option of sleight.rollOptions ?? []) {
+      if (!optionFits(option, keys, dataset)) continue;
+      offered.push({ field: `sleightOption-${effect.id}-${option.id}`, drug: sleight.name ?? effect.name, option, shown: shownValue(option), source: "sleight" });
+    }
+  }
+  return offered;
+}
+
+/**
  * Whether an option fits this check. A special-skill option - Hardware, Exotic Skill: Disguise -
  * fits the special skills the player picked for it on the ware, whatever they are called.
  * @param {Object} option - The option

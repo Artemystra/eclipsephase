@@ -339,6 +339,39 @@ describe("a dose running out", () => {
     expect(doseOn(actor)).toBeUndefined();
   });
 
+  test("an overdue effect left behind by a deleted actor, or one that cannot be marked, does not keep the others from expiring", async () => {
+    registerExpiryCleanup();
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+    const dose = doseOn(actor);
+    dose.duration.remaining = 0;
+    const gone = carrying();
+    await takeDose(gone, gone.items.get("kick1"));
+    const stale = doseOn(gone);
+    stale.duration.remaining = 0;
+    const update = jest.fn(async () => { throw new Error("gone"); });
+    stale.update = update;
+    game.actors.delete(gone.id);
+    const broken = { ...stale, parent: actor, getFlag: (...args) => stale.getFlag(...args), duration: { value: 1, units: "minutes", remaining: 0 }, update: jest.fn(async () => { throw new Error("broken"); }) };
+    const registry = ActiveEffect.registry;
+    ActiveEffect.registry = [stale, broken, dose];
+    const activeGM = game.users.activeGM;
+    game.users.activeGM = { isSelf: true };
+    jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      await expireOverdue();
+      await new Promise(resolve => setTimeout(resolve, 0));
+    } finally {
+      game.users.activeGM = activeGM;
+      ActiveEffect.registry = registry;
+    }
+
+    expect(update).not.toHaveBeenCalled();
+    expect(broken.update).toHaveBeenCalled();
+    expect(doseOn(actor)).toBeUndefined();
+  });
+
   test("only the system's clock-timed effects whose time is up count as overdue", async () => {
     const actor = carrying();
     await takeDose(actor, actor.items.get("kick1"));
@@ -855,7 +888,7 @@ describe("clicking use on me", () => {
     await requestDoseClaim(message.id);
 
     expect(emitted).toEqual([]);
-    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.doseNeedsGM");
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.needsGM");
   });
 });
 

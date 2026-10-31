@@ -203,6 +203,28 @@ describe("the GM's list in sections", () => {
     expect(html).toContain("Thug");
   });
 
+  test("a player's flat list offers ending a row the player may end, and only that one", async () => {
+    const row = { actorUuid: "Actor.a", effectId: "e1", parentId: null, onItem: false, name: "Sustaining: Mindlink", remaining: "", hasInfo: false };
+    const data = { effectsOpen: true, grouped: false, effects: [{ ...row, endable: true }, { ...row, effectId: "e2", name: "Static", endable: false }] };
+
+    const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/apps/time-panel.hbs", data);
+
+    expect(html.match(/data-action="endEffect"/g)).toHaveLength(1);
+    expect(html).toMatch(/data-action="endEffect"[^>]*data-effect-id="e1"/s);
+  });
+
+  test("a sleight an async sustains on themselves shows once, as what they sustain", async () => {
+    makeActor({ type: "character", name: "Hex", effects: [
+      { name: "Hex's Shield", duration: { value: 8, units: "hours" }, flags: { eclipsephase: { sleight: { sustained: true, targetUuid: "Actor.hex", asyncUuid: "Actor.hex" } } } },
+      { name: "Sustaining: Shield", duration: { value: 8, units: "hours" }, flags: { eclipsephase: { sustain: { targets: [] } } } },
+      { name: "Ana's Link", duration: { value: 8, units: "hours" }, flags: { eclipsephase: { sleight: { sustained: true, targetUuid: "Actor.ana", asyncUuid: "Actor.hex" } } } }
+    ] });
+
+    const { sections } = await context(new EPtimePanel());
+
+    expect(sections[0].groups[0].effects.map(row => row.name)).toEqual(["Ana's Link", "Sustaining: Shield"]);
+  });
+
   test("a section with nothing running is left out", async () => {
     makeActor({ type: "goon", name: "Thug", effects: [KICK] });
 

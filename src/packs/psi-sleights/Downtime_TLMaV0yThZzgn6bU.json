@@ -16,7 +16,15 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "task",
-    "duration": "sustained"
+    "duration": "sustained",
+    "repeatPerSuperior": true,
+    "damage": {
+      "mode": "heal",
+      "target": "mental",
+      "d10": 0,
+      "d6": 1,
+      "bonus": 0
+    }
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

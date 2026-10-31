@@ -147,7 +147,6 @@
         "noDosesLeft": "{name} nao tem doses restantes.",
         "doseCheckRolled": "Este teste já foi rolado.",
         "doseNoScene": "Abra uma cena para escolher um alvo nela.",
-        "doseNeedsGM": "Um GM precisa estar conectado para entregar esta dose.",
         "doseNoSelection": "Selecione um token primeiro.",
         "doseNeedsClaimant": "Atribua um personagem a si mesmo ou, como GM, selecione um token para tomar esta dose.",
         "doseAlreadyUsed": "Esta dose já foi usada.",
@@ -155,7 +154,8 @@
         "ammoPackNotTaken": "{name} é um pacote de munição: carregue-o numa arma em vez de tomá-lo.",
         "noPlacedToken": "Este ator não está representado por um token posicionado no momento.",
         "attackDelivered": "Este ataque já foi aplicado aos seus alvos.",
-        "attackNoPayload": "A arma não sabe com qual droga está carregada. Recarregue-a primeiro."
+        "attackNoPayload": "A arma não sabe com qual droga está carregada. Recarregue-a primeiro.",
+        "needsGM": "Um GM precisa estar conectado para transferir o efeito."
       },
       "button": {
         "edit": "Editar",
@@ -896,6 +896,70 @@
           "playWithPrey": "Brincar com a Presa",
           "protectTribe": "Proteger a Tribo"
         }
+      },
+      "lockOut": {
+        "name": "Bloqueado: {target}",
+        "description": "{target} se defendeu com um sucesso crítico: este async não pode mirar a mente dessa pessoa de novo até a sua próxima recarga."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Testes de perícias sociais contra o alvo",
+        "basiliskHacks": "Resistir a hacks basilisco"
+      },
+      "sustain": {
+        "name": "Sustentando: {sleight} ({targets})",
+        "description": "Você sustenta {sleight}: -10 em todos os outros testes de perícia enquanto durar. Termina quando você o encerra ou quando o async se afasta mais que Perto + 10 m do alvo.",
+        "outOfReach": "{target} está a {distance} m de {async}, além dos {reach} m em que {sleight} pode ser sustentada.",
+        "end": "Encerrar sustentação",
+        "endCopy": "Encerrar a sustentação desta habilidade psi? Seu efeito nos alvos termina junto.",
+        "summary": "Sustenta psi",
+        "endTip": "Sustentada - encerrar sustentação",
+        "pickCopy": "Você sustenta esta habilidade psi em mais de um alvo. Marque aqueles em que quer parar de sustentá-la.",
+        "nameSelf": "Sustentando: {sleight}"
+      },
+      "healing": {
+        "card": "{name} cura {amount} de {kind} ({sleight}).",
+        "stress": "estresse",
+        "damage": "dano",
+        "rollTitle": "Curado"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} pode usar a próxima ação complexa como recarga curta, sem o tempo habitual. Não concede recarga extra.",
+        "errorGM": "{sleight} em {target}: um teste de perícia à sua escolha falha. Use o botão no cartão do teste antes do fim do efeito.",
+        "blockSkill": "{sleight} atingiu {target}. Escolha a perícia a bloquear.",
+        "blockSkillButton": "Escolher perícia",
+        "boostSkill": "{sleight} atingiu {target}. Escolha a perícia física a aumentar.",
+        "boostSkillButton": "Escolher perícia",
+        "boostCopy": "Qual perícia física o sleight aumenta?",
+        "failSkill": "{sleight} atingiu {target} com sucesso superior. Escolha como o erro age.",
+        "failSkillButton": "Escolher",
+        "alterDuration": "{sleight} atingiu {target}. Escolha uma droga ou toxina ativa.",
+        "alterDurationButton": "Escolher substância",
+        "noSubstance": "{target} não tem drogas nem toxinas ativas.",
+        "alterHeader": "Alterar substância",
+        "alterCopy": "Qual droga ou toxina você altera?",
+        "shorter": "Reduzir a duração pela metade",
+        "longer": "Aumentar a duração",
+        "errorHeader": "Induzir erro",
+        "superiorFailure": "Falha superior",
+        "errorCopy": "Como o erro se manifesta?",
+        "failSkillOption": "Fazer a perícia falhar",
+        "alterQuestion": "Como você quer manipular o efeito?",
+        "forcedFailure": "Falhou devido a um erro induzido.",
+        "skillHeader": "Escolher perícia",
+        "skillCopy": "Qual perícia o sleight atinge?",
+        "shortened": "{effect} em {target} agora dura metade do habitual.",
+        "lengthened": "{effect} em {target} agora dura 1,5 vez mais que o habitual.",
+        "superiorChosen": "{sleight} em {target}: um teste de perícia à escolha do GM será uma falha superior, com o botão no cartão do teste.",
+        "errorKind": {
+          "auto": "Falha",
+          "superior": "Falha superior"
+        },
+        "skillChosen": "{sleight} em {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} bloqueia {skill}: não pode ser usada, nem por padrão."
       }
     },
     "gmInfo": {
@@ -1045,7 +1109,39 @@
           "damage": {
             "label": "Dano",
             "physical": "Físico",
-            "mental": "Mental"
+            "mental": "Mental",
+            "mode": {
+              "damage": "Infligir",
+              "heal": "Cura",
+              "none": "Sem dano"
+            },
+            "targetLabel": "Alvo"
+          },
+          "targetRule": {
+            "label": "Alvos possíveis",
+            "any": "Qualquer um",
+            "self": "Só a si",
+            "others": "Só outros"
+          },
+          "affects": {
+            "label": "Afeta",
+            "target": "Alvo",
+            "async": "Async",
+            "both": "Ambos"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiplicar efeitos",
+            "tip": "Cada sucesso superior aplica o efeito mais uma vez"
+          },
+          "landingRule": {
+            "label": "Efeito especial",
+            "tip": "Adicionar efeito especial em acerto bem-sucedido",
+            "select": "- Selecionar -",
+            "boostSkill": "Aumentar uma perícia física",
+            "blockSkill": "Bloquear perícia",
+            "failSkill": "Induzir erro",
+            "recharge": "Recarga rápida",
+            "alterDuration": "Alterar duração de substância"
           }
         }
       },
@@ -1637,7 +1733,8 @@
           "proximity": "Alcance do sensor",
           "payload": "Carga",
           "noPayload": "Sem carga"
-        }
+        },
+        "sleightOptions": "Habilidades psi"
       },
       "successType": {
         "success": "Sucesso",
@@ -2069,7 +2166,7 @@
           "inCover": "em cobertura"
         },
         "severalTargets": "Vários alvos",
-        "resist": "Resistir (VON)",
+        "resist": "Resistir ({aptitude})",
         "yield": "Não resistir",
         "lockedOut": "Crítico: o async fica bloqueado desta mente até se recuperar.",
         "touchLabel": "{name} por toque",
@@ -2085,6 +2182,7 @@
         "payloadLabel": "Carga",
         "doseInfo": "Dose"
       },
+      "failGone": "Esta falha não está mais disponível.",
       "poolSpent": {
         "swapped": "{name} usou um ponto de {pool} para trocar os dados",
         "upgraded": "{name} usou um ponto de {pool} para melhorar o resultado",
@@ -2374,7 +2472,9 @@
       "outsideArea": "Esse token está fora da área.",
       "tooMany": "Neste alcance, este ataque atinge no máximo {max} alvos.",
       "ownBlast": "{name} está na própria explosão.",
-      "armedElsewhere": "Esse explosivo está em outra cena - mostre essa cena primeiro."
+      "armedElsewhere": "Esse explosivo está em outra cena - mostre essa cena primeiro.",
+      "lockedOut": "A mente de {name} está fechada para você até a sua próxima recarga.",
+      "notOnSelf": "Esta habilidade psi não pode ser usada em si."
     }
   },
   "BEHAVIOR": {

@@ -150,7 +150,6 @@
         "noDosesLeft": "{name} hat keine Dosen mehr.",
         "doseCheckRolled": "Diese Probe wurde schon gewürfelt.",
         "doseNoScene": "Öffne eine Szene, um dort ein Ziel zu wählen.",
-        "doseNeedsGM": "Ein GM muss verbunden sein, damit die Dosis übergeben werden kann.",
         "doseNoSelection": "Wähle zuerst ein Token aus.",
         "doseNeedsClaimant": "Weise dir einen Charakter zu oder wähle als GM ein Token aus, um diese Dosis zu nehmen.",
         "doseAlreadyUsed": "Diese Dosis wurde schon genommen.",
@@ -158,7 +157,8 @@
         "ammoPackNotTaken": "{name} ist ein Munitionspack: Lade es in eine Waffe, statt es einzunehmen.",
         "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert.",
         "attackDelivered": "Dieser Angriff wurde bereits auf seine Ziele angewendet.",
-        "attackNoPayload": "Die Waffe weiß nicht, mit welcher Droge sie geladen ist. Lade sie zuerst nach."
+        "attackNoPayload": "Die Waffe weiß nicht, mit welcher Droge sie geladen ist. Lade sie zuerst nach.",
+        "needsGM": "Ein GM muss verbunden sein, um die Wirkung zu übertragen."
       },
       "button": {
         "edit": "Editieren",
@@ -908,6 +908,70 @@
           "playWithPrey": "Mit der Beute spielen",
           "protectTribe": "Den Stamm schützen"
         }
+      },
+      "lockOut": {
+        "name": "Ausgesperrt: {target}",
+        "description": "{target} hat sich mit einem kritischen Erfolg verteidigt: Das Async darf diesen Geist nicht mehr anvisieren, bis es sich erholt."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Soziale Fertigkeitstests gegen das Ziel",
+        "basiliskHacks": "Widerstand gegen Basilisk-Hacks"
+      },
+      "sustain": {
+        "name": "Hält: {sleight} ({targets})",
+        "description": "Du hältst {sleight}: -10 auf alle anderen Fertigkeitstests, solange es läuft. Es endet, wenn du es beendest oder das Async sich weiter als Nah + 10 m vom Ziel entfernt.",
+        "outOfReach": "{target} ist {distance} m von {async} entfernt - weiter als die {reach} m, auf die sich {sleight} halten lässt.",
+        "end": "Halten beenden",
+        "endCopy": "Das Halten dieses Sleights beenden? Seine Wirkung auf die Ziele endet mit.",
+        "summary": "Hält Psi",
+        "endTip": "Gehalten - Halten beenden",
+        "pickCopy": "Du hältst diesen Sleight auf mehr als einem Ziel. Hake die an, auf denen du ihn nicht mehr halten willst.",
+        "nameSelf": "Hält: {sleight}"
+      },
+      "healing": {
+        "card": "{name} heilt {amount} {kind} ({sleight}).",
+        "stress": "Stress",
+        "damage": "Schaden",
+        "rollTitle": "Geheilt"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} kann die nächste komplexe Aktion als kurze Erholung nutzen, ohne die übliche Zeit. Das gibt keine zusätzliche Erholung.",
+        "errorGM": "{sleight} auf {target}: Ein Fertigkeitstest deiner Wahl schlägt fehl. Nutze den Button auf der Testkarte, bevor die Wirkung endet.",
+        "blockSkill": "{sleight} ist auf {target} gelandet. Wähle die Fertigkeit, die gesperrt wird.",
+        "blockSkillButton": "Fertigkeit wählen",
+        "boostSkill": "{sleight} ist auf {target} gelandet. Wähle den physischen Skill, der steigt.",
+        "boostSkillButton": "Skill wählen",
+        "boostCopy": "Welchen physischen Skill erhöht der Sleight?",
+        "failSkill": "{sleight} ist mit einem überragenden Erfolg auf {target} gelandet. Wähle, wie der Fehler wirkt.",
+        "failSkillButton": "Wählen",
+        "alterDuration": "{sleight} ist auf {target} gelandet. Wähle eine laufende Droge oder ein Toxin.",
+        "alterDurationButton": "Substanz wählen",
+        "noSubstance": "{target} hat keine laufende Droge und kein Toxin.",
+        "alterHeader": "Substanz verändern",
+        "alterCopy": "Welche Droge oder welches Toxin veränderst du?",
+        "shorter": "Dauer halbieren",
+        "longer": "Dauer verlängern",
+        "errorHeader": "Fehler auslösen",
+        "superiorFailure": "Überragender Fehlschlag",
+        "errorCopy": "Wie schlägt der Fehler zu?",
+        "failSkillOption": "Fertigkeit fehlschlagen lassen",
+        "alterQuestion": "Wie möchtest du den Effekt manipulieren?",
+        "forcedFailure": "Fehlgeschlagen durch einen induzierten Fehler.",
+        "skillHeader": "Fertigkeit wählen",
+        "skillCopy": "Welche Fertigkeit trifft der Sleight?",
+        "shortened": "{effect} auf {target} wirkt nun nur halb so lange wie üblich.",
+        "lengthened": "{effect} auf {target} wirkt nun 1,5-mal so lange wie üblich.",
+        "superiorChosen": "{sleight} auf {target}: Ein Fertigkeitstest nach Wahl des GM wird zum Superior Failure, über den Button auf der Testkarte.",
+        "errorKind": {
+          "auto": "Fail",
+          "superior": "Superior Fail"
+        },
+        "skillChosen": "{sleight} auf {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} sperrt {skill}: Die Fertigkeit kann nicht genutzt werden, auch nicht per Default."
       }
     },
     "gmInfo": {
@@ -1060,7 +1124,39 @@
           "damage": {
             "label": "Schaden",
             "physical": "Körperlich",
-            "mental": "Geistig"
+            "mental": "Geistig",
+            "mode": {
+              "damage": "Zufügen",
+              "heal": "Heilung",
+              "none": "Kein Schaden"
+            },
+            "targetLabel": "Ziel"
+          },
+          "targetRule": {
+            "label": "Mögliche Ziele",
+            "any": "Jeder",
+            "self": "Nur selbst",
+            "others": "Nur andere"
+          },
+          "affects": {
+            "label": "Wirkt auf",
+            "target": "Ziel",
+            "async": "Async",
+            "both": "Beide"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiapplikation",
+            "tip": "Jeder Überragende Erfolg wendet die Wirkung einmal mehr an"
+          },
+          "landingRule": {
+            "label": "Spezialeffekt",
+            "tip": "Spezialeffekt bei erfolgreichem Treffer hinzufügen",
+            "select": "- Auswählen -",
+            "boostSkill": "Physischen Skill erhöhen",
+            "blockSkill": "Fertigkeit sperren",
+            "failSkill": "Fehler auslösen",
+            "recharge": "Schnelle Erholung",
+            "alterDuration": "Dauer einer Substanz ändern"
           }
         }
       },
@@ -1656,7 +1752,8 @@
           "proximity": "Sensorreichweite",
           "payload": "Ladung",
           "noPayload": "Keine Ladung geladen"
-        }
+        },
+        "sleightOptions": "Sleights"
       },
       "successType": {
         "success": "Erfolg",
@@ -2097,7 +2194,7 @@
           "inCover": "in Deckung"
         },
         "severalTargets": "Mehrere Ziele",
-        "resist": "Widerstehen (WIL)",
+        "resist": "Widerstehen ({aptitude})",
         "yield": "Nicht widerstehen",
         "lockedOut": "Kritisch: Das Async ist aus diesem Geist ausgesperrt, bis es sich erholt.",
         "touchLabel": "{name} durch Berührung",
@@ -2113,6 +2210,7 @@
         "payloadLabel": "Ladung",
         "doseInfo": "Dosis"
       },
+      "failGone": "Dieser Fehlschlag steht nicht mehr zur Verfügung.",
       "poolSpent": {
         "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
         "upgraded": "{name} hat einen Punkt {pool} eingesetzt, um das Ergebnis zu verbessern",
@@ -2395,7 +2493,9 @@
       "outsideArea": "Dieser Token liegt außerhalb der Fläche.",
       "tooMany": "Auf diese Reichweite trifft dieser Angriff höchstens {max} Ziele.",
       "ownBlast": "{name} steht in der eigenen Explosion.",
-      "armedElsewhere": "Dieser Sprengsatz liegt in einer anderen Szene - zeige zuerst diese Szene an."
+      "armedElsewhere": "Dieser Sprengsatz liegt in einer anderen Szene - zeige zuerst diese Szene an.",
+      "lockedOut": "Der Geist von {name} ist dir verschlossen, bis du dich erholst.",
+      "notOnSelf": "Diesen Sleight kannst du nicht auf dich selbst wirken."
     }
   },
   "BEHAVIOR": {

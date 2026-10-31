@@ -10,6 +10,7 @@ import {
   selectBody,
   moreInfo,
   systemMessage,
+  postCard,
   addWindowControls,
   addDragSupport,
   addMinimizeSupport,
@@ -47,8 +48,15 @@ import {
   registerRezSpendOptions,
   registerTaskResultText,
   registerPayloadSource,
-  listPayloadSources
+  listPayloadSources,
+  registerRollBlock,
+  rollBlockReason,
+  registerFailOption,
+  listFailOptions,
+  registerLandingRule,
+  listLandingRules
 } from "./registry.js";
+import { sleightPotency } from "../rolls/psi.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
 import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget, blastTargets, detonateArmed, defuseArmed } from "../rolls/attacks.js";
@@ -106,6 +114,7 @@ export const actors = {
  * @since 2.5
  */
 export const ui = {
+  postCard,
   confirmation,
   selectBody,
   moreInfo,
@@ -168,6 +177,12 @@ export const migration = {
  */
 export const registry = {
   registerRollSource,
+  registerFailOption,
+  listFailOptions,
+  registerLandingRule,
+  listLandingRules,
+  registerRollBlock,
+  rollBlockReason,
   registerPayloadSource,
   listPayloadSources,
   registerPoolOption,
@@ -216,6 +231,7 @@ export const attacks = {
   followUpVisibility,
   yieldDefence,
   unsuitableTarget,
+  sleightPotency,
   detonateArmed,
   defuseArmed
 };

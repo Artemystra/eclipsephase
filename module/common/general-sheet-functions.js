@@ -3,7 +3,7 @@ import { sameDrugForm } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
-import { getRollSource } from "../api/registry.js";
+import { getRollSource, rollBlockReason } from "../api/registry.js";
 
 /**
  * Foundry VTTs active effect creation & deletion functions
@@ -867,12 +867,12 @@ export function itemToggle(html, item) {
       classes: ["ep2e-primary-right"],
       content,
       buttons: [
-        {
-          action: "select",
-          label: useButton,
-          default: true,
-          callback: (event, button) => listSelectionOutcome(button.form)
-        },
+        ...(extras.answers ?? [{ action: "select", label: useButton }]).map((answer, index) => ({
+          action: answer.action,
+          label: game.i18n.localize(answer.label),
+          default: index === 0,
+          callback: (event, button) => ({ ...listSelectionOutcome(button.form), answer: answer.action })
+        })),
         {
           action: "cancel",
           label: cancelButton,
@@ -894,8 +894,10 @@ export function itemToggle(html, item) {
  * @param {Object[]} entries - id and label per entry
  * @param {String} header - The dialog title's localization key
  * @param {String} copy - The explanation's localization key
- * @param {Object} [extras] - Further template data, e.g. sizeChoice for a size select above the list
- * @returns {Promise<Object>} selection (and size when asked), or cancelled
+ * @param {Object} [extras] - Further template data: sizeChoice for a size select above the list,
+ *   listMode for radios above it of which one may open the list, listQuestion for a line below it,
+ *   answers for buttons that replace the select button
+ * @returns {Promise<Object>} selection (and size, mode or answer when asked), or cancelled
  */
   export async function searchableListSelection(entries, header, copy, extras = {}) {
     const renderHook = (event, dialog) => {
@@ -913,7 +915,15 @@ export function itemToggle(html, item) {
       };
       filter.addEventListener("input", narrow);
       narrow();
-      filter.focus();
+      const modes = [...root.querySelectorAll('input[name="ListMode"]')];
+      const followMode = () => {
+        const open = !modes.length || modes.some(mode => mode.checked && "enablesList" in mode.dataset);
+        filter.disabled = !open;
+        select.disabled = !open;
+        if (open) filter.focus();
+      };
+      modes.forEach(mode => mode.addEventListener("change", followMode));
+      followMode();
     };
 
     return listSelection(entries, "searchableList", 320, header, "", copy, renderHook, extras);
@@ -933,6 +943,29 @@ export function itemToggle(html, item) {
     return result?.selection || null;
   }
 
+
+/**
+ * Turns the die of every test the actor cannot make into a warning triangle that says why. It stays
+ * visible and keeps the die's size and place, so nothing moves.
+ * @param {HTMLElement} root - The rendered sheet
+ * @param {Actor} actor - The actor
+ * @returns {void}
+ */
+export function markBlockedRolls(root, actor) {
+  for (const die of root.querySelectorAll("img.task-check[data-key]")) {
+    const reason = rollBlockReason(actor, die.dataset.key.toLowerCase());
+    if (!reason) continue;
+    const triangle = document.createElement("i");
+    triangle.className = die.className;
+    triangle.style.cssText = die.style.cssText;
+    triangle.classList.remove("task-check", "info", "icon-hidden", "toggle", "noShow");
+    triangle.classList.add("fa-solid", "fa-triangle-exclamation", "awesomeIcon", "ep-roll-blocked");
+    triangle.dataset.tooltip = reason;
+    const placeholder = die.previousElementSibling;
+    if (die.classList.contains("toggle") && placeholder?.classList.contains("toggle")) placeholder.remove();
+    die.replaceWith(triangle);
+  }
+}
 
 /**
  * The actor of the token the user has selected on the canvas.
@@ -964,6 +997,7 @@ export async function pickActorFromList(actors, header, copy) {
       if (form?.BodySelect) result.body = form.BodySelect.value;
       if (form?.ExtraOption) result.extraOption = form.ExtraOption.checked === true;
       if (form?.SizeSelect) result.size = form.SizeSelect.value;
+      if (form?.ListMode) result.mode = form.ListMode.value;
       return result;
     }
 

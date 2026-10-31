@@ -13,11 +13,13 @@ const EP2eActiveEffectBaseDataModel =
  * Whether an item's own effects are a blueprint rather than effects that ever apply by themselves.
  * A drug's effects describe what one dose does: taking a dose copies them onto the actor for as
  * long as the dose lasts, so the copies sitting on the item must never apply - least of all
- * because the item is at hand, which only ever meant the drug is carried, not taken.
+ * because the item is at hand, which only ever meant the drug is carried, not taken. A gamma or
+ * epsilon sleight's effects likewise describe what it does where it lands.
  * @param {Item} item - The item carrying the effect
  * @returns {Boolean} True when the item's own effects never apply
  */
-function isEffectBlueprint(item) {
+export function isEffectBlueprint(item) {
+  if (item.type === "aspect") return ["gamma", "epsilon"].includes(item.system?.psiType);
   return item.type === "drug";
 }
 
@@ -162,11 +164,50 @@ export function overdueByClock(effects) {
 
 /**
  * Marks the system's overdue clock-timed effects expired once the clock has moved, so they end on
- * time during a combat as well; their clean-up follows from the mark. Runs on the active GM.
+ * time during a combat as well; their clean-up follows from the mark. Runs on the active GM. An
+ * effect whose actor was deleted is passed over, and one that cannot be marked never stops the
+ * others from being marked.
  * @returns {Promise<void>} Resolves once they are marked
  */
 export async function expireOverdue() {
   if (!game.users?.activeGM?.isSelf) return;
-  const effects = ActiveEffect.registry ? Array.from(ActiveEffect.registry) : game.actors.contents.flatMap(actor => Array.from(actor.effects));
-  for (const effect of overdueByClock(effects)) await effect.update({ "duration.expired": true });
+  for (const effect of overdueByClock(trackedEffects())) {
+    if (!stillExists(effect)) continue;
+    try {
+      await effect.update({ "duration.expired": true });
+    } catch (error) {
+      console.warn(`Eclipse Phase | Could not mark ${effect.name} expired`, error);
+    }
+  }
+}
+
+/**
+ * Every effect that may run on the clock: those Foundry's registry tracks, and those on the world's
+ * actors and on the unlinked tokens of every scene. Foundry drops an effect from its registry once
+ * it counts it expired, even when marking it then fails, so the registry alone can miss one.
+ * @returns {ActiveEffect[]} The effects, each once
+ */
+function trackedEffects() {
+  const found = new Set(ActiveEffect.registry ? Array.from(ActiveEffect.registry) : []);
+  for (const actor of game.actors ?? []) for (const effect of actor.effects ?? []) found.add(effect);
+  for (const scene of game.scenes?.contents ?? []) {
+    for (const token of scene.tokens?.contents ?? []) {
+      if (token.actorLink || !token.actor) continue;
+      for (const effect of token.actor.effects ?? []) found.add(effect);
+    }
+  }
+  return [...found];
+}
+
+/**
+ * Whether an effect still belongs to a document in the world: its actor, or the token it sits on,
+ * has not been deleted since Foundry registered it.
+ * @param {ActiveEffect} effect - The effect
+ * @returns {Boolean} True while it can still be updated
+ */
+function stillExists(effect) {
+  const actor = owningActor(effect);
+  if (!actor) return false;
+  if (actor.isToken) return !!actor.token?.parent?.tokens?.get?.(actor.token.id);
+  return !actor.id || !game.actors?.get || !!game.actors.get(actor.id);
 }

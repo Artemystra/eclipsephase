@@ -55,6 +55,8 @@
   --augmentedTurquoise: #19d3c5;
   --augmentedMagenta: #ff2bd6;
   --augmentedYellow: #f5ec1b;
+  --jammingYellow: #f2c200;
+  --jammingBlack: #0d0d0d;
   --color-bg-option: #1f1f1f;
   --color-shadow-primary: #36aee9!important;
   --color-border-highlight: #36aee9!important;
@@ -2339,6 +2341,16 @@ h3.subheaderBlank {
   border-bottom: solid var(--complementary1) 3px;
 }
 
+.flexrow.subheader.colorPsi{
+  border-bottom: solid var(--mentalHealth) 3px;
+}
+
+/* Jamming in the roll dialog: a line striped like barrier tape. */
+.flexrow.subheader.colorJamming{
+  border-bottom: 3px solid transparent;
+  border-image: repeating-linear-gradient(135deg, var(--jammingYellow) 0 10px, var(--jammingBlack) 10px 20px) 1;
+}
+
 /* Drug options in the roll dialog, underlined in the negative colour the dose cards use. */
 .flexrow.subheader.colorNegative{
   border-bottom: solid var(--negative) 3px;
@@ -2529,6 +2541,14 @@ h3.subheaderBlank {
 .icon-hidden{
   opacity: 0%;
   border: none;
+}
+
+.eclipsephase .ep-roll-blocked {
+  color: var(--negative);
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  cursor: help;
 }
 
 .noShow {
@@ -4119,16 +4139,53 @@ li:has(.ep-system-notice) .message-header {
 }
 
 /* The flat part of a damage roll, set beside its dice. */
-.eclipsephase.dicetray .diecontainerSmall.bonus{
+.eclipsephase.dicetray .ep-dice-bracket{
+  align-self: center;
+  margin: 0 2px;
+  color: var(--mainText);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.eclipsephase.dicetray .diecontainerSmall.bonus,
+.eclipsephase.dicetray .ep-dice-factor{
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   align-self: center;
-  min-width: 0;
+  min-width: 48px;
   min-height: 40px;
-  padding: 0 10px;
-  background-color: var(--pitchBorder);
-  border-radius: 6px;
+  padding: 0;
+  background: none;
+}
+
+.eclipsephase.dicetray .ep-dice-sign{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pitchBorder);
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.eclipsephase.dicetray .ep-dice-factor .ep-dice-sign{
+  font-size: 0;
+}
+
+.eclipsephase.dicetray .ep-dice-factor .ep-dice-sign::before{
+  content: "+";
+  font-size: 80px;
+  transform: rotate(45deg);
+}
+
+.eclipsephase.dicetray .diecontainerSmall.bonus .eyes,
+.eclipsephase.dicetray .ep-dice-factor .eyes{
+  position: relative;
+  color: var(--mainText);
 }
 
 /* The die images carry transparent margins of their own (d10 about 6px, d6 about 10px at this
@@ -4217,6 +4274,17 @@ li:has(.ep-system-notice) .message-header {
   line-height: normal;
   white-space: normal;
   padding: 4px 8px;
+}
+
+/* Chat card buttons keep Foundry's height as their least and grow when the label wraps; buttons
+   side by side stretch to the tallest of them. */
+.chat-message .message-content button {
+  height: auto;
+  min-height: var(--button-size, 2em);
+  line-height: normal;
+  white-space: normal;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 /* The GM's addiction controls on a dose card: the WIL Check button and the dose history beside it. */

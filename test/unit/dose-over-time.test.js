@@ -1,7 +1,7 @@
 import { takeDose, settleOverTime, damageTicksDue, combinedDamage, tickBreakdowns, registerOverTimeHooks, endRunOutDoses } from "../../module/common/doses.js";
 import { drugHealingAddition } from "../../module/rolls/modifiers.js";
 import { globalModifiers } from "../../module/rolls/modifiers.js";
-import { flatBonus } from "../../module/rolls/dice.js";
+import { flatBonus, rollFactor } from "../../module/rolls/dice.js";
 import { JSDOM } from "jsdom";
 import { makeActor, makeUnlinkedToken, resetWorld, seedRolls } from "../setup/factories.js";
 
@@ -258,6 +258,10 @@ describe("the flat part of a damage roll", () => {
     expect(flatBonus({ terms: [{ number: 2, faces: 10 }, { operator: "+" }, { number: 10 }] })).toBe("+10");
     expect(flatBonus({ terms: [{ number: 1, faces: 6 }, { operator: "-" }, { number: 2 }] })).toBe("-2");
     expect(flatBonus({ terms: [{ number: 1, faces: 100 }] })).toBe("");
+    const critical = { terms: [{ number: 2 }, { operator: "*" }, { roll: { terms: [{ number: 2, faces: 10 }, { operator: "+" }, { number: 3 }] } }] };
+    expect(flatBonus(critical)).toBe("+3");
+    expect(rollFactor(critical)).toBe(2);
+    expect(rollFactor({ terms: [{ number: 1, faces: 100 }] })).toBe(1);
   });
 });
 

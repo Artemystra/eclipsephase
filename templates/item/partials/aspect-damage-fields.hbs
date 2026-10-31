@@ -15,24 +15,6 @@
                 {{selectOptions config.strainFamilies selected=item.system.strainFamily localize=true}}
             </select>
         </div>
-        {{#if (ne item.system.psiType "chi")}}
-        <div class="alignRight flexGrowHalf">
-            <div class="flexrow alignCenter wantToKnowMore" style="justify-content: flex-end; gap: 8px;">
-                <i class="fa-solid fa-burst awesomeIcon icon-small"></i>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.damage.label"}}</span>
-                <select name="system.damage.target" data-type="String" style="min-width: 110px;">
-                    {{selectOptions config.damageTargets selected=item.system.damage.target localize=true}}
-                </select>
-                <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
-                <input class="input-xs" type="number" name="system.damage.d10" value="{{item.system.damage.d10}}" placeholder="0"/>
-                <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
-                <input class="input-xs" type="number" name="system.damage.d6" value="{{item.system.damage.d6}}" placeholder="0"/>
-                <i class="fas fa-plus awesomeIcon"></i>
-                <input class="input-xs" type="number" name="system.damage.bonus" value="{{item.system.damage.bonus}}" placeholder="0"/>
-            </div>
-        </div>
-        {{/if}}
     </div>
 </div>
 
@@ -64,5 +46,80 @@
             {{/if}}
         </div>
     </div>
+    {{#if (ne item.system.psiType "chi")}}
+    <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-crosshairs awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.targetRule.label"}}</span>
+            <select name="system.targetRule" data-type="String">
+                {{selectOptions config.sleightTargetRules selected=item.system.targetRule localize=true}}
+            </select>
+        </div>
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-arrows-left-right awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.affects.label"}}</span>
+            <select name="system.affects" data-type="String">
+                {{selectOptions config.sleightAffects selected=item.system.affects localize=true}}
+            </select>
+        </div>
+        <div class="flexrow alignCenter wantToKnowMore" style="justify-content: center; gap: 4px;">
+            <input type="checkbox" name="system.repeatPerSuperior" id="repeatPerSuperior-{{item._id}}" style="flex: 0 0 auto; margin: 0;" {{checked item.system.repeatPerSuperior}}/>
+            <label for="repeatPerSuperior-{{item._id}}" style="flex: 0 0 auto;">{{localize "ep2e.item.aspect.table.repeatPerSuperior.label"}}</label>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.repeatPerSuperior.tip"}}</span>
+        </div>
+    </div>
+    <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-wand-sparkles awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.landingRule.tip"}}</span>
+            <input type="checkbox" id="landingRuleOn-{{item.id}}" data-landing-rule-toggle style="flex: 0 0 auto; margin: 0 4px;" {{#if landingRuleOn}}checked{{/if}}>
+            <label for="landingRuleOn-{{item.id}}">{{localize "ep2e.item.aspect.table.landingRule.label"}}</label>
+        </div>
+        <div class="flexrow alignCenter" style="grid-column: span 2;">
+            <i class="fa-solid fa-sparkles awesomeIcon" style="font-size: 18px; flex: 0 0 auto;"></i>
+            <select name="system.landingRule" data-type="String" {{#unless landingRuleOn}}disabled{{/unless}}>
+                {{selectOptions landingRules selected=item.system.landingRule localize=true}}
+            </select>
+        </div>
+    </div>
+    <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-burst awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.damage.label"}}</span>
+            <select name="system.damage.mode" data-type="String">
+                {{selectOptions config.sleightDamageModes selected=sleightDamageMode localize=true}}
+            </select>
+        </div>
+        {{#if (ne sleightDamageMode "none")}}
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-bullseye awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.damage.targetLabel"}}</span>
+            <select name="system.damage.target" data-type="String">
+                {{selectOptions config.damageTargets selected=item.system.damage.target localize=true}}
+            </select>
+        </div>
+        <div class="flexrow alignCenter wantToKnowMore" style="justify-content: center; gap: 4px;">
+            <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+            <input onFocus="this.select()" class="input-xs" type="number" name="system.damage.d10" value="{{item.system.damage.d10}}" placeholder="0"/>
+            <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+            <input onFocus="this.select()" class="input-xs" type="number" name="system.damage.d6" value="{{item.system.damage.d6}}" placeholder="0"/>
+            <i class="fas fa-plus awesomeIcon"></i>
+            <input onFocus="this.select()" class="input-xs" type="number" name="system.damage.bonus" value="{{item.system.damage.bonus}}" placeholder="0"/>
+        </div>
+        {{/if}}
+    </div>
+    {{#if (eq sleightDamageMode "damage")}}
+    <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-shield-halved awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</span>
+            <select name="system.damage.armorUsed" data-type="String">
+                {{selectOptions config.sleightArmor selected=item.system.damage.armorUsed localize=true}}
+            </select>
+        </div>
+    </div>
+    {{/if}}
+    {{/if}}
 </div>
 </div>

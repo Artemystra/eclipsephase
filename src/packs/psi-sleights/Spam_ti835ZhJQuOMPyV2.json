@@ -5,7 +5,53 @@
     "core": {}
   },
   "img": "systems/eclipsephase/resources/icons/bond.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "n6q6HYSC28chDWN7",
+      "name": "Spam",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.globalMod",
+            "value": "-10",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!ti835ZhJQuOMPyV2.n6q6HYSC28chDWN7"
+    }
+  ],
   "system": {
     "additionalSystems": {},
     "description": "You overload and flood the target’s sensory cortices, spamming them with confusing and distracting sensory input. The target is impaired, suffering –10 to all actions, plus an extra –10 per superior success, for WIL ÷ 5 action turns.",
@@ -16,7 +62,8 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "Actions Turns"
+    "duration": "action",
+    "repeatPerSuperior": true
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

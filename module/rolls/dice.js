@@ -3,8 +3,8 @@ import * as psi from "./psi.js";
 import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
 import { strainSubstrate } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
-import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
-import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
+import { getRollSource, applicablePoolOptions, getTaskResultText, rollBlockReason } from "../api/registry.js";
+import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
 import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
 import { attackPicking, chosenTargets } from "./attacks.js";
@@ -472,6 +472,15 @@ export class TaskRoll {
 
 
   /**
+   * Sets the result whatever the dice say.
+   * @param {Number} result - The result tier
+   */
+  forceResult(result) {
+    this._result = result
+  }
+
+
+  /**
    * Figure out the result of the roll, compared to the target number
    */
   _calculateResult() {
@@ -689,6 +698,12 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         outputData: null, message: null, blind: false, rollMode: null
     }
 
+    const blocked = rollBlockReason(actorWhole, roll.type)
+    if (blocked) {
+        ui.notifications.warn(blocked)
+        return
+    }
+
     if (Hooks.call("eclipsephase.preRollDialog", rollContext) === false) {
         if (rollContext.cancelReason) ui.notifications.warn(game.i18n.localize(rollContext.cancelReason))
         return
@@ -711,7 +726,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options[entry] = values[entry] || false
     }
 
-    const doseChoices = chosenRollOptions([...doseRollOptions(actorWhole, dataset), ...wareRollOptions(actorWhole, dataset)], values)
+    const doseChoices = chosenRollOptions([...doseRollOptions(actorWhole, dataset), ...wareRollOptions(actorWhole, dataset), ...sleightRollOptions(actorWhole, dataset)], values)
     options.doseChoices = await Promise.all(doseChoices.map(async entry => ({ ...entry, value: await optionValue(entry.option) })))
 
     // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
@@ -786,6 +801,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         if (options.attackMode === "suppressive") task.keepModifiers(modifier => modifier.underSuppression === true)
 
         await task.performRoll()
+        if(rollContext.forcedResult != null) task.forceResult(rollContext.forcedResult)
 
         let itemData = {}
         if(weaponSelected)
@@ -798,7 +814,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
         outputData.skillKey = roll.type
+        if (roll.type === "psi") outputData.infectionLabel = getStrainFamily(psi.actorStrainFamily(actorWhole)).labels?.infection ?? null
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
+        if(rollContext.forcedResult != null) outputData.alternatives.options = {swap: false, upgrade: false, mitigate: false}
         outputData.rollContext = buildRollContext(outputData, actorWhole, options, itemData)
         if(Object.keys(rollContext.flags).length) Object.assign(outputData.rollContext, rollContext.flags)
         let diceRoll = task.roll
@@ -864,7 +882,8 @@ if (traits) {
 const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
 const doseOptions = tickableRollOptions(doseRollOptions(actorWhole, dataset));
 const wareOptions = tickableRollOptions(wareRollOptions(actorWhole, dataset));
-rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field));
+const sleightOptions = tickableRollOptions(sleightRollOptions(actorWhole, dataset));
+rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field), ...sleightOptions.map(entry => entry.field));
 
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
     specName,
@@ -880,6 +899,7 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     poolOptions,
     doseOptions,
     wareOptions,
+    sleightOptions,
     rollContext
 });
 
@@ -1593,7 +1613,7 @@ function rollCardFlags(message, htmlTemplate){
     return Object.keys(flags).length ? {eclipsephase: flags} : {}
 }
 
-function breakdown(roll){
+export function breakdown(roll){
     
     let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
     let i = 0
@@ -1615,6 +1635,10 @@ function breakdown(roll){
         }
     }
     diceBreakdown.bonus = flatBonus(roll)
+    diceBreakdown.bonusSign = diceBreakdown.bonus.slice(0, 1)
+    diceBreakdown.bonusValue = diceBreakdown.bonus.slice(1)
+    const factor = rollFactor(roll)
+    diceBreakdown.factor = factor !== 1 ? factor : null
     return diceBreakdown
 }
 
@@ -1624,11 +1648,40 @@ function breakdown(roll){
  * @returns {String} e.g. "+10" or "-2", empty when the roll has none
  */
 export function flatBonus(roll) {
+    const { bonus } = flatParts(roll)
+    return bonus ? signed(bonus) : ""
+}
+
+/**
+ * The numbers in a roll beside its dice, also inside its brackets.
+ * @param {Roll} roll - An evaluated roll
+ * @returns {Object} bonus, the added part, and factor, what the dice are multiplied by
+ */
+function flatParts(roll) {
+    const terms = roll?.terms ?? []
     let sign = 1
     let bonus = 0
-    for (const term of roll?.terms ?? []) {
+    let factor = 1
+    terms.forEach((term, index) => {
         if (typeof term.operator === "string") sign = term.operator === "-" ? -1 : 1
-        else if (typeof term.number === "number" && term.faces === undefined) bonus += sign * term.number
-    }
-    return bonus ? signed(bonus) : ""
+        else if (term.roll) {
+            const inner = flatParts(term.roll)
+            bonus += sign * inner.bonus
+            factor *= inner.factor
+        }
+        else if (typeof term.number === "number" && term.faces === undefined) {
+            if (terms[index - 1]?.operator === "*" || terms[index + 1]?.operator === "*") factor *= term.number
+            else bonus += sign * term.number
+        }
+    })
+    return { bonus, factor }
+}
+
+/**
+ * What a roll's dice are multiplied by, as a critical's 2*(...).
+ * @param {Roll} roll - An evaluated roll
+ * @returns {Number} The factor, 1 for none
+ */
+export function rollFactor(roll) {
+    return flatParts(roll).factor
 }

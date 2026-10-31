@@ -5,8 +5,10 @@ import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload,
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
 import { ownerVision } from "../../module/rolls/chat.js";
+import { cardFailures, failCard } from "../../module/rolls/cards.js";
+import { registerFailOption, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -628,6 +630,21 @@ describe("marking targets on the canvas", () => {
     expect(measuredDistances({ measuredRanges: "" })).toEqual([]);
   });
 
+  test("on a grid, the gap counts whole cells by the scene's diagonal rule, so a diagonal step costs one cell", () => {
+    const grid = {
+      isSquare: true, size: 100, distance: 2,
+      getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }),
+      getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }),
+      measurePath: ([a, b]) => ({ distance: Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)) / 100 * 2 })
+    };
+    const at = (j, i) => ({ bounds: { x: j * 100, y: i * 100, width: 100, height: 100 } });
+
+    expect(tokenGap(at(0, 0), at(1, 1), grid)).toBe(0);
+    expect(tokenGap(at(0, 0), at(11, 7), grid)).toBe(20);
+    expect(tokenGap(at(0, 0), at(12, 7), grid)).toBe(22);
+    expect(tokenGap(at(0, 0), at(0, 0), grid)).toBe(0);
+  });
+
   test("a measured limit keeps the marks to what the farthest of them allows, and the counter counts down from it, what is under the cursor included", async () => {
     canvas.grid = { size: 100, distance: 1 };
     const limit = distance => (distance >= 3 ? 1 : 3);
@@ -825,5 +842,49 @@ describe("areas on the canvas", () => {
 
     expect(await clearAreas(flag => flag.attackId === "a1", scene)).toBe(1);
     expect(deleted).toEqual(["r1"]);
+  });
+});
+
+describe("a failure put on an attack card", () => {
+  /**
+   * A shooter whose card offers one failure, after a hit on the given targets.
+   * @param {Actor[]} actors - The targets
+   * @returns {Promise<Object>} The card and how often the failure was spent
+   */
+  async function hitCard(actors) {
+    const spent = jest.fn();
+    registerFailOption(() => [{ id: "plain", label: "Fail", result: TASK_RESULT.FAILURE, note: "Failed", spend: spent }]);
+    const actor = await shooter();
+    globalThis.fromUuidSync = () => actor;
+    const card = await fire(actor, 11);
+    await aimAt(card, actors);
+    return { card, spent };
+  }
+
+  afterEach(() => resetRegistry());
+
+  test("withdraws the defence cards still open and leaves no further failure", async () => {
+    const { card, spent } = await hitCard([target("Ana")]);
+    expect(defenceCards()).toHaveLength(1);
+    expect(cardFailures(card).map(entry => entry.id)).toEqual(["plain"]);
+
+    expect(await failCard(card, "plain")).toBe(true);
+
+    expect(defenceCards()).toHaveLength(0);
+    expect(spent).toHaveBeenCalledTimes(1);
+    expect(card.getFlag("eclipsephase", "taskCard").targets).toEqual([]);
+    expect(card.getFlag("eclipsephase", "roll").targetedAttack.delivered).toBe(false);
+    expect(cardFailures(card)).toEqual([]);
+  });
+
+  test("is no longer offered once a defence is in", async () => {
+    const ana = target("Ana");
+    const { card } = await hitCard([ana]);
+    seedRolls([99]);
+    await rollDefence(defenceCards()[0], ana.uuid, "dodge", DODGE);
+    await until(() => outcomeOf(ana));
+
+    expect(outcomeOf(ana)).toBeTruthy();
+    expect(cardFailures(card)).toEqual([]);
   });
 });

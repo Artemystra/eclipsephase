@@ -159,6 +159,30 @@ eclipsephase.duration = {
     sustained: "ep2e.item.aspect.table.duration.sustained"
 }
 
+eclipsephase.sleightTargetRules = {
+    any: "ep2e.item.aspect.table.targetRule.any",
+    self: "ep2e.item.aspect.table.targetRule.self",
+    others: "ep2e.item.aspect.table.targetRule.others"
+}
+
+eclipsephase.sleightAffects = {
+    target: "ep2e.item.aspect.table.affects.target",
+    async: "ep2e.item.aspect.table.affects.async",
+    both: "ep2e.item.aspect.table.affects.both"
+}
+
+eclipsephase.sleightArmor = {
+    mental: "ep2e.item.weapon.table.armorUsed.mental",
+    energy: "ep2e.item.weapon.table.armorUsed.energy",
+    kinetic: "ep2e.item.weapon.table.armorUsed.kinetic"
+}
+
+eclipsephase.sleightDamageModes = {
+    none: "ep2e.item.aspect.table.damage.mode.none",
+    damage: "ep2e.item.aspect.table.damage.mode.damage",
+    heal: "ep2e.item.aspect.table.damage.mode.heal"
+}
+
 eclipsephase.damageTargets = {
     physical: "ep2e.item.aspect.table.damage.physical",
     mental: "ep2e.item.aspect.table.damage.mental"

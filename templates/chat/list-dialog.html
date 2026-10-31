@@ -226,6 +226,15 @@
             </select>
         </div>
         {{/if}}
+        {{#if listMode}}
+        <div style="padding: 10px 0 4px 0;">{{localize listMode.copy}}</div>
+        {{#each listMode.options}}
+        <div style="display: flex; align-items: center; gap: 4px;">
+            <input type="radio" name="ListMode" id="listMode-{{id}}" value="{{id}}" style="flex: 0 0 auto;" {{#if @first}}checked{{/if}} {{#if enablesList}}data-enables-list{{/if}}>
+            <label for="listMode-{{id}}">{{localize label}}</label>
+        </div>
+        {{/each}}
+        {{/if}}
         {{#if copy}}
             <div style="padding: 10px 0;">{{localize copy}}</div>
         {{/if}}
@@ -236,6 +245,9 @@
             <option value="{{id}}">{{label}}</option>
             {{/each}}
         </select>
+        {{/if}}
+        {{#if listQuestion}}
+            <div style="padding: 0 0 10px 0;">{{localize listQuestion}}</div>
         {{/if}}
 
     {{else if (eq dialogType "selectBody")}}

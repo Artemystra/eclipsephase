@@ -166,10 +166,11 @@
 
   {{#if (and (eq skillKey "psi")(or (eq alternatives.options.available true) poolSpent)(ne options.usePool "ignoreInfection")(ne actor.type "goon"))}}
       <div class="chatControls">
-        <button type="button" class="chatButton psiEffect privateChatButton" data-action="psiEffect">{{localize "ep2e.chat.buttonLabel.psiInfection"}}</button>
+        <button type="button" class="chatButton psiEffect privateChatButton" data-action="psiEffect">{{#if infectionLabel}}{{localize infectionLabel}}{{else}}{{localize "ep2e.chat.buttonLabel.psiInfection"}}{{/if}}</button>
       </div>
   {{/if}}
 
+  {{#if rollContext.failureNote}}<p class="footnote">{{rollContext.failureNote}}</p>{{/if}}
   {{#if scatterNote}}<p class="footnote">{{scatterNote}}</p>{{/if}}
   {{#if (and rollContext.targetedAttack targetNames)}}
    <p class="ep-attack-targets">{{targetNames}}</p>

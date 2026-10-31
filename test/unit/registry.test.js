@@ -3,9 +3,30 @@ import {
   registerPoolOption, applicablePoolOptions,
   registerSlot, slotEntries, renderSlot, renderPoolOptions,
   registerPayloadSource, listPayloadSources,
+  registerRollBlock, rollBlockReason,
   resetRegistry
 } from "../../module/api/registry.js";
 import { resetWorld } from "../setup/factories.js";
+
+describe("roll blocks", () => {
+  beforeEach(() => { resetRegistry(); resetWorld(); });
+
+  test("the first check with a reason answers, and a free test has none", () => {
+    expect(registerRollBlock(() => null)).toBe(true);
+    registerRollBlock((actor, key) => key === "guns" ? `${actor.name}: blocked` : null);
+    registerRollBlock(() => null);
+
+    expect(rollBlockReason({ name: "Ana" }, "guns")).toBe("Ana: blocked");
+    expect(rollBlockReason({ name: "Ana" }, "melee")).toBeNull();
+  });
+
+  test("a check that is no function is rejected", () => {
+    const logged = jest.spyOn(console, "error").mockImplementation(() => {});
+    expect(registerRollBlock("guns")).toBe(false);
+    expect(rollBlockReason({}, "guns")).toBeNull();
+    logged.mockRestore();
+  });
+});
 
 describe("roll sources", () => {
   beforeEach(() => { resetRegistry(); resetWorld(); });

@@ -230,6 +230,8 @@ Hooks.once('init', async function() {
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
+  Handlebars.registerHelper('percentile', value => Number.isFinite(value) ? Math.clamp(value, 0, 100) : value);
+
   Handlebars.registerHelper('concat', function() {
 
     var outStr = '';
@@ -943,6 +945,7 @@ Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.ownerVision(html, data);
   EPchat.playerVision(html, data);
   EPchat.doseHarmVision(message, html);
+  EPchat.drawFailButtons(message, html);
 });
 
 //Renders the ChatLog according to given visibility options

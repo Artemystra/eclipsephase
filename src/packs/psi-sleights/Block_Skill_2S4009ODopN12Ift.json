@@ -16,7 +16,8 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "minutes"
+    "duration": "minutes",
+    "landingRule": "blockSkill"
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

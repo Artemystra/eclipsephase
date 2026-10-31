@@ -670,7 +670,7 @@ Hooks.on("quenchReady", quench => {
      */
     async function poisonedThenSkipped(linked) {
       const before = new Set(game.messages.contents.map(message => message.id));
-      const seen = { taken: false, ticksAtOnset: null, ticksAtDeletion: null, deleted: false, expiry: [] };
+      const seen = { taken: false, ticksAtOnset: null, ticksAtDeletion: null, deleted: false, expiry: [], clock: null };
       const onExpire = Hooks.on("updateActiveEffect", (effect, changes) => {
         if (foundry.utils.getProperty(changes ?? {}, "duration.expired") !== true) return;
         seen.expiry.push({ parent: effect.parent?.documentName, parentIsToken: effect.parent?.isToken ?? null, owner: owningActor(effect)?.uuid ?? null, runOut: durationRunOut(effect), ticks: ticksOf(effect) });
@@ -691,8 +691,12 @@ Hooks.on("quenchReady", quench => {
           seen.taken = !!poisonOn(token.actor);
           await waitUntil(() => ticksOf(poisonOn(token.actor)) >= 1, 3000).catch(() => {});
           seen.ticksAtOnset = ticksOf(poisonOn(token.actor));
+          seen.clock = { before: game.time.worldTime, combat: !!game.combat?.started, paused: game.paused === true };
           await game.time.advance(120);
+          seen.clock.after = game.time.worldTime;
           await waitUntil(() => seen.deleted, 8000).catch(() => {});
+          const left = poisonOn(token.actor);
+          if (left) seen.after = { ticks: ticksOf(left), start: left.start?.time ?? null, units: left.duration?.units, value: left.duration?.value, remaining: left.duration?.remaining, expired: left.duration?.expired === true, isTemporary: left.isTemporary, gm: game.users.activeGM?.isSelf === true, inRegistry: Array.from(ActiveEffect.registry ?? []).includes(left), expiry: left.duration?.expiry ?? null };
           await new Promise(resolve => setTimeout(resolve, 300));
         });
       } finally {

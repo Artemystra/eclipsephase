@@ -1,0 +1,17 @@
+<form class="ep-sustain-end">
+    <div class="contentBoxMargin">
+        <div class="form-group listBackgroundMain">
+            <p>{{localize "ep2e.psi.sustain.pickCopy"}}</p>
+        </div>
+        <div class="flexrow subheader" style="justify-content: flex-start; align-items: center; gap: 4px; padding: 5px 0.5em;">
+            <input type="checkbox" class="ep-sustain-all" id="sustain-all" style="flex: 0 0 auto; margin: 0;">
+            <label for="sustain-all" style="flex: 0 0 auto;"><h3 class="subheader dialog" style="margin: 0; padding: 0;">{{sleightName}}</h3></label>
+        </div>
+        {{#each entries as |entry|}}
+        <div class="form-group listBackgroundMain" style="justify-content: flex-start; align-items: center; gap: 4px;">
+            <input type="checkbox" class="ep-sustain-pick" name="pick-{{@index}}" id="sustain-pick-{{@index}}" data-attack-id="{{entry.attackId}}" data-target-uuid="{{entry.uuid}}" style="flex: 0 0 auto; margin: 0;">
+            <label class="resource-label" for="sustain-pick-{{@index}}" style="flex: 0 0 auto;">{{entry.name}}</label>
+        </div>
+        {{/each}}
+    </div>
+</form>

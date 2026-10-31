@@ -147,7 +147,6 @@
         "noDosesLeft": "{name} no tiene dosis restantes.",
         "doseCheckRolled": "Este chequeo ya se ha tirado.",
         "doseNoScene": "Abre una escena para elegir un objetivo en ella.",
-        "doseNeedsGM": "Debe haber un GM conectado para entregar esta dosis.",
         "doseNoSelection": "Selecciona primero un token.",
         "doseNeedsClaimant": "Asígnate un personaje o, como GM, selecciona un token para tomar esta dosis.",
         "doseAlreadyUsed": "Esta dosis ya se ha usado.",
@@ -155,7 +154,8 @@
         "ammoPackNotTaken": "{name} es un paquete de munición: cárgalo en un arma en lugar de tomarlo.",
         "noPlacedToken": "Este actor no está representado por un token colocado en este momento.",
         "attackDelivered": "Este ataque ya se ha aplicado a sus objetivos.",
-        "attackNoPayload": "El arma no sabe con qué droga está cargada. Recárgala primero."
+        "attackNoPayload": "El arma no sabe con qué droga está cargada. Recárgala primero.",
+        "needsGM": "Un GM debe estar conectado para transferir el efecto."
       },
       "button": {
         "edit": "Edit",
@@ -896,6 +896,70 @@
           "playWithPrey": "Play with Prey",
           "protectTribe": "Protect Tribe"
         }
+      },
+      "lockOut": {
+        "name": "Bloqueado: {target}",
+        "description": "{target} se defendió con un éxito crítico: este async no puede volver a elegir su mente como objetivo hasta su próxima recarga."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Tiradas de habilidades sociales contra el objetivo",
+        "basiliskHacks": "Resistir hackeos basilisco"
+      },
+      "sustain": {
+        "name": "Manteniendo: {sleight} ({targets})",
+        "description": "Mantienes {sleight}: -10 a todas las demás tiradas de habilidad mientras dure. Termina cuando lo terminas o cuando el async se aleja más de Cerca + 10 m del objetivo.",
+        "outOfReach": "{target} está a {distance} m de {async}, más allá de los {reach} m a los que se puede mantener {sleight}.",
+        "end": "Dejar de mantener",
+        "endCopy": "¿Dejar de mantener esta habilidad psi? Su efecto sobre los objetivos termina con ella.",
+        "summary": "Mantiene psi",
+        "endTip": "Mantenida - dejar de mantener",
+        "pickCopy": "Mantienes esta habilidad psi sobre más de un objetivo. Marca aquellos sobre los que quieres dejar de mantenerla.",
+        "nameSelf": "Sosteniendo: {sleight}"
+      },
+      "healing": {
+        "card": "{name} se cura {amount} de {kind} ({sleight}).",
+        "stress": "estrés",
+        "damage": "daño",
+        "rollTitle": "Curado"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} puede usar su siguiente acción compleja como recarga corta, sin el tiempo habitual. No da una recarga adicional.",
+        "errorGM": "{sleight} en {target}: una prueba de habilidad que elijas falla. Usa el botón de la tarjeta de la prueba antes de que acabe el efecto.",
+        "blockSkill": "{sleight} afecta a {target}. Elige la habilidad a bloquear.",
+        "blockSkillButton": "Elegir habilidad",
+        "boostSkill": "{sleight} ha alcanzado a {target}. Elige la habilidad física que aumenta.",
+        "boostSkillButton": "Elegir habilidad",
+        "boostCopy": "¿Qué habilidad física aumenta el sleight?",
+        "failSkill": "{sleight} afecta a {target} con un éxito superior. Elige cómo actúa el error.",
+        "failSkillButton": "Elegir",
+        "alterDuration": "{sleight} afecta a {target}. Elige una droga o toxina activa.",
+        "alterDurationButton": "Elegir sustancia",
+        "noSubstance": "{target} no tiene drogas ni toxinas activas.",
+        "alterHeader": "Alterar sustancia",
+        "alterCopy": "¿Qué droga o toxina alteras?",
+        "shorter": "Reducir la duración a la mitad",
+        "longer": "Aumentar la duración",
+        "errorHeader": "Inducir error",
+        "superiorFailure": "Fallo superior",
+        "errorCopy": "¿Cómo se manifiesta el error?",
+        "failSkillOption": "Hacer fallar la habilidad",
+        "alterQuestion": "¿Cómo quieres manipular el efecto?",
+        "forcedFailure": "Fallo debido a un error inducido.",
+        "skillHeader": "Elegir habilidad",
+        "skillCopy": "¿A qué habilidad afecta el sleight?",
+        "shortened": "{effect} en {target} dura ahora la mitad de lo habitual.",
+        "lengthened": "{effect} en {target} dura ahora 1,5 veces más de lo habitual.",
+        "superiorChosen": "{sleight} en {target}: una prueba de habilidad que elija el GM será un fallo superior, con el botón de la tarjeta de la prueba.",
+        "errorKind": {
+          "auto": "Fallo",
+          "superior": "Fallo superior"
+        },
+        "skillChosen": "{sleight} en {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} bloquea {skill}: no se puede usar, ni siquiera por defecto."
       }
     },
     "gmInfo": {
@@ -1045,7 +1109,39 @@
           "damage": {
             "label": "Daño",
             "physical": "Físico",
-            "mental": "Mental"
+            "mental": "Mental",
+            "mode": {
+              "damage": "Infligir",
+              "heal": "Curación",
+              "none": "Sin daño"
+            },
+            "targetLabel": "Objetivo"
+          },
+          "targetRule": {
+            "label": "Objetivos posibles",
+            "any": "Cualquiera",
+            "self": "Solo uno mismo",
+            "others": "Solo otros"
+          },
+          "affects": {
+            "label": "Afecta a",
+            "target": "Objetivo",
+            "async": "Async",
+            "both": "Ambos"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiplicar efectos",
+            "tip": "Cada éxito superior aplica el efecto una vez más"
+          },
+          "landingRule": {
+            "label": "Efecto especial",
+            "tip": "Añadir efecto especial al acertar",
+            "select": "- Seleccionar -",
+            "boostSkill": "Aumentar una habilidad física",
+            "blockSkill": "Bloquear habilidad",
+            "failSkill": "Inducir error",
+            "recharge": "Recarga rápida",
+            "alterDuration": "Alterar duración de sustancia"
           }
         }
       },
@@ -1623,7 +1719,8 @@
           "proximity": "Alcance del sensor",
           "payload": "Carga",
           "noPayload": "Sin carga"
-        }
+        },
+        "sleightOptions": "Habilidades psi"
       },
       "successType": {
         "success": "Success",
@@ -2055,7 +2152,7 @@
           "inCover": "a cubierto"
         },
         "severalTargets": "Varios objetivos",
-        "resist": "Resistir (VOL)",
+        "resist": "Resistir ({aptitude})",
         "yield": "No resistir",
         "lockedOut": "Crítico: el async queda bloqueado de esta mente hasta que se recupere.",
         "touchLabel": "{name} por toque",
@@ -2071,6 +2168,7 @@
         "payloadLabel": "Carga",
         "doseInfo": "Dosis"
       },
+      "failGone": "Este fallo ya no está disponible.",
       "poolSpent": {
         "swapped": "{name} gastó un punto de {pool} para intercambiar los dados",
         "upgraded": "{name} gastó un punto de {pool} para mejorar el resultado",
@@ -2359,7 +2457,9 @@
       "outsideArea": "Esa ficha está fuera del área.",
       "tooMany": "A este alcance, este ataque alcanza como máximo {max} objetivos.",
       "ownBlast": "{name} está atrapado en su propia explosión.",
-      "armedElsewhere": "Ese explosivo está en otra escena - muestra esa escena primero."
+      "armedElsewhere": "Ese explosivo está en otra escena - muestra esa escena primero.",
+      "lockedOut": "La mente de {name} está cerrada para ti hasta tu próxima recarga.",
+      "notOnSelf": "Esta habilidad psi no se puede usar sobre uno mismo."
     }
   },
   "BEHAVIOR": {

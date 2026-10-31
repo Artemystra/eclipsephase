@@ -206,6 +206,22 @@ Hooks.once("eclipsephase.ready", ({ api }) => {
 A rejected registration (missing field, duplicate id) is logged with `console.error` and returns
 `false` - it never throws, so one broken module cannot stop the system from loading.
 
+### `registerFailOption(check)`
+
+Offers the GM a failure at the end of a task card. `check(actor, { skillKey, message })` returns
+entries of `id`, `label`, `result` (the result tier), `note` (the card's footnote) and `spend` (runs
+when the button is used). Each entry is a button, seen by the GM only, and a card without entries is
+unchanged. Using one rewrites the card as a pool point does and fires `eclipsephase.poolResult`. No
+button appears once an attack reached its targets or when it would not worsen the result.
+`listFailOptions(actor, context)` asks all sources. Induce Error is the system's own source.
+
+### `registerRollBlock(check)`
+
+Makes tests unusable: `check(actor, key)` gets the actor and the lower-case roll key and returns the
+reason as text, or `null`. A refused test shows the text as a toast, and the sheet shows a warning
+triangle with the text as its tooltip in place of the test's die. `rollBlockReason(actor, key)` asks
+all checks. Block Skill is the system's own check.
+
 ### `registerRollSource(id, definition)`
 
 Lets a roll use `id` as its `rolledFrom` value and resolve its own skill/pool data instead of
@@ -348,6 +364,17 @@ Four things are worth knowing before you build one:
   choices and on the archetype; a table cannot express that. Yours may ignore the arguments and
   return a constant if it is simpler.
 - **`tierTraits` carries the pack**, so the trait can live in your module's own compendium.
+
+`targeting` says who the family's sleights work on (2.8.5). `refuses(actor, kinds)` names the kind
+refused, or null; `modifiers(actor, kinds)` lists `{ text, value }` for the test; `doublesRange(actor)`
+doubles the range categories against that target. `kinds` are what `api.actors.targetKinds` lists.
+`resist` is the `{ aptitude, pool }` a target resists with (default `wil`, `Moxie`) and
+`durationAptitude` what a sleight's span and a chi push count in (default `wil`). `labels` holds the
+keys of the family's own wording: `spendRez` and `infection`. The family's `label` also names its
+skill on the sheet and its cards.
+`api.ui.postCard(actor, card, flags, whisper)` posts a notice card.
+Left out, a family reaches anyone, with no modifiers and no doubling. A damaging sleight's
+`system.damage.armorUsed` is `"mental"` (default), `"energy"` or `"kinetic"`.
 
 `getStrainFamily(id)`, `listStrainFamilies()` and `hasStrainFamily(id)` are on `api.registry` too,
 for reading the registry back.
@@ -695,7 +722,12 @@ through, or `"none"` behind cover. Otherwise it is an opposed test against `atta
 a pool point spent on the attack before that counts): when both succeed, a critical success beats
 one that is not, and between equals the higher die wins, a tie going to the defender. The attack
 card keeps its pool controls until the first target has defended. A defender who wins against a
-sleight with a critical success is noted as having locked the async out.
+sleight with a critical success is noted as having locked the async out (2.8.5): the async gets an
+ActiveEffect flagged `psiLockOut: { targetUuid, attackId }`, listed among the running effects of the
+time panel, where the GM may end it. Target pickers for sleights refuse that mind before and after
+the roll, a pool point that turns the defence lifts the lock again, and the async's recharge
+(`eclipsephase.postRest`) ends all of them. `lockedOutOf(actor, target)` in `module/rolls/psi.js`
+answers whether one holds.
 
 Defence cards, defence rolls and the damage card are seen as the attack card was:
 `api.attacks.followUpVisibility(attackCard, targets)` is public for a public attack, and otherwise
@@ -746,6 +778,90 @@ cannot strike; the picker refuses those with a notice, before the roll and after
 sleight cannot strike a synthmorph, an infomorph, a bot or a vehicle, and takes -30 against a
 cyberbrain picked before the roll (once the roll has landed, the modifier can no longer apply).
 
+### Landing rules (2.8.5)
+
+`system.landingRule` on a gamma or epsilon sleight adds a special effect on landing, chosen on the
+sheet behind a checkbox (`"none"` when off, `"select"` while ticked with nothing chosen; neither does
+anything). The system registers four:
+`blockSkill` (the async chooses a skill on a card; its tests are refused while the effect runs),
+`failSkill` (the GM gets a button on the actor's task cards while the effect runs, each use spends
+the oldest effect; on a superior success the async instead chooses a skill whose next test fails, or
+makes the button a superior failure), `recharge` (a note that the next complex
+action may be a short recharge) and `alterDuration` (the async halves or adds half to a running
+dose's duration). A roll can be forced from `eclipsephase.preRoll` by setting
+`rollContext.forcedResult` to a result tier: the dice no longer decide and no pool can turn it.
+`rollContext.flags.failureNote` adds a footnote to the roll's card.
+
+The built-in rule `boostSkill` asks the async for a physical skill and adds 10 to it while the effect runs, times its potency.
+
+A module adds its own with `registerLandingRule(id, { label, onLand, instant, bindsSkill, onReland, choose })`,
+and it appears in the sheet's list (`listLandingRules()` returns them all). `onLand({ attack, target, async, landing, result })` runs on landing.
+`instant` leaves no timed effect, `bindsSkill` gives the effect a skill to be chosen, and
+`onReland(context)` runs after a pool point improved the result on a sleight that landed already.
+`api.attacks.sleightPotency(landing, result)` reports its `count` and `factor`.
+`choose({ message, target, request })` answers the `sleightChoice` button of a card carrying the flag
+`flags.eclipsephase.sleightChoice` with `rule` and `targetUuid`.
+
+### What a sleight leaves (2.8.5)
+
+A gamma or epsilon sleight's own effects are a blueprint, as a drug's are: they never apply on the
+item (`isEffectBlueprint` in `module/effects.js`). When the sleight lasts - action turns, minutes,
+hours or sustained - and lands on a target (a lost or yielded defence, a willing target, or the
+async itself), the system copies them into one ActiveEffect on the side the sleight works on, named
+after the sleight and carrying its description, flagged `effectKey: "sleight"` and
+`sleight: { key, name, sleightName, targetUuid, sustained, attackId, defenceId, rollOptions }`. It
+is listed in the time panel and runs for the async's WIL / 5 in the sleight's unit (at least 1,
+doubled by Increased Duration); a sustained sleight has no end. A sleight without effects still
+leaves this timer. The same sleight landing again replaces it, and a pool point that turns the
+defence takes it back. The sleight's fields:
+
+| Field | Meaning |
+|---|---|
+| `targetRule` | `"any"` (default), `"self"` (no target is picked; it goes to the async) or `"others"` (the async's own token is refused) |
+| `affects` | `"target"` (default), `"async"` (the effect goes to the async, named after the target - Empathic Scan) or `"both"` |
+| `repeatPerSuperior` | Each superior success applies the effect once more |
+| `rollOptions` | Conditional modifiers as a drug authors them; the roll dialog offers them under "Sleights" while the effect runs (`sleightRollOptions` in `module/rolls/modifiers.js`) |
+
+Added changes and option values scale: a number is multiplied, a dice formula such as `"1d6"` is
+rolled once at the count (`scaledFormula`), all times four on a critical success (damage only doubles) and
+doubled by the Increased Effect push. `setSleightEffect({ actorUuid, data, defenceId })` in `module/rolls/psi.js`
+puts such an effect on an actor or takes one defence's off, through the active GM where the user
+may not. Picking one's own token is using the sleight on oneself: no defence card and no range
+modifier (Core p.277). `gammaPushes(actor, manualPush)` lists the pushes a roll runs with: the one
+chosen plus the free push of an Infection 66+ async, so the free Additional Target, Power,
+Penetration, Duration and Effect pushes now count as well.
+
+A pool point the async spends on the psi test counts at landing - the result is read off the attack
+card then - and renews what already landed (`relandAfterSpend` on `eclipsephase.poolResult`).
+
+**Sustaining.** A sustained sleight's effect has no end, and the async gets a record of it, flagged
+`effectKey: "sustain"` and `sustain: { attackId, itemId, sleightName, pushRange, targets: [{ uuid,
+name, warned }] }`, named "Sustaining: <sleight> (<targets>)" and listed in the time panel. Every
+record costs -10 on the async's other skill tests, in one line "Sustains Psi" broken down per
+sleight ("Mindlink x 3") on the roll card and in the sheet's modifier overview (`sustainSummary(actor)`,
+`sustainModifiers(context)` pushed at `eclipsephase.preRoll`); casting it again on the same target
+moves that target to the new record; aptitude checks (a dataset key under `system.aptitudes.`), rep tests and
+testing the sustained sleight itself are spared. The two sides stay together: deleting the record
+removes the effects it left, and removing a target's effect takes that target off the record, the
+record going with the last (`followSustainEnd` on `deleteActiveEffect`; a renewal deletes with the
+option `sleightCascade: false`, which skips this). The Psi tab marks a sustained sleight with a stop button that ends it
+(`endSustaining(actor, { attackId | itemId })`); sustained on more than one target, it asks which
+(`sustainedTargets(actor, itemId)`, `pickSustainedTargets`, `endSustainingOn(actor, picks)`). The time
+panel lets the GM end any running effect and a player end the records of their own character. When a token moves, the active GM measures
+async and targets on the viewed scene against Close + 10 m (`sustainReach(target, pushRange)`:
+20 m, 30 m against an async or with Increased Range) and posts one card per parting with an
+"End Sustaining" button, whispered to the async's owners and the GMs and flagged
+`sustainWarning: { actorUuid, attackId }`; the card is deleted once they are back in reach, and a new
+one comes when they part again. Nothing ends by itself.
+
+**Healing.** `damage.mode` is `"damage"`, `"heal"` or `"none"`; empty, it reads as damage when a
+damage value is set (`sleightDamageMode`). A sleight whose mode is `"heal"` heals instead of attacking: `damage.target`
+names what (`"mental"` stress, `"physical"` damage), its dice and bonus count once more per superior
+success where it repeats, times four on a critical and doubled by the Increased Effect push
+(`healingFormula`). It heals at once where it lands, leaves no effect and no record, and posts a
+roll card seen as the psi test was, with the roll to unfold; `applyHealing(actor, amount, { target })` in `module/rolls/damage.js` takes the points off
+without touching wounds or traumas.
+
 ### The system's effects
 
 - `"damage"` - a weapon that deals damage, and a psi-gamma sleight that does. Once every target has
@@ -757,8 +873,8 @@ cyberbrain picked before the roll (once the roll has landed, the modifier can no
   piercing, a Penetration push), half damage reaches a target who partly dodged an area attack,
   and `payload.damageTarget` puts it on the body or, as stress, the mind. The card shows each
   target's owners and the GMs the reckoning, everyone else only whether damage got through.
-- `"sleight"` - a psi-gamma sleight without damage of its own. The targets resist with WIL, and the
-  outcome stays on the cards; what the sleight does is the GM's to apply.
+- `"sleight"` - a psi-gamma or psi-epsilon sleight without damage of its own. The targets resist
+  with WIL; a sleight that lasts leaves its effect where it works, see below.
 - `"dose"` - a weapon with the "Ammunition: Chems" trait (`specialAmmoDrugs`) delivers one dose per
   target, as an area attack, to as many targets as its cone reaches at the range chosen
   (`api.attacks.chemicalDoses(weaponTraits)` tells whether a weapon fires chemicals). The weapon

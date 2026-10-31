@@ -353,13 +353,13 @@ class MockDocument {
     return created;
   }
 
-  async deleteEmbeddedDocuments(documentName, ids = []) {
+  async deleteEmbeddedDocuments(documentName, ids = [], options = {}) {
     if (documentName !== "ActiveEffect") return [];
     const removed = this.effects.filter(effect => ids.includes(effect.id));
-    for (const effect of removed) global.Hooks.callAll("preDeleteActiveEffect", effect, {}, global.game.user.id);
+    for (const effect of removed) global.Hooks.callAll("preDeleteActiveEffect", effect, options, global.game.user.id);
     this.effects = this.effects.filter(effect => !ids.includes(effect.id));
     this.prepareData?.();
-    for (const effect of removed) global.Hooks.callAll("deleteActiveEffect", effect, {}, global.game.user.id);
+    for (const effect of removed) global.Hooks.callAll("deleteActiveEffect", effect, options, global.game.user.id);
     this.actor?.prepareData?.();
     await new Promise(resolve => setTimeout(resolve, 0));
     return removed;
@@ -579,8 +579,8 @@ class MockActor extends MockDocument {
     return updated;
   }
 
-  async deleteEmbeddedDocuments(documentName, ids = []) {
-    if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids);
+  async deleteEmbeddedDocuments(documentName, ids = [], options = {}) {
+    if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids, options);
 
     const removed = ids.map(id => this.items.get(id)).filter(Boolean);
     for (const item of removed) global.Hooks.callAll("preDeleteItem", item, {}, global.game.user.id);
@@ -817,6 +817,7 @@ function getHandlebars() {
     or: (...args) => args.slice(0, -1).some(Boolean),
     not: value => !value,
     concat: (...args) => args.slice(0, -1).join(""),
+    percentile: value => Number.isFinite(value) ? Math.min(Math.max(value, 0), 100) : value,
     toLowerCase: value => String(value ?? "").toLowerCase(),
     checkedIf: condition => (condition ? "checked" : ""),
     checked: condition => (condition ? "checked" : ""),

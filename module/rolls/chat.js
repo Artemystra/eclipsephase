@@ -6,6 +6,8 @@ import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "./modifiers.js";
+import { failCard, drawFailButtons } from "./cards.js";
+export { drawFailButtons };
 import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, soakRemaining, scatterBlast, detonateArmed, defuseArmed } from "./attacks.js";
 
 /**
@@ -136,6 +138,27 @@ export async function addChatListeners(html) {
     if (defenceCover) {
       const message = game.messages.get(defenceCover.closest("[data-message-id]")?.dataset.messageId);
       if (message) takeCover(message, defenceCover.dataset.targetUuid);
+      return;
+    }
+
+    const endSustain = event.target.closest("button.endSustain");
+    if (endSustain) {
+      const message = game.messages.get(endSustain.closest("[data-message-id]")?.dataset.messageId);
+      if (message) psiFunctions.endSustainFromCard(message);
+      return;
+    }
+
+    const failButton = event.target.closest("button.failCard");
+    if (failButton) {
+      const message = game.messages.get(failButton.closest("[data-message-id]")?.dataset.messageId);
+      if (message && game.user.isGM) failCard(message, failButton.dataset.failId);
+      return;
+    }
+
+    const sleightChoice = event.target.closest("button.sleightChoice");
+    if (sleightChoice) {
+      const message = game.messages.get(sleightChoice.closest("[data-message-id]")?.dataset.messageId);
+      if (message) psiFunctions.chooseFromCard(message);
       return;
     }
 

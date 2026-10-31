@@ -69,7 +69,9 @@ function rowActor(actorUuid) {
 
 /**
  * Every running effect on the watched actors, grouped under the actor carrying them. Item-owned
- * effects are included, since that is where a sleight's or a drug's own effect lives.
+ * effects are included, since that is where a sleight's or a drug's own effect lives. The GM may end
+ * any of them; a player may end the sleights their character sustains. A sleight an async sustains
+ * on themselves shows once, as what they sustain.
  * @returns {Object[]} One group per actor, each with its name, count and effect rows
  */
 export function runningEffectGroups() {
@@ -82,6 +84,8 @@ export function runningEffectGroups() {
     const rows = [];
     for (const effect of owned) {
       if (effect.disabled || !isRunningEffect(effect)) continue;
+      const sleight = effect.getFlag?.("eclipsephase", "sleight");
+      if (sleight?.sustained && sleight.targetUuid === sleight.asyncUuid) continue;
       const description = effect.description || effect.parent?.system?.description || "";
       rows.push({
         actorUuid: actor.uuid,
@@ -92,6 +96,7 @@ export function runningEffectGroups() {
         expired: effect.duration?.expired === true,
         remaining: effect.duration?.label ?? "",
         hasInfo: !!description,
+        endable: game.user.isGM || (effect.getFlag?.("eclipsephase", "sustain") !== undefined && actor.isOwner),
         description
       });
     }

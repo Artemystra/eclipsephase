@@ -13,7 +13,7 @@ import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
-import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
+import { endChiPush, confirmChiPush, actorStrainFamily, sustainedSleights, endSustaining, sustainedTargets, pickSustainedTargets, endSustainingOn } from "../rolls/psi.js";
 import { getStrainFamily } from "../rolls/strain-families.js";
 import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
@@ -254,6 +254,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
     context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
+    context.sustaining = sustainedSleights(actor);
 
     const strainFamily = getStrainFamily(actorStrainFamily(actor));
     const substrate = strainFamily.substrate(actor);
@@ -941,6 +942,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const actor = this.document;
 
       await super._onRender(context, options);
+
+      SHEET.markBlockedRolls(this.element, actor);
 
       if (game.user.isGM || actor.isOwner){
       try {
@@ -1745,6 +1748,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
+    html.querySelectorAll(".endSustain").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        const targets = sustainedTargets(actor, itemId);
+        if (targets.length > 1) {
+          const picks = await pickSustainedTargets(actor.items.get(itemId)?.name ?? "", targets);
+          if (picks?.length) await endSustainingOn(actor, picks);
+          return;
+        }
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.psi.sustain.end");
+        const { confirm } = await confirmation(popUpTitle, popUpHeadline, "ep2e.psi.sustain.endCopy", undefined, "", "ep2e.psi.sustain.end");
+        if (!confirm) return;
+
+        await endSustaining(actor, { itemId });
+      });
+    });
+
     html.querySelectorAll(".endChiPush").forEach(element => {
       element.addEventListener("click", async ev => {
         const itemId = ev.currentTarget.dataset.itemId;
@@ -1799,7 +1820,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const ledger = actorModel.rezPoints.ledger;
 
         const rezTable = EPactorSheet.rezSpendTable(brewStatus);
-        object = rezTable.options;
+        const familyRezLabel = getStrainFamily(actorStrainFamily(this.actor)).labels?.spendRez;
+        object = familyRezLabel ? Object.fromEntries(Object.entries(rezTable.options).map(([key, option]) => [key, ["psi", "psiH"].includes(option.id) ? { ...option, label: familyRezLabel } : option])) : rezTable.options;
 
         const costMatrix = rezTable.costMatrix;
 

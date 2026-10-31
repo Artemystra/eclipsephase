@@ -170,6 +170,28 @@ export const DAMAGE_CONFIG = {
 };
 
 /**
+ * Takes damage or stress off an actor, as far as it has any: wounds and traumas stay, as healing
+ * points alone never removes them. The sheet's bars move from where they stood.
+ * @param {Actor} actor - Who is healed
+ * @param {Number} amount - The points healed
+ * @param {Object} [options] - target: "physical" (damage, the default) or "mental" (stress)
+ * @returns {Promise<Number>} The points actually taken off
+ */
+export async function applyHealing(actor, amount, { target = "physical" } = {}) {
+  const config = DAMAGE_CONFIG[target] ?? DAMAGE_CONFIG.physical;
+  const read = path => Number(foundry.utils.getProperty(actor.system, path)) || 0;
+  const current = read(`${config.attribute}.value`);
+  const healed = Math.max(0, Math.min(current, Math.floor(Number(amount) || 0)));
+  if (healed < 1) return 0;
+  await actor.update({
+    [`system.${config.attribute}.value`]: current - healed,
+    [`system.${config.oldBarPath}`]: Math.max(1, read(config.barPath)),
+    [`system.${config.oldOverBarPath}`]: read(config.overBarPath)
+  });
+  return healed;
+}
+
+/**
  * Puts damage or stress on an actor through the one path every source uses: the amount is held to
  * what the actor can still take, wounds or traumas follow from the Wound or Trauma Threshold, and
  * the sheet's bars move from where they stood. Several amounts - the ticks of a dose - are each

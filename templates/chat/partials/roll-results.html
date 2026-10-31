@@ -17,6 +17,7 @@
         </div>
 
         <div class="alignCenter eclipsephase dicetray">
+            {{#if diceBreakdown.factor}}<strong class="ep-dice-bracket">(</strong>{{/if}}
             {{#each diceBreakdown.hundreds as |die key|}}
             <div class="diecontainer hundreds">
                 <strong class="eyes">{{die.result}}</strong>
@@ -34,9 +35,10 @@
             {{/each}}
             {{#if diceBreakdown.bonus}}
             <div class="diecontainerSmall bonus">
-                <strong class="eyes">{{diceBreakdown.bonus}}</strong>
+                <span class="ep-dice-sign">{{diceBreakdown.bonusSign}}</span><strong class="eyes">{{diceBreakdown.bonusValue}}</strong>
             </div>
             {{/if}}
+            {{#if diceBreakdown.factor}}<strong class="ep-dice-bracket">)</strong><div class="ep-dice-factor"><span class="ep-dice-sign">x</span><strong class="eyes">{{diceBreakdown.factor}}</strong></div>{{/if}}
         </div>
 
     </div>
@@ -48,7 +50,7 @@
         <td class="table-dice-label" style="font-size: 16px;">{{localize "ep2e.roll.announce.total"}}</td>
         <td class="table-dice-result {{resultClass}}" style="font-size: 16px; display: flex; justify-content: center; min-height: 50px; align-items: center; padding: 0!important;"><strong>{{total}}</strong></td>
         <td class="table-dice-label" style="font-size: 16px;">{{localize "ep2e.roll.announce.rollTarget"}}</td>
-        <td class="table-dice-result" style="font-size: 16px;"><strong style="text-decoration: underline; text-decoration-style: double;">{{targetNumber}}</strong></td>
+        <td class="table-dice-result" style="font-size: 16px;"><strong style="text-decoration: underline; text-decoration-style: double;">{{percentile targetNumber}}</strong></td>
       </tr>
     </table>
     <div class="showMore noShow"  data-display="flex" style="background-image: url(systems/eclipsephase/resources/img/background3.webp);">

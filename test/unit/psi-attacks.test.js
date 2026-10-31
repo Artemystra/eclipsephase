@@ -1,11 +1,12 @@
 import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, yieldDefence, defenceDataset, attackPicking } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { registerWeaponAttacks, rollAttackDamage } from "../../module/rolls/damage.js";
-import { registerSleightAttacks, registerPsiTouch, touchComesFirst, useSleightAfterTouch, detectSleightAttack, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "../../module/rolls/psi.js";
+import { registerSleightAttacks, registerPsiTouch, touchComesFirst, useSleightAfterTouch, detectSleightAttack, sleightModifiers, psiRangeBand, isAsync, pushesRange, lockedOutOf, setLockOut, LOCK_OUT_FLAG, PSI_CURSOR, PSI_UNSUITABLE } from "../../module/rolls/psi.js";
 import { targetKinds, CYBERBRAIN_MARKER } from "../../module/common/morp-functions.js";
 import { _ep28_missingPsiArmorMarker } from "../../module/common/migration.js";
 import { RollCheck } from "../../module/rolls/dice.js";
 import { resetStrainFamilies, registerCoreStrainFamilies } from "../../module/rolls/strain-families.js";
+import { isRunningEffect } from "../../module/common/time.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -96,7 +97,7 @@ describe("a psi-gamma sleight used on someone", () => {
   test("a damaging sleight is a damage attack, resisted with WIL, picked with the lightning, unable to reach a synthmorph", async () => {
     const card = await cast(async(), "stab1", 30);
 
-    expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "damage", defence: "will", targets: 1, cursor: PSI_CURSOR, unsuitable: PSI_UNSUITABLE, payload: { armorUsed: "mental", damageTarget: "physical" } });
+    expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "damage", defence: "will", targets: 1, cursor: PSI_CURSOR, strainFamily: "psi", payload: { armorUsed: "mental", damageTarget: "physical" } });
   });
 
   test("a sleight without damage is an attack all the same, whose outcome stays on the cards", async () => {
@@ -202,6 +203,54 @@ describe("what a psi attack does to its targets", () => {
 
     expect(defenceCards().at(-1).getFlag("eclipsephase", "attackDefence").entries[0]).toMatchObject({ outcome: "none", lockedOut: true });
     expect(defenceCards().at(-1).content).toContain("ep2e.chat.defence.lockedOut");
+  });
+
+  test("the lock-out lies on the async as a running effect, refuses that mind in the picker before and after the roll, and ends with the async's recharge", async () => {
+    const caster = async();
+    const ana = mind("Ana");
+    const bo = mind("Bo");
+    const card = await cast(caster, "stab1", 30);
+    await applyTargetedAttack(card, { pick: async () => [{ actor: ana }], confirm: async () => true });
+    seedRolls([33]);
+    await rollDefence(defenceCards().at(-1), ana.uuid, "will", { skipDialog: true, presetOptions: PUBLIC });
+    await until(() => lockedOutOf(caster, ana));
+
+    const lock = caster.effects.find(effect => effect.getFlag("eclipsephase", LOCK_OUT_FLAG));
+    expect(lock.flags.eclipsephase[LOCK_OUT_FLAG]).toEqual({ targetUuid: ana.uuid, attackId: card.getFlag("eclipsephase", "roll").targetedAttack.id });
+    expect(lock.name).toBe('ep2e.psi.lockOut.name {"target":"Ana"}');
+    expect(isRunningEffect(lock)).toBe(true);
+    expect(lockedOutOf(caster, bo)).toBe(false);
+
+    const before = attackPicking({ rolledFrom: "psiSleight", actor: caster, dataset: { itemid: "stab1" }, options: {} });
+    expect(before.refuse({ actor: ana })).toContain("ep2e.targeting.lockedOut");
+    expect(before.refuse({ actor: bo })).toBeNull();
+    let refused = null;
+    const again = await cast(caster, "stab1", 30);
+    await applyTargetedAttack(again, { pick: async ({ refuse }) => { refused = refuse({ actor: ana }); return [{ actor: bo }]; }, confirm: async () => true });
+    expect(refused).toContain("ep2e.targeting.lockedOut");
+
+    registerSleightAttacks();
+    Hooks.callAll("eclipsephase.postRest", caster, "short", {});
+    await until(() => !lockedOutOf(caster, ana));
+    expect(lockedOutOf(caster, ana)).toBe(false);
+  });
+
+  test("a pool point that turns the critical defence lifts the lock-out again, and an ordinary win sets none", async () => {
+    const caster = async();
+    const ana = mind("Ana");
+    await setLockOut({ actorUuid: caster.uuid, targetUuid: ana.uuid, attackId: "a1", locked: true });
+    await setLockOut({ actorUuid: caster.uuid, targetUuid: ana.uuid, attackId: "a1", locked: true });
+    expect(caster.effects.filter(effect => effect.getFlag("eclipsephase", LOCK_OUT_FLAG))).toHaveLength(1);
+    await setLockOut({ actorUuid: caster.uuid, targetUuid: ana.uuid, attackId: "a1", locked: false });
+    expect(lockedOutOf(caster, ana)).toBe(false);
+
+    const card = await cast(caster, "stab1", 30);
+    await applyTargetedAttack(card, { pick: async () => [{ actor: ana }], confirm: async () => true });
+    seedRolls([40]);
+    await rollDefence(defenceCards().at(-1), ana.uuid, "will", { skipDialog: true, presetOptions: PUBLIC });
+    await until(() => defenceCards().at(-1).getFlag("eclipsephase", "attackDefence").entries[0].outcome);
+    expect(defenceCards().at(-1).getFlag("eclipsephase", "attackDefence").entries[0].outcome).toBe("none");
+    expect(lockedOutOf(caster, ana)).toBe(false);
   });
 
   test("Psychic Stab's damage meets the target's mental armour, WIL / 3 from Psi Armor", async () => {

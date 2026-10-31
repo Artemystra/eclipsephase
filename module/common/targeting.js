@@ -176,16 +176,43 @@ export function targetLabel({ multi, left, marked }) {
 }
 
 /**
- * The gap between two tokens on the canvas, edge to edge, in the scene's distance units.
+ * The gap between two tokens on the canvas, edge to edge, in the scene's distance units. On a square
+ * or hex grid it counts the whole cells between them, by the scene's own diagonal rule.
  * @param {Object} a - A token, with bounds {x, y, width, height} in pixels
  * @param {Object} b - Another token
  * @param {Object} grid - size (pixels per square) and distance (units per square)
  * @returns {Number} The gap, 0 when they touch or overlap
  */
 export function tokenGap(a, b, grid) {
+  if (hasCells(grid) && typeof grid.measurePath === "function") {
+    let nearest = Infinity;
+    for (const from of cellCentres(a, grid)) {
+      for (const to of cellCentres(b, grid)) {
+        nearest = Math.min(nearest, from.x === to.x && from.y === to.y ? 0 : grid.measurePath([from, to]).distance);
+      }
+    }
+    return Math.max(0, nearest - (Number(grid.distance) || 1));
+  }
   const gapX = Math.max(0, a.bounds.x - (b.bounds.x + b.bounds.width), b.bounds.x - (a.bounds.x + a.bounds.width));
   const gapY = Math.max(0, a.bounds.y - (b.bounds.y + b.bounds.height), b.bounds.y - (a.bounds.y + a.bounds.height));
   return Math.hypot(gapX, gapY) / (Number(grid?.size) || 1) * (Number(grid?.distance) || 1);
+}
+
+/**
+ * The middles of the grid cells a token covers.
+ * @param {Object} token - A token, with bounds {x, y, width, height} in pixels and optionally its document
+ * @param {Object} grid - The scene's grid, with cells
+ * @returns {Object[]} Canvas coordinates, at least one
+ */
+function cellCentres(token, grid) {
+  const occupied = token.document?.getOccupiedGridSpaceOffsets?.() ?? [];
+  if (occupied.length) return occupied.map(offset => grid.getCenterPoint(offset));
+  const { x, y, width, height } = token.bounds;
+  const points = [];
+  for (let py = y + grid.size / 2; py < y + height; py += grid.size) {
+    for (let px = x + grid.size / 2; px < x + width; px += grid.size) points.push(grid.getCenterPoint(grid.getOffset({ x: px, y: py })));
+  }
+  return points.length ? points : [grid.getCenterPoint(grid.getOffset({ x: x + width / 2, y: y + height / 2 }))];
 }
 
 /**
@@ -447,7 +474,7 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     const measure = picking.measure?.(form) ?? null;
     let refuse = picking.refuseFor ? picking.refuseFor(form) : picking.refuse;
     const zone = picking.area?.(form) ?? null;
-    let options = { multi: any || count > 1, max: count, within: !any && count > 1 ? 1 : null };
+    let options = { multi: any || count > 1, max: count, within: !any && count > 1 && picking.within !== null ? 1 : null };
     const restoreSheets = zone ? sheetsAside() : () => {};
     if (zone) {
       const area = await place({ ...zone, asideSheets: false });

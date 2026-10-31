@@ -1,4 +1,6 @@
+import { listLandingRules } from "../api/registry.js";
 import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText, followingTooltips } from "../common/general-sheet-functions.js";
+import { sleightDamageMode } from "../rolls/psi.js";
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
 import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
 import { choosePayload } from "../common/drugs.js";
@@ -155,6 +157,11 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
 
     context.config = CONFIG.eclipsephase;
     context.item = item;
+    if (item.type === "aspect") context.sleightDamageMode = sleightDamageMode(item);
+    if (item.type === "aspect") {
+      context.landingRuleOn = !["none", "", undefined, null].includes(item.system.landingRule);
+      context.landingRules = { select: "ep2e.item.aspect.table.landingRule.select", ...Object.fromEntries(listLandingRules().map(rule => [rule.id, rule.label])) };
+    }
     context.editable = this.isEditable;
 
     if(item.type !== "knowSkill" && item.type !== "specialSkill"){
@@ -406,6 +413,11 @@ async _onRender(context, options) {
   const html = this.element;
   const item = this.document;
   if (!html) return;
+
+  html.querySelector("[data-landing-rule-toggle]")?.addEventListener("change", event => {
+    event.stopPropagation();
+    item.update({ "system.landingRule": event.currentTarget.checked ? "select" : "none" });
+  });
   followingTooltips(html, html);
 
   const windowHeader = html.querySelector('.window-header');

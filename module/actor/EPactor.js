@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js"
 import { applyDamage } from "../rolls/damage.js"
-import { endAllChiPushes } from "../rolls/psi.js"
+import { endAllChiPushes, sustainSummary, actorStrainFamily } from "../rolls/psi.js"
+import { getStrainFamily } from "../rolls/strain-families.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/morp-functions.js"
 import { globalModifiers } from "../rolls/modifiers.js";
 
@@ -246,6 +247,8 @@ export default class EPactor extends Actor {
     }
 
     // Moxie skills
+    const familyLabel = getStrainFamily(actorStrainFamily(actorWhole)).label;
+    if (familyLabel && actorModel.skillsMox.psi) actorModel.skillsMox.psi.name = familyLabel;
     for (let [key, skill] of Object.entries(actorModel.skillsMox)) {
       skill.mod = eval(skill.mod) + (skill.chiMod ? (eval(skill.chiMod)*chiMultiplier) : 0);
       this._calculateSkillValue(key,skill,actorModel,this.type);
@@ -773,6 +776,9 @@ export default class EPactor extends Actor {
     for (const { label, modifier, comment } of globalModifiers(actorWhole)) {
       actorModel.currentStatus.specialModifiers.push({ label, modifier, comment, flag: "globalMod" });
     }
+
+    const sustained = sustainSummary(actorWhole);
+    if (sustained) actorModel.currentStatus.specialModifiers.push({ ...sustained, flag: "sustain" });
 
     Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);
 

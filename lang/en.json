@@ -151,7 +151,6 @@
         "noDosesLeft": "{name} has no doses left.",
         "doseCheckRolled": "This check has already been rolled.",
         "doseNoScene": "Open a scene to pick a target on it.",
-        "doseNeedsGM": "A GM needs to be connected to hand this dose over.",
         "doseNoSelection": "Select a token first.",
         "doseNeedsClaimant": "Assign yourself a character, or as GM select a token, to take this dose.",
         "doseAlreadyUsed": "This dose has already been used.",
@@ -159,7 +158,8 @@
         "ammoPackNotTaken": "{name} is an ammunition pack: load it into a weapon instead.",
         "noPlacedToken": "This actor isn't represented by a placed token right now.",
         "attackDelivered": "This attack has already been applied to its targets.",
-        "attackNoPayload": "The weapon does not know which drug it is loaded with. Reload it first."
+        "attackNoPayload": "The weapon does not know which drug it is loaded with. Reload it first.",
+        "needsGM": "A GM needs to be connected to carry the effect over."
       },
       "button": {
         "edit": "Edit",
@@ -920,6 +920,70 @@
           "playWithPrey": "Play with Prey",
           "protectTribe": "Protect Tribe"
         }
+      },
+      "lockOut": {
+        "name": "Locked out: {target}",
+        "description": "{target} defended with a critical success: this async may not target their mind again until their next recharge."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Social skill tests against them",
+        "basiliskHacks": "Resisting basilisk hacks"
+      },
+      "sustain": {
+        "name": "Sustaining: {sleight} ({targets})",
+        "description": "You sustain {sleight}: -10 to all other skill tests while it lasts. It ends when you end it, or when the async moves farther than Close range + 10 m from the target.",
+        "outOfReach": "{target} is {distance} m from {async} - beyond the {reach} m at which {sleight} can be sustained.",
+        "end": "End Sustaining",
+        "endCopy": "End sustaining this sleight? Its effect on the targets ends with it.",
+        "summary": "Sustains Psi",
+        "endTip": "Sustained - end sustaining",
+        "pickCopy": "You sustain this sleight on more than one target. Tick those you want to stop sustaining it on.",
+        "nameSelf": "Sustaining: {sleight}"
+      },
+      "healing": {
+        "card": "{name} heals {amount} {kind} ({sleight}).",
+        "stress": "stress",
+        "damage": "damage",
+        "rollTitle": "Healed"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} may spend their next complex action as a short recharge, without the usual time. It gives no extra recharge.",
+        "errorGM": "{sleight} on {target}: a skill test of your choice fails. Use the button on the test's card before the effect runs out.",
+        "blockSkill": "{sleight} landed on {target}. Choose the skill to block.",
+        "blockSkillButton": "Choose Skill",
+        "boostSkill": "{sleight} landed on {target}. Choose the physical skill to raise.",
+        "boostSkillButton": "Choose Skill",
+        "boostCopy": "Which physical skill does the sleight raise?",
+        "failSkill": "{sleight} landed on {target} with a superior success. Choose how the error strikes.",
+        "failSkillButton": "Choose",
+        "alterDuration": "{sleight} landed on {target}. Choose a running drug or toxin.",
+        "alterDurationButton": "Choose Substance",
+        "noSubstance": "{target} has no running drug or toxin.",
+        "alterHeader": "Alter a Substance",
+        "alterCopy": "Which drug or toxin do you alter?",
+        "shorter": "Halve Duration",
+        "longer": "Increase Duration",
+        "errorHeader": "Induce an Error",
+        "superiorFailure": "Superior Failure",
+        "errorCopy": "How does the error strike?",
+        "failSkillOption": "Fail Skill",
+        "alterQuestion": "How do you want to manipulate the effect?",
+        "forcedFailure": "Failed due to an induced error.",
+        "skillHeader": "Choose a Skill",
+        "skillCopy": "Which skill does the sleight strike?",
+        "shortened": "{effect} on {target} now lasts half as long as usual.",
+        "lengthened": "{effect} on {target} now lasts 1.5 times longer than usual.",
+        "superiorChosen": "{sleight} on {target}: a skill test of the GM's choice becomes a superior failure, with the button on the test's card.",
+        "errorKind": {
+          "auto": "Fail",
+          "superior": "Superior Fail"
+        },
+        "skillChosen": "{sleight} on {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} blocks {skill}: it cannot be used, not even by defaulting."
       }
     },
     "gmInfo": {
@@ -1073,7 +1137,39 @@
           "damage": {
             "label": "Damage",
             "physical": "Physical",
-            "mental": "Mental"
+            "mental": "Mental",
+            "mode": {
+              "damage": "Inflicting",
+              "heal": "Healing",
+              "none": "No Damage"
+            },
+            "targetLabel": "Target"
+          },
+          "targetRule": {
+            "label": "Possible Targets",
+            "any": "Anyone",
+            "self": "Self only",
+            "others": "Others only"
+          },
+          "affects": {
+            "label": "Works on",
+            "target": "Target",
+            "async": "Async",
+            "both": "Both"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiply Effects",
+            "tip": "Each superior success applies the effect once more"
+          },
+          "landingRule": {
+            "label": "Special Effect",
+            "tip": "Add special effect on successful hit",
+            "select": "- Select -",
+            "boostSkill": "Raise a physical skill",
+            "blockSkill": "Block a skill",
+            "failSkill": "Induce an error",
+            "recharge": "Quick recharge",
+            "alterDuration": "Alter a substance's duration"
           }
         }
       },
@@ -1682,7 +1778,8 @@
           "proximity": "Sensor reach",
           "payload": "Payload",
           "noPayload": "No payload loaded"
-        }
+        },
+        "sleightOptions": "Sleights"
       },
       "successType": {
         "success": "Success",
@@ -2125,7 +2222,7 @@
           "inCover": "in cover"
         },
         "severalTargets": "Several targets",
-        "resist": "Resist (WIL)",
+        "resist": "Resist ({aptitude})",
         "yield": "Don't resist",
         "lockedOut": "Critical: the async is locked out of this mind until they recharge.",
         "touchLabel": "{name} by touch",
@@ -2141,6 +2238,7 @@
         "payloadLabel": "Payload",
         "doseInfo": "Dose"
       },
+      "failGone": "This failure is no longer available.",
       "poolSpent": {
         "swapped": "{name} used a {pool} point to swap the dice",
         "upgraded": "{name} used a {pool} point to raise the result",
@@ -2447,7 +2545,9 @@
       "outsideArea": "That token is outside the area.",
       "tooMany": "At this range, this attack strikes at most {max} targets.",
       "ownBlast": "{name} is caught in their own blast.",
-      "armedElsewhere": "That explosive lies on another scene - view that scene first."
+      "armedElsewhere": "That explosive lies on another scene - view that scene first.",
+      "lockedOut": "{name}'s mind is closed to you until your next recharge.",
+      "notOnSelf": "This sleight may not be used on yourself."
     }
   },
   "BEHAVIOR": {

@@ -3181,21 +3181,81 @@ export function _ep285_sealEffects(item, catalogue) {
   return seals.map(data => foundry.utils.deepClone(data));
 }
 
+// The sleight compendium whose entries say where a sleight works and what it leaves behind.
+const _ep285_SLEIGHT_PACK = "eclipsephase.psi-sleights";
+const _ep285_SLEIGHT_FIELDS = ["targetRule", "affects", "repeatPerSuperior", "landingRule", "rollOptions", "damage"];
+
+/**
+ * The gamma and epsilon sleights of the system compendium, by name: their target rule, who they
+ * work on, whether superior successes repeat them, their options and their blueprint effects.
+ * @returns {Promise<Map<String, Object>>} system (the fields above) and effects, per name
+ */
+async function _ep285_sleightCatalogue() {
+  const catalogue = new Map();
+  const pack = game.packs.get(_ep285_SLEIGHT_PACK);
+  if (!pack) return catalogue;
+  for (const sleight of await pack.getDocuments()) {
+    if (sleight.type !== "aspect" || !["gamma", "epsilon"].includes(sleight.system?.psiType)) continue;
+    const source = sleight._source?.system ?? {};
+    const effects = Array.from(sleight.effects ?? []).map(effect => {
+      const data = typeof effect.toObject === "function" ? effect.toObject() : foundry.utils.deepClone(effect);
+      delete data._id;
+      return data;
+    });
+    catalogue.set(sleight.name, { system: Object.fromEntries(_ep285_SLEIGHT_FIELDS.filter(field => field in source).map(field => [field, foundry.utils.deepClone(source[field])])), effects });
+  }
+  return catalogue;
+}
+
+/**
+ * What a sleight placed before 2.8.5 needs: "Actions Turns" written as the action-turn key the
+ * sheet knows, and from its compendium namesake the target rule, who it works on, its options, its
+ * healing and its blueprint effects, where the sleight itself has none of them.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep285_sleightCatalogue read
+ * @returns {Object|null} update (item update or null) and effects (data to create), or null
+ */
+export function _ep285_sleightUpdate(item, catalogue) {
+  if (item.type !== "aspect") return null;
+  const source = item._source?.system ?? item.system ?? {};
+  const update = {};
+  if (source.duration === "Actions Turns") update["system.duration"] = "action";
+  const namesake = catalogue.get(item.name);
+  let effects = [];
+  if (namesake) {
+    for (const [field, value] of Object.entries(namesake.system)) {
+      const own = source[field];
+      if (field === "damage") {
+        if (value?.mode === "heal" && own?.mode !== "heal") update["system.damage"] = foundry.utils.deepClone(value);
+        continue;
+      }
+      const unset = own === undefined || own === null || (Array.isArray(own) && !own.length) || (field === "targetRule" && own === "any") || (field === "affects" && own === "target") || (field === "landingRule" && own === "none") || (field === "repeatPerSuperior" && own === false);
+      if (unset && JSON.stringify(own) !== JSON.stringify(value)) update[`system.${field}`] = foundry.utils.deepClone(value);
+    }
+    if (!Array.from(item.effects ?? []).length) effects = namesake.effects.map(data => foundry.utils.deepClone(data));
+  }
+  if (!Object.keys(update).length && !effects.length) return null;
+  return { update: Object.keys(update).length ? update : null, effects };
+}
+
 /**
  * Whether any weapon, ammunition or grenade in the world still carries text where 2.8.5 reads a
- * number or a structured area, or a mask or suit still lacks the effect that seals its wearer.
+ * number or a structured area, a mask or suit still lacks the effect that seals its wearer, or a
+ * sleight lacks what 2.8.5 reads off it.
  * @returns {Promise<Boolean>} True when at least one item needs work
  */
 export async function migrationPre285Needed() {
   const seals = await _ep285_sealCatalogue();
-  const needs = item => _ep285_weaponUpdate(item, new Map())?.update != null || _ep285_sealEffects(item, seals).length > 0;
+  const sleights = await _ep285_sleightCatalogue();
+  const needs = item => _ep285_weaponUpdate(item, new Map())?.update != null || _ep285_sealEffects(item, seals).length > 0 || _ep285_sleightUpdate(item, sleights) !== null;
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
 /**
  * Turns every weapon range in the world into metres and every munition's area text into a
  * structured area, fixes the munitions' armour type and fills payloads from the system
- * compendiums, and gives masks and suits the effect that seals their wearer: the world's own items,
+ * compendiums, gives masks and suits the effect that seals their wearer, and gives sleights their
+ * target rule, options and blueprint effects from the system compendium: the world's own items,
  * every actor's embedded ones and the world's item compendiums. Ranges that cannot be read are
  * listed to the GM in one message.
  * @param {Boolean} startMigration - Whether the user confirmed the migration
@@ -3225,6 +3285,18 @@ export async function migrationPre285(startMigration) {
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => ["gear", "armor", "ware"].includes(item.type),
+    includeCompendiums: true
+  });
+
+  const sleights = await _ep285_sleightCatalogue();
+  await forEachItem(async item => {
+    const result = _ep285_sleightUpdate(item, sleights);
+    if (!result) return;
+    if (result.update) await item.update(result.update);
+    if (result.effects.length) await item.createEmbeddedDocuments("ActiveEffect", result.effects);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "aspect",
     includeCompendiums: true
   });
 

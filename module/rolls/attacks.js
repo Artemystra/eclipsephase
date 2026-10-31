@@ -2,7 +2,8 @@ import { RollCheck, isCriticalSuccess, isHit } from "./dice.js";
 import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
-import { gammaSleight, sleightModifiers, psiRangeBand, isAsync, pushesRange, PSI_CURSOR, PSI_UNSUITABLE } from "./psi.js";
+import { getStrainFamily } from "./strain-families.js";
+import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, PSI_CURSOR } from "./psi.js";
 import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
@@ -97,6 +98,32 @@ export function refuseUnsuitable(unsuitable = []) {
   return unsuitable.length ? token => (token.actor ? unsuitableTarget(token.actor, unsuitable) : null) : null;
 }
 
+const APTITUDE_SHORT = { cog: "cognition", int: "intuition", ref: "reflexes", sav: "savvy", som: "somatics", wil: "willpower" };
+
+/**
+ * What a target resists a psi attack with.
+ * @param {Object} attack - The attack
+ * @returns {Object} aptitude and pool
+ */
+function resistOf(attack) {
+  return getStrainFamily(attack?.strainFamily ?? "psi").targeting.resist;
+}
+
+/**
+ * A picker's refusal for the targets a strain family's sleights do not work on.
+ * @param {String} [family] - The family
+ * @returns {Function|null} refuse(token), or null when the attack names no family
+ */
+export function refuseForFamily(family) {
+  if (!family) return null;
+  const { refuses } = getStrainFamily(family).targeting;
+  return token => {
+    if (!token.actor) return null;
+    const kind = refuses(token.actor, targetKinds(token.actor));
+    return kind ? game.i18n.format("ep2e.targeting.unsuitable", { name: token.actor.name, kind: game.i18n.localize(`ep2e.targeting.kind.${kind}`) }) : null;
+  };
+}
+
 /**
  * Builds the attack a roll carries: either one the caller set up already, or one a registered
  * effect recognises in the roll. Targets picked in the dialog come along with it.
@@ -118,8 +145,17 @@ export function attackFor(context) {
     targetNames: [],
     ...(found ? { effect: found.effect, ...found.found } : {}),
     ...(preset ?? {}),
-    ...(preTargets.length ? { preTargets } : {})
+    ...(preTargets.length && !found?.found?.selfOnly ? { preTargets } : {})
   };
+}
+
+/**
+ * A picker's refusal of the attacker's own token, for a sleight that may not be used on oneself.
+ * @param {Actor} actor - The attacker
+ * @returns {Function} refuse(token) for pickTokensOnCanvas
+ */
+export function refuseOwnToken(actor) {
+  return token => token.actor && token.actor.uuid === actor?.uuid ? game.i18n.localize("ep2e.targeting.notOnSelf") : null;
 }
 
 /**
@@ -154,7 +190,11 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   if (handlers?.ready && !handlers.ready(attack)) return null;
 
   const any = attack.targets === ANY_TARGETS;
-  const tokens = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, refuse: refuseUnsuitable(attack.unsuitable), ...(attack.cursor ?? {}) });
+  const refuseSelf = attack.refuseSelf && attacker ? refuseOwnToken(attacker) : null;
+  const refuse = refuseAny(refuseUnsuitable(attack.unsuitable), refuseForFamily(attack.strainFamily), attack.defence === "will" && attacker ? refuseLockedOut(attacker) : null, refuseSelf);
+  const picked = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, refuse, ...(attack.cursor ?? {}) });
+  const tokens = refuseSelf ? (picked ?? []).filter(token => !refuseSelf(token)) : picked;
+  if (refuseSelf && tokens.length < (picked?.length ?? 0)) ui.notifications.warn(game.i18n.localize("ep2e.targeting.notOnSelf"));
   if (!tokens?.length) return null;
   if (!any && tokens.length < attack.targets && !(await confirm(attack, tokens.length))) return null;
   const targets = tokens.map(token => token.actor).filter(Boolean);
@@ -167,10 +207,13 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   if (message.getFlag("eclipsephase", "taskCard")) await updateCard(message, "taskCard", "targets", { names, uuids }, { extra: delivered });
   else await message.update(delivered);
   const sent = { ...attack, delivered: true, targetNames: names, roll, messageId: message.id };
+  const own = attack.defence === "will" && attacker ? targets.filter(target => target.uuid === attacker.uuid) : [];
+  for (const target of own) await handlers?.resolve?.(sent, target, "hit", { kind: "self" });
+  const others = targets.filter(target => !own.includes(target));
   if (attack.willing) {
-    for (const target of targets) await handlers?.resolve?.(sent, target, "hit", { kind: "willing" });
+    for (const target of others) await handlers?.resolve?.(sent, target, "hit", { kind: "willing" });
   }
-  else await postDefenceCards(sent, targets);
+  else if (others.length) await postDefenceCards(sent, others);
   return targets;
 }
 
@@ -251,7 +294,7 @@ function defenceButton(cls, label, { target = "", kind = "", primary = false, gm
  */
 function defenceChoices(attack, entry) {
   const uuid = entry.uuid;
-  if (attack.defence === "will") return { pair: [defenceButton("defenceYield", "ep2e.chat.defence.yield", { target: uuid }), defenceButton("defenceRoll", "ep2e.chat.defence.resist", { target: uuid, kind: "will" })], primary: null };
+  if (attack.defence === "will") return { pair: [defenceButton("defenceYield", "ep2e.chat.defence.yield", { target: uuid }), defenceButton("defenceRoll", game.i18n.format("ep2e.chat.defence.resist", { aptitude: game.i18n.localize(`ep2e.actorSheet.aptitudes.${APTITUDE_SHORT[resistOf(attack).aptitude]}`) }), { target: uuid, kind: "will" })], primary: null };
   const dodge = defenceButton("defenceRoll", "ep2e.chat.defence.dodge", { target: uuid, kind: "dodge" });
   if (attack.defence === "melee") return { pair: [dodge, defenceButton("defenceRoll", "ep2e.chat.defence.parry", { target: uuid, kind: "parry" })], primary: null };
   if (attack.coverOption) return { pair: [defenceButton("defenceCover", attack.coverOption === "remain" ? "ep2e.chat.defence.remainCover" : "ep2e.chat.defence.cover", { target: uuid }), dodge], primary: null };
@@ -385,8 +428,9 @@ export async function postDefenceCards(attack, targets, { gmOnly = false, detail
  */
 export function defenceDataset(actor, attack, kind) {
   if (kind === "will") {
-    const will = Number(actor.system.aptitudes?.wil?.roll) || 0;
-    return { type: "skill", key: "system.aptitudes.wil.value", apttype: "wil", name: game.i18n.localize(actor.system.aptitudes?.wil?.name ?? "WIL"), rollvalue: attack.payload?.halveWill ? Math.floor(will / 2) : will, pooltype: "Moxie", defence: true };
+    const { aptitude, pool } = resistOf(attack);
+    const will = Number(actor.system.aptitudes?.[aptitude]?.roll) || 0;
+    return { type: "skill", key: `system.aptitudes.${aptitude}.value`, apttype: aptitude, name: game.i18n.localize(actor.system.aptitudes?.[aptitude]?.name ?? aptitude.toUpperCase()), rollvalue: attack.payload?.halveWill ? Math.floor(will / 2) : will, pooltype: pool, defence: true };
   }
   if (kind === "parry") {
     return { type: "skill", key: "melee", name: game.i18n.localize("ep2e.skills.vigorSkills.melee"), rollvalue: actor.system.skillsVig?.melee?.roll ?? 0, pooltype: "Vigor", defence: true };
@@ -593,7 +637,7 @@ export function exposureModifiers(actor, dataset) {
  */
 export function registerTargetedAttackHooks() {
   Hooks.on("eclipsephase.preRoll", context => {
-    if (context?.modifiers) context.modifiers.push(...exposureModifiers(context.actor, context.dataset), ...sleightModifiers(context, targetKinds));
+    if (context?.modifiers) context.modifiers.push(...exposureModifiers(context.actor, context.dataset), ...sleightModifiers(context, targetKinds), ...sustainModifiers(context));
     if (context?.flags?.attackDefence) context.flags.attackDefence.behindCover = isChecked(context.options?.behindCover);
     if (context?.flags?.targetedAttack?.id) return;
     const attack = attackFor(context);
@@ -624,6 +668,7 @@ export function registerTargetedAttackHooks() {
     const outcome = defenceOutcome(attack, { passed, result, value, behindCover: defence.behindCover || entry?.nearEdge === true || entry?.shadow === true });
     const lockedOut = attack.defence === "will" && outcome === "none" && isCriticalSuccess(result);
     await markDefenceRolled(card, defence.targetUuid, outcome, { lockedOut });
+    if (attack.defence === "will") await setLockOut({ actorUuid: state.attack.actorUuid, targetUuid: defence.targetUuid, attackId: state.attack.id, locked: lockedOut });
     const target = await fromUuid(defence.targetUuid);
     if (target) await EFFECTS.get(state.attack.effect)?.resolve?.(state.attack, target, outcome, { byPool, defenceId: defence.defenceId, kind: defence.kind ?? "dodge" });
   });
@@ -1844,19 +1889,20 @@ export function registerArmedBlasts() {
 
 /**
  * What a psi-gamma sleight measures while its targets are picked: the distance from the async's
- * token with its psi range category (Core p.276), doubled against asyncs and by the Increased Range
- * push.
+ * token with its psi range category (Core p.276), doubled as its strain family says and by the
+ * Increased Range push.
  * @param {Object} rollContext - The roll context
  * @returns {Function} measure(form)
  */
 function psiMeasuring(rollContext) {
+  const targeting = sleightTargeting(gammaSleight(rollContext));
   return form => {
     const origin = attackerToken(rollContext.actor);
     if (!origin) return null;
     const pushRange = pushesRange({ actor: rollContext.actor, options: { push: form?.elements?.push?.value } });
     return {
       from: origin,
-      describe: (distance, token) => distanceText(distance, psiRangeBand(distance, { async: isAsync(token?.actor), pushRange }))
+      describe: (distance, token) => distanceText(distance, psiRangeBand(distance, { async: !!token?.actor && targeting.doublesRange(token.actor), pushRange }))
     };
   };
 }
@@ -1877,9 +1923,13 @@ export function attackPicking(rollContext) {
   const preset = rollContext?.flags?.targetedAttack;
   const weapon = rollContext?.weapon?.weapon ?? null;
   const rolledFrom = rollContext?.rolledFrom;
-  if (!preset && gammaSleight(rollContext)) {
-    const unsuitable = refuseUnsuitable(PSI_UNSUITABLE);
-    return { cursor: PSI_CURSOR, refuse: unsuitable, refuseFor: form => form?.elements?.psiTouch?.checked ? refuseAny(unsuitable, refuseBeyondTouch(rollContext.actor)) : unsuitable, measure: psiMeasuring(rollContext), count: form => form?.elements?.push?.value === "target" && !form?.elements?.psiTouch?.checked ? 2 : 1, minimum: () => 1 };
+  const sleight = preset ? null : gammaSleight(rollContext);
+  if (sleight) {
+    const rule = sleight.system.targetRule;
+    if (rule === "self") return null;
+    const actor = rollContext.actor;
+    const unsuitable = refuseAny(refuseForFamily(sleight.system.strainFamily ?? "psi"), actor ? refuseLockedOut(actor) : null, rule === "others" && actor ? refuseOwnToken(actor) : null);
+    return { cursor: PSI_CURSOR, within: null, refuse: unsuitable, refuseFor: form => form?.elements?.psiTouch?.checked ? refuseAny(unsuitable, refuseBeyondTouch(actor)) : unsuitable, measure: psiMeasuring(rollContext), count: form => gammaPushes(actor, form?.elements?.push?.value).has("target") && !form?.elements?.psiTouch?.checked ? 2 : 1, minimum: () => 1 };
   }
   if (!preset && !(weapon && (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon" || rolledFrom === "grenade"))) return null;
   if (preset?.preTargets?.length) return null;

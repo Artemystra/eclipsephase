@@ -147,7 +147,6 @@
         "noDosesLeft": "{name} 没有剩余剂量。",
         "doseCheckRolled": "这次检定已经掷过了。",
         "doseNoScene": "请先打开一个场景，再在其中选择目标。",
-        "doseNeedsGM": "必须有 GM 在线才能交付这一剂。",
         "doseNoSelection": "请先选中一个令牌。",
         "doseNeedsClaimant": "请为自己指定角色，或以 GM 身份选中一个令牌，来服用这一剂。",
         "doseAlreadyUsed": "这一剂已经被使用。",
@@ -155,7 +154,8 @@
         "ammoPackNotTaken": "{name} 是弹药包：请将其装入武器，而不是服用。",
         "noPlacedToken": "该角色当前没有已放置的指令牌。",
         "attackDelivered": "此攻击已应用于其目标。",
-        "attackNoPayload": "武器不知道装填的是哪种药物。请先重新装填。"
+        "attackNoPayload": "武器不知道装填的是哪种药物。请先重新装填。",
+        "needsGM": "需要GM在线才能转移效果。"
       },
       "button": {
         "edit": "编辑",
@@ -895,6 +895,70 @@
           "playWithPrey": "玩弄猎物",
           "protectTribe": "保护部落"
         }
+      },
+      "lockOut": {
+        "name": "被拒之门外：{target}",
+        "description": "{target}以关键成功进行了防御：此异能者在下次恢复之前不能再以其心智为目标。"
+      },
+      "sleightEffect": {
+        "against": "{sleight}（{target}）"
+      },
+      "option": {
+        "socialTests": "对目标的社交技能检定",
+        "basiliskHacks": "抵抗蛇怪骇入"
+      },
+      "sustain": {
+        "name": "维持：{sleight}（{targets}）",
+        "description": "你在维持{sleight}：持续期间其他所有技能检定-10。由你结束，或异能者离目标超过近距离+10米时结束。",
+        "outOfReach": "{target}距{async} {distance}米，超出可维持{sleight}的{reach}米。",
+        "end": "结束维持",
+        "endCopy": "结束维持此异能？它对目标的效果随之结束。",
+        "summary": "维持异能",
+        "endTip": "维持中 - 结束维持",
+        "pickCopy": "你正在多个目标上维持此异能。勾选你想停止维持的目标。",
+        "nameSelf": "维持中：{sleight}"
+      },
+      "healing": {
+        "card": "{name}恢复了{amount}点{kind}（{sleight}）。",
+        "stress": "压力",
+        "damage": "伤害",
+        "rollTitle": "已恢复"
+      },
+      "choice": {
+        "recharge": "{sleight}：{target} 可将下一个复杂动作用作短暂恢复，无需通常时间。不提供额外恢复。",
+        "errorGM": "{sleight} 作用于 {target}：由你选择的一次技能检定失败。请在效果结束前使用检定卡片上的按钮。",
+        "blockSkill": "{sleight} 命中 {target}。请选择要封锁的技能。",
+        "blockSkillButton": "选择技能",
+        "boostSkill": "{sleight} 已作用于 {target}。选择要提升的身体技能。",
+        "boostSkillButton": "选择技能",
+        "boostCopy": "该异能提升哪项身体技能？",
+        "failSkill": "{sleight} 以卓越成功命中 {target}。请选择失误的方式。",
+        "failSkillButton": "选择",
+        "alterDuration": "{sleight} 命中 {target}。请选择一种生效中的药物或毒素。",
+        "alterDurationButton": "选择物质",
+        "noSubstance": "{target} 没有生效中的药物或毒素。",
+        "alterHeader": "改变物质",
+        "alterCopy": "你要改变哪种药物或毒素?",
+        "shorter": "持续时间减半",
+        "longer": "延长持续时间",
+        "errorHeader": "诱发失误",
+        "superiorFailure": "卓越失败",
+        "errorCopy": "错误如何发生?",
+        "failSkillOption": "使技能失败",
+        "alterQuestion": "你想如何操控该效果?",
+        "forcedFailure": "因诱发错误而失败。",
+        "skillHeader": "选择技能",
+        "skillCopy": "此异能影响哪项技能？",
+        "shortened": "{target} 身上的 {effect} 持续时间现为通常的一半。",
+        "lengthened": "{target} 身上的 {effect} 持续时间现为通常的 1.5 倍。",
+        "superiorChosen": "{sleight} 作用于 {target}：GM 选择的一次技能检定将成为卓越失败，使用检定卡片上的按钮。",
+        "errorKind": {
+          "auto": "失败",
+          "superior": "卓越失败"
+        },
+        "skillChosen": "{sleight} 作用于 {target}：{skill}。",
+        "effectName": "{sleight}：{skill}",
+        "blocked": "{sleight} 封锁了 {skill}：无法使用，也不能以默认值进行。"
       }
     },
     "gmInfo": {
@@ -1044,7 +1108,39 @@
           "damage": {
             "label": "伤害",
             "physical": "物理",
-            "mental": "精神"
+            "mental": "精神",
+            "mode": {
+              "damage": "造成伤害",
+              "heal": "治疗",
+              "none": "无伤害"
+            },
+            "targetLabel": "目标"
+          },
+          "targetRule": {
+            "label": "可选目标",
+            "any": "任何人",
+            "self": "仅自身",
+            "others": "仅他人"
+          },
+          "affects": {
+            "label": "作用于",
+            "target": "目标",
+            "async": "异能者",
+            "both": "双方"
+          },
+          "repeatPerSuperior": {
+            "label": "效果倍增",
+            "tip": "每个优秀成功再施加一次效果"
+          },
+          "landingRule": {
+            "label": "特殊效果",
+            "tip": "命中成功时添加特殊效果",
+            "select": "- 选择 -",
+            "boostSkill": "提升一项身体技能",
+            "blockSkill": "封锁技能",
+            "failSkill": "诱发失误",
+            "recharge": "快速恢复",
+            "alterDuration": "改变物质持续时间"
           }
         }
       },
@@ -1630,7 +1726,8 @@
           "proximity": "感应范围",
           "payload": "载荷",
           "noPayload": "未装载载荷"
-        }
+        },
+        "sleightOptions": "异能"
       },
       "successType": {
         "success": "Success",
@@ -2062,7 +2159,7 @@
           "inCover": "在掩体中"
         },
         "severalTargets": "多个目标",
-        "resist": "抵抗（意志）",
+        "resist": "抵抗({aptitude})",
         "yield": "不抵抗",
         "lockedOut": "大成功：异能者在恢复前无法再进入此心智。",
         "touchLabel": "{name}（接触）",
@@ -2078,6 +2175,7 @@
         "payloadLabel": "载荷",
         "doseInfo": "剂量"
       },
+      "failGone": "此失败已不可用。",
       "poolSpent": {
         "swapped": "{name} 消耗了一点{pool}来交换骰子",
         "upgraded": "{name} 消耗了一点{pool}来提升结果",
@@ -2366,7 +2464,9 @@
       "outsideArea": "该标记在范围之外。",
       "tooMany": "在此距离上，此攻击最多命中 {max} 个目标。",
       "ownBlast": "{name} 身处自己的爆炸之中。",
-      "armedElsewhere": "该爆炸物位于另一个场景——请先查看该场景。"
+      "armedElsewhere": "该爆炸物位于另一个场景——请先查看该场景。",
+      "lockedOut": "在你下次恢复之前，{name}的心智对你关闭。",
+      "notOnSelf": "此异能不能对自己使用。"
     }
   },
   "BEHAVIOR": {

@@ -2,7 +2,7 @@
 // themselves. Kept free of imports, so any module can use it without pulling in the sheet code.
 
 export const SYSTEM_SOCKET = "system.eclipsephase";
-const NO_GM_KEY = "ep2e.actorSheet.warnings.doseNeedsGM";
+const NO_GM_KEY = "ep2e.actorSheet.warnings.needsGM";
 
 /**
  * Whether this client is the active GM - the one client that acts on what the others ask for.

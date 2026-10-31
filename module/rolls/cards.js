@@ -1,4 +1,5 @@
-import { RollCheck, isHit } from "./dice.js";
+import { RollCheck, isHit, TASK_RESULT_TEXT } from "./dice.js";
+import { getTaskResultText, listFailOptions } from "../api/registry.js";
 import { postCard, ownersAndGMs, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
 import { registerCard, updateCard, storable } from "../common/chat-cards.js";
 import { outcomeLabel } from "./attacks.js";
@@ -18,6 +19,11 @@ registerCard("taskCard", {
   render: state => foundry.applications.handlebars.renderTemplate(TASK_RESULT_TEMPLATE, taskCardView(state)),
   mutations: {
     poolSpent,
+    failed: (state, { resultClass, resultText, note }) => {
+      const rollContext = { ...(state.data.rollContext ?? {}), failureNote: note };
+      const alternatives = { ...(state.data.alternatives ?? {}), options: { swap: false, upgrade: false, mitigate: false } };
+      return { ...state, targets: [], data: { ...state.data, resultClass, resultText, rollContext, alternatives } };
+    },
     targets: (state, { names, uuids = [] }) => ({ ...state, targets: uuids.map((uuid, index) => ({ uuid, name: names[index] ?? "", outcome: null })) }),
     defence: (state, { uuid, outcome, kind = "dodge" }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, outcome, kind } : target) }),
     damageOffered: state => ({ ...state, damageOffered: true }),
@@ -147,6 +153,99 @@ function poolSpent(state, spent) {
  */
 export function spentOrOriginalResult(context) {
   return context.alternatives?.spent && Number.isFinite(context.alternatives.result) ? context.alternatives.result : context.alternatives?.originalResult;
+}
+
+/**
+ * The defence cards an attack card has sent out.
+ * @param {ChatMessage} message - The attack card
+ * @returns {ChatMessage[]} The defence cards
+ */
+function defenceCardsOf(message) {
+  return Array.from(game.messages ?? []).filter(card => card.getFlag?.("eclipsephase", "attackDefence")?.attack?.messageId === message.id);
+}
+
+/**
+ * Whether an attack has already done something a failure could not take back: a defence is in, an
+ * effect landed without one, or its own flow runs on the map.
+ * @param {Object} state - The taskCard flag
+ * @param {Object} [attack] - The attack, as the roll flag has it now
+ * @param {ChatMessage[]} cards - Its defence cards
+ * @returns {Boolean} True when it stays as it is
+ */
+function attackSettled(state, attack, cards) {
+  if (attack?.blast || attack?.suppressive || state.blastLaid || state.damageOffered) return true;
+  if ((state.targets ?? []).some(target => target.outcome)) return true;
+  if (cards.some(card => card.getFlag("eclipsephase", "attackDefence").entries.some(entry => entry.outcome))) return true;
+  if (!attack?.delivered) return false;
+  return attack.willing === true || (attack.defence === "will" && (state.targets ?? []).some(target => target.uuid === attack.actorUuid));
+}
+
+/**
+ * The failures the GM can still put on a task card: none once one was put on it, none once an attack
+ * can no longer be taken back, and none that would not make the result worse.
+ * @param {ChatMessage} message - The card
+ * @returns {Object[]} The entries on offer
+ */
+export function cardFailures(message) {
+  const state = message?.getFlag?.("eclipsephase", "taskCard");
+  const roll = message?.getFlag?.("eclipsephase", "roll");
+  if (!state || !roll?.actorUuid) return [];
+  if (state.data?.rollContext?.failureNote || attackSettled(state, roll.targetedAttack, defenceCardsOf(message))) return [];
+  const actor = fromUuidSync(roll.actorUuid);
+  if (!actor) return [];
+  const current = spentOrOriginalResult(roll);
+  const passed = state.data?.resultClass === "success";
+  return listFailOptions(actor, { skillKey: state.data?.skillKey, message }).filter(option => passed || (current <= 2 && option.result < current));
+}
+
+/**
+ * Puts a failure on a task card, as a pool point turns a result: the card shows it, its pool
+ * controls go, an attack's open defence cards are withdrawn, and what follows from the result settles.
+ * @param {ChatMessage} message - The card
+ * @param {String} id - The failure's id
+ * @returns {Promise<Boolean>} True when it was put on
+ */
+export async function failCard(message, id) {
+  const option = cardFailures(message).find(entry => entry.id === id);
+  if (!option) {
+    ui.notifications.warn(game.i18n.localize("ep2e.chat.failGone"));
+    return false;
+  }
+  const text = (getTaskResultText() ?? TASK_RESULT_TEXT)[option.result];
+  const withdrawn = defenceCardsOf(message);
+  const undelivered = withdrawn.length ? { "flags.eclipsephase.roll.targetedAttack.delivered": false, "flags.eclipsephase.roll.targetedAttack.targetNames": [] } : {};
+  await updateCard(message, "taskCard", "failed", { resultClass: text.class, resultText: text.text, note: option.note }, {
+    extra: { "flags.eclipsephase.roll.alternatives.spent": true, "flags.eclipsephase.roll.alternatives.result": option.result, ...undelivered }
+  });
+  await Promise.all(withdrawn.map(card => card.delete()));
+  await option.spend();
+  const roll = message.getFlag("eclipsephase", "roll");
+  const actor = fromUuidSync(roll.actorUuid);
+  Hooks.callAll("eclipsephase.poolResult", { context: { ...roll, messageId: message.id }, actor, rolledFrom: roll.rolledFrom, newResult: option.result, blind: message.blind, recipientList: message.whisper });
+  return true;
+}
+
+/**
+ * Draws the GM's failure buttons at the end of a task card. A card with none on offer stays as it is.
+ * @param {ChatMessage} message - The rendered message
+ * @param {HTMLElement} html - Its markup
+ * @returns {void}
+ */
+export function drawFailButtons(message, html) {
+  if (!game.user.isGM) return;
+  const failures = cardFailures(message);
+  if (!failures.length) return;
+  const slot = document.createElement("div");
+  slot.className = "chatControls ep-chat-stack";
+  for (const failure of failures) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "chatButton failCard ep-chat-secondary";
+    button.dataset.failId = failure.id;
+    button.textContent = failure.label;
+    slot.append(button);
+  }
+  (html.querySelector(".message-content") ?? html).append(slot);
 }
 
 // A check asked for on a chat card: the card carries a button, the owner rolls from it - spending
