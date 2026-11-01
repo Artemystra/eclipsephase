@@ -318,7 +318,7 @@ describe("the 2.8 armour type per weapon mode", () => {
 
     const rendered = await runLadderFrom("2.7");
 
-    expect(rendered.map(entry => entry.copy)).toContain("notice:2.8");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9");
     expect(actor.items.get("frz1")._source.system.mode1.armorused).toBe("none");
     expect(actor.items.get("own1")._source.system.mode1.armorused).toBe("energy");
     expect(actor.items.get("set1")._source.system.mode1.armorused).toBe("kinetic");
@@ -354,7 +354,7 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
 
     const rendered = await runLadderFrom("2.8");
 
-    expect(rendered.map(entry => entry.copy)).toContain("notice:2.8.5");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9");
     const source = id => actor.items.get(id)._source.system;
     expect([source("pul1").mode1.range, source("pul1").mode2.range, source("pul1").mode2.area]).toEqual([100, 100, { kind: "uniform", radius: 1, reduction: null }]);
     expect([source("gre1").area, source("gre1").armorused]).toEqual([{ kind: "centered", radius: null, reduction: 2 }, "energy"]);

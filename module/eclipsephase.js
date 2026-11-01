@@ -736,31 +736,16 @@ Hooks.once("ready", async function() {
     endMigration = Migration27["endMigration"];
   }
 
-  if (before28 && !(await update.migrationPre28Needed())) {
-    await game.settings.set("eclipsephase", "migrationVersion", "2.8");
-  }
-  else if (before28) {
-    let migration = await update.migrationNotice("2.8");
-
+  const runs28 = before28 && await update.migrationPre28Needed();
+  const runs285 = before285 && await update.migrationPre285Needed();
+  if (runs28 || runs285) {
+    const migration = await update.migrationNotice("2.9");
     if (migration.cancelled) return;
     startMigration = migration.start;
-
-    let Migration28 = await update.migrationPre28(startMigration);
-    endMigration = endMigration || Migration28["endMigration"];
+    if (runs28) endMigration = (await update.migrationPre28(startMigration))["endMigration"] || endMigration;
+    if (runs285) endMigration = (await update.migrationPre285(startMigration))["endMigration"] || endMigration;
   }
-
-  if (before285 && !(await update.migrationPre285Needed())) {
-    await game.settings.set("eclipsephase", "migrationVersion", "2.8.5");
-  }
-  else if (before285) {
-    let migration = await update.migrationNotice("2.8.5");
-
-    if (migration.cancelled) return;
-    startMigration = migration.start;
-
-    let Migration285 = await update.migrationPre285(startMigration);
-    endMigration = endMigration || Migration285["endMigration"];
-  }
+  if (before285 && !runs285) await game.settings.set("eclipsephase", "migrationVersion", "2.8.5");
 
     if(endMigration){
       await migrationEnd(endMigration)

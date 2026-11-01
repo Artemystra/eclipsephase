@@ -30,28 +30,23 @@ export const MIGRATION_NOTES = {
     ],
     comments: []
   },
-  "2.8": {
-    title: "We always aimed for that!",
-    intro: "Weapons are updated a great deal in this iteration, agent, so you better gear up! Because while just rolling damage has already been implemented before, we're now moving towards a better UX during combat encounters and competitive dice rolls. So buckle up champ 'cause here. we. go!",
+  "2.9": {
+    title: "We always aimed for that...",
+    intro: "Weapons are updated a great deal in this iteration, agent, so you better gear up! While just rolling damage has been around for a while, combat now works on actual targets - and because that wasn't enough, grenades finally landed on the map as well, and your sleights do what their descriptions have been promising all along. So buckle up champ 'cause here. we. go!",
     bullets: [
-      "Using Weapons and damaging Psi abilities is now a target practice! Choose your way to do harm, select your targets and cave in their faces... or melt them... or whatever...",
-      "We streamlined how weapons work to an extent, that they will now tell you whether a target is able to take damage or not.",
-      "Also weapons now do have a damage type rather than just an ammo type. This helps armor to understand if it's applicable or not.",
-      "Talking about armor: There's a new kind of armor now! Based on the glow-up of Psi with 2.5 we have now introduced the optional \"mental armor\", based on the psi chi sleight. That means you're now far better off against TITAN mutants in your adventures - psykers, sorry. I meant to say psykers...",
-      "That's not all, though. Beside ranged, we also have a full range of melee updates, GM quality of life hacks and much more in the quiver so to speak.",
-      "All of the original book weapons should be updated with this migration dialog, when it comes to homebrew weapons we tried to anticipate that energy weapons might do energy damage... but everything else just is kinetic. So you might want to check on these items!",
-      "Grenades and cone weapons: Well we're working very hard on these. But due to their nature we're still struggling a bit on how to represent them on the canvas. But fret not: We're Firewall. We will get there. Eventually..."
+      "Using Weapons and damaging Psi abilities is now a **target practice**! Choose your way to do harm, select your targets and cave in their faces... or melt them... or whatever...",
+      "Weapons now have a **damage type** rather than just an ammo type, so armor knows whether it applies. The book's weapons get theirs here. For homebrew weapons we anticipate that energy weapons do energy damage and everything else is kinetic, so you might want to check on these items!",
+      "There's a new kind of armor: based on the glow-up of Psi with 2.5 we now have the optional **mental armor**. Psi Armor sleights on your sheets learn about it here. You're now far better off against TITAN mutants - asyncs, sorry. I meant to say asyncs...",
+      "Weapon **ranges** become numbers in metres, so the system can measure them for you. Ranges it cannot read stay as they are, and the GM gets a list of them in the chat.",
+      "Grenades and cones are on the canvas at last: we're Firewall, who would leave a lasting imprint if not us? Ammunition and grenades get a structured **area**, and their **payloads** a form: only substances in that form can be loaded.",
+      "Items named like a compendium entry pick up what they are missing from it. Your own values stay untouched.",
+      "Breathers and sealed suits learn to keep **gas and contact substances** out.",
+      "Psi sleights on your sheets get their **effects and target rules** from the compendium, unless they already have effects of their own.",
+      "Beside all that, every item sheet got a new look, and there's a full range of melee updates and GM quality of life hacks in the quiver, so to speak."
     ],
-    comments: []
-  },
-  "2.8.5": {
-    title: "Draft: Areas and ranges",
-    intro: "Draft text - to be written before the release.",
-    bullets: [
-      "Weapon ranges become numbers in metres, so the system can measure them for you.",
-      "Ammunition and grenades get a structured area effect, a size and room for payloads."
-    ],
-    comments: []
+    comments: [
+      "Using the Ki module? Update it to 1.1 together with the system. Ki sleights already on your sheets keep their old data: drop them on the sheet again from the compendium to get the new effects."
+    ]
   }
 };
 
