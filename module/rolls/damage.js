@@ -3,7 +3,7 @@ import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, is
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit } from "./dice.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
-import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast } from "./attacks.js";
+import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast, postDefenceCards } from "./attacks.js";
 import { MELEE_CURSOR } from "../common/targeting.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
 import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
@@ -683,6 +683,7 @@ export function registerWeaponAttacks() {
 export function registerWeaponAttackSocket() {
   registerSocketActions({
     applyAttackDamage: payload => applyAttackDamage(payload),
-    noteAttackDefence: payload => settleAttackDefence(game.messages.get(payload.messageId), payload.uuid, payload.outcome, payload.kind)
+    noteAttackDefence: payload => settleAttackDefence(game.messages.get(payload.messageId), payload.uuid, payload.outcome, payload.kind),
+    postSecretDefenceCards: async ({ attack, targetUuids, details }) => postDefenceCards(attack, (await Promise.all(targetUuids.map(uuid => fromUuid(uuid)))).filter(Boolean), { gmOnly: true, details: new Map(details) })
   });
 }

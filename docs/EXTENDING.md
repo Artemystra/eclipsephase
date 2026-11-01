@@ -700,7 +700,8 @@ first sets it off where it was aimed. The attack record carries `blast: { kind, 
 origin, from, trigger, harmless }` - `from` being where it was thrown or fired from - and, once
 scattered, `scatter: { direction, degrees, distance, blocked }`; `api.ui.blastTargets(area, tokens)` lists whom a blast catches, each with
 `distance`, `nearEdge`, `shadow` and `secret`. `api.attacks.postDefenceCards(attack, targets,
-{ gmOnly, details })` keeps `details.get(uuid)` on that target's entry. A grenade without a blast
+{ gmOnly, details })` keeps `details.get(uuid)` on that target's entry; with `gmOnly` a player's call
+has the active GM post the cards and returns none. A grenade without a blast
 is thrown at one target like a shot.
 
 ### Defending

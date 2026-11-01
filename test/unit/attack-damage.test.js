@@ -1,7 +1,7 @@
 import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR, attackEffect } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
-import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine, applyAttackDamage } from "../../module/rolls/damage.js";
+import { registerWeaponAttacks, registerWeaponAttackSocket, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine, applyAttackDamage } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
 import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cellOutlines, cloudOutline, OUTER_ZONE_COLOR } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
@@ -1291,6 +1291,64 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     expect(regions).toEqual([]);
     expect(defenceCards()).toEqual([]);
     expect(narrative.content).toContain("data-action=\"weaponDamage\"");
+  });
+
+  describe("a defence card for the GM alone", () => {
+    const gm = { id: "gm1", _id: "gm1", isGM: true, active: false };
+    let wasGM;
+    let wasActive;
+
+    beforeEach(() => {
+      wasGM = game.user.isGM;
+      wasActive = game.users.activeGM;
+      jest.spyOn(game.users, "filter").mockImplementation(test => [gm].filter(test));
+    });
+
+    afterEach(() => {
+      game.user.isGM = wasGM;
+      game.users.activeGM = wasActive;
+    });
+
+    test("a player's throw leaves it to the active GM, whose card carries the same target and details", async () => {
+      const actor = thrower(FRAG);
+      const seen = armoured("Seen");
+      const hidden = armoured("Zenobia");
+      scene([tokenAt(seen, 5, 6), tokenAt(hidden, 5, 10)]);
+      game.user.isGM = false;
+      const emit = jest.spyOn(game.socket, "emit");
+      const listeners = [];
+      jest.spyOn(game.socket, "on").mockImplementation((name, listener) => listeners.push(listener));
+      registerWeaponAttackSocket();
+
+      await hurl(actor, 30);
+      await until(() => emit.mock.calls.some(([, payload]) => payload?.action === "postSecretDefenceCards"));
+
+      expect(defenceCards().map(message => message.getFlag("eclipsephase", "attackDefence").entries[0].name)).toEqual(["Seen"]);
+      const [, payload] = emit.mock.calls.find(([, sent]) => sent?.action === "postSecretDefenceCards");
+
+      game.user.isGM = true;
+      game.users.activeGM = { id: game.user.id };
+      for (const listener of listeners) await listener(JSON.parse(JSON.stringify(payload)));
+
+      const secret = defenceCards().find(message => message.getFlag("eclipsephase", "attackDefence").entries[0].uuid === hidden.uuid);
+      expect(secret.whisper).toEqual(["gm1"]);
+      expect(secret.getFlag("eclipsephase", "attackDefence").entries[0]).toMatchObject({ name: "Zenobia", shadow: true });
+      expect(defenceCards()).toHaveLength(2);
+    });
+
+    test("a GM's own throw posts it directly, without asking anyone", async () => {
+      const actor = thrower(FRAG);
+      const hidden = armoured("Zenobia");
+      scene([tokenAt(hidden, 5, 10)]);
+      game.user.isGM = true;
+      const emit = jest.spyOn(game.socket, "emit");
+
+      await hurl(actor, 30);
+      await until(() => defenceCards().length === 1);
+
+      expect(defenceCards()[0].whisper).toEqual(["gm1"]);
+      expect(emit.mock.calls.some(([, payload]) => payload?.action === "postSecretDefenceCards")).toBe(false);
+    });
   });
 
   test("a successful dodge clears someone at the edge or behind a wall from the centre, and lets half through to anyone else", async () => {

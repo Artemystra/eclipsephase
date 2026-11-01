@@ -6,6 +6,7 @@ import { getStrainFamily } from "./strain-families.js";
 import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, PSI_CURSOR } from "./psi.js";
 import { pickTokensOnCanvas, attackerToken, NO_GM_ATTACK, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
+import { relayToActiveGM } from "../common/socket.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
@@ -401,14 +402,19 @@ export function defenceSpeaker(targets) {
 
 /**
  * Posts one defence card per owner of the targets, speaking as the defender. It is seen as the
- * attack card was, and always by that owner, who has to roll from it.
+ * attack card was, and always by that owner, who has to roll from it. Foundry shows a whisper to
+ * its author, so a card for the GMs alone is left to the active GM to post.
  * @param {Object} attack - The attack, delivered
  * @param {Actor[]} targets - Who it struck
  * @param {Object} [options] - gmOnly: whisper the cards to the GMs alone; details: a Map of target
  *   uuid to fields kept on its entry, such as where it stands in a blast
- * @returns {Promise<ChatMessage[]>} The cards
+ * @returns {Promise<ChatMessage[]>} The cards, none when the active GM posts them
  */
 export async function postDefenceCards(attack, targets, { gmOnly = false, details = new Map() } = {}) {
+  if (gmOnly && !game.user.isGM) {
+    relayToActiveGM("postSecretDefenceCards", { attack, targetUuids: targets.map(target => target.uuid), details: Array.from(details) });
+    return [];
+  }
   const origin = attack.messageId ? game.messages.get(attack.messageId) ?? null : null;
   const cards = [];
   for (const group of defenceGroups(targets)) {
