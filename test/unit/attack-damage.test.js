@@ -3,7 +3,7 @@ import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine, applyAttackDamage } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
-import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cloudOutline, OUTER_ZONE_COLOR } from "../../module/common/targeting.js";
+import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cellOutlines, cloudOutline, OUTER_ZONE_COLOR } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
 import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS, firingAttackModes } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
@@ -1697,7 +1697,7 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
       expect(cellCentre({ x: 230, y: 180 })).toEqual({ x: 200, y: 200 });
       expect(spotShapes({ x: 230, y: 180 })).toEqual([{ type: "polygon", points: [200, 142, 250, 171, 250, 229, 200, 258, 150, 229, 150, 171] }]);
       expect(spotTop({ x: 200, y: 200 })).toBe(142);
-      expect(wholeShapes({ kind: "circle", origin: { x: 200, y: 200 }, radius: 1 })).toHaveLength(5);
+      expect(wholeShapes({ kind: "circle", origin: { x: 200, y: 200 }, radius: 1 })).toHaveLength(3);
     });
 
     test("on a hex grid a blast is drawn in whole hexagons, red in the open and yellow behind walls, and a token counts by the hexagons it stands on", async () => {
@@ -1714,7 +1714,7 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
 
       await createShadowedArea(area, { name: "Blast", flags: { attackId: "a1" } });
 
-      expect(created.map(region => [region.flags.eclipsephase.area.part, region.shapes.length, region.shapes.every(shape => shape.type === "polygon")])).toEqual([["open", 4, true], ["shadow", 1, true]]);
+      expect(created.map(region => [region.flags.eclipsephase.area.part, region.shapes.length, region.shapes.every(shape => shape.type === "polygon")])).toEqual([["open", 3, true], ["shadow", 1, true]]);
       expect(created[1].flags.eclipsephase.area.cells).toEqual(["5,6"]);
       const token = { bounds: { x: 560, y: 450, width: 100, height: 100 }, document: { getOccupiedGridSpaceOffsets: () => [{ i: 5, j: 6 }] } };
       expect(blastPosition(token, area, canvas.grid)).toMatchObject({ distance: 1, nearEdge: true, shadow: true });
@@ -2201,6 +2201,67 @@ describe("cloud colours and outlines", () => {
     const hex = [[0, -50], [43.3, -25], [43.3, 25], [0, 50], [-43.3, 25], [-43.3, -25]];
     const hexGrid = { isHexagonal: true, getVertices: ({ i, j }) => hex.map(([x, y]) => ({ x: j * 86.6 + x, y: i * 100 + y })) };
     expect(outlineEdges([{ i: 0, j: 0 }, { i: 0, j: 1 }], hexGrid)).toHaveLength(10);
+  });
+
+  describe("the lines around hexagons", () => {
+    const width = 100;
+    const height = 100 / (Math.sqrt(3) / 2);
+    const centre = ({ i, j }) => ({ x: (j + (i % 2 ? 1 : 0.5)) * width, y: (i * 0.75 + 0.5) * height });
+    const grid = { getVertices: cell => [[0, -0.5], [0.5, -0.25], [0.5, 0.25], [0, 0.5], [-0.5, 0.25], [-0.5, -0.25]].map(([x, y]) => ({ x: centre(cell).x + x * width, y: centre(cell).y + y * height })) };
+    const middle = { x: 2000, y: 2000 };
+    const hexes = covers => {
+      const cells = [];
+      for (let i = 0; i < 40; i++) for (let j = 0; j < 40; j++) if (covers(Math.hypot(centre({ i, j }).x - middle.x, centre({ i, j }).y - middle.y))) cells.push({ i, j });
+      return cells;
+    };
+    const inPolygon = ({ x, y }, points) => {
+      let inside = false;
+      for (let a = 0, b = points.length - 2; a < points.length; b = a, a += 2) {
+        if ((points[a + 1] > y) !== (points[b + 1] > y) && x < (points[b] - points[a]) * (y - points[a + 1]) / (points[b + 1] - points[a + 1]) + points[a]) inside = !inside;
+      }
+      return inside;
+    };
+    // As Foundry applies them: in order, each shape adding its area or a hole cutting it.
+    const covered = (shapes, point) => shapes.reduce((inside, shape) => inPolygon(point, shape.points) ? !shape.hole : inside, false);
+    const expectExactly = (cells, shapes) => {
+      const wanted = new Set(cells.map(({ i, j }) => `${i},${j}`));
+      for (let i = 0; i < 40; i++) for (let j = 0; j < 40; j++) expect([`${i},${j}`, covered(shapes, centre({ i, j }))]).toEqual([`${i},${j}`, wanted.has(`${i},${j}`)]);
+    };
+
+    test("a solid blast is one line, however many hexagons it covers", () => {
+      const cells = hexes(distance => distance <= 1000);
+      const shapes = cellOutlines(cells, grid);
+
+      expect(cells.length).toBeGreaterThan(250);
+      expect(shapes).toHaveLength(1);
+      expect(shapes[0].hole).toBeUndefined();
+      expectExactly(cells, shapes);
+    });
+
+    test("a ring is a line and a hole, and covers no hexagon in the hole", () => {
+      const cells = hexes(distance => distance > 500 && distance <= 1200);
+      const shapes = cellOutlines(cells, grid);
+
+      expect(shapes.map(shape => !!shape.hole)).toEqual([false, true]);
+      expectExactly(cells, shapes);
+    });
+
+    test("an island in a hole comes after the hole, or the hole would cut it away", () => {
+      const cells = hexes(distance => distance <= 200 || (distance > 600 && distance <= 1200));
+      const shapes = cellOutlines(cells, grid);
+
+      expect(shapes.map(shape => !!shape.hole)).toEqual([false, true, false]);
+      expectExactly(cells, shapes);
+    });
+
+    test("parts that do not touch are lines of their own, and no cells no line", () => {
+      const cells = [{ i: 2, j: 2 }, { i: 2, j: 3 }, { i: 20, j: 20 }];
+      const shapes = cellOutlines(cells, grid);
+
+      expect(shapes.map(shape => [!!shape.hole, shape.points.length / 2])).toEqual([[false, 10], [false, 6]]);
+      expectExactly(cells, shapes);
+      expect(cellOutlines([], grid)).toEqual([]);
+    });
   });
 
   test("without cells a cloud is outlined by its wall-cut shape, and once the grid changed by its circle", () => {

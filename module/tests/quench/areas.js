@@ -5,7 +5,7 @@ import { weaponPreparation, grenadePreparation } from "../../common/weapon-funct
 import { SUPPRESSIVE_BEHAVIOR, strikeUnderSuppression, scatterBlast, trapOwnership, rollDefence } from "../../rolls/attacks.js";
 import { rollAttackDamage } from "../../rolls/damage.js";
 import { activeDoseFor } from "../../common/doses.js";
-import { TARGET_COLOR } from "../../common/targeting.js";
+import { TARGET_COLOR, cellShapes } from "../../common/targeting.js";
 
 // Areas on a real canvas: walls of a scratch scene cut a blast and a cone off and stop what flies at
 // them, and an area left as a Region can be cleared again. The scene is viewed while the batch runs
@@ -155,6 +155,35 @@ export function registerAreasBatch(quench) {
 
         assert.strictEqual(await clearAreas(flag => flag.attackId === "quench", scene), 1);
         assert.isUndefined(scene.regions.get(region.id));
+      });
+    });
+
+    describe("a large area on a hex grid", function () {
+      it("covers exactly its hexagons and takes Foundry no time to join", function () {
+        const grid = new foundry.grid.HexagonalGrid({ size: 100, columns: false, even: false });
+        const cells = [];
+        const outside = [];
+        const middle = grid.getCenterPoint({ i: 40, j: 40 });
+        for (let i = 0; i <= 80; i++) {
+          for (let j = 0; j <= 80; j++) {
+            const centre = grid.getCenterPoint({ i, j });
+            const distance = Math.hypot(centre.x - middle.x, centre.y - middle.y);
+            if (distance <= 200 || (distance > 700 && distance <= 2100)) cells.push({ i, j });
+            else if (distance <= 2500) outside.push({ i, j });
+          }
+        }
+        const shapes = cellShapes(cells, grid);
+        const region = new CONFIG.Region.documentClass({ name: "Quench Hexes", shapes, levels: canvas.level ? [canvas.level.id] : [] }, { parent: scene });
+
+        const started = performance.now();
+        const tree = region.polygonTree;
+        const joined = performance.now() - started;
+
+        assert.isAbove(cells.length, 1000);
+        assert.isBelow(shapes.length, 10);
+        assert.isBelow(joined, 1000, "Foundry joined the shapes in that many ms");
+        for (const cell of cells) assert.isTrue(tree.testPoint(grid.getCenterPoint(cell)), `hexagon ${cell.i},${cell.j} is covered`);
+        for (const cell of outside) assert.isFalse(tree.testPoint(grid.getCenterPoint(cell)), `hexagon ${cell.i},${cell.j} is not`);
       });
     });
 

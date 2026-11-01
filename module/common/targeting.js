@@ -1081,14 +1081,14 @@ export function squareShapes(squares, grid) {
 
 /**
  * Grid cells as Region shapes: squares as rectangles, those of a row joined into one; hexagons as
- * polygons.
+ * the lines around them, since Foundry takes many seconds to join a polygon per hexagon.
  * @param {Object[]} cells - { i, j } each
  * @param {Object} grid - The grid
  * @returns {Object[]} The shapes
  */
 export function cellShapes(cells, grid) {
   if (grid.isSquare) return squareShapes(cells, grid);
-  return cells.map(cell => ({ type: "polygon", points: grid.getVertices(cell).flatMap(vertex => [vertex.x, vertex.y]) }));
+  return cellOutlines(cells, grid);
 }
 
 /**
@@ -1208,12 +1208,13 @@ export function createPrivateArea(shapes, { name = "", color = TARGET_COLOR, fla
 }
 
 /**
- * The outer edges of a set of grid cells: every cell side that no other cell of the set shares.
+ * The sides of a set of grid cells that no other cell of the set shares, in the direction their cell
+ * runs.
  * @param {Object[]} cells - The cells, as { i, j }
  * @param {Object} grid - The scene's grid
- * @returns {Number[][]} The edges, as [x1, y1, x2, y2]
+ * @returns {Object[]} from and to as points, start and end as keys of those corners
  */
-export function outlineEdges(cells, grid) {
+function boundaryEdges(cells, grid) {
   const edges = new Map();
   const corner = vertex => `${Math.round(vertex.x)},${Math.round(vertex.y)}`;
   for (const cell of cells) {
@@ -1223,10 +1224,50 @@ export function outlineEdges(cells, grid) {
       const key = [corner(vertex), corner(next)].sort().join("|");
       const known = edges.get(key);
       if (known) known.count++;
-      else edges.set(key, { count: 1, line: [vertex.x, vertex.y, next.x, next.y] });
+      else edges.set(key, { count: 1, from: vertex, to: next, start: corner(vertex), end: corner(next) });
     });
   }
-  return Array.from(edges.values()).filter(edge => edge.count === 1).map(edge => edge.line);
+  return Array.from(edges.values()).filter(edge => edge.count === 1);
+}
+
+/**
+ * The outer edges of a set of grid cells: every cell side that no other cell of the set shares.
+ * @param {Object[]} cells - The cells, as { i, j }
+ * @param {Object} grid - The scene's grid
+ * @returns {Number[][]} The edges, as [x1, y1, x2, y2]
+ */
+export function outlineEdges(cells, grid) {
+  return boundaryEdges(cells, grid).map(({ from, to }) => [from.x, from.y, to.x, to.y]);
+}
+
+/**
+ * The closed lines around a set of hexagons as Region shapes. Three hexagons meet at a corner, so a
+ * line never has a choice of where to go on. The largest comes first and a line running the other way
+ * is a hole, so that Foundry cuts each hole before adding what lies inside it.
+ * @param {Object[]} cells - The cells, as { i, j }
+ * @param {Object} grid - The scene's hexagonal grid
+ * @returns {Object[]} The polygon shapes
+ */
+export function cellOutlines(cells, grid) {
+  const next = new Map(boundaryEdges(cells, grid).map(edge => [edge.start, edge]));
+  const lines = [];
+  for (let [key, edge] of next) {
+    const points = [];
+    while (edge) {
+      next.delete(key);
+      points.push(edge.from.x, edge.from.y);
+      key = edge.end;
+      edge = next.get(key);
+    }
+    let area = 0;
+    for (let index = 0; index < points.length; index += 2) {
+      const after = (index + 2) % points.length;
+      area += points[index] * points[after + 1] - points[after] * points[index + 1];
+    }
+    lines.push({ points, area });
+  }
+  lines.sort((a, b) => Math.abs(b.area) - Math.abs(a.area));
+  return lines.map(({ points, area }) => ({ type: "polygon", points, ...(Math.sign(area) === Math.sign(lines[0].area) ? {} : { hole: true }) }));
 }
 
 /**
