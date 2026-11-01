@@ -2463,6 +2463,8 @@
       }
     },
     "targeting": {
+      "needsGM": "没有 GM 在线时部分功能会被锁定，否则可能导致系统错误并丢失弹药、手榴弹等物品。GM 上线后将自动恢复。",
+      "tacnetVision": "战术网络",
       "cancelHint": "按 ESC 或在未选目标时右键取消。",
       "confirmHint": "右键确认",
       "remaining": "还剩 {count} 个目标",

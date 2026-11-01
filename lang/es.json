@@ -2456,6 +2456,8 @@
       }
     },
     "targeting": {
+      "needsGM": "Algunas funciones están bloqueadas mientras no haya un DJ conectado, porque podrían causar errores en el sistema y la pérdida de objetos como munición o granadas. Se reactivan en cuanto haya un DJ presente.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "Pulsa ESC o haz clic derecho sin objetivos para cancelar.",
       "confirmHint": "Clic derecho para confirmar",
       "remaining": "Quedan {count} objetivos",

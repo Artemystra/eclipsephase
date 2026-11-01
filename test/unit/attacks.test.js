@@ -5,7 +5,7 @@ import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload,
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES, aimOrigin, taperedLine, laserPieces, arcShape, waveBulges, waveShape, dashSegments, aimKind, aimFlicker } from "../../module/common/targeting.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES, aimOrigin, taperedLine, laserPieces, arcShape, waveBulges, waveShape, dashSegments, aimKind, aimFlicker, wirePreRollTargets } from "../../module/common/targeting.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { cardFailures, failCard } from "../../module/rolls/cards.js";
 import { registerFailOption, resetRegistry } from "../../module/api/registry.js";
@@ -830,7 +830,64 @@ describe("areas on the canvas", () => {
     expect(await createAreaRegion(area)).toBeNull();
     expect(emit).toHaveBeenCalledWith("system.eclipsephase", expect.objectContaining({ action: "createAreaRegion", sceneId: "scene1" }));
     expect(created).toHaveLength(1);
-    delete game.users.activeGM;
+    game.users.activeGM = { id: "connected-gm" };
+  });
+
+  test("a Region with behaviors is only for the GM to create, even for a user who may create Regions", async () => {
+    const created = [];
+    const scene = { id: "scene1", regions: [], createEmbeddedDocuments: async (type, data) => { created.push(...data); return data; } };
+    global.canvas = { scene, level: null };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    const area = { kind: "circle", origin: { x: 1, y: 2 }, radius: 10, polygon: { points: [0, 0, 10, 0, 10, 10] } };
+    const behaviors = [{ type: "suppressive", name: "Fire", system: {} }];
+    const realUser = game.user;
+    game.users.activeGM = { id: "gm" };
+    const emit = jest.spyOn(game.socket, "emit");
+    try {
+      game.user = { ...realUser, isGM: false };
+      await createAreaRegion(area);
+      expect(created).toHaveLength(1);
+
+      expect(await createAreaRegion(area, { behaviors })).toBeNull();
+      expect(created).toHaveLength(1);
+      expect(emit).toHaveBeenCalledWith("system.eclipsephase", expect.objectContaining({ action: "createAreaRegion", sceneId: "scene1" }));
+
+      game.user = { ...realUser, isGM: true };
+      await createAreaRegion(area, { behaviors });
+      expect(created).toHaveLength(2);
+    } finally {
+      game.user = realUser;
+      game.users.activeGM = { id: "connected-gm" };
+      emit.mockRestore();
+    }
+  });
+
+  test("without a connected GM the pick button only warns: nothing is picked, placed or rolled", async () => {
+    const document = new JSDOM("").window.document;
+    const root = document.createElement("div");
+    root.innerHTML = `<form><input type="hidden" name="preTargets"><button type="button" data-action="pickTargets"><span></span></button></form>`;
+    const pick = jest.fn(async () => []);
+    const place = jest.fn(async () => null);
+    const area = jest.fn(() => ({ kind: "circle", radius: 5 }));
+    const close = jest.fn();
+    wirePreRollTargets(root, { close }, { count: () => 1, minimum: () => 1, area }, { pick, place });
+    const realGM = game.users.activeGM;
+    game.users.activeGM = null;
+    const warn = jest.spyOn(ui.notifications, "warn").mockImplementation(() => {});
+    try {
+      root.querySelector("button").click();
+      await Promise.resolve();
+      expect(warn).toHaveBeenCalledWith("ep2e.targeting.needsGM");
+      expect(close).toHaveBeenCalledTimes(1);
+      expect(area).not.toHaveBeenCalled();
+      expect(place).not.toHaveBeenCalled();
+      expect(pick).not.toHaveBeenCalled();
+      expect(root.querySelector('[name="preTargets"]').value).toEqual("");
+    } finally {
+      game.users.activeGM = realGM;
+      warn.mockRestore();
+    }
   });
 
   test("only the areas asked for are cleared, and nothing that is no area", async () => {

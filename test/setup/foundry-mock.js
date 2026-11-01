@@ -1097,7 +1097,7 @@ global.game = {
     lang: "en"
   },
   user: { id: "testuser", _id: "testuser", isGM: true, name: "Tester" },
-  users: { activeGM: null, filter: () => [], find: () => null, get: () => null },
+  users: { activeGM: { id: "connected-gm" }, filter: () => [], find: () => null, get: () => null },
   messages: new MockCollection(),
   actors: new MockCollection(),
   items: new MockCollection(),

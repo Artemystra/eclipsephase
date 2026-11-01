@@ -35,6 +35,9 @@ export const TARGET_COLOR = "#4098d6";
 const AIM_GLOW_COLOR = 0x346d8e;
 export const OUTER_ZONE_COLOR = "#346d8e";
 export const MARK_COLOR = "#db2a2a";
+
+// What a player hears who attacks with no GM connected: defences, damage and areas all need one.
+export const NO_GM_ATTACK = "ep2e.targeting.needsGM";
 const AIM_CORE_COLOR = 0xb5dcf2;
 const AIM_RED_CORE_COLOR = 0xff9a9a;
 const WAVE_CORE_COLOR = 0xf4f7fb;
@@ -687,6 +690,10 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
     if (picked) return;
     event.preventDefault();
     event.stopImmediatePropagation();
+    if (!game.users?.activeGM) {
+      dialog?.close?.();
+      return ui.notifications.warn(game.i18n.localize(NO_GM_ATTACK));
+    }
     const count = picking.count(form);
     const minimum = picking.minimum(form);
     const any = !Number.isFinite(count);
@@ -983,14 +990,15 @@ function areaRegionData(area, { color, name, flags = {}, behaviors = [], whole =
  * @returns {Promise<Object[]>} The Regions, empty when the GM creates them
  */
 async function createRegions(data) {
-  if (CONFIG.Region.documentClass.canUserCreate(game.user)) return (await canvas.scene.createEmbeddedDocuments("Region", data)) ?? [];
+  const mayCreate = CONFIG.Region.documentClass.canUserCreate(game.user) && (game.user.isGM || !data.some(entry => entry.behaviors?.length));
+  if (mayCreate) return (await canvas.scene.createEmbeddedDocuments("Region", data)) ?? [];
   relayToActiveGM("createAreaRegion", { sceneId: canvas.scene.id, data });
   return [];
 }
 
 /**
  * Leaves an area in the scene for everyone to see: a Region in the shape walls cut it to. A user who
- * may not create Regions has the active GM create it.
+ * may not create Regions, or only ones without behaviors as all but GMs, has the active GM create it.
  * @param {Object} area - What placeArea returned, or the same fields
  * @param {Object} [options] - color; name ("Area" when none is given); behaviors, Region behaviors it
  *   carries; flags, kept under the area flag, such as the attack it

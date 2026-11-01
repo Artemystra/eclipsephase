@@ -2492,6 +2492,8 @@
       }
     },
     "targeting": {
+      "needsGM": "Einige Funktionen sind gesperrt, solange keine SL verbunden ist, weil sie sonst zu Fehlern im System und zum Verlust von Items wie Munition oder Granaten führen können. Sie werden wieder aktiv, sobald eine SL anwesend ist.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "ESC oder Rechtsklick ohne Ziele bricht ab.",
       "confirmHint": "Rechtsklick zum Bestätigen",
       "remaining": "Noch {count} Ziele",

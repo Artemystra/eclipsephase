@@ -6,6 +6,7 @@ import { postDefenceCards, rollRemainingDefences, applyTargetedAttack, rollDefen
 import { rollAttackDamage } from "../../rolls/damage.js";
 import { lockedOutOf } from "../../rolls/psi.js";
 import { weaponPreparation } from "../../common/weapon-functions.js";
+import { wirePreRollTargets } from "../../common/targeting.js";
 import { withTempActor, seedDice, restoreDice, uniformForFace, waitUntil, suppressDice3d, restoreDice3d } from "./helpers.js";
 
 // Every chat card that changes after it is posted, driven once through its change in a live world:
@@ -494,6 +495,91 @@ export function registerChatCardBatch(quench) {
           assert.isUndefined(card.getFlag("eclipsephase", "roll")?.targetedAttack);
           return null;
         })));
+      });
+    });
+
+    describe("without a connected GM", function () {
+      /**
+       * Runs a test as if no GM were connected, noting the warnings it gives.
+       * @param {Function} fn - Called with the warnings so far
+       * @returns {Promise<*>} What fn returned
+       */
+      async function withoutGM(fn) {
+        const warnings = [];
+        const warn = ui.notifications.warn;
+        ui.notifications.warn = message => warnings.push(message);
+        Object.defineProperty(game.users, "activeGM", { configurable: true, get: () => null });
+        try {
+          return await fn(warnings);
+        } finally {
+          delete game.users.activeGM;
+          ui.notifications.warn = warn;
+        }
+      }
+      const pistol = { name: "Quench Pistol", type: "rangedWeapon", system: { active: true, ammoType: "kinetic", ammoMin: 10, ammoMax: 10, mode1: { d10: 2, d6: 0, bonus: 2, armorused: "kinetic" } } };
+      const preset = { rollMode: "public", usePool: "", globalMod: 0 };
+
+      it("the target picker closes its dialog, explains why and leaves everything untouched", async function () {
+        const root = document.createElement("div");
+        root.innerHTML = `<form><input type="hidden" name="preTargets"><button type="button" data-action="pickTargets"><span></span></button></form>`;
+        let closed = 0;
+        let picked = 0;
+        wirePreRollTargets(root, { close: () => { closed += 1; } }, { count: () => 1, minimum: () => 1 }, { pick: async () => { picked += 1; return []; } });
+
+        await withoutGM(async warnings => {
+          root.querySelector("button").click();
+          await waitUntil(() => warnings.length);
+          assert.equal(warnings[0], game.i18n.localize("ep2e.targeting.needsGM"));
+          assert.notEqual(warnings[0], "ep2e.targeting.needsGM", "the message is translated");
+        });
+        assert.equal(closed, 1);
+        assert.equal(picked, 0);
+        assert.equal(root.querySelector('[name="preTargets"]').value, "");
+      });
+
+      it("an attack card refuses to pick targets, so no defence card goes out", async function () {
+        this.timeout(20000);
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Shooter", system: { skillsVig: { guns: { value: 60 } } }, items: [pistol] }, async shooter => {
+          await waitUntil(() => shooter.getFlag("eclipsephase", "defaultMorphAdded"));
+          const weapon = await weaponPreparation(shooter, "guns", "rangedWeapon", shooter.items.find(item => item.name === "Quench Pistol").id);
+          seedDice([uniformForFace(30, 100)]);
+          await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, shooter.system, shooter, { skipDialog: true, presetOptions: { ...preset, attackMode: "single" } }, weapon, "rangedWeapon");
+          const card = newestWith("taskCard");
+          let picked = 0;
+          await withoutGM(async warnings => {
+            const result = await applyTargetedAttack(card, { pick: async () => { picked += 1; return []; }, confirm: async () => true });
+            assert.isNull(result);
+            assert.equal(warnings.length, 1);
+          });
+          assert.equal(picked, 0);
+          assert.isNotOk(newestWith("attackDefence"));
+        }));
+      });
+
+      it("rolls that pick no targets still work: a skill, an aptitude and a shot without targets", async function () {
+        this.timeout(20000);
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Roller", system: { skillsVig: { infiltrate: { value: 40 }, guns: { value: 60 } } }, items: [pistol] }, async actor => {
+          await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
+          const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", actor.items.find(item => item.name === "Quench Pistol").id);
+          await withoutGM(async () => {
+            const posted = () => game.messages.size;
+            let before = posted();
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ name: "Infiltrate", key: "infiltrate", type: "skill", rollvalue: 55, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: preset }, null, "skill");
+            assert.isAbove(posted(), before, "the skill test posts its card");
+
+            before = posted();
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ name: "Reflexes", key: "system.aptitudes.ref.value", type: "aptitude", rollvalue: 60, apttype: "ref" }, actor.system, actor, { skipDialog: true, presetOptions: preset }, null, "aptitude");
+            assert.isAbove(posted(), before, "the aptitude check posts its card");
+
+            before = posted();
+            seedDice([uniformForFace(30, 100)]);
+            await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...preset, attackMode: "single" } }, weapon, "rangedWeapon");
+            assert.isAbove(posted(), before, "the shot posts its card");
+            await waitUntil(() => actor.items.find(item => item.name === "Quench Pistol").system.ammoMin === 9);
+          });
+        }));
       });
     });
   }, { displayName: "Eclipse Phase: Chat cards" });

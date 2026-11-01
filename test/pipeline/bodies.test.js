@@ -1,7 +1,7 @@
 import EPactorSheet from "../../module/actor/EPactorSheet.js";
 import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
-  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete
+  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet
 } from "../../module/common/morp-functions.js";
 import { calcEffects } from "../../module/rolls/resleeving.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
@@ -279,5 +279,55 @@ describe("armour on a body about to be deleted", () => {
 
     seedDialogs(true);
     expect(await resolveArmorOnBodyDelete(actor, "activeMorph", "Body")).toEqual({ proceed: true });
+  });
+});
+
+describe("sight shared through a tacnet", () => {
+  const actor = (tacnet, hasPlayerOwner = true, observed = false) => ({
+    hasPlayerOwner,
+    system: { additionalSystems: { tacnet } },
+    testUserPermission: () => observed
+  });
+  const token = (a, controlled = false) => ({ actor: a, controlled });
+  const player = { isGM: false };
+
+  test("the effect's value names the channel, and true means the actor's side", () => {
+    expect(tacnetChannel(actor(true))).toEqual("player");
+    expect(tacnetChannel(actor("true", false))).toEqual("nonPlayer");
+    expect(tacnetChannel(actor("alpha"))).toEqual("alpha");
+    expect(tacnetChannel(actor(undefined))).toBeNull();
+    expect(tacnetChannel(actor(false))).toBeNull();
+    expect(tacnetChannel(null)).toBeNull();
+  });
+
+  test("a player sees through a token on the channel of the one they control, and only then", () => {
+    const mate = token(actor(true));
+    const own = token(actor(true), true);
+    const foe = token(actor(true, false));
+    const outsider = token(actor(undefined));
+    const tokens = [mate, own, foe, outsider];
+
+    expect(seesThroughTacnet(mate, tokens, player)).toBe(true);
+    expect(seesThroughTacnet(foe, tokens, player)).toBe(false);
+    expect(seesThroughTacnet(outsider, tokens, player)).toBe(false);
+    expect(seesThroughTacnet(own, tokens, player)).toBe(false);
+  });
+
+  test("without a controlled token a player looks through those they observe, and a viewer outside the net sees nothing", () => {
+    const mate = token(actor(true));
+    const mine = token(actor(true, true, true));
+    expect(seesThroughTacnet(mate, [mate, mine], player)).toBe(true);
+
+    const notOnIt = token(actor(undefined, true, true));
+    expect(seesThroughTacnet(mate, [mate, notOnIt], player)).toBe(false);
+  });
+
+  test("the GM looks through controlled tokens only", () => {
+    const gm = { isGM: true };
+    const guard = token(actor(true, false));
+    const other = token(actor(true, false));
+    expect(seesThroughTacnet(guard, [guard, other], gm)).toBe(false);
+    other.controlled = true;
+    expect(seesThroughTacnet(guard, [guard, other], gm)).toBe(true);
   });
 });

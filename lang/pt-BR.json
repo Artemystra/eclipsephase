@@ -2471,6 +2471,8 @@
       }
     },
     "targeting": {
+      "needsGM": "Algumas funções ficam bloqueadas enquanto não houver um mestre conectado, pois poderiam causar erros no sistema e a perda de itens como munição ou granadas. Elas voltam a funcionar assim que um mestre estiver presente.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "Pressione ESC ou clique com o botão direito sem alvos para cancelar.",
       "confirmHint": "Clique direito para confirmar",
       "remaining": "Restam {count} alvos",

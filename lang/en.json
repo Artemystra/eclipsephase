@@ -2544,6 +2544,8 @@
       }
     },
     "targeting": {
+      "needsGM": "Some functions are locked while no GM is connected, because they could otherwise cause errors in the system and lose items such as ammunition or grenades. They unlock as soon as a GM is present.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "Press ESC or right-click with no targets to cancel.",
       "confirmHint": "Right click to confirm",
       "remaining": "{count} targets left",

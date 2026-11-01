@@ -4,7 +4,7 @@ import { confirmation, gmList, isChecked, timedEffectData } from "../common/gene
 import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
 import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, PSI_CURSOR } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
+import { pickTokensOnCanvas, attackerToken, NO_GM_ATTACK, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
 
@@ -192,6 +192,10 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   const any = attack.targets === ANY_TARGETS;
   const refuseSelf = attack.refuseSelf && attacker ? refuseOwnToken(attacker) : null;
   const refuse = refuseAny(refuseUnsuitable(attack.unsuitable), refuseForFamily(attack.strainFamily), attack.defence === "will" && attacker ? refuseLockedOut(attacker) : null, refuseSelf);
+  if (!game.users?.activeGM) {
+    ui.notifications.warn(game.i18n.localize(NO_GM_ATTACK));
+    return null;
+  }
   const aimFrom = attacker ? attackerToken(attacker) : null;
   const picked = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, refuse, ...(aimFrom ? { aimFrom } : {}), ...(attack.cursor ?? {}) });
   const tokens = refuseSelf ? (picked ?? []).filter(token => !refuseSelf(token)) : picked;

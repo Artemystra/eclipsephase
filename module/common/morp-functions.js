@@ -615,6 +615,40 @@ export function sleevedNervousSystem(actor){
 }
 
 // The vectors a sealed suit or a mask keeps out, by the flag an item's effect sets on the actor.
+// The vision mode a token seen through a tacnet is drawn in, and the key an effect joins one with.
+export const TACNET_VISION = "tacnet";
+export const TACNET_KEY = "system.additionalSystems.tacnet";
+
+/**
+ * The tacnet channel an actor shares its sight on (Core p.327): the one its effect names, or for a
+ * plain "true" the channel of everyone on its side.
+ * @param {Actor} actor - The actor
+ * @returns {String|null} The channel, null when it is on no tacnet
+ */
+export function tacnetChannel(actor) {
+  const value = actor?.system?.additionalSystems?.tacnet;
+  if (!value || value === "false") return null;
+  if (value === true || value === "true") return actor.hasPlayerOwner ? "player" : "nonPlayer";
+  return String(value);
+}
+
+/**
+ * Whether a token's sight reaches a user through a tacnet: it shares a channel with a token they are
+ * looking through, the ones they control or else, for a player, the ones they observe. The GM looks
+ * through controlled tokens only.
+ * @param {Object} token - The token that may share its sight
+ * @param {Object[]} tokens - The scene's tokens
+ * @param {User} user - The user
+ * @returns {Boolean} True when the user sees through it
+ */
+export function seesThroughTacnet(token, tokens, user) {
+  const channel = tacnetChannel(token.actor);
+  if (!channel) return false;
+  const controlled = tokens.filter(other => other.controlled);
+  const viewers = controlled.length || user.isGM ? controlled : tokens.filter(other => other.actor?.testUserPermission?.(user, "OBSERVER"));
+  return viewers.some(viewer => viewer !== token && tacnetChannel(viewer.actor) === channel);
+}
+
 const SEALS = { inhalation: "airSealed", dermal: "skinSealed" };
 
 /**

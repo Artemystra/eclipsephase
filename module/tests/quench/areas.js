@@ -366,7 +366,7 @@ export function registerAreasBatch(quench) {
 
       it("dodged inside its blast still strikes for half the damage, dodged within 2 metres of the edge it misses", async function () {
         this.timeout(40000);
-        const frag = { name: "Quench Uniform", type: "grenade", system: { active: true, quantity: 2, dv: { d10: 2, d6: null, bonus: 10 }, area: { kind: "uniform", radius: 6, reduction: null }, armorused: "kinetic", trigger: "impact" } };
+        const frag = { name: "Quench Uniform", type: "grenade", system: { active: true, quantity: 2, dv: { d10: 2, d6: null, bonus: 10 }, area: { kind: "uniform", radius: 5, reduction: 100 }, armorused: "kinetic", trigger: "impact" } };
         await dodgeInBlast(scene, frag, async ({ inner, edge, outcomes, posted }) => {
           assert.deepEqual(outcomes, { inner: { outcome: "half", nearEdge: false }, edge: { outcome: "none", nearEdge: true } });
           const damageCard = () => game.messages.contents.find(message => !posted.has(message.id) && message.getFlag("eclipsephase", "damageCard"));

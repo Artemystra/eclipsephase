@@ -1,6 +1,7 @@
 import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
 import { defaultArmorUsed, weaponDataRepairs } from "./weapon-functions.js";
+import { TACNET_KEY } from "./morp-functions.js";
 
 // The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
 // only its own English text - a title, an introduction, the bullets of what changed and footnote
@@ -3028,16 +3029,6 @@ export function _ep28_missingPsiArmorMarker(item) {
 }
 
 /**
- * Whether any weapon in the world has a mode without an armour type, or a Psi Armor sleight lacks
- * the marker mental armour is counted from.
- * @returns {Promise<Boolean>} True when at least one item needs work
- */
-export async function migrationPre28Needed() {
-  const needs = item => _ep28_missingArmorUsed(item, new Map()) !== null || _ep28_missingPsiArmorMarker(item) !== null;
-  return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
-}
-
-/**
  * Gives every weapon in the world the armour type its damage meets, per mode, and every Psi Armor
  * sleight its marker: the world's own items, every actor's embedded ones and the world's item
  * compendiums.
@@ -3234,19 +3225,6 @@ export function _ep285_sleightUpdate(item, catalogue) {
 }
 
 /**
- * Whether any weapon, ammunition or grenade in the world still carries text where 2.8.5 reads a
- * number or a structured area, a mask or suit still lacks the effect that seals its wearer, or a
- * sleight lacks what 2.8.5 reads off it.
- * @returns {Promise<Boolean>} True when at least one item needs work
- */
-export async function migrationPre285Needed() {
-  const seals = await _ep285_sealCatalogue();
-  const sleights = await _ep285_sleightCatalogue();
-  const needs = item => _ep285_weaponUpdate(item, new Map())?.update != null || _ep285_sealEffects(item, seals).length > 0 || _ep285_sleightUpdate(item, sleights) !== null;
-  return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
-}
-
-/**
  * Turns every weapon range in the world into metres and every munition's area text into a
  * structured area, fixes the munitions' armour type and fills payloads from the system
  * compendiums, gives masks and suits the effect that seals their wearer, and gives sleights their
@@ -3304,6 +3282,29 @@ export async function migrationPre285(startMigration) {
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };
+}
+
+/**
+ * The effect a TacNet placed before 2.9 lacks.
+ * @param {Item} item - The item
+ * @returns {Object[]} The effect's data to create, empty when it has it or is no TacNet
+ */
+export function _ep29_tacnetEffects(item) {
+  if (item.type !== "gear" || item.name?.toLowerCase() !== "tacnet") return [];
+  if (Array.from(item.effects ?? []).some(effect => Array.from(effect.system?.changes ?? effect.changes ?? []).some(change => change.key === TACNET_KEY))) return [];
+  return [{ name: "TacNet", img: "icons/svg/aura.svg", type: "base", transfer: true, disabled: false, system: { changes: [{ key: TACNET_KEY, value: true, priority: null, type: "override" }] } }];
+}
+
+/**
+ * Gives every TacNet its effect, without a dialog or progress bar.
+ * @returns {Promise<void>}
+ */
+export async function migrationPre29() {
+  await forEachItem(async item => {
+    const effects = _ep29_tacnetEffects(item);
+    if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
+  }, { filter: item => item.type === "gear", includeCompendiums: true, silent: true });
+  await game.settings.set("eclipsephase", "migrationVersion", "2.9");
 }
 
 // Recovers the pre-1.5 legacy body type for an actor's active morph, or null if none can be found.
@@ -3464,11 +3465,12 @@ export function epCreateProgressDialog(title = "Migration") {
  * @param {Array} documents - The documents to process
  * @param {Function} fn - async (document) => void, run once per document
  * @param {String} label - The progress dialog's title
+ * @param {Boolean} [silent] - Whether to show no progress dialog
  * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
  */
-async function runOverDocuments(documents, fn, label) {
+async function runOverDocuments(documents, fn, label, silent = false) {
   const total = documents.length;
-  const uiBar = total ? epCreateProgressDialog(label) : null;
+  const uiBar = total && !silent ? epCreateProgressDialog(label) : null;
   const errors = [];
   let completed = 0;
 
@@ -3514,7 +3516,7 @@ export async function forEachActor(fn, { label = "Migration", filter } = {}) {
  * @param {Object} [options] - label; filter(item) => boolean; includeCompendiums to also cover world item packs
  * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
  */
-export async function forEachItem(fn, { label = "Migration", filter, includeCompendiums = false } = {}) {
+export async function forEachItem(fn, { label = "Migration", filter, includeCompendiums = false, silent = false } = {}) {
   const items = [];
   const passes = item => typeof filter !== "function" || filter(item);
 
@@ -3528,7 +3530,7 @@ export async function forEachItem(fn, { label = "Migration", filter, includeComp
     }
   }
 
-  return runOverDocuments(items, fn, label);
+  return runOverDocuments(items, fn, label, silent);
 }
 
 /**

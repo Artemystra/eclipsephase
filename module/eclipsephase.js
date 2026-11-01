@@ -15,7 +15,8 @@ import  * as helperFunction from "./common/general-helper-functions.js"
 import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
 import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
-import EPtoken from "./canvas/EPtoken.js";
+import EPtoken, { registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
+import { TACNET_VISION } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -214,6 +215,16 @@ Hooks.once('init', async function() {
   registerPsiTouch();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
+  const VisionMode = foundry.canvas.perception?.VisionMode;
+  if (VisionMode) {
+    CONFIG.Canvas.visionModes[TACNET_VISION] = new VisionMode({
+      id: TACNET_VISION,
+      label: "ep2e.targeting.tacnetVision",
+      tokenConfig: false,
+      vision: { background: { shader: tacnetVisionShader() }, darkness: { adaptive: false }, defaults: { attenuation: 0, contrast: 0, saturation: 0, brightness: 0 }, preferred: false }
+    });
+  }
+  registerTacnetVision();
   CONFIG.Token.rulerClass = EPtokenRuler;
 
   // Register sheet application classes
@@ -434,8 +445,7 @@ Hooks.once("ready", async function() {
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
-  let before28 = foundry.utils.isNewerVersion("2.8", gameVersion);
-  let before285 = foundry.utils.isNewerVersion("2.8.5", gameVersion);
+  const before29 = gameVersion !== "newInstall" && foundry.utils.isNewerVersion("2.9", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -736,16 +746,15 @@ Hooks.once("ready", async function() {
     endMigration = Migration27["endMigration"];
   }
 
-  const runs28 = before28 && await update.migrationPre28Needed();
-  const runs285 = before285 && await update.migrationPre285Needed();
-  if (runs28 || runs285) {
+  // Every world below 2.9 runs these again, even if stamped past them: they only fill what is missing.
+  if (before29) {
     const migration = await update.migrationNotice("2.9");
     if (migration.cancelled) return;
     startMigration = migration.start;
-    if (runs28) endMigration = (await update.migrationPre28(startMigration))["endMigration"] || endMigration;
-    if (runs285) endMigration = (await update.migrationPre285(startMigration))["endMigration"] || endMigration;
+    endMigration = (await update.migrationPre28(startMigration))["endMigration"] || endMigration;
+    endMigration = (await update.migrationPre285(startMigration))["endMigration"] || endMigration;
+    if (startMigration) await update.migrationPre29();
   }
-  if (before285 && !runs285) await game.settings.set("eclipsephase", "migrationVersion", "2.8.5");
 
     if(endMigration){
       await migrationEnd(endMigration)
