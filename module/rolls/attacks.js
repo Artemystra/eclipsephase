@@ -4,7 +4,7 @@ import { confirmation, gmList, isChecked, timedEffectData } from "../common/gene
 import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
 import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, PSI_CURSOR } from "./psi.js";
-import { pickTokensOnCanvas, attackerToken, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
+import { pickTokensOnCanvas, attackerToken, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
 
@@ -1000,7 +1000,7 @@ function blastArea(rollContext) {
     if (!(reach.radius > 0)) return null;
     const from = attackerToken(rollContext.actor);
     return {
-      kind: "circle", radius: reach.radius, max: 0, from,
+      kind: "circle", radius: reach.radius, outer: rollContext.weapon?.weaponTraits?.automatedEffects?.noDamage ? null : reach.reach ?? null, max: 0, from,
       measure: from ? { from, aim: rollContext.rolledFrom === "grenade" ? "dashes" : "laser", describe: distance => distanceText(distance, rangeBand(distance, range, traits)) } : null,
       distance: area => (from ? pointGap(from, area.origin, canvas.grid) : null)
     };
@@ -1113,17 +1113,22 @@ export function detonateBlast(message) {
 async function setOffBlast(message, attack, origin, scatter = null) {
   const blast = attack.blast;
   if (blast.cloud) return releaseCloud(message, attack, origin, scatter);
-  const area = { kind: "circle", origin, radius: blast.radius, angle: 360, rotation: 0 };
-  area.polygon = areaPolygon(area.origin, area);
+  const circle = (at, radius) => {
+    const shape = { kind: "circle", origin: at, radius, angle: 360, rotation: 0 };
+    shape.polygon = areaPolygon(shape.origin, shape);
+    return shape;
+  };
+  const area = circle(origin, blast.radius);
+  const struck = blast.reach ? circle(origin, blast.reach) : area;
   const name = game.i18n.format("ep2e.chat.attack.blastArea", { name: attack.weaponName });
   const flags = { attackId: attack.id, messageId: message.id, actorUuid: attack.actorUuid, blast: true };
   await createShadowedArea(area, { name, flags });
+  if (blast.reach) await createShadowedArea(struck, { name, flags, openColor: OUTER_ZONE_COLOR, inside: area, exclude: coveredSquares(area) });
   if (scatter) {
-    const aimed = { kind: "circle", origin: blast.origin, radius: blast.radius, angle: 360, rotation: 0 };
-    aimed.polygon = areaPolygon(aimed.origin, aimed);
-    await createShadowedArea(aimed, { name, flags, spent: true, exclude: coveredSquares(area) });
+    const aimed = circle(blast.origin, blast.reach ?? blast.radius);
+    await createShadowedArea(aimed, { name, flags, spent: true, exclude: coveredSquares(struck) });
   }
-  const caught = blast.harmless && !attack.dose ? [] : blastTargets(area, canvas.tokens?.placeables ?? []);
+  const caught = blast.harmless && !attack.dose ? [] : blastTargets(struck, canvas.tokens?.placeables ?? []);
   if (!caught.length) clearBlast(attack, BLAST_LINGER);
   const own = caught.find(entry => entry.actor.uuid === attack.actorUuid);
   if (own) ui.notifications.warn(game.i18n.format("ep2e.targeting.ownBlast", { name: own.actor.name }));

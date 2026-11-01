@@ -1,9 +1,9 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR, attackEffect } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
-import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine } from "../../module/rolls/damage.js";
+import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine, applyAttackDamage } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
-import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cloudOutline } from "../../module/common/targeting.js";
+import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cloudOutline, OUTER_ZONE_COLOR } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
 import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS, firingAttackModes } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
@@ -1227,7 +1227,10 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     expect(blastReach(frag, { reduction: 6 })).toEqual({ kind: "centered", radius: 6, reduction: 6 });
     expect(blastReach(frag, { reduction: 50 }).reduction).toBe(20);
     expect(blastReach(frag, { reduction: 1 }).reduction).toBe(2);
-    expect(blastReach(stun, { radius: 4 })).toEqual({ kind: "uniform", radius: 4, reduction: 0 });
+    expect(blastReach({ ...stun, maxDamage: 0 }, { radius: 4 })).toEqual({ kind: "uniform", radius: 4, reduction: 0 });
+    expect(blastReach({ ...stun, maxDamage: 26 })).toEqual({ kind: "uniform", radius: stun.radius, reduction: 2, falloffFrom: stun.radius, reach: stun.radius + 13 });
+    expect(blastReach({ ...stun, maxDamage: 26 }, { radius: 4 })).toMatchObject({ radius: 4, falloffFrom: 4, reach: 17 });
+    expect(blastReach({ ...stun, maxDamage: 20, reduction: 10 })).toMatchObject({ reduction: 10, reach: stun.radius + 2 });
     expect(blastReach(stun, { radius: 40 }).radius).toBe(10);
   });
 
@@ -1240,11 +1243,42 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
     const card = await hurl(actor, 30);
     await until(() => defenceCards().length);
 
-    expect(regions.map(region => region.flags.eclipsephase.area.part)).toEqual(["open", "shadow"]);
+    expect(regions.map(region => region.flags.eclipsephase.area.part)).toEqual(["open", "shadow", "open", "shadow"]);
     expect(regions[0].flags.eclipsephase.area).toMatchObject({ blast: true, actorUuid: actor.uuid });
+    expect(regions[2].color).toEqual(OUTER_ZONE_COLOR);
+    const inner = new Set(regions[0].flags.eclipsephase.area.cells);
+    expect(regions[2].flags.eclipsephase.area.cells.length).toBeGreaterThan(0);
+    expect(regions[2].flags.eclipsephase.area.cells.some(cell => inner.has(cell))).toBe(false);
     expect(card.getFlag("eclipsephase", "taskCard").targets.map(target => target.name).sort()).toEqual(["Bo", "Thrower"]);
     expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.ownBlast"));
     expect(defenceCards().flatMap(message => message.getFlag("eclipsephase", "attackDefence").entries.map(entry => entry.name)).sort()).toEqual(["Bo", "Thrower"]);
+  });
+
+  test("a uniform blast deals full damage inside its radius, and loses 2 DV a metre outside it", async () => {
+    const actor = armoured("Bo");
+    const dealt = async distance => {
+      const before = actor.system.health.physical.value;
+      await applyAttackDamage({ cardId: "none", total: 12, armorUsed: "none", armorPiercing: false, reduction: 2, falloffFrom: 10, targets: [{ uuid: actor.uuid, name: "Bo", outcome: "hit", distance }] });
+      return actor.system.health.physical.value - before;
+    };
+
+    expect(await dealt(4)).toBe(12);
+    expect(await dealt(10)).toBe(12);
+    expect(await dealt(13)).toBe(6);
+    expect(await dealt(30)).toBe(0);
+  });
+
+  test("a payload that comes with the damage stays inside a uniform blast's radius", async () => {
+    const effect = attackEffect("payload");
+    const resolve = jest.spyOn(effect, "resolve").mockResolvedValue(null);
+    const actor = armoured("Bo");
+    const hit = distance => applyAttackDamage({ cardId: "none", total: 12, armorUsed: "none", armorPiercing: false, reduction: 2, falloffFrom: 10, dose: { when: "dealt" }, targets: [{ uuid: actor.uuid, name: "Bo", outcome: "hit", distance }] });
+
+    await hit(13);
+    expect(resolve).not.toHaveBeenCalled();
+    await hit(9);
+    expect(resolve).toHaveBeenCalledTimes(1);
+    resolve.mockRestore();
   });
 
   test("a throw that misses sets nothing off, nor does one that was not placed", async () => {

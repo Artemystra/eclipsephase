@@ -425,6 +425,9 @@ export function maxDamage(dv) {
   return (Number(dv?.d10) || 0) * 10 + (Number(dv?.d6) || 0) * 6 + (Number(dv?.bonus) || 0);
 }
 
+// What a uniform blast's damage loses per metre outside its radius unless it says otherwise (Core p.218).
+const UNIFORM_BLAST_REDUCTION = 2;
+
 /**
  * How far a blast reaches (Core p.212, p.218): a uniform blast as far as its radius, a centred one
  * until its damage has fallen to nothing - its highest damage over what it loses per metre. Dialled
@@ -437,7 +440,11 @@ export function blastReach(blast, dial = {}) {
   if (blast?.kind === "uniform") {
     const full = Number(blast.radius) || 0;
     const chosen = Number(dial.radius);
-    return { kind: "uniform", radius: chosen > 0 ? Math.min(full, chosen) : full, reduction: 0 };
+    const radius = chosen > 0 ? Math.min(full, chosen) : full;
+    const damage = Number(blast.maxDamage) || 0;
+    if (!damage) return { kind: "uniform", radius, reduction: 0 };
+    const reduction = Number(blast.reduction) || UNIFORM_BLAST_REDUCTION;
+    return { kind: "uniform", radius, reduction, falloffFrom: radius, reach: radius + damage / reduction };
   }
   if (blast?.kind === "centered") {
     const base = Number(blast.reduction) || 2;

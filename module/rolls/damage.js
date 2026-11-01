@@ -415,6 +415,11 @@ export function detectThrow(context) {
   const reach = blastReach(selected.blast, { radius: options.blastRadius, reduction: options.blastReduction });
   const placed = (() => { try { return JSON.parse(options.placedArea || "null"); } catch { return null; } })();
   const trigger = options.trigger || selected.blast?.trigger || "impact";
+  if (harmless) {
+    delete reach.reach;
+    delete reach.falloffFrom;
+    if (reach.kind === "uniform") reach.reduction = 0;
+  }
   const blast = reach.kind !== "none" ? {
     ...reach, origin: placed?.origin ?? null, from: placed?.from ?? null, trigger, harmless, delayed: isDelayedTrigger(trigger), lingers: !!cloud, ...(cloud ? { cloud } : {}),
     ...(trigger === "timer" ? { timer: { value: Number(options.timerValue) || 1, unit: options.timerUnit || "rounds", ...timerSpan(options.timerValue || 1, options.timerUnit || "rounds") } } : {}),
@@ -591,7 +596,7 @@ function highlighted(key, value) {
  *   hidden in a blast } each)
  * @returns {Promise<Array<String|Object>>} The lines written onto the card
  */
-export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, dose = null, targets }) {
+export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, falloffFrom = 0, dose = null, targets }) {
   const lines = [];
   for (const target of targets) {
     if (target.outcome === "none") {
@@ -600,10 +605,11 @@ export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercin
     }
     const actor = await fromUuid(target.uuid);
     if (!actor) continue;
-    const falloff = reduction && Number.isFinite(target.distance) ? reduction * Math.floor(target.distance) : 0;
+    const falloff = reduction && Number.isFinite(target.distance) ? reduction * Math.floor(Math.max(0, target.distance - falloffFrom)) : 0;
+    const outerZone = falloffFrom > 0 && target.distance > falloffFrom;
     const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing, falloff);
     const result = await applyDamage(actor, against.dealt, { target: damageTarget });
-    if (dose?.when === "dealt" && against.dealt > 0) await attackEffect("payload")?.resolve?.({ dose }, actor, "hit");
+    if (dose?.when === "dealt" && against.dealt > 0 && !outerZone) await attackEffect("payload")?.resolve?.({ dose }, actor, "hit");
     const name = falloff ? game.i18n.format("ep2e.chat.damage.blastFalloff", { name: actor.name, distance: Math.floor(target.distance), falloff }) : actor.name;
     lines.push(secretLine(target, attackDamageLine({ ...target, name }, { ...against, ...result, armorUsed, damageTarget })));
   }
@@ -647,7 +653,7 @@ export async function rollAttackDamage(card) {
     await updateCard(card, "damageCard", "rolled", { data: storable(shown) });
 
     const total = Number(shown.total) || 0;
-    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", reduction: Number(attack.blast?.reduction) || 0, dose: attack.dose ?? null, targets: state.targets };
+    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", falloffFrom: Number(attack.blast?.falloffFrom) || 0, reduction: Number(attack.blast?.reduction) || 0, dose: attack.dose ?? null, targets: state.targets };
     if (game.user.isGM) await applyAttackDamage(request);
     else relayToActiveGM("applyAttackDamage", request);
     await clearBlast(attack);

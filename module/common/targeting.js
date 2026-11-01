@@ -33,6 +33,7 @@ export function tokenAt(point, tokens) {
 // on a picked token red, and the darker glow and the bright core of the line an attack aims with.
 export const TARGET_COLOR = "#4098d6";
 const AIM_GLOW_COLOR = 0x346d8e;
+export const OUTER_ZONE_COLOR = "#346d8e";
 export const MARK_COLOR = "#db2a2a";
 const AIM_CORE_COLOR = 0xb5dcf2;
 const AIM_RED_CORE_COLOR = 0xff9a9a;
@@ -866,7 +867,8 @@ function measureFrom({ from, describe, aim = "dashes" }) {
  * that wide. A left click places it, a right click or Escape cancels - Escape is caught here,
  * so it does not close a window that is waiting on the placement instead. Open sheets are minimised
  * meanwhile, as when picking targets.
- * @param {Object} options - kind ("circle" or "cone"); radius in scene units; angle in degrees for a
+ * @param {Object} options - kind ("circle" or "cone"); radius in scene units; outer: the radius of a
+ *   second circle shown around a placed circle; angle in degrees for a
  *   cone; width in scene units for a cone whose length the user chooses; from, the token a cone starts
  *   at; color; name, "Area" when none is given; asideSheets: false
  *   when the caller keeps the sheets minimised itself; measure: { from, describe(distance) } draws a
@@ -874,7 +876,7 @@ function measureFrom({ from, describe, aim = "dashes" }) {
  * @returns {Promise<Object|null>} kind, origin, radius, angle, rotation and the wall-cut polygon, or
  *   null when cancelled
  */
-export async function placeArea({ kind = "circle", radius, angle = 45, width = null, from = null, color = TARGET_COLOR, name = "", asideSheets = true, measure = null } = {}) {
+export async function placeArea({ kind = "circle", radius, outer = null, angle = 45, width = null, from = null, color = TARGET_COLOR, name = "", asideSheets = true, measure = null } = {}) {
   if (!globalThis.canvas?.ready) return null;
   const cone = kind === "cone";
   const tip = cone ? (from?.center ?? null) : null;
@@ -893,12 +895,33 @@ export async function placeArea({ kind = "circle", radius, angle = 45, width = n
   };
   document.addEventListener("keydown", onKey, true);
   const stopMeasuring = measure?.from ? measureFrom(measure) : () => {};
+  const ring = outer && globalThis.PIXI ? new PIXI.Graphics() : null;
+  if (ring) canvas.controls?.addChild?.(ring);
+  const showRing = ({ shape: placing }) => {
+    const zone = Number.parseInt(OUTER_ZONE_COLOR.replace("#", ""), 16);
+    ring.clear().beginFill(zone, 0.3);
+    const origin = { x: placing.x, y: placing.y };
+    if (hasCells(canvas.grid)) {
+      const circle = reach => {
+        const shape = { kind: "circle", origin, radius: reach, angle: 360, rotation: 0 };
+        shape.polygon = areaPolygon(origin, shape);
+        return shape;
+      };
+      const inner = areaSquares(circle(radius), canvas.grid);
+      const covered = new Set([...inner.open, ...inner.shadow].map(({ i, j }) => `${i},${j}`));
+      const { open, shadow } = areaSquares(circle(outer), canvas.grid, covered);
+      for (const cell of [...open, ...shadow]) ring.drawPolygon(canvas.grid.getVertices(cell).flatMap(({ x, y }) => [x, y]));
+    }
+    else ring.lineStyle(2 / (canvas.stage?.scale?.x || 1), zone, 1).drawCircle(origin.x, origin.y, unitsToPixels(outer));
+    ring.endFill();
+  };
   const placed = await canvas.regions.placeRegion({
     name: name || game.i18n.localize("ep2e.targeting.areaName"), color, shapes: [shape], highlightMode: "coverage", displayMeasurements: true,
     visibility: CONST.REGION_VISIBILITY.ALWAYS, levels: canvas.level ? [canvas.level.id] : []
   }, {
     create: false,
     allowRotation: false,
+    ...(ring ? { onChange: showRing } : {}),
     onMove: cone ? ({ shape: placing, position }) => {
       const rotation = Math.atan2(position.y - tip.y, position.x - tip.x) * 180 / Math.PI;
       if (!width) {
@@ -912,6 +935,7 @@ export async function placeArea({ kind = "circle", radius, angle = 45, width = n
   }).finally(() => {
     document.removeEventListener("keydown", onKey, true);
     stopMeasuring();
+    ring?.destroy();
     restoreSheets();
   });
   const final = placed?.shapes?.[0];
@@ -1070,7 +1094,7 @@ export function cellShapes(cells, grid) {
  *   ("i,j") to leave out
  * @returns {Promise<Object[]>} The Regions, empty when the GM creates them
  */
-export async function createShadowedArea(area, { name = "", flags = {}, behaviors = [], spent = false, exclude = new Set() } = {}) {
+export async function createShadowedArea(area, { name = "", flags = {}, behaviors = [], spent = false, exclude = new Set(), openColor = MARK_COLOR, inside = null } = {}) {
   const grid = canvas.grid;
   const part = (key, color, shapes) => {
     const data = areaRegionData(area, { color, name, flags: { ...flags, part: key }, behaviors, whole: true });
@@ -1081,7 +1105,7 @@ export async function createShadowedArea(area, { name = "", flags = {}, behavior
     const { open, shadow } = areaSquares(area, grid, exclude);
     const parts = spent
       ? [[ "spent", SPENT_COLOR, [...open, ...shadow] ]]
-      : [[ "open", MARK_COLOR, open ], [ "shadow", SHADOW_COLOR, shadow ]];
+      : [[ "open", openColor, open ], [ "shadow", SHADOW_COLOR, shadow ]];
     return createRegions(parts.filter(([, , cells]) => cells.length).map(([key, color, cells]) => {
       const data = part(key, color, cellShapes(cells, grid));
       data.flags.eclipsephase[AREA_FLAG].cells = cells.map(({ i, j }) => `${i},${j}`);
@@ -1089,9 +1113,14 @@ export async function createShadowedArea(area, { name = "", flags = {}, behavior
     }));
   }
   if (spent) return createRegions([part("spent", SPENT_COLOR)]);
-  const open = areaRegionData(area, { color: MARK_COLOR, name, flags: { ...flags, part: "open" }, behaviors });
+  const open = areaRegionData(area, { color: openColor, name, flags: { ...flags, part: "open" }, behaviors });
   const shadow = part("shadow", SHADOW_COLOR);
   if (open) shadow.shapes.push({ ...open.shapes[0], hole: true });
+  const hole = inside ? areaRegionData(inside, { color: openColor, name, whole: true })?.shapes?.[0] : null;
+  if (hole) {
+    open?.shapes.push({ ...hole, hole: true });
+    shadow.shapes.push({ ...hole, hole: true });
+  }
   return createRegions([open, shadow].filter(Boolean));
 }
 

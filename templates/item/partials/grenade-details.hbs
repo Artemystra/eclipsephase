@@ -32,7 +32,7 @@
     <span class="resource-label">{{localize "ep2e.item.weapon.table.area.reduction"}}</span>
     <div class="ep-field-unit">
         <span>-</span>
-        <input onFocus="this.select()" type="number" min="0" name="system.area.reduction" value="{{item.system.area.reduction}}" placeholder="2"{{#unless (eq item.system.area.kind "centered")}} disabled{{/unless}}/>
+        <input onFocus="this.select()" type="number" min="0" name="system.area.reduction" value="{{item.system.area.reduction}}" placeholder="2"{{#if (eq item.system.area.kind "none")}} disabled{{/if}}/>
         <span>DV/m</span>
     </div>
 </label>
