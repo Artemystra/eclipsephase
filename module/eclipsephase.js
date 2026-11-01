@@ -105,15 +105,6 @@ async function registerSystemSettings() {
     default: true
   });
 
-  game.settings.register("eclipsephase", "effectPanel", {
-    config: true,
-    scope: "world",
-    name: "SETTINGS.effectPanel.name",
-    hint: 'SETTINGS.effectPanel.hint',
-    type: Boolean,
-    default: false
-  });
-
   game.settings.register("eclipsephase", "timeFormat", {
     config: true,
     scope: "client",
@@ -274,12 +265,20 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
     "systems/eclipsephase/templates/chat/partials/card-header.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
+    "systems/eclipsephase/templates/item/partials/weapon-tabs.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-titlebar.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-tabs.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-description.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-effects.hbs",
+    "systems/eclipsephase/templates/item/partials/field-dice.hbs",
+    "systems/eclipsephase/templates/item/partials/field-cost.hbs",
+    "systems/eclipsephase/templates/item/partials/induced-changes.hbs",
+    "systems/eclipsephase/templates/item/partials/aspect-mechanics.hbs",
+    "systems/eclipsephase/templates/item/partials/weapon-choice-pills.hbs",
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
     "systems/eclipsephase/templates/item/partials/munition-payload.hbs",
-    "systems/eclipsephase/templates/item/partials/item-traits.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
     "systems/eclipsephase/templates/item/partials/movement-grid.hbs",
-    "systems/eclipsephase/templates/item/partials/aspect-damage-fields.hbs",
     "systems/eclipsephase/templates/apps/time-panel.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);

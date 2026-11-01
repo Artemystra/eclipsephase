@@ -821,7 +821,11 @@ function getHandlebars() {
     toLowerCase: value => String(value ?? "").toLowerCase(),
     checkedIf: condition => (condition ? "checked" : ""),
     checked: condition => (condition ? "checked" : ""),
-    numberFormat: value => String(value ?? "")
+    numberFormat: value => String(value ?? ""),
+    radioBoxes: () => new handlebars.SafeString(""),
+    selectOptions: (choices, options) => new handlebars.SafeString(Object.entries(choices ?? {})
+      .map(([value, label]) => `<option value="${value}"${String(options.hash.selected) === value ? " selected" : ""}>${label}</option>`)
+      .join(""))
   });
   handlebarsReady = true;
   global.Handlebars = handlebars;

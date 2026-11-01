@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "时间格式",
       "hint": "时间面板如何显示一天中的时间。小时使用 24 小时制，Beats 使用斯沃琪网络时间，一天为 1000 beats。",
@@ -1031,6 +1027,22 @@
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "资源池"},
+      "inducedChanges": {
+        "headline": "诱发变化",
+        "allActions": "所有行动",
+        "durability": "耐久",
+        "lucidity": "清醒",
+        "initiative": "先攻",
+        "energyArmor": "能量护甲",
+        "kineticArmor": "动能护甲",
+        "mentalArmor": "精神护甲",
+        "rest": "休息恢复",
+        "ignoreWounds": "忽略 {count} 处创伤",
+        "ignoreTrauma": "忽略 {count} 次精神创伤",
+        "psiArmor": "获得精神护甲"
+      },
       "general": {
         "tabs": {
           "detailsTab": "物品细节",
@@ -1061,6 +1073,9 @@
         }
       },
       "traits": {
+        "traitShort": "正",
+        "flawShort": "负",
+        "typeLabel": "类型",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1080,6 +1095,7 @@
       "aspect": {
         "pushedBadge": "已推送",
         "table": {
+          "targetHeadline": "目标",
           "type": {
             "label": "灵能类型",
             "gamma": "伽马",
@@ -1146,6 +1162,13 @@
       },
       "weapon": {
         "table": {
+          "modeName": "模式名称",
+          "section": {
+            "general": "常规",
+            "attack": "攻击",
+            "traits": "特性",
+            "accessories": "配件"
+          },
           "range": "远程",
           "maxAmmo": "弹药上限",
           "damageValue": "DV",
@@ -1343,7 +1366,8 @@
           }
         },
         "mechanics": {
-          "tab": "药效",
+          "grantHeadline": "授予",
+          "tab": "机制",
           "none": "无",
           "checkHeadline": "服用时检定",
           "aptitude": "属性",
@@ -1410,8 +1434,12 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "技能"
+        },
         "autoBot": "Add AI",
         "table": {
+          "skillName": "技能",
           "initiative": "先攻",
           "threatValue": "TV",
           "durability": "DUR",

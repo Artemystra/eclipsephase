@@ -426,7 +426,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const special = [];
       const trait = [];
       const flaw = [];
-      const effects = [];
       const rangedweapon = [];
       const ccweapon = [];
       const armor = [];
@@ -881,14 +880,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         }
       }
 
-      actor.showEffectsTab=false
-      if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-        const effectList = this.document.getEmbeddedCollection("ActiveEffect");
-        for(let item of effectList){
-          effects.push(item);
-        }
-        actor.showEffectsTab=true;
-      }
 
       // Assign and return
       actor.trait = trait;
@@ -924,7 +915,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         v.hasMovement = hasAnyMovement(v);
         return v;
       });
-      actor.activeEffects=effects;
       actor.actorType = "PC";
       actor.ammo = ammo;
       actor.morph = morph;

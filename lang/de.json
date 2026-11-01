@@ -11,10 +11,6 @@
       "survival": "Überleben",
       "grenadesOnly": "Nur Granaten"
     },
-    "effectPanel": {
-      "name": "Active Effect Tab",
-      "hint": "Aktiviert Active Effect Tabs für Spielleiter:innen"
-    },
     "timeFormat": {
       "name": "Zeitformat",
       "hint": "Wie das Zeit-Panel die Tageszeit anzeigt. Stunden nutzt eine 24-Stunden-Uhr, Beats die Swatch Internet Time, bei der ein Tag 1000 Beats hat.",
@@ -1044,6 +1040,22 @@
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Pools"},
+      "inducedChanges": {
+        "headline": "Ausgelöste Änderungen",
+        "allActions": "auf alle Aktionen",
+        "durability": "Durability",
+        "lucidity": "Lucidity",
+        "initiative": "Initiative",
+        "energyArmor": "Energierüstung",
+        "kineticArmor": "Kinetische Rüstung",
+        "mentalArmor": "Mentale Rüstung",
+        "rest": "auf Erholung",
+        "ignoreWounds": "Ignoriert {count} Wunde(n)",
+        "ignoreTrauma": "Ignoriert {count} Trauma(ta)",
+        "psiArmor": "Gewährt mentale Rüstung"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Details",
@@ -1077,6 +1089,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Typ",
         "traitLabel": "Positiv",
         "flawLabel": "Negativ"
       },
@@ -1096,6 +1111,7 @@
       "aspect": {
         "pushedBadge": "Gepusht",
         "table": {
+          "targetHeadline": "Ziele",
           "type": {
             "label": "Psi Typ",
             "gamma": "Gamma",
@@ -1179,6 +1195,13 @@
           "weaponMode": "Waffenmodus",
           "addTrait": "Eigenschaft Hinzufügen",
           "addAccessory": "Zubehör Hinzufügen",
+          "modeName": "Modusname",
+          "section": {
+            "general": "Allgemein",
+            "attack": "Angriff",
+            "traits": "Traits",
+            "accessories": "Zubehör"
+          },
           "armorUsed": {
             "label": "Widerstandsart",
             "none": "Keine",
@@ -1365,7 +1388,8 @@
           }
         },
         "mechanics": {
-          "tab": "Wirkung",
+          "grantHeadline": "Gewährt",
+          "tab": "Mechanik",
           "none": "Keine",
           "checkHeadline": "Check beim Nehmen",
           "aptitude": "Attribut",
@@ -1432,8 +1456,12 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Skills"
+        },
         "autoBot": "AI Hinzufügen",
         "table": {
+          "skillName": "Skill",
           "initiative": "Init",
           "threatValue": "BW",
           "durability": "AUS",

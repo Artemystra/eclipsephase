@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "Time Format",
       "hint": "How the Time Panel shows the time of day. Hours uses a 24-hour clock, Beats uses Swatch Internet Time, where a day is 1000 beats.",
@@ -1057,6 +1053,22 @@
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Pools"},
+      "inducedChanges": {
+        "headline": "Induced Changes",
+        "allActions": "to all actions",
+        "durability": "Durability",
+        "lucidity": "Lucidity",
+        "initiative": "Initiative",
+        "energyArmor": "Energy Armor",
+        "kineticArmor": "Kinetic Armor",
+        "mentalArmor": "Mental Armor",
+        "rest": "on rest recovery",
+        "ignoreWounds": "Ignores {count} wound(s)",
+        "ignoreTrauma": "Ignores {count} trauma(s)",
+        "psiArmor": "Grants Mental Armor"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Details",
@@ -1090,6 +1102,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Type",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1109,6 +1124,7 @@
       "aspect": {
         "pushedBadge": "Pushed",
         "table": {
+          "targetHeadline": "Targets",
           "type": {
             "label": "Psi Type",
             "gamma": "Gamma",
@@ -1192,6 +1208,13 @@
           "weaponMode": "Weapon Mode",
           "addTrait": "Add Trait",
           "addAccessory": "Add Accessory",
+          "modeName": "Mode Name",
+          "section": {
+            "general": "General",
+            "attack": "Attack",
+            "traits": "Traits",
+            "accessories": "Accessories"
+          },
           "tooltips": {
             "multiShoot": "Multiplier for every round fired"
           },
@@ -1381,7 +1404,8 @@
           }
         },
         "mechanics": {
-          "tab": "Dose",
+          "grantHeadline": "Grants",
+          "tab": "Mechanics",
           "none": "None",
           "checkHeadline": "Check on Taking",
           "aptitude": "Aptitude",
@@ -1452,9 +1476,13 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Skills"
+        },
         "autoBot": "Add AI",
         "skillFieldDefault": "[appropriate field]",
         "table": {
+          "skillName": "Skill",
           "initiative": "Init",
           "threatValue": "TV",
           "durability": "DUR",

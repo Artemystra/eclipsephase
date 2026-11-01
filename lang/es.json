@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "Formato de hora",
       "hint": "Cómo muestra el Panel de Tiempo la hora del día. Horas usa un reloj de 24 horas, Beats usa el Swatch Internet Time, donde un día tiene 1000 beats.",
@@ -1032,6 +1028,22 @@
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Reservas"},
+      "inducedChanges": {
+        "headline": "Cambios inducidos",
+        "allActions": "a todas las acciones",
+        "durability": "Durabilidad",
+        "lucidity": "Lucidez",
+        "initiative": "Iniciativa",
+        "energyArmor": "Armadura de energía",
+        "kineticArmor": "Armadura cinética",
+        "mentalArmor": "Armadura mental",
+        "rest": "a la recuperación",
+        "ignoreWounds": "Ignora {count} herida(s)",
+        "ignoreTrauma": "Ignora {count} trauma(s)",
+        "psiArmor": "Otorga armadura mental"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Item Details",
@@ -1062,6 +1074,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Tipo",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1081,6 +1096,7 @@
       "aspect": {
         "pushedBadge": "Empujado",
         "table": {
+          "targetHeadline": "Objetivos",
           "type": {
             "label": "Psi Type",
             "gamma": "Gamma",
@@ -1147,6 +1163,13 @@
       },
       "weapon": {
         "table": {
+          "modeName": "Nombre del modo",
+          "section": {
+            "general": "General",
+            "attack": "Ataque",
+            "traits": "Rasgos",
+            "accessories": "Accesorios"
+          },
           "range": "Range",
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
@@ -1344,7 +1367,8 @@
           }
         },
         "mechanics": {
-          "tab": "Dosis",
+          "grantHeadline": "Concede",
+          "tab": "Mecánicas",
           "none": "Ninguno",
           "checkHeadline": "Chequeo al tomarla",
           "aptitude": "Aptitud",
@@ -1411,7 +1435,11 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Habilidades"
+        },
         "table": {
+          "skillName": "Habilidad",
           "initiative": "Init",
           "threatValue": "TV",
           "durability": "DUR",

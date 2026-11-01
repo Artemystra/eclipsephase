@@ -9,31 +9,24 @@
         </div>
     </div>
 
-    {{!-- Sheet Body --}}
     <section class="item-sheet-body">
-        <div class="flexrow flex-group-center">
-            <table>
-                <tr>
-                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.valueLabel"}}</label></td>
-                    {{#if item.system.isThreat}}
-                    {{else}}
-                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.aptitudeLabel"}}</label></td>
-                    {{/if}}
-                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.specLabel"}}</label></td>
-                </tr>
-                <tr>
-                    <td><input class="input-small" type="number"
-                      name="system.value" value="{{item.system.value}}" data-dtype="Number" placeholder="0"/></td>
-                    {{#if item.system.isThreat}}
-                    {{else}}
-                    <td><select class="input-XL" name="system.aptitude" data-type="String">
-                        {{selectOptions config.aptitudes selected=item.system.aptitude localize=true}}
-                    </select></td>
-                    {{/if}}
-                    <td><input class="input-large" type="text"
-                      name="system.specname" value="{{item.system.specname}}" placeholder="Spec name"/></td>
-                </tr>
-            </table>
-        </div>
+<div class="ep-sheet-grid ep-sheet-grid-3">
+<label class="ep-field">
+    <span class="resource-label">{{localize "ep2e.item.additionalSkill.table.valueLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.value" value="{{item.system.value}}" placeholder="0" data-dtype="Number"/>
+</label>
+{{#unless item.system.isThreat}}
+<label class="ep-field">
+    <span class="resource-label">{{localize "ep2e.item.additionalSkill.table.aptitudeLabel"}}</span>
+    <select name="system.aptitude" data-type="String">
+        {{selectOptions config.aptitudes selected=item.system.aptitude localize=true}}
+    </select>
+</label>
+{{/unless}}
+<label class="ep-field">
+    <span class="resource-label">{{localize "ep2e.item.additionalSkill.table.specLabel"}}</span>
+    <input onFocus="this.select()" type="text" name="system.specname" value="{{item.system.specname}}" placeholder="Spec name"/>
+</label>
+</div>
     </section>
 </form>

@@ -1,0 +1,14 @@
+<div class="tab {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description">
+    {{#if editable}}
+        <prose-mirror
+            name="system.description"
+            button="true"
+            editable="true"
+            toggled="false"
+            value="{{item.system.description}}">
+            {{{htmlDescription}}}
+        </prose-mirror>
+    {{else}}
+        {{{htmlDescription}}}
+    {{/if}}
+</div>

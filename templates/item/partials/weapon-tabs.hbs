@@ -1,0 +1,24 @@
+<nav class="sheet-tabs itemnav tabs" data-group="primary">
+    <a class="item {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="details"><span class="ep-tab-label">{{#if item.system.additionalMode}}
+            {{#if item.system.mode1.name}}{{localize item.system.mode1.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode1"}}{{/if}}
+        {{else}}
+            {{localize "ep2e.item.general.tabs.detailsTab"}}
+        {{/if}}</span></a>
+
+    {{#if item.system.additionalMode}}
+        <a class="item ep-mode-tab {{#if (eq tabGroups.primary 'details2')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="details2">
+            <span class="ep-tab-label">{{#if item.system.mode2.name}}{{localize item.system.mode2.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode2"}}{{/if}}</span>
+            <i class="far fa-times-circle awesomeIcon toggleItem" data-path="system.additionalMode"></i>
+        </a>
+    {{else}}
+        <a class="item ep-mode-add toggleItem" data-path="system.additionalMode" data-tooltip="{{localize 'ep2e.item.general.tabs.addMode'}}">
+            <i class="fas fa-plus awesomeIcon"></i>
+        </a>
+    {{/if}}
+
+    <a class="item {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="description"><span class="ep-tab-label">{{localize "ep2e.item.general.table.description"}}</span></a>
+
+    {{#if item.showEffectsTab}}
+        <a class="item {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="effects"><span class="ep-tab-label">{{localize "ep2e.item.general.tabs.effectsTab"}}</span></a>
+    {{/if}}
+</nav>

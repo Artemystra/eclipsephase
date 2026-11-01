@@ -1,127 +1,64 @@
 <form class="{{cssClass}}" autocomplete="off">
-    <div class="ep-sheet-titlebar">
-        <div class="ep-titlebar-item-logo">
-            <img class="item-img" src="{{item.img}}" data-action="editImage" data-field="img" title="{{item.name}}"/>
+    {{> systems/eclipsephase/templates/item/partials/sheet-titlebar.hbs}}
+    {{> systems/eclipsephase/templates/item/partials/sheet-tabs.hbs}}
+
+    <section class="item-sheet-body">
+        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.item.weapon.table.section.general"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-4">
+<label class="ep-field">
+    <span class="resource-label">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0"/>
+</label>
+<label class="ep-field">
+    <span class="resource-label" data-tooltip="{{localize 'ep2e.morph.currentMorph.morphPointsLabel'}}">{{localize "ep2e.morph.currentMorph.morphPointsShortLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.morphPoints" value="{{item.system.morphPoints}}" placeholder="0"/>
+</label>
+<label class="ep-field">
+    <span class="resource-label">{{localize "ep2e.morph.currentMorph.morphType.label"}}</span>
+    <select name="system.type" data-type="String">
+        {{selectOptions config.bodyTypes selected=item.system.type localize=true}}
+    </select>
+</label>
+{{#if (eq item.system.type "synth")}}
+<label class="ep-field">
+    <span class="resource-label">{{localize "ep2e.morph.currentMorph.frame.label"}}</span>
+    <select name="system.frame" data-type="String">
+        {{selectOptions itemList.frame selected=frameDefault}}
+    </select>
+</label>
+{{/if}}
+</div>
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.item.morph.poolsHeadline"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-4">
+<label class="ep-field">
+    <span class="resource-label"><img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/> {{localize "ep2e.morph.currentMorph.insightLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.insight" value="{{item.system.insight}}" placeholder="0"/>
+</label>
+<label class="ep-field">
+    <span class="resource-label"><img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/> {{localize "ep2e.morph.currentMorph.moxieLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.moxie" value="{{item.system.moxie}}" placeholder="0"/>
+</label>
+<label class="ep-field">
+    <span class="resource-label"><img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/> {{localize "ep2e.morph.currentMorph.vigorLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.vigor" value="{{item.system.vigor}}" placeholder="0"/>
+</label>
+<label class="ep-field">
+    <span class="resource-label"><img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/> {{localize "ep2e.morph.currentMorph.flexLabel"}}</span>
+    <input onFocus="this.select()" type="number" name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
+</label>
+</div>
+{{> systems/eclipsephase/templates/item/partials/movement-grid.hbs}}
         </div>
-        <div class="ep-titlebar-name centerBackground">
-            <input name="name" type="text" value="{{item.name}}" placeholder="Name" style="width: 100%;"/>
-            <span class="ep-titlebar-name-plain">{{item.name}}</span>
-        </div>
-    </div>
-
-    <nav class="sheet-tabs itemnav tabs" data-group="primary">
-        {{#each tabs.primary as |tab|}}
-            {{#if (eq tab.id "effects")}}
-                {{#if @root.item.showEffectsTab}}
-                    <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                        {{localize tab.label}}
-                    </a>
-                {{/if}}
-            {{else}}
-                <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                    {{localize tab.label}}
-                </a>
-            {{/if}}
-        {{/each}}
-    </nav>
-
-    <section class="item-sheet-body" style="min-height: 255px; height: fit-content; overflow-y: scroll">
-        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details" style="min-height: 255px;">
-            {{#if (eq item.system.type "synth")}}
-            <div class="itemRowPadded" style="display: flex; justify-content: space-between;">
-                <div class="itemGroup">
-                    <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
-                    <input class="input-small" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0" style="text-align: center"/>
-                </div>
-                <div class="itemGroup wantToKnowMore">
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphPointsShortLabel"}}</label>
-                    <span class="tooltipText" style="top: 50%; transform: translateY(-50%); left: auto; right: 100%; margin-right: 6px;">{{localize "ep2e.morph.currentMorph.morphPointsLabel"}}</span>
-                    <input class="input-small" type="number" name="system.morphPoints" value="{{item.system.morphPoints}}" placeholder="0" style="text-align: center"/>
-                </div>
-                <div class="itemGroup">
-                    <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
-                    <select style="max-width: 100px;" class="selectSpecApt" name="system.type" data-type="String">
-                        {{selectOptions config.bodyTypes selected=item.system.type localize=true}}
-                    </select>
-                </div>
-                <div class="itemGroup">
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.frame.label"}}</label>
-                    <select style="max-width: 130px;" class="selectSpecApt" name="system.frame" data-type="String">
-                        {{selectOptions itemList.frame selected=frameDefault}}
-                    </select>
-                </div>
-            </div>
-            {{else}}
-            <div class="itemRowPadded" style="display: flex; justify-content: space-between;">
-                <div class="itemGroup">
-                    <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
-                    <input class="input-small" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0" style="text-align: center"/>
-                </div>
-                <div class="itemGroup wantToKnowMore">
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphPointsShortLabel"}}</label>
-                    <span class="tooltipText" style="top: 50%; transform: translateY(-50%); left: auto; right: 100%; margin-right: 6px;">{{localize "ep2e.morph.currentMorph.morphPointsLabel"}}</span>
-                    <input class="input-small" type="number" name="system.morphPoints" value="{{item.system.morphPoints}}" placeholder="0" style="text-align: center"/>
-                </div>
-                <div class="itemGroup">
-                    <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
-                    <select style="max-width: 100px;" class="selectSpecApt" name="system.type" data-type="String">
-                        {{selectOptions config.bodyTypes selected=item.system.type localize=true}}
-                    </select>
-                </div>
-            </div>
-            {{/if}}
-
-            <div class="itemRowHeader">
-                <div class="itemGroup">
-                    <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
-                    <input class="input-xs" onFocus="this.select()" type="number" name="system.insight" value="{{item.system.insight}}" placeholder="0"/>
-                </div>
-                <div class="itemGroup">
-                    <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
-                    <input class="input-xs" onFocus="this.select()" type="number" name="system.moxie" value="{{item.system.moxie}}" placeholder="0"/>
-                </div>
-                <div class="itemGroup">
-                    <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
-                    <input class="input-xs" onFocus="this.select()" type="number" name="system.vigor" value="{{item.system.vigor}}" placeholder="0"/>
-                </div>
-                <div class="itemGroup">
-                    <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
-                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
-                    <input class="input-xs" onFocus="this.select()" type="number" name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
-                </div>
-            </div>
-
-            {{> systems/eclipsephase/templates/item/partials/movement-grid.hbs item=item config=config}}
+        <div class="tab {{#if (eq tabGroups.primary 'additions')}}active{{/if}}" data-group="primary" data-tab="additions">
+{{> systems/eclipsephase/templates/item/partials/additions-tab.hbs}}
         </div>
 
-        <div class="tab {{#if (eq tabGroups.primary 'additions')}}active{{/if}}" data-group="primary" data-tab="additions" style="min-height: 255px;">
-            {{> systems/eclipsephase/templates/item/partials/additions-tab.hbs item=item}}
-        </div>
-
-        <div class="tab morph {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description" style="min-height: 255px;">
-            {{#if editable}}
-                <prose-mirror
-                    name="system.description"
-                    button="true"
-                    editable="true"
-                    toggled="false"
-                    value="{{item.system.description}}">
-                    {{{htmlDescription}}}
-                </prose-mirror>
-            {{else}}
-                {{{htmlDescription}}}
-            {{/if}}
-        </div>
-
-        <div class="tab {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects" style="min-height: 255px;">
-            {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
-        </div>
+        {{> systems/eclipsephase/templates/item/partials/sheet-description.hbs}}
+        {{> systems/eclipsephase/templates/item/partials/sheet-effects.hbs}}
     </section>
 </form>

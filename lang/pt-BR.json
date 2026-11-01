@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "Formato de hora",
       "hint": "Como o Painel de Tempo mostra a hora do dia. Horas usa um relógio de 24 horas, Beats usa o Swatch Internet Time, em que um dia tem 1000 beats.",
@@ -1032,6 +1028,22 @@
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Reservas"},
+      "inducedChanges": {
+        "headline": "Mudanças induzidas",
+        "allActions": "em todas as ações",
+        "durability": "Durabilidade",
+        "lucidity": "Lucidez",
+        "initiative": "Iniciativa",
+        "energyArmor": "Armadura de energia",
+        "kineticArmor": "Armadura cinética",
+        "mentalArmor": "Armadura mental",
+        "rest": "na recuperação",
+        "ignoreWounds": "Ignora {count} ferimento(s)",
+        "ignoreTrauma": "Ignora {count} trauma(s)",
+        "psiArmor": "Concede armadura mental"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Detalhes do Item",
@@ -1062,6 +1074,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Tipo",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1081,6 +1096,7 @@
       "aspect": {
         "pushedBadge": "Empurrado",
         "table": {
+          "targetHeadline": "Alvos",
           "type": {
             "label": "Tipo Psi",
             "gamma": "Gama",
@@ -1147,6 +1163,13 @@
       },
       "weapon": {
         "table": {
+          "modeName": "Nome do modo",
+          "section": {
+            "general": "Geral",
+            "attack": "Ataque",
+            "traits": "Traços",
+            "accessories": "Acessórios"
+          },
           "range": "Alcance",
           "maxAmmo": "Munição Máxima",
           "damageValue": "VD",
@@ -1344,7 +1367,8 @@
           }
         },
         "mechanics": {
-          "tab": "Dose",
+          "grantHeadline": "Concede",
+          "tab": "Mecânicas",
           "none": "Nenhum",
           "checkHeadline": "Teste ao tomar",
           "aptitude": "Aptidão",
@@ -1415,9 +1439,13 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Perícias"
+        },
         "autoBot": "Adicionar IA",
         "skillFieldDefault": "[área apropriada]",
         "table": {
+          "skillName": "Perícia",
           "initiative": "Inic",
           "threatValue": "NA",
           "durability": "DUR",

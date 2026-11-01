@@ -5,6 +5,11 @@ eclipsephase.traitTypes = {
     flaw: "ep2e.item.traits.flawLabel"
 }
 
+eclipsephase.traitTypesShort = {
+    trait: "ep2e.item.traits.traitShort",
+    flaw: "ep2e.item.traits.flawShort"
+}
+
 eclipsephase.firingModes = {
     ss: "ep2e.item.weapon.table.firingMode.ss",
     sa: "ep2e.item.weapon.table.firingMode.sa",

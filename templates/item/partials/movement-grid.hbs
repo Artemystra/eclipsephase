@@ -1,18 +1,15 @@
-<p class="headline5">{{localize "ep2e.morph.currentMorph.movement.label"}}</p>
-<div class="grid grid-2col">
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.morph.currentMorph.movement.label"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-4">
     {{#each @root.visibleMovement as |mov key|}}
-    <div class="itemRow itemBackgroundDark">
-        <div class="itemGroup wantToKnowMore">
-            {{mov.label}}
-            <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
-            <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
-            <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.base" value="{{mov.base}}" placeholder="0"/>/
-            <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.full" value="{{mov.full}}" placeholder="0"/>
-        </div>
-        <div class="itemGroup wantToKnowMore">
-            <i class="fa-regular fa-tags awesomeIcon icon-xsmall"></i>
-            <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}</label>
-            <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
+    <div class="ep-field ep-span-2">
+        <span class="resource-label">{{mov.label}}</span>
+        <div class="ep-field-unit">
+            <input onFocus="this.select()" type="number" name="system.movement.{{key}}.base" value="{{mov.base}}" placeholder="0" data-tooltip="{{localize 'ep2e.morph.currentMorph.movement.speed'}}"/>
+            <span>/</span>
+            <input onFocus="this.select()" type="number" name="system.movement.{{key}}.full" value="{{mov.full}}" placeholder="0" data-tooltip="{{localize 'ep2e.morph.currentMorph.movement.speed'}}"/>
+            <select name="system.movement.{{key}}.type" data-type="String" data-tooltip="{{localize 'ep2e.morph.currentMorph.movement.type'}}">
                 {{selectOptions @root.config.moveTypes selected=mov.type localize=true}}
             </select>
         </div>

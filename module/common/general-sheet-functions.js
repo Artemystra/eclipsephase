@@ -589,14 +589,71 @@ export function embeddedItemToggle(html, actor) {
   });
 }
 
+// What an effect's change reads as, for the changes with a fixed wording.
+const INDUCED_LABELS = {
+  "system.mods.globalMod": "allActions",
+  "system.mods.durmod": "durability",
+  "system.mods.lucmod": "lucidity",
+  "system.mods.iniMod": "initiative",
+  "system.mods.iniChiMod": "initiative",
+  "system.mods.energyMod": "energyArmor",
+  "system.mods.kineticMod": "kineticArmor",
+  "system.mods.mentalArmorMod": "mentalArmor",
+  "system.additionalSystems.restChiMod": "rest"
+};
+const INDUCED_IGNORED = {
+  "system.mods.woundMod": "ignoreWounds",
+  "system.mods.woundChiMod": "ignoreWounds",
+  "system.mods.traumaMod": "ignoreTrauma",
+  "system.mods.traumaChiMod": "ignoreTrauma"
+};
+const INDUCED_FLAGS = { "system.mods.psiArmor": "psiArmor" };
+const SKILL_GROUPS = { skillsIns: "insightSkills", skillsMox: "moxieSkills", skillsVig: "vigorSkills" };
+
+/**
+ * One change of an effect as readable text.
+ * @param {Object} change - The change: key and value
+ * @returns {String|null} The text, or null when the key has no wording
+ */
+function inducedChangeText({ key, value }) {
+  const label = id => game.i18n.localize(`ep2e.item.inducedChanges.${id}`);
+  const amount = /^\d/.test(String(value)) ? `+${value}` : String(value);
+  if (INDUCED_LABELS[key]) return `${amount} ${label(INDUCED_LABELS[key])}`;
+  if (INDUCED_IGNORED[key]) return game.i18n.format(`ep2e.item.inducedChanges.${INDUCED_IGNORED[key]}`, { count: Math.abs(Number(value)) });
+  if (INDUCED_FLAGS[key]) return label(INDUCED_FLAGS[key]);
+  const skill = key.match(/^system\.(skillsIns|skillsMox|skillsVig)\.(.+)\.(?:mod|chiMod)$/);
+  if (skill) return `${amount} ${game.i18n.localize(`ep2e.skills.${SKILL_GROUPS[skill[1]]}.${skill[2]}`)}`;
+  const pool = key.match(/^system\.pools\.(insight|moxie|vigor|flex)\.(?:mod|chiMod)$/);
+  if (pool) return `${amount} ${game.i18n.localize(`ep2e.morph.currentMorph.${pool[1]}Label`)}`;
+  const aptitude = key.match(/^system\.aptitudes\.(\w+)\.(?:mod|chiMod)$/);
+  if (aptitude) return `${amount} ${game.i18n.localize(`ep2e.actorSheet.aptitudes.${aptitude[1]}`)}`;
+  return null;
+}
+
+/**
+ * What an item's effects change, as readable lines: an effect with a change that has no wording
+ * reads as its name.
+ * @param {Item} item - A drug or a sleight
+ * @returns {String[]} The lines, one per change
+ */
+export function inducedChanges(item) {
+  return Array.from(item.effects ?? []).flatMap(effect => {
+    const changes = Array.from(effect.changes ?? effect.system?.changes ?? []);
+    const lines = changes.map(inducedChangeText);
+    return lines.some(line => line === null) ? [effect.name] : lines;
+  });
+}
+
 /**
  * Powers any ".multiselect-widget" (see templates/actor/partials/multiselect-pills.html) - a
  * reusable multi-select that stores its values as an array on the widget's data-path.
  * Add: type into .multiselect-input and press Enter (free text allowed), or pick a suggestion
  * from the custom .multiselect-dropdown (filtered while typing, arrow keys to highlight).
  * Remove: click a .multiselect-pill-remove.
+ * A widget with data-toggles offers fixed choices instead: each is switched at <path>.<key>.value,
+ * and text that matches no single choice adds nothing.
  * @param {Object} html - The HTML object to which the event listeners are added
- * @param {Object} actor - The actor object whose data-path array fields are being edited
+ * @param {Object} actor - The actor or item whose data-path fields are being edited
  */
 export function multiSelectPills(html, actor) {
   html.querySelectorAll(".multiselect-widget").forEach(widget => {
@@ -605,6 +662,8 @@ export function multiSelectPills(html, actor) {
 
     const input = widget.querySelector(".multiselect-input");
     const dropdown = widget.querySelector(".multiselect-dropdown");
+    const toggles = "toggles" in widget.dataset;
+    const switchChoice = (key, value) => actor.update({ [`${path}.${key}.value`]: value });
 
     // shared by the Enter-key path and the option-click path
     const addValue = async rawValue => {
@@ -635,6 +694,15 @@ export function multiSelectPills(html, actor) {
       dropdown.querySelectorAll(".multiselect-option-active").forEach(option => option.classList.remove("multiselect-option-active"));
     };
 
+    // A list set to position: fixed sits under the input, or above it when the screen ends first.
+    const placeFixed = () => {
+      const box = input.getBoundingClientRect();
+      const height = dropdown.offsetHeight;
+      const fits = box.bottom + height + 2 <= input.ownerDocument.defaultView.innerHeight;
+      dropdown.style.left = `${box.left}px`;
+      dropdown.style.top = `${fits ? box.bottom + 2 : Math.max(0, box.top - height - 2)}px`;
+    };
+
     const visibleOptions = () => dropdown ? [...dropdown.querySelectorAll(".multiselect-option:not(.noShow)")] : [];
 
     // Show options whose text contains the typed value (all of them while the input is empty,
@@ -654,7 +722,8 @@ export function multiSelectPills(html, actor) {
 
       // left:0 in CSS would anchor to the whole widget's left edge, not the input's - wrong once
       // pills push the input rightward (or onto a wrapped second row). Align under the input itself.
-      if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
+      if (anyMatch && toggles) placeFixed();
+      else if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
     };
 
     if (input) {
@@ -696,6 +765,14 @@ export function multiSelectPills(html, actor) {
         // Enter picks the arrow-key-highlighted suggestion if there is one,
         // otherwise it adds the literal typed text (free-text entries stay allowed)
         const highlighted = dropdownOpen ? dropdown.querySelector(".multiselect-option-active:not(.noShow)") : null;
+        if (toggles) {
+          const options = visibleOptions();
+          const choice = highlighted ?? (options.length === 1 ? options[0] : null);
+          if (!choice) return;
+          hideDropdown();
+          await switchChoice(choice.dataset.key, true);
+          return;
+        }
         if (highlighted) {
           hideDropdown();
           await addValue(highlighted.dataset.value);
@@ -714,13 +791,15 @@ export function multiSelectPills(html, actor) {
         option.addEventListener("click", async ev => {
           ev.preventDefault();
           hideDropdown();
-          await addValue(ev.currentTarget.dataset.value);
+          if (toggles) await switchChoice(ev.currentTarget.dataset.key, true);
+          else await addValue(ev.currentTarget.dataset.value);
         });
       });
     }
 
     widget.querySelectorAll(".multiselect-pill-remove").forEach(element => {
       element.addEventListener("click", async ev => {
+        if (toggles) return switchChoice(ev.currentTarget.dataset.key, false);
         const index = Number(ev.currentTarget.dataset.index);
         const values = foundry.utils.duplicate(foundry.utils.getProperty(actor, path) ?? []);
         if (Number.isNaN(index) || !values[index]) return;

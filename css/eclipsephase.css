@@ -3341,10 +3341,6 @@ button.epTextlink:hover{
   opacity: 0.4;
 }
 
-.munition-fields .wantToKnowMore .tooltipText {
-  white-space: nowrap;
-}
-
 .munition-fields input:disabled,
 .munition-fields select:disabled,
 .munition-fields button:disabled {
@@ -3356,26 +3352,6 @@ button.epTextlink:hover{
   max-width: 150px;
   margin: 0;
   font-size: 12px;
-}
-
-.psiDamageFields .wantToKnowMore .tooltipText {
-  position: fixed;
-  top: auto;
-  left: auto;
-  transform: translateY(-40px);
-}
-
-.psiDamageFields .grid-3col .wantToKnowMore {
-  flex-wrap: nowrap;
-}
-
-.psiDamageFields .grid-3col .awesomeIcon {
-  flex: 0 0 auto;
-}
-
-.psiDamageFields .grid-3col select {
-  flex: 1 1 0;
-  min-width: 0;
 }
 
 .chiPushed {
@@ -4376,41 +4352,6 @@ li:has(.ep-system-notice) .message-header {
   border: 1px solid var(--pitchBorder);
 }
 
-/* A munition's area and payload rows: every field as wide as it needs, spread across the row. */
-.ep-natural-row {
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.ep-natural-row > * {
-  flex: 0 0 auto;
-  max-width: none !important;
-  flex-wrap: nowrap;
-  gap: 5px;
-}
-
-.ep-natural-row > * > :not(.tooltipText) {
-  flex: 0 0 auto;
-  margin: 0;
-}
-
-.ep-natural-row select {
-  width: auto;
-}
-
-/* A munition's cloud colour: for a colour of its own a small swatch beside the choice, which keeps
-   its place while unused, so the row does not shift. */
-.munition-fields .ep-cloud-custom-unused {
-  visibility: hidden;
-}
-
-.ep-natural-row .ep-cloud-custom {
-  width: 26px;
-  height: 26px;
-  padding: 0;
-}
-
 /* A sheet tooltip shown centred above the mouse pointer, outside the sheet's clipping. */
 .wantToKnowMore .tooltipText.ep-tooltip-follow,
 .wantToKnowMoreFixed .tooltipText.ep-tooltip-follow,
@@ -4481,17 +4422,6 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   flex: 0 0 16px;
   width: 16px;
   max-width: 16px;
-  text-align: center;
-}
-
-/* A drug's wear-off stress in three columns like the rows above it: label, damage value, empty. */
-.ep-wear-off-row {
-  align-items: center;
-  padding: 5px 0;
-}
-
-.ep-wear-off-row > * {
-  flex: 1 1 0;
   text-align: center;
 }
 
@@ -4603,4 +4533,324 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   background-color: currentColor;
   -webkit-mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
   mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
+}
+
+/* Item sheet raster: a fixed number of columns per window width, fields may span them. */
+.ep-sheet-grid {
+  display: grid;
+  gap: 8px 12px;
+  padding: 8px 10px;
+  background-color: var(--pitchBorder);
+}
+
+.ep-sheet-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ep-sheet-grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ep-span-2 {
+  grid-column: span 2;
+}
+
+.ep-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  text-align: center;
+}
+
+.eclipsephase .ep-field > .resource-label {
+  align-self: center;
+  text-align: center;
+}
+
+.ep-field select,
+.ep-field input {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  text-align-last: center;
+}
+
+.eclipsephase .ep-field select,
+.eclipsephase .ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]) {
+  background: var(--focusBackground);
+}
+
+.eclipsephase .ep-field select:hover,
+.eclipsephase .ep-field select:focus,
+.eclipsephase .ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):hover,
+.eclipsephase .ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):focus {
+  background: var(--highlightBackground);
+}
+
+.eclipsephase .ep-choice-pills,
+.eclipsephase .ep-choice-pills:focus-within,
+.eclipsephase .ep-choice-pills .multiselect-pill {
+  background: var(--pitchBorder);
+}
+
+.eclipsephase .ep-choice-pills input[type="text"].multiselect-input {
+  background: var(--focusBackground);
+}
+
+.eclipsephase .ep-choice-pills input[type="text"].multiselect-input:hover,
+.eclipsephase .ep-choice-pills input[type="text"].multiselect-input:focus {
+  background: var(--highlightBackground);
+}
+
+.ep-field-bound {
+  color: var(--inactive);
+  text-transform: capitalize;
+}
+
+.ep-field-dice,
+.ep-field-unit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.ep-field-dice input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ep-field-dice img,
+.ep-field-dice i,
+.ep-field-unit span {
+  flex: none;
+}
+
+.ep-choice-pills {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 0;
+}
+
+.ep-choice-pills .multiselect-pill select {
+  width: auto;
+  max-width: 130px;
+  height: 20px;
+}
+
+.ep-choice-pills .ep-pill-number {
+  width: 40px;
+  height: 20px;
+}
+
+/* Fixed so the list is not cut off at the window's edge; multiSelectPills() places it. */
+.ep-choice-pills .multiselect-dropdown {
+  position: fixed;
+  top: auto;
+  left: auto;
+  margin: 0;
+}
+
+.ep-mode-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ep-mode-tab-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ep-mode-add {
+  flex: 0 0 45px;
+  cursor: pointer;
+}
+
+.ep-sheet-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: var(--pitchBorder);
+}
+
+.ep-strip-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  text-align: center;
+}
+
+.ep-strip-cell input:not([type="checkbox"]) {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.eclipsephase .ep-strip-cell input:not([type="checkbox"]) {
+  background: var(--focusBackground);
+}
+
+.eclipsephase .ep-strip-cell input:not([type="checkbox"]):hover,
+.eclipsephase .ep-strip-cell input:not([type="checkbox"]):focus {
+  background: var(--highlightBackground);
+}
+
+.ep-rep-head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+}
+
+.ep-strip-checks {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+
+.ep-field input[type="checkbox"],
+.ep-field input[type="radio"] {
+  width: 13px;
+  align-self: center;
+}
+
+.ep-field select,
+.ep-field button,
+.ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]) {
+  box-sizing: border-box;
+  height: 30px;
+  margin: 0;
+}
+
+.ep-field > input[type="checkbox"] {
+  margin: 8px auto;
+}
+
+.munition-fields .ep-cloud-custom-unused {
+  display: none;
+}
+
+.ep-field-options input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 13px;
+  height: 13px;
+  margin: 0 5px 0 0;
+  border: var(--focusBackground) 1px solid;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.ep-field-options input[type="radio"]::before,
+.ep-field-options input[type="radio"]::after {
+  display: none;
+  content: none;
+}
+
+.ep-field-options input[type="radio"]:checked {
+  background-color: var(--highlight);
+}
+
+.ep-field-options label {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+}
+
+.ep-strip-checks-stacked {
+  flex-direction: column;
+  align-items: center;
+}
+
+.ep-strip-checks input[type="checkbox"] {
+  flex: 0 0 13px;
+  width: 13px;
+}
+
+.eclipsephase .ep-field > .resource-label img {
+  display: block;
+  margin: 0 auto;
+}
+
+.ep-tab-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.eclipsephase nav.itemnav .item {
+  min-width: 0;
+}
+
+.item-sheet-body:has(> .tab[data-tab="description"].active) > .ep-vehicle-aptitudes,
+.item-sheet-body:has(> .tab[data-tab="additions"].active) > .ep-vehicle-aptitudes,
+.item-sheet-body:has(> .tab[data-tab="effects"].active) > .ep-vehicle-aptitudes {
+  display: none;
+}
+
+.ep-field-unit input[type="color"] {
+  flex: none;
+}
+
+.ep-field-unit select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ep-field-unit input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ep-field-unit input.ep-field-short {
+  flex: 0 0 45px;
+}
+
+.ep-field-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+}
+
+.ep-field .munition-payload-select {
+  width: 100%;
+}
+
+.eclipsephase .ep-grid-heading {
+  text-align: center;
+}
+
+.ep-subheader-button {
+  flex: 0 0 auto;
+  width: fit-content;
+  max-height: 30px;
+}
+
+.ep-induced-changes {
+  margin: 0;
+  padding: 8px 10px 8px 28px;
+  background-color: var(--pitchBorder);
+}
+
+.ep-pill-dice {
+  display: inline-flex;
+}
+
+.ep-field-unit .ep-cloud-custom {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
 }
