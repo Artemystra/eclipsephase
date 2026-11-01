@@ -8,7 +8,7 @@ import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
 import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
 import { attackPicking, chosenTargets } from "./attacks.js";
-import { ATTACK_MODES, weaponRange, rangeBand, spendGrenade } from "../common/weapon-functions.js";
+import { ATTACK_MODES, firingAttackModes, weaponRange, rangeBand, spendGrenade } from "../common/weapon-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -885,7 +885,10 @@ const wareOptions = tickableRollOptions(wareRollOptions(actorWhole, dataset));
 const sleightOptions = tickableRollOptions(sleightRollOptions(actorWhole, dataset));
 rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field), ...sleightOptions.map(entry => entry.field));
 
+const attackModes = firingAttackModes(rollContext?.weapon);
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
+    attackModes,
+    singleAttackMode: attackModes.length === 1,
     specName,
     pool,
     actorWhole,
@@ -1033,7 +1036,8 @@ function markUnderSuppression(task, from) {
 const SUPPRESSIVE_FIELDS = new Set(["attackMode", "range", "vacuum", "biomorphTarget", "ammoEffect", "rollMode", "preTargets", "measuredRanges", "placedArea"]);
 
 /**
- * Greys out the attack dialog's modifiers while suppressive fire is chosen, as its roll ignores them.
+ * Greys out the attack dialog's modifiers while suppressive fire is chosen, as its roll ignores them,
+ * and aiming on anything but a single shot (Core p.205).
  * Fields the dialog shows disabled anyway stay so.
  * @param {HTMLElement} root - The dialog's element
  * @returns {void}
@@ -1047,6 +1051,13 @@ export function wireSuppressiveFields(root) {
         for (const field of fields) {
             field.disabled = suppressive
             field.closest(".form-group")?.classList.toggle("ep-field-suppressed", suppressive)
+        }
+        const aim = mode.form.elements.aim
+        if (aim) {
+            const noAim = mode.value !== "single"
+            aim.disabled = noAim
+            if (noAim) aim.value = "none"
+            aim.closest(".form-group")?.classList.toggle("ep-field-suppressed", noAim)
         }
     }
     mode.addEventListener("change", sync)

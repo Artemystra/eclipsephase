@@ -3341,6 +3341,10 @@ button.epTextlink:hover{
   opacity: 0.4;
 }
 
+.ep-locked-select {
+  pointer-events: none;
+}
+
 .munition-fields input:disabled,
 .munition-fields select:disabled,
 .munition-fields button:disabled {

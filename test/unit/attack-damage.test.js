@@ -5,7 +5,7 @@ import { registerWeaponAttacks, detectWeaponAttack, detectThrow, damageAgainst, 
 import { scatterSide } from "../../module/rolls/cards.js";
 import { cellCentre, spotShapes, spotTop, wholeShapes, createShadowedArea, outlineEdges, cloudOutline } from "../../module/common/targeting.js";
 import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeContains } from "../../module/common/targeting.js";
-import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS } from "../../module/common/weapon-functions.js";
+import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS, firingAttackModes } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
 import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
@@ -900,6 +900,63 @@ describe("suppressive fire (Core p.207)", () => {
     field("attackMode").value = "single";
     field("attackMode").dispatchEvent(new document.defaultView.Event("change"));
     expect([field("aim").disabled, field("smartlink").disabled]).toEqual([false, true]);
+  });
+
+  test("aiming only goes with a single shot, and is reset when another mode is chosen", () => {
+    const document = new JSDOM("").window.document;
+    const root = document.createElement("div");
+    root.innerHTML = `<form><select name="attackMode"><option value="single">s</option><option value="burst">b</option><option value="fullAuto">f</option></select>
+      <div class="form-group"><select name="aim"><option value="none">n</option><option value="quick">q</option></select></div></form>`;
+    const field = name => root.querySelector(`[name="${name}"]`);
+    const choose = mode => {
+      field("attackMode").value = mode;
+      field("attackMode").dispatchEvent(new document.defaultView.Event("change"));
+    };
+    wireSuppressiveFields(root);
+
+    expect(field("aim").disabled).toBe(false);
+    field("aim").value = "quick";
+    for (const mode of ["burst", "fullAuto"]) {
+      choose(mode);
+      expect(field("aim").disabled).toBe(true);
+      expect(field("aim").value).toEqual("none");
+      expect(field("aim").closest(".form-group").classList.contains("ep-field-suppressed")).toBe(true);
+    }
+    choose("single");
+    expect(field("aim").disabled).toBe(false);
+    expect(field("aim").closest(".form-group").classList.contains("ep-field-suppressed")).toBe(false);
+  });
+
+  test("the attack dialog's only mode is locked but still sent, and several can be chosen", async () => {
+    const render = async firingMode => {
+      const attackModes = firingAttackModes({ weaponMode: "1", weapon: { system: { mode1: { firingMode } } } });
+      const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/gun-test-dialog.html", { attackModes, singleAttackMode: attackModes.length === 1, rollContext: { weapon: {} }, traits: {} });
+      return new JSDOM(html).window.document.querySelector('select[name="attackMode"]');
+    };
+    const only = await render("ss");
+    const several = await render("saBF");
+
+    expect([...only.options].map(option => option.value)).toEqual(["single"]);
+    expect(only.classList.contains("ep-locked-select")).toBe(true);
+    expect(only.disabled).toBe(false);
+    expect(only.closest(".form-group").classList.contains("ep-field-suppressed")).toBe(true);
+    expect(several.options).toHaveLength(4);
+    expect(several.classList.contains("ep-locked-select")).toBe(false);
+  });
+
+  test("the attack dialog offers the modes a weapon's firing mode allows", () => {
+    const modes = (firingMode, weaponMode = "1") => firingAttackModes({ weaponMode, weapon: { system: { mode1: { firingMode }, mode2: { firingMode: "ss" } } } }).map(entry => entry.value);
+    const bursts = ["burst", "wBurst", "burstTargets"];
+    const autos = ["fullAuto", "wFullAuto", "fullAutoTargets", "suppressive"];
+
+    expect(modes("ss")).toEqual(["single"]);
+    expect(modes("sa")).toEqual(["single"]);
+    expect(modes("saBF")).toEqual(["single", ...bursts]);
+    expect(modes("bfFA")).toEqual([...bursts, ...autos]);
+    expect(modes("saBFfa")).toEqual(["single", ...bursts, ...autos]);
+    expect(modes("saBFfa", "2")).toEqual(["single"]);
+    expect(modes(undefined)).toEqual(["single", ...bursts, ...autos]);
+    expect(firingAttackModes(null)).toHaveLength(8);
   });
 
   test("the cone it was placed in is left whole, one colour at every spot - the open part red, the part behind walls yellow - both answering to the roll card", async () => {

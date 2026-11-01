@@ -41,17 +41,12 @@
                         <input type="checkbox" name="superiorPosition"  id="supposition">
                         <label class="resource-label" for="supposition">{{localize "ep2e.roll.dialog.ranged.attacker.superiorPosition"}}</label>
                     </div>
-                    <div class="form-group listBackgroundMain{{#if rollContext.weapon.blast}} ep-field-suppressed{{/if}}">
+                    <div class="form-group listBackgroundMain{{#if rollContext.weapon.blast}} ep-field-suppressed{{/if}}{{#if singleAttackMode}} ep-field-suppressed{{/if}}">
                         <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.label"}}:</label>
-                        <select name="attackMode"  style="max-width: 140px;"{{#if rollContext.weapon.blast}} disabled{{/if}}>
-                            <option value="single">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.single"}}</option>
-                            <option value="burst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.burst"}}</option>
-                            <option value="wBurst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wBurst"}}</option>
-                            <option value="burstTargets">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.burstTargets"}}</option>
-                            <option value="fullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.fullAuto"}}</option>
-                            <option value="wFullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wFullAuto"}}</option>
-                            <option value="fullAutoTargets">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.fullAutoTargets"}}</option>
-                            <option value="suppressive">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.suppressive"}}</option>
+                        <select name="attackMode" style="max-width: 140px;"{{#if rollContext.weapon.blast}} disabled{{/if}}{{#if singleAttackMode}} class="ep-locked-select" tabindex="-1"{{/if}}>
+                            {{#each attackModes as |mode|}}
+                            <option value="{{mode.value}}">{{localize mode.label}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <input type="hidden" name="preTargets" value="">

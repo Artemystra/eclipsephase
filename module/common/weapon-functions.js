@@ -612,6 +612,28 @@ export const ANY_TARGETS = 0;
 // the targets it strikes with one attack test, and what it leaves the attacker open to afterwards.
 // An aggressive attack takes either +10 to hit (Aggressive Hit) or +1d10 DV (Ruthless Attack), and
 // costs -10 on Fray until the attacker's next action.
+// Which of the attack dialog's modes a weapon's firing mode allows. Suppressive fire takes full-auto
+// mode (Core p.207).
+const BURST_ATTACKS = ["burst", "wBurst", "burstTargets"];
+const AUTO_ATTACKS = ["fullAuto", "wFullAuto", "fullAutoTargets", "suppressive"];
+const FIRING_MODE_ATTACKS = {
+  ss: ["single"],
+  sa: ["single"],
+  saBF: ["single", ...BURST_ATTACKS],
+  bfFA: [...BURST_ATTACKS, ...AUTO_ATTACKS],
+  saBFfa: ["single", ...BURST_ATTACKS, ...AUTO_ATTACKS]
+};
+
+/**
+ * The attack dialog's modes for a weapon: those its firing mode allows, all of them when it has none.
+ * @param {Object} selected - The roll's weapon, with weapon and weaponMode
+ * @returns {Object[]} value and label of each mode
+ */
+export function firingAttackModes(selected) {
+  const firing = selected?.weapon?.system?.[`mode${selected?.weaponMode ?? "1"}`]?.firingMode;
+  return (FIRING_MODE_ATTACKS[firing] ?? FIRING_MODE_ATTACKS.saBFfa).map(value => ({ value, label: `ep2e.roll.dialog.ranged.attacker.fireMode.${value}` }));
+}
+
 export const ATTACK_MODES = {
   single: { rounds: 1 },
   burst: { rounds: 3, damage: "+1d10" },
