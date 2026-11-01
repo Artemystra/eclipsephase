@@ -2,7 +2,7 @@
 <button type="button" class="chatButton {{cls}} {{#if primary}}ep-chat-primary{{else}}ep-chat-secondary{{/if}} {{#if gm}}gmOnlyControl{{else}}ownerOnlyControl{{/if}}"{{#if uuid}} data-actor-uuid="{{uuid}}"{{/if}} data-action="{{action}}"{{#if kind}} data-kind="{{kind}}"{{/if}}{{#if target}} data-target-uuid="{{target}}"{{/if}}>{{label}}</button>
 {{/inline}}
 <div class="alignCenter ep-defence-card">
-  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon=icon color="--negative" text=headline open=true}}
+  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon=icon text=headline open=true}}
 
   {{#if effectInfo}}
   <div class="ep-effect-box">

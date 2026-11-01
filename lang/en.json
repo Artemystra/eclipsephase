@@ -709,6 +709,7 @@
           },
           "result": {
             "stressCopy": "Changing my body stresses me out.",
+            "cleanCopy": "You slip into your new body without any trouble.",
             "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions.",
             "effectIntegrationIssues": {
               "title": "Integration Issues",

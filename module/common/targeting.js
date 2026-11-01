@@ -29,9 +29,10 @@ export function tokenAt(point, tokens) {
   return hits.at(-1) ?? null;
 }
 
-// The system's colours for picking targets: the cursor the blue of --iconBlue, the mark on a picked
-// token red, and the bright core of the line an attack aims with.
-export const TARGET_COLOR = "#346d8e";
+// The system's colours for picking targets: the cursor and areas the blue of --highlight, the mark
+// on a picked token red, and the darker glow and the bright core of the line an attack aims with.
+export const TARGET_COLOR = "#4098d6";
+const AIM_GLOW_COLOR = 0x346d8e;
 export const MARK_COLOR = "#db2a2a";
 const AIM_CORE_COLOR = 0xb5dcf2;
 const AIM_RED_CORE_COLOR = 0xff9a9a;
@@ -407,7 +408,7 @@ export function aimFlicker(time, random = Math.random) {
 function aimLine(kind, from) {
   const graphics = new PIXI.Graphics();
   canvas.controls?.addChild?.(graphics);
-  const glow = Number.parseInt(TARGET_COLOR.replace("#", ""), 16);
+  const glow = AIM_GLOW_COLOR;
   const red = Number.parseInt(MARK_COLOR.replace("#", ""), 16);
   const center = from.center ?? { x: from.bounds.x + from.bounds.width / 2, y: from.bounds.y + from.bounds.height / 2 };
   const radius = Math.min(from.bounds?.width ?? from.w ?? 100, from.bounds?.height ?? from.h ?? 100) / 2;
@@ -421,9 +422,9 @@ function aimLine(kind, from) {
       const layer = (color, alpha, width) => {
         for (const piece of laserPieces(origin, point, width * pixel)) fill(color, alpha * piece.alpha, piece.corners);
       };
-      layer(0x000000, 0.35, 6);
-      layer(red, 0.8 * bright, 5);
-      layer(AIM_RED_CORE_COLOR, bright, 2);
+      layer(0x000000, 0.35, 3);
+      layer(red, 0.8 * bright, 2.5);
+      layer(AIM_RED_CORE_COLOR, bright, 1);
     },
     arc: (pixel, time) => {
       const angle = Math.atan2(point.y - center.y, point.x - center.x);

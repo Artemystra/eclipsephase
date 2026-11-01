@@ -3,6 +3,7 @@ import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
   stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete
 } from "../../module/common/morp-functions.js";
+import { calcEffects } from "../../module/rolls/resleeving.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -50,6 +51,28 @@ function sleeveClick(itemId) {
 beforeEach(() => resetWorld());
 
 describe("resleeving", () => {
+  test("a resleeve with both tests passed says so in the chat and leaves nothing behind", async () => {
+    const actor = makeActor();
+    await calcEffects(actor, actor.system, 3, 4);
+
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.sleeving.announce.result.cleanCopy");
+    expect(Array.from(actor.effects)).toHaveLength(0);
+  });
+
+  test("a passed integration test without a stress test counts as clean too", async () => {
+    const actor = makeActor();
+    await calcEffects(actor, actor.system, 5, null);
+
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.sleeving.announce.result.cleanCopy");
+  });
+
+  test("a failed integration test brings no clean message", async () => {
+    const actor = makeActor();
+    await calcEffects(actor, actor.system, 1, 4);
+
+    expect(createdMessages.some(message => String(message.content).includes("cleanCopy"))).toBe(false);
+  });
+
   test("a confirmed resleeve moves the ego into the new morph and refills every pool", async () => {
     const actor = twoBodies({ system: { pools: { insight: { value: 0 }, vigor: { value: 0 }, moxie: { value: 0 } } } });
     const sheet = { tabGroups: {} };

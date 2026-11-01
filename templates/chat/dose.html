@@ -2,7 +2,7 @@
   {{> systems/eclipsephase/templates/chat/partials/card-header.html icon=icon color=color html=headline open=rows.length}}
 
   {{#if rows.length}}
-  <div style="display: block; margin: 15px 0 20px 0; padding: 15px 0; background-color: var(--pitchBorder);">
+  <div style="display: block; margin: 15px 0 20px 0; padding: 15px 10px; background-color: var(--pitchBorder);">
     <div style="font-size: 14px; line-height: 1.6;">
       {{#each rows as |row|}}
       {{#if row.label}}<span>{{row.label}}: <b>{{row.value}}</b></span>{{else}}<span><i>{{row.value}}</i></span>{{/if}}<br>

@@ -702,6 +702,7 @@
           },
           "result": {
             "stressCopy": "Den Körper zu wechseln versetzt mich in Stress",
+            "cleanCopy": "Du gleitest ohne Probleme in deinen neuen Körper.",
             "integrationCopy": "Ich fühle mich noch unwohl in meinem Körper und erhalte -10 auf alle Aktionen.",
             "effectIntegrationIssues": {
               "title": "Integrationsprobleme",

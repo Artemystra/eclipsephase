@@ -1703,13 +1703,13 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
       const sensor = regions.find(region => region.flags.eclipsephase.area.part === "sensor");
       expect(sensor.flags.eclipsephase.area).toMatchObject({ live: false, at: 9 });
       expect(sensor.behaviors).toEqual([expect.objectContaining({ type: PROXIMITY_BEHAVIOR })]);
-      expect(sensor.color).not.toBe("#346d8e");
+      expect(sensor.color).not.toBe("#4098d6");
       const covered = sensor.shapes.reduce((sum, shape) => sum + shape.width * shape.height, 0) / 10000;
       expect(covered).toBe(29);
 
       game.time.worldTime = 9;
       await tickArmed();
-      expect(sensor).toMatchObject({ color: "#346d8e", flags: { eclipsephase: { area: { live: true } } } });
+      expect(sensor).toMatchObject({ color: "#4098d6", flags: { eclipsephase: { area: { live: true } } } });
     });
   });
 });

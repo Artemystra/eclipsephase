@@ -163,7 +163,6 @@ function doseRows(system, outcome) {
 async function postDoseCard(actor, item, outcome, renewed) {
   await postCard(actor, {
     icon: "fa-syringe",
-    color: "--negative",
     headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
     rows: doseRows(item.system, outcome),
     addiction: addictionControls(actor, { name: item.name, addiction: drugAddiction(item.system) })
@@ -360,7 +359,7 @@ export async function defendDose(actor, data, { willing = true, ask = true } = {
  */
 function postNullifiedCard(actor, name, defense) {
   const key = defense.immune ? "ep2e.chat.dose.immune" : "ep2e.chat.dose.nullified";
-  return postCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format(key, { name, ware: wareNames(defense) }) });
+  return postCard(actor, { icon: "fa-shield-virus", headline: game.i18n.format(key, { name, ware: wareNames(defense) }) });
 }
 
 /**
@@ -460,7 +459,6 @@ export async function offerDose(actor, item) {
   const drugType = item.system.drugType ?? "";
   const card = {
     icon: "fa-syringe",
-    color: "--negative",
     headline: game.i18n.format("ep2e.chat.dose.offered", { name: item.name }),
     rows: doseRows(item.system, null)
   };
@@ -661,12 +659,12 @@ export async function doseFromAttack(attack, target, outcome, { byPool = false, 
   const reaches = vector ?? payload.data.flags?.eclipsephase?.dose?.vector ?? null;
   if (sealedAgainst(target, reaches)) {
     const how = game.i18n.localize(`ep2e.item.drug.table.applicationVectors.${reaches}Label`);
-    await postCard(target, { icon: "fa-mask-ventilator", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.sealedOff", { name: target.name, drug: payload.name, vector: how }) });
+    await postCard(target, { icon: "fa-mask-ventilator", headline: game.i18n.format("ep2e.chat.dose.sealedOff", { name: target.name, drug: payload.name, vector: how }) });
     return null;
   }
   const substrate = doseSubstrate(target, { system: { drugType: payload.drugType } });
   if (!substrate.allowed) {
-    await postCard(target, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
+    await postCard(target, { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
     return null;
   }
   const data = foundry.utils.deepClone(payload.data);
@@ -883,7 +881,7 @@ export async function postUseCheckCard(actor, effect) {
   if (!needsUseCheck(dose?.useCheck)) return null;
   const label = checkLabel(dose.useCheck);
   return postCheckCard(actor, "doseCheck", {
-    card: { icon: "fa-syringe", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.checkNeeded", { name: dose.name, check: label }) },
+    card: { icon: "fa-syringe", headline: game.i18n.format("ep2e.chat.dose.checkNeeded", { name: dose.name, check: label }) },
     button: { action: "rollDoseCheck", label: game.i18n.format("ep2e.chat.dose.rollCheck", { check: label }) },
     payload: { effectId: effect.id }
   });
@@ -1031,7 +1029,7 @@ export async function settleUseCheck(check, passed) {
  * @returns {Promise<ChatMessage>} The card
  */
 function postOutcomeCard(actor, key, name) {
-  return postCard(actor, { icon: "fa-syringe", color: "--negative", headline: game.i18n.format(key, { name }) });
+  return postCard(actor, { icon: "fa-syringe", headline: game.i18n.format(key, { name }) });
 }
 
 /**
@@ -1295,7 +1293,7 @@ export function postFilterCheckCard(actor, data, defense, wanted = true) {
   const name = data.flags.eclipsephase.dose.name;
   const ware = wareNames({ by: defense?.filterBy ?? [] });
   return postCheckCard(actor, "doseFilter", {
-    card: { icon: "fa-shield-virus", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.filterCheckNeeded", { name, ware }) },
+    card: { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.filterCheckNeeded", { name, ware }) },
     button: { action: "rollFilterCheck", label: game.i18n.format("ep2e.chat.dose.rollFilterCheck", { ware }) },
     payload: { name, ware, data, wanted }
   });
@@ -1370,7 +1368,7 @@ export async function filterOut(filter) {
     await effect.update({ "flags.eclipsephase.dose.filteredOut": true });
     await actor.deleteEmbeddedDocuments("ActiveEffect", [effect.id]);
   }
-  await postCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.filteredOut", { name: filter.name, ware: filter.ware ?? "" }) });
+  await postCard(actor, { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.filteredOut", { name: filter.name, ware: filter.ware ?? "" }) });
   return true;
 }
 
@@ -1407,7 +1405,7 @@ export async function becomeImmune(immunizer) {
   const ware = workingImmunizers(actor)[0];
   if (!ware || immunities(actor).includes(immunizer.name)) return false;
   await ware.setFlag("eclipsephase", "immunities", [...learnedBy(ware), immunizer.name]);
-  await postCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.becameImmune", { name: immunizer.name }) });
+  await postCard(actor, { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.becameImmune", { name: immunizer.name }) });
   return true;
 }
 
@@ -1594,7 +1592,7 @@ async function incapacitateAtDurability(actor, effect, dose, value) {
   const already = Array.from(actor.effects ?? []).some(entry => entry.getFlag?.("eclipsephase", "incapacitatedBy") === effect.id);
   if (already) return false;
   await actor.createEmbeddedDocuments("ActiveEffect", [conditionData(dose.name, effect, "incapacitated", null)]);
-  await postCard(actor, { icon: "fa-syringe", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.outcomeIncapacitated", { name: dose.name }) });
+  await postCard(actor, { icon: "fa-syringe", headline: game.i18n.format("ep2e.chat.dose.outcomeIncapacitated", { name: dose.name }) });
   return true;
 }
 
@@ -1930,7 +1928,6 @@ export async function grantTemporaryItems(actor, effect, random = Math.random) {
   const created = await actor.createEmbeddedDocuments("Item", incoming);
   await postCard(actor, {
     icon: "fa-syringe",
-    color: "--negative",
     headline: game.i18n.format("ep2e.chat.dose.granted", { name: dose.name, items: created.map(item => item.name).join(", ") })
   });
   return created;
@@ -2070,7 +2067,7 @@ export async function demandWillpower(actorUuid, name, addiction = null) {
   const known = knownAddiction(actor, name, addiction);
   if (!actor || !known) return null;
   return postCheckCard(actor, "addictionCheck", {
-    card: { icon: "fa-brain", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.addictionCheckNeeded", { name, modifier: signed(known.modifier) }) },
+    card: { icon: "fa-brain", headline: game.i18n.format("ep2e.chat.dose.addictionCheckNeeded", { name, modifier: signed(known.modifier) }) },
     button: { action: "rollAddictionCheck", label: game.i18n.format("ep2e.chat.dose.rollAddictionCheck", { modifier: signed(known.modifier) }) },
     payload: { name, ...known }
   });
@@ -2196,7 +2193,7 @@ export async function becomeAddicted(check) {
   const created = await actor.createEmbeddedDocuments("Item", incoming);
   const where = incoming.length > 1 ? "Both" : incoming[0].system.ego ? "Ego" : "Body";
   const key = level > 1 ? `ep2e.chat.dose.addictionRaised${where}` : `ep2e.chat.dose.addicted${where}`;
-  await postCard(actor, { icon: "fa-brain", color: "--negative", headline: game.i18n.format(key, { name: check.name, level: "I".repeat(level) }) });
+  await postCard(actor, { icon: "fa-brain", headline: game.i18n.format(key, { name: check.name, level: "I".repeat(level) }) });
   return created;
 }
 

@@ -903,7 +903,7 @@ export async function applySleightChoice(request) {
             chosen = game.i18n.format("ep2e.psi.choice.skillChosen", { sleight: sleightName, target: target.name, skill: skillName });
         }
     }
-    if (message) await message.update({ content: await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { icon: "fa-brain", color: "--iconBlue", headline: chosen, rows: [] }) });
+    if (message) await message.update({ content: await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { icon: "fa-brain", headline: chosen, rows: [] }) });
     return true;
 }
 
@@ -1414,7 +1414,7 @@ async function measureSustainReach(scene) {
                 const away = distance > reach;
                 let warningId = entry.warningId ?? null;
                 if (away && !entry.warned) {
-                    const card = await postCard(actor, { icon: "fa-person-walking-arrow-right", color: "--warning", headline: game.i18n.format("ep2e.psi.sustain.outOfReach", { target: target.name, async: actor.name, sleight: flag.sleightName, distance: Math.round(distance), reach }), button: { action: "endSustain", label: game.i18n.localize("ep2e.psi.sustain.end") }, actorUuid: actor.uuid }, { eclipsephase: { sustainWarning: { actorUuid: actor.uuid, attackId: flag.attackId } } }, [...new Set([...defenders(actor), ...gmList()])]);
+                    const card = await postCard(actor, { icon: "fa-person-walking-arrow-right", headline: game.i18n.format("ep2e.psi.sustain.outOfReach", { target: target.name, async: actor.name, sleight: flag.sleightName, distance: Math.round(distance), reach }), button: { action: "endSustain", label: game.i18n.localize("ep2e.psi.sustain.end") }, actorUuid: actor.uuid }, { eclipsephase: { sustainWarning: { actorUuid: actor.uuid, attackId: flag.attackId } } }, [...new Set([...defenders(actor), ...gmList()])]);
                     warningId = card?.id ?? null;
                     warned++;
                 }
