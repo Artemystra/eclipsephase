@@ -5,7 +5,7 @@ import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload,
 import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
 import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
 import { usePoolFromChat } from "../../module/rolls/pools.js";
-import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES } from "../../module/common/targeting.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES, aimOrigin, taperedLine, laserPieces, arcShape, waveBulges, waveShape, dashSegments, aimKind, aimFlicker } from "../../module/common/targeting.js";
 import { ownerVision } from "../../module/rolls/chat.js";
 import { cardFailures, failCard } from "../../module/rolls/cards.js";
 import { registerFailOption, resetRegistry } from "../../module/api/registry.js";
@@ -886,5 +886,116 @@ describe("a failure put on an attack card", () => {
 
     expect(outcomeOf(ana)).toBeTruthy();
     expect(cardFailures(card)).toEqual([]);
+  });
+});
+
+describe("the line an attack aims with", () => {
+  const center = { x: 100, y: 100 };
+
+  test("it starts two thirds of the token's radius out, on the side of the cursor", () => {
+    expect(aimOrigin(center, 30, { x: 500, y: 100 })).toEqual({ x: 120, y: 100 });
+    const below = aimOrigin(center, 30, { x: 100, y: 500 });
+    expect(below.x).toBeCloseTo(100);
+    expect(below.y).toBeCloseTo(120);
+  });
+
+  test("a laser tapers from its start to its end", () => {
+    const [ax, ay, bx, by, cx, cy, dx, dy] = taperedLine({ x: 0, y: 0 }, { x: 100, y: 0 }, 4, 1);
+
+    expect([ax, dx]).toEqual([0, 0]);
+    expect([bx, cx]).toEqual([100, 100]);
+    expect(Math.abs(ay - dy)).toBeCloseTo(4);
+    expect(Math.abs(by - cy)).toBeCloseTo(1);
+  });
+
+  test("a laser tapers to nothing and all but fades out over the last fifth", () => {
+    const pieces = laserPieces({ x: 0, y: 0 }, { x: 100, y: 0 }, 4, 10);
+    const widthAt = piece => Math.abs(piece.corners[1] - piece.corners[7]);
+
+    expect(pieces).toHaveLength(10);
+    expect(widthAt(pieces[0])).toBeCloseTo(4);
+    expect(Math.abs(pieces[9].corners[3] - pieces[9].corners[5])).toBeCloseTo(0);
+    expect(pieces.slice(0, 8).every(piece => piece.alpha === 1)).toBe(true);
+    expect(pieces[8].alpha).toBeCloseTo(1);
+    expect(pieces[9].alpha).toBeCloseTo(0.5);
+    expect(laserPieces({ x: 0, y: 0 }, { x: 100, y: 0 }, 4, 100).at(-1).alpha).toBeLessThan(0.1);
+  });
+
+  test("a blade's arc faces the cursor, sits at its radius and is pointed at both ends", () => {
+    const corners = arcShape(center, 50, 0, 8, Math.PI / 2, 4);
+    const points = [];
+    for (let index = 0; index < corners.length; index += 2) points.push({ x: corners[index], y: corners[index + 1] });
+
+    expect(points).toHaveLength(10);
+    expect(points[2].x).toBeCloseTo(150);
+    expect(points[2].y).toBeCloseTo(100);
+    expect(points[7].x).toBeCloseTo(142);
+    expect(points[0].x).toBeCloseTo(points[9].x);
+    expect(points[0].y).toBeCloseTo(points[9].y);
+    expect(points[4].x).toBeCloseTo(points[5].x);
+    expect(points[4].y).toBeCloseTo(points[5].y);
+  });
+
+  test("a wavering mass closes at both ends and bulges most around its middle", () => {
+    const sum = values => values.reduce((total, value) => total + value, 0);
+    for (const time of [0, 400, 3000]) {
+      const bulges = waveBulges(time, 1, 48);
+      expect(bulges[0]).toBeCloseTo(0);
+      expect(bulges[48]).toBeCloseTo(0);
+      expect(sum(bulges.slice(16, 33))).toBeGreaterThan(sum(bulges.slice(0, 16)));
+      expect(sum(bulges.slice(16, 33))).toBeGreaterThan(sum(bulges.slice(33)));
+      expect(Math.max(...bulges)).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test("a wavering mass changes over time, in its own rhythm per side", () => {
+    expect(waveBulges(0, 1)).not.toEqual(waveBulges(1000, 1));
+    expect(waveBulges(0, 1)).not.toEqual(waveBulges(0, -1));
+  });
+
+  test("a wavering mass runs around the line between its ends", () => {
+    const corners = waveShape({ x: 0, y: 0 }, { x: 100, y: 0 }, 500, 20);
+    const points = [];
+    for (let index = 0; index < corners.length; index += 2) points.push({ x: corners[index], y: corners[index + 1] });
+
+    expect(points).toHaveLength(98);
+    expect(points[0].x).toBeCloseTo(0);
+    expect(points[48].x).toBeCloseTo(100);
+    expect(points[49].x).toBeCloseTo(100);
+    expect(points[97].x).toBeCloseTo(0);
+    expect(points.slice(1, 48).every(point => point.y >= 0)).toBe(true);
+    expect(points.slice(50, 97).every(point => point.y <= 0)).toBe(true);
+    expect(Math.max(...points.map(point => Math.abs(point.y)))).toBeLessThanOrEqual(20);
+  });
+
+  test("dashes stay on the line and wander towards its end", () => {
+    const from = { x: 0, y: 0 };
+    const to = { x: 100, y: 0 };
+    const still = dashSegments(from, to, 0, 10, 8);
+    const moved = dashSegments(from, to, 5, 10, 8);
+
+    expect(still[0]).toEqual([{ x: 0, y: 0 }, { x: 10, y: 0 }]);
+    expect(moved[1][0].x).toBe(still[1][0].x + 5);
+    for (const [start, end] of [...still, ...moved]) {
+      expect(start.x).toBeGreaterThanOrEqual(0);
+      expect(end.x).toBeLessThanOrEqual(100);
+    }
+    expect(dashSegments(from, from, 0, 10, 8)).toEqual([]);
+  });
+
+  test("the picker's icon chooses the line", () => {
+    expect(aimKind("ep-slash")).toEqual("arc");
+    expect(aimKind("ep-lightning")).toEqual("wave");
+    expect(aimKind(null)).toEqual("laser");
+    expect(aimKind("fa-syringe")).toEqual("laser");
+  });
+
+  test("a flicker dips now and then and otherwise stays bright", () => {
+    expect(aimFlicker(100, () => 0)).toEqual(0.25);
+    for (const time of [0, 50, 500, 5000]) {
+      const bright = aimFlicker(time, () => 1);
+      expect(bright).toBeGreaterThanOrEqual(0.5);
+      expect(bright).toBeLessThanOrEqual(1);
+    }
   });
 });

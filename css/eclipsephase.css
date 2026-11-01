@@ -4320,7 +4320,7 @@ li:has(.ep-system-notice) .message-header {
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  color: #00f5e4;
+  color: var(--mainText);
   font-size: 13px;
   font-weight: bold;
   text-shadow: 0 0 3px black, 0 0 6px black;

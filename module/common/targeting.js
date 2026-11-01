@@ -29,9 +29,13 @@ export function tokenAt(point, tokens) {
   return hits.at(-1) ?? null;
 }
 
-// The system's colours for picking targets: the cursor turquoise, the mark on a picked token red.
-export const TARGET_COLOR = "#00f5e4";
+// The system's colours for picking targets: the cursor the blue of --iconBlue, the mark on a picked
+// token red, and the bright core of the line an attack aims with.
+export const TARGET_COLOR = "#346d8e";
 export const MARK_COLOR = "#db2a2a";
+const AIM_CORE_COLOR = 0xb5dcf2;
+const AIM_RED_CORE_COLOR = 0xff9a9a;
+const WAVE_CORE_COLOR = 0xf4f7fb;
 
 /**
  * The default picking cursor as an image: a ring, four strokes and a centre dot, 32 pixels across.
@@ -39,7 +43,7 @@ export const MARK_COLOR = "#db2a2a";
  * @returns {String} A data URL
  */
 function crosshairImage(color) {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='${color}' stroke-width='2.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='1.5' fill='${color}'/></svg>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='white' stroke-width='4.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='2.5' fill='white'/><g fill='none' stroke='${color}' stroke-width='2.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='1.5' fill='${color}'/></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
@@ -241,18 +245,234 @@ export function attackerToken(actor) {
 }
 
 /**
- * Draws the line a measured attack shows while picking, from the attacker's token to the cursor.
- * @param {Object} graphics - The PIXI graphics to draw into, cleared first
- * @param {Object} from - The attacker's token
- * @param {Object} point - The cursor, in canvas coordinates
- * @returns {void}
+ * Where an aiming line starts: on a circle around the token, two thirds of its radius out, on the
+ * side of the cursor, as if the attacker held what aims.
+ * @param {Object} center - The token's centre
+ * @param {Number} radius - The token's radius
+ * @param {Object} point - The cursor
+ * @returns {Object} x and y
  */
-function drawMeasureLine(graphics, from, point) {
-  const pixel = 1 / (globalThis.canvas?.stage?.scale?.x || 1);
-  const origin = from.center ?? { x: from.bounds.x + from.bounds.width / 2, y: from.bounds.y + from.bounds.height / 2 };
-  graphics.clear();
-  graphics.lineStyle(4 * pixel, 0x000000, 0.5).moveTo(origin.x, origin.y).lineTo(point.x, point.y);
-  graphics.lineStyle(2 * pixel, Number.parseInt(TARGET_COLOR.replace("#", ""), 16), 1).moveTo(origin.x, origin.y).lineTo(point.x, point.y);
+export function aimOrigin(center, radius, point) {
+  const angle = Math.atan2(point.y - center.y, point.x - center.x);
+  return { x: center.x + Math.cos(angle) * radius * 2 / 3, y: center.y + Math.sin(angle) * radius * 2 / 3 };
+}
+
+/**
+ * A line as a thin polygon that tapers from its start to its end.
+ * @param {Object} from - The start
+ * @param {Object} to - The end
+ * @param {Number} startWidth - Its width at the start
+ * @param {Number} endWidth - Its width at the end
+ * @returns {Number[]} The polygon's corners, as x, y, x, y
+ */
+export function taperedLine(from, to, startWidth, endWidth) {
+  const length = Math.hypot(to.x - from.x, to.y - from.y) || 1;
+  const nx = -(to.y - from.y) / length;
+  const ny = (to.x - from.x) / length;
+  return [
+    from.x + nx * startWidth / 2, from.y + ny * startWidth / 2,
+    to.x + nx * endWidth / 2, to.y + ny * endWidth / 2,
+    to.x - nx * endWidth / 2, to.y - ny * endWidth / 2,
+    from.x - nx * startWidth / 2, from.y - ny * startWidth / 2
+  ];
+}
+
+/**
+ * A laser as pieces that taper to nothing and fade out over the last fifth of the way.
+ * @param {Object} from - The start
+ * @param {Object} to - The end
+ * @param {Number} width - Its width at the start
+ * @param {Number} [pieces] - How many pieces it is drawn from
+ * @returns {Object[]} Each piece's corners, as for taperedLine, and its alpha from 0 to 1
+ */
+export function laserPieces(from, to, width, pieces = 15) {
+  const at = part => ({ x: from.x + (to.x - from.x) * part, y: from.y + (to.y - from.y) * part });
+  return Array.from({ length: pieces }, (_, piece) => {
+    const start = piece / pieces;
+    const end = (piece + 1) / pieces;
+    const fade = start < 0.8 ? 1 : Math.max(0.08, 1 - (start - 0.8) / 0.2);
+    return { corners: taperedLine(at(start), at(end), width * (1 - start), width * (1 - end)), alpha: fade };
+  });
+}
+
+/**
+ * A blade's sweep at a token's edge as a polygon, facing the cursor and pointed at both ends.
+ * @param {Object} center - The token's centre
+ * @param {Number} radius - The arc's radius
+ * @param {Number} angle - Where it faces, in radians
+ * @param {Number} thickness - Its thickness in the middle
+ * @param {Number} [spread] - How far it reaches, in radians
+ * @param {Number} [steps] - How many pieces it is drawn from
+ * @returns {Number[]} The polygon's corners, as x, y, x, y
+ */
+export function arcShape(center, radius, angle, thickness, spread = Math.PI * 0.6, steps = 24) {
+  const place = (part, reach) => {
+    const at = angle - spread / 2 + spread * part;
+    return [center.x + Math.cos(at) * reach, center.y + Math.sin(at) * reach];
+  };
+  const parts = Array.from({ length: steps + 1 }, (_, step) => step / steps);
+  const outer = parts.flatMap(part => place(part, radius));
+  const inner = parts.toReversed().flatMap(part => place(part, radius - thickness * Math.sin(part * Math.PI)));
+  return [...outer, ...inner];
+}
+
+/**
+ * How far a wavering mass bulges to one side along its way: nothing at its ends, most in the middle,
+ * in bulges of changing size that creep towards the end.
+ * @param {Number} time - The time in milliseconds
+ * @param {Number} side - 1 or -1; each side bulges in its own rhythm
+ * @param {Number} [samples] - How many points it is measured at
+ * @returns {Number[]} The bulge at each point, from 0 to 1
+ */
+export function waveBulges(time, side, samples = 48) {
+  const creep = time / 900;
+  return Array.from({ length: samples + 1 }, (_, sample) => {
+    const part = sample / samples;
+    const envelope = Math.sin(part * Math.PI);
+    const swell = 0.5 + 0.3 * Math.sin(part * 11 - creep * 2 + side) + 0.2 * Math.sin(part * 23 - creep * 3.1 + side * 2.3);
+    return envelope * Math.max(0.08, swell);
+  });
+}
+
+/**
+ * A wavering mass between two points as a polygon.
+ * @param {Object} from - The start
+ * @param {Object} to - The end
+ * @param {Number} time - The time in milliseconds
+ * @param {Number} reach - How far it bulges at most to either side
+ * @returns {Number[]} The polygon's corners, as x, y, x, y
+ */
+export function waveShape(from, to, time, reach) {
+  const length = Math.hypot(to.x - from.x, to.y - from.y) || 1;
+  const nx = -(to.y - from.y) / length;
+  const ny = (to.x - from.x) / length;
+  const edge = (bulges, side) => bulges.flatMap((bulge, sample) => {
+    const part = sample / (bulges.length - 1);
+    return [from.x + (to.x - from.x) * part + nx * side * bulge * reach, from.y + (to.y - from.y) * part + ny * side * bulge * reach];
+  });
+  return [...edge(waveBulges(time, 1), 1), ...edge(waveBulges(time, -1), -1).reduceRight((points, _, index, all) => index % 2 ? [...points, all[index - 1], all[index]] : points, [])];
+}
+
+/**
+ * The dashes of a line that wander towards its end, cut off at both ends.
+ * @param {Object} from - The start
+ * @param {Object} to - The end
+ * @param {Number} offset - How far the dashes have wandered
+ * @param {Number} dash - A dash's length
+ * @param {Number} gap - The gap between dashes
+ * @returns {Object[][]} Each dash as its two end points
+ */
+export function dashSegments(from, to, offset, dash, gap) {
+  const length = Math.hypot(to.x - from.x, to.y - from.y);
+  if (!length) return [];
+  const along = at => ({ x: from.x + (to.x - from.x) * at / length, y: from.y + (to.y - from.y) * at / length });
+  const period = dash + gap;
+  const dashes = [];
+  for (let start = (offset % period) - period; start < length; start += period) {
+    const first = Math.max(0, start);
+    const last = Math.min(length, start + dash);
+    if (last > first) dashes.push([along(first), along(last)]);
+  }
+  return dashes;
+}
+
+/**
+ * The line an attack picks with an icon aims with: a blade's arc, a wavering mass, or else a laser.
+ * @param {String|null} icon - The picker's icon
+ * @returns {String} "arc", "wave" or "laser"
+ */
+export function aimKind(icon) {
+  if (icon === MELEE_CURSOR.icon) return "arc";
+  if (icon === "ep-lightning") return "wave";
+  return "laser";
+}
+
+/**
+ * How bright a flickering line is at this moment: unsteady, with a sudden dip now and then.
+ * @param {Number} time - The time in milliseconds
+ * @param {Function} [random] - The source of chance
+ * @returns {Number} The brightness, 0 to 1
+ */
+export function aimFlicker(time, random = Math.random) {
+  if (random() < 0.05) return 0.25;
+  return 0.75 + 0.25 * Math.sin(time / 37) * Math.sin(time / 113);
+}
+
+/**
+ * Draws the line of an attack that aims from a token towards the cursor, animated until destroyed.
+ * @param {String} kind - "laser", "arc", "wave" or "dashes"
+ * @param {Object} from - The attacker's token
+ * @returns {Object} move(point) sets where it aims, destroy() removes it
+ */
+function aimLine(kind, from) {
+  const graphics = new PIXI.Graphics();
+  canvas.controls?.addChild?.(graphics);
+  const glow = Number.parseInt(TARGET_COLOR.replace("#", ""), 16);
+  const red = Number.parseInt(MARK_COLOR.replace("#", ""), 16);
+  const center = from.center ?? { x: from.bounds.x + from.bounds.width / 2, y: from.bounds.y + from.bounds.height / 2 };
+  const radius = Math.min(from.bounds?.width ?? from.w ?? 100, from.bounds?.height ?? from.h ?? 100) / 2;
+  const started = performance.now();
+  let point = null;
+  const fill = (color, alpha, corners) => graphics.beginFill(color, alpha).drawPolygon(corners).endFill();
+  const painters = {
+    laser: (pixel, time) => {
+      const origin = aimOrigin(center, radius, point);
+      const bright = aimFlicker(time);
+      const layer = (color, alpha, width) => {
+        for (const piece of laserPieces(origin, point, width * pixel)) fill(color, alpha * piece.alpha, piece.corners);
+      };
+      layer(0x000000, 0.35, 6);
+      layer(red, 0.8 * bright, 5);
+      layer(AIM_RED_CORE_COLOR, bright, 2);
+    },
+    arc: (pixel, time) => {
+      const angle = Math.atan2(point.y - center.y, point.x - center.x);
+      const pulse = (1 + Math.sin(time / 320)) / 2;
+      const reach = radius * (1.32 + 0.03 * pulse);
+      const bright = 0.65 + 0.35 * pulse;
+      const thick = 1 + 0.2 * pulse;
+      fill(0x000000, 0.35, arcShape(center, reach + 2 * pixel, angle, 11 * thick * pixel));
+      fill(glow, 0.7 * bright, arcShape(center, reach, angle, 9 * thick * pixel));
+      fill(AIM_CORE_COLOR, bright, arcShape(center, reach - 3 * pixel, angle, 4 * thick * pixel));
+    },
+    wave: (pixel, time) => {
+      const origin = aimOrigin(center, radius, point);
+      const length = Math.hypot(point.x - origin.x, point.y - origin.y);
+      const reach = Math.min(24 * pixel, length * 0.14);
+      fill(0x000000, 0.3, waveShape(origin, point, time, reach + 2 * pixel));
+      fill(glow, 0.55, waveShape(origin, point, time, reach));
+      fill(WAVE_CORE_COLOR, 0.85, waveShape(origin, point, time, reach * 0.3));
+    },
+    dashes: (pixel, time) => {
+      const origin = aimOrigin(center, radius, point);
+      const dashes = dashSegments(origin, point, time * 0.024 * pixel, 10 * pixel, 8 * pixel);
+      const stroke = (width, color, alpha) => {
+        graphics.lineStyle(width * pixel, color, alpha);
+        for (const [start, end] of dashes) graphics.moveTo(start.x, start.y).lineTo(end.x, end.y);
+      };
+      stroke(4, 0x000000, 0.35);
+      stroke(2.5, red, 1);
+      stroke(1, AIM_RED_CORE_COLOR, 1);
+      graphics.lineStyle(0);
+    }
+  };
+  const draw = () => {
+    graphics.clear();
+    if (!point) return;
+    painters[kind](1 / (globalThis.canvas?.stage?.scale?.x || 1), performance.now() - started);
+  };
+  const ticker = canvas.app?.ticker;
+  ticker?.add(draw);
+  return {
+    move: next => {
+      point = next;
+      if (!ticker) draw();
+    },
+    destroy: () => {
+      ticker?.remove(draw);
+      graphics.destroy();
+    }
+  };
 }
 
 /**
@@ -276,20 +496,20 @@ export function sheetsAside() {
  * targets does not also select or deselect tokens. The cursor is set by a stylesheet rule rather
  * than on the board, since the canvas writes its own cursor onto the board over every token.
  * @param {Object} [options] - icon: one of the system's shapes ("ep-slash", "ep-lightning") or a
- *   Font Awesome class for the cursor and the marks, none for the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
+ *   Font Awesome class for the cursor and the marks, none for the crosshair; color: the cursor's colour, the blue TARGET_COLOR by default; markColor: the
  *   marks' colour, the red MARK_COLOR by default; multi: several targets; max: how many, with multi
  *   (Infinity for any number); within: how far, in scene units, a further target may be from the
  *   nearest marked one; refuse: refuse(token) returns the notice for a token that may not be
  *   picked, or nothing; marker: marker(token, point, {icon, color}) draws a mark and returns what
- *   removes it; measure: { from, describe(distance, token), limit(distance) } draws a line from the
- *   token from to the cursor and shows what describe says about the distance - to the token under
+ *   removes it; aimFrom: a token to aim from without measuring; measure: { from, describe(distance, token), limit(distance) } aims from the
+ *   token from at the cursor - by the icon a laser, a blade's arc or a wavering mass - and shows what describe says about the distance - to the token under
  *   the cursor (passed along), else to the cursor itself; limit, when given, is how many targets may
  *   be marked when the farthest of them stands that far away, and the counter counts down from it
  *   for the marked targets together with the token under the cursor, or the cursor itself
  * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
  *   cancelled
  */
-export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, within = null, refuse = null, marker = drawTargetMarker, measure = null } = {}) {
+export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, within = null, refuse = null, marker = drawTargetMarker, measure = null, aimFrom = null } = {}) {
   const board = document.getElementById("board");
   if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
   ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
@@ -302,8 +522,8 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
     label.className = "ep-targeting-counter";
     const range = document.createElement("span");
     range.className = "ep-targeting-range";
-    const line = measure?.from && globalThis.PIXI ? new PIXI.Graphics() : null;
-    if (line) canvas.controls?.addChild?.(line);
+    const aimer = measure?.from ?? aimFrom;
+    const line = aimer && globalThis.PIXI ? aimLine(aimKind(icon), aimer) : null;
     let pointed = null;
     const capFor = (tokens, extra = null) => {
       if (!measure?.limit) return limit;
@@ -364,8 +584,10 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
     const onMove = event => {
       label.style.left = `${event.clientX}px`;
       label.style.top = `${event.clientY}px`;
-      if (!measure?.from) return;
+      if (!aimer) return;
       const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
+      line?.move(point);
+      if (!measure?.from) return;
       const hovered = tokenAt(point, canvas.tokens.placeables);
       const distance = hovered && hovered !== measure.from ? tokenGap(measure.from, hovered, canvas.grid) : pointGap(measure.from, point, canvas.grid);
       if (measure.limit) {
@@ -373,7 +595,6 @@ export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColo
         refresh();
       }
       range.textContent = measure.describe?.(distance, hovered && hovered !== measure.from ? hovered : null) ?? "";
-      if (line) drawMeasureLine(line, measure.from, point);
     };
     const onKey = event => {
       if (event.key !== "Escape") return;
@@ -498,7 +719,8 @@ export function wirePreRollTargets(root, dialog, picking, { pick = pickTokensOnC
       refuse = before ? token => outside(token) ?? before(token) : outside;
       options = { multi: zone.max > 1, max: zone.max, within: zone.within ?? null };
     }
-    const tokens = await pick({ ...options, ...(refuse ? { refuse } : {}), ...(measure ? { measure } : {}), ...picking.cursor });
+    const aimFrom = picking.aimFrom?.() ?? null;
+    const tokens = await pick({ ...options, ...(refuse ? { refuse } : {}), ...(measure ? { measure } : {}), ...(aimFrom ? { aimFrom } : {}), ...picking.cursor });
     restoreSheets();
     const actors = (tokens ?? []).map(token => token.actor).filter(Boolean);
     if (actors.length >= minimum) {
@@ -609,24 +831,24 @@ export function coneAngleForWidth(length, width) {
 /**
  * Shows, while the cursor moves, a line from a token to it and what a measure says of the distance,
  * in a label beside the cursor.
- * @param {Object} measure - from, the token; describe(distance), the text for a distance in scene units
+ * @param {Object} measure - from, the token; describe(distance), the text for a distance in scene
+ *   units; aim, the kind of line: wandering "dashes" by default
  * @returns {Function} Stops measuring and removes the line and the label
  */
-function measureFrom({ from, describe }) {
+function measureFrom({ from, describe, aim = "dashes" }) {
   const label = document.createElement("div");
   label.className = "ep-targeting-counter";
   const range = document.createElement("span");
   range.className = "ep-targeting-range";
   label.append(range);
   document.body.append(label);
-  const line = globalThis.PIXI ? new PIXI.Graphics() : null;
-  if (line) canvas.controls?.addChild?.(line);
+  const line = globalThis.PIXI ? aimLine(aim, from) : null;
   const onMove = event => {
     label.style.left = `${event.clientX}px`;
     label.style.top = `${event.clientY}px`;
     const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
     range.textContent = describe?.(pointGap(from, point, canvas.grid)) ?? "";
-    if (line) drawMeasureLine(line, from, point);
+    line?.move(point);
   };
   document.addEventListener("pointermove", onMove, true);
   return () => {

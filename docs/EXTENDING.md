@@ -61,7 +61,7 @@ api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, ro
 
 `api.drugs` is described in "Drugs and doses" below.
 
-`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, within, refuse, marker, measure })` lets
+`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, within, refuse, marker, measure, aimFrom })` lets
 the user pick targets on the canvas. A click marks a token, another click on it unmarks it, a
 right-click confirms; Escape, or a right-click with nothing marked, cancels. Open sheets are
 minimised while the user picks and come back afterwards. It resolves to the marked tokens in the
@@ -69,8 +69,8 @@ order they were marked, or `null`.
 
 - `icon` is a Font Awesome class, e.g. `"fa-syringe"`, or one of the system's own shapes,
   `"ep-slash"` (melee) or `"ep-lightning"` (psi), drawn as the cursor and as the marks.
-  Without it both are a crosshair. The system's own colours are a turquoise cursor and red marks
-  with a white border; `color` and `markColor` (CSS hex values) change them.
+  Without it both are a crosshair. The system's own colours are a blue cursor and red marks,
+  both with a white border; `color` and `markColor` (CSS hex values) change them.
 - `multi: true` picks up to `max` targets: the text under the cursor counts down, and a click past
   `max` is refused with a notice. `max: Infinity` takes any number, and the text counts what is
   marked. Without `multi` one target is picked: the text says whether it is chosen, and a click on
@@ -83,8 +83,10 @@ order they were marked, or `null`.
 - `marker(token, point, { icon, color })` draws the mark and returns what removes it. The default,
   `drawTargetMarker`, draws the cursor's shape in `markColor` with a white border where the token
   was clicked.
-- `measure: { from, describe(distance, token) }` (2.8.5) draws a line from the token `from` to the
-  cursor and shows under the count what `describe` returns for the distance, in scene units edge to
+- `aimFrom` (2.9) draws an animated line from that token to the cursor without measuring: a blade's
+  arc with `"ep-slash"`, a wavering mass with `"ep-lightning"`, otherwise a laser.
+- `measure: { from, describe(distance, token) }` (2.8.5) draws that line from the token `from` and
+  shows under the count what `describe` returns for the distance, in scene units edge to
   edge - to the token under the cursor (passed as `token`), else to the cursor itself. The system's
   ranged attacks and psi-gamma sleights measure this way from the attacker's token
   (`api.ui.attackerToken(actor)`).

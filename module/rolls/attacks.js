@@ -192,7 +192,8 @@ export async function applyTargetedAttack(message, { pick = pickTokensOnCanvas, 
   const any = attack.targets === ANY_TARGETS;
   const refuseSelf = attack.refuseSelf && attacker ? refuseOwnToken(attacker) : null;
   const refuse = refuseAny(refuseUnsuitable(attack.unsuitable), refuseForFamily(attack.strainFamily), attack.defence === "will" && attacker ? refuseLockedOut(attacker) : null, refuseSelf);
-  const picked = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, refuse, ...(attack.cursor ?? {}) });
+  const aimFrom = attacker ? attackerToken(attacker) : null;
+  const picked = await pick({ multi: any || attack.targets > 1, max: any ? Infinity : attack.targets, within: attack.within ?? null, refuse, ...(aimFrom ? { aimFrom } : {}), ...(attack.cursor ?? {}) });
   const tokens = refuseSelf ? (picked ?? []).filter(token => !refuseSelf(token)) : picked;
   if (refuseSelf && tokens.length < (picked?.length ?? 0)) ui.notifications.warn(game.i18n.localize("ep2e.targeting.notOnSelf"));
   if (!tokens?.length) return null;
@@ -1000,7 +1001,7 @@ function blastArea(rollContext) {
     const from = attackerToken(rollContext.actor);
     return {
       kind: "circle", radius: reach.radius, max: 0, from,
-      measure: from ? { from, describe: distance => distanceText(distance, rangeBand(distance, range, traits)) } : null,
+      measure: from ? { from, aim: rollContext.rolledFrom === "grenade" ? "dashes" : "laser", describe: distance => distanceText(distance, rangeBand(distance, range, traits)) } : null,
       distance: area => (from ? pointGap(from, area.origin, canvas.grid) : null)
     };
   };
@@ -1940,6 +1941,7 @@ export function attackPicking(rollContext) {
   const area = blast ? blastArea(rollContext) : ranged && !thrown && !isConeWeapon(weapon) ? suppressiveArea(rollContext) : null;
   return {
     cursor: preset?.cursor ?? (rolledFrom === "ccWeapon" ? MELEE_CURSOR : {}),
+    ...(rolledFrom === "ccWeapon" ? { aimFrom: () => attackerToken(rollContext.actor) } : {}),
     refuse,
     refuseFor: form => form?.elements?.touchOnly?.checked ? refuseAny(refuse, refuseBeyondTouch(rollContext.actor)) : refuse,
     ...(ranged ? { measure: ranged.measure, applyMeasured: ranged.applyMeasured, applySight: ranged.applySight } : {}),
