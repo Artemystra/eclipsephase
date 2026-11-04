@@ -1674,6 +1674,30 @@ optgroup .Default .Roll .Mode,
   padding: 0 !important;
 }
 
+/* The dark theme blurs .window-content, which makes Firefox place fixed dropdowns and tooltips
+   relative to it and clip them at its edge. Sheets draw that blur on a layer behind the content. */
+.application.eclipsephase.sheet .window-content {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.theme-dark .application.eclipsephase.sheet::before,
+.themed.theme-dark .application.eclipsephase.sheet::before,
+.application.eclipsephase.sheet.themed.theme-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+body.game:is(.performance-low, .noblur) .application.eclipsephase.sheet::before {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 /* custom title bar, replaces native window-header */
 .ep-sheet-titlebar {
   display: flex;
