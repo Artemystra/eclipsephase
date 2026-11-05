@@ -618,6 +618,17 @@ export function sleevedNervousSystem(actor){
 // The vision mode a token seen through a tacnet is drawn in, and the key an effect joins one with.
 export const TACNET_VISION = "tacnet";
 export const TACNET_KEY = "system.additionalSystems.tacnet";
+export const PLAIN_TACNET_VISION = "tacnetPlain";
+
+/**
+ * The vision mode a tacnet's shared sight is drawn in: with its picture effects, or without them
+ * when the user turned sight effects off.
+ * @param {Boolean} effects - Whether the user wants sight effects
+ * @returns {String} The vision mode's id
+ */
+export function sharedSightMode(effects) {
+  return effects ? TACNET_VISION : PLAIN_TACNET_VISION;
+}
 
 /**
  * The tacnet channel an actor shares its sight on (Core p.327): the one its effect names, or for a

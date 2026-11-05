@@ -21,6 +21,10 @@
       "name": "Mostrar o Painel de Tempo aos jogadores",
       "hint": "Permite que os jogadores abram o Painel de Tempo e vejam o dia e a hora atuais. Eles recebem o mesmo painel sem nenhum controle."
     },
+    "visionEffects": {
+      "name": "Modificadores de visão",
+      "hint": "Mostra a visão especial, como a visão compartilhada com outros, com seus próprios efeitos de imagem. Desative para vê-la sem filtros, por exemplo se os efeitos incomodam seus olhos. O que você consegue ver continua igual."
+    },
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."

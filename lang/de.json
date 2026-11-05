@@ -21,6 +21,10 @@
       "name": "Zeit-Panel für Spieler anzeigen",
       "hint": "Erlaubt Spielern, das Zeit-Panel zu öffnen und Tag und Uhrzeit zu sehen. Sie bekommen dasselbe Panel ohne die Bedienelemente."
     },
+    "visionEffects": {
+      "name": "Sichtmodifikatoren",
+      "hint": "Zeigt besondere Sicht, etwa mit anderen geteilte Sicht, mit eigenen Bildeffekten. Schalte sie aus, um sie ohne Filter zu sehen, zum Beispiel wenn die Effekte deinen Augen schaden. Was du sehen kannst, bleibt gleich."
+    },
     "editAll": {
       "name": "Keine Editiereinschränkungen",
       "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Aufladung mit ein."

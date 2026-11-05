@@ -1,7 +1,7 @@
 import EPactorSheet from "../../module/actor/EPactorSheet.js";
 import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
-  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet
+  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode
 } from "../../module/common/morp-functions.js";
 import { calcEffects } from "../../module/rolls/resleeving.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
@@ -329,5 +329,10 @@ describe("sight shared through a tacnet", () => {
     expect(seesThroughTacnet(guard, [guard, other], gm)).toBe(false);
     other.controlled = true;
     expect(seesThroughTacnet(guard, [guard, other], gm)).toBe(true);
+  });
+
+  test("a user who turned sight effects off sees shared sight without them", () => {
+    expect(sharedSightMode(true)).toEqual("tacnet");
+    expect(sharedSightMode(false)).toEqual("tacnetPlain");
   });
 });

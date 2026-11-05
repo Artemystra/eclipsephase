@@ -21,6 +21,10 @@
       "name": "向玩家显示时间面板",
       "hint": "允许玩家打开时间面板并查看当前的天数与时间。他们看到的面板相同，但没有任何操作按钮。"
     },
+    "visionEffects": {
+      "name": "视野修正",
+      "hint": "以专属的画面效果显示特殊视野，例如与他人共享的视野。关闭后将不带滤镜显示，例如当这些效果让你的眼睛不适时。你能看到的内容保持不变。"
+    },
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."

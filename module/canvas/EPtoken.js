@@ -1,4 +1,4 @@
-import { TACNET_KEY, TACNET_VISION, seesThroughTacnet } from "../common/morp-functions.js";
+import { TACNET_KEY, seesThroughTacnet, sharedSightMode } from "../common/morp-functions.js";
 // Physical/Mental bars are two-part (health zone + Death Rating/Insanity overflow), like the actor sheet, not a single-fill native bar.
 const { Token } = foundry.canvas.placeables;
 
@@ -52,15 +52,21 @@ export function tacnetVisionShader() {
 }
 
 /**
+ * Rebuilds every token's sight, so shared sight follows who is on a tacnet and how the user wants it drawn.
+ * @returns {void}
+ */
+export function refreshSharedSight() {
+  if (!canvas?.ready) return;
+  for (const token of canvas.tokens.placeables) token.initializeVisionSource();
+  canvas.perception.update({ initializeVisionModes: true, refreshVision: true, refreshLighting: true });
+}
+
+/**
  * Keeps what a user sees through tacnets current when someone joins or leaves one.
  * @returns {void}
  */
 export function registerTacnetVision() {
-  const refresh = foundry.utils.debounce(() => {
-    if (!canvas?.ready) return;
-    for (const token of canvas.tokens.placeables) token.initializeVisionSource();
-    canvas.perception.update({ initializeVisionModes: true, refreshVision: true, refreshLighting: true });
-  }, 50);
+  const refresh = foundry.utils.debounce(refreshSharedSight, 50);
   const carriesTacnet = effect => Array.from(effect?.changes ?? effect?.system?.changes ?? []).some(change => change.key === TACNET_KEY);
   for (const hook of ["createActiveEffect", "updateActiveEffect", "deleteActiveEffect"]) Hooks.on(hook, effect => { if (carriesTacnet(effect)) refresh(); });
   for (const hook of ["createItem", "updateItem", "deleteItem"]) Hooks.on(hook, item => { if (Array.from(item.effects ?? []).some(carriesTacnet)) refresh(); });
@@ -81,11 +87,11 @@ export default class EPtoken extends Token {
     return super._isVisionSource() || this.#sharedSight;
   }
 
-  // Shared sight has its own look. A token without a range of its own still needs one, or it draws nothing.
+  // Shared sight has its own look, unless the user turned sight effects off. A token without a range of its own still needs one, or it draws nothing.
   _getVisionSourceData() {
     const data = super._getVisionSourceData();
     if (!this.#sharedSight) return data;
-    return { ...data, visionMode: TACNET_VISION, radius: data.radius || data.lightRadius };
+    return { ...data, visionMode: sharedSightMode(game.settings.get("eclipsephase", "visionEffects")), radius: data.radius || data.lightRadius };
   }
 
   // Per bar index: displayed/target scalar (0..combinedMax) driving the fill animation.

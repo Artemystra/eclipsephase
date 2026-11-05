@@ -21,6 +21,10 @@
       "name": "Show the Time Panel to players",
       "hint": "Lets players open the Time Panel and see the current day and time. They get the same panel without any of the controls."
     },
+    "visionEffects": {
+      "name": "Vision Modifiers",
+      "hint": "Draws special sight, such as sight shared with others, with its own picture effects. Turn it off to see it without filters, for example if the effects are hard on your eyes. What you can see stays the same."
+    },
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."

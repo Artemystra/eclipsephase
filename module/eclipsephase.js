@@ -15,8 +15,8 @@ import  * as helperFunction from "./common/general-helper-functions.js"
 import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
 import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
-import EPtoken, { registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
-import { TACNET_VISION } from "./common/morp-functions.js";
+import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -137,6 +137,16 @@ async function registerSystemSettings() {
     default: false
   });
 
+  game.settings.register("eclipsephase", "visionEffects", {
+    config: true,
+    scope: "client",
+    name: "SETTINGS.visionEffects.name",
+    hint: 'SETTINGS.visionEffects.hint',
+    type: Boolean,
+    default: true,
+    onChange: () => refreshSharedSight()
+  });
+
   game.settings.register("eclipsephase", "editAll", {
     config: true,
     scope: "world",
@@ -222,6 +232,13 @@ Hooks.once('init', async function() {
       label: "ep2e.targeting.tacnetVision",
       tokenConfig: false,
       vision: { background: { shader: tacnetVisionShader() }, darkness: { adaptive: false }, defaults: { attenuation: 0, contrast: 0, saturation: 0, brightness: 0 }, preferred: false }
+    });
+    // The same sight without picture effects, for users who turned them off.
+    CONFIG.Canvas.visionModes[PLAIN_TACNET_VISION] = new VisionMode({
+      id: PLAIN_TACNET_VISION,
+      label: "ep2e.targeting.tacnetVision",
+      tokenConfig: false,
+      vision: { darkness: { adaptive: false }, defaults: { attenuation: 0, contrast: 0, saturation: 0, brightness: 0 }, preferred: false }
     });
   }
   registerTacnetVision();
