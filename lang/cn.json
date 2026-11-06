@@ -1804,6 +1804,7 @@
         "baseValue": "基础值",
         "rollTarget": "目标值",
         "total": "Result",
+        "initiative": "进行先攻检定",
         "damageDone": "Damage Done",
         "infectionRaise": "感染加深至",
         "jamming": {

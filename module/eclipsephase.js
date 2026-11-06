@@ -13,7 +13,7 @@ import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
-import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
+import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
 import { PLAIN_TACNET_VISION, TACNET_VISION } from "./common/morp-functions.js";
@@ -204,6 +204,11 @@ Hooks.once('init', async function() {
     formula: "1d6 + @initiative.value",
     decimals: 0
   };
+
+  // Initiative is rolled with its own roll class, whose card shows the system's dice tray.
+  const InitiativeRoll = initiativeRollClass();
+  CONFIG.Dice.rolls.push(InitiativeRoll);
+  CONFIG.Combatant.documentClass = combatantClass(InitiativeRoll);
 
   // An action turn is roughly three seconds (Core), so a combat round advances the world clock by
   // that much - which is what lets a duration counted in turns expire during a fight.
@@ -946,6 +951,11 @@ Hooks.once("ready", async () => {
   if (!game.user.getFlag("eclipsephase", "pendingWareSetup")) return;
   await postWareSetupCard(game.user);
   await game.user.unsetFlag("eclipsephase", "pendingWareSetup");
+});
+
+// An initiative card names the combatant in its header, so it needs no line of its own saying who rolls.
+Hooks.on("preCreateChatMessage", message => {
+  if (message.getFlag("core", "initiativeRoll")) message.updateSource({ flavor: "" });
 });
 
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages

@@ -4186,6 +4186,18 @@ li:has(.ep-system-notice) .message-header {
   transform: rotate(45deg);
 }
 
+/* A minus glyph sits low, so it is drawn as a bar centred behind the value. */
+.eclipsephase.dicetray .ep-dice-sign.ep-dice-minus{
+  font-size: 0;
+}
+
+.eclipsephase.dicetray .ep-dice-sign.ep-dice-minus::before{
+  content: "";
+  width: 44px;
+  height: 12px;
+  background: var(--pitchBorder);
+}
+
 .eclipsephase.dicetray .diecontainerSmall.bonus .eyes,
 .eclipsephase.dicetray .ep-dice-factor .eyes{
   position: relative;
@@ -4881,4 +4893,16 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   width: 26px;
   height: 26px;
   padding: 0;
+}
+
+/* Carousel Combat Tracker (combat-dock): its combatant name, an h2, takes the system's h2. */
+#combat-dock,
+.combat-dock-tooltip {
+  --font-h2: "Cousine", monospace;
+  --font-h2-size: 1rem;
+}
+
+body #combat-dock h2,
+body .combat-dock-tooltip .combat-dock-tooltip-wrapper h2 {
+  border-bottom: 1px solid var(--accentBackground);
 }

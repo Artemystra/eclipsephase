@@ -1830,6 +1830,7 @@
         "baseValue": "Grundwert",
         "rollTarget": "Ziel",
         "total": "Resultat",
+        "initiative": "würfelt Initiative",
         "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
         "jamming": {

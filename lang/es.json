@@ -1797,6 +1797,7 @@
         "baseValue": "Base Value",
         "rollTarget": "Target",
         "total": "Result",
+        "initiative": "tira por Iniciativa",
         "damageDone": "Damage Done",
         "infectionRaise": "Infection raised to",
         "jamming": {

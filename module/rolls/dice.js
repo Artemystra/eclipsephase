@@ -1624,6 +1624,40 @@ function rollCardFlags(message, htmlTemplate){
     return Object.keys(flags).length ? {eclipsephase: flags} : {}
 }
 
+/**
+ * The roll class of initiative: its card shows the system's dice tray instead of Foundry's roll card.
+ * @returns {Function} The roll class
+ */
+export function initiativeRollClass() {
+    return class EPinitiativeRoll extends foundry.dice.Roll {
+        async render({ isPrivate = false, ...options } = {}) {
+            if (isPrivate) return super.render({ isPrivate, ...options })
+            if (!this._evaluated) await this.evaluate()
+            // The total as text, so a total of 0 still shows.
+            return foundry.applications.handlebars.renderTemplate(DEFAULT_ROLL, {
+                mainMessage: "ep2e.roll.announce.initiative",
+                rollType: "rollOutput",
+                rollTitle: "ep2e.roll.announce.total",
+                total: String(this.total),
+                diceBreakdown: breakdown(this)
+            })
+        }
+    }
+}
+
+/**
+ * The combatant class, which rolls initiative with the given roll class.
+ * @param {Function} InitiativeRoll - The roll class of initiative
+ * @returns {Function} The combatant class
+ */
+export function combatantClass(InitiativeRoll) {
+    return class EPcombatant extends foundry.documents.Combatant {
+        getInitiativeRoll(formula) {
+            return new InitiativeRoll(formula || this._getInitiativeFormula(), this.actor?.getRollData() || {})
+        }
+    }
+}
+
 export function breakdown(roll){
     
     let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}

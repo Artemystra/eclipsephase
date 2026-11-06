@@ -35,7 +35,7 @@
             {{/each}}
             {{#if diceBreakdown.bonus}}
             <div class="diecontainerSmall bonus">
-                <span class="ep-dice-sign">{{diceBreakdown.bonusSign}}</span><strong class="eyes">{{diceBreakdown.bonusValue}}</strong>
+                <span class="ep-dice-sign{{#if (eq diceBreakdown.bonusSign "-")}} ep-dice-minus{{/if}}">{{diceBreakdown.bonusSign}}</span><strong class="eyes">{{diceBreakdown.bonusValue}}</strong>
             </div>
             {{/if}}
             {{#if diceBreakdown.factor}}<strong class="ep-dice-bracket">)</strong><div class="ep-dice-factor"><span class="ep-dice-sign">x</span><strong class="eyes">{{diceBreakdown.factor}}</strong></div>{{/if}}

@@ -1856,6 +1856,7 @@
         "baseValue": "Base Value",
         "rollTarget": "Target",
         "total": "Result",
+        "initiative": "rolls for Initiative",
         "damageDone": "Damage Done",
         "stressReceived": "Stress Received",
         "infectionRaise": "Infection raised to",

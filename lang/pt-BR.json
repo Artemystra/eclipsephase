@@ -1811,6 +1811,7 @@
         "baseValue": "Valor Base",
         "rollTarget": "Target",
         "total": "Result",
+        "initiative": "rola Iniciativa",
         "damageDone": "Damage Done",
         "infectionRaise": "Infecção elevada para",
         "jamming": {
