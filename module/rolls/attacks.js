@@ -1,4 +1,4 @@
-import { RollCheck, isCriticalSuccess, isHit, rollToChat } from "./dice.js";
+import { RollCheck, isCriticalSuccess, isHit, rollToChat, superiorResults } from "./dice.js";
 import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
@@ -1254,7 +1254,7 @@ async function setOffBlast(message, attack, origin, scatter = null) {
     const aimed = circle(blast.origin, blast.reach ?? blast.radius);
     await createShadowedArea(aimed, { name, flags, spent: true, exclude: coveredSquares(struck) });
   }
-  const caught = blast.harmless && !attack.dose ? [] : blastTargets(struck, canvas.tokens?.placeables ?? []);
+  const caught = blast.harmless && !attack.dose && !attack.checks?.length ? [] : blastTargets(struck, canvas.tokens?.placeables ?? []);
   if (!caught.length) clearBlast(attack, BLAST_LINGER);
   const own = caught.find(entry => entry.actor.uuid === attack.actorUuid);
   if (own) ui.notifications.warn(game.i18n.format("ep2e.targeting.ownBlast", { name: own.actor.name }));
@@ -1404,17 +1404,6 @@ function coveredSquares(area) {
 }
 
 /**
- * How many superior failures a failed roll has: one at 66 or less, two at 33 or less.
- * @param {Number} value - The die
- * @returns {Number} 0, 1 or 2
- */
-export function superiorFailures(value) {
-  const die = Number(value) || 0;
-  if (die >= 99) return 0;
-  return die <= 33 ? 2 : die <= 66 ? 1 : 0;
-}
-
-/**
  * Where a blast scatters to (Core p.218), from the d100 and d10 rolled for it: the d100 turns it 3.6
  * degrees a point clockwise from the line of the throw - 00 straight on beyond the aim, 25 to its
  * right, 50 back towards the thrower, 75 to its left - and the d10 is how many metres, doubled for
@@ -1462,7 +1451,8 @@ export function scatterBlast(message, { rollDice = rollScatterDice } = {}) {
     const { direction, metres } = await rollDice();
     const from = blast.from ?? attackerToken(attacker)?.center ?? null;
     const bearing = from && (from.x !== blast.origin.x || from.y !== blast.origin.y) ? Math.atan2(blast.origin.y - from.y, blast.origin.x - from.x) : -Math.PI / 2;
-    const offset = scatterOffset(direction, metres, hit ? 0 : superiorFailures(attackRoll(message).value), bearing);
+    const roll = attackRoll(message);
+    const offset = scatterOffset(direction, metres, hit ? 0 : superiorResults(roll.result, roll.value), bearing);
     const landing = scatterPoint(blast.origin, offset.angle, unitsToPixels(offset.distance));
     const scatter = { direction, degrees: offset.degrees, distance: offset.distance, blocked: landing.blocked };
     return blast.delayed ? armBlast(message, attack, landing.point, scatter) : setOffBlast(message, attack, landing.point, scatter);

@@ -738,6 +738,20 @@ attack waits for the card's "Accept Result" (`api.attacks.acceptBlindPerceive(me
 fails, a d100 on a card of its own decides: on 00-49 the attack misses outright (Core p.218) - a
 shot is still spent, but no attack is rolled.
 
+A weapon or grenade with Shock, Stun, Knockdown, Blinding, Pain or Entangling carries them as
+`checks` on its attack (2.9.5); a touch-only attack, or a weapon without damage dice, that has such a
+trait is an attack on its target too, and its damage card says it deals none. Once the damage is
+applied, the damage card lists the checks its struck targets make (`checks` on the card's
+`damageCard` state: `{ id, actorUuid, name, check, weaponName, superiors, npc, rolled }`), each a
+button for the target's owners; for an area the GM may roll the NPCs' rest or resolve it without a
+roll. A wound asks for the SOM Check against falling prone on a card of its own whenever wounds go
+up - by damage, the sheet or typed in - unless the update passes `{ eclipsephase: { woundCheck: false
+} }`; two at once knock prone and ask against passing out. A knockdown weapon's check covers the
+wound's. The check's roll carries `strikeCheck: { actorUuid, check, id, weaponName, superiors }`,
+counts as a check no condition blocks, and its result puts the conditions on, again when a pool point
+turns it. Pain Tolerance and Anti-Glare are read from `system.additionalSystems.painTolerance` (1 or
+2) and `antiGlare`, which their items' effects set.
+
 `api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
 the target: a failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"`
 through, or `"none"` behind cover. Otherwise it is an opposed test against `attack.roll`

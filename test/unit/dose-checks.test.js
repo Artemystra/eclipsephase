@@ -142,7 +142,7 @@ describe("the check card", () => {
     await requestUseCheck(checkCard().id, SKIP_DIALOG);
 
     expect(createdMessages).toHaveLength(before);
-    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.doseCheckRolled");
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.checkRolled");
   });
 });
 

@@ -63,6 +63,27 @@ export function isHit(result) {
 }
 
 /**
+ * How many superior results a roll has (Core p.29): on a success one at 33 or more and two at 66 or
+ * more, on a failure one at 66 or less and two at 33 or less. The tier rollCalc gives tells, except
+ * for a critical, whose die does; an automatic result has none.
+ * @param {Number} result - The result tier
+ * @param {Number} value - The die
+ * @returns {Number} 0, 1 or 2
+ */
+export function superiorResults(result, value) {
+    const die = Number(value) || 0
+    switch (result) {
+        case TASK_RESULT.SUCCESS_TWO:
+        case TASK_RESULT.FAILURE_TWO: return 2
+        case TASK_RESULT.SUCCESS_ONE:
+        case TASK_RESULT.FAILURE_ONE: return 1
+        case TASK_RESULT.CRITICAL_SUCCESS: return die >= 66 ? 2 : die >= 33 ? 1 : 0
+        case TASK_RESULT.CRITICAL_FAILURE: return die <= 33 ? 2 : die <= 66 ? 1 : 0
+        default: return 0
+    }
+}
+
+/**
  * A number with its sign, the way modifiers are shown: +10, -20, 0.
  * @param {Number|String} value - The number
  * @returns {String} The signed number

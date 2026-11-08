@@ -1,4 +1,8 @@
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 15px 10px {{#if open}}0{{else}}15px{{/if}} 10px;">
+  {{#if iconImg}}
+  <span style="display: block; width: 36px; height: 36px; background-color: var({{#if color}}{{color}}{{else}}--iconBlue{{/if}}); -webkit-mask: url('{{iconImg}}') center / contain no-repeat; mask: url('{{iconImg}}') center / contain no-repeat;"></span>
+  {{else}}
   <i class="fa-solid {{icon}}" style="font-size: 36px; color: var({{#if color}}{{color}}{{else}}--iconBlue{{/if}});"></i>
+  {{/if}}
   <div style="text-align: center; font-size: 14px;">{{#if html}}{{{html}}}{{else}}{{text}}{{/if}}</div>
 </div>

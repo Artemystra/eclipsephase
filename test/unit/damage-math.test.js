@@ -225,9 +225,9 @@ describe("applyDamage", () => {
   });
 
   test("it posts no card of its own unless asked to", async () => {
-    await applyDamage(body(), 8);
+    await applyDamage(body(), 8, { woundCheck: false });
     const quiet = createdMessages.length;
-    await applyDamage(body(), 8, { announce: true });
+    await applyDamage(body(), 8, { announce: true, woundCheck: false });
 
     expect(quiet).toBe(0);
     expect(createdMessages).toHaveLength(1);

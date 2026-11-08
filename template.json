@@ -107,7 +107,9 @@
       "digestiveSymbiotes": false,
       "immunizers": false,
       "airSealed": false,
-      "skinSealed": false
+      "skinSealed": false,
+      "painTolerance": 0,
+      "antiGlare": false
         },
         "initiative": {
           "value": null,

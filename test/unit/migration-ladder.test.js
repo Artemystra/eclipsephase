@@ -2,9 +2,9 @@ import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } fr
 
 // The version of the last migration step: what a world is stamped with once it has climbed the whole
 // ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
-const LATEST_MIGRATION = "2.9";
-// What every world below 2.9 sees, whatever its data: the 2.9 notice and its closing dialog.
-const ONLY_THE_NOTICE = ["notice:2.9", "ep2e.migration.done"];
+const LATEST_MIGRATION = "2.9.5";
+// What every world below 2.9 sees, whatever its data: one notice for 2.9 and 2.9.5, and the closing dialog.
+const ONLY_THE_NOTICE = ["notice:2.9+2.9.5", "ep2e.migration.done"];
 
 
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
@@ -39,7 +39,7 @@ async function runLadderFrom(from, answer = { start: true }) {
   const realRender = foundry.applications.handlebars.renderTemplate;
   foundry.applications.handlebars.renderTemplate = async (template, data = {}) => {
     if (String(template).includes("migration-dialog")) rendered.push({ copy: data.messageCopy, extra: data.messageCopyExtra });
-    if (String(template).includes("migration-notice")) rendered.push({ copy: `notice:${data.version}`, extra: data.extra || undefined });
+    if (String(template).includes("migration-notice")) rendered.push({ copy: `notice:${(data.versions ?? [data.version]).join("+")}`, extra: data.extra || undefined });
     return realRender(template, data);
   };
 
@@ -76,9 +76,10 @@ describe("the migration ladder's closing dialog", () => {
     expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
   });
 
-  test("a new world gets no 2.9 notice, and one already at 2.9 is told nothing", async () => {
-    expect((await runLadderFrom("newInstall")).map(entry => entry.copy)).not.toContain("notice:2.9");
-    expect(await runLadderFrom("2.9")).toEqual([]);
+  test("a new world gets no 2.9 notice, one at 2.9 only the 2.9.5 one, and one at 2.9.5 is told nothing", async () => {
+    expect((await runLadderFrom("newInstall")).map(entry => entry.copy)).not.toContain("notice:2.9+2.9.5");
+    expect((await runLadderFrom("2.9")).map(entry => entry.copy)).toEqual(["notice:2.9.5"]);
+    expect(await runLadderFrom("2.9.5")).toEqual([]);
   });
 });
 
@@ -95,7 +96,7 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
   test("a world from the last released version is offered 2.5 and 2.9 and nothing else", async () => {
     const rendered = await runLadderFrom("2.1.5");
 
-    expect(offers(rendered).map(entry => entry.copy)).toEqual(["ep2e.migration.25", "notice:2.9"]);
+    expect(offers(rendered).map(entry => entry.copy)).toEqual(["ep2e.migration.25", "notice:2.9+2.9.5"]);
   });
 
   test("that one migration is not the retired 2.3 notice", async () => {
@@ -325,7 +326,7 @@ describe("the 2.8 armour type per weapon mode", () => {
 
     const rendered = await runLadderFrom("2.7");
 
-    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9+2.9.5");
     expect(actor.items.get("frz1")._source.system.mode1.armorused).toBe("none");
     expect(actor.items.get("own1")._source.system.mode1.armorused).toBe("energy");
     expect(actor.items.get("set1")._source.system.mode1.armorused).toBe("kinetic");
@@ -361,7 +362,7 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
 
     const rendered = await runLadderFrom("2.8");
 
-    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9");
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9+2.9.5");
     const source = id => actor.items.get(id)._source.system;
     expect([source("pul1").mode1.range, source("pul1").mode2.range, source("pul1").mode2.area]).toEqual([100, 100, { kind: "uniform", radius: 1, reduction: null }]);
     expect([source("gre1").area, source("gre1").armorused]).toEqual([{ kind: "centered", radius: null, reduction: 2 }, "energy"]);

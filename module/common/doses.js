@@ -3,7 +3,7 @@ import { durationRunOut, isTimedSpan, SECONDS_PER } from "./time.js";
 import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
 import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
-import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
+import { settleOnRoll, postCheckCard, requestCardCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER, getBodyBindingInfo, sealedAgainst } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
@@ -889,16 +889,6 @@ export async function postUseCheckCard(actor, effect) {
 }
 
 /**
- * Turns a check card into a record once its check is rolled: the button gives way to a note.
- * Done where the card may be changed; anyone else asks the active GM.
- * @param {ChatMessage} message - The check card
- * @returns {Promise<void>} Resolves once marked or asked
- */
-export function markCheckCardRolled(message) {
-  return markCardRolled(message, "doseCheck");
-}
-
-/**
  * Rolls a dose's check on the clicking client, which owns the actor. The check carries what it is
  * for, so its outcome can be applied once the roll lands - and undone or redone if a pool spend
  * turns it around. A check already rolled for this dose is not rolled again.
@@ -906,20 +896,18 @@ export function markCheckCardRolled(message) {
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
  */
-export async function requestUseCheck(messageId, systemOptions = {}) {
-  const request = game.messages.get(messageId)?.getFlag?.("eclipsephase", "doseCheck");
-  const actor = request ? await fromUuid(request.actorUuid) : null;
-  const effect = Array.from(actor?.effects ?? []).find(entry => entry.id === request?.effectId);
-  const dose = effect?.getFlag?.("eclipsephase", "dose");
-  if (!dose) return null;
-  if (dose.checkOutcome) {
-    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseCheckRolled"));
-    return null;
-  }
-
-  await markCheckCardRolled(game.messages.get(messageId));
-  const check = { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck, dose), filterBonus: dose.defense?.checkBonus === true };
-  return rollAptitudeCheck(actor, dose.useCheck.aptitude, { doseCheck: check }, systemOptions);
+export function requestUseCheck(messageId, systemOptions = {}) {
+  return requestCardCheck(messageId, "doseCheck", (request, actor) => {
+    const effect = Array.from(actor.effects ?? []).find(entry => entry.id === request.effectId);
+    const dose = effect?.getFlag?.("eclipsephase", "dose");
+    if (!dose) return null;
+    if (dose.checkOutcome) {
+      ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.checkRolled"));
+      return null;
+    }
+    const check = { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck, dose), filterBonus: dose.defense?.checkBonus === true };
+    return { aptitude: dose.useCheck.aptitude, check };
+  }, systemOptions);
 }
 
 /**
@@ -1301,32 +1289,17 @@ export function postFilterCheckCard(actor, data, defense, wanted = true) {
 }
 
 /**
- * Turns a filter card into a record once its check is rolled. Done where the card may be changed;
- * anyone else asks the active GM.
- * @param {ChatMessage} message - The filter card
- * @returns {Promise<void>} Resolves once marked or asked
- */
-export function markFilterCardRolled(message) {
-  return markCardRolled(message, "doseFilter");
-}
-
-/**
  * Rolls the filters' SOM Check from its card, once. The dose waiting on the card rides along with
  * the roll, so its outcome can let the dose in - or take it out again after a pool spend.
  * @param {String} messageId - The filter card
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
  */
-export async function requestFilterCheck(messageId, systemOptions = {}) {
-  const message = game.messages.get(messageId);
-  const request = message?.getFlag?.("eclipsephase", "doseFilter");
-  if (!request || request.rolled) return null;
-  const actor = await fromUuid(request.actorUuid);
-  if (!actor) return null;
-
-  await markFilterCardRolled(message);
-  const filter = { actorUuid: actor.uuid, cardId: messageId, name: request.name, ware: request.ware, data: request.data, wanted: request.wanted };
-  return rollAptitudeCheck(actor, "som", { doseFilter: filter }, systemOptions);
+export function requestFilterCheck(messageId, systemOptions = {}) {
+  return requestCardCheck(messageId, "doseFilter", (request, actor) => ({
+    aptitude: "som",
+    check: { actorUuid: actor.uuid, cardId: messageId, name: request.name, ware: request.ware, data: request.data, wanted: request.wanted }
+  }), systemOptions);
 }
 
 /**
@@ -2075,31 +2048,16 @@ export async function demandWillpower(actorUuid, name, addiction = null) {
 }
 
 /**
- * Turns an addiction check card into a record once it is rolled. Done where the card may be
- * changed; a player rolling from the GM's card asks the active GM.
- * @param {ChatMessage} message - The card
- * @returns {Promise<void>} Resolves once marked or asked
- */
-export function markAddictionCardRolled(message) {
-  return markCardRolled(message, "addictionCheck");
-}
-
-/**
  * Rolls the WIL Check from its card, once; the card keeps a note instead of its button.
  * @param {String} messageId - The card
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
  */
-export async function requestAddictionCheck(messageId, systemOptions = {}) {
-  const message = game.messages.get(messageId);
-  const request = message?.getFlag?.("eclipsephase", "addictionCheck");
-  if (!request || request.rolled) return null;
-  const actor = await fromUuid(request.actorUuid);
-  if (!actor) return null;
-
-  await markAddictionCardRolled(message);
-  const check = { actorUuid: actor.uuid, name: request.name, type: request.type, modifier: request.modifier, checkId: messageId };
-  return rollAptitudeCheck(actor, "wil", { addictionCheck: check }, systemOptions);
+export function requestAddictionCheck(messageId, systemOptions = {}) {
+  return requestCardCheck(messageId, "addictionCheck", (request, actor) => ({
+    aptitude: "wil",
+    check: { actorUuid: actor.uuid, name: request.name, type: request.type, modifier: request.modifier, checkId: messageId }
+  }), systemOptions);
 }
 
 /**

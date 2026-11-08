@@ -145,7 +145,7 @@
         "doseNeedsBiomorph": "Esta droga so funciona em um corpo biologico.",
         "doseNeedsCyberbrain": "Esta droga so funciona em um infomorfo ou um cibercerebro.",
         "noDosesLeft": "{name} nao tem doses restantes.",
-        "doseCheckRolled": "Este teste já foi rolado.",
+        "checkRolled": "Este teste já foi rolado.",
         "doseNoScene": "Abra uma cena para escolher um alvo nela.",
         "doseNoSelection": "Selecione um token primeiro.",
         "doseNeedsClaimant": "Atribua um personagem a si mesmo ou, como GM, selecione um token para tomar esta dose.",
@@ -2199,6 +2199,56 @@
         "note": "Rolagem: {roll} · 00–49 erra",
         "accept": "Aceitar resultado",
         "gone": "Nenhum ataque aguarda mais esta rolagem. Role o ataque de novo."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> deve fazer um {check}",
+        "roll": "Rolar {check}",
+        "resist": "Resistir a {effect}",
+        "resistFor": "{name}: resistir a {effect}",
+        "rollRemaining": "Rolar os testes restantes",
+        "resolveRest": "Resolver o resto sem rolar",
+        "weapon": "Arma",
+        "immune": "<strong>{name}</strong> é imune a {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> resiste: {effect}",
+        "flee": "<strong>{name}</strong> deve fugir com a próxima ação completa - o mais longe possível da dor ou para a cobertura total mais próxima",
+        "spanRound": "1 turno de ação",
+        "spanRounds": "{count} turnos de ação",
+        "spanMinutes": "{count} min",
+        "armor": {
+          "energy": "Armadura de energia",
+          "kinetic": "Armadura cinética"
+        },
+        "attackSuperiors": "Sucessos superiores do ataque",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Derrubada",
+          "rule": "Modificadores de ferimento se aplicam. Falha: caído."
+        },
+        "unconscious": {
+          "name": "Inconsciência",
+          "rule": "Dois ou mais ferimentos de uma vez derrubam você. Modificadores de ferimento se aplicam. Falha: inconsciente até ser acordado ou curado."
+        },
+        "shock": {
+          "name": "Choque",
+          "rule": "A armadura de energia soma ao teste; adicione o modificador de tamanho no diálogo (muito pequeno -30, pequeno -10, grande +10, muito grande +30). Falha: caído, incapacitado por 1 turno de ação (+2 por falha superior) e atordoado por 3 minutos. Sucesso: atordoado por 3 turnos de ação."
+        },
+        "stun": {
+          "name": "Atordoamento",
+          "rule": "A armadura cinética soma ao teste; adicione o modificador de tamanho no diálogo (pequeno -30, grande +30). Falha: atordoado por 1 turno de ação, +1 por falha superior. Falha crítica: incapacitado por 1 turno de ação e atordoado por 1 minuto."
+        },
+        "blinding": {
+          "name": "Ofuscante",
+          "rule": "Falha: cego por 1 turno de ação, +1 por falha superior. Falha crítica: cego até ser reparado ou curado num tanque de cura."
+        },
+        "entangling": {
+          "name": "Enredante",
+          "rule": "Cada sucesso superior do ataque: -10 neste teste e nos testes de SOM para se soltar. Falha: agarrado."
+        },
+        "pain": {
+          "name": "Dor",
+          "rule": "-20 até o fim do próximo turno em qualquer caso (Pain Tolerance I: +30 no teste e -10). Falha: fugir com a próxima ação completa."
+        }
       },
       "defence": {
         "headline": "Defender-se de {weapon}",

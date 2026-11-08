@@ -3,7 +3,7 @@ import { damageFormula } from "../../rolls/damage-formula.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import { takeDose, offerDose, claimDose, requestUseCheck, rollWearOffStress, demandWillpower, requestAddictionCheck } from "../../common/doses.js";
 import { postDefenceCards, rollRemainingDefences, applyTargetedAttack, rollDefence, yieldDefence } from "../../rolls/attacks.js";
-import { rollAttackDamage } from "../../rolls/damage.js";
+import { rollAttackDamage, postStrikeCheck, requestStrikeCheck, STRIKE_CHECK_KEY } from "../../rolls/damage.js";
 import { lockedOutOf } from "../../rolls/psi.js";
 import { weaponPreparation } from "../../common/weapon-functions.js";
 import { wirePreRollTargets } from "../../common/targeting.js";
@@ -198,6 +198,36 @@ export function registerChatCardBatch(quench) {
           assert.deepInclude(shape, { root: true, icon: true, stray: 0, primaryLast: true });
           assert.strictEqual(cardShape(after).buttons, 0);
           return after;
+        }));
+      });
+
+      it("a failed Shock check that a pool point turns into a pass takes Prone and Incapacitated off and leaves Stunned for 3 action turns", async function () {
+        this.timeout(20000);
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Shocked", system: { aptitudes: { som: { value: 15 } }, pools: { vigor: { value: 2 } } } }, async actor => {
+          await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
+          await postStrikeCheck(actor, "shock");
+          const card = newestWith(STRIKE_CHECK_KEY);
+          const shocked = () => actor.effects.filter(effect => effect.getFlag("eclipsephase", STRIKE_CHECK_KEY)).flatMap(effect => Array.from(effect.statuses)).sort();
+
+          seedDice([uniformForFace(91, 100)]);
+          await requestStrikeCheck(card.id, null, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } });
+          restoreDice();
+          await waitUntil(() => shocked().length === 3, 5000);
+          assert.deepEqual(shocked(), ["incapacitated", "prone", "stunned"], "the failure");
+
+          const roll = newestWith("taskCard");
+          const row = document.createElement("li");
+          row.dataset.messageId = roll.id;
+          const button = document.createElement("button");
+          button.dataset.usepool = "pool";
+          row.append(button);
+          await usePoolFromChat({ currentTarget: button });
+          await waitUntil(() => shocked().length === 1, 5000);
+
+          const stunned = actor.effects.find(effect => effect.getFlag("eclipsephase", STRIKE_CHECK_KEY));
+          assert.deepEqual(shocked(), ["stunned"], "the pass");
+          assert.deepInclude(stunned.duration, { value: 3, units: "rounds" });
+          return game.messages.get(roll.id);
         }));
       });
 

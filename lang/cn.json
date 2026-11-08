@@ -145,7 +145,7 @@
         "doseNeedsBiomorph": "这种药物只对生物躯体有效。",
         "doseNeedsCyberbrain": "这种药物只能在信息形体或赛博脑上运行。",
         "noDosesLeft": "{name} 没有剩余剂量。",
-        "doseCheckRolled": "这次检定已经掷过了。",
+        "checkRolled": "这次检定已经掷过了。",
         "doseNoScene": "请先打开一个场景，再在其中选择目标。",
         "doseNoSelection": "请先选中一个令牌。",
         "doseNeedsClaimant": "请为自己指定角色，或以 GM 身份选中一个令牌，来服用这一剂。",
@@ -2192,6 +2192,56 @@
         "note": "掷出 {roll} · 00–49 落空",
         "accept": "接受结果",
         "gone": "已没有攻击在等待此检定。请重新进行攻击。"
+      },
+      "strike": {
+        "checkNeeded": "{effect}：<strong>{name}</strong> 必须进行 {check}",
+        "roll": "掷 {check}",
+        "resist": "抵抗{effect}",
+        "resistFor": "{name}：抵抗{effect}",
+        "rollRemaining": "掷剩余检定",
+        "resolveRest": "其余不掷骰直接结算",
+        "weapon": "武器",
+        "immune": "<strong>{name}</strong> 免疫{effect}",
+        "outcome": "<strong>{name}</strong>：{conditions}",
+        "resisted": "<strong>{name}</strong> 抵抗了{effect}",
+        "flee": "<strong>{name}</strong> 必须在下一个完整行动中逃离——尽可能远离痛源，或躲到最近的完全掩体",
+        "spanRound": "1 个行动回合",
+        "spanRounds": "{count} 个行动回合",
+        "spanMinutes": "{count} 分钟",
+        "armor": {
+          "energy": "能量护甲",
+          "kinetic": "动能护甲"
+        },
+        "attackSuperiors": "攻击的卓越成功",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "击倒",
+          "rule": "适用伤口修正。失败：倒地。"
+        },
+        "unconscious": {
+          "name": "昏迷",
+          "rule": "一次受到两处或以上伤口会将你击倒。适用伤口修正。失败：昏迷，直到被唤醒或治愈。"
+        },
+        "shock": {
+          "name": "电击",
+          "rule": "能量护甲作为加值；在对话框中填入体型修正（极小 -30，小 -10，大 +10，极大 +30）。失败：倒地，失能 1 个行动回合（每个卓越失败 +2），并眩晕 3 分钟。成功：眩晕 3 个行动回合。"
+        },
+        "stun": {
+          "name": "眩晕",
+          "rule": "动能护甲作为加值；在对话框中填入体型修正（小 -30，大 +30）。失败：眩晕 1 个行动回合，每个卓越失败 +1。大失败：失能 1 个行动回合并眩晕 1 分钟。"
+        },
+        "blinding": {
+          "name": "致盲",
+          "rule": "失败：目盲 1 个行动回合，每个卓越失败 +1。大失败：目盲，直到修复或在治疗槽中治愈。"
+        },
+        "entangling": {
+          "name": "缠绕",
+          "rule": "攻击的每个卓越成功：此检定及挣脱的 SOM 检定 -10。失败：被擒抱。"
+        },
+        "pain": {
+          "name": "痛苦",
+          "rule": "无论如何直到下一回合结束时 -20（Pain Tolerance I：检定 +30，且仅 -10）。失败：在下一个完整行动中逃离。"
+        }
       },
       "defence": {
         "headline": "防御 {weapon}",

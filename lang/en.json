@@ -149,7 +149,7 @@
         "doseNeedsBiomorph": "This drug only works in a biological body.",
         "doseNeedsCyberbrain": "This drug only runs on an infomorph or a cyberbrain.",
         "noDosesLeft": "{name} has no doses left.",
-        "doseCheckRolled": "This check has already been rolled.",
+        "checkRolled": "This check has already been rolled.",
         "doseNoScene": "Open a scene to pick a target on it.",
         "doseNoSelection": "Select a token first.",
         "doseNeedsClaimant": "Assign yourself a character, or as GM select a token, to take this dose.",
@@ -2255,6 +2255,56 @@
         "note": "Rolled {roll} · 00–49 misses",
         "accept": "Accept Result",
         "gone": "No attack waits on this roll any more. Roll the attack again."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> must make a {check}",
+        "roll": "Roll {check}",
+        "resist": "Resist {effect}",
+        "resistFor": "{name}: Resist {effect}",
+        "rollRemaining": "Roll Remaining Checks",
+        "resolveRest": "Resolve Rest Without Roll",
+        "weapon": "Weapon",
+        "immune": "<strong>{name}</strong> is immune to {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> resists {effect}",
+        "flee": "<strong>{name}</strong> must flee with the next full action - as far from the pain as possible or into the nearest full cover",
+        "spanRound": "1 action turn",
+        "spanRounds": "{count} action turns",
+        "spanMinutes": "{count} min",
+        "armor": {
+          "energy": "Energy armor",
+          "kinetic": "Kinetic armor"
+        },
+        "attackSuperiors": "Superior successes of the attack",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Knockdown",
+          "rule": "Wound modifiers apply. Failure: prone."
+        },
+        "unconscious": {
+          "name": "Unconsciousness",
+          "rule": "Two or more wounds at once knock you prone. Wound modifiers apply. Failure: unconscious until woken or healed."
+        },
+        "shock": {
+          "name": "Shock",
+          "rule": "Energy armor adds to the check; add the size modifier in the dialog (very small -30, small -10, large +10, very large +30). Failure: prone, incapacitated for 1 action turn (+2 per superior failure) and stunned for 3 minutes. Success: stunned for 3 action turns."
+        },
+        "stun": {
+          "name": "Stun",
+          "rule": "Kinetic armor adds to the check; add the size modifier in the dialog (small -30, large +30). Failure: stunned for 1 action turn, +1 per superior failure. Critical failure: incapacitated for 1 action turn and stunned for 1 minute."
+        },
+        "blinding": {
+          "name": "Blinding",
+          "rule": "Failure: blinded for 1 action turn, +1 per superior failure. Critical failure: blinded until repaired or healed in a healing vat."
+        },
+        "entangling": {
+          "name": "Entangling",
+          "rule": "Each superior success of the attack: -10 to this check and to SOM Checks to break free. Failure: grappled."
+        },
+        "pain": {
+          "name": "Pain",
+          "rule": "-20 until the end of the next turn either way (Pain Tolerance I: +30 to the check and -10). Failure: flee with the next full action."
+        }
       },
       "defence": {
         "headline": "Defend against the {weapon}",

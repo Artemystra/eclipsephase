@@ -88,3 +88,23 @@ describe("hiding private buttons from users who do not own the actor", () => {
     expect(card.buttons[0].classes.has("noShow")).toBe(false);
   });
 });
+
+describe("a row of buttons with none for this user", () => {
+  test("is hidden whole, so no empty space is left; a row with one button left stays", async () => {
+    const { JSDOM } = await import("jsdom");
+    const document = new JSDOM(`<div>
+      <div class="chatControls" id="none"><button class="ownerOnlyControl" data-actor-uuid="Actor.theirs">Resist</button></div>
+      <div class="chatControls" id="some"><button class="ownerOnlyControl" data-actor-uuid="Actor.theirs">Resist</button><button class="ownerOnlyControl" data-actor-uuid="Actor.mine">Resist</button></div>
+    </div>`).window.document;
+    const realLookup = global.fromUuidSync;
+    global.fromUuidSync = uuid => ({ isOwner: uuid === "Actor.mine" });
+    try {
+      await ownerVision(document.body);
+    } finally {
+      global.fromUuidSync = realLookup;
+    }
+
+    expect(document.getElementById("none").classList.contains("noShow")).toBe(true);
+    expect(document.getElementById("some").classList.contains("noShow")).toBe(false);
+  });
+});

@@ -470,6 +470,7 @@ Hooks.once("ready", async function() {
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
   const before29 = gameVersion !== "newInstall" && foundry.utils.isNewerVersion("2.9", gameVersion);
+  const before295 = gameVersion !== "newInstall" && foundry.utils.isNewerVersion("2.9.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -772,12 +773,18 @@ Hooks.once("ready", async function() {
 
   // Every world below 2.9 runs these again, even if stamped past them: they only fill what is missing.
   if (before29) {
-    const migration = await update.migrationNotice("2.9");
+    const migration = await update.migrationNotice(["2.9", "2.9.5"]);
     if (migration.cancelled) return;
     startMigration = migration.start;
     endMigration = (await update.migrationPre28(startMigration))["endMigration"] || endMigration;
     endMigration = (await update.migrationPre285(startMigration))["endMigration"] || endMigration;
     if (startMigration) await update.migrationPre29();
+    if (startMigration) await update.migrationPre295();
+  }
+  else if (before295) {
+    const migration = await update.migrationNotice("2.9.5");
+    if (migration.cancelled) return;
+    if (migration.start) await update.migrationPre295();
   }
 
     if(endMigration){

@@ -302,6 +302,37 @@ export function markCardRolled(message, key) {
 }
 
 /**
+ * Rolls a check card's check on the clicking client, which owns the actor, once: the card keeps a
+ * note instead of its button, and the roll carries what the check is for, so its outcome can be
+ * applied once it lands - and again if a pool spend turns it.
+ * @param {String} messageId - The card
+ * @param {String} key - The flag the card keeps its request under, and the roll its check
+ * @param {Function} prepare - prepare(request, actor) returning { aptitude, check } - the aptitude
+ *   to roll and what the roll carries - or null to roll nothing
+ * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
+ * @param {Object} [entry] - entryId: one of the checks a card lists under checks, marked rolled by
+ *   the card's checkRolled change; flag: what the roll carries the check under, if not key
+ * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
+ */
+export async function requestCardCheck(messageId, key, prepare, systemOptions = {}, { entryId = null, flag = key } = {}) {
+  const message = game.messages.get(messageId);
+  const state = message?.getFlag?.("eclipsephase", key);
+  const request = entryId ? state?.checks?.find(entry => entry.id === entryId) : state;
+  if (!request) return null;
+  if (request.rolled) {
+    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.checkRolled"));
+    return null;
+  }
+  const actor = await fromUuid(request.actorUuid);
+  if (!actor?.isOwner) return null;
+  const roll = await prepare(request, actor);
+  if (!roll) return null;
+  if (entryId) await updateCard(message, key, "checkRolled", { id: entryId });
+  else await markCardRolled(message, key);
+  return rollAptitudeCheck(actor, roll.aptitude, { [flag]: roll.check }, systemOptions);
+}
+
+/**
  * Rolls an aptitude check through the roll pipeline, carrying what it is for on the roll.
  * @param {Actor} actor - Who rolls
  * @param {String} aptitude - The aptitude key, e.g. "wil"

@@ -145,7 +145,7 @@
         "doseNeedsBiomorph": "Esta droga solo actua en un cuerpo biologico.",
         "doseNeedsCyberbrain": "Esta droga solo funciona en un infomorfo o un cibercerebro.",
         "noDosesLeft": "{name} no tiene dosis restantes.",
-        "doseCheckRolled": "Este chequeo ya se ha tirado.",
+        "checkRolled": "Este chequeo ya se ha tirado.",
         "doseNoScene": "Abre una escena para elegir un objetivo en ella.",
         "doseNoSelection": "Selecciona primero un token.",
         "doseNeedsClaimant": "Asígnate un personaje o, como GM, selecciona un token para tomar esta dosis.",
@@ -2185,6 +2185,56 @@
         "note": "Tirada: {roll} · 00–49 falla",
         "accept": "Aceptar resultado",
         "gone": "Ningún ataque espera ya esta tirada. Vuelve a tirar el ataque."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> debe hacer un {check}",
+        "roll": "Tirar {check}",
+        "resist": "Resistir {effect}",
+        "resistFor": "{name}: resistir {effect}",
+        "rollRemaining": "Tirar los chequeos restantes",
+        "resolveRest": "Resolver el resto sin tirar",
+        "weapon": "Arma",
+        "immune": "<strong>{name}</strong> es inmune a {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> resiste: {effect}",
+        "flee": "<strong>{name}</strong> debe huir con su siguiente acción completa: lo más lejos posible del dolor o a la cobertura total más cercana",
+        "spanRound": "1 turno de acción",
+        "spanRounds": "{count} turnos de acción",
+        "spanMinutes": "{count} min",
+        "armor": {
+          "energy": "Armadura de energía",
+          "kinetic": "Armadura cinética"
+        },
+        "attackSuperiors": "Éxitos superiores del ataque",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Derribo",
+          "rule": "Se aplican los modificadores por herida. Fallo: derribado."
+        },
+        "unconscious": {
+          "name": "Inconsciencia",
+          "rule": "Dos o más heridas a la vez te derriban. Se aplican los modificadores por herida. Fallo: inconsciente hasta que te despierten o te curen."
+        },
+        "shock": {
+          "name": "Descarga",
+          "rule": "La armadura de energía suma al chequeo; añade el modificador de tamaño en el diálogo (muy pequeño -30, pequeño -10, grande +10, muy grande +30). Fallo: derribado, incapacitado 1 turno de acción (+2 por fallo superior) y aturdido 3 minutos. Éxito: aturdido 3 turnos de acción."
+        },
+        "stun": {
+          "name": "Aturdimiento",
+          "rule": "La armadura cinética suma al chequeo; añade el modificador de tamaño en el diálogo (pequeño -30, grande +30). Fallo: aturdido 1 turno de acción, +1 por fallo superior. Fallo crítico: incapacitado 1 turno de acción y aturdido 1 minuto."
+        },
+        "blinding": {
+          "name": "Cegador",
+          "rule": "Fallo: cegado 1 turno de acción, +1 por fallo superior. Fallo crítico: ciego hasta ser reparado o curado en un tanque de curación."
+        },
+        "entangling": {
+          "name": "Enredador",
+          "rule": "Cada éxito superior del ataque: -10 a este chequeo y a los chequeos de SOM para liberarse. Fallo: apresado."
+        },
+        "pain": {
+          "name": "Dolor",
+          "rule": "-20 hasta el final del siguiente turno en cualquier caso (Pain Tolerance I: +30 al chequeo y -10). Fallo: huir con la siguiente acción completa."
+        }
       },
       "defence": {
         "headline": "Defenderse de {weapon}",

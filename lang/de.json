@@ -148,7 +148,7 @@
         "doseNeedsBiomorph": "Diese Droge wirkt nur in einem biologischen Koerper.",
         "doseNeedsCyberbrain": "Diese Droge laeuft nur auf einem Infomorph oder einem Cyberbrain.",
         "noDosesLeft": "{name} hat keine Dosen mehr.",
-        "doseCheckRolled": "Diese Probe wurde schon gewürfelt.",
+        "checkRolled": "Diese Probe wurde schon gewürfelt.",
         "doseNoScene": "Öffne eine Szene, um dort ein Ziel zu wählen.",
         "doseNoSelection": "Wähle zuerst ein Token aus.",
         "doseNeedsClaimant": "Weise dir einen Charakter zu oder wähle als GM ein Token aus, um diese Dosis zu nehmen.",
@@ -2227,6 +2227,56 @@
         "note": "Gewürfelt: {roll} · 00–49 geht daneben",
         "accept": "Ergebnis annehmen",
         "gone": "Auf diesen Wurf wartet kein Angriff mehr. Würfle den Angriff neu."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> muss eine {check} ablegen",
+        "roll": "{check} würfeln",
+        "resist": "{effect} widerstehen",
+        "resistFor": "{name}: {effect} widerstehen",
+        "rollRemaining": "Restliche Proben würfeln",
+        "resolveRest": "Rest ohne Wurf auflösen",
+        "weapon": "Waffe",
+        "immune": "<strong>{name}</strong> ist immun gegen {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> widersteht: {effect}",
+        "flee": "<strong>{name}</strong> muss mit der nächsten vollen Aktion fliehen - so weit vom Schmerz weg wie möglich oder in die nächste volle Deckung",
+        "spanRound": "1 Aktionszug",
+        "spanRounds": "{count} Aktionszüge",
+        "spanMinutes": "{count} Min.",
+        "armor": {
+          "energy": "Energierüstung",
+          "kinetic": "Kinetische Rüstung"
+        },
+        "attackSuperiors": "Überragende Erfolge des Angriffs",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Knockdown",
+          "rule": "Wundmodifikatoren gelten. Misserfolg: Liegend."
+        },
+        "unconscious": {
+          "name": "Bewusstlosigkeit",
+          "rule": "Zwei oder mehr Wunden auf einmal werfen dich zu Boden. Wundmodifikatoren gelten. Misserfolg: bewusstlos, bis geweckt oder geheilt."
+        },
+        "shock": {
+          "name": "Shock",
+          "rule": "Energierüstung zählt als Bonus; Größe im Dialog als Modifikator eintragen (sehr klein -30, klein -10, groß +10, sehr groß +30). Misserfolg: Liegend, Handlungsunfähig für 1 Aktionszug (+2 pro überragendem Misserfolg) und Betäubt für 3 Minuten. Erfolg: Betäubt für 3 Aktionszüge."
+        },
+        "stun": {
+          "name": "Stun",
+          "rule": "Kinetische Rüstung zählt als Bonus; Größe im Dialog als Modifikator eintragen (klein -30, groß +30). Misserfolg: Betäubt für 1 Aktionszug, +1 pro überragendem Misserfolg. Kritischer Misserfolg: Handlungsunfähig für 1 Aktionszug und Betäubt für 1 Minute."
+        },
+        "blinding": {
+          "name": "Blinding",
+          "rule": "Misserfolg: Geblendet für 1 Aktionszug, +1 pro überragendem Misserfolg. Kritischer Misserfolg: blind, bis repariert oder im Heiltank geheilt."
+        },
+        "entangling": {
+          "name": "Entangling",
+          "rule": "Jeder überragende Erfolg des Angriffs: -10 auf diese Probe und auf SOM-Proben, um sich zu befreien. Misserfolg: Gepackt."
+        },
+        "pain": {
+          "name": "Pain",
+          "rule": "-20 bis zum Ende des nächsten Zugs in jedem Fall (Pain Tolerance I: +30 auf die Probe und -10). Misserfolg: mit der nächsten vollen Aktion fliehen."
+        }
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",

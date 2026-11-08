@@ -368,7 +368,19 @@ export function rangeRefusal(distance, traits = {}) {
 
 // The grenade traits the roll accounts for, and those its hit brings, as a weapon's are sorted.
 const GRENADE_AUTOMATED = ["noDamage"];
-const GRENADE_EFFECTS = ["armorPiercing", "blinding", "disablesRadio", "knockdown", "pain", "shock", "noDamage"];
+const GRENADE_EFFECTS = ["armorPiercing", "blinding", "disablesRadio", "knockdown", "pain", "shock", "stunBiomorphs", "noDamage"];
+
+// The traits whose hit asks the target for a check (Core p.216, 219).
+export const STRIKE_TRAITS = ["shock", "stun", "stunBiomorphs", "blinding", "entangling", "knockdown", "pain"];
+
+/**
+ * The traits of a weapon or grenade whose hit asks the target for a check.
+ * @param {Object} [effects] - Its additional effects, as traitSubSetConstructor or grenadeTraits sort them
+ * @returns {String[]} The trait keys
+ */
+export function strikeTraits(effects) {
+  return STRIKE_TRAITS.filter(key => effects?.[key]?.value);
+}
 
 // The steepest a centred blast can be dialled back to, in DV per metre (Core p.212).
 export const MAX_BLAST_REDUCTION = 20;
@@ -831,7 +843,7 @@ export async function traitSubSetConstructor(weapon){
 
   //Effects that will effect the nature of the damage taken once the shot hit (e.g. "Shock", "Armor Piercing", "Stun" etc.)
   for (const key in joinedEffectsMode1){
-    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
+    if(key === "blinding" || key === "disablesRadio" || key === "entangling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
       effects[key] = joinedEffectsMode1[key]
     }
   }
@@ -839,7 +851,7 @@ export async function traitSubSetConstructor(weapon){
   effects = {}
 
   for (const key in joinedEffectsMode2){
-    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
+    if(key === "blinding" || key === "disablesRadio" || key === "entangling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
       effects[key] = joinedEffectsMode2[key]
     }
   }

@@ -169,20 +169,20 @@ describe("the side car's armor box", () => {
 });
 
 describe("what the current modifiers add up to", () => {
-  test("wounds and all-action modifiers count for both, armour and physical ones for the body, mental ones for the mind", () => {
+  test("wounds and all-action modifiers count for both, armour and physical ones for the body, mental ones for the mind; an effect with both is one row", () => {
     const status = { woundModifierSum: -10, traumaModifierSum: 0, encumberanceModifierSum: 0,
       specialModifiers: [{ label: "Impaired", modifier: -10 }] };
     const counts = { wounds: 1, trauma: 0, layers: 2, layerMalus: 20, somMalus: 20 };
-    const summary = modifierSummary(status, counts, [{ label: "Stunned", modifier: -30 }], [{ label: "Stunned", modifier: -10 }]);
+    const summary = modifierSummary(status, counts, [{ label: "Stunned", modifier: -30 }], [{ label: "Stunned", modifier: -10 }, { label: "Mindfog", modifier: -10 }]);
 
-    expect(summary).toMatchObject({ body: -90, mind: -30, bodyText: "-90", mindText: "-30" });
+    expect(summary).toMatchObject({ body: -90, mind: -40, bodyText: "-90", mindText: "-40" });
     expect(summary.rows.map(row => [row.label, row.count, row.body, row.mind])).toEqual([
       ["ep2e.sideCar.currentStatus.statuses.wounded", 1, "-10", "-10"],
       ["Impaired", undefined, "-10", "-10"],
       ["ep2e.sideCar.currentStatus.statuses.layersOfArmor", 2, "-20", ""],
       ["ep2e.sideCar.currentStatus.statuses.somExceeded", undefined, "-20", ""],
-      ["Stunned", undefined, "-30", ""],
-      ["Stunned", undefined, "", "-10"]
+      ["Stunned", undefined, "-30", "-10"],
+      ["Mindfog", undefined, "", "-10"]
     ]);
     expect(summary.rows[0].times).toBe(true);
     expect(summary.rows[2].times).toBeUndefined();

@@ -48,6 +48,18 @@ export const MIGRATION_NOTES = {
     comments: [
       "Using the Ki module? Update it to 1.1 together with the system. Ki sleights already on your sheets keep their old data: drop them on the sheet again from the compendium to get the new effects."
     ]
+  },
+  "2.9.5": {
+    title: "Down, but not out...",
+    intro: "Getting hit used to be a matter of numbers. Now it is a matter of how you land. The rulebook's conditions have arrived on your tokens, and they mean it - so mind your footing, agent, and keep your eyes open while you still can.",
+    bullets: [
+      "The token HUD carries the rulebook's **conditions**, and they do what they say: Incapacitated, Unconscious, Dazed and Immobilized stop the actions they rule out, the others put their modifiers on your rolls.",
+      "Your side car shows what every **physical and mental** action costs you right now - one click shows where it comes from.",
+      "Blinded fighters **perceive** before they strike, a target on the floor is easier to hit up close, and whoever cannot defend simply gets hit.",
+      "Weapons with **Shock, Stun, Knockdown, Blinding, Pain and Entangling** ask their targets for the check, and a wound can knock you **prone** - or out cold.",
+      "**Pain Tolerance** and **Anti-Glare** on your sheets learn here what they protect you from."
+    ],
+    comments: []
   }
 };
 
@@ -61,19 +73,22 @@ export function noticeText(text) {
 }
 
 /**
- * Asks whether to migrate to a release, showing what the release brings.
- * @param {String} version - The release, a key of MIGRATION_NOTES
+ * Asks whether to migrate to a release, showing what the release brings. Several releases a world
+ * takes at once share one notice: the first one's title and introduction, and everything they bring.
+ * @param {String|String[]} versions - The release, or releases, keys of MIGRATION_NOTES
  * @param {Object} [options] - extra: a further note for this world only
  * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
  */
-export async function migrationNotice(version, { extra = "" } = {}) {
-  const note = MIGRATION_NOTES[version] ?? {};
+export async function migrationNotice(versions, { extra = "" } = {}) {
+  const list = [versions].flat();
+  const notes = list.map(version => MIGRATION_NOTES[version] ?? {});
   const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
-    version,
-    title: note.title ?? version,
-    intro: noticeText(note.intro),
-    bullets: (note.bullets ?? []).map(noticeText),
-    comments: (note.comments ?? []).map(noticeText),
+    version: list.at(-1),
+    versions: list,
+    title: notes[0].title ?? list[0],
+    intro: noticeText(notes[0].intro),
+    bullets: notes.flatMap(note => note.bullets ?? []).map(noticeText),
+    comments: notes.flatMap(note => note.comments ?? []).map(noticeText),
     extra: extra ? noticeText(extra) : "",
     links: SUPPORT_LINKS
   });
@@ -3293,6 +3308,39 @@ export function _ep29_tacnetEffects(item) {
   if (item.type !== "gear" || item.name?.toLowerCase() !== "tacnet") return [];
   if (Array.from(item.effects ?? []).some(effect => Array.from(effect.system?.changes ?? effect.changes ?? []).some(change => change.key === TACNET_KEY))) return [];
   return [{ name: "TacNet", img: "icons/svg/aura.svg", type: "base", transfer: true, disabled: false, system: { changes: [{ key: TACNET_KEY, value: true, priority: null, type: "override" }] } }];
+}
+
+// The items that tell the system what they protect against, found by their book name, and the effect
+// each of them gets.
+const _EP295_MARKERS = [
+  { type: "traits", name: "pain tolerance i", effect: "Pain Tolerance I", key: "system.additionalSystems.painTolerance", value: 1 },
+  { type: "traits", name: "pain tolerance ii", effect: "Pain Tolerance II", key: "system.additionalSystems.painTolerance", value: 2 },
+  { type: "ware", name: "anti-glare", effect: "Anti-Glare", key: "system.additionalSystems.antiGlare", value: true }
+];
+
+/**
+ * The effect a Pain Tolerance trait or Anti-Glare ware is missing, telling the system what it
+ * protects against.
+ * @param {Item} item - The item
+ * @returns {Object[]} The effect's data to create, empty when it has it or is none of them
+ */
+export function _ep295_markerEffects(item) {
+  const marker = _EP295_MARKERS.find(entry => entry.type === item.type && entry.name === item.name?.trim().toLowerCase());
+  if (!marker) return [];
+  if (Array.from(item.effects ?? []).some(effect => Array.from(effect.system?.changes ?? effect.changes ?? []).some(change => change.key === marker.key))) return [];
+  return [{ name: marker.effect, img: item.img, type: "base", transfer: true, disabled: false, system: { changes: [{ key: marker.key, value: marker.value, priority: null, type: "override" }] } }];
+}
+
+/**
+ * Gives every Pain Tolerance trait and Anti-Glare ware the effect it is missing.
+ * @returns {Promise<void>}
+ */
+export async function migrationPre295() {
+  await forEachItem(async item => {
+    const effects = _ep295_markerEffects(item);
+    if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
+  }, { label: "Migration 2.9.5", filter: item => item.type === "traits" || item.type === "ware", includeCompendiums: true });
+  await game.settings.set("eclipsephase", "migrationVersion", "2.9.5");
 }
 
 /**

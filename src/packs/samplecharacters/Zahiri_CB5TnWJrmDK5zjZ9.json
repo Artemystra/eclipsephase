@@ -233,7 +233,53 @@
         "core": {}
       },
       "img": "systems/eclipsephase/resources/icons/sensory.png",
-      "effects": [],
+      "effects": [
+        {
+          "name": "Anti-Glare",
+          "img": "systems/eclipsephase/resources/icons/sensory.png",
+          "_id": "ULz2ABoJzDYp616w",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.additionalSystems.antiGlare",
+                "value": true,
+                "priority": null,
+                "type": "override"
+              }
+            ]
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.356",
+            "systemId": "eclipsephase",
+            "systemVersion": "1.1.3",
+            "createdTime": null,
+            "modifiedTime": null,
+            "lastModifiedBy": null,
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!CB5TnWJrmDK5zjZ9.AHhWd0HB6BCQfuF9.ULz2ABoJzDYp616w"
+        }
+      ],
       "system": {
         "additionalSystems": {},
         "description": "No glare penalties.",
@@ -976,6 +1022,12 @@
                 "value": -1,
                 "priority": null,
                 "type": "add"
+              },
+              {
+                "key": "system.additionalSystems.painTolerance",
+                "value": 1,
+                "priority": null,
+                "type": "override"
               }
             ]
           },

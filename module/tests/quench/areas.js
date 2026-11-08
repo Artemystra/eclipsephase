@@ -355,7 +355,7 @@ export function registerAreasBatch(quench) {
         }
       });
 
-      it("scatters a d10 metres doubled per superior failure, turned clockwise by the d100 from the line of the throw: 00 on, 25 right, 50 back, 75 left", async function () {
+      it("scatters a d10 metres doubled per superior failure - a critical failure counting by its die - turned clockwise by the d100 from the line of the throw: 00 on, 25 right, 50 back, 75 left", async function () {
         this.timeout(60000);
         const stun = { name: "Quench Scatter", type: "grenade", system: { active: true, quantity: 9, dv: { d10: null, d6: 1, bonus: 2 }, area: { kind: "uniform", radius: 1, reduction: null }, armorused: "kinetic", trigger: "impact" } };
         const origin = { x: 1250, y: 1450 };
@@ -363,6 +363,7 @@ export function registerAreasBatch(quench) {
           { die: 95, direction: 100, metres: 2, at: { x: 1450, y: 1450 } },
           { die: 50, direction: 50, metres: 3, at: { x: 650, y: 1450 } },
           { die: 20, direction: 50, metres: 3, at: { x: 50, y: 1450 } },
+          { die: 33, direction: 50, metres: 3, at: { x: 50, y: 1450 } },
           { die: 95, direction: 25, metres: 3, at: { x: 1250, y: 1750 } },
           { die: 95, direction: 75, metres: 3, at: { x: 1250, y: 1150 } }
         ];

@@ -103,6 +103,17 @@
       {{/each}}
     </div>
     {{/if}}
+    {{#if strikeButtons.length}}
+    <div class="chatControls ep-chat-stack ep-strike-checks">
+      {{#each strikeButtons as |button|}}
+      <button type="button" class="chatButton rollStrikeCheck ownerOnlyControl {{#if button.primary}}ep-chat-primary{{else}}ep-chat-secondary{{/if}}" data-action="rollStrikeCheck" data-actor-uuid="{{button.uuid}}" data-check-id="{{button.id}}">{{button.label}}</button>
+      {{/each}}
+      {{#if strikeRest}}
+      <button type="button" class="chatButton resolveRemainingStrikes gmOnlyControl ep-chat-secondary" data-action="resolveRemainingStrikes">{{localize "ep2e.chat.strike.resolveRest"}}</button>
+      <button type="button" class="chatButton rollRemainingStrikes gmOnlyControl ep-chat-primary" data-action="rollRemainingStrikes">{{localize "ep2e.chat.strike.rollRemaining"}}</button>
+      {{/if}}
+    </div>
+    {{/if}}
 
   {{/if}}
   </div>

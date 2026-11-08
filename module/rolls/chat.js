@@ -3,6 +3,7 @@ import { moreInfo, registerCommonHandlers } from "../common/general-sheet-functi
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
+import { requestStrikeCheck, rollRemainingStrikes, resolveRemainingStrikes } from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "./modifiers.js";
@@ -70,6 +71,11 @@ export async function ownerVision(html){
     for(const control of html.querySelectorAll(".notForOwnerControl")){
         const actor = fromUuidSync(control.dataset.actorUuid ?? "")
         if(actor?.isOwner) control.classList.add("noShow")
+    }
+    // A row of buttons none of which is for this user leaves no empty space behind.
+    for(const controls of html.querySelectorAll(".chatControls")){
+        const buttons = Array.from(controls.querySelectorAll("button"))
+        if(buttons.length && buttons.every(button => button.classList.contains("noShow"))) controls.classList.add("noShow")
     }
 }
 
@@ -239,6 +245,27 @@ export async function addChatListeners(html) {
     if (useDose) {
       const messageId = useDose.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestDoseClaim(messageId, { selection: useDose.dataset.selection === "true" });
+      return;
+    }
+
+    const rollStrikeCheck = event.target.closest("button.rollStrikeCheck");
+    if (rollStrikeCheck) {
+      const messageId = rollStrikeCheck.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestStrikeCheck(messageId, rollStrikeCheck.dataset.checkId ?? null);
+      return;
+    }
+
+    const rollRemaining = event.target.closest("button.rollRemainingStrikes");
+    if (rollRemaining) {
+      const message = game.messages.get(rollRemaining.closest("[data-message-id]")?.dataset.messageId);
+      if (message && game.user.isGM) rollRemainingStrikes(message);
+      return;
+    }
+
+    const resolveRemaining = event.target.closest("button.resolveRemainingStrikes");
+    if (resolveRemaining) {
+      const message = game.messages.get(resolveRemaining.closest("[data-message-id]")?.dataset.messageId);
+      if (message && game.user.isGM) resolveRemainingStrikes(message);
       return;
     }
 

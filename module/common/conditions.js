@@ -1,5 +1,6 @@
 import { registerRollBlock } from "../api/registry.js";
 import { rollScope, GLOBAL_MOD_KEY, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
+import { timedEffectData } from "./general-sheet-functions.js";
 
 // The conditions of Core p.226 as the token HUD's status effects, plus Dead and Invisible, which
 // Foundry itself acts on. A condition set from the HUD is a temporary effect: it shows in the Time
@@ -130,7 +131,7 @@ function blockText(id, key) {
  */
 export function rollBlockContext(dataset, rolledFrom) {
   const flags = dataset?.contextFlags ?? {};
-  return { defence: !!flags.attackDefence, check: !!flags.doseCheck, scope: rollScope(dataset, rolledFrom) };
+  return { defence: !!flags.attackDefence, check: !!(flags.doseCheck || flags.strikeCheck), scope: rollScope(dataset, rolledFrom) };
 }
 
 /**
@@ -206,6 +207,40 @@ export async function removeReplacedConditions(actor, id) {
   if (!replaced.length) return;
   const effects = Array.from(actor.effects ?? []).filter(effect => Array.from(effect.statuses ?? []).some(status => replaced.includes(status)));
   if (effects.length) await actor.deleteEmbeddedDocuments("ActiveEffect", effects.map(effect => effect.id));
+}
+
+/**
+ * A condition as an effect of its own, with the catalogue's modifiers: running for a span, or until
+ * removed without one. Its icon always shows.
+ * @param {String} id - The condition id
+ * @param {Object} [options] - span ({value, units}) and flags kept on the effect
+ * @returns {Object} The ActiveEffect data
+ */
+export function conditionEffectData(id, { span = null, flags = {} } = {}) {
+  const entry = conditionEntry(id);
+  const [status] = conditionStatusEffects().filter(effect => effect.id === id);
+  return timedEffectData({
+    name: game.i18n.localize(`ep2e.conditions.${id}.name`),
+    img: entry.img,
+    description: game.i18n.localize(`ep2e.conditions.${id}.description`),
+    statuses: [id],
+    changes: status.changes,
+    showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS,
+    span,
+    flags: { effectKey: CONDITION_KEY, ...flags }
+  });
+}
+
+/**
+ * Puts a condition on an actor, in place of the others of its group.
+ * @param {Actor} actor - The actor
+ * @param {String} id - The condition id
+ * @param {Object} [options] - span and flags, as conditionEffectData takes them
+ * @returns {Promise<ActiveEffect[]>} The effect created
+ */
+export async function inflictCondition(actor, id, options = {}) {
+  await removeReplacedConditions(actor, id);
+  return actor.createEmbeddedDocuments("ActiveEffect", [conditionEffectData(id, options)]);
 }
 
 /**

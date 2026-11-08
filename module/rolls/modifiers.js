@@ -289,14 +289,15 @@ export function globalModifiers(actor, { exclude = new Set(), key = GLOBAL_MOD_K
  * Where an actor's current modifiers come from and what they add up to on a physical and on a
  * mental action. Wounds, trauma and the modifiers to all actions count for both; encumbrance - each
  * armour layer past the first and armour beyond SOM (Core p.214) - and the modifiers to physical
- * actions for the body; those to mental actions for the mind.
+ * actions for the body; those to mental actions for the mind. An effect with a modifier to each, such
+ * as Stunned, is one row with both.
  * @param {Object} status - The actor's currentStatus, its sums already worked out
  * @param {Object} counts - wounds and trauma as the actor has them, and its armour: layers,
  *   layerMalus and somMalus, each a positive penalty
  * @param {Object[]} physical - globalModifiers on the physical field
  * @param {Object[]} mental - globalModifiers on the mental field
- * @returns {Object} rows (label, count, times, comment, scope, modifier, and body and mind as text),
- *   body and mind as numbers and as text
+ * @returns {Object} rows (label, count, times, comment, scope - "split" for one with both -
+ *   modifier, bodyValue and mindValue, and body and mind as text), body and mind as numbers and as text
  */
 export function modifierSummary(status, counts, physical, mental) {
   const rows = [];
@@ -304,7 +305,7 @@ export function modifierSummary(status, counts, physical, mental) {
     const value = Number(modifier) || 0;
     if (!value) return;
     const text = signed(value);
-    rows.push({ ...entry, scope, modifier: value, body: scope === "mind" ? "" : text, mind: scope === "body" ? "" : text });
+    rows.push({ ...entry, scope, modifier: value, bodyValue: scope === "mind" ? 0 : value, mindValue: scope === "body" ? 0 : value, body: scope === "mind" ? "" : text, mind: scope === "body" ? "" : text });
   };
   add("all", status.woundModifierSum, { label: "ep2e.sideCar.currentStatus.statuses.wounded", count: counts.wounds, times: true });
   add("all", status.traumaModifierSum, { label: "ep2e.sideCar.currentStatus.statuses.traumatized", count: counts.trauma, times: true });
@@ -312,11 +313,19 @@ export function modifierSummary(status, counts, physical, mental) {
   add("body", -(Number(counts.layerMalus) || 0), { label: "ep2e.sideCar.currentStatus.statuses.layersOfArmor", count: counts.layers });
   add("body", -(Number(counts.somMalus) || 0), { label: "ep2e.sideCar.currentStatus.statuses.somExceeded" });
   add("body", status.encumberanceModifierSum, { label: "ep2e.sideCar.currentStatus.gearModifiers" });
-  for (const { label, modifier, comment } of physical) add("body", modifier, { label, comment });
-  for (const { label, modifier, comment } of mental) add("mind", modifier, { label, comment });
+  for (const { label, modifier, comment } of physical) add("body", modifier, { label, comment, effect: true });
+  for (const { label, modifier, comment } of mental) {
+    const value = Number(modifier) || 0;
+    const twin = value && rows.find(row => row.effect && row.scope === "body" && row.label === label);
+    if (!twin) {
+      add("mind", modifier, { label, comment, effect: true });
+      continue;
+    }
+    Object.assign(twin, { scope: "split", mindValue: value, mind: signed(value) });
+  }
 
-  const body = rows.filter(row => row.scope !== "mind").reduce((total, row) => total + row.modifier, 0);
-  const mind = rows.filter(row => row.scope !== "body").reduce((total, row) => total + row.modifier, 0);
+  const body = rows.reduce((total, row) => total + row.bodyValue, 0);
+  const mind = rows.reduce((total, row) => total + row.mindValue, 0);
   return { rows, body, mind, bodyText: signed(body), mindText: signed(mind) };
 }
 

@@ -1,6 +1,9 @@
-import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, munitionDose, cloudColor, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon } from "../common/weapon-functions.js";
-import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked } from "../common/general-sheet-functions.js";
-import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit } from "./dice.js";
+import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, munitionDose, cloudColor, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon, strikeTraits } from "../common/weapon-functions.js";
+import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, postCard } from "../common/general-sheet-functions.js";
+import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit, superiorResults } from "./dice.js";
+import { targetKinds } from "../common/morp-functions.js";
+import { inflictCondition, conditionEntry, activeConditions } from "../common/conditions.js";
+import { postCheckCard, requestCardCheck, settleOnRoll, modifiersOnRoll, registerCheckCard } from "./cards.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
 import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast, postDefenceCards } from "./attacks.js";
@@ -105,7 +108,7 @@ async function hitDamage(actorWhole, weaponSelected, rollResult, modeDice, biomo
   if (biomorphTarget) message.weaponTraits["bioMorphsOnly"] = weaponSelected.weaponTraits.confirmationEffects["bioMorphsOnly"];
   if (!Object.keys(message.weaponTraits).length) delete message.weaponTraits;
 
-  if (weaponSelected.weaponTraits.automatedEffects.noDamage || weaponDamage === "ep2e.item.weapon.table.noDamage") {
+  if (weaponSelected.weaponTraits.automatedEffects.noDamage || weaponDamage === "ep2e.item.weapon.table.noDamage" || !formulaMax(weaponDamage)) {
     message.total = false;
     return { message, roll: false };
   }
@@ -201,10 +204,12 @@ export async function applyHealing(actor, amount, { target = "physical" } = {}) 
  * @param {Actor} actor - Who takes it
  * @param {Number|Number[]} amount - The damage or stress, or several amounts in turn
  * @param {Object} [options] - target: "physical" (damage, the default) or "mental" (stress);
- *   announce: post the status card
+ *   announce: post the status card; woundCheck: false when the caller asks for the wound's check
+ *   itself, together with what else the hit brings - otherwise the wound asks for it, as any does
  * @returns {Promise<Object>} taken and wounds (traumas for stress)
  */
-export async function applyDamage(actor, amount, { target = "physical", announce = false } = {}) {
+export async function applyDamage(actor, amount, { target = "physical", announce = false, woundCheck = true } = {}) {
+  const updateOptions = woundCheck ? {} : { eclipsephase: { woundCheck: false } };
   const config = DAMAGE_CONFIG[target] ?? DAMAGE_CONFIG.physical;
   const read = path => Number(foundry.utils.getProperty(actor.system, path)) || 0;
   const current = read(`${config.attribute}.value`);
@@ -223,7 +228,7 @@ export async function applyDamage(actor, amount, { target = "physical", announce
 
   const currentModifier = read(config.modifierPath);
   if (pieces.length === 1) {
-    await takeDamage({ value: taken }, current, read(config.barPath), read(config.overBarPath), currentModifier, threshold, `system.${config.attribute}.value`, `system.${config.modifierPath}`, actor, target === "mental" ? "mental" : "physical", read(config.ceilingPath), { announce });
+    await takeDamage({ value: taken }, current, read(config.barPath), read(config.overBarPath), currentModifier, threshold, `system.${config.attribute}.value`, `system.${config.modifierPath}`, actor, target === "mental" ? "mental" : "physical", read(config.ceilingPath), { announce, updateOptions });
   }
   else {
     await actor.update({
@@ -232,7 +237,7 @@ export async function applyDamage(actor, amount, { target = "physical", announce
       [`system.${config.oldBarPath}`]: Math.max(1, read(config.barPath)),
       [`system.${config.oldOverBarPath}`]: read(config.overBarPath),
       "system.health.barModifier": config.barModifier
-    });
+    }, updateOptions);
   }
   return { taken, wounds };
 }
@@ -261,7 +266,7 @@ export async function appendDamageLines(output, lines) {
 }
 
 //Take Damage through character sheet
-export async function takeDamage(receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth, { announce = true } = {}) {
+export async function takeDamage(receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth, { announce = true, updateOptions = {} } = {}) {
   let inputValue = Number(receiveDamage?.value) < maxHealth ? Number(receiveDamage?.value) : maxHealth;
   let oldDamageBarTarget = "";
   let oldOverBarTarget = "";
@@ -311,7 +316,7 @@ export async function takeDamage(receiveDamage, currentDamage, bar, overBar, cur
       [oldDamageBarTarget]: bar,
       [oldOverBarTarget]: overBar,
       [barModifierTarget]: barModifier
-    });
+    }, updateOptions);
   }
 }
 
@@ -327,18 +332,20 @@ registerCard("damageCard", {
   render: renderDamageCard,
   mutations: {
     rolled: (state, { data }) => ({ ...state, data }),
-    applied: (state, { lines }) => ({ ...state, lines })
+    applied: (state, { lines, checks = [] }) => ({ ...state, lines, checks: [...(state.checks ?? []), ...checks] }),
+    checkRolled: (state, { id }) => ({ ...state, checks: (state.checks ?? []).map(entry => entry.id === id ? { ...entry, rolled: true } : entry) }),
+    checksResolved: (state, { ids }) => ({ ...state, checks: (state.checks ?? []).map(entry => ids.includes(entry.id) ? { ...entry, rolled: true } : entry) })
   }
 });
 
 /**
  * Draws a damage card: before the roll, the targets' outcomes and the button to roll; after it,
- * the roll and what each target took.
+ * the roll, what each target took and the checks the weapon asks of them.
  * @param {Object} state - The card's damageCard flag
  * @returns {Promise<String>} The markup
  */
 export function renderDamageCard(state) {
-  if (state.data) return foundry.applications.handlebars.renderTemplate(WEAPON_DAMAGE_OUTPUT, { ...state.data, appliedLines: state.lines ?? [] });
+  if (state.data) return foundry.applications.handlebars.renderTemplate(WEAPON_DAMAGE_OUTPUT, { ...state.data, appliedLines: state.lines ?? [], ...strikeButtons(state) });
   return foundry.applications.handlebars.renderTemplate(DAMAGE_READY_TEMPLATE, {
     headline: game.i18n.format("ep2e.chat.attack.damageReady", { weapon: state.weaponName }),
     actorUuid: state.actorUuid,
@@ -357,9 +364,9 @@ export function payloadEffectInfo(name, uuid = "") {
 }
 
 /**
- * The attack a weapon roll carries: a weapon that deals damage or carries a payload, fires no
- * chemicals and is not used for a touch only - a payload brings its dose along, with or without
- * damage. Ranged weapons pick with the crosshair, melee weapons with the slash. A cone
+ * The attack a weapon roll carries: a weapon that deals damage, carries a payload or has a trait
+ * whose hit asks for a check, and fires no chemicals - a payload brings its dose along, with or
+ * without damage, and a touch only brings the checks. Ranged weapons pick with the crosshair, melee weapons with the slash. A cone
  * strikes as an area; a cone or a burst at several targets takes targets within a meter of each
  * other.
  * @param {Object} context - The roll context at preRoll
@@ -370,14 +377,17 @@ export function detectWeaponAttack(context) {
   if (context.rolledFrom !== "rangedWeapon" && context.rolledFrom !== "ccWeapon") return null;
   const selected = context.weapon;
   if (!selected?.weapon || chemicalDoses(selected.weaponTraits)) return null;
-  if (isChecked(context.options?.touchOnly)) return null;
-  const noDamage = !!selected.weaponTraits?.automatedEffects?.noDamage;
+  const checks = strikeTraits(selected.weaponTraits?.additionalEffects);
+  const touch = isChecked(context.options?.touchOnly);
+  if (touch && !checks.length) return null;
+  const noDamage = touch || !!selected.weaponTraits?.automatedEffects?.noDamage || !formulaMax(selected.weaponDamage);
   const dose = context.rolledFrom === "rangedWeapon" ? munitionDose(selected.weapon.system?.ammoSelected?.payload, !noDamage) : null;
-  if (noDamage && !dose) return null;
+  if (noDamage && !dose && !checks.length) return null;
   const targets = context.rolledFrom === "rangedWeapon" ? attackTargetCount(selected.weapon, context.options ?? {}) : 1;
   return {
     ...(dose ? { dose, effectInfo: payloadEffectInfo(dose.name, dose.uuid) } : {}),
     ...(noDamage ? { noDamage: true } : {}),
+    ...(checks.length ? { checks } : {}),
     targets,
     area: isConeWeapon(selected.weapon),
     suppressive: context.options?.attackMode === "suppressive",
@@ -395,8 +405,8 @@ export function detectWeaponAttack(context) {
  * The attack a thrown grenade or a fired seeker carries, with what a grenade's damage needs once the
  * last grenade of the stack is gone. A blast strikes whoever is in it once it goes off where it was
  * placed - without a placed blast the roll is narrative and offers only its damage; a blast without
- * damage, such as smoke, is still laid but strikes nobody. A grenade without a blast strikes the one
- * target picked.
+ * damage, such as smoke, is still laid but strikes nobody, unless its traits ask for checks. A
+ * grenade without a blast strikes the one target picked.
  * @param {Object} context - The roll context at preRoll
  * @returns {Object|null} The attack's data, or null for a grenade that neither blasts nor damages
  */
@@ -425,11 +435,13 @@ export function detectThrow(context) {
     ...(trigger === "timer" ? { timer: { value: Number(options.timerValue) || 1, unit: options.timerUnit || "rounds", ...timerSpan(options.timerValue || 1, options.timerUnit || "rounds") } } : {}),
     ...(trigger === "proximity" ? { sensor: Math.min(PROXIMITY_REACH, Math.max(1, Number(options.proximityRadius) || PROXIMITY_REACH)) } : {})
   } : null;
-  if (!blast && harmless && !dose) return null;
+  const checks = strikeTraits(selected.weaponTraits?.additionalEffects);
+  if (!blast && harmless && !dose && !checks.length) return null;
   const armorUsed = grenade ? selected.weapon.system?.armorused : attackArmorUsed(selected.weapon, selected.weaponMode || "1");
   return {
     ...(dose ? { dose, effectInfo: payloadEffectInfo(dose.name, dose.uuid) } : {}),
     ...(harmless ? { noDamage: true } : {}),
+    ...(checks.length ? { checks } : {}),
     ...(grenade ? { thrown: { weaponName: selected.weaponName, weaponDamage: selected.weaponDamage, weaponTraits: selected.weaponTraits, rolledFrom: "grenade", item: selected.weapon.toObject?.() ?? null } } : {}),
     targets: blast ? ANY_TARGETS : 1,
     area: !!blast,
@@ -462,7 +474,8 @@ export async function noteDefence(attack, target, outcome, { kind = "dodge", byP
 
 /**
  * Notes a defence on the attack card, and once every target has defended and one was struck,
- * posts the damage card after them. Defences settled together are noted one after another, so
+ * posts the damage card after them - for an attack without damage whose hit asks for checks, at
+ * once as the card saying so, with the checks on it. Defences settled together are noted one after another, so
  * the card is posted once.
  * @param {ChatMessage} card - The attack card
  * @param {String} uuid - The target
@@ -483,9 +496,11 @@ export function settleAttackDefence(card, uuid, outcome, kind = "dodge") {
     }
     const settled = (state.targets ?? []).length && state.targets.every(target => target.outcome);
     if (settled && attack?.blast && (attack.noDamage || state.targets.every(target => target.outcome === "none"))) await clearBlast(attack);
-    if (!damageReady(state) || attack?.effect !== "damage" || attack.noDamage) return null;
+    if (!damageReady(state) || attack?.effect !== "damage" || (attack.noDamage && !attack.checks?.length)) return null;
     await updateCard(card, "taskCard", "damageOffered");
-    return postDamageCard(card, state.targets);
+    const posted = await postDamageCard(card, state.targets);
+    if (attack.noDamage) await rollAttackDamage(posted);
+    return posted;
   };
   return inOrder(`settle:${card.id}`, settle);
 }
@@ -501,7 +516,7 @@ async function postDamageCard(card, targets) {
   const actors = (await Promise.all(targets.map(target => fromUuid(target.uuid)))).filter(Boolean);
   const shown = actors.filter(actor => !targets.find(target => target.uuid === actor.uuid)?.hidden);
   const { whisper, blind } = targets.length && targets.every(target => target.hidden) ? { whisper: gmWhisper(), blind: false } : followUpVisibility(card, shown);
-  const state = { attackMessageId: card.id, actorUuid: context.actorUuid, weaponName: context.targetedAttack.weaponName, targets, data: null, lines: [] };
+  const state = { attackMessageId: card.id, actorUuid: context.actorUuid, weaponName: context.targetedAttack.weaponName, area: context.targetedAttack.area === true, targets, data: null, lines: [], checks: [] };
   return ChatMessage.create({
     speaker: card.speaker,
     content: await renderCard("damageCard", state),
@@ -596,25 +611,32 @@ function highlighted(key, value) {
  *   hidden in a blast } each)
  * @returns {Promise<Array<String|Object>>} The lines written onto the card
  */
-export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, falloffFrom = 0, dose = null, targets }) {
+export async function applyAttackDamage({ cardId, total, armorUsed, armorPiercing, damageTarget = "physical", reduction = 0, falloffFrom = 0, dose = null, strike = null, noDamage = false, targets }) {
   const lines = [];
+  const checks = [];
+  const card = game.messages.get(cardId);
+  const whisper = card ? card.whisper ?? [] : null;
   for (const target of targets) {
     if (target.outcome === "none") {
-      lines.push(secretLine(target, attackDamageLine(target)));
+      if (!noDamage) lines.push(secretLine(target, attackDamageLine(target)));
       continue;
     }
     const actor = await fromUuid(target.uuid);
     if (!actor) continue;
+    if (noDamage) {
+      checks.push(...await strikeChecks(actor, { ...(strike ?? {}), wounds: 0, whisper }));
+      continue;
+    }
     const falloff = reduction && Number.isFinite(target.distance) ? reduction * Math.floor(Math.max(0, target.distance - falloffFrom)) : 0;
     const outerZone = falloffFrom > 0 && target.distance > falloffFrom;
     const against = damageAgainst(total, target.outcome, armorAgainst(actor, armorUsed), armorPiercing, falloff);
-    const result = await applyDamage(actor, against.dealt, { target: damageTarget });
+    const result = await applyDamage(actor, against.dealt, { target: damageTarget, woundCheck: false });
     if (dose?.when === "dealt" && against.dealt > 0 && !outerZone) await attackEffect("payload")?.resolve?.({ dose }, actor, "hit");
+    checks.push(...await strikeChecks(actor, { ...(strike ?? {}), wounds: damageTarget === "physical" ? result.wounds : 0, whisper }));
     const name = falloff ? game.i18n.format("ep2e.chat.damage.blastFalloff", { name: actor.name, distance: Math.floor(target.distance), falloff }) : actor.name;
     lines.push(secretLine(target, attackDamageLine({ ...target, name }, { ...against, ...result, armorUsed, damageTarget })));
   }
-  const card = game.messages.get(cardId);
-  if (card) await updateCard(card, "damageCard", "applied", { lines });
+  if (card) await updateCard(card, "damageCard", "applied", { lines, checks });
   return lines;
 }
 
@@ -648,12 +670,12 @@ export async function rollAttackDamage(card) {
   ROLLING.add(card.id);
   try {
     const damage = await attackDamageRoll({ ...foundry.utils.deepClone(context), messageId: attackCard.id }, spentOrOriginalResult(context));
-    if (!damage?.roll) return null;
-    const shown = await rollToChat({ preventPrintToChat: true }, damage.message, WEAPON_DAMAGE_OUTPUT, damage.roll, damage.actor.name, card.whisper ?? [], card.blind === true, "rollOutput");
+    if (!damage?.message) return null;
+    const shown = damage.roll ? await rollToChat({ preventPrintToChat: true }, damage.message, WEAPON_DAMAGE_OUTPUT, damage.roll, damage.actor.name, card.whisper ?? [], card.blind === true, "rollOutput") : damage.message;
     await updateCard(card, "damageCard", "rolled", { data: storable(shown) });
 
     const total = Number(shown.total) || 0;
-    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", falloffFrom: Number(attack.blast?.falloffFrom) || 0, reduction: Number(attack.blast?.reduction) || 0, dose: attack.dose ?? null, targets: state.targets };
+    const request = { cardId: card.id, total, armorUsed: attack.payload?.armorUsed ?? "kinetic", armorPiercing: attack.payload?.armorPiercing === true, damageTarget: attack.payload?.damageTarget ?? "physical", falloffFrom: Number(attack.blast?.falloffFrom) || 0, reduction: Number(attack.blast?.reduction) || 0, dose: attack.dose ?? null, strike: strikeOf(attack), noDamage: !damage.roll, targets: state.targets };
     if (game.user.isGM) await applyAttackDamage(request);
     else relayToActiveGM("applyAttackDamage", request);
     await clearBlast(attack);
@@ -673,6 +695,7 @@ export function registerWeaponAttacks() {
     detect: context => detectWeaponAttack(context) ?? detectSleightAttack(context, { damaging: true }),
     resolve: noteDefence
   });
+  registerStrikeChecks();
 }
 
 /**
@@ -686,4 +709,310 @@ export function registerWeaponAttackSocket() {
     noteAttackDefence: payload => settleAttackDefence(game.messages.get(payload.messageId), payload.uuid, payload.outcome, payload.kind),
     postSecretDefenceCards: async ({ attack, targetUuids, details }) => postDefenceCards(attack, (await Promise.all(targetUuids.map(uuid => fromUuid(uuid)))).filter(Boolean), { gmOnly: true, details: new Map(details) })
   });
+}
+
+
+// What a hit does beyond its damage (Core p.216, 219, 220). A wound, or a weapon that knocks down,
+// asks for a SOM Check against falling prone - one check, even for both; two wounds at once knock
+// prone and ask for one against passing out. A weapon's traits ask for the checks they name. Each
+// check is a card for the target's owners; its result puts the conditions on, and a pool point that
+// turns the result puts on what the new one brings instead.
+
+export const STRIKE_CHECK_KEY = "strikeCheck";
+
+// The aptitude each check is rolled on, its card's icon - a Foundry image where it has one - and the
+// armour that adds to it.
+export const STRIKE_CHECKS = {
+  knockdown: { aptitude: "som", icon: "fa-person-falling" },
+  unconscious: { aptitude: "som", icon: "fa-bed", img: "icons/svg/unconscious.svg" },
+  shock: { aptitude: "som", icon: "fa-bolt", armor: "energy" },
+  stun: { aptitude: "som", icon: "fa-burst", armor: "kinetic" },
+  blinding: { aptitude: "ref", icon: "fa-eye-slash" },
+  entangling: { aptitude: "ref", icon: "fa-spider", img: "systems/eclipsephase/resources/icons/conditions/grappled.svg" },
+  pain: { aptitude: "wil", icon: "fa-face-grimace" }
+};
+
+// What Pain Tolerance I adds to the check against pain (Core p.216).
+export const PAIN_TOLERANCE_BONUS = 30;
+
+// The check each trait asks for and who is immune to it (Core p.216, 219): synthmorphs, bots and
+// vehicles to shock, everyone but biomorphs to the biomorph stun and to pain, Pain Tolerance II to
+// pain, Anti-Glare to blinding.
+const TRAIT_CHECKS = [
+  { trait: "shock", check: "shock", immune: ({ kind }) => ["synthmorph", "bot", "vehicle"].includes(kind) },
+  { trait: "stun", check: "stun", immune: () => false },
+  { trait: "stunBiomorphs", check: "stun", immune: ({ kind }) => kind !== "biomorph" },
+  { trait: "blinding", check: "blinding", immune: ({ systems }) => systems.antiGlare === true },
+  { trait: "entangling", check: "entangling", immune: () => false },
+  { trait: "pain", check: "pain", immune: ({ kind, tolerance }) => kind !== "biomorph" || tolerance >= 2 }
+];
+
+/**
+ * What an attack's hit brings beyond its damage, for the active GM to put on its targets.
+ * @param {Object} attack - The attack
+ * @returns {Object} checks (trait keys), weaponName and superiors (the attack's superior successes)
+ */
+export function strikeOf(attack) {
+  const roll = attack?.roll;
+  const superiors = roll && isHit(roll.result) ? superiorResults(roll.result, roll.value) : 0;
+  return { checks: attack?.checks ?? [], weaponName: attack?.weaponName ?? "", superiors };
+}
+
+/**
+ * Puts what a hit brings beyond its damage on a target. The wound's own check - and the one against
+ * passing out after two wounds, which knock prone at once - gets a card of its own; the checks the
+ * weapon's traits ask for come back to go on the damage card, a knockdown weapon's covering the
+ * wound's. A target immune to an effect gets a note instead, and pain puts its modifier on at once.
+ * @param {Actor} actor - The target
+ * @param {Object} [strike] - checks (trait keys), wounds taken, weaponName, the attack's superiors and
+ *   whisper: who sees an immunity note, as the damage card is seen; by default as the actor's cards
+ * @returns {Promise<Object[]>} The damage card's check entries for this target
+ */
+export async function strikeChecks(actor, { checks = [], wounds = 0, weaponName = "", superiors = 0, whisper = null } = {}) {
+  const systems = actor.system?.additionalSystems ?? {};
+  const target = { kind: targetKinds(actor)[0], systems, tolerance: Number(systems.painTolerance) || 0 };
+  const onCard = [];
+  const immune = [];
+
+  if (wounds >= 2) {
+    await inflictCondition(actor, "prone");
+    await postStrikeCheck(actor, "unconscious");
+  }
+  else if (checks.includes("knockdown")) onCard.push("knockdown");
+  else if (wounds === 1) await postStrikeCheck(actor, "knockdown");
+
+  for (const { trait, check, immune: spared } of TRAIT_CHECKS) {
+    if (!checks.includes(trait) || onCard.includes(check) || immune.includes(check)) continue;
+    if (spared(target)) {
+      immune.push(check);
+      continue;
+    }
+    if (check === "pain") await sufferPain(actor, target.tolerance);
+    onCard.push(check);
+  }
+
+  for (const check of immune) await postCard(actor, { icon: STRIKE_CHECKS[check].icon, iconImg: STRIKE_CHECKS[check].img, headline: game.i18n.format("ep2e.chat.strike.immune", { name: actor.name, effect: game.i18n.localize(`ep2e.chat.strike.${check}.name`) }) }, {}, whisper);
+  return onCard.map(check => ({ id: foundry.utils.randomID(), actorUuid: actor.uuid, name: actor.name, check, weaponName, superiors: check === "entangling" ? superiors : 0, npc: !actor.hasPlayerOwner, rolled: false }));
+}
+
+/**
+ * The -20 a pain beam leaves until the end of the next turn, -10 with Pain Tolerance I (Core p.216),
+ * as an Impaired condition - unless a stronger one is on already.
+ * @param {Actor} actor - The target
+ * @param {Number} tolerance - Its Pain Tolerance level
+ * @returns {Promise<void>} Resolves once put on
+ */
+async function sufferPain(actor, tolerance) {
+  const id = tolerance >= 1 ? "impaired10" : "impaired20";
+  const level = entry => Math.abs(Number(Object.values(conditionEntry(entry)?.changes ?? {})[0]) || 0);
+  const stronger = Array.from(activeConditions(actor)).some(entry => conditionEntry(entry)?.group === "impaired" && level(entry) >= level(id));
+  if (!stronger) await inflictCondition(actor, id, { span: { value: 1, units: "rounds" } });
+}
+
+/**
+ * Posts the card asking a target for one check of a hit, for its owners.
+ * @param {Actor} actor - The target
+ * @param {String} check - The check's key
+ * @param {Object} [options] - weaponName, and superiors: the attack's superior successes, for entangling
+ * @returns {Promise<ChatMessage>} The card
+ */
+export function postStrikeCheck(actor, check, { weaponName = "", superiors = 0 } = {}) {
+  const label = game.i18n.format("ep2e.chat.dose.checkLabel", { aptitude: STRIKE_CHECKS[check].aptitude.toUpperCase() });
+  return postCheckCard(actor, STRIKE_CHECK_KEY, {
+    card: {
+      icon: STRIKE_CHECKS[check].icon,
+      iconImg: STRIKE_CHECKS[check].img,
+      headline: game.i18n.format("ep2e.chat.strike.checkNeeded", { effect: game.i18n.localize(`ep2e.chat.strike.${check}.name`), name: actor.name, check: label }),
+      rows: [
+        ...(weaponName ? [{ label: game.i18n.localize("ep2e.chat.strike.weapon"), value: weaponName }] : []),
+        { value: game.i18n.localize(`ep2e.chat.strike.${check}.rule`) }
+      ]
+    },
+    button: { action: "rollStrikeCheck", label: game.i18n.format("ep2e.chat.strike.roll", { check: label }) },
+    payload: { check, id: foundry.utils.randomID(), weaponName, superiors }
+  });
+}
+
+/**
+ * Rolls a hit's check, once: from its own card, or one of those on a damage card.
+ * @param {String} messageId - The card's id
+ * @param {String|null} [checkId] - The check on a damage card; none for a card of its own
+ * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
+ * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
+ */
+export function requestStrikeCheck(messageId, checkId = null, systemOptions = {}) {
+  const prepare = ({ check, id, weaponName, superiors }, actor) => ({
+    aptitude: STRIKE_CHECKS[check].aptitude,
+    check: { actorUuid: actor.uuid, check, id, weaponName, superiors }
+  });
+  if (checkId) return requestCardCheck(messageId, "damageCard", prepare, systemOptions, { entryId: checkId, flag: STRIKE_CHECK_KEY });
+  return requestCardCheck(messageId, STRIKE_CHECK_KEY, prepare, systemOptions);
+}
+
+/**
+ * The buttons a damage card shows for its checks: one per check still open - named after the target
+ * when the card holds several - and, for an area attack, the GM's choices for the NPCs' and Goons'
+ * checks left: roll them all, or resolve them without a roll.
+ * @param {Object} state - The damage card's state
+ * @returns {Object} strikeButtons and strikeRest (whether the GM's choices show)
+ */
+export function strikeButtons(state) {
+  const open = (state.checks ?? []).filter(entry => !entry.rolled);
+  const several = new Set((state.checks ?? []).map(entry => entry.actorUuid)).size > 1;
+  const strikeRest = state.area === true && open.some(entry => entry.npc);
+  return {
+    strikeButtons: open.map((entry, index) => ({
+      id: entry.id,
+      uuid: entry.actorUuid,
+      primary: !strikeRest && index === open.length - 1,
+      label: game.i18n.format(several ? "ep2e.chat.strike.resistFor" : "ep2e.chat.strike.resist", { name: entry.name, effect: game.i18n.localize(`ep2e.chat.strike.${entry.check}.name`) })
+    })),
+    strikeRest
+  };
+}
+
+/**
+ * The GM's roll of every NPC's and Goon's check still open on a damage card, without a dialog.
+ * @param {ChatMessage} message - The damage card
+ * @returns {Promise<void>} Resolves once all are rolled
+ */
+export async function rollRemainingStrikes(message) {
+  const open = (message?.getFlag?.("eclipsephase", "damageCard")?.checks ?? []).filter(entry => entry.npc && !entry.rolled);
+  const options = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } };
+  await Promise.all(open.map(entry => requestStrikeCheck(message.id, entry.id, options)));
+}
+
+/**
+ * The GM's ruling that the NPCs' and Goons' checks still open on a damage card need no roll: they
+ * are taken off the card, and nothing comes of them.
+ * @param {ChatMessage} message - The damage card
+ * @returns {Promise<*>} What updateCard reported
+ */
+export function resolveRemainingStrikes(message) {
+  const ids = (message?.getFlag?.("eclipsephase", "damageCard")?.checks ?? []).filter(entry => entry.npc && !entry.rolled).map(entry => entry.id);
+  return ids.length ? updateCard(message, "damageCard", "checksResolved", { ids }) : null;
+}
+
+/**
+ * What a check's result brings (Core p.216, 219, 220): the conditions and how long each runs - no
+ * span until removed - and, for pain, whether the target must flee.
+ * @param {String} check - The check's key
+ * @param {Number} result - The result tier
+ * @param {Number} value - The die
+ * @returns {Object} conditions ({id, span} each) and flee
+ */
+export function strikeOutcome(check, result, value) {
+  const passed = isHit(result);
+  const critical = result === TASK_RESULT.CRITICAL_FAILURE;
+  const superior = superiorResults(result, value);
+  const rounds = count => ({ value: count, units: "rounds" });
+  const outcome = conditions => ({ conditions, flee: false });
+  switch (check) {
+    case "knockdown": return outcome(passed ? [] : [{ id: "prone" }]);
+    case "unconscious": return outcome(passed ? [] : [{ id: "unconscious" }]);
+    case "shock": return outcome(passed
+      ? [{ id: "stunned", span: rounds(3) }]
+      : [{ id: "prone" }, { id: "incapacitated", span: rounds(1 + 2 * superior) }, { id: "stunned", span: { value: 3, units: "minutes" } }]);
+    case "stun": return outcome(passed ? [] : critical
+      ? [{ id: "incapacitated", span: rounds(1) }, { id: "stunned", span: { value: 1, units: "minutes" } }]
+      : [{ id: "stunned", span: rounds(1 + superior) }]);
+    case "blinding": return outcome(passed ? [] : [{ id: "blinded", ...(critical ? {} : { span: rounds(1 + superior) }) }]);
+    case "entangling": return outcome(passed ? [] : [{ id: "grappled" }]);
+    case "pain": return { conditions: [], flee: !passed };
+    default: return outcome([]);
+  }
+}
+
+/**
+ * How long a condition runs, as the outcome card gives it.
+ * @param {Object} [span] - {value, units}
+ * @returns {String} e.g. "3 action turns", "" without a span
+ */
+export function spanText(span) {
+  if (!span?.value) return "";
+  if (span.units === "rounds") return game.i18n.format(span.value === 1 ? "ep2e.chat.strike.spanRound" : "ep2e.chat.strike.spanRounds", { count: span.value });
+  return game.i18n.format("ep2e.chat.strike.spanMinutes", { count: span.value });
+}
+
+/**
+ * Settles a hit's check: what an earlier result of it put on goes, what this one brings is put on,
+ * and a card says what that is, seen as the check's roll was. A pool point spent on the check
+ * settles it again.
+ * @param {Object} check - The strikeCheck the roll carried
+ * @param {Number} result - The result tier as it now stands
+ * @param {Number} value - The die as it now stands
+ * @param {ChatMessage} [roll] - The check's roll card
+ * @returns {Promise<Object|null>} The outcome, or null when the target is gone
+ */
+export async function settleStrikeCheck(check, result, value, roll = null) {
+  const actor = await fromUuid(check.actorUuid);
+  if (!actor) return null;
+  const earlier = Array.from(actor.effects ?? []).filter(effect => effect.getFlag?.("eclipsephase", STRIKE_CHECK_KEY) === check.id);
+  if (earlier.length) await actor.deleteEmbeddedDocuments("ActiveEffect", earlier.map(effect => effect.id));
+  const outcome = strikeOutcome(check.check, result, value);
+  for (const { id, span } of outcome.conditions) await inflictCondition(actor, id, { span, flags: { [STRIKE_CHECK_KEY]: check.id } });
+  const names = outcome.conditions.map(({ id, span }) => {
+    const name = game.i18n.localize(`ep2e.conditions.${id}.name`);
+    return span ? `${name} (${spanText(span)})` : name;
+  });
+  const headline = outcome.flee
+    ? game.i18n.format("ep2e.chat.strike.flee", { name: actor.name })
+    : names.length
+      ? game.i18n.format("ep2e.chat.strike.outcome", { name: actor.name, conditions: names.join(", ") })
+      : game.i18n.format("ep2e.chat.strike.resisted", { name: actor.name, effect: game.i18n.localize(`ep2e.chat.strike.${check.check}.name`) });
+  await postCard(actor, { icon: STRIKE_CHECKS[check.check].icon, iconImg: STRIKE_CHECKS[check.check].img, headline }, {}, roll ? roll.whisper ?? [] : null);
+  return outcome;
+}
+
+/**
+ * The modifiers a hit's check brings: the armour that adds to it, the attack's superior successes
+ * against entangling and Pain Tolerance I against pain.
+ * @param {Object} check - The strikeCheck the roll carried
+ * @returns {Object[]} text and value each
+ */
+export function strikeModifiers(check) {
+  const actor = fromUuidSync(check.actorUuid);
+  const armor = STRIKE_CHECKS[check.check]?.armor;
+  const found = [];
+  const worn = armor && actor ? armorAgainst(actor, armor) : 0;
+  if (worn) found.push({ text: game.i18n.localize(`ep2e.chat.strike.armor.${armor}`), value: worn });
+  if (check.check === "entangling" && check.superiors) found.push({ text: game.i18n.localize("ep2e.chat.strike.attackSuperiors"), value: -10 * check.superiors });
+  if (check.check === "pain" && Number(actor?.system?.additionalSystems?.painTolerance) === 1) found.push({ text: game.i18n.localize("ep2e.chat.strike.painTolerance"), value: PAIN_TOLERANCE_BONUS });
+  return found;
+}
+
+/**
+ * Hangs a hit's checks on the roll pipeline: their modifiers land on the roll, and the result -
+ * or a pool point that turns it - settles what they bring.
+ * @returns {void}
+ */
+export function registerStrikeChecks() {
+  registerCheckCard(STRIKE_CHECK_KEY);
+  modifiersOnRoll(STRIKE_CHECK_KEY, strikeModifiers);
+  settleOnRoll(STRIKE_CHECK_KEY, (check, passed, { result, value, message }) => settleStrikeCheck(check, result, value, message));
+  Hooks.on("preUpdateActor", (actor, changes) => {
+    if (foundry.utils.getProperty(foundry.utils.expandObject(changes), "system.physical.wounds") !== undefined) WOUNDS_BEFORE.set(actor.uuid, Number(actor.system?.physical?.wounds) || 0);
+  });
+  Hooks.on("updateActor", (actor, changes, options, userId) => woundCheck(actor, options, userId));
+}
+
+// The wounds an actor had before an update that changes them, until the update has gone through.
+const WOUNDS_BEFORE = new Map();
+
+/**
+ * Asks for a wound's check whenever wounds are added (Core p.220) - by damage, the sheet or typed in -
+ * on the client that added them; the card reaches the actor's owners. Damage whose caller asks for
+ * the check itself, as an attack's does, says so in its update.
+ * @param {Actor} actor - The actor updated
+ * @param {Object} options - The update's options
+ * @param {String} userId - Who updated it
+ * @returns {Promise<Object[]|null>} What strikeChecks returned, or null when no wound was added
+ */
+export async function woundCheck(actor, options, userId) {
+  if (!WOUNDS_BEFORE.has(actor.uuid)) return null;
+  const before = WOUNDS_BEFORE.get(actor.uuid);
+  WOUNDS_BEFORE.delete(actor.uuid);
+  const gained = (Number(actor.system?.physical?.wounds) || 0) - before;
+  if (userId !== game.user.id || options?.eclipsephase?.woundCheck === false || gained < 1) return null;
+  return strikeChecks(actor, { wounds: gained });
 }

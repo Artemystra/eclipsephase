@@ -1,4 +1,4 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, superiorFailures, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR, attackEffect } from "../../module/rolls/attacks.js";
+import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR, attackEffect } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, registerWeaponAttackSocket, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine, applyAttackDamage } from "../../module/rolls/damage.js";
@@ -8,7 +8,7 @@ import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeConta
 import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS, firingAttackModes } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
-import { RollCheck, wireSuppressiveFields, rollCalc } from "../../module/rolls/dice.js";
+import { RollCheck, wireSuppressiveFields, rollCalc, superiorResults } from "../../module/rolls/dice.js";
 import { makeActor, makeItem, resetWorld, seedRolls, seedDialogs, loadPackItem, setSetting } from "../setup/factories.js";
 import { activeDoseFor } from "../../module/common/doses.js";
 import { sealedAgainst } from "../../module/common/morp-functions.js";
@@ -1545,7 +1545,8 @@ describe("a thrown grenade (Core p.209, p.212, p.218)", () => {
 
     expect([turn(100), turn(25), turn(50), turn(75), turn(37)]).toEqual([0, 90, 180, 270, 133]);
     expect([scatterOffset(1, 4, 0, east).distance, scatterOffset(1, 4, 1, east).distance, scatterOffset(1, 4, 2, east).distance]).toEqual([4, 8, 16]);
-    expect([superiorFailures(70), superiorFailures(66), superiorFailures(34), superiorFailures(33), superiorFailures(99)]).toEqual([0, 1, 1, 2, 0]);
+    const failed = value => superiorResults(rollCalc(value, 10), value);
+    expect([failed(70), failed(66), failed(34), failed(33), failed(99)]).toEqual([0, 1, 1, 2, 0]);
     expect([scatterSide(0), scatterSide(90), scatterSide(180), scatterSide(270)]).toEqual(["ep2e.chat.attack.scatterAhead", 'ep2e.chat.attack.scatterRight {"degrees":90}', "ep2e.chat.attack.scatterBack", 'ep2e.chat.attack.scatterLeft {"degrees":90}']);
   });
 

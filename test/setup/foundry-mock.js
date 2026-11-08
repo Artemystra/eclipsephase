@@ -320,8 +320,8 @@ class MockDocument {
     return this;
   }
 
-  async update(changes = {}) {
-    global.Hooks.callAll(`preUpdate${this.documentName}`, this, changes, {}, global.game.user.id);
+  async update(changes = {}, options = {}) {
+    global.Hooks.callAll(`preUpdate${this.documentName}`, this, changes, options, global.game.user.id);
     for (const [key, value] of Object.entries(changes)) {
       if (value instanceof ForcedDeletion) {
         deleteProperty(this._source, key);
@@ -332,7 +332,7 @@ class MockDocument {
       setProperty(this, key, value);
     }
     (this.actor ?? this).prepareData?.();
-    global.Hooks.callAll(`update${this.documentName}`, this, changes, {}, global.game.user.id);
+    global.Hooks.callAll(`update${this.documentName}`, this, changes, options, global.game.user.id);
     await new Promise(resolve => setTimeout(resolve, 0));
     return this;
   }
