@@ -907,7 +907,9 @@
       },
       "option": {
         "socialTests": "Tiradas de habilidades sociales contra el objetivo",
-        "basiliskHacks": "Resistir hackeos basilisco"
+        "basiliskHacks": "Resistir hackeos basilisco",
+        "lostSense": "Depende de {sense}",
+        "visualCoordination": "Coordinación visual mientras mira fijamente"
       },
       "sustain": {
         "name": "Manteniendo: {sleight} ({targets})",
@@ -960,7 +962,31 @@
         },
         "skillChosen": "{sleight} en {target}: {skill}.",
         "effectName": "{sleight}: {skill}",
-        "blocked": "{sleight} bloquea {skill}: no se puede usar, ni siquiera por defecto."
+        "blocked": "{sleight} bloquea {skill}: no se puede usar, ni siquiera por defecto.",
+        "loseSense": "{sleight} ha alcanzado a {target}. Elige el sentido que pierde.",
+        "loseSenseButton": "Elegir sentido",
+        "senseHeader": "Elegir un sentido",
+        "senseCopy": "¿Qué sentido pierde el objetivo?",
+        "senseChosen": "{sleight} sobre {target}: pierde {sense}."
+      },
+      "sleightLabel": "Habilidad",
+      "contactLost": "<strong>{sleight}</strong>: se pierde el contacto visual con {target}",
+      "sense": {
+        "sight": "Vista",
+        "hearing": "Oído",
+        "touch": "Tacto",
+        "smell": "Olfato",
+        "taste": "Gusto",
+        "hunger": "Hambre",
+        "balance": "Equilibrio",
+        "direction": "Orientación",
+        "proprioception": "Propiocepción",
+        "facialRecognition": "Reconocimiento facial",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "Rayos T",
+        "electricalSense": "Sentido eléctrico",
+        "radiationSense": "Sentido de radiación"
       }
     },
     "gmInfo": {
@@ -1172,7 +1198,16 @@
             "blockSkill": "Bloquear habilidad",
             "failSkill": "Inducir error",
             "recharge": "Recarga rápida",
-            "alterDuration": "Alterar duración de sustancia"
+            "alterDuration": "Alterar duración de sustancia",
+            "shockEffect": "Efecto de descarga",
+            "painEffect": "Efecto de dolor",
+            "loseSense": "Quitar un sentido",
+            "eyeContact": "Termina si el objetivo es atacado o movido"
+          },
+          "condition": {
+            "label": "Estado",
+            "tip": "El estado que la habilidad deja en su objetivo mientras dura",
+            "impaired": "Mermado (-10 por aplicación)"
           }
         }
       },

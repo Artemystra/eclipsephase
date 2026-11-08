@@ -790,6 +790,9 @@ span.neutral {
   text-align: center;
   margin: 0;
   padding: 0 28px;
+  /* A long name wraps instead of running under the delete icon. */
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .chat-message .message-header .message-metadata {

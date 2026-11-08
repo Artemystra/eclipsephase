@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat, RollCheck, isHit, isCriticalSuccess } from "./dice.js";
+import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat, RollCheck, isHit, isCriticalSuccess, superiorResults } from "./dice.js";
 import * as pools from "./pools.js";
 import { gmList, prepareRecipients, inheritChatVisibility, readRollContext, isChecked, timedEffectData, postCard, searchableListSelection, selectFromSearchableList, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
 import { registerSocketActions, relayToActiveGM } from "../common/socket.js";
@@ -11,7 +11,8 @@ import { strainSubstrate } from "../common/morp-functions.js";
 import { registerAttackEffect, chosenTargets, attackRoll, followUpVisibility, defenders } from "./attacks.js";
 import { registerCard, renderCard, updateCard, storable } from "../common/chat-cards.js";
 import { measuredDistances, tokenGap } from "../common/targeting.js";
-import { noteDefence, applyHealing } from "./damage.js";
+import { noteDefence, applyHealing, sufferPain, shockConditions, conditionNames } from "./damage.js";
+import { conditionEntry, conditionStatusEffects, inflictCondition } from "../common/conditions.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
 
@@ -428,6 +429,15 @@ export const PSI_CURSOR = { icon: "ep-lightning" };
 // lasting one leaves, the units its WIL / 5 counts in, and who it may work on.
 const LANDING_TYPES = ["gamma", "epsilon"];
 export const SLEIGHT_FLAG = "sleight";
+
+// The conditions a sleight can leave on its target (Core p.226); "impaired" goes one level deeper,
+// -10 a level, as often as the sleight applies.
+export const SLEIGHT_CONDITIONS = ["blinded", "confused", "dazed", "deafened", "grappled", "immobilized", "impaired", "incapacitated", "prone", "stunned", "unconscious"];
+
+// The senses a sleight can take (Core p.282, Ki Blackout); sight and hearing are conditions of their own.
+export const SENSES = ["sight", "hearing", "touch", "smell", "taste", "hunger", "balance", "direction", "proprioception", "facialRecognition", "radar", "lidar", "tRay", "electricalSense", "radiationSense"];
+const SENSE_CONDITIONS = { sight: "blinded", hearing: "deafened" };
+const LOST_SENSE_MODIFIER = -30;
 const LASTING_DURATIONS = ["action", "minutes", "hours", "sustained"];
 const SLEIGHT_UNITS = { action: "rounds", minutes: "minutes", hours: "hours" };
 const AFFECTS = ["target", "async", "both"];
@@ -550,8 +560,20 @@ export function sleightLanding(sleight, actor, pushes = new Set()) {
         rollOptions: Array.isArray(system.rollOptions) ? foundry.utils.deepClone(system.rollOptions) : [],
         affects: AFFECTS.includes(system.affects) ? system.affects : "target",
         repeat: system.repeatPerSuperior === true,
-        multiplier: pushes.has("effect") ? 2 : 1
+        multiplier: pushes.has("effect") ? 2 : 1,
+        condition: SLEIGHT_CONDITIONS.includes(system.condition) ? system.condition : null
     };
+}
+
+/**
+ * The condition a sleight leaves at its potency: Impaired one level per time it applies, -30 at most.
+ * @param {String|null} condition - The sleight's condition
+ * @param {Object} potency - What sleightPotency reported
+ * @returns {String|null} The condition id
+ */
+export function sleightCondition(condition, { count = 1, factor = 1 } = {}) {
+    if (condition !== "impaired") return condition ?? null;
+    return `impaired${Math.min(3, count * factor) * 10}`;
 }
 
 /**
@@ -614,19 +636,25 @@ export async function sleightEffectData(landing, potency, { target, onAsync = fa
         const added = change.type ? change.type === "add" : Number(change.mode ?? 2) === 2;
         changes.push({ ...change, value: added ? String(await scaledValue(change.value, potency)) : change.value });
     }
+    const condition = onAsync ? null : sleightCondition(landing.condition, potency);
+    if (condition) changes.push(...conditionStatusEffects().find(status => status.id === condition).changes);
+    const rule = getLandingRule(landing.rule);
+    const choosing = rule?.bindsSkill || rule?.bindsChoice;
     const rollOptions = [];
     for (const option of landing.rollOptions ?? []) rollOptions.push({ ...option, value: await scaledValue(option.value, potency) });
     return timedEffectData({
         name,
-        img: landing.img,
+        img: condition ? conditionEntry(condition).img : landing.img,
         origin: landing.uuid,
         description: landing.description,
         changes,
+        statuses: condition ? [condition] : [],
+        ...(condition ? { showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS } : {}),
         span: landing.span,
         flags: {
             effectKey: SLEIGHT_FLAG,
             [SLEIGHT_FLAG]: {
-                key: getLandingRule(landing.rule)?.bindsSkill && attackId ? `${landing.name}:${attackId}` : sleightKey(landing, named ? target : null),
+                key: choosing && attackId ? `${landing.name}:${attackId}` : sleightKey(landing, named ? target : null),
                 name,
                 sleightName: landing.name,
                 targetUuid: target?.uuid ?? null,
@@ -635,7 +663,8 @@ export async function sleightEffectData(landing, potency, { target, onAsync = fa
                 attackId,
                 defenceId,
                 rollOptions,
-                choice: getLandingRule(landing.rule)?.bindsSkill ? { rule: landing.rule, skillKey: null, skillName: null } : null
+                choice: choosing ? { rule: landing.rule, skillKey: null, skillName: null } : null,
+                breaksContact: !onAsync && rule?.breaksContact === true
             }
         }
     });
@@ -877,7 +906,14 @@ export async function applySleightChoice(request) {
     const message = messageId ? game.messages.get(messageId) : null;
     if (!target.isOwner || (message && !message.isOwner)) return relayToActiveGM("sleightChoice", request);
     let chosen;
-    if (rule === "alterDuration") {
+    if (rule === "loseSense") {
+        const effect = Array.from(target.effects).find(candidate => {
+            const flag = candidate.getFlag?.("eclipsephase", SLEIGHT_FLAG);
+            return flag?.choice?.rule === rule && flag.attackId === attackId;
+        });
+        if (!effect) return false;
+        chosen = await loseSense(effect, request.sense, sleightName, target);
+    } else if (rule === "alterDuration") {
         const effect = Array.from(target.effects).find(candidate => candidate.id === effectId);
         if (!effect) return false;
         await effect.update({ "duration.value": Math.max(1, Math.round(Number(effect.duration.value) * factor)) });
@@ -908,6 +944,10 @@ export async function applySleightChoice(request) {
 }
 
 const postLandingCard = ({ attack, target, async, landing, result }) => offerLandingChoice(attack, target, async, landing, result);
+registerLandingRule("shockEffect", { label: "ep2e.item.aspect.table.landingRule.shockEffect", instant: true, onLand: landShock });
+registerLandingRule("painEffect", { label: "ep2e.item.aspect.table.landingRule.painEffect", instant: true, onLand: landPain });
+registerLandingRule("loseSense", { label: "ep2e.item.aspect.table.landingRule.loseSense", bindsChoice: true, onLand: postLandingCard, choose: chooseSense });
+registerLandingRule("eyeContact", { label: "ep2e.item.aspect.table.landingRule.eyeContact", breaksContact: true, onLand: () => null });
 registerLandingRule("blockSkill", { label: "ep2e.item.aspect.table.landingRule.blockSkill", bindsSkill: true, onLand: postLandingCard, choose: chooseBlockedSkill });
 registerLandingRule("failSkill", { label: "ep2e.item.aspect.table.landingRule.failSkill", bindsSkill: true, onLand: postLandingCard, choose: chooseError, onReland: context => SUPERIOR_RESULTS.includes(context.result) ? postLandingCard(context) : undefined });
 registerLandingRule("boostSkill", { label: "ep2e.item.aspect.table.landingRule.boostSkill", bindsSkill: true, onLand: postLandingCard, choose: chooseBoostedSkill });
@@ -1540,7 +1580,9 @@ export function registerSleightAttacks() {
     });
     Hooks.on("deleteActiveEffect", (effect, options, userId) => followSustainEnd(effect, options, userId));
     Hooks.on("updateToken", (token, changes) => {
-        if ("x" in (changes ?? {}) || "y" in (changes ?? {})) checkSustainReach(token.parent);
+        if (!("x" in (changes ?? {}) || "y" in (changes ?? {}))) return;
+        checkSustainReach(token.parent);
+        if (game.user.isActiveGM && token.actor) breakContact(token.actor);
     });
     registerRollBlock(blockedSkillReason);
     registerFailOption(inducedErrorFailures);
@@ -1788,4 +1830,107 @@ export function registerPsiTouch() {
         if (attack?.effect !== "touch" || !isHit(newResult)) return;
         await touchCardFor(attack)?.delete();
     });
+}
+
+
+/**
+ * A sleight that works like a shock attack - Short Circuit, Ki's Cold Start (Core p.219): the target
+ * falls prone, is incapacitated for 1 action turn plus 2 per superior success, and stunned for 3
+ * minutes; a card says so, seen as the attack was.
+ * @param {Object} context - attack, target, landing and result
+ * @returns {Promise<Object[]>} The conditions put on
+ */
+export async function landShock({ attack, target, landing, result }) {
+    const conditions = shockConditions(superiorResults(result, attack?.roll?.value));
+    for (const { id, span } of conditions) await inflictCondition(target, id, { span, flags: { sleightShock: attack?.id ?? null } });
+    await postLandingOutcome(attack, target, landing, game.i18n.format("ep2e.chat.strike.outcome", { name: target.name, conditions: conditionNames(conditions) }));
+    return conditions;
+}
+
+/**
+ * A sleight that works like a pain effect - Pain (Core p.216): -20 until the end of the next turn,
+ * -10 with Pain Tolerance I, and the target flees with its next action; Pain Tolerance II shrugs it
+ * off. The target already resisted the sleight, so no further check is asked.
+ * @param {Object} context - attack, target and landing
+ * @returns {Promise<Boolean>} True when the pain took hold
+ */
+export async function landPain({ attack, target, landing }) {
+    const tolerance = Number(target.system?.additionalSystems?.painTolerance) || 0;
+    if (tolerance >= 2) {
+        await postLandingOutcome(attack, target, landing, game.i18n.format("ep2e.chat.strike.immune", { name: target.name, effect: game.i18n.localize("ep2e.chat.strike.pain.name") }));
+        return false;
+    }
+    await sufferPain(target, tolerance);
+    await postLandingOutcome(attack, target, landing, game.i18n.format("ep2e.chat.strike.flee", { name: target.name }));
+    return true;
+}
+
+/**
+ * Posts what a sleight's landing did on a card, seen as the attack card was.
+ * @param {Object} attack - The attack
+ * @param {Actor} target - The target
+ * @param {Object} landing - What sleightLanding read
+ * @param {String} headline - What happened
+ * @returns {Promise<ChatMessage>} The card
+ */
+function postLandingOutcome(attack, target, landing, headline) {
+    const origin = attack?.messageId ? game.messages.get(attack.messageId) : null;
+    return postCard(target, { icon: "fa-brain", color: "--iconBlue", headline, rows: [{ label: game.i18n.localize("ep2e.psi.sleightLabel"), value: landing.name }] }, {}, followUpVisibility(origin, [target]).whisper);
+}
+
+/**
+ * Asks which sense a sleight takes - Block Sense, Ki's Blackout.
+ * @param {Object} context - target and request
+ * @returns {Promise<Boolean>} True when something was chosen
+ */
+async function chooseSense({ request }) {
+    const entries = SENSES.map(id => ({ id, label: game.i18n.localize(`ep2e.psi.sense.${id}`) }));
+    const sense = await searchableListSelection(entries, "ep2e.psi.choice.senseHeader", "ep2e.psi.choice.senseCopy");
+    if (sense?.cancelled || !sense?.selection) return false;
+    return applySleightChoice({ ...request, sense: sense.selection });
+}
+
+/**
+ * Takes a sense from a sleight's target (Core p.282): lost sight is Blinded, lost hearing Deafened;
+ * any other sense costs -30 on the actions that rely on it, offered on every roll.
+ * @param {ActiveEffect} effect - The sleight's effect on the target
+ * @param {String} sense - A key of SENSES
+ * @param {String} sleightName - The sleight
+ * @param {Actor} target - The target
+ * @returns {Promise<String>} The card's text
+ */
+export async function loseSense(effect, sense, sleightName, target) {
+    const label = game.i18n.localize(`ep2e.psi.sense.${sense}`);
+    const name = game.i18n.format("ep2e.psi.choice.effectName", { sleight: sleightName, skill: label });
+    const condition = SENSE_CONDITIONS[sense] ?? null;
+    const flag = effect.getFlag("eclipsephase", SLEIGHT_FLAG);
+    const rollOptions = condition ? flag.rollOptions ?? [] : [...(flag.rollOptions ?? []), { id: "lostSense", label: game.i18n.format("ep2e.psi.option.lostSense", { sense: label }), value: LOST_SENSE_MODIFIER, appliesTo: [] }];
+    const changes = condition ? conditionStatusEffects().find(status => status.id === condition).changes : [];
+    await effect.update({
+        name,
+        ...(condition ? { img: conditionEntry(condition).img, statuses: [condition], showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS, "system.changes": [...(effect.changes ?? []), ...changes] } : {}),
+        [`flags.eclipsephase.${SLEIGHT_FLAG}.name`]: name,
+        [`flags.eclipsephase.${SLEIGHT_FLAG}.choice`]: { rule: "loseSense", sense },
+        [`flags.eclipsephase.${SLEIGHT_FLAG}.rollOptions`]: rollOptions
+    });
+    return game.i18n.format("ep2e.psi.choice.senseChosen", { sleight: sleightName, target: target.name, sense: label });
+}
+
+/**
+ * Ends the sleights held on an actor by eye contact - Basilisk Stare - once it is attacked or moved
+ * (Core p.281): the async stops sustaining them, which takes the effects off both sides, and a card
+ * says the contact is lost.
+ * @param {Actor} actor - The actor attacked or moved
+ * @param {Object} [options] - except: the attack whose own sleight it is, which does not break it
+ * @returns {Promise<Number>} How many ended
+ */
+export async function breakContact(actor, { except = null } = {}) {
+    const held = Array.from(actor?.effects ?? []).map(effect => effect.getFlag?.("eclipsephase", SLEIGHT_FLAG)).filter(flag => flag?.breaksContact && (!except || flag.attackId !== except));
+    for (const flag of held) {
+        const async = flag.asyncUuid ? await fromUuid(flag.asyncUuid) : null;
+        const ended = async && flag.attackId ? await endSustaining(async, { attackId: flag.attackId }) : 0;
+        if (!ended) await setSleightEffect({ actorUuid: actor.uuid, attackId: flag.attackId, targetUuid: flag.targetUuid });
+        await postCard(actor, { icon: "fa-eye-slash", color: "--iconBlue", headline: game.i18n.format("ep2e.psi.contactLost", { sleight: flag.sleightName, target: actor.name }) });
+    }
+    return held.length;
 }

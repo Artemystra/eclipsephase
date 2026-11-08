@@ -1,13 +1,14 @@
 import { registerTargetedAttackHooks, applyTargetedAttack, yieldDefence, attackPicking } from "../../module/rolls/attacks.js";
 import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
 import { registerWeaponAttacks } from "../../module/rolls/damage.js";
-import { applySleightChoice, sleightTargeting, sleightArmor, skillEntries, chooseFromCard, sleightLanding, inducedErrorFailures, blockedSkillReason, forceInducedError, spendInducedError, registerSleightAttacks, detectSleightAttack, sleightModifiers, gammaPushes, sleightSpan, sleightPotency, scaledValue, scaledFormula, landSleight, relandAfterSpend, SLEIGHT_FLAG, SUSTAIN_FLAG, sustainRecords, sustainModifiers, sustainedSleights, endSustaining, sustainReach, healingFormula, sustainSummary, checkSustainReach, sleightDamageMode, sustainedTargets, endSustainingOn } from "../../module/rolls/psi.js";
+import { breakContact, sleightCondition, applySleightChoice, sleightTargeting, sleightArmor, skillEntries, chooseFromCard, sleightLanding, inducedErrorFailures, blockedSkillReason, forceInducedError, spendInducedError, registerSleightAttacks, detectSleightAttack, sleightModifiers, gammaPushes, sleightSpan, sleightPotency, scaledValue, scaledFormula, landSleight, relandAfterSpend, SLEIGHT_FLAG, SUSTAIN_FLAG, sustainRecords, sustainModifiers, sustainedSleights, endSustaining, sustainReach, healingFormula, sustainSummary, checkSustainReach, sleightDamageMode, sustainedTargets, endSustainingOn } from "../../module/rolls/psi.js";
 import { sleightRollOptions } from "../../module/rolls/modifiers.js";
 import { registerLandingRule, listLandingRules, registerFailOption } from "../../module/api/registry.js";
 import { cardFailures } from "../../module/rolls/cards.js";
 import { refuseForFamily, defenceDataset } from "../../module/rolls/attacks.js";
 import { isEffectBlueprint } from "../../module/effects.js";
-import { _ep285_sleightUpdate } from "../../module/common/migration.js";
+import { _ep285_sleightUpdate, _ep295_replacedBlueprints } from "../../module/common/migration.js";
+import { markDefenceRolled } from "../../module/rolls/attacks.js";
 import { RollCheck } from "../../module/rolls/dice.js";
 import { resetStrainFamilies, registerCoreStrainFamilies, registerStrainFamily, getStrainFamily } from "../../module/rolls/strain-families.js";
 import { isRunningEffect } from "../../module/common/time.js";
@@ -46,6 +47,10 @@ function async(additionalSystems = {}) {
     pack("Induce_Error_CdbYcrB6K50gscPN.json", "error1"),
     pack("Invigorate_k0mxZEmjbxfMbaDc.json", "invigorate1"),
     pack("Alter_Effect_YJMlJrypaAELR1v7.json", "alter1"),
+    pack("Basilisk_Stare_zXu469j4alW4HxcK.json", "stare1"),
+    pack("Short_Circuit_aH5xFkIr9iCM6SkR.json", "circuit1"),
+    pack("Pain_Ok2NLRCJ0fhGs5pl.json", "pain1"),
+    pack("Block_Sense_ReUtU29tn1QhRGUF.json", "sense1"),
     { _id: "link1", name: "Mindlink", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", duration: "sustained", infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } } },
     { _id: "aphasia1", name: "Aphasia", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", duration: "minutes", description: "No words.", infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } } },
     { _id: "quick1", name: "Quick", type: "aspect", system: { psiType: "gamma", strainFamily: "psi", duration: "instant", infection: 0, damage: { d10: 0, d6: 0, bonus: 0 } } }
@@ -138,11 +143,12 @@ describe("what a sleight leaves where it lands (Core p.276)", () => {
     expect(spam.name).toBe("Spam");
     expect(spam.changes[0]).toMatchObject({ key: "system.mods.globalMod" });
     expect(firstValue(spam)).toBe(-10);
+    expect(Array.from(spam.statuses)).toEqual(["impaired10"]);
     expect(spam.duration).toMatchObject({ value: 4, units: "rounds" });
     expect(isRunningEffect(spam)).toBe(true);
   });
 
-  test("each superior success repeats Spam, a critical success quadruples it and the Effect push doubles it", async () => {
+  test("each superior success takes Spam's Impaired a level deeper, as do a critical success and the Effect push - never past -30", async () => {
     const at = async (die, options) => {
       const ana = mind("Ana");
       await landOn(async(), "spam1", ana, die, options);
@@ -152,7 +158,7 @@ describe("what a sleight leaves where it lands (Core p.276)", () => {
 
     expect(await at(50)).toBe(-20);
     expect(await at(67)).toBe(-30);
-    expect(await at(44)).toBe(-40);
+    expect(await at(44)).toBe(-30);
     expect(await at(30, { push: "effect" })).toBe(-20);
   });
 
@@ -682,5 +688,123 @@ describe("landing rules", () => {
     const ana = makeActor({ type: "character", name: "Ana", system: { skillsIns: { infosec: { name: "Infosec" } }, skillsVig: {} }, items: [{ _id: "k1", name: "Know: Art", type: "knowSkill", system: {} }] });
 
     expect(skillEntries(ana)).toEqual(expect.arrayContaining([{ id: "infosec", label: "Infosec" }, { id: "know: art", label: "Know: Art" }]));
+  });
+});
+
+describe("the conditions a sleight leaves (Core p.226)", () => {
+  beforeEach(() => registerSleightAttacks());
+
+  /**
+   * The statuses an actor's effects carry, sorted.
+   * @param {Actor} actor - The actor
+   * @returns {String[]} The statuses
+   */
+  const statusesOn = actor => Array.from(actor.effects).flatMap(effect => Array.from(effect.statuses ?? [])).sort();
+
+  test("Impaired goes a level deeper each time the sleight applies, never past -30; other conditions stay as they are", () => {
+    expect([1, 2, 3, 4].map(count => sleightCondition("impaired", { count, factor: 1 }))).toEqual(["impaired10", "impaired20", "impaired30", "impaired30"]);
+    expect(sleightCondition("incapacitated", { count: 3, factor: 2 })).toBe("incapacitated");
+    expect(sleightCondition(null)).toBeNull();
+  });
+
+  test("Basilisk Stare leaves its target Incapacitated with the condition's icon; the async keeps -30 for visual coordination and sustains it", async () => {
+    const caster = async();
+    const ana = mind("Ana");
+    await landOn(caster, "stare1", ana, 30);
+    await until(() => sleightEffects(ana).length && sleightEffects(caster).length);
+    const [onTarget] = sleightEffects(ana);
+    const [onAsync] = sleightEffects(caster);
+
+    expect(Array.from(onTarget.statuses)).toEqual(["incapacitated"]);
+    expect(onTarget.img).toBe("icons/svg/paralysis.svg");
+    expect(onTarget.getFlag("eclipsephase", SLEIGHT_FLAG).breaksContact).toBe(true);
+    expect(Array.from(onAsync.statuses ?? [])).toEqual([]);
+    expect(onAsync.getFlag("eclipsephase", SLEIGHT_FLAG).rollOptions).toEqual([expect.objectContaining({ id: "visualCoordination", value: -30 })]);
+    expect(sustainRecords(caster)).toHaveLength(1);
+  });
+
+  test("the stare breaks once another attack has met the target or its token moves - not by its own defence card - and says so", async () => {
+    const caster = async();
+    const ana = mind("Ana");
+    const card = await landOn(caster, "stare1", ana, 30);
+    await until(() => sustainRecords(caster).length);
+    const own = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+    await markDefenceRolled(own, ana.uuid, "hit");
+    expect(statusesOn(ana)).toEqual(["incapacitated"]);
+
+    const other = await ChatMessage.create({ content: "", flags: { eclipsephase: { attackDefence: { attack: { id: "another" }, entries: [{ uuid: ana.uuid, name: "Ana", outcome: null }] } } } });
+    await markDefenceRolled(other, ana.uuid, "hit");
+    await until(() => !sleightEffects(ana).length && !sleightEffects(caster).length);
+
+    expect(statusesOn(ana)).toEqual([]);
+    expect(sustainRecords(caster).length).toBe(0);
+    expect(sleightEffects(caster).length).toBe(0);
+    expect(createdMessages.at(-1).content).toContain("ep2e.psi.contactLost");
+    expect(card).toBeDefined();
+
+    const bo = mind("Bo");
+    await landOn(caster, "stare1", bo, 30);
+    await until(() => sleightEffects(bo).length);
+    game.user.isActiveGM = true;
+    Hooks.callAll("updateToken", { actor: bo, parent: null }, { x: 100 });
+    await until(() => !sleightEffects(bo).length);
+    game.user.isActiveGM = undefined;
+    expect(statusesOn(bo)).toEqual([]);
+  });
+
+  test("Short Circuit works like a shock: prone, incapacitated 1 action turn plus 2 per superior success, stunned for 3 minutes", async () => {
+    const ana = mind("Ana");
+    await landOn(async(), "circuit1", ana, 50);
+    await until(() => statusesOn(ana).length === 3);
+    const span = id => Array.from(ana.effects).find(effect => Array.from(effect.statuses).includes(id))?.duration;
+
+    expect(statusesOn(ana)).toEqual(["incapacitated", "prone", "stunned"]);
+    expect(span("incapacitated")).toMatchObject({ value: 3, units: "rounds" });
+    expect(span("stunned")).toMatchObject({ value: 3, units: "minutes" });
+    expect(createdMessages.some(message => message.content?.includes("ep2e.chat.strike.outcome"))).toBe(true);
+  });
+
+  test("Pain impairs its target for a turn and makes it flee, without a further check; Pain Tolerance II shrugs it off", async () => {
+    const ana = mind("Ana");
+    await landOn(async(), "pain1", ana, 30);
+    await until(() => statusesOn(ana).length);
+    const flee = createdMessages.at(-1);
+    const tough = mind("Tough");
+    tough.system.additionalSystems.painTolerance = 2;
+    await landOn(async(), "pain1", tough, 30);
+    await until(() => createdMessages.at(-1).content.includes("ep2e.chat.strike.immune"));
+
+    expect(statusesOn(ana)).toEqual(["impaired20"]);
+    expect(flee.content).toContain("ep2e.chat.strike.flee");
+    expect(statusesOn(tough)).toEqual([]);
+    expect(createdMessages.some(message => message.getFlag?.("eclipsephase", "strikeCheck"))).toBe(false);
+  });
+
+  test("Block Sense asks the async for the sense: sight leaves it Blinded, any other sense -30 on the rolls that rely on it", async () => {
+    const ana = mind("Ana");
+    const card = await landOn(async(), "sense1", ana, 30);
+    await until(() => sleightEffects(ana).length);
+    const attackId = card.getFlag("eclipsephase", "roll").targetedAttack.id;
+    await applySleightChoice({ rule: "loseSense", targetUuid: ana.uuid, attackId, sleightName: "Block Sense", sense: "sight" });
+    const bo = mind("Bo");
+    const other = await landOn(async(), "sense1", bo, 30);
+    await until(() => sleightEffects(bo).length);
+    await applySleightChoice({ rule: "loseSense", targetUuid: bo.uuid, attackId: other.getFlag("eclipsephase", "roll").targetedAttack.id, sleightName: "Block Sense", sense: "smell" });
+
+    expect(statusesOn(ana)).toEqual(["blinded"]);
+    expect(sleightEffects(ana)[0].changes).toEqual([expect.objectContaining({ value: "-30" })]);
+    expect(statusesOn(bo)).toEqual([]);
+    expect(sleightEffects(bo)[0].getFlag("eclipsephase", SLEIGHT_FLAG).rollOptions).toEqual([expect.objectContaining({ id: "lostSense", value: -30 })]);
+    expect(createdMessages.some(message => message.content?.includes("ep2e.psi.choice.loseSense"))).toBe(true);
+  });
+
+  test("the 2.9.5 migration gives a sleight its namesake's condition and takes Spam's old -10 blueprint off", () => {
+    const catalogue = new Map([["Spam", { system: { condition: "impaired", repeatPerSuperior: true }, effects: [] }], ["Basilisk Stare", { system: { condition: "incapacitated", landingRule: "eyeContact" }, effects: [] }]]);
+    const spam = { type: "aspect", name: "Spam", system: { condition: "none" }, effects: [{ id: "old", changes: [{ key: "system.mods.globalMod", value: "-10" }] }, { id: "own", changes: [{ key: "system.mods.globalMod", value: "-10" }, { key: "system.mods.iniMod", value: "1" }] }] };
+    const stare = { type: "aspect", name: "Basilisk Stare", system: { condition: "none", landingRule: "none" }, effects: [] };
+
+    expect(_ep295_replacedBlueprints(spam, catalogue)).toEqual(["old"]);
+    expect(_ep295_replacedBlueprints(stare, catalogue)).toEqual([]);
+    expect(_ep285_sleightUpdate(stare, catalogue).update).toEqual({ "system.condition": "incapacitated", "system.landingRule": "eyeContact" });
   });
 });

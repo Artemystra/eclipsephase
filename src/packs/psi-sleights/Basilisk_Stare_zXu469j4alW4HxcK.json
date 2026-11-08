@@ -16,7 +16,18 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "task",
-    "duration": "sustained"
+    "duration": "sustained",
+    "condition": "incapacitated",
+    "landingRule": "eyeContact",
+    "affects": "both",
+    "rollOptions": [
+      {
+        "id": "visualCoordination",
+        "label": "ep2e.psi.option.visualCoordination",
+        "value": -30,
+        "appliesTo": []
+      }
+    ]
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

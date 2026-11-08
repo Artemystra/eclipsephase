@@ -807,7 +807,7 @@ export async function strikeChecks(actor, { checks = [], wounds = 0, weaponName 
  * @param {Number} tolerance - Its Pain Tolerance level
  * @returns {Promise<void>} Resolves once put on
  */
-async function sufferPain(actor, tolerance) {
+export async function sufferPain(actor, tolerance) {
   const id = tolerance >= 1 ? "impaired10" : "impaired20";
   const level = entry => Math.abs(Number(Object.values(conditionEntry(entry)?.changes ?? {})[0]) || 0);
   const stronger = Array.from(activeConditions(actor)).some(entry => conditionEntry(entry)?.group === "impaired" && level(entry) >= level(id));
@@ -916,9 +916,7 @@ export function strikeOutcome(check, result, value) {
   switch (check) {
     case "knockdown": return outcome(passed ? [] : [{ id: "prone" }]);
     case "unconscious": return outcome(passed ? [] : [{ id: "unconscious" }]);
-    case "shock": return outcome(passed
-      ? [{ id: "stunned", span: rounds(3) }]
-      : [{ id: "prone" }, { id: "incapacitated", span: rounds(1 + 2 * superior) }, { id: "stunned", span: { value: 3, units: "minutes" } }]);
+    case "shock": return outcome(passed ? [{ id: "stunned", span: rounds(3) }] : shockConditions(superior));
     case "stun": return outcome(passed ? [] : critical
       ? [{ id: "incapacitated", span: rounds(1) }, { id: "stunned", span: { value: 1, units: "minutes" } }]
       : [{ id: "stunned", span: rounds(1 + superior) }]);
@@ -928,6 +926,28 @@ export function strikeOutcome(check, result, value) {
     case "confused": return { conditions: [], flee: false, confusion: !passed };
     default: return outcome([]);
   }
+}
+
+/**
+ * What a shock effect does to whom it overcomes (Core p.219): prone, incapacitated for 1 action turn
+ * plus 2 per superior result, and stunned for 3 minutes.
+ * @param {Number} superior - The superior failures of the check, or successes of a sleight
+ * @returns {Object[]} {id, span} per condition
+ */
+export function shockConditions(superior) {
+  return [{ id: "prone" }, { id: "incapacitated", span: { value: 1 + 2 * superior, units: "rounds" } }, { id: "stunned", span: { value: 3, units: "minutes" } }];
+}
+
+/**
+ * The conditions an outcome puts on, as a card names them: each with how long it runs.
+ * @param {Object[]} conditions - {id, span} per condition
+ * @returns {String} e.g. "Prone, Incapacitated (3 action turns)"
+ */
+export function conditionNames(conditions) {
+  return conditions.map(({ id, span }) => {
+    const name = game.i18n.localize(`ep2e.conditions.${id}.name`);
+    return span ? `${name} (${spanText(span)})` : name;
+  }).join(", ");
 }
 
 /**
@@ -969,14 +989,10 @@ export async function settleStrikeCheck(check, result, value, roll = null, { byP
   if (earlier.length) await actor.deleteEmbeddedDocuments("ActiveEffect", earlier.map(effect => effect.id));
   const outcome = strikeOutcome(check.check, result, value);
   for (const { id, span } of outcome.conditions) await inflictCondition(actor, id, { span, flags: { [STRIKE_CHECK_KEY]: check.id } });
-  const names = outcome.conditions.map(({ id, span }) => {
-    const name = game.i18n.localize(`ep2e.conditions.${id}.name`);
-    return span ? `${name} (${spanText(span)})` : name;
-  });
   const headline = outcome.flee
     ? game.i18n.format("ep2e.chat.strike.flee", { name: actor.name })
-    : names.length
-      ? game.i18n.format("ep2e.chat.strike.outcome", { name: actor.name, conditions: names.join(", ") })
+    : outcome.conditions.length
+      ? game.i18n.format("ep2e.chat.strike.outcome", { name: actor.name, conditions: conditionNames(outcome.conditions) })
       : game.i18n.format("ep2e.chat.strike.resisted", { name: actor.name, effect: game.i18n.localize(`ep2e.chat.strike.${check.check}.name`) });
   await postCard(actor, { icon: STRIKE_CHECKS[check.check].icon, iconImg: STRIKE_CHECKS[check.check].img, headline }, {}, whisper);
   return outcome;

@@ -3,7 +3,7 @@ import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
-import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, PSI_CURSOR } from "./psi.js";
+import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, breakContact, PSI_CURSOR } from "./psi.js";
 import { pickTokensOnCanvas, attackerToken, NO_GM_ATTACK, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
 import { relayToActiveGM } from "../common/socket.js";
@@ -651,15 +651,19 @@ export function defenceOutcome(attack, { passed, result, value, behindCover = fa
 }
 
 /**
- * Notes a target's outcome on its defence card.
+ * Notes a target's outcome on its defence card. Once another attack has met it - not one the GM
+ * resolved as not reaching it - a sleight held on it by eye contact is broken (Core p.281).
  * @param {ChatMessage} message - The defence card
  * @param {String} targetUuid - The target
  * @param {String} outcome - "hit", "half" or "none"
  * @param {Object} [options] - lockedOut: the target won with a critical success against psi
  * @returns {Promise<Boolean>} What updateCard reported
  */
-export function markDefenceRolled(message, targetUuid, outcome, { lockedOut = false, cover = false } = {}) {
-  return updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome, lockedOut, cover });
+export async function markDefenceRolled(message, targetUuid, outcome, { lockedOut = false, cover = false } = {}) {
+  const marked = await updateCard(message, "attackDefence", "markOutcome", { targetUuid, outcome, lockedOut, cover });
+  const target = cover === "spared" ? null : await fromUuid(targetUuid);
+  if (target) await breakContact(target, { except: message?.getFlag?.("eclipsephase", "attackDefence")?.attack?.id ?? null });
+  return marked;
 }
 
 /**

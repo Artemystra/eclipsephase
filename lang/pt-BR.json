@@ -907,7 +907,9 @@
       },
       "option": {
         "socialTests": "Testes de perícias sociais contra o alvo",
-        "basiliskHacks": "Resistir a hacks basilisco"
+        "basiliskHacks": "Resistir a hacks basilisco",
+        "lostSense": "Depende de {sense}",
+        "visualCoordination": "Coordenação visual enquanto encara"
       },
       "sustain": {
         "name": "Sustentando: {sleight} ({targets})",
@@ -960,7 +962,31 @@
         },
         "skillChosen": "{sleight} em {target}: {skill}.",
         "effectName": "{sleight}: {skill}",
-        "blocked": "{sleight} bloqueia {skill}: não pode ser usada, nem por padrão."
+        "blocked": "{sleight} bloqueia {skill}: não pode ser usada, nem por padrão.",
+        "loseSense": "{sleight} atingiu {target}. Escolha o sentido perdido.",
+        "loseSenseButton": "Escolher sentido",
+        "senseHeader": "Escolher um sentido",
+        "senseCopy": "Qual sentido o alvo perde?",
+        "senseChosen": "{sleight} em {target}: perde {sense}."
+      },
+      "sleightLabel": "Habilidade",
+      "contactLost": "<strong>{sleight}</strong>: o contato visual com {target} foi perdido",
+      "sense": {
+        "sight": "Visão",
+        "hearing": "Audição",
+        "touch": "Tato",
+        "smell": "Olfato",
+        "taste": "Paladar",
+        "hunger": "Fome",
+        "balance": "Equilíbrio",
+        "direction": "Orientação",
+        "proprioception": "Propriocepção",
+        "facialRecognition": "Reconhecimento facial",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "Raio T",
+        "electricalSense": "Sentido elétrico",
+        "radiationSense": "Sentido de radiação"
       }
     },
     "gmInfo": {
@@ -1172,7 +1198,16 @@
             "blockSkill": "Bloquear perícia",
             "failSkill": "Induzir erro",
             "recharge": "Recarga rápida",
-            "alterDuration": "Alterar duração de substância"
+            "alterDuration": "Alterar duração de substância",
+            "shockEffect": "Efeito de choque",
+            "painEffect": "Efeito de dor",
+            "loseSense": "Tirar um sentido",
+            "eyeContact": "Termina se o alvo for atacado ou movido"
+          },
+          "condition": {
+            "label": "Condição",
+            "tip": "A condição que a habilidade deixa no alvo enquanto dura",
+            "impaired": "Prejudicado (-10 por aplicação)"
           }
         }
       },

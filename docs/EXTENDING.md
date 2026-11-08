@@ -833,6 +833,15 @@ dose's duration). A roll can be forced from `eclipsephase.preRoll` by setting
 
 The built-in rule `boostSkill` asks the async for a physical skill and adds 10 to it while the effect runs, times its potency.
 
+Four more come with 2.9.5: `shockEffect` (instant: prone, incapacitated for 1 action turn plus 2 per
+superior success, stunned for 3 minutes - Short Circuit), `painEffect` (instant: -20 until the end
+of the next turn, -10 with Pain Tolerance I, none with II, and a card that the target flees - Pain),
+`loseSense` (the async chooses a sense on a card: sight makes the effect Blinded, hearing Deafened,
+any other adds a -30 roll option "Relies on ..." - Block Sense) and `eyeContact` (the effect on the
+target carries `breaksContact`: once another attack meets the target or its token moves, the async
+stops sustaining it - Basilisk Stare; `breakContact(actor)` in `module/rolls/psi.js`). A rule with
+`bindsChoice` keeps a choice on its effect as `bindsSkill` does, without being about a skill.
+
 A module adds its own with `registerLandingRule(id, { label, onLand, instant, bindsSkill, onReland, choose })`,
 and it appears in the sheet's list (`listLandingRules()` returns them all). `onLand({ attack, target, async, landing, result })` runs on landing.
 `instant` leaves no timed effect, `bindsSkill` gives the effect a skill to be chosen, and
@@ -860,6 +869,7 @@ defence takes it back. The sleight's fields:
 | `affects` | `"target"` (default), `"async"` (the effect goes to the async, named after the target - Empathic Scan) or `"both"` |
 | `repeatPerSuperior` | Each superior success applies the effect once more |
 | `rollOptions` | Conditional modifiers as a drug authors them; the roll dialog offers them under "Sleights" while the effect runs (`sleightRollOptions` in `module/rolls/modifiers.js`) |
+| `condition` | A condition of Core p.226 the effect on the target carries as its status, with the condition's icon and modifiers (2.9.5); `"impaired"` goes a level deeper, -10 a level, per time the sleight applies (`SLEIGHT_CONDITIONS`) |
 
 Added changes and option values scale: a number is multiplied, a dice formula such as `"1d6"` is
 rolled once at the count (`scaledFormula`), all times four on a critical success (damage only doubles) and

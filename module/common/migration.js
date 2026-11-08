@@ -57,7 +57,8 @@ export const MIGRATION_NOTES = {
       "Your side car shows what every **physical and mental** action costs you right now - one click shows where it comes from.",
       "Blinded fighters **perceive** before they strike, a target on the floor is easier to hit up close, and whoever cannot defend simply gets hit.",
       "Weapons with **Shock, Stun, Knockdown, Blinding, Pain and Entangling** ask their targets for the check, and a wound can knock you **prone** - or out cold.",
-      "**Pain Tolerance** and **Anti-Glare** on your sheets learn here what they protect you from."
+      "**Pain Tolerance** and **Anti-Glare** on your sheets learn here what they protect you from.",
+      "Sleights that stun, blind, impair or freeze put their **conditions** on the target - Basilisk Stare, Short Circuit, Pain, Spam, Block Sense and their kin. The ones on your sheets learn it here."
     ],
     comments: []
   }
@@ -3184,7 +3185,7 @@ export function _ep285_sealEffects(item, catalogue) {
 
 // The sleight compendium whose entries say where a sleight works and what it leaves behind.
 const _ep285_SLEIGHT_PACK = "eclipsephase.psi-sleights";
-const _ep285_SLEIGHT_FIELDS = ["targetRule", "affects", "repeatPerSuperior", "landingRule", "rollOptions", "damage"];
+const _ep285_SLEIGHT_FIELDS = ["targetRule", "affects", "repeatPerSuperior", "landingRule", "condition", "rollOptions", "damage"];
 
 /**
  * The gamma and epsilon sleights of the system compendium, by name: their target rule, who they
@@ -3230,7 +3231,7 @@ export function _ep285_sleightUpdate(item, catalogue) {
         if (value?.mode === "heal" && own?.mode !== "heal") update["system.damage"] = foundry.utils.deepClone(value);
         continue;
       }
-      const unset = own === undefined || own === null || (Array.isArray(own) && !own.length) || (field === "targetRule" && own === "any") || (field === "affects" && own === "target") || (field === "landingRule" && own === "none") || (field === "repeatPerSuperior" && own === false);
+      const unset = own === undefined || own === null || (Array.isArray(own) && !own.length) || (field === "targetRule" && own === "any") || (field === "affects" && own === "target") || (["landingRule", "condition"].includes(field) && own === "none") || (field === "repeatPerSuperior" && own === false);
       if (unset && JSON.stringify(own) !== JSON.stringify(value)) update[`system.${field}`] = foundry.utils.deepClone(value);
     }
     if (!Array.from(item.effects ?? []).length) effects = namesake.effects.map(data => foundry.utils.deepClone(data));
@@ -3332,14 +3333,39 @@ export function _ep295_markerEffects(item) {
 }
 
 /**
- * Gives every Pain Tolerance trait and Anti-Glare ware the effect it is missing.
+ * The blueprint effects of a sleight whose modifier its compendium namesake now leaves as a
+ * condition - Spam's -10 to all actions, now Impaired: effects that change nothing but that.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep285_sleightCatalogue read
+ * @returns {String[]} The ids of the effects to remove
+ */
+export function _ep295_replacedBlueprints(item, catalogue) {
+  if (item.type !== "aspect" || catalogue.get(item.name)?.system?.condition !== "impaired") return [];
+  return Array.from(item.effects ?? []).filter(effect => {
+    const changes = Array.from(effect.system?.changes ?? effect.changes ?? []);
+    return changes.length && changes.every(change => change.key === "system.mods.globalMod");
+  }).map(effect => effect.id ?? effect._id);
+}
+
+/**
+ * Gives every Pain Tolerance trait and Anti-Glare ware the effect it is missing, and every sleight
+ * the condition or special effect its compendium namesake now leaves on its target - in place of
+ * the plain modifier it carried before.
  * @returns {Promise<void>}
  */
 export async function migrationPre295() {
+  const sleights = await _ep285_sleightCatalogue();
   await forEachItem(async item => {
+    if (item.type === "aspect") {
+      const stale = _ep295_replacedBlueprints(item, sleights);
+      if (stale.length) await item.deleteEmbeddedDocuments("ActiveEffect", stale);
+      const result = _ep285_sleightUpdate(item, sleights);
+      if (result?.update) await item.update(result.update);
+      return;
+    }
     const effects = _ep295_markerEffects(item);
     if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
-  }, { label: "Migration 2.9.5", filter: item => item.type === "traits" || item.type === "ware", includeCompendiums: true });
+  }, { label: "Migration 2.9.5", filter: item => ["traits", "ware", "aspect"].includes(item.type), includeCompendiums: true });
   await game.settings.set("eclipsephase", "migrationVersion", "2.9.5");
 }
 

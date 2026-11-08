@@ -26,6 +26,12 @@
             {{selectOptions landingRules selected=landingRule localize=true}}
         </select>
     </label>
+    <label class="ep-field" data-tooltip="{{localize 'ep2e.item.aspect.table.condition.tip'}}">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.condition.label"}}</span>
+        <select name="system.condition" data-type="String">
+            {{selectOptions sleightConditions selected=item.system.condition localize=true}}
+        </select>
+    </label>
 </div>
 <div class="flexrow subheader">
     <h3 class="subheader dialog">{{localize "ep2e.item.aspect.table.damage.label"}}</h3>

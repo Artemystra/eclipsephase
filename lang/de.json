@@ -919,7 +919,9 @@
       },
       "option": {
         "socialTests": "Soziale Fertigkeitstests gegen das Ziel",
-        "basiliskHacks": "Widerstand gegen Basilisk-Hacks"
+        "basiliskHacks": "Widerstand gegen Basilisk-Hacks",
+        "lostSense": "Braucht {sense}",
+        "visualCoordination": "Visuelle Koordination während des Starrens"
       },
       "sustain": {
         "name": "Hält: {sleight} ({targets})",
@@ -972,7 +974,31 @@
         },
         "skillChosen": "{sleight} auf {target}: {skill}.",
         "effectName": "{sleight}: {skill}",
-        "blocked": "{sleight} sperrt {skill}: Die Fertigkeit kann nicht genutzt werden, auch nicht per Default."
+        "blocked": "{sleight} sperrt {skill}: Die Fertigkeit kann nicht genutzt werden, auch nicht per Default.",
+        "loseSense": "{sleight} ist auf {target} gelandet. Wähle den Sinn, der verloren geht.",
+        "loseSenseButton": "Sinn wählen",
+        "senseHeader": "Sinn wählen",
+        "senseCopy": "Welchen Sinn verliert das Ziel?",
+        "senseChosen": "{sleight} auf {target}: {sense} verloren."
+      },
+      "sleightLabel": "Sleight",
+      "contactLost": "<strong>{sleight}</strong>: Der Blickkontakt mit {target} ist abgerissen",
+      "sense": {
+        "sight": "Sehen",
+        "hearing": "Hören",
+        "touch": "Tasten",
+        "smell": "Riechen",
+        "taste": "Schmecken",
+        "hunger": "Hunger",
+        "balance": "Gleichgewicht",
+        "direction": "Orientierung",
+        "proprioception": "Propriozeption",
+        "facialRecognition": "Gesichtserkennung",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "T-Ray",
+        "electricalSense": "Elektrosinn",
+        "radiationSense": "Strahlungssinn"
       }
     },
     "gmInfo": {
@@ -1187,7 +1213,16 @@
             "blockSkill": "Fertigkeit sperren",
             "failSkill": "Fehler auslösen",
             "recharge": "Schnelle Erholung",
-            "alterDuration": "Dauer einer Substanz ändern"
+            "alterDuration": "Dauer einer Substanz ändern",
+            "shockEffect": "Schock-Effekt",
+            "painEffect": "Schmerz-Effekt",
+            "loseSense": "Einen Sinn nehmen",
+            "eyeContact": "Endet, wenn das Ziel angegriffen oder bewegt wird"
+          },
+          "condition": {
+            "label": "Zustand",
+            "tip": "Der Zustand, den der Sleight auf dem Ziel hinterlässt, solange er wirkt",
+            "impaired": "Beeinträchtigt (-10 je Anwendung)"
           }
         }
       },

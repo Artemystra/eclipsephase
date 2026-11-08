@@ -1303,6 +1303,7 @@
       "affects": "target",
       "repeatPerSuperior": false,
       "landingRule": "none",
+      "condition": "none",
       "rollOptions": [],
       "damage": {
         "mode": "",

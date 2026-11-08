@@ -1,6 +1,6 @@
 import { listLandingRules } from "../api/registry.js";
 import { inducedChanges, multiSelectPills, registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText, followingTooltips } from "../common/general-sheet-functions.js";
-import { sleightDamageMode } from "../rolls/psi.js";
+import { sleightDamageMode, SLEIGHT_CONDITIONS } from "../rolls/psi.js";
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
 import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
 import { choosePayload } from "../common/drugs.js";
@@ -138,6 +138,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     if (item.type === "aspect") {
       context.landingRule = item.system.landingRule === "select" ? "none" : item.system.landingRule;
       context.landingRules = { none: "ep2e.item.aspect.table.landingRule.select", ...Object.fromEntries(listLandingRules().map(rule => [rule.id, rule.label])) };
+      context.sleightConditions = { none: "ep2e.item.aspect.table.landingRule.select", ...Object.fromEntries(SLEIGHT_CONDITIONS.map(id => [id, id === "impaired" ? "ep2e.item.aspect.table.condition.impaired" : `ep2e.conditions.${id}.name`])) };
     }
     context.editable = this.isEditable;
 

@@ -906,7 +906,9 @@
       },
       "option": {
         "socialTests": "对目标的社交技能检定",
-        "basiliskHacks": "抵抗蛇怪骇入"
+        "basiliskHacks": "抵抗蛇怪骇入",
+        "lostSense": "依赖{sense}",
+        "visualCoordination": "凝视时的视觉协调"
       },
       "sustain": {
         "name": "维持：{sleight}（{targets}）",
@@ -959,7 +961,31 @@
         },
         "skillChosen": "{sleight} 作用于 {target}：{skill}。",
         "effectName": "{sleight}：{skill}",
-        "blocked": "{sleight} 封锁了 {skill}：无法使用，也不能以默认值进行。"
+        "blocked": "{sleight} 封锁了 {skill}：无法使用，也不能以默认值进行。",
+        "loseSense": "{sleight}命中了{target}。选择被剥夺的感官。",
+        "loseSenseButton": "选择感官",
+        "senseHeader": "选择一种感官",
+        "senseCopy": "目标失去哪种感官？",
+        "senseChosen": "{sleight}作用于{target}：失去{sense}。"
+      },
+      "sleightLabel": "异能",
+      "contactLost": "<strong>{sleight}</strong>：与{target}的目光接触中断",
+      "sense": {
+        "sight": "视觉",
+        "hearing": "听觉",
+        "touch": "触觉",
+        "smell": "嗅觉",
+        "taste": "味觉",
+        "hunger": "饥饿感",
+        "balance": "平衡",
+        "direction": "方向感",
+        "proprioception": "本体感觉",
+        "facialRecognition": "面部识别",
+        "radar": "雷达",
+        "lidar": "激光雷达",
+        "tRay": "T射线",
+        "electricalSense": "电感",
+        "radiationSense": "辐射感"
       }
     },
     "gmInfo": {
@@ -1171,7 +1197,16 @@
             "blockSkill": "封锁技能",
             "failSkill": "诱发失误",
             "recharge": "快速恢复",
-            "alterDuration": "改变物质持续时间"
+            "alterDuration": "改变物质持续时间",
+            "shockEffect": "电击效果",
+            "painEffect": "痛苦效果",
+            "loseSense": "剥夺一种感官",
+            "eyeContact": "目标被攻击或移动时结束"
+          },
+          "condition": {
+            "label": "状态",
+            "tip": "异能持续期间在目标身上留下的状态",
+            "impaired": "受损（每次生效 -10）"
           }
         }
       },

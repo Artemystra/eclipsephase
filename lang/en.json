@@ -931,7 +931,9 @@
       },
       "option": {
         "socialTests": "Social skill tests against them",
-        "basiliskHacks": "Resisting basilisk hacks"
+        "basiliskHacks": "Resisting basilisk hacks",
+        "lostSense": "Relies on {sense}",
+        "visualCoordination": "Visual coordination while staring"
       },
       "sustain": {
         "name": "Sustaining: {sleight} ({targets})",
@@ -984,7 +986,31 @@
         },
         "skillChosen": "{sleight} on {target}: {skill}.",
         "effectName": "{sleight}: {skill}",
-        "blocked": "{sleight} blocks {skill}: it cannot be used, not even by defaulting."
+        "blocked": "{sleight} blocks {skill}: it cannot be used, not even by defaulting.",
+        "loseSense": "{sleight} landed on {target}. Choose the sense it takes.",
+        "loseSenseButton": "Choose Sense",
+        "senseHeader": "Choose a Sense",
+        "senseCopy": "Which sense does the target lose?",
+        "senseChosen": "{sleight} on {target}: {sense} lost."
+      },
+      "sleightLabel": "Sleight",
+      "contactLost": "<strong>{sleight}</strong>: eye contact with {target} is lost",
+      "sense": {
+        "sight": "Sight",
+        "hearing": "Hearing",
+        "touch": "Touch",
+        "smell": "Smell",
+        "taste": "Taste",
+        "hunger": "Hunger",
+        "balance": "Balance",
+        "direction": "Direction",
+        "proprioception": "Proprioception",
+        "facialRecognition": "Facial recognition",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "T-ray",
+        "electricalSense": "Electrical sense",
+        "radiationSense": "Radiation sense"
       }
     },
     "gmInfo": {
@@ -1200,7 +1226,16 @@
             "blockSkill": "Block a skill",
             "failSkill": "Induce an error",
             "recharge": "Quick recharge",
-            "alterDuration": "Alter a substance's duration"
+            "alterDuration": "Alter a substance's duration",
+            "shockEffect": "Shock effect",
+            "painEffect": "Pain effect",
+            "loseSense": "Take a sense",
+            "eyeContact": "Ends when the target is attacked or moved"
+          },
+          "condition": {
+            "label": "Condition",
+            "tip": "The condition the sleight leaves on its target while it lasts",
+            "impaired": "Impaired (-10 per time it applies)"
           }
         }
       },
