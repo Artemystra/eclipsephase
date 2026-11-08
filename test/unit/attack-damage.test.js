@@ -2451,9 +2451,9 @@ describe("conditions in an attack", () => {
 
     expect(attacks).toHaveLength(0);
     expect(blind.content).toContain("ep2e.chat.blindAttack.missed");
-    expect(blind.content).toContain("&quot;roll&quot;:&quot;07&quot;");
+    expect(blind.content).toContain("<strong>07</strong>");
     expect(createdMessages.slice(before).some(message => message.getFlag?.("eclipsephase", "attackDefence"))).toBe(false);
-    expect(perceiveCards(before)[0].content).not.toContain("blindAccept");
+    expect(perceiveCards(before)[0].content).not.toContain("acceptResult");
   });
 
   test("while a pool point could still turn the Perceive result, the attack waits for it to be accepted - as a spent point left it", async () => {
@@ -2466,14 +2466,14 @@ describe("conditions in an attack", () => {
     await new Promise(resolve => setTimeout(resolve, 20));
 
     expect(done).toBe(false);
-    expect(card.content).toContain("blindAccept");
+    expect(card.content).toContain("acceptResult");
     await card.update({ "flags.eclipsephase.roll.alternatives.spent": true, "flags.eclipsephase.roll.alternatives.result": rollCalc(7, 50) });
     expect(await acceptBlindPerceive(card)).toBe(true);
     const [struck] = await attack;
     expect(struck).toBeDefined();
     expect(blindCards(before)).toHaveLength(0);
     expect(card.getFlag("eclipsephase", "taskCard").accepted).toBe(true);
-    expect(card.content).not.toContain("blindAccept");
+    expect(card.content).not.toContain("acceptResult");
     expect(await acceptBlindPerceive(card)).toBeNull();
   });
 
@@ -2517,7 +2517,7 @@ describe("conditions in an attack", () => {
     const later = createdMessages.length;
     seedDialogs(PERCEIVE_DIALOG);
     expect(await stab([under("Bo")], [70, 100, 30], {}, ["blinded"])).toHaveLength(0);
-    expect(blindCards(later)[0].content).toContain("&quot;roll&quot;:&quot;00&quot;");
+    expect(blindCards(later)[0].content).toContain("<strong>00</strong>");
   });
 
   test("calling off the Perceive dialog calls off the attack", async () => {

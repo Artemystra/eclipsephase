@@ -2224,7 +2224,7 @@
         "headline": "Blinder Angriff mit {weapon}",
         "missed": "{name} ist geblendet. Der Angriff geht glatt daneben.",
         "through": "{name} ist geblendet. Der Angriff geht trotzdem los.",
-        "note": "Gewürfelt: {roll} · 00–49 geht daneben",
+        "rollTitle": "Blindwurf",
         "accept": "Ergebnis annehmen",
         "gone": "Auf diesen Wurf wartet kein Angriff mehr. Würfle den Angriff neu."
       },
@@ -2250,7 +2250,7 @@
         "attackSuperiors": "Überragende Erfolge des Angriffs",
         "painTolerance": "Pain Tolerance I",
         "knockdown": {
-          "name": "Knockdown",
+          "name": "Niederschlag",
           "rule": "Wundmodifikatoren gelten. Misserfolg: Liegend."
         },
         "unconscious": {
@@ -2258,25 +2258,38 @@
           "rule": "Zwei oder mehr Wunden auf einmal werfen dich zu Boden. Wundmodifikatoren gelten. Misserfolg: bewusstlos, bis geweckt oder geheilt."
         },
         "shock": {
-          "name": "Shock",
+          "name": "Schock",
           "rule": "Energierüstung zählt als Bonus; Größe im Dialog als Modifikator eintragen (sehr klein -30, klein -10, groß +10, sehr groß +30). Misserfolg: Liegend, Handlungsunfähig für 1 Aktionszug (+2 pro überragendem Misserfolg) und Betäubt für 3 Minuten. Erfolg: Betäubt für 3 Aktionszüge."
         },
         "stun": {
-          "name": "Stun",
+          "name": "Betäubung",
           "rule": "Kinetische Rüstung zählt als Bonus; Größe im Dialog als Modifikator eintragen (klein -30, groß +30). Misserfolg: Betäubt für 1 Aktionszug, +1 pro überragendem Misserfolg. Kritischer Misserfolg: Handlungsunfähig für 1 Aktionszug und Betäubt für 1 Minute."
         },
         "blinding": {
-          "name": "Blinding",
+          "name": "Blendung",
           "rule": "Misserfolg: Geblendet für 1 Aktionszug, +1 pro überragendem Misserfolg. Kritischer Misserfolg: blind, bis repariert oder im Heiltank geheilt."
         },
         "entangling": {
-          "name": "Entangling",
+          "name": "Fesselung",
           "rule": "Jeder überragende Erfolg des Angriffs: -10 auf diese Probe und auf SOM-Proben, um sich zu befreien. Misserfolg: Gepackt."
         },
         "pain": {
-          "name": "Pain",
+          "name": "Schmerz",
           "rule": "-20 bis zum Ende des nächsten Zugs in jedem Fall (Pain Tolerance I: +30 auf die Probe und -10). Misserfolg: mit der nächsten vollen Aktion fliehen."
+        },
+        "confused": {
+          "name": "Verwirrung",
+          "rule": "-30 auf die Probe. Erfolg: handelt normal. Misserfolg: der W100 entscheidet - 00-24 murmelt nur Unverständliches, 25-49 handelt zufällig nach Wahl der SL, 50-74 flieht in eine zufällige Richtung, 75-99 greift ein zufälliges Ziel in der Nähe an, auch Verbündete, mit dem, was gerade in der Hand ist. Verteidigung mit Fray wie gewohnt."
         }
+      },
+      "confusion": {
+        "headline": "Verwirrt: <strong>{name}</strong>",
+        "mutter": "{name} murmelt nur Unverständliches und tut sonst nichts.",
+        "random": "{name} handelt zufällig - die SL entscheidet, wie.",
+        "flee": "{name} flieht in eine zufällige Richtung.",
+        "attack": "{name} greift mit dem, was gerade in der Hand ist, ein zufälliges Ziel in der Nähe an - auch Verbündete.",
+        "rollTitle": "Verwirrungswurf",
+        "clear": "<strong>{name}</strong> durchschaut die Verwirrung und handelt normal"
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",

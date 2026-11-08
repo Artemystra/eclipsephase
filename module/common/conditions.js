@@ -26,7 +26,7 @@ export const CONDITIONS = [
   { id: "impaired30", img: `${ICONS}/impaired-30.svg`, group: "impaired", changes: { [GLOBAL_MOD_KEY]: -30 } },
   { id: "incapacitated", img: "icons/svg/paralysis.svg" },
   { id: "prone", img: "icons/svg/falling.svg", note: true },
-  { id: "stunned", img: `${ICONS}/stunned.svg`, changes: { [PHYSICAL_MOD_KEY]: -30, [MENTAL_MOD_KEY]: -10 } },
+  { id: "stunned", img: "icons/svg/lightning.svg", changes: { [PHYSICAL_MOD_KEY]: -30, [MENTAL_MOD_KEY]: -10 } },
   { id: "unconscious", img: "icons/svg/unconscious.svg" },
   { id: "dead", img: "icons/svg/skull.svg" },
   { id: "invisible", img: "icons/svg/invisible.svg" }

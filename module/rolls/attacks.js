@@ -17,7 +17,7 @@ import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRan
 // dose (doses.js) or damage (damage.js).
 
 export const DEFENCE_TEMPLATE = "systems/eclipsephase/templates/chat/targeted-defence.html";
-export const BLIND_ATTACK_TEMPLATE = "systems/eclipsephase/templates/chat/blind-attack.html";
+export const TABLE_ROLL_TEMPLATE = "systems/eclipsephase/templates/chat/table-roll.html";
 const EFFECTS = new Map();
 // Blinded attacks waiting on their Perceive card's result being accepted, by the roll's id.
 const WAITING_PERCEIVE = new Map();
@@ -502,17 +502,38 @@ export async function acceptBlindPerceive(message) {
  * @param {Object} [visibility] - recipientList and blind, as the attack card's
  * @returns {Promise<Boolean>} True when the attack misses
  */
-export async function rollBlindAttack(actor, weaponName, { recipientList = [], blind = false } = {}) {
+export async function rollBlindAttack(actor, weaponName, visibility = {}) {
+  const value = await rollOnTable(actor, roll => ({
+    icon: "fa-eye-slash",
+    rollTitle: "ep2e.chat.blindAttack.rollTitle",
+    headline: game.i18n.format("ep2e.chat.blindAttack.headline", { weapon: weaponName }),
+    outcome: game.i18n.format(roll < 50 ? "ep2e.chat.blindAttack.missed" : "ep2e.chat.blindAttack.through", { name: actor.name })
+  }), visibility);
+  return value < 50;
+}
+
+/**
+ * Rolls a d100 on a table of the rules - 00 to 99, a 100 counting as 00 - and posts what it decides
+ * with the dice beneath, as a roll card shows them.
+ * @param {Actor} actor - Who the roll is for
+ * @param {Function} describe - describe(value) returning the card: icon or iconImg, rollTitle,
+ *   headline and outcome
+ * @param {Object} [visibility] - recipientList (user ids, empty for public) and blind
+ * @returns {Promise<Number>} The d100, 00-99
+ */
+export async function rollOnTable(actor, describe, { recipientList = [], blind = false } = {}) {
   const roll = await new Roll("1d100").evaluate();
   const value = roll.total % 100;
-  const missed = value < 50;
-  const card = {
-    headline: game.i18n.format("ep2e.chat.blindAttack.headline", { weapon: weaponName }),
-    outcome: game.i18n.format(missed ? "ep2e.chat.blindAttack.missed" : "ep2e.chat.blindAttack.through", { name: actor.name }),
-    note: game.i18n.format("ep2e.chat.blindAttack.note", { roll: String(value).padStart(2, "0") })
-  };
-  await rollToChat(null, card, BLIND_ATTACK_TEMPLATE, roll, actor.name, recipientList, blind);
-  return missed;
+  const shown = await rollToChat({ preventPrintToChat: true }, describe(value), TABLE_ROLL_TEMPLATE, roll, actor.name, recipientList, blind, "rollOutput");
+  shown.total = String(value).padStart(2, "0");
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ alias: actor.name }),
+    content: await foundry.applications.handlebars.renderTemplate(TABLE_ROLL_TEMPLATE, shown),
+    whisper: recipientList?.length ? recipientList : null,
+    blind,
+    sound: shown.sound
+  });
+  return value;
 }
 
 /**

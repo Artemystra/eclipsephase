@@ -2189,7 +2189,7 @@
         "headline": "盲目攻击：{weapon}",
         "missed": "{name}目盲。攻击直接落空。",
         "through": "{name}目盲。攻击照常进行。",
-        "note": "掷出 {roll} · 00–49 落空",
+        "rollTitle": "盲目掷骰",
         "accept": "接受结果",
         "gone": "已没有攻击在等待此检定。请重新进行攻击。"
       },
@@ -2241,7 +2241,20 @@
         "pain": {
           "name": "痛苦",
           "rule": "无论如何直到下一回合结束时 -20（Pain Tolerance I：检定 +30，且仅 -10）。失败：在下一个完整行动中逃离。"
+        },
+        "confused": {
+          "name": "困惑",
+          "rule": "检定 -30。成功：正常行动。失败：由 d100 决定——00-24 只会语无伦次地喃喃自语，25-49 由 GM 决定随机行动，50-74 向随机方向逃跑，75-99 用手中的武器或物品攻击附近一个随机目标（甚至盟友）。照常用 Fray 防御。"
         }
+      },
+      "confusion": {
+        "headline": "困惑：<strong>{name}</strong>",
+        "mutter": "{name}只是语无伦次地喃喃自语，什么也不做。",
+        "random": "{name}随机行动——由 GM 决定如何行动。",
+        "flee": "{name}向随机方向逃跑。",
+        "attack": "{name}用手中的东西攻击附近一个随机目标——甚至是盟友。",
+        "rollTitle": "困惑掷骰",
+        "clear": "<strong>{name}</strong>看穿了困惑，正常行动"
       },
       "defence": {
         "headline": "防御 {weapon}",

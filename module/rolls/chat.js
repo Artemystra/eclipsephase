@@ -3,7 +3,7 @@ import { moreInfo, registerCommonHandlers } from "../common/general-sheet-functi
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
-import { requestStrikeCheck, rollRemainingStrikes, resolveRemainingStrikes } from "./damage.js";
+import { requestStrikeCheck, rollRemainingStrikes, resolveRemainingStrikes, acceptStrikeCheck } from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
 import { setupFromCard } from "./modifiers.js";
@@ -133,10 +133,11 @@ export async function addChatListeners(html) {
       return;
     }
 
-    const blindAccept = event.target.closest("button.blindAccept");
-    if (blindAccept) {
-      const message = game.messages.get(blindAccept.closest("[data-message-id]")?.dataset.messageId);
-      if (message) acceptBlindPerceive(message);
+    const acceptResult = event.target.closest("button.acceptResult");
+    if (acceptResult) {
+      const message = game.messages.get(acceptResult.closest("[data-message-id]")?.dataset.messageId);
+      if (message?.getFlag("eclipsephase", "roll")?.blindPerceive) acceptBlindPerceive(message);
+      else if (message) acceptStrikeCheck(message);
       return;
     }
 

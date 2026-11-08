@@ -2,11 +2,11 @@ import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelaye
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, postCard } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit, superiorResults } from "./dice.js";
 import { targetKinds } from "../common/morp-functions.js";
-import { inflictCondition, conditionEntry, activeConditions } from "../common/conditions.js";
+import { inflictCondition, conditionEntry, activeConditions, isUnder } from "../common/conditions.js";
 import { postCheckCard, requestCardCheck, settleOnRoll, modifiersOnRoll, registerCheckCard } from "./cards.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
-import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast, postDefenceCards } from "./attacks.js";
+import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, gmWhisper, clearBlast, postDefenceCards, rollOnTable } from "./attacks.js";
 import { MELEE_CURSOR } from "../common/targeting.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
 import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
@@ -720,17 +720,22 @@ export function registerWeaponAttackSocket() {
 
 export const STRIKE_CHECK_KEY = "strikeCheck";
 
-// The aptitude each check is rolled on, its card's icon - a Foundry image where it has one - and the
-// armour that adds to it.
+// The aptitude each check is rolled on, its card's icon - a Foundry image where it has one - the
+// armour that adds to it and a modifier of its own.
 export const STRIKE_CHECKS = {
   knockdown: { aptitude: "som", icon: "fa-person-falling" },
   unconscious: { aptitude: "som", icon: "fa-bed", img: "icons/svg/unconscious.svg" },
-  shock: { aptitude: "som", icon: "fa-bolt", armor: "energy" },
-  stun: { aptitude: "som", icon: "fa-burst", armor: "kinetic" },
+  shock: { aptitude: "som", icon: "fa-bolt", img: "icons/svg/lightning.svg", armor: "energy" },
+  stun: { aptitude: "som", icon: "fa-burst", img: "icons/svg/lightning.svg", armor: "kinetic" },
   blinding: { aptitude: "ref", icon: "fa-eye-slash" },
   entangling: { aptitude: "ref", icon: "fa-spider", img: "systems/eclipsephase/resources/icons/conditions/grappled.svg" },
-  pain: { aptitude: "wil", icon: "fa-face-grimace" }
+  pain: { aptitude: "wil", icon: "fa-face-grimace" },
+  confused: { aptitude: "cog", icon: "fa-question", img: "icons/svg/daze.svg", modifier: -30 }
 };
+
+// What a confused character does who fails the COG Check, by the d100 (Core p.226): 00-24, 25-49,
+// 50-74 and 75-99.
+export const CONFUSION_TABLE = ["mutter", "random", "flee", "attack"];
 
 // What Pain Tolerance I adds to the check against pain (Core p.216).
 export const PAIN_TOLERANCE_BONUS = 30;
@@ -843,7 +848,8 @@ export function postStrikeCheck(actor, check, { weaponName = "", superiors = 0 }
 export function requestStrikeCheck(messageId, checkId = null, systemOptions = {}) {
   const prepare = ({ check, id, weaponName, superiors }, actor) => ({
     aptitude: STRIKE_CHECKS[check].aptitude,
-    check: { actorUuid: actor.uuid, check, id, weaponName, superiors }
+    check: { actorUuid: actor.uuid, check, id, weaponName, superiors },
+    ...(check === "confused" ? { flags: { acceptResult: true } } : {})
   });
   if (checkId) return requestCardCheck(messageId, "damageCard", prepare, systemOptions, { entryId: checkId, flag: STRIKE_CHECK_KEY });
   return requestCardCheck(messageId, STRIKE_CHECK_KEY, prepare, systemOptions);
@@ -899,7 +905,7 @@ export function resolveRemainingStrikes(message) {
  * @param {String} check - The check's key
  * @param {Number} result - The result tier
  * @param {Number} value - The die
- * @returns {Object} conditions ({id, span} each) and flee
+ * @returns {Object} conditions ({id, span} each), flee, and for confusion whether the table decides
  */
 export function strikeOutcome(check, result, value) {
   const passed = isHit(result);
@@ -919,6 +925,7 @@ export function strikeOutcome(check, result, value) {
     case "blinding": return outcome(passed ? [] : [{ id: "blinded", ...(critical ? {} : { span: rounds(1 + superior) }) }]);
     case "entangling": return outcome(passed ? [] : [{ id: "grappled" }]);
     case "pain": return { conditions: [], flee: !passed };
+    case "confused": return { conditions: [], flee: false, confusion: !passed };
     default: return outcome([]);
   }
 }
@@ -937,16 +944,27 @@ export function spanText(span) {
 /**
  * Settles a hit's check: what an earlier result of it put on goes, what this one brings is put on,
  * and a card says what that is, seen as the check's roll was. A pool point spent on the check
- * settles it again.
+ * settles it again. A confused character's check settles once: on the roll, or - while a pool point
+ * could still turn it - once its result is accepted; a failure has the table decide what they do.
  * @param {Object} check - The strikeCheck the roll carried
  * @param {Number} result - The result tier as it now stands
  * @param {Number} value - The die as it now stands
  * @param {ChatMessage} [roll] - The check's roll card
- * @returns {Promise<Object|null>} The outcome, or null when the target is gone
+ * @param {Object} [options] - byPool: settled again by a pool point; accepted: its result accepted
+ * @returns {Promise<Object|null>} The outcome, or null when the target is gone or it waits
  */
-export async function settleStrikeCheck(check, result, value, roll = null) {
+export async function settleStrikeCheck(check, result, value, roll = null, { byPool = false, accepted = false } = {}) {
   const actor = await fromUuid(check.actorUuid);
   if (!actor) return null;
+  const whisper = roll ? roll.whisper ?? [] : null;
+  if (check.check === "confused") {
+    const waits = byPool || roll?.getFlag?.("eclipsephase", "taskCard")?.data?.alternatives?.options?.available === true;
+    if (waits && !accepted) return null;
+    const outcome = strikeOutcome(check.check, result, value);
+    if (!outcome.confusion) await postCard(actor, { icon: STRIKE_CHECKS.confused.icon, iconImg: STRIKE_CHECKS.confused.img, headline: game.i18n.format("ep2e.chat.confusion.clear", { name: actor.name }) }, {}, whisper);
+    else await rollConfusion(actor, { whisper, blind: roll?.blind === true });
+    return outcome;
+  }
   const earlier = Array.from(actor.effects ?? []).filter(effect => effect.getFlag?.("eclipsephase", STRIKE_CHECK_KEY) === check.id);
   if (earlier.length) await actor.deleteEmbeddedDocuments("ActiveEffect", earlier.map(effect => effect.id));
   const outcome = strikeOutcome(check.check, result, value);
@@ -960,13 +978,66 @@ export async function settleStrikeCheck(check, result, value, roll = null) {
     : names.length
       ? game.i18n.format("ep2e.chat.strike.outcome", { name: actor.name, conditions: names.join(", ") })
       : game.i18n.format("ep2e.chat.strike.resisted", { name: actor.name, effect: game.i18n.localize(`ep2e.chat.strike.${check.check}.name`) });
-  await postCard(actor, { icon: STRIKE_CHECKS[check.check].icon, iconImg: STRIKE_CHECKS[check.check].img, headline }, {}, roll ? roll.whisper ?? [] : null);
+  await postCard(actor, { icon: STRIKE_CHECKS[check.check].icon, iconImg: STRIKE_CHECKS[check.check].img, headline }, {}, whisper);
   return outcome;
 }
 
 /**
+ * Accepts a confused character's check as it stands - after a pool point, if one was spent - and
+ * settles it: the table decides on a failure.
+ * @param {ChatMessage} message - The check's roll card
+ * @returns {Promise<Object|null>} The outcome, or null when there is nothing to accept
+ */
+export async function acceptStrikeCheck(message) {
+  const roll = message?.getFlag?.("eclipsephase", "roll");
+  if (!roll?.strikeCheck || message.getFlag("eclipsephase", "taskCard")?.accepted) return null;
+  await updateCard(message, "taskCard", "accepted");
+  const value = Number(message.getFlag("eclipsephase", "taskCard")?.data?.rollResult) || 0;
+  return settleStrikeCheck(roll.strikeCheck, spentOrOriginalResult(roll), value, message, { accepted: true });
+}
+
+/**
+ * What a confused character does by the d100 (Core p.226).
+ * @param {Number} value - The d100, 00-99
+ * @returns {String} A key of CONFUSION_TABLE
+ */
+export function confusionResult(value) {
+  return CONFUSION_TABLE[Math.min(3, Math.floor((Number(value) || 0) / 25))];
+}
+
+/**
+ * Rolls the d100 that decides what a confused character who failed the COG Check does, and posts it
+ * on a card of its own, seen as the check was.
+ * @param {Actor} actor - The confused character
+ * @param {Object} [visibility] - whisper (user ids, empty for public) and blind
+ * @returns {Promise<String>} What they do, a key of CONFUSION_TABLE
+ */
+export async function rollConfusion(actor, { whisper = [], blind = false } = {}) {
+  const value = await rollOnTable(actor, roll => ({
+    icon: STRIKE_CHECKS.confused.icon,
+    iconImg: STRIKE_CHECKS.confused.img,
+    rollTitle: "ep2e.chat.confusion.rollTitle",
+    headline: game.i18n.format("ep2e.chat.confusion.headline", { name: actor.name }),
+    outcome: game.i18n.format(`ep2e.chat.confusion.${confusionResult(roll)}`, { name: actor.name })
+  }), { recipientList: whisper ?? [], blind });
+  return confusionResult(value);
+}
+
+/**
+ * Asks a confused character for the COG Check at the start of each of their turns in a combat. Done
+ * by the active GM; the card reaches the character's owners.
+ * @param {Combat} combat - The combat whose turn changed
+ * @returns {Promise<ChatMessage|null>} The card, or null when the one now acting is not confused
+ */
+export function confusionOnTurn(combat) {
+  const actor = combat?.combatant?.actor;
+  if (!game.user.isActiveGM || !actor || !isUnder(actor, "confused")) return null;
+  return postStrikeCheck(actor, "confused");
+}
+
+/**
  * The modifiers a hit's check brings: the armour that adds to it, the attack's superior successes
- * against entangling and Pain Tolerance I against pain.
+ * against entangling, Pain Tolerance I against pain and the check's own, such as confusion's -30.
  * @param {Object} check - The strikeCheck the roll carried
  * @returns {Object[]} text and value each
  */
@@ -978,6 +1049,8 @@ export function strikeModifiers(check) {
   if (worn) found.push({ text: game.i18n.localize(`ep2e.chat.strike.armor.${armor}`), value: worn });
   if (check.check === "entangling" && check.superiors) found.push({ text: game.i18n.localize("ep2e.chat.strike.attackSuperiors"), value: -10 * check.superiors });
   if (check.check === "pain" && Number(actor?.system?.additionalSystems?.painTolerance) === 1) found.push({ text: game.i18n.localize("ep2e.chat.strike.painTolerance"), value: PAIN_TOLERANCE_BONUS });
+  const own = STRIKE_CHECKS[check.check]?.modifier;
+  if (own) found.push({ text: game.i18n.localize(`ep2e.chat.strike.${check.check}.name`), value: own });
   return found;
 }
 
@@ -989,7 +1062,8 @@ export function strikeModifiers(check) {
 export function registerStrikeChecks() {
   registerCheckCard(STRIKE_CHECK_KEY);
   modifiersOnRoll(STRIKE_CHECK_KEY, strikeModifiers);
-  settleOnRoll(STRIKE_CHECK_KEY, (check, passed, { result, value, message }) => settleStrikeCheck(check, result, value, message));
+  settleOnRoll(STRIKE_CHECK_KEY, (check, passed, { result, value, message, byPool }) => settleStrikeCheck(check, result, value, message, { byPool }));
+  Hooks.on("combatTurnChange", combat => confusionOnTurn(combat));
   Hooks.on("preUpdateActor", (actor, changes) => {
     if (foundry.utils.getProperty(foundry.utils.expandObject(changes), "system.physical.wounds") !== undefined) WOUNDS_BEFORE.set(actor.uuid, Number(actor.system?.physical?.wounds) || 0);
   });

@@ -164,9 +164,9 @@
   
   {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass}}
 
-  {{#if (and rollContext.blindPerceive (or (eq alternatives.options.available true) poolSpent))}}{{#unless accepted}}
+  {{#if (and (or rollContext.blindPerceive rollContext.acceptResult) (or (eq alternatives.options.available true) poolSpent))}}{{#unless accepted}}
    <div class="chatControls ep-chat-stack">
-     <button type="button" class="chatButton blindAccept ownerOnlyControl ep-chat-primary" data-action="blindAccept" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.blindAttack.accept"}}</button>
+     <button type="button" class="chatButton acceptResult ownerOnlyControl ep-chat-primary" data-action="acceptResult" data-actor-uuid="{{actor.uuid}}">{{localize "ep2e.chat.blindAttack.accept"}}</button>
    </div>
   {{/unless}}{{/if}}
 

@@ -1,4 +1,4 @@
-import { strikeOutcome, strikeOf, strikeChecks, settleStrikeCheck, strikeModifiers, requestStrikeCheck, strikeButtons, rollRemainingStrikes, resolveRemainingStrikes, applyDamage, applyAttackDamage, detectWeaponAttack, registerStrikeChecks, registerWeaponAttacks, spanText, STRIKE_CHECK_KEY, PAIN_TOLERANCE_BONUS } from "../../module/rolls/damage.js";
+import { confusionResult, confusionOnTurn, acceptStrikeCheck, strikeOutcome, strikeOf, strikeChecks, settleStrikeCheck, strikeModifiers, requestStrikeCheck, strikeButtons, rollRemainingStrikes, resolveRemainingStrikes, applyDamage, applyAttackDamage, detectWeaponAttack, registerStrikeChecks, registerWeaponAttacks, spanText, STRIKE_CHECK_KEY, PAIN_TOLERANCE_BONUS } from "../../module/rolls/damage.js";
 import { registerTargetedAttackHooks, yieldDefence } from "../../module/rolls/attacks.js";
 import { weaponPreparation } from "../../module/common/weapon-functions.js";
 import { strikeTraits, traitSubSetConstructor } from "../../module/common/weapon-functions.js";
@@ -365,6 +365,89 @@ describe("weapons whose hit asks for checks", () => {
     expect(state.checks.map(entry => entry.check)).toEqual(["shock"]);
     expect(damage().content).toContain("rollStrikeCheck");
     expect(damage().content).not.toContain("attackDamage");
+  });
+});
+
+describe("a confused character's turn", () => {
+  afterEach(() => { game.user.isActiveGM = undefined; });
+
+  /**
+   * A combat whose turn has come to the given actor.
+   * @param {Actor} actor - The one acting
+   * @returns {Object} The combat
+   */
+  const turnOf = actor => ({ combatant: { actor } });
+
+  test("the d100 decides: 00-24 mutter, 25-49 act at random, 50-74 flee, 75-99 attack", () => {
+    expect([0, 24, 25, 49, 50, 74, 75, 99].map(confusionResult)).toEqual(["mutter", "mutter", "random", "random", "flee", "flee", "attack", "attack"]);
+  });
+
+  test("at the start of their turn the active GM asks them for the COG Check at -30; nobody else, and nobody who is not confused", async () => {
+    const ana = target();
+    ana.statuses = new Set(["confused"]);
+    const before = createdMessages.length;
+    expect(await confusionOnTurn(turnOf(ana))).toBeNull();
+    game.user.isActiveGM = true;
+    expect(await confusionOnTurn(turnOf(target()))).toBeNull();
+    Hooks.callAll("combatTurnChange", turnOf(ana));
+    await until(() => asked(before).length);
+
+    expect(asked(before)).toEqual(["confused"]);
+    expect(createdMessages.at(-1).content).toContain("icons/svg/daze.svg");
+    expect(strikeModifiers({ actorUuid: ana.uuid, check: "confused" }).map(entry => entry.value)).toEqual([-30]);
+  });
+
+  /**
+   * A confused character's check roll card, as the roll leaves it.
+   * @param {Actor} actor - The confused character
+   * @param {Number} value - The die
+   * @param {Boolean} available - Whether a pool point could still turn it
+   * @returns {Promise<ChatMessage>} The card
+   */
+  const checkCard = (actor, value, available) => ChatMessage.create({ content: "", whisper: ["gm"], flags: { eclipsephase: {
+    roll: { strikeCheck: { actorUuid: actor.uuid, check: "confused", id: "c1" }, alternatives: { originalResult: rollCalc(value, 10) } },
+    taskCard: { data: { rollResult: value, alternatives: { options: { available } } }, targets: [] }
+  } } });
+
+  test("a failed check with no pool to spend has the table decide at once, with the dice shown as a roll card shows them and seen as the check was", async () => {
+    const ana = target();
+    const card = await checkCard(ana, 80, false);
+    seedRolls([60]);
+    await settleStrikeCheck({ actorUuid: ana.uuid, check: "confused", id: "c1" }, rollCalc(80, 10), 80, card);
+    const table = createdMessages.at(-1);
+
+    expect(table.content).toContain("ep2e.chat.confusion.flee");
+    expect(table.content).toContain("<strong>60</strong>");
+    expect(table.content).toContain("ep2e.chat.confusion.rollTitle");
+    expect(table.content).not.toContain("&lt;strong&gt;");
+    expect(table.whisper).toEqual(["gm"]);
+    expect(conditionsOn(ana)).toEqual([]);
+  });
+
+  test("the table card sets its headline as markup, so a name in bold is bold", async () => {
+    const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/table-roll.html", { icon: "fa-question", headline: "Confused: <strong>Ana</strong>", outcome: "x", total: "07", rollTitle: "t", diceBreakdown: { hundreds: {} } });
+
+    expect(html).toContain("Confused: <strong>Ana</strong>");
+  });
+
+  test("while a pool point could still turn it, nothing is rolled until the result is accepted - a pass then lets them act as normal, a failure has the table decide, once", async () => {
+    const ana = target();
+    const card = await checkCard(ana, 80, true);
+    const check = card.getFlag("eclipsephase", "roll").strikeCheck;
+    const before = createdMessages.length;
+    await settleStrikeCheck(check, rollCalc(80, 10), 80, card);
+    await settleStrikeCheck(check, rollCalc(5, 10), 5, card, { byPool: true });
+    expect(createdMessages.length).toBe(before);
+
+    await card.update({ "flags.eclipsephase.roll.alternatives.spent": true, "flags.eclipsephase.roll.alternatives.result": rollCalc(5, 10) });
+    await acceptStrikeCheck(card);
+    expect(createdMessages.at(-1).content).toContain("ep2e.chat.confusion.clear");
+    expect(await acceptStrikeCheck(card)).toBeNull();
+
+    const failed = await checkCard(ana, 80, true);
+    seedRolls([10]);
+    await acceptStrikeCheck(failed);
+    expect(createdMessages.at(-1).content).toContain("ep2e.chat.confusion.mutter");
   });
 });
 

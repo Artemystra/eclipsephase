@@ -2196,7 +2196,7 @@
         "headline": "Ataque às cegas com {weapon}",
         "missed": "{name} está cego. O ataque erra direto.",
         "through": "{name} está cego. O ataque segue adiante.",
-        "note": "Rolagem: {roll} · 00–49 erra",
+        "rollTitle": "Rolagem às cegas",
         "accept": "Aceitar resultado",
         "gone": "Nenhum ataque aguarda mais esta rolagem. Role o ataque de novo."
       },
@@ -2248,7 +2248,20 @@
         "pain": {
           "name": "Dor",
           "rule": "-20 até o fim do próximo turno em qualquer caso (Pain Tolerance I: +30 no teste e -10). Falha: fugir com a próxima ação completa."
+        },
+        "confused": {
+          "name": "Confusão",
+          "rule": "-30 no teste. Sucesso: age normalmente. Falha: o d100 decide - 00-24 apenas murmura coisas incoerentes, 25-49 age aleatoriamente conforme o mestre decidir, 50-74 foge numa direção aleatória, 75-99 ataca um alvo próximo aleatório, mesmo um aliado, com o que tiver em mãos. Defende-se com Fray normalmente."
         }
+      },
+      "confusion": {
+        "headline": "Confuso: <strong>{name}</strong>",
+        "mutter": "{name} não faz nada além de murmurar coisas incoerentes.",
+        "random": "{name} age aleatoriamente - o mestre decide como.",
+        "flee": "{name} foge numa direção aleatória.",
+        "attack": "{name} ataca um alvo próximo aleatório - mesmo um aliado - com o que tiver em mãos.",
+        "rollTitle": "Rolagem de confusão",
+        "clear": "<strong>{name}</strong> supera a confusão e age normalmente"
       },
       "defence": {
         "headline": "Defender-se de {weapon}",

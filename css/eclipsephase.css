@@ -4496,6 +4496,11 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   margin-top: 0;
 }
 
+/* A table card's dice, set off from what they decided. */
+.ep-defence-card .ep-table-roll-dice {
+  margin-top: 10px;
+}
+
 /* Where a target stands in a blast, below its choices. */
 .ep-defence-card .ep-defence-note {
   margin: 0;

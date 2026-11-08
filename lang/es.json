@@ -2182,7 +2182,7 @@
         "headline": "Ataque a ciegas con {weapon}",
         "missed": "{name} está cegado. El ataque falla sin más.",
         "through": "{name} está cegado. El ataque sigue adelante.",
-        "note": "Tirada: {roll} · 00–49 falla",
+        "rollTitle": "Tirada a ciegas",
         "accept": "Aceptar resultado",
         "gone": "Ningún ataque espera ya esta tirada. Vuelve a tirar el ataque."
       },
@@ -2234,7 +2234,20 @@
         "pain": {
           "name": "Dolor",
           "rule": "-20 hasta el final del siguiente turno en cualquier caso (Pain Tolerance I: +30 al chequeo y -10). Fallo: huir con la siguiente acción completa."
+        },
+        "confused": {
+          "name": "Confusión",
+          "rule": "-30 al chequeo. Éxito: actúa con normalidad. Fallo: decide el d100 - 00-24 solo murmura incoherencias, 25-49 actúa al azar según decida el DJ, 50-74 huye en una dirección aleatoria, 75-99 ataca a un objetivo cercano al azar, incluso a un aliado, con lo que tenga en la mano. Se defiende con Fray como siempre."
         }
+      },
+      "confusion": {
+        "headline": "Confundido: <strong>{name}</strong>",
+        "mutter": "{name} no hace nada salvo murmurar incoherencias.",
+        "random": "{name} actúa al azar: el DJ decide cómo.",
+        "flee": "{name} huye en una dirección aleatoria.",
+        "attack": "{name} ataca a un objetivo cercano al azar, incluso a un aliado, con lo que tenga en la mano.",
+        "rollTitle": "Tirada de confusión",
+        "clear": "<strong>{name}</strong> supera la confusión y actúa con normalidad"
       },
       "defence": {
         "headline": "Defenderse de {weapon}",

@@ -750,7 +750,9 @@ up - by damage, the sheet or typed in - unless the update passes `{ eclipsephase
 wound's. The check's roll carries `strikeCheck: { actorUuid, check, id, weaponName, superiors }`,
 counts as a check no condition blocks, and its result puts the conditions on, again when a pool point
 turns it. Pain Tolerance and Anti-Glare are read from `system.additionalSystems.painTolerance` (1 or
-2) and `antiGlare`, which their items' effects set.
+2) and `antiGlare`, which their items' effects set. A Confused character is asked at the start of
+each of their turns in a combat for a COG Check at -30, the same kind of check card (`check:
+"confused"`); a failure has a d100 decide what they do (Core p.226), posted as the check was seen.
 
 `api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
 the target: a failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"`

@@ -307,8 +307,8 @@ export function markCardRolled(message, key) {
  * applied once it lands - and again if a pool spend turns it.
  * @param {String} messageId - The card
  * @param {String} key - The flag the card keeps its request under, and the roll its check
- * @param {Function} prepare - prepare(request, actor) returning { aptitude, check } - the aptitude
- *   to roll and what the roll carries - or null to roll nothing
+ * @param {Function} prepare - prepare(request, actor) returning { aptitude, check, flags } - the
+ *   aptitude to roll, what the roll carries and any further flags for it - or null to roll nothing
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @param {Object} [entry] - entryId: one of the checks a card lists under checks, marked rolled by
  *   the card's checkRolled change; flag: what the roll carries the check under, if not key
@@ -329,7 +329,7 @@ export async function requestCardCheck(messageId, key, prepare, systemOptions = 
   if (!roll) return null;
   if (entryId) await updateCard(message, key, "checkRolled", { id: entryId });
   else await markCardRolled(message, key);
-  return rollAptitudeCheck(actor, roll.aptitude, { [flag]: roll.check }, systemOptions);
+  return rollAptitudeCheck(actor, roll.aptitude, { [flag]: roll.check, ...(roll.flags ?? {}) }, systemOptions);
 }
 
 /**

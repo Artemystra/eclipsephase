@@ -2252,7 +2252,7 @@
         "headline": "Blind attack with the {weapon}",
         "missed": "{name} is blinded. The attack misses outright.",
         "through": "{name} is blinded. The attack goes ahead.",
-        "note": "Rolled {roll} · 00–49 misses",
+        "rollTitle": "Blind roll",
         "accept": "Accept Result",
         "gone": "No attack waits on this roll any more. Roll the attack again."
       },
@@ -2304,7 +2304,20 @@
         "pain": {
           "name": "Pain",
           "rule": "-20 until the end of the next turn either way (Pain Tolerance I: +30 to the check and -10). Failure: flee with the next full action."
+        },
+        "confused": {
+          "name": "Confusion",
+          "rule": "-30 to the check. Success: act as normal. Failure: the d100 decides - 00-24 mutter incoherently, 25-49 act randomly as the GM decides, 50-74 flee in a random direction, 75-99 attack a random nearby target, even an ally, with whatever is in hand. Defend with Fray as normal."
         }
+      },
+      "confusion": {
+        "headline": "Confused: <strong>{name}</strong>",
+        "mutter": "{name} does nothing but mutter incoherently.",
+        "random": "{name} acts at random - the GM decides how.",
+        "flee": "{name} flees in a random direction.",
+        "attack": "{name} attacks a random nearby target - even an ally - with whatever is in hand.",
+        "rollTitle": "Confusion roll",
+        "clear": "<strong>{name}</strong> sees through the confusion and acts as normal"
       },
       "defence": {
         "headline": "Defend against the {weapon}",
