@@ -4,11 +4,11 @@ import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/
 import { strainSubstrate } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText, rollBlockReason } from "../api/registry.js";
-import { rollBlockContext, conditionSkillModifiers } from "../common/conditions.js";
+import { rollBlockContext, conditionSkillModifiers, isUnder, targetsUnder } from "../common/conditions.js";
 import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers, rollScope, scopeModKey } from "./modifiers.js";
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
 import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
-import { attackPicking, chosenTargets } from "./attacks.js";
+import { attackPicking, chosenTargets, blindAttacker, rollBlindPerceive, rollBlindAttack } from "./attacks.js";
 import { ATTACK_MODES, firingAttackModes, weaponRange, rangeBand, spendGrenade } from "../common/weapon-functions.js";
 
 /*
@@ -232,7 +232,7 @@ async function defineRoll(dataset, actorWhole, rolledFrom){
     let sleight = {}
     let template
     let templateSize = {width: 276}
-    let title = dataset.dialogTitle ?? game.i18n.localize('ep2e.roll.dialog.title.check')
+    let title = dataset.dialogTitle ?? (dataset.name ? game.i18n.format('ep2e.roll.dialog.title.named', { name: game.i18n.localize(dataset.name) }) : game.i18n.localize('ep2e.roll.dialog.title.check'))
 
     switch (type) {
         case 'fray':
@@ -760,6 +760,17 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             options.preTargets = chosen[repitition - 1] ?? false
         }
 
+        // A blinded attacker first perceives the target with another sense; failing that, a straight
+        // 50% misses outright - the shot is still fired.
+        if (blindAttacker(actorWhole, rolledFrom, weaponSelected, options)) {
+            const perceived = await rollBlindPerceive(actorWhole)
+            if (perceived === null) return
+            if (!perceived && await rollBlindAttack(actorWhole, weaponSelected?.weaponName ?? dataset.name, rollVisibility(options, dataset))) {
+                if (rolledFrom === "rangedWeapon" && await checkAmmo(actorWhole, weaponSelected, options.attackMode) === "cancel") return
+                continue
+            }
+        }
+
         // While jamming, the pool choice comes from the jam-aware dropdowns and "own body" spends from the backup flag
         let activePoolChoice = isJammingRoll
             ? (options.jammingRollTarget === "own" ? options.jammingUsePoolOwn : options.jammingUsePoolRemote)
@@ -828,14 +839,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         else if(roll.type === "muse" && !actorModel.muse.name)
             actingPerson = game.i18n.localize("ep2e.muse.museOf") + " " + actorWhole.name
 
-        let blind = options.rollMode === "blind" ? true : false
-
-        let recipientList = prepareRecipients(options.rollMode)
-
-        if (dataset.visibility) {
-            blind = dataset.visibility.blind === true
-            recipientList = [...(dataset.visibility.whisper ?? [])]
-        }
+        const { blind, recipientList } = rollVisibility(options, dataset)
 
         if(rolledFrom === "rangedWeapon")
         proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)
@@ -858,6 +862,17 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     }
 
     return rollResult;
+}
+
+/**
+ * Who sees a roll's card: as the dialog's roll mode says, unless the caller set its visibility.
+ * @param {Object} options - The dialog's values
+ * @param {Object} dataset - The roll's dataset
+ * @returns {Object} blind and recipientList (user ids, empty for public)
+ */
+function rollVisibility(options, dataset) {
+    if (dataset.visibility) return { blind: dataset.visibility.blind === true, recipientList: [...(dataset.visibility.whisper ?? [])] }
+    return { blind: options.rollMode === "blind", recipientList: prepareRecipients(options.rollMode) }
 }
 
 /**
@@ -904,7 +919,8 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     doseOptions,
     wareOptions,
     sleightOptions,
-    rollContext
+    rollContext,
+    sightBlind: isUnder(actorWhole, "blinded")
 });
 
 function extractFormValues(form) {
@@ -1039,7 +1055,7 @@ const SUPPRESSIVE_FIELDS = new Set(["attackMode", "range", "vacuum", "biomorphTa
 /**
  * Greys out the attack dialog's modifiers while suppressive fire is chosen, as its roll ignores them,
  * and aiming on anything but a single shot (Core p.205).
- * Fields the dialog shows disabled anyway stay so.
+ * Fields the dialog shows disabled anyway stay so, and a locked one stays greyed.
  * @param {HTMLElement} root - The dialog's element
  * @returns {void}
  */
@@ -1051,7 +1067,7 @@ export function wireSuppressiveFields(root) {
         const suppressive = mode.value === "suppressive"
         for (const field of fields) {
             field.disabled = suppressive
-            field.closest(".form-group")?.classList.toggle("ep-field-suppressed", suppressive)
+            field.closest(".form-group")?.classList.toggle("ep-field-suppressed", suppressive || field.classList.contains("ep-locked-select"))
         }
         const aim = mode.form.elements.aim
         if (aim) {
@@ -1229,6 +1245,9 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.superiorPosition";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
+    // A standing attacker has superior position against a prone target in melee (Core p.226).
+    if (rolledFrom === "ccWeapon" && targetsUnder(options, "prone"))
+        task.addModifier(new TaskRollModifier("ep2e.roll.announce.combat.melee.proneTarget", 20))
     if (options.inMelee) {
         if (weaponTraits.automatedEffects.long){
             modValue = -30
@@ -1278,24 +1297,26 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
     const rangeFrom = task.modifiers.length
+    // Shooting at a prone target counts as the dialog's prone defender, when every target picked lies.
+    const prone = options.prone || (rolledFrom === "rangedWeapon" && targetsUnder(options, "prone"))
     const measured = (rolledFrom === "rangedWeapon" || rolledFrom === "grenade") && !weaponTraits?.automatedEffects?.steady?.value ? measuredDistances(options) : []
     if (measured.length) {
         const farthest = Math.max(...measured)
         const band = rangeBand(farthest, weaponRange(weaponSelected), weaponTraits?.automatedEffects)
         if (band.modifier) task.addModifier(new TaskRollModifier(game.i18n.format("ep2e.roll.announce.combat.ranged.measured", { band: game.i18n.localize(`ep2e.targeting.band.${band.band}`), distance: Math.round(farthest) }), band.modifier))
-        if (options.prone && farthest >= 10) task.addModifier(new TaskRollModifier("ep2e.roll.announce.combat.ranged.proneAtRange", -10))
+        if (prone && farthest >= 10) task.addModifier(new TaskRollModifier("ep2e.roll.announce.combat.ranged.proneAtRange", -10))
     }
-    else if (options.range === "range" && options.prone) {
+    else if (options.range === "range" && prone) {
         modValue = -20
         announce = "ep2e.roll.announce.combat.ranged.rangeProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "beyond" && options.prone) {
+    else if (options.range === "beyond" && prone) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.beyondProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "beyond+" && options.prone) {
+    else if (options.range === "beyond+" && prone) {
         modValue = -40
         announce = "ep2e.roll.announce.combat.ranged.beyondPlusProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
@@ -1315,7 +1336,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.beyondPlus";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "pointBlank" || options.range === "pointBlank" && options.prone){
+    else if (options.range === "pointBlank" || options.range === "pointBlank" && prone){
         if (!weaponTraits?.automatedEffects?.long){
             modValue = 10
             announce = "ep2e.roll.announce.combat.ranged.pointBlank";
@@ -1351,7 +1372,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.visImpMaj";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.visualImpairment === "blind") {
+    // A Blinded attacker's -30 comes with the condition already; blindness from the scene is chosen here.
+    else if (options.visualImpairment === "blind" && !isUnder(actorWhole, "blinded")) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.blind";
         task.addModifier(new TaskRollModifier(announce, modValue))

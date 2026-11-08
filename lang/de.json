@@ -1619,7 +1619,8 @@
           "damageRoll": "Schadenswurf",
           "swap": "Ergebnis Drehen",
           "raise": "Ergebnis Verbessern",
-          "check": "Würfelwurf"
+          "check": "Würfelwurf",
+          "named": "Wurf auf {name}"
         },
         "button": {
           "roll": "Würfeln",
@@ -1959,6 +1960,7 @@
             "agressiveCharge": "Rücksichtsloser Angriff",
             "agressiveChargeAddition": "(+1d10SW & Ausweichen -10)",
             "multipleTargets": "Mehrere Ziele",
+            "proneTarget": "Ziel liegt (erhabene Position)",
             "touchOnly": "Berührungsangriff"
           },
           "ranged": {
@@ -2217,6 +2219,14 @@
         "smokeArea": "Rauch ({name})",
         "gasNote": "Die Gaswolke liegt 3 Aktionszüge: Wer darin steht, hineinläuft oder seinen Zug darin beginnt, atmet die Dosis ein.",
         "smokeNote": "Der Rauch liegt 3 Minuten und verbirgt, was darin oder dahinter ist (-20)."
+      },
+      "blindAttack": {
+        "headline": "Blinder Angriff mit {weapon}",
+        "missed": "{name} ist geblendet. Der Angriff geht glatt daneben.",
+        "through": "{name} ist geblendet. Der Angriff geht trotzdem los.",
+        "note": "Gewürfelt: {roll} · 00–49 geht daneben",
+        "accept": "Ergebnis annehmen",
+        "gone": "Auf diesen Wurf wartet kein Angriff mehr. Würfle den Angriff neu."
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
@@ -2608,7 +2618,7 @@
       "noteText": "{name}: {note}",
       "notApplied": "{name} (Nicht aktiv)",
       "notes": {
-        "blinded": "Ein Angriff auf ein Ziel, das du nicht wahrnimmst, verfehlt glatt zu 50 %",
+        "blinded": "Vor jedem Angriff ein Perceive-Wurf; misslingt er, verfehlt der Angriff glatt zu 50 %",
         "deafened": "−3 Initiative und −30 Perceive",
         "grappled": "Fray −30 gegen Angriffe von außerhalb",
         "prone": "Gegner im Nahkampf +20, Schützen ab Range −10"

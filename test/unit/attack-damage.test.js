@@ -8,10 +8,13 @@ import { MELEE_CURSOR, wirePreRollTargets, areaSquares, squareShapes, shapeConta
 import { weaponPreparation, grenadePreparation, blastReach, weaponRange, formulaMax, munitionArea, timerSpan, munitionDose, loadedPayloadName, payloadInfo, cloudColor, payloadCloudKind, CLOUD_COLORS, attackTargetCount, coneDamage, ANY_TARGETS, firingAttackModes } from "../../module/common/weapon-functions.js";
 import { weaponDamage } from "../../module/rolls/damage.js";
 import { attackPicking } from "../../module/rolls/attacks.js";
-import { RollCheck, wireSuppressiveFields } from "../../module/rolls/dice.js";
-import { makeActor, makeItem, resetWorld, seedRolls, loadPackItem, setSetting } from "../setup/factories.js";
+import { RollCheck, wireSuppressiveFields, rollCalc } from "../../module/rolls/dice.js";
+import { makeActor, makeItem, resetWorld, seedRolls, seedDialogs, loadPackItem, setSetting } from "../setup/factories.js";
 import { activeDoseFor } from "../../module/common/doses.js";
 import { sealedAgainst } from "../../module/common/morp-functions.js";
+import { registerConditions } from "../../module/common/conditions.js";
+import { yieldHelpless, helplessReason, blindAttacker, acceptBlindPerceive, rollBlindPerceive } from "../../module/rolls/attacks.js";
+import { resetRegistry } from "../../module/api/registry.js";
 
 const { createdMessages } = global.__ep;
 const SINGLE_SHOT = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, attackMode: "single" } };
@@ -942,6 +945,22 @@ describe("suppressive fire (Core p.207)", () => {
     expect(only.closest(".form-group").classList.contains("ep-field-suppressed")).toBe(true);
     expect(several.options).toHaveLength(4);
     expect(several.classList.contains("ep-locked-select")).toBe(false);
+  });
+
+  test("the attack dialog asks for the distance among the defender's modifiers - for a blast in its own section - and splits the attacker's evenly", async () => {
+    const render = async (weapon, rolledFrom = "rangedWeapon") => {
+      const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/gun-test-dialog.html", { attackModes: [], rollContext: { weapon }, traits: { automatedEffects: {} }, rolledFrom });
+      return new JSDOM(html).window.document;
+    };
+    const gun = await render({});
+    const grenade = await render({ blast: { kind: "uniform" } }, "grenade");
+    const columns = gun.querySelectorAll(".dialogWrapperCenter .grid-2col > div");
+
+    expect(gun.querySelectorAll('[name="range"]')).toHaveLength(1);
+    expect(gun.querySelector('.dialogWrapperRight [name="range"]')).not.toBeNull();
+    expect(grenade.querySelectorAll('[name="range"]')).toHaveLength(1);
+    expect(grenade.querySelector('.dialogWrapperRight [name="range"]')).not.toBeNull();
+    expect(columns[0].querySelectorAll(".form-group")).toHaveLength(columns[1].querySelectorAll(".form-group").length);
   });
 
   test("the attack dialog offers the modes a weapon's firing mode allows", () => {
@@ -2336,5 +2355,268 @@ describe("masks and sealed suits", () => {
     expect(["inhalation", "dermal", "injection", "oral", null].map(vector => sealedAgainst(actor, vector))).toEqual([true, false, false, false, false]);
     actor.system.additionalSystems.skinSealed = true;
     expect(sealedAgainst(actor, "dermal")).toBe(true);
+  });
+});
+
+describe("conditions in an attack", () => {
+  let realRandom;
+  let realGM;
+  beforeEach(() => {
+    resetRegistry();
+    global.CONFIG.statusEffects = [];
+    global.CONFIG.specialStatusEffects = {};
+    registerConditions();
+    realRandom = CONFIG.Dice.randomUniform;
+    realGM = game.users.activeGM;
+  });
+  afterEach(() => {
+    CONFIG.Dice.randomUniform = realRandom;
+    game.users.activeGM = realGM;
+    delete global.CONFIG.statusEffects;
+    delete global.CONFIG.specialStatusEffects;
+  });
+
+  /**
+   * An armoured NPC under the given conditions.
+   * @param {String} name - Its name
+   * @param {String[]} statuses - The condition ids
+   * @returns {Actor} The target
+   */
+  function under(name, ...statuses) {
+    const target = armoured(name);
+    target.statuses = new Set(statuses);
+    return target;
+  }
+
+  /**
+   * A knife attack at the given targets, picked in the dialog, the d100s showing the given values.
+   * @param {Actor[]} targets - The targets
+   * @param {Number[]} dice - One d100 per attack
+   * @param {Object} [options] - Further dialog values
+   * @param {String[]} [statuses] - The attacker's conditions
+   * @param {Object} [pools] - The attacker's pools
+   * @returns {Promise<Object[]>} The attack cards
+   */
+  async function stab(targets, dice, options = {}, statuses = [], pools = null) {
+    const actor = armed("Knife_PmMMe4WzKsEXpsAo.json");
+    actor.statuses = new Set(statuses);
+    if (pools) actor.system.pools = pools;
+    actor.system.skillsIns = { perceive: { roll: 50, specname: "" } };
+    const weapon = await weaponPreparation(actor, "melee", "ccWeapon", "gun1");
+    const before = createdMessages.length;
+    seedRolls(dice);
+    await RollCheck({ type: "skill", key: "melee", name: "melee", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, attackMode: "none", numberOfTargets: String(targets.length), preTargets: targets.map(target => target.uuid).join(","), ...options } }, weapon, "ccWeapon");
+    return createdMessages.slice(before).filter(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack);
+  }
+
+  test("a prone target in melee gives the attacker superior position, a standing one does not", async () => {
+    const [onFloor, standing] = await stab([under("Ana", "prone"), under("Bo")], [30, 40]);
+
+    expect(onFloor.content).toContain("ep2e.roll.announce.combat.melee.proneTarget");
+    expect(standing.content).not.toContain("ep2e.roll.announce.combat.melee.proneTarget");
+  });
+
+  /**
+   * The blind attack cards posted since the given count.
+   * @param {Number} before - The messages there were before
+   * @returns {Object[]} The cards
+   */
+  const blindCards = before => createdMessages.slice(before).filter(message => message.content?.includes("ep2e.chat.blindAttack.headline"));
+
+  const PERCEIVE_DIALOG = { rollMode: "public", usePool: "", globalMod: 0 };
+
+  /**
+   * The Perceive cards of a blinded attacker posted since the given count.
+   * @param {Number} before - The messages there were before
+   * @returns {Object[]} The cards
+   */
+  const perceiveCards = before => createdMessages.slice(before).filter(message => message.getFlag?.("eclipsephase", "roll")?.blindPerceive);
+
+  test("a Blinded attacker who perceives the target attacks at once, without the 50% roll", async () => {
+    const before = createdMessages.length;
+    seedDialogs(PERCEIVE_DIALOG);
+    const [card] = await stab([under("Ana")], [30, 30], {}, ["blinded"]);
+    await until(() => card.getFlag("eclipsephase", "roll").targetedAttack.delivered);
+
+    expect(perceiveCards(before)).toHaveLength(1);
+    expect(blindCards(before)).toHaveLength(0);
+  });
+
+  test("a Blinded attacker who fails to perceive rolls the 50%: on 00-49 the attack misses outright and no attack is rolled", async () => {
+    const before = createdMessages.length;
+    seedDialogs(PERCEIVE_DIALOG);
+    const attacks = await stab([under("Ana")], [70, 7, 30], {}, ["blinded"]);
+    const [blind] = blindCards(before);
+
+    expect(attacks).toHaveLength(0);
+    expect(blind.content).toContain("ep2e.chat.blindAttack.missed");
+    expect(blind.content).toContain("&quot;roll&quot;:&quot;07&quot;");
+    expect(createdMessages.slice(before).some(message => message.getFlag?.("eclipsephase", "attackDefence"))).toBe(false);
+    expect(perceiveCards(before)[0].content).not.toContain("blindAccept");
+  });
+
+  test("while a pool point could still turn the Perceive result, the attack waits for it to be accepted - as a spent point left it", async () => {
+    const before = createdMessages.length;
+    seedDialogs(PERCEIVE_DIALOG);
+    let done = false;
+    const attack = stab([under("Ana")], [70, 30, 30], {}, ["blinded"], { insight: { value: 2 }, vigor: { value: 0 }, moxie: { value: 0 }, flex: { value: 0 } }).then(cards => { done = true; return cards; });
+    await until(() => perceiveCards(before).length);
+    const [card] = perceiveCards(before);
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(done).toBe(false);
+    expect(card.content).toContain("blindAccept");
+    await card.update({ "flags.eclipsephase.roll.alternatives.spent": true, "flags.eclipsephase.roll.alternatives.result": rollCalc(7, 50) });
+    expect(await acceptBlindPerceive(card)).toBe(true);
+    const [struck] = await attack;
+    expect(struck).toBeDefined();
+    expect(blindCards(before)).toHaveLength(0);
+    expect(card.getFlag("eclipsephase", "taskCard").accepted).toBe(true);
+    expect(card.content).not.toContain("blindAccept");
+    expect(await acceptBlindPerceive(card)).toBeNull();
+  });
+
+  test("accepting a Perceive card no attack waits on any more says so", async () => {
+    seedDialogs(PERCEIVE_DIALOG);
+    const before = createdMessages.length;
+    stab([under("Ana")], [70, 30, 30], {}, ["blinded"], { insight: { value: 2 }, vigor: { value: 0 }, moxie: { value: 0 }, flex: { value: 0 } });
+    await until(() => perceiveCards(before).length);
+    const [card] = perceiveCards(before);
+    await card.update({ "flags.eclipsephase.roll.blindPerceive.id": "gone" });
+
+    expect(await acceptBlindPerceive(card)).toBeNull();
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.chat.blindAttack.gone");
+  });
+
+  test("a roll dialog is titled after the skill rolled", async () => {
+    const titles = [];
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    actor.statuses = new Set(["blinded"]);
+    actor.system.skillsIns = { perceive: { roll: 50, specname: "" } };
+    const wait = foundry.applications.api.DialogV2.wait;
+    foundry.applications.api.DialogV2.wait = async config => { titles.push(config.window?.title); return { cancelled: true }; };
+    try {
+      await rollBlindPerceive(actor);
+    }
+    finally {
+      foundry.applications.api.DialogV2.wait = wait;
+    }
+
+    expect(titles[0]).toContain("ep2e.roll.dialog.title.named");
+    expect(titles[0]).toContain("ep2e.skills.insightSkills.perceive");
+  });
+
+  test("a failed Perceive and a 50% roll of 50 or more lets the attack go on, and a roll of 100 counts as 00", async () => {
+    const before = createdMessages.length;
+    seedDialogs(PERCEIVE_DIALOG);
+    const [card] = await stab([under("Ana")], [70, 50, 30], {}, ["blinded"]);
+    await until(() => card.getFlag("eclipsephase", "roll").targetedAttack.delivered);
+
+    expect(blindCards(before)[0].content).toContain("ep2e.chat.blindAttack.through");
+    const later = createdMessages.length;
+    seedDialogs(PERCEIVE_DIALOG);
+    expect(await stab([under("Bo")], [70, 100, 30], {}, ["blinded"])).toHaveLength(0);
+    expect(blindCards(later)[0].content).toContain("&quot;roll&quot;:&quot;00&quot;");
+  });
+
+  test("calling off the Perceive dialog calls off the attack", async () => {
+    const before = createdMessages.length;
+    seedDialogs({ cancelled: true });
+    expect(await stab([under("Ana")], [30, 30], {}, ["blinded"])).toHaveLength(0);
+    expect(blindCards(before)).toHaveLength(0);
+  });
+
+  test("a blind shot that misses outright still spends its round", async () => {
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    actor.statuses = new Set(["blinded"]);
+    actor.system.skillsIns = { perceive: { roll: 50, specname: "" } };
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+    const before = createdMessages.length;
+    seedDialogs(PERCEIVE_DIALOG);
+    seedRolls([70, 7, 30]);
+    await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, preTargets: under("Ana").uuid } }, weapon, "rangedWeapon");
+    await until(() => actor.items.get("gun1").system.ammoMin === 9);
+
+    expect(createdMessages.slice(before).some(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack)).toBe(false);
+    expect(actor.items.get("gun1").system.ammoMin).toBe(9);
+  });
+
+  test("only a Blinded attacker's strike or shot at a target is made blind: not a blast, not suppressive fire", () => {
+    const blind = under("Ana", "blinded");
+    expect(blindAttacker(blind, "ccWeapon", null)).toBe(true);
+    expect(blindAttacker(blind, "rangedWeapon", {}, { attackMode: "single" })).toBe(true);
+    expect(blindAttacker(blind, "rangedWeapon", {}, { attackMode: "suppressive" })).toBe(false);
+    expect(blindAttacker(blind, "rangedWeapon", { blast: { kind: "uniform" } })).toBe(false);
+    expect(blindAttacker(blind, "skill", null)).toBe(false);
+    expect(blindAttacker(under("Bo"), "ccWeapon", null)).toBe(false);
+  });
+
+  test("a Blinded attacker's dialog sets the sight to blind and locks it", async () => {
+    const render = async sightBlind => {
+      const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/gun-test-dialog.html", { attackModes: [], rollContext: { weapon: {} }, traits: {}, sightBlind });
+      const document = new JSDOM(`<form>${html}</form>`).window.document;
+      wireSuppressiveFields(document.body);
+      return document.querySelector('select[name="visualImpairment"]');
+    };
+    const locked = await render(true);
+    const free = await render(false);
+
+    expect(locked.value).toBe("blind");
+    expect(locked.classList.contains("ep-locked-select")).toBe(true);
+    expect(locked.closest(".form-group").classList.contains("ep-field-suppressed")).toBe(true);
+    expect(free.value).toBe("none");
+    expect(free.classList.contains("ep-locked-select")).toBe(false);
+  });
+
+  test("an Incapacitated target cannot defend: its card says why, and the active GM lets the attack land", async () => {
+    const ana = under("Ana", "incapacitated");
+    const [card] = await stab([ana], [30]);
+    await until(() => card.getFlag("eclipsephase", "roll").targetedAttack.delivered);
+    const defence = createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence")).at(-1);
+    const entry = () => defence.getFlag("eclipsephase", "attackDefence").entries[0];
+
+    expect(entry().helpless).toContain("ep2e.conditions.incapacitated.name");
+    expect(defence.content).toContain("ep2e.conditions.incapacitated.name");
+    game.users.activeGM = { id: "gm", isSelf: false };
+    await yieldHelpless(defence);
+    expect(entry().outcome).toBeNull();
+    game.users.activeGM = { id: "gm", isSelf: true };
+    await yieldHelpless(defence);
+    expect(entry().outcome).toBe("hit");
+  });
+
+  test("shooting at Range at targets who all lie counts as at a prone defender; one standing among them does not", async () => {
+    const shoot = async targets => {
+      const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+      const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+      seedRolls([30]);
+      await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, range: "range", preTargets: targets.map(target => target.uuid).join(",") } }, weapon, "rangedWeapon");
+      return createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack).at(-1);
+    };
+    const lying = await shoot([under("Ana", "prone")]);
+    const mixed = await shoot([under("Bo", "prone"), under("Cy")]);
+
+    expect(lying.content).toContain("ep2e.roll.announce.combat.ranged.rangeProne");
+    expect(mixed.content).not.toContain("ep2e.roll.announce.combat.ranged.rangeProne");
+  });
+
+  test("a Blinded attacker who also picks blindness in the dialog takes its -30 once", async () => {
+    const actor = armed("Medium_Pistol_yWrFfONiXTuWWPpz.json");
+    actor.statuses = new Set(["blinded"]);
+    actor.system.skillsIns = { perceive: { roll: 50, specname: "" } };
+    const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+    seedDialogs(PERCEIVE_DIALOG);
+    seedRolls([30, 30]);
+    await RollCheck({ type: "skill", key: "guns", name: "guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { ...SINGLE_SHOT.presetOptions, visualImpairment: "blind" } }, weapon, "rangedWeapon");
+    const card = createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack).at(-1);
+
+    expect(card.content).not.toContain("ep2e.roll.announce.combat.ranged.blind");
+  });
+
+  test("who can roll some defence is not helpless: Dazed defends, Immobilized resists psi but not a weapon", () => {
+    expect(helplessReason(under("Ana", "dazed"), { defence: "melee" })).toBeNull();
+    expect(helplessReason(under("Bo", "immobilized"), { defence: "melee" })).toContain("ep2e.conditions.immobilized.name");
+    expect(helplessReason(under("Cy", "immobilized"), { defence: "will", strainFamily: "psi" })).toBeNull();
+    expect(helplessReason(under("Di"), { defence: "ranged" })).toBeNull();
   });
 });

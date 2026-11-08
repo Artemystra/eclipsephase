@@ -32,6 +32,7 @@ registerCard("taskCard", {
     blastTargets: (state, { targets, scatter = null }) => ({ ...state, blastLaid: true, scatter: scatter ?? state.scatter ?? null, targets: targets.map(target => ({ ...target, outcome: null })) }),
     armed: (state, { armed, scatter = null }) => ({ ...state, armed, scatter }),
     defused: state => ({ ...state, defused: true }),
+    accepted: state => ({ ...state, accepted: true, data: { ...state.data, alternatives: { ...(state.data.alternatives ?? {}), options: { swap: false, upgrade: false, mitigate: false } } } }),
     targetDamageOffered: (state, { uuid }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, damageOffered: true } : target) })
   }
 });
@@ -70,6 +71,7 @@ export function taskCardView(state) {
   if (shown.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: shown.map(targetWithOutcome(state)).join(", ") });
   view.defended = (state.targets ?? []).some(target => target.outcome) || !!state.scatter;
   view.blastLaid = state.blastLaid === true;
+  view.accepted = state.accepted === true;
   view.lying = !!state.armed && !view.blastLaid && !state.defused;
   if (view.lying) view.armedNote = armedNote(state.armed);
   if (state.defused) view.armedNote = game.i18n.localize("ep2e.chat.attack.defusedNote");
@@ -181,8 +183,8 @@ function attackSettled(state, attack, cards) {
 }
 
 /**
- * The failures the GM can still put on a task card: none once one was put on it, none once an attack
- * can no longer be taken back, and none that would not make the result worse.
+ * The failures the GM can still put on a task card: none once one was put on it or its result was
+ * accepted, none once an attack can no longer be taken back, and none that would not make the result worse.
  * @param {ChatMessage} message - The card
  * @returns {Object[]} The entries on offer
  */
@@ -190,7 +192,7 @@ export function cardFailures(message) {
   const state = message?.getFlag?.("eclipsephase", "taskCard");
   const roll = message?.getFlag?.("eclipsephase", "roll");
   if (!state || !roll?.actorUuid) return [];
-  if (state.data?.rollContext?.failureNote || attackSettled(state, roll.targetedAttack, defenceCardsOf(message))) return [];
+  if (state.accepted || state.data?.rollContext?.failureNote || attackSettled(state, roll.targetedAttack, defenceCardsOf(message))) return [];
   const actor = fromUuidSync(roll.actorUuid);
   if (!actor) return [];
   const current = spentOrOriginalResult(roll);

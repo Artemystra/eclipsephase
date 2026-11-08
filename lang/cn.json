@@ -1597,7 +1597,8 @@
           "damageRoll": "伤害检定k",
           "swap": "颠倒结果",
           "raise": "提升结果",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "{name}检定"
         },
         "button": {
           "roll": "投骰",
@@ -1932,6 +1933,7 @@
             "agressiveCharge": "侵袭冲锋",
             "agressiveChargeAddition": "（+1d10 DV且回避-10）",
             "multipleTargets": "多目标",
+            "proneTarget": "目标倒地（优势位置）",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -2182,6 +2184,14 @@
         "smokeArea": "烟雾（{name}）",
         "gasNote": "毒气云持续 3 个行动回合：身处其中、进入其中或在其中开始回合的人都会吸入剂量。",
         "smokeNote": "烟雾持续 3 分钟，遮蔽其中或其后的事物（-20）。"
+      },
+      "blindAttack": {
+        "headline": "盲目攻击：{weapon}",
+        "missed": "{name}目盲。攻击直接落空。",
+        "through": "{name}目盲。攻击照常进行。",
+        "note": "掷出 {roll} · 00–49 落空",
+        "accept": "接受结果",
+        "gone": "已没有攻击在等待此检定。请重新进行攻击。"
       },
       "defence": {
         "headline": "防御 {weapon}",
@@ -2579,7 +2589,7 @@
       "noteText": "{name}：{note}",
       "notApplied": "{name}（未生效）",
       "notes": {
-        "blinded": "攻击无法感知的目标时有 50% 几率直接落空",
+        "blinded": "每次攻击前进行一次感知检定；失败时攻击有 50% 几率直接落空",
         "deafened": "先攻 −3，Perceive −30",
         "grappled": "对擒抱之外的攻击 Fray −30",
         "prone": "近战对手 +20，从 Range 或更远处射击 −10"

@@ -1590,7 +1590,8 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "Tirada de {name}"
         },
         "button": {
           "roll": "Roll",
@@ -1925,6 +1926,7 @@
             "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
             "multipleTargets": "Multiple Targets",
+            "proneTarget": "Objetivo derribado (posición superior)",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -2175,6 +2177,14 @@
         "smokeArea": "Humo ({name})",
         "gasNote": "La nube de gas dura 3 turnos de acción: quien esté en ella, entre o empiece su turno en ella inhala la dosis.",
         "smokeNote": "El humo dura 3 minutos y oculta lo que está dentro o detrás (-20)."
+      },
+      "blindAttack": {
+        "headline": "Ataque a ciegas con {weapon}",
+        "missed": "{name} está cegado. El ataque falla sin más.",
+        "through": "{name} está cegado. El ataque sigue adelante.",
+        "note": "Tirada: {roll} · 00–49 falla",
+        "accept": "Aceptar resultado",
+        "gone": "Ningún ataque espera ya esta tirada. Vuelve a tirar el ataque."
       },
       "defence": {
         "headline": "Defenderse de {weapon}",
@@ -2572,7 +2582,7 @@
       "noteText": "{name}: {note}",
       "notApplied": "{name} (No aplicado)",
       "notes": {
-        "blinded": "un ataque contra un objetivo que no percibes falla sin más con un 50 %",
+        "blinded": "una tirada de Percibir antes de cada ataque; si falla, el ataque falla sin más con un 50 %",
         "deafened": "−3 a la Iniciativa y −30 a Perceive",
         "grappled": "Fray −30 contra ataques desde fuera de la presa",
         "prone": "oponentes en cuerpo a cuerpo +20, disparos desde Range o más lejos −10"

@@ -729,6 +729,15 @@ may "Soak Damage" the same way. A card with several targets offers, below their 
 "Dodge Rest". An attack set up with `willing: true` skips
 the defence cards altogether and lands on every target at once.
 
+A target that can roll none of its defences - every one refused by a roll block, such as
+Incapacitated, Unconscious, or Immobilized against a weapon (2.9.5) - carries the refusal as
+`helpless` on its card entry, which the card shows; the active GM then lets the attack land on it as
+if it had not resisted, through `yieldDefence`. A Blinded attacker first rolls Perceive from its
+usual dialog, the roll flagged `blindPerceive: { id }`; while a pool point could still change it, the
+attack waits for the card's "Accept Result" (`api.attacks.acceptBlindPerceive(message)`). When it
+fails, a d100 on a card of its own decides: on 00-49 the attack misses outright (Core p.218) - a
+shot is still spent, but no attack is rolled.
+
 `api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
 the target: a failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"`
 through, or `"none"` behind cover. Otherwise it is an opposed test against `attack.roll`

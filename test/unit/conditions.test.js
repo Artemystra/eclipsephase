@@ -2,7 +2,8 @@ import fs from "fs";
 import path from "path";
 import {
   CONDITIONS, conditionStatusEffects, activeConditions, replacedConditions, removeReplacedConditions,
-  conditionBlockReason, rollBlockContext, registerConditions, conditionNotes, conditionSkillModifiers
+  conditionBlockReason, rollBlockContext, registerConditions, conditionNotes, conditionSkillModifiers,
+  targetsUnder
 } from "../../module/common/conditions.js";
 import { rollBlockReason, resetRegistry } from "../../module/api/registry.js";
 import { RollCheck } from "../../module/rolls/dice.js";
@@ -209,5 +210,18 @@ describe("what a condition does beyond the sums", () => {
     expect(conditionStatusEffects().find(status => status.id === "deafened").changes).toEqual([
       { key: "system.mods.iniMod", value: "-3", priority: null, type: "add" }
     ]);
+  });
+});
+
+describe("conditions in an attack", () => {
+  test("every target picked must be under a condition for the attack to count it, and no target counts as none", () => {
+    resetWorld();
+    const ana = under("prone");
+    const bo = under("prone");
+    const cy = under();
+
+    expect(targetsUnder({ preTargets: `${ana.uuid},${bo.uuid}` }, "prone")).toBe(true);
+    expect(targetsUnder({ preTargets: `${ana.uuid},${cy.uuid}` }, "prone")).toBe(false);
+    expect(targetsUnder({ preTargets: false }, "prone")).toBe(false);
   });
 });

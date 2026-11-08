@@ -1642,7 +1642,8 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "{name} Roll"
         },
         "button": {
           "roll": "Roll",
@@ -1986,6 +1987,7 @@
             "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
             "multipleTargets": "Multiple Targets",
+            "proneTarget": "Target prone (superior position)",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -2245,6 +2247,14 @@
         "smokeArea": "Smoke ({name})",
         "gasNote": "The gas cloud lies for 3 action turns: whoever is in it, comes into it or begins their turn in it breathes the dose in.",
         "smokeNote": "The smoke lies for 3 minutes and hides whatever is in or behind it (-20)."
+      },
+      "blindAttack": {
+        "headline": "Blind attack with the {weapon}",
+        "missed": "{name} is blinded. The attack misses outright.",
+        "through": "{name} is blinded. The attack goes ahead.",
+        "note": "Rolled {roll} · 00–49 misses",
+        "accept": "Accept Result",
+        "gone": "No attack waits on this roll any more. Roll the attack again."
       },
       "defence": {
         "headline": "Defend against the {weapon}",
@@ -2660,7 +2670,7 @@
       "noteText": "{name}: {note}",
       "notApplied": "{name} (Not applied)",
       "notes": {
-        "blinded": "an attack on a target you do not perceive misses on a straight 50%",
+        "blinded": "a Perceive Test before every attack; when it fails, the attack misses on a straight 50%",
         "deafened": "−3 Initiative and −30 Perceive",
         "grappled": "Fray −30 against attacks from outside the grapple",
         "prone": "opponents in melee +20, shooters at Range or farther −10"

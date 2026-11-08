@@ -159,6 +159,28 @@ export function conditionNotes(actor) {
 }
 
 /**
+ * Whether an actor is under a condition.
+ * @param {Actor} actor - The actor
+ * @param {String} id - The condition id
+ * @returns {Boolean} True while it is
+ */
+export function isUnder(actor, id) {
+  return activeConditions(actor).has(id);
+}
+
+/**
+ * Whether every target an attack dialog picked is under a condition. The dialog names its targets
+ * as actor uuids joined by commas; no target means no.
+ * @param {Object} options - The dialog's values
+ * @param {String} id - The condition id
+ * @returns {Boolean} True when there are targets and all of them are under it
+ */
+export function targetsUnder(options, id) {
+  const uuids = typeof options?.preTargets === "string" ? options.preTargets.split(",").filter(Boolean) : [];
+  return uuids.length > 0 && uuids.every(uuid => isUnder(fromUuidSync(uuid), id));
+}
+
+/**
  * The modifiers an actor's conditions put on the tests of one skill - Deafened on Perceive.
  * @param {Actor} actor - The actor
  * @param {String} key - The roll key, lower case

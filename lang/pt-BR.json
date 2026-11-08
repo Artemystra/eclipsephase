@@ -1604,7 +1604,8 @@
           "damageRoll": "Teste de Dano",
           "swap": "Trocar Resultado",
           "raise": "Elevar Resultado",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "Rolagem de {name}"
         },
         "button": {
           "roll": "Rolar",
@@ -1939,6 +1940,7 @@
             "agressiveCharge": "Ataque Violento",
             "agressiveChargeAddition": "(+1d10VD & Evasão -10)",
             "multipleTargets": "Múltiplos Alvos",
+            "proneTarget": "Alvo caído (posição superior)",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -2189,6 +2191,14 @@
         "smokeArea": "Fumaça ({name})",
         "gasNote": "A nuvem de gás dura 3 turnos de ação: quem estiver nela, entrar ou começar o turno nela inala a dose.",
         "smokeNote": "A fumaça dura 3 minutos e esconde o que estiver dentro ou atrás (-20)."
+      },
+      "blindAttack": {
+        "headline": "Ataque às cegas com {weapon}",
+        "missed": "{name} está cego. O ataque erra direto.",
+        "through": "{name} está cego. O ataque segue adiante.",
+        "note": "Rolagem: {roll} · 00–49 erra",
+        "accept": "Aceitar resultado",
+        "gone": "Nenhum ataque aguarda mais esta rolagem. Role o ataque de novo."
       },
       "defence": {
         "headline": "Defender-se de {weapon}",
@@ -2587,7 +2597,7 @@
       "noteText": "{name}: {note}",
       "notApplied": "{name} (Não aplicado)",
       "notes": {
-        "blinded": "um ataque contra um alvo que você não percebe erra direto com 50%",
+        "blinded": "um teste de Perceber antes de cada ataque; se falhar, o ataque erra direto com 50%",
         "deafened": "−3 na Iniciativa e −30 em Perceive",
         "grappled": "Fray −30 contra ataques de fora do agarrão",
         "prone": "oponentes em corpo a corpo +20, disparos de Range ou mais longe −10"

@@ -8,7 +8,7 @@ import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck
 import { setupFromCard } from "./modifiers.js";
 import { failCard, drawFailButtons } from "./cards.js";
 export { drawFailButtons };
-import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, soakRemaining, scatterBlast, detonateArmed, defuseArmed } from "./attacks.js";
+import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, soakRemaining, scatterBlast, detonateArmed, defuseArmed, acceptBlindPerceive } from "./attacks.js";
 
 /**
  * Hides GM info from players
@@ -124,6 +124,13 @@ export async function addChatListeners(html) {
     if (defenceRoll) {
       const message = game.messages.get(defenceRoll.closest("[data-message-id]")?.dataset.messageId);
       if (message) rollDefence(message, defenceRoll.dataset.targetUuid, defenceRoll.dataset.kind);
+      return;
+    }
+
+    const blindAccept = event.target.closest("button.blindAccept");
+    if (blindAccept) {
+      const message = game.messages.get(blindAccept.closest("[data-message-id]")?.dataset.messageId);
+      if (message) acceptBlindPerceive(message);
       return;
     }
 

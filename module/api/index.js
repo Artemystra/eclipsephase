@@ -59,7 +59,7 @@ import {
 import { sleightPotency } from "../rolls/psi.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
-import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget, blastTargets, detonateArmed, defuseArmed } from "../rolls/attacks.js";
+import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget, blastTargets, detonateArmed, defuseArmed, acceptBlindPerceive } from "../rolls/attacks.js";
 import { tokenAt, pickTokensOnCanvas, attackerToken, drawTargetMarker, placeArea, areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion, createShadowedArea, areaSquares, squareShapes, clearAreas } from "../common/targeting.js";
 import { chemicalDoses, chooseMunition, needsMunitionChoice, munitionLabel } from "../common/weapon-functions.js";
 import { runningDoses, drugBlockingPsi, drugPsiPenalties, rollScope } from "../rolls/modifiers.js";
@@ -234,7 +234,8 @@ export const attacks = {
   unsuitableTarget,
   sleightPotency,
   detonateArmed,
-  defuseArmed
+  defuseArmed,
+  acceptBlindPerceive
 };
 
 /**

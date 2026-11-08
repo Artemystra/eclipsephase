@@ -24,6 +24,7 @@ Object {
     "transferItemBetweenActors": [Function],
   },
   "attacks": Object {
+    "acceptBlindPerceive": [Function],
     "applyTargetedAttack": [Function],
     "chemicalDoses": [Function],
     "defenceOutcome": [Function],

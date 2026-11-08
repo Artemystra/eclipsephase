@@ -1,4 +1,4 @@
-import { RollCheck, isCriticalSuccess, isHit } from "./dice.js";
+import { RollCheck, isCriticalSuccess, isHit, rollToChat } from "./dice.js";
 import { spentOrOriginalResult, settleOnRoll } from "./cards.js";
 import { confirmation, gmList, isChecked, timedEffectData } from "../common/general-sheet-functions.js";
 import { targetKinds, sealedAgainst } from "../common/morp-functions.js";
@@ -7,6 +7,8 @@ import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainM
 import { pickTokensOnCanvas, attackerToken, NO_GM_ATTACK, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
 import { relayToActiveGM } from "../common/socket.js";
+import { rollBlockReason } from "../api/registry.js";
+import { rollBlockContext, isUnder } from "../common/conditions.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
 
 // An attack that lands on targets: the attacker picks them at the end of the attack dialog, or after
@@ -15,7 +17,10 @@ import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRan
 // dose (doses.js) or damage (damage.js).
 
 export const DEFENCE_TEMPLATE = "systems/eclipsephase/templates/chat/targeted-defence.html";
+export const BLIND_ATTACK_TEMPLATE = "systems/eclipsephase/templates/chat/blind-attack.html";
 const EFFECTS = new Map();
+// Blinded attacks waiting on their Perceive card's result being accepted, by the roll's id.
+const WAITING_PERCEIVE = new Map();
 
 registerCard("attackDefence", {
   render: renderDefenceCard,
@@ -348,7 +353,7 @@ export function renderDefenceCard(state) {
       name: entry.name,
       outcome: entry.outcome,
       lockedOut: entry.lockedOut,
-      note: blastNote(entry),
+      note: [blastNote(entry), entry.helpless ?? ""].filter(Boolean).join(" · "),
       outcomeLabel: entry.cover ? game.i18n.localize(COVER_LABELS[entry.cover] ?? COVER_LABELS.moved) : outcomeLabel(entry.outcome, attack.defence),
       ...(entry.outcome ? {} : defenceChoices(attack, entry))
     })),
@@ -418,7 +423,10 @@ export async function postDefenceCards(attack, targets, { gmOnly = false, detail
   const origin = attack.messageId ? game.messages.get(attack.messageId) ?? null : null;
   const cards = [];
   for (const group of defenceGroups(targets)) {
-    const state = { attack, entries: group.targets.map(target => ({ uuid: target.uuid, name: target.name, outcome: null, ...(details.get(target.uuid) ?? {}) })) };
+    const state = { attack, entries: group.targets.map(target => {
+      const helpless = helplessReason(target, attack);
+      return { uuid: target.uuid, name: target.name, outcome: null, ...(details.get(target.uuid) ?? {}), ...(helpless ? { helpless } : {}) };
+    }) };
     cards.push(await ChatMessage.create({
       speaker: defenceSpeaker(group.targets),
       content: await renderCard("attackDefence", state),
@@ -427,6 +435,112 @@ export async function postDefenceCards(attack, targets, { gmOnly = false, detail
     }));
   }
   return cards;
+}
+
+/**
+ * Whether an attack is made blind: a Blinded attacker striking or shooting at a target, not laying a
+ * blast or suppressive fire.
+ * @param {Actor} actor - The attacker
+ * @param {String} rolledFrom - Where the roll comes from
+ * @param {Object|null} weapon - The weapon, as prepared for the roll
+ * @param {Object} options - The dialog's values
+ * @returns {Boolean} True when the attack needs a Perceive Test first
+ */
+export function blindAttacker(actor, rolledFrom, weapon, options = {}) {
+  if (!isUnder(actor, "blinded") || !["rangedWeapon", "ccWeapon"].includes(rolledFrom)) return false;
+  return !(weapon?.blast && weapon.blast.kind !== "none") && options.attackMode !== "suppressive";
+}
+
+/**
+ * A blinded attacker's Perceive Test to detect the target with another sense (Core p.218), rolled
+ * from its usual dialog before each attack. When a pool point could still change its result, the
+ * attack waits until the card's result is accepted.
+ * @param {Actor} actor - The attacker
+ * @param {Object} [systemOptions] - Passed on to RollCheck
+ * @returns {Promise<Boolean|null>} True when perceived, null when the roll was called off
+ */
+export async function rollBlindPerceive(actor, systemOptions = {}) {
+  const perceive = actor.system.skillsIns?.perceive ?? {};
+  const id = foundry.utils.randomID();
+  const dataset = {
+    type: "skill", key: "perceive", name: game.i18n.localize("ep2e.skills.insightSkills.perceive"),
+    rollvalue: perceive.roll ?? 0, specname: perceive.specname ?? "", pooltype: "Insight",
+    contextFlags: { blindPerceive: { id } }
+  };
+  const result = await RollCheck(dataset, actor.system, actor, systemOptions, null, "skill");
+  if (!result?.alternatives) return null;
+  if (!result.alternatives.options?.available) return isHit(result.alternatives.originalResult);
+  return new Promise(resolve => WAITING_PERCEIVE.set(id, resolve));
+}
+
+/**
+ * Accepts a blinded attacker's Perceive card as it stands - after a pool point, if one was spent -
+ * and lets the waiting attack go on.
+ * @param {ChatMessage} message - The Perceive card
+ * @returns {Promise<Boolean|null>} Whether the target was perceived, null when no attack waits on it
+ */
+export async function acceptBlindPerceive(message) {
+  const roll = message?.getFlag?.("eclipsephase", "roll");
+  if (!roll?.blindPerceive || message.getFlag("eclipsephase", "taskCard")?.accepted) return null;
+  await updateCard(message, "taskCard", "accepted");
+  const resolve = WAITING_PERCEIVE.get(roll.blindPerceive.id);
+  if (!resolve) {
+    ui.notifications.warn(game.i18n.localize("ep2e.chat.blindAttack.gone"));
+    return null;
+  }
+  WAITING_PERCEIVE.delete(roll.blindPerceive.id);
+  const perceived = isHit(spentOrOriginalResult(roll));
+  resolve(perceived);
+  return perceived;
+}
+
+/**
+ * Rolls the straight 50% a blinded attacker who failed to perceive the target has of missing it
+ * (Core p.218) and posts it on a card of its own, before the attack: on 00-49 the attack misses outright.
+ * @param {Actor} actor - The attacker
+ * @param {String} weaponName - What they attack with
+ * @param {Object} [visibility] - recipientList and blind, as the attack card's
+ * @returns {Promise<Boolean>} True when the attack misses
+ */
+export async function rollBlindAttack(actor, weaponName, { recipientList = [], blind = false } = {}) {
+  const roll = await new Roll("1d100").evaluate();
+  const value = roll.total % 100;
+  const missed = value < 50;
+  const card = {
+    headline: game.i18n.format("ep2e.chat.blindAttack.headline", { weapon: weaponName }),
+    outcome: game.i18n.format(missed ? "ep2e.chat.blindAttack.missed" : "ep2e.chat.blindAttack.through", { name: actor.name }),
+    note: game.i18n.format("ep2e.chat.blindAttack.note", { roll: String(value).padStart(2, "0") })
+  };
+  await rollToChat(null, card, BLIND_ATTACK_TEMPLATE, roll, actor.name, recipientList, blind);
+  return missed;
+}
+
+/**
+ * Why a target cannot defend against an attack at all: every defence it could roll is refused, such
+ * as by Incapacitated or Unconscious, or by Immobilized against a weapon.
+ * @param {Actor} actor - The target
+ * @param {Object} attack - The attack
+ * @returns {String|null} The first refusal, or null when it can defend
+ */
+export function helplessReason(actor, attack) {
+  const kinds = attack.defence === "will" ? ["will"] : attack.defence === "melee" ? ["dodge", "parry"] : ["dodge"];
+  const reasons = kinds.map(kind => {
+    const dataset = { ...defenceDataset(actor, attack, kind), contextFlags: { attackDefence: {} } };
+    return rollBlockReason(actor, dataset.key.toLowerCase(), rollBlockContext(dataset, "skill"));
+  });
+  return reasons.every(Boolean) ? reasons[0] : null;
+}
+
+/**
+ * Lets every target on a new defence card that cannot defend take the attack, as if it had chosen
+ * not to resist. Done by the active GM, who may answer for any target.
+ * @param {ChatMessage} message - The new card
+ * @returns {Promise<void>} Resolves once each has taken it
+ */
+export async function yieldHelpless(message) {
+  const state = message?.getFlag?.("eclipsephase", "attackDefence");
+  if (!state || !game.users?.activeGM?.isSelf) return;
+  for (const entry of state.entries.filter(candidate => candidate.helpless && !candidate.outcome)) await yieldDefence(message, entry.uuid);
 }
 
 /**
@@ -641,8 +755,8 @@ export function exposureModifiers(actor, dataset) {
 }
 
 /**
- * Registers the hooks targeted attacks run on: the attack is put on the roll, and a defence settles
- * its target's outcome. A pool spend that turns a miss into a hit needs no hook - the roll card is
+ * Registers the hooks targeted attacks run on: the attack is put on the roll, a defence settles
+ * its target's outcome, and a target that cannot defend takes the attack. A pool spend that turns a miss into a hit needs no hook - the roll card is
  * redrawn and shows the target button itself.
  * @returns {void}
  */
@@ -654,6 +768,8 @@ export function registerTargetedAttackHooks() {
     const attack = attackFor(context);
     if (attack) context.flags.targetedAttack = attack;
   });
+
+  Hooks.on("createChatMessage", message => yieldHelpless(message));
 
   Hooks.on("eclipsephase.postRoll", context => {
     exposeAttacker(context);
