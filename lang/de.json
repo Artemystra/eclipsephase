@@ -1002,6 +1002,11 @@
         "gearModifiers": "Ausrüstungsbehinderung",
         "noModifiersSubHeader": "Kein Modifikator",
         "noModifiersCopy": "Wann immer der Charakter negative Effekte erleidet werden sie hier zu finden sein. Warte nur ab. Wir werden uns bald wiedersehen...",
+        "body": "Körper",
+        "mind": "Geist",
+        "showBreakdown": "Woher die Modifikatoren kommen",
+        "sourceColumn": "Quelle",
+        "totalRow": "Summe",
         "statuses": {
           "wounded": "Wunde",
           "woundsIgnored": "Wunde(n) ignoriert",
@@ -1018,10 +1023,13 @@
       "armor": {
         "headline": "Rüstung",
         "noArmorSubheadline": "Keine Rüstung",
+        "energy": "Energie",
+        "kinetic": "Kinetisch",
+        "mental": "Mental",
         "concealWarning": "Rüstungswerte über 11 lassen sich nicht verbergen - stell es dir wie mindestens eine dicke, auffällige Kleidungsschicht vor.",
         "encumberanceWarning": "Solange deine kumulierte Rüstung die Ausdauer deines Körpers übersteigt, bist du bewegungsunfähig.",
         "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst.",
-        "mentalHint": "Mentale Rüstung (Gehirn-Symbol) zählt nur gegen Psi-Angriffe und kommt mit dem Sleight Psi Armor"
+        "mentalHint": "Mentale Rüstung zählt nur gegen Psi-Angriffe und kommt mit dem Sleight Psi Armor"
       },
       "ranged": {
         "headline": "Fernkampf",
@@ -1050,6 +1058,8 @@
       "inducedChanges": {
         "headline": "Ausgelöste Änderungen",
         "allActions": "auf alle Aktionen",
+        "physicalActions": "auf alle körperlichen Aktionen",
+        "mentalActions": "auf alle geistigen Aktionen",
         "durability": "Durability",
         "lucidity": "Lucidity",
         "initiative": "Initiative",
@@ -2595,7 +2605,16 @@
         "name": "Unsichtbar",
         "description": "Dieser Charakter ist nicht zu sehen."
       },
+      "noteText": "{name}: {note}",
+      "notApplied": "{name} (Nicht aktiv)",
+      "notes": {
+        "blinded": "Ein Angriff auf ein Ziel, das du nicht wahrnimmst, verfehlt glatt zu 50 %",
+        "deafened": "−3 Initiative und −30 Perceive",
+        "grappled": "Fray −30 gegen Angriffe von außerhalb",
+        "prone": "Gegner im Nahkampf +20, Schützen ab Range −10"
+      },
       "blocked": "{condition}: Es sind keine Würfe möglich.",
+      "blockedPhysical": "{condition}: Es sind keine körperlichen Handlungen möglich.",
       "blockedDefenceOnly": "{condition}: Nur die Verteidigung gegen Angriffe ist möglich."
     }
   },

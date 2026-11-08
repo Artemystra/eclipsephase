@@ -1015,6 +1015,11 @@
         "specialModifiers": "Special Modifiers",
         "noModifiersSubHeader": "No modifiers present",
         "noModifiersCopy": "Whenever you receive any negative modifiers while exploring the world, you'll find them here. Just give it a bit of time and we'll see each other soon...",
+        "body": "Body",
+        "mind": "Mind",
+        "showBreakdown": "Where the modifiers come from",
+        "sourceColumn": "Source",
+        "totalRow": "Total",
         "statuses": {
           "wounded": "Wound",
           "woundsIgnored": "Wound(s) Ignored",
@@ -1031,10 +1036,13 @@
       "armor": {
         "headline": "Armor",
         "noArmorSubheadline": "No Armor Equipped",
+        "energy": "Energy",
+        "kinetic": "Kinetic",
+        "mental": "Mental",
         "concealWarning": "Armor values higher than 11 are not concealable - think of it as at least a thick, noticeable layer of clothing.",
         "encumberanceWarning": "While your cumulative Armor exceeds your body's Durability, you are unable to move.",
         "armorSourceHint": "To change your armor value, add it to your current Morph, or to the Remote Body you're jamming.",
-        "mentalHint": "Mental Armor (Brain Icon) only counts against psi attacks and comes with the Psi Armor Sleight"
+        "mentalHint": "Mental Armor only counts against psi attacks and comes with the Psi Armor Sleight"
       },
       "ranged": {
         "headline": "Ranged Combat",
@@ -1063,6 +1071,8 @@
       "inducedChanges": {
         "headline": "Induced Changes",
         "allActions": "to all actions",
+        "physicalActions": "to all physical actions",
+        "mentalActions": "to all mental actions",
         "durability": "Durability",
         "lucidity": "Lucidity",
         "initiative": "Initiative",
@@ -2647,7 +2657,16 @@
         "name": "Invisible",
         "description": "This character cannot be seen."
       },
+      "noteText": "{name}: {note}",
+      "notApplied": "{name} (Not applied)",
+      "notes": {
+        "blinded": "an attack on a target you do not perceive misses on a straight 50%",
+        "deafened": "−3 Initiative and −30 Perceive",
+        "grappled": "Fray −30 against attacks from outside the grapple",
+        "prone": "opponents in melee +20, shooters at Range or farther −10"
+      },
       "blocked": "{condition}: no tests can be made.",
+      "blockedPhysical": "{condition}: no physical actions are possible.",
       "blockedDefenceOnly": "{condition}: only defending against attacks is possible."
     }
   },

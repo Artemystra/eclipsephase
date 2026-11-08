@@ -2301,13 +2301,13 @@ h3.subheaderBlank {
   margin-bottom: 10px;
 }
 
-/* Same footprint as .statusSideCar above it (single line, detail on hover), for every actor type. */
+/* The Armor box: built like Current Modifiers above it, detail on hover, for every actor type. */
 .armorSideCar {
   min-height: 50px;
-  max-height: 50px;
   padding: 10px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rangedSideCar {
@@ -4910,4 +4910,144 @@ body .combat-dock-tooltip .combat-dock-tooltip-wrapper h2 {
 /* Foundry sizes the token HUD's status palette for eight rows; it holds only the system's conditions. */
 #token-hud .status-effects {
   height: auto;
+}
+
+/* The value boxes at the top of the side car, Current Modifiers and Armor: a small caption, labelled
+   values side by side, and on the right a narrow column for an icon beside the values' row. */
+.ep-modifier-box {
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.eclipsephase .ep-sidecar-caption {
+  margin: 0;
+}
+.ep-sidecar-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 15px;
+  align-items: center;
+}
+.ep-sidecar-main .ep-modifier-notes {
+  grid-column: 1;
+}
+/* Each label takes what its value leaves and trails off when it runs out of room; a value has room
+   for three digits and a sign, never more. */
+.ep-sidecar-values {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.ep-sidecar-pair {
+  display: flex;
+  align-items: baseline;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 4px;
+}
+.ep-sidecar-pair .ep-sidecar-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ep-sidecar-pair .ep-sidecar-value {
+  flex: 0 0 4.5ch;
+  max-width: 4.5ch;
+  font-size: 16px;
+  text-align: right;
+  white-space: nowrap;
+}
+/* Armor rarely reaches three digits: its values start at two and grow when they must. */
+.armorSideCar .ep-sidecar-pair .ep-sidecar-value {
+  flex: 0 0 auto;
+  min-width: 2.5ch;
+  max-width: none;
+}
+.ep-sidecar-pair .ep-modifier-negative {
+  color: var(--negative);
+}
+.ep-sidecar-divider {
+  flex: 0 0 auto;
+}
+.ep-sidecar-aside {
+  width: 16px;
+  text-align: center;
+}
+.ep-modifier-info {
+  color: var(--iconGrey);
+}
+/* The Current Modifiers box keeps its note icons in the values' column, under the sums. */
+/* The note icons spread over the row, dim until the actor is under the condition. */
+.ep-modifier-notes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.ep-modifier-note-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: var(--focusBackground);
+  /* The image itself is set on the element: a URL in the stylesheet would resolve against it. */
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.ep-modifier-note-active .ep-modifier-note-icon {
+  background-color: var(--mainText);
+}
+/* The sheet places the note above the pointer; it wraps at a fixed width and grows in height. */
+.ep-modifier-notes .ep-modifier-note .tooltipText {
+  width: max-content;
+  max-width: 260px;
+  height: auto;
+  white-space: normal;
+  line-height: 1.3;
+  text-transform: none;
+  text-align: left;
+}
+
+/* The breakdown dialog: source, then one column each for physical and mental actions. The columns
+   touch, so the lines under the heads and above the totals run through; the values keep their
+   distance by padding. */
+.ep-modifier-breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, 64px);
+  column-gap: 0;
+  row-gap: 4px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+.ep-modifier-breakdown-grid > .alignRight {
+  padding-left: 8px;
+}
+.ep-modifier-breakdown-grid .ep-modifier-breakdown-head {
+  font-weight: bold;
+  border-bottom: 1px solid var(--accentBackground);
+}
+.ep-modifier-breakdown-grid .ep-modifier-breakdown-comment {
+  font-size: 11px;
+  color: var(--iconGrey);
+  white-space: pre-line;
+}
+.ep-modifier-breakdown-grid .ep-modifier-breakdown-total {
+  border-top: 2px solid var(--iconGrey);
+  padding-top: 2px;
+}
+.ep-modifier-breakdown-empty {
+  font-size: 12px;
+}
+
+/* The side car's section titles, smaller than they were, so less space goes to empty room. */
+.ep-sidecar-title {
+  margin-bottom: 8px;
+}
+.ep-sidecar-title .resource-value {
+  font-size: 16px;
 }

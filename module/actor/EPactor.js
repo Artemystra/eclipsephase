@@ -3,8 +3,8 @@ import { applyDamage } from "../rolls/damage.js"
 import { endAllChiPushes, sustainSummary, actorStrainFamily } from "../rolls/psi.js"
 import { getStrainFamily } from "../rolls/strain-families.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/morp-functions.js"
-import { globalModifiers } from "../rolls/modifiers.js";
-import { removeReplacedConditions } from "../common/conditions.js";
+import { globalModifiers, modifierSummary, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
+import { removeReplacedConditions, conditionNotes } from "../common/conditions.js";
 
 const gammaAutoPushInFlight = new Set();
 
@@ -811,6 +811,18 @@ export default class EPactor extends Actor {
     }
 
     actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum + actorModel.currentStatus.specialModifierSum;
+
+    const counts = {
+      wounds: actorModel.physical.wounds,
+      trauma: actorModel.mental.trauma,
+      layers: actorModel.currentStatus.armorLayerSum,
+      layerMalus: armorEncumberance,
+      somMalus: armorSomCumberance
+    };
+    const physical = globalModifiers(actorWhole, { key: PHYSICAL_MOD_KEY });
+    const mental = globalModifiers(actorWhole, { key: MENTAL_MOD_KEY });
+    Object.assign(actorModel.currentStatus, modifierSummary(actorModel.currentStatus, counts, physical, mental));
+    actorModel.currentStatus.conditionNotes = conditionNotes(actorWhole);
   }
 
   /**

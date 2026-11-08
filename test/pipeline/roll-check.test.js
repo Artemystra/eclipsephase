@@ -1,6 +1,7 @@
 import { RollCheck, TaskRollModifier, resolveSkillRollValue, DIALOG_FIELDS } from "../../module/rolls/dice.js";
 import { registerRollSource, registerPoolOption, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
+import { conditionStatusEffects } from "../../module/common/conditions.js";
 
 const SYSTEM_OPTIONS = { askForOptions: false, optionsSettings: false };
 
@@ -317,6 +318,85 @@ describe("modifiers to all actions", () => {
     await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
 
     expect(global.__ep.createdMessages[0].content).not.toContain("ep2e.roll.announce.globalEffects");
+  });
+});
+
+describe("modifiers to physical or mental actions", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * The roller under a condition from the catalogue, as the token HUD would set it.
+   * @param {String} id - The condition id
+   * @returns {Object} The prepared actor
+   */
+  function conditionedRoller(id) {
+    const actor = makeRoller();
+    const status = conditionStatusEffects().find(entry => entry.id === id);
+    actor._source.effects = [];
+    actor.effects.push(new ActiveEffect({ ...status, name: id, statuses: [id] }, { parent: actor }));
+    actor.prepareData();
+    actor.statuses = new Set([id]);
+    return actor;
+  }
+
+  /**
+   * Rolls a dataset and returns the card's content.
+   * @param {Object} actor - The roller
+   * @param {Object} dataset - The roll's dataset
+   * @param {String} [rolledFrom] - Where the roll comes from
+   * @returns {Promise<String>} The card's content
+   */
+  async function rolledCard(actor, dataset, rolledFrom = "skill") {
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+    await RollCheck(dataset, actor.system, actor, SYSTEM_OPTIONS, null, rolledFrom);
+    return global.__ep.createdMessages.at(-1).content;
+  }
+
+  test("Stunned costs a Vigor skill -30 and an Insight skill -10", async () => {
+    const actor = conditionedRoller("stunned");
+    const physical = await rolledCard(actor, skillDataset());
+    const mental = await rolledCard(actor, skillDataset({ name: "Interface", key: "interface", pooltype: "Insight" }));
+
+    expect(physical).toContain("stunned");
+    expect(physical).toContain("-30");
+    expect(physical).not.toContain("-10");
+    expect(mental).toContain("stunned");
+    expect(mental).toContain("-10");
+    expect(mental).not.toContain("-30");
+  });
+
+  test("a check goes by its aptitude: SOM is physical, WIL mental", async () => {
+    const actor = conditionedRoller("blinded");
+    const som = await rolledCard(actor, skillDataset({ name: "SOM", key: "system.aptitudes.som.value", apttype: "som", pooltype: undefined }));
+    const wil = await rolledCard(actor, skillDataset({ name: "WIL", key: "system.aptitudes.wil.value", apttype: "wil", pooltype: undefined }));
+
+    expect(som).toContain("blinded");
+    expect(wil).not.toContain("blinded");
+  });
+
+  test("a vehicle's own skill takes neither", async () => {
+    const actor = conditionedRoller("stunned");
+    expect(await rolledCard(actor, skillDataset(), "vehicleSkill")).not.toContain("stunned");
+  });
+
+  test("Deafened costs Perceive -30 and leaves other skills alone", async () => {
+    const actor = conditionedRoller("deafened");
+    const perceive = await rolledCard(actor, skillDataset({ name: "Perceive", key: "perceive", pooltype: "Insight" }));
+    const other = await rolledCard(actor, skillDataset({ name: "Interface", key: "interface", pooltype: "Insight" }));
+
+    expect(perceive).toContain("ep2e.conditions.deafened.name");
+    expect(other).not.toContain("ep2e.conditions.deafened.name");
+  });
+
+  test("encumbrance hinders physical actions only", async () => {
+    const actor = makeRoller();
+    actor.system.physical.mainArmorMalus = 20;
+    const physical = await rolledCard(actor, skillDataset());
+    const mental = await rolledCard(actor, skillDataset({ name: "Interface", key: "interface", pooltype: "Insight" }));
+
+    expect(physical).toContain("ep2e.roll.announce.encumberance");
+    expect(mental).not.toContain("ep2e.roll.announce.encumberance");
   });
 });
 

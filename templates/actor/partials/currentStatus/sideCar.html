@@ -7,8 +7,8 @@
 
     <!-- Ranged Weapon Summary -->
     <div class="sideCarBox rangedSideCar">
-        <div style=" margin-bottom: 20px;">
-            <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.ranged.headline"}}</label>
+        <div class="ep-sidecar-title">
+            <label class="resource-value">{{localize "ep2e.sideCar.ranged.headline"}}</label>
         </div>
         {{#if actor.system.additionalSystems.rangedEquipped}}
             {{#each actor.rangedWeapon as |item id|}}
@@ -23,8 +23,8 @@
     
     <!-- CC Weapon Summary -->
     <div class="sideCarBox ccSideCar">
-        <div style=" margin-bottom: 20px;">
-            <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.melee.headline"}}</label>
+        <div class="ep-sidecar-title">
+            <label class="resource-value">{{localize "ep2e.sideCar.melee.headline"}}</label>
         </div>
         {{#if actor.system.additionalSystems.ccEquipped}}
             {{#each actor.ccweapon as |item id|}}
@@ -44,8 +44,8 @@
     {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
     {{#if actor.armedExplosives.length}}
     <div class="sideCarBox armedSideCar">
-        <div style=" margin-bottom: 20px;">
-            <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.armed.headline"}}</label>
+        <div class="ep-sidecar-title">
+            <label class="resource-value">{{localize "ep2e.sideCar.armed.headline"}}</label>
         </div>
         {{#each actor.armedExplosives as |armed|}}
         <div class="item flexrow flex-group-center offHand ep-armed-row" data-message-id="{{armed.messageId}}">

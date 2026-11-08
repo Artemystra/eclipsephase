@@ -989,6 +989,11 @@
         "gearModifiers": "装备妨碍",
         "noModifiersSubHeader": "没有可展示的调整值",
         "noModifiersCopy": "在你探索世界的过程中，每当你承受了任何负面调整值时，你都能在这里找到。再给一点时间，我们很快就能看到每一个了……",
+        "body": "身体",
+        "mind": "心智",
+        "showBreakdown": "修正值来源",
+        "sourceColumn": "来源",
+        "totalRow": "合计",
         "statuses": {
           "wounded": "损伤",
           "woundsIgnored": "忽视的损伤",
@@ -1005,10 +1010,13 @@
       "armor": {
         "headline": "护甲",
         "noArmorSubheadline": "没有装备护甲d",
+        "energy": "能量",
+        "kinetic": "动能",
+        "mental": "精神",
         "concealWarning": "护甲值高于11时无法隐藏——可以把它想象成至少一层又厚又显眼的衣物。",
         "encumberanceWarning": "当你的累计护甲值超过身体的耐久值时，你将无法移动。",
         "armorSourceHint": "如需更改护甲值，请将护甲添加到你当前的Morph，或添加到你正在Jamming的远程躯体上。",
-        "mentalHint": "精神护甲（大脑图标）仅对异能攻击生效，来自异能 Psi Armor"
+        "mentalHint": "精神护甲仅对异能攻击生效，来自异能 Psi Armor"
       },
       "ranged": {
         "headline": "远程战斗",
@@ -1037,6 +1045,8 @@
       "inducedChanges": {
         "headline": "诱发变化",
         "allActions": "所有行动",
+        "physicalActions": "所有物理行动",
+        "mentalActions": "所有精神行动",
         "durability": "耐久",
         "lucidity": "清醒",
         "initiative": "先攻",
@@ -2566,7 +2576,16 @@
         "name": "隐形",
         "description": "此角色无法被看见。"
       },
+      "noteText": "{name}：{note}",
+      "notApplied": "{name}（未生效）",
+      "notes": {
+        "blinded": "攻击无法感知的目标时有 50% 几率直接落空",
+        "deafened": "先攻 −3，Perceive −30",
+        "grappled": "对擒抱之外的攻击 Fray −30",
+        "prone": "近战对手 +20，从 Range 或更远处射击 −10"
+      },
       "blocked": "{condition}：无法进行任何检定。",
+      "blockedPhysical": "{condition}：无法进行任何物理行动。",
       "blockedDefenceOnly": "{condition}：只能防御攻击。"
     }
   },

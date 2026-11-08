@@ -4,8 +4,8 @@ import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/
 import { strainSubstrate } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText, rollBlockReason } from "../api/registry.js";
-import { rollBlockContext } from "../common/conditions.js";
-import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
+import { rollBlockContext, conditionSkillModifiers } from "../common/conditions.js";
+import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers, rollScope, scopeModKey } from "./modifiers.js";
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
 import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
 import { attackPicking, chosenTargets } from "./attacks.js";
@@ -699,7 +699,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         outputData: null, message: null, blind: false, rollMode: null
     }
 
-    const blocked = rollBlockReason(actorWhole, roll.type, rollBlockContext(dataset))
+    const blocked = rollBlockReason(actorWhole, roll.type, rollBlockContext(dataset, rolledFrom))
     if (blocked) {
         ui.notifications.warn(blocked)
         return
@@ -788,7 +788,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             options.totalInfection = await psi.infectionUpdate(actorWhole, options)
 
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
-            addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
+            addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected, rollScope(dataset, rolledFrom))
 
         rollContext.options = options
         rollContext.task = task
@@ -1092,8 +1092,9 @@ function addModeModifier(task, attackMode, kind) {
  * Creates all the modifiers for one roll based on the options selected
  * in the dialog before.
  * @param {Object} options - The options selected in the dialog
+ * @param {String|null} scope - "body" or "mind" as rollScope reads the roll, null for neither
  */
-function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolledFrom, weaponSelected){
+function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolledFrom, weaponSelected, scope){
     let modValue
     let addition
     let announce
@@ -1159,7 +1160,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     const totalWeaponMalusHere = actorModel.physical.totalWeaponMalus || 0;
     const totalGearMalusHere = actorModel.physical.totalGearMalus || 0;
 
-    if(rolledFrom !== "vehicleSkill" && (additionalArmorMalusHere || mainArmorMalusHere || totalWeaponMalusHere || totalGearMalusHere || armorSomMalusHere)){
+    // Encumbrance hinders physical actions only (Core p.214).
+    if(scope === "body" && (additionalArmorMalusHere || mainArmorMalusHere || totalWeaponMalusHere || totalGearMalusHere || armorSomMalusHere)){
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - additionalArmorMalusHere - mainArmorMalusHere - totalWeaponMalusHere - totalGearMalusHere - armorSomMalusHere))
     }
 
@@ -1402,7 +1404,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
                 announce = "ep2e.roll.announce.jamming.ownBodyWounds";
                 task.addModifier(new TaskRollModifier(announce, modValue));
             }
-            if (actorModel?.additionalSystems?.jamming?.ownBodyArmorMalus) {
+            if (scope === "body" && actorModel?.additionalSystems?.jamming?.ownBodyArmorMalus) {
                 modValue = actorModel.additionalSystems.jamming.ownBodyArmorMalus;
                 announce = "ep2e.roll.announce.jamming.ownBodyArmor";
                 task.addModifier(new TaskRollModifier(announce, modValue));
@@ -1410,7 +1412,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
             // The Homebrew weapon/gear/bulky/consumable encumbrance is suppressed on the drone's own
             // rolls (see _calculateHomebrewEncumberance), so the real body's stashed values apply here instead.
-            if (actorModel?.homebrew) {
+            if (scope === "body" && actorModel?.homebrew) {
                 const weapon = actorModel.additionalSystems?.jamming?.ownBodyWeaponMalus || 0;
                 const gear = actorModel.additionalSystems?.jamming?.ownBodyGearMalus || 0;
                 const homebrewEncumbrance = (weapon + gear) * -1;
@@ -1438,6 +1440,12 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         const exclude = replacedDrugs(options.doseChoices ?? [])
         for (const { label, modifier, comment } of globalModifiers(actorWhole, { exclude }))
             task.addModifier(new TaskRollModifier(label, modifier, comment))
+        const scopeKey = scopeModKey(scope)
+        if (scopeKey)
+            for (const { label, modifier, comment } of globalModifiers(actorWhole, { exclude, key: scopeKey }))
+                task.addModifier(new TaskRollModifier(label, modifier, comment))
+        for (const { label, modifier } of conditionSkillModifiers(actorWhole, rollType))
+            task.addModifier(new TaskRollModifier(label, modifier))
         for (const choice of options.doseChoices ?? [])
             task.addModifier(new TaskRollModifier(choice.drug, choice.value, choice.option.label))
     }

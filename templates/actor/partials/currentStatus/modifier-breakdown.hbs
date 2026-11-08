@@ -1,0 +1,22 @@
+{{!-- Where an actor's current modifiers come from: each source in the column of the actions it reaches,
+     a modifier to all actions in both, and what that adds up to on a physical and on a mental action. --}}
+<div class="ep-modifier-breakdown">
+    {{#if rows.length}}
+    <div class="ep-modifier-breakdown-grid">
+        <span class="resource-label ep-modifier-breakdown-head">{{localize "ep2e.sideCar.currentStatus.sourceColumn"}}</span>
+        <span class="resource-label ep-modifier-breakdown-head alignRight">{{localize "ep2e.sideCar.currentStatus.body"}}</span>
+        <span class="resource-label ep-modifier-breakdown-head alignRight">{{localize "ep2e.sideCar.currentStatus.mind"}}</span>
+        {{#each rows as |row|}}
+        <span class="resource-label alignLeft">{{#if row.count}}{{row.count}}{{#if row.times}} x{{/if}} {{/if}}{{localize row.label}}{{#if row.comment}}<br><span class="ep-mod-breakdown ep-modifier-breakdown-comment">{{row.comment}}</span>{{/if}}</span>
+        <span class="resource-value alignRight">{{row.body}}</span>
+        <span class="resource-value alignRight">{{row.mind}}</span>
+        {{/each}}
+        <span class="resource-value alignLeft ep-modifier-breakdown-total">{{localize "ep2e.sideCar.currentStatus.totalRow"}}</span>
+        <span class="resource-value alignRight ep-modifier-breakdown-total">{{bodyText}}</span>
+        <span class="resource-value alignRight ep-modifier-breakdown-total">{{mindText}}</span>
+    </div>
+    {{else}}
+    <label class="resource-value">{{localize "ep2e.sideCar.currentStatus.noModifiersSubHeader"}}</label>
+    <p><i class="ep-modifier-breakdown-empty">{{localize "ep2e.sideCar.currentStatus.noModifiersCopy"}}</i></p>
+    {{/if}}
+</div>

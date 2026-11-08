@@ -77,6 +77,8 @@
         },
         "mods": {
           "globalMod": null,
+          "physicalMod": null,
+          "mentalMod": null,
           "traumaMod": null,
           "woundMod": null,
           "woundMultiplier": 1,

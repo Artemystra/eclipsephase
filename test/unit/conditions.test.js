@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import {
   CONDITIONS, conditionStatusEffects, activeConditions, replacedConditions, removeReplacedConditions,
-  conditionBlockReason, rollBlockContext, registerConditions
+  conditionBlockReason, rollBlockContext, registerConditions, conditionNotes, conditionSkillModifiers
 } from "../../module/common/conditions.js";
 import { rollBlockReason, resetRegistry } from "../../module/api/registry.js";
 import { RollCheck } from "../../module/rolls/dice.js";
@@ -120,14 +120,24 @@ describe("tests a condition refuses", () => {
     expect(conditionBlockReason(under("unconscious"), "system.aptitudes.int.value", { check: true })).toBeNull();
   });
 
-  test("other conditions refuse nothing yet", () => {
-    expect(conditionBlockReason(under("prone", "stunned", "immobilized", "impaired30"), "guns")).toBeNull();
+  test("other conditions refuse nothing", () => {
+    expect(conditionBlockReason(under("prone", "stunned", "grappled", "impaired30"), "guns", { scope: "body" })).toBeNull();
   });
 
-  test("a roll's flags say whether it answers an attack or a card", () => {
-    expect(rollBlockContext({ contextFlags: { attackDefence: {} } })).toEqual({ defence: true, check: false });
-    expect(rollBlockContext({ contextFlags: { doseCheck: {} } })).toEqual({ defence: false, check: true });
-    expect(rollBlockContext({ name: "Guns" })).toEqual({ defence: false, check: false });
+  test("a roll's flags say whether it answers an attack or a card, and its pool whether it is physical", () => {
+    expect(rollBlockContext({ contextFlags: { attackDefence: {} }, pooltype: "Vigor" })).toEqual({ defence: true, check: false, scope: "body" });
+    expect(rollBlockContext({ contextFlags: { doseCheck: {} }, apttype: "wil" })).toEqual({ defence: false, check: true, scope: "mind" });
+    expect(rollBlockContext({ name: "Guns" }, "rangedWeapon")).toEqual({ defence: false, check: false, scope: "body" });
+  });
+
+  test("Immobilized refuses physical actions, Fray included, and leaves mental ones and card checks", () => {
+    const actor = under("immobilized");
+    expect(conditionBlockReason(actor, "infiltrate", { scope: "body" })).toContain("ep2e.conditions.blockedPhysical");
+    expect(conditionBlockReason(actor, "fray")).toContain("ep2e.conditions.immobilized.name");
+    expect(conditionBlockReason(actor, "melee", { defence: true, scope: "body" })).toContain("ep2e.conditions.blockedPhysical");
+    expect(conditionBlockReason(actor, "system.aptitudes.wil.value", { defence: true, scope: "mind" })).toBeNull();
+    expect(conditionBlockReason(actor, "interface", { scope: "mind" })).toBeNull();
+    expect(conditionBlockReason(actor, "system.aptitudes.som.value", { check: true, scope: "body" })).toBeNull();
   });
 });
 
@@ -171,5 +181,33 @@ describe("a refused test in the roll pipeline", () => {
   test("the registry hands the roll's context on to every check", () => {
     expect(rollBlockReason(under("dazed"), "melee", { defence: true })).toBeNull();
     expect(rollBlockReason(under("dazed"), "melee")).toContain("ep2e.conditions.dazed.name");
+  });
+});
+
+describe("what a condition does beyond the sums", () => {
+  test("every condition that reaches only some tests has a note, lit while the actor is under it", () => {
+    const notes = conditionNotes(under("deafened", "stunned", "prone"));
+    expect(notes.map(note => [note.id, note.active])).toEqual([["blinded", false], ["deafened", true], ["grappled", false], ["prone", true]]);
+    expect(notes[1].img).toBe("icons/svg/deaf.svg");
+    expect(notes[1].text).toContain("ep2e.conditions.noteText");
+    expect(notes[1].text).toContain("ep2e.conditions.notes.deafened");
+    expect(notes[1].text).not.toContain("ep2e.conditions.notApplied");
+    expect(notes[0].text).toContain("ep2e.conditions.notApplied");
+  });
+
+  test("Deafened costs Perceive alone", () => {
+    expect(conditionSkillModifiers(under("deafened"), "perceive")).toEqual([{ label: "ep2e.conditions.deafened.name", modifier: -30 }]);
+    expect(conditionSkillModifiers(under("deafened"), "infiltrate")).toEqual([]);
+  });
+
+  test("each condition's modifiers are changes Foundry adds to the actor", () => {
+    const stunned = conditionStatusEffects().find(status => status.id === "stunned");
+    expect(stunned.changes).toEqual([
+      { key: "system.mods.physicalMod", value: "-30", priority: null, type: "add" },
+      { key: "system.mods.mentalMod", value: "-10", priority: null, type: "add" }
+    ]);
+    expect(conditionStatusEffects().find(status => status.id === "deafened").changes).toEqual([
+      { key: "system.mods.iniMod", value: "-3", priority: null, type: "add" }
+    ]);
   });
 });

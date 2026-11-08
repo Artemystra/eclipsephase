@@ -62,7 +62,7 @@ import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffec
 import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget, blastTargets, detonateArmed, defuseArmed } from "../rolls/attacks.js";
 import { tokenAt, pickTokensOnCanvas, attackerToken, drawTargetMarker, placeArea, areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion, createShadowedArea, areaSquares, squareShapes, clearAreas } from "../common/targeting.js";
 import { chemicalDoses, chooseMunition, needsMunitionChoice, munitionLabel } from "../common/weapon-functions.js";
-import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
+import { runningDoses, drugBlockingPsi, drugPsiPenalties, rollScope } from "../rolls/modifiers.js";
 import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 
 /**
@@ -80,7 +80,8 @@ export const rolls = {
   gmList,
   inheritChatVisibility,
   damageValueCalc,
-  applySuccessTierBonus
+  applySuccessTierBonus,
+  rollScope
 };
 
 /**

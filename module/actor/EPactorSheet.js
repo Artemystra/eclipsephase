@@ -19,6 +19,8 @@ import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 import { getRezSpendOptions } from "../api/registry.js";
 
+const MODIFIER_BREAKDOWN = "systems/eclipsephase/templates/actor/partials/currentStatus/modifier-breakdown.hbs";
+
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -121,6 +123,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     },
     actions: {
       editImage: this._onEditImage,
+      modifierBreakdown: this._onModifierBreakdown,
       // Guards a rare core edge case (actor.token null despite the "Configure Token" control being
       // shown) instead of letting ActorSheetV2's own handler throw.
       configureToken: function () {
@@ -226,6 +229,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   // Psi Infection details panel - client-local like tabGroups above, not actor data, so toggling
   // it never syncs to other owners' simultaneously-open sheets of the same actor.
   _psiDetailsOpen = true;
+
+  /**
+   * Opens where the actor's current modifiers come from: each source with the actions it reaches,
+   * and their sums on a physical and on a mental action.
+   * @returns {Promise<void>} Resolves once the dialog is closed
+   */
+  static async _onModifierBreakdown() {
+    const content = await foundry.applications.handlebars.renderTemplate(MODIFIER_BREAKDOWN, this.actor.system.currentStatus ?? {});
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: game.i18n.localize("ep2e.sideCar.currentStatus.headline") },
+      classes: ["eclipsephase", "ep-modifier-breakdown-dialog"],
+      content,
+      buttons: [{ action: "close", label: game.i18n.localize("Close"), default: true }],
+      modal: true,
+      rejectClose: false,
+      position: { width: 420 }
+    });
+  }
 
   static async _onEditImage(event, target) {
     const field = target.dataset.field || "img";

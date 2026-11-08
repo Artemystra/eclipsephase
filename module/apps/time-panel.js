@@ -1,5 +1,5 @@
 import { cloudsOnScene, endCloud, panToCloud } from "../rolls/attacks.js";
-import { addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
+import { addWindowControls, addDragSupport, addMinimizeSupport, INFO_DIALOG_WIDTH } from "../common/general-sheet-functions.js";
 import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, isRunningEffect, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -451,11 +451,13 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
    * @returns {Promise<void>} Resolves once the dialog is dismissed
    */
   static async _onBeatsInfo() {
-    await foundry.applications.api.DialogV2.prompt({
+    await foundry.applications.api.DialogV2.wait({
       window: { title: game.i18n.localize("ep2e.time.beatsInfo.title") },
       content: `<div class="ep-time-effect-info">${game.i18n.localize("ep2e.time.beatsInfo.copy")}</div>`,
-      ok: { label: game.i18n.localize("ep2e.time.close") },
-      modal: true
+      buttons: [{ action: "close", label: game.i18n.localize("ep2e.time.close"), default: true }],
+      position: { width: INFO_DIALOG_WIDTH },
+      modal: true,
+      rejectClose: false
     });
   }
 
@@ -486,11 +488,13 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
     if (!effect) return;
 
     const description = effect.description || parent?.system?.description || "";
-    await foundry.applications.api.DialogV2.prompt({
+    await foundry.applications.api.DialogV2.wait({
       window: { title: effect.name },
       content: `<div class="ep-time-effect-info">${description}</div>`,
-      ok: { label: game.i18n.localize("ep2e.time.close") },
-      modal: true
+      buttons: [{ action: "close", label: game.i18n.localize("ep2e.time.close"), default: true }],
+      position: { width: INFO_DIALOG_WIDTH },
+      modal: true,
+      rejectClose: false
     });
   }
 

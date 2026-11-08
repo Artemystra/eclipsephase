@@ -38,7 +38,7 @@ listed here is considered stable for a module to depend on.
 ```js
 api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, usePoolFromChat,
             // prepareRecipients, gmList, inheritChatVisibility, damageValueCalc,
-            // applySuccessTierBonus
+            // applySuccessTierBonus, rollScope
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
             // sleevedNervousSystem, CYBERBRAIN_MARKER, targetKinds, transferItemBetweenActors,
             // mergeOrCreateItem, requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
@@ -180,7 +180,7 @@ from a listener.
 | `eclipsephase.postRoll` | In `RollCheck()`, after the chat card was created | `rollContext` with `outputData`, `message` (the created `ChatMessage`, or `null`), `blind`, `rollMode` | React to a completed roll |
 | `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a roll card was applied and the card redrawn | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
 | `eclipsephase.prepareActorMods` | In `EPactor.prepareData()`, right after `mods`/`currentStatus` are reset | `(actorWhole, actorModel)` | Contribute to `actorModel.mods` before derived values are computed |
-| `eclipsephase.prepareActorStatus` | In `EPactor.prepareData()`, before the status-sidebar modifiers are summed | `(actorWhole, actorModel)` | Push `{label, modifier, flag}` onto `actorModel.currentStatus.specialModifiers` |
+| `eclipsephase.prepareActorStatus` | In `EPactor.prepareData()`, before the status-sidebar modifiers are summed | `(actorWhole, actorModel)` | Push `{label, modifier, flag}` onto `actorModel.currentStatus.specialModifiers`; it counts on physical and mental actions alike |
 | `eclipsephase.prepareActorDerived` | In `EPactor.prepareData()`, as its last statement | `(actorWhole, actorModel)` | Override fully-derived fields |
 | `eclipsephase.prepareItemData` | In `EPitem.prepareData()`, as its last statement | `(item, itemModel)` | Override fully-derived item fields |
 | `eclipsephase.effectSuppression` | In `effects.js`, while deciding whether an ActiveEffect is suppressed | `(item, actor, result)` - set `result.suppressed` | Add a suppression rule for a module's own item types |
@@ -193,6 +193,12 @@ from a listener.
 Only `character`, `npc` and `goon` actors run through this pipeline (`EPactor.MANAGED_TYPES`);
 an actor type your module contributes via a module sub-type (see below) is left untouched by
 `EPactor.prepareData()`.
+
+An effect changes every test through `system.mods.globalMod`, every physical action through
+`system.mods.physicalMod` and every mental action through `system.mods.mentalMod` (2.9.5). A test by
+Reflexes or Somatics and every attack is physical, every other test mental (Core p.34);
+`api.rolls.rollScope(dataset, rolledFrom)` tells which, `"body"`, `"mind"` or `null` for a vehicle's own
+skill. The status side car shows the sums on a physical and on a mental action.
 
 ## Registries
 
@@ -223,10 +229,11 @@ Makes tests unusable: `check(actor, key, context)` gets the actor, the lower-cas
 roll's context and returns the reason as text, or `null`. The context says where the roll comes from:
 `defence` is true when it answers an attack, `check` when a card asked for it, such as a drug's check;
 the sheet's dice pass neither. A refused test shows the text as a toast, and the sheet shows a warning
-triangle with the text as its tooltip in place of the test's die. `rollBlockReason(actor, key,
+triangle with the text as its tooltip in place of the test's die. `scope` is `"body"` for a physical
+action and `"mind"` for a mental one, as `api.rolls.rollScope` reads the roll. `rollBlockReason(actor, key,
 context)` asks all checks. Block Skill and the conditions are the system's own checks: Incapacitated
-and Unconscious refuse every test, Dazed every test but a defence and Fray, and neither refuses a
-check a card asked for.
+and Unconscious refuse every test, Dazed every test but a defence and Fray, Immobilized every
+physical action, Fray included, and none of them refuses a check a card asked for.
 
 ### `registerRollSource(id, definition)`
 

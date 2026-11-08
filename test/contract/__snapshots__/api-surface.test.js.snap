@@ -94,6 +94,7 @@ Object {
     "inheritChatVisibility": [Function],
     "prepareRecipients": [Function],
     "rollCalc": [Function],
+    "rollScope": [Function],
     "rollToChat": [Function],
     "usePoolFromChat": [Function],
   },

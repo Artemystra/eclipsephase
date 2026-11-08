@@ -167,6 +167,38 @@ export function replacedDrugs(chosen) {
 }
 
 export const GLOBAL_MOD_KEY = "system.mods.globalMod";
+export const PHYSICAL_MOD_KEY = "system.mods.physicalMod";
+export const MENTAL_MOD_KEY = "system.mods.mentalMod";
+
+// Rolls by Reflexes or Somatics are physical actions, all others mental (Core p.34: Vigor is linked
+// to physical efforts, Reflexes and Somatics; Insight and Moxie to the rest).
+const BODY_APTITUDES = ["ref", "som"];
+const ATTACKS = ["rangedWeapon", "ccWeapon", "grenade"];
+
+/**
+ * Whether a roll is a physical or a mental action, read from what it already carries: an attack is
+ * physical, an aptitude check or a special skill goes by its aptitude, a skill by its pool. A
+ * vehicle's own skill is not the character acting and has neither.
+ * @param {Object} dataset - The roll's dataset
+ * @param {String} rolledFrom - Where the roll comes from
+ * @returns {String|null} "body", "mind" or null
+ */
+export function rollScope(dataset, rolledFrom) {
+  if (rolledFrom === "vehicleSkill") return null;
+  if (ATTACKS.includes(rolledFrom)) return "body";
+  const aptitude = String(dataset?.apttype ?? "").toLowerCase();
+  if (aptitude) return BODY_APTITUDES.includes(aptitude) ? "body" : "mind";
+  return String(dataset?.pooltype ?? "").toLowerCase() === "vigor" ? "body" : "mind";
+}
+
+/**
+ * The effect field that holds the modifiers to every roll of a scope.
+ * @param {String} scope - "body" or "mind"
+ * @returns {String|null} The key, or null for no scope
+ */
+export function scopeModKey(scope) {
+  return { body: PHYSICAL_MOD_KEY, mind: MENTAL_MOD_KEY }[scope] ?? null;
+}
 
 /**
  * The number a modifier value stands for. Foundry hands a change on a field without a default
@@ -196,30 +228,33 @@ function breakdownEntry(name, modifier) {
  * not bring them back.
  * @param {Actor} actor - The actor
  * @param {Set<String>} exclude - Drug names left out
+ * @param {String} key - The effect field summed
  * @returns {Number} Their combined modifier
  */
-function excludedTotal(actor, exclude) {
+function excludedTotal(actor, exclude, key) {
   if (!exclude.size) return 0;
   let total = 0;
   for (const effect of actor?.allApplicableEffects?.() ?? []) {
     if (!effect.active || !exclude.has(effect.name) || effect.getFlag?.("eclipsephase", "dose") === undefined) continue;
-    for (const change of effect.changes ?? []) if (change.key === GLOBAL_MOD_KEY) total += modifierValue(change.value);
+    for (const change of effect.changes ?? []) if (change.key === key) total += modifierValue(change.value);
   }
   return total;
 }
 
 /**
- * Every modifier to all actions currently on the actor. The running doses of drugs and toxins are
+ * Every modifier to all actions currently on the actor - or, given another field, to all physical
+ * or all mental actions. The running doses of drugs and toxins are
  * summed into one line labelled intoxicated, with the drugs it is made of as its comment, one per
  * line; any other effect keeps a line of its own, so the label never claims a drug where there is
  * none.
  * Whatever part of the actor's total no active effect explains - a value a module wrote straight
  * into the field - is listed once more under a general label, so the sum always matches.
  * @param {Actor} actor - The actor
- * @param {Object} [options] - exclude: drug names whose penalty a ticked roll option replaces
+ * @param {Object} [options] - exclude: drug names whose penalty a ticked roll option replaces;
+ *   key: the effect field, all actions by default
  * @returns {Object[]} label, modifier and, for the intoxicated line, comment; without zero entries
  */
-export function globalModifiers(actor, { exclude = new Set() } = {}) {
+export function globalModifiers(actor, { exclude = new Set(), key = GLOBAL_MOD_KEY } = {}) {
   const doses = new Map();
   const others = new Map();
   for (const effect of actor?.allApplicableEffects?.() ?? []) {
@@ -228,7 +263,7 @@ export function globalModifiers(actor, { exclude = new Set() } = {}) {
     if (isDose && exclude.has(effect.name)) continue;
     const bucket = isDose ? doses : others;
     for (const change of effect.changes ?? []) {
-      if (change.key !== GLOBAL_MOD_KEY) continue;
+      if (change.key !== key) continue;
       bucket.set(effect.name, (bucket.get(effect.name) ?? 0) + modifierValue(change.value));
     }
   }
@@ -245,9 +280,44 @@ export function globalModifiers(actor, { exclude = new Set() } = {}) {
   for (const [label, modifier] of others) if (modifier) sources.push({ label, modifier });
 
   const counted = sources.reduce((sum, entry) => sum + entry.modifier, 0);
-  const total = modifierValue(actor?.system?.mods?.globalMod) - excludedTotal(actor, exclude);
+  const total = modifierValue(foundry.utils.getProperty(actor ?? {}, key)) - excludedTotal(actor, exclude, key);
   if (total !== counted) sources.push({ label: FALLBACK_LABEL, modifier: total - counted });
   return sources;
+}
+
+/**
+ * Where an actor's current modifiers come from and what they add up to on a physical and on a
+ * mental action. Wounds, trauma and the modifiers to all actions count for both; encumbrance - each
+ * armour layer past the first and armour beyond SOM (Core p.214) - and the modifiers to physical
+ * actions for the body; those to mental actions for the mind.
+ * @param {Object} status - The actor's currentStatus, its sums already worked out
+ * @param {Object} counts - wounds and trauma as the actor has them, and its armour: layers,
+ *   layerMalus and somMalus, each a positive penalty
+ * @param {Object[]} physical - globalModifiers on the physical field
+ * @param {Object[]} mental - globalModifiers on the mental field
+ * @returns {Object} rows (label, count, times, comment, scope, modifier, and body and mind as text),
+ *   body and mind as numbers and as text
+ */
+export function modifierSummary(status, counts, physical, mental) {
+  const rows = [];
+  const add = (scope, modifier, entry) => {
+    const value = Number(modifier) || 0;
+    if (!value) return;
+    const text = signed(value);
+    rows.push({ ...entry, scope, modifier: value, body: scope === "mind" ? "" : text, mind: scope === "body" ? "" : text });
+  };
+  add("all", status.woundModifierSum, { label: "ep2e.sideCar.currentStatus.statuses.wounded", count: counts.wounds, times: true });
+  add("all", status.traumaModifierSum, { label: "ep2e.sideCar.currentStatus.statuses.traumatized", count: counts.trauma, times: true });
+  for (const { label, modifier, comment } of status.specialModifiers ?? []) add("all", modifier, { label, comment });
+  add("body", -(Number(counts.layerMalus) || 0), { label: "ep2e.sideCar.currentStatus.statuses.layersOfArmor", count: counts.layers });
+  add("body", -(Number(counts.somMalus) || 0), { label: "ep2e.sideCar.currentStatus.statuses.somExceeded" });
+  add("body", status.encumberanceModifierSum, { label: "ep2e.sideCar.currentStatus.gearModifiers" });
+  for (const { label, modifier, comment } of physical) add("body", modifier, { label, comment });
+  for (const { label, modifier, comment } of mental) add("mind", modifier, { label, comment });
+
+  const body = rows.filter(row => row.scope !== "mind").reduce((total, row) => total + row.modifier, 0);
+  const mind = rows.filter(row => row.scope !== "body").reduce((total, row) => total + row.modifier, 0);
+  return { rows, body, mind, bodyText: signed(body), mindText: signed(mind) };
 }
 
 /**

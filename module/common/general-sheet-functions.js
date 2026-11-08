@@ -4,6 +4,7 @@ import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
 import { getRollSource, rollBlockReason } from "../api/registry.js";
+import { rollBlockContext } from "./conditions.js";
 
 /**
  * Foundry VTTs active effect creation & deletion functions
@@ -477,6 +478,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
     return { confirm: result === true || result === "confirm" };
   }
 
+// The width of the system's information dialogs.
+export const INFO_DIALOG_WIDTH = 325;
+
 /**
  * A simple dialog with only the option to confirm. This is used for simple information messages.
  * @param {*} event 
@@ -529,7 +533,7 @@ export async function itemReduction(actor, itemID, itemQuantity){
             callback: () => ({ cancelled: true })
           }
         ],
-        position: { width: 325 },
+        position: { width: INFO_DIALOG_WIDTH },
         modal: true,
         rejectClose: false
       });
@@ -592,6 +596,8 @@ export function embeddedItemToggle(html, actor) {
 // What an effect's change reads as, for the changes with a fixed wording.
 const INDUCED_LABELS = {
   "system.mods.globalMod": "allActions",
+  "system.mods.physicalMod": "physicalActions",
+  "system.mods.mentalMod": "mentalActions",
   "system.mods.durmod": "durability",
   "system.mods.lucmod": "lucidity",
   "system.mods.iniMod": "initiative",
@@ -1032,7 +1038,7 @@ export function itemToggle(html, item) {
  */
 export function markBlockedRolls(root, actor) {
   for (const die of root.querySelectorAll("img.task-check[data-key]")) {
-    const reason = rollBlockReason(actor, die.dataset.key.toLowerCase());
+    const reason = rollBlockReason(actor, die.dataset.key.toLowerCase(), rollBlockContext(die.dataset));
     if (!reason) continue;
     const triangle = document.createElement("i");
     triangle.className = die.className;

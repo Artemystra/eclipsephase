@@ -990,6 +990,11 @@
         "gearModifiers": "Sobrecarga de Equipamentos",
         "noModifiersSubHeader": "Nenhum modificador presente",
         "noModifiersCopy": "Sempre que você receber quaisquer modificadores negativos enquanto exploram o mundo, você vai encontrá-los aqui. Logo mais nos veremos...",
+        "body": "Corpo",
+        "mind": "Mente",
+        "showBreakdown": "De onde vêm os modificadores",
+        "sourceColumn": "Origem",
+        "totalRow": "Total",
         "statuses": {
           "wounded": "Ferimento",
           "woundsIgnored": "Ferimento(s) Ignorado(s)",
@@ -1006,10 +1011,13 @@
       "armor": {
         "headline": "Armadura",
         "noArmorSubheadline": "Nenhuma Armadura Equipada",
+        "energy": "Energia",
+        "kinetic": "Cinética",
+        "mental": "Mental",
         "concealWarning": "Valores de Armadura acima de 11 não são ocultáveis - pense nisso como, no mínimo, uma camada grossa e perceptível de roupa.",
         "encumberanceWarning": "Enquanto sua Armadura cumulativa exceder a Durabilidade do seu corpo, você é incapaz de se mover.",
         "armorSourceHint": "Para alterar seu valor de Armadura, adicione-a ao seu Morph atual ou ao Corpo Remoto que estiver em jamming.",
-        "mentalHint": "A armadura mental (ícone do cérebro) só conta contra ataques psi e vem com o sleight Psi Armor"
+        "mentalHint": "A armadura mental só conta contra ataques psi e vem com o sleight Psi Armor"
       },
       "ranged": {
         "headline": "Combate de Distância",
@@ -1038,6 +1046,8 @@
       "inducedChanges": {
         "headline": "Mudanças induzidas",
         "allActions": "em todas as ações",
+        "physicalActions": "em todas as ações físicas",
+        "mentalActions": "em todas as ações mentais",
         "durability": "Durabilidade",
         "lucidity": "Lucidez",
         "initiative": "Iniciativa",
@@ -2574,7 +2584,16 @@
         "name": "Invisível",
         "description": "Este personagem não pode ser visto."
       },
+      "noteText": "{name}: {note}",
+      "notApplied": "{name} (Não aplicado)",
+      "notes": {
+        "blinded": "um ataque contra um alvo que você não percebe erra direto com 50%",
+        "deafened": "−3 na Iniciativa e −30 em Perceive",
+        "grappled": "Fray −30 contra ataques de fora do agarrão",
+        "prone": "oponentes em corpo a corpo +20, disparos de Range ou mais longe −10"
+      },
       "blocked": "{condition}: nenhum teste pode ser feito.",
+      "blockedPhysical": "{condition}: nenhuma ação física é possível.",
       "blockedDefenceOnly": "{condition}: só é possível se defender de ataques."
     }
   },
