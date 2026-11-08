@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128">
+  <title>Grappled</title>
+  <path d="M34 76 L23 91 L14 113 M37 76 L49 95 L49 112" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M97 79 L80 92 L70 112 M99 80 L113 94 L116 111" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 76 Q32 60 43 47 M98 81 Q103 69 94 58" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M43 48 L61 59 L79 49 M94 59 L73 77 L51 69" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="43" cy="23" r="12" fill="#fff"/>
+  <circle cx="91" cy="35" r="12" fill="#fff"/>
+</svg>

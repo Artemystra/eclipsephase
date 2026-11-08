@@ -2381,6 +2381,7 @@
       "sectionThreats": "Personajes no jugadores y amenazas",
       "endNow": "Terminar",
       "remaining": "Restante",
+      "endsThisRound": "Termina esta ronda",
       "owner": "Personaje",
       "toggleFormat": "Alternar horas y beats",
       "hoursTooltip": "unas {hours} h",
@@ -2496,6 +2497,70 @@
       "armedElsewhere": "Ese explosivo está en otra escena - muestra esa escena primero.",
       "lockedOut": "La mente de {name} está cerrada para ti hasta tu próxima recarga.",
       "notOnSelf": "Esta habilidad psi no se puede usar sobre uno mismo."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Cegado",
+        "description": "No puedes ver, pero sigues percibiendo con otros sentidos, entópticos y sensores en malla. −30 a las acciones físicas, Fray incluido; un ataque contra un objetivo que no percibes puede fallar sin más."
+      },
+      "confused": {
+        "name": "Confundido",
+        "description": "Cada turno, un Chequeo de COG a −30. Si fallas, murmuras, actúas al azar, huyes o atacas a alguien cercano."
+      },
+      "dazed": {
+        "name": "Aturdido",
+        "description": "Mentalmente aturdido y desorientado: ninguna acción salvo un movimiento básico y defenderte de ataques."
+      },
+      "deafened": {
+        "name": "Ensordecido",
+        "description": "No puedes oír. −3 a la Iniciativa y −30 a las Pruebas de Perceive."
+      },
+      "grappled": {
+        "name": "Apresado",
+        "description": "Sujeto físicamente: Tasa de Movimiento 0 y ninguna acción física salvo liberarte. Fray a −30 contra ataques desde fuera de la presa."
+      },
+      "immobilized": {
+        "name": "Inmovilizado",
+        "description": "Ninguna acción física, Fray incluido, hasta que te recuperes. Las acciones mentales y de malla siguen siendo posibles."
+      },
+      "impaired10": {
+        "name": "Mermado (−10)",
+        "description": "Tus capacidades están limitadas: −10 a todas las acciones."
+      },
+      "impaired20": {
+        "name": "Mermado (−20)",
+        "description": "Tus capacidades están limitadas: −20 a todas las acciones."
+      },
+      "impaired30": {
+        "name": "Mermado (−30)",
+        "description": "Tus capacidades están limitadas: −30 a todas las acciones."
+      },
+      "incapacitated": {
+        "name": "Incapacitado",
+        "description": "Ninguna acción, tampoco mental ni Fray. No puedes defenderte de ataques."
+      },
+      "prone": {
+        "name": "Derribado",
+        "description": "En el suelo, o girando en microgravedad. Levantarse es una acción rápida. Los oponentes de pie en cuerpo a cuerpo obtienen +20; quien dispara desde Range o más lejos, −10."
+      },
+      "stunned": {
+        "name": "Sin aliento",
+        "description": "Te han dejado sin aire: −30 a las acciones físicas y −10 a las mentales."
+      },
+      "unconscious": {
+        "name": "Inconsciente",
+        "description": "Sin sentido e indefenso. Un estimulante, o un Chequeo de INT a −30 si alguien te sacude con fuerza, te despierta."
+      },
+      "dead": {
+        "name": "Muerto",
+        "description": "Este personaje está muerto."
+      },
+      "invisible": {
+        "name": "Invisible",
+        "description": "Este personaje no se puede ver."
+      },
+      "blocked": "{condition}: no se puede hacer ninguna tirada.",
+      "blockedDefenceOnly": "{condition}: solo es posible defenderse de ataques."
     }
   },
   "BEHAVIOR": {

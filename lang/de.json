@@ -2423,6 +2423,7 @@
       "sectionThreats": "Nichtspielercharaktere & Bedrohungen",
       "endNow": "Beenden",
       "remaining": "Verbleibend",
+      "endsThisRound": "Endet diese Runde",
       "owner": "Charakter",
       "toggleFormat": "Zwischen Stunden und Beats wechseln",
       "hoursTooltip": "etwa {hours} Std",
@@ -2532,6 +2533,70 @@
       "armedElsewhere": "Dieser Sprengsatz liegt in einer anderen Szene - zeige zuerst diese Szene an.",
       "lockedOut": "Der Geist von {name} ist dir verschlossen, bis du dich erholst.",
       "notOnSelf": "Diesen Sleight kannst du nicht auf dich selbst wirken."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Geblendet",
+        "description": "Du kannst nicht sehen, nimmst aber über andere Sinne, Entoptics und gemeshte Sensoren weiter wahr. −30 auf körperliche Handlungen, Fray eingeschlossen; ein Angriff auf ein Ziel, das du nicht wahrnimmst, kann glatt danebengehen."
+      },
+      "confused": {
+        "name": "Verwirrt",
+        "description": "Jede Runde eine COG-Probe mit −30. Bei einem Fehlschlag murmelst du, handelst zufällig, fliehst oder greifst jemanden in der Nähe an."
+      },
+      "dazed": {
+        "name": "Benommen",
+        "description": "Geistig betäubt und orientierungslos: keine Handlungen außer einer Grundbewegung und der Verteidigung gegen Angriffe."
+      },
+      "deafened": {
+        "name": "Taub",
+        "description": "Du kannst nicht hören. −3 auf Initiative und −30 auf Perceive-Proben."
+      },
+      "grappled": {
+        "name": "Gepackt",
+        "description": "Körperlich festgehalten: Bewegungsrate 0 und keine körperlichen Handlungen außer dem Losreißen. Fray mit −30 gegen Angriffe von außerhalb."
+      },
+      "immobilized": {
+        "name": "Bewegungsunfähig",
+        "description": "Keine körperlichen Handlungen, Fray eingeschlossen, bis du dich erholst. Geistige und Mesh-Handlungen bleiben möglich."
+      },
+      "impaired10": {
+        "name": "Beeinträchtigt (−10)",
+        "description": "Deine Fähigkeiten sind eingeschränkt: −10 auf alle Handlungen."
+      },
+      "impaired20": {
+        "name": "Beeinträchtigt (−20)",
+        "description": "Deine Fähigkeiten sind eingeschränkt: −20 auf alle Handlungen."
+      },
+      "impaired30": {
+        "name": "Beeinträchtigt (−30)",
+        "description": "Deine Fähigkeiten sind eingeschränkt: −30 auf alle Handlungen."
+      },
+      "incapacitated": {
+        "name": "Handlungsunfähig",
+        "description": "Keinerlei Handlungen, auch keine geistigen und kein Fray. Du kannst dich nicht gegen Angriffe verteidigen."
+      },
+      "prone": {
+        "name": "Liegend",
+        "description": "Am Boden oder in der Mikrogravitation am Trudeln. Aufstehen ist eine schnelle Aktion. Stehende Gegner im Nahkampf erhalten +20, Schützen ab Range −10."
+      },
+      "stunned": {
+        "name": "Betäubt",
+        "description": "Dir bleibt die Luft weg: −30 auf körperliche und −10 auf geistige Handlungen."
+      },
+      "unconscious": {
+        "name": "Bewusstlos",
+        "description": "Ohne Bewusstsein und hilflos. Ein Stimulans oder eine INT-Probe mit −30, wenn dich jemand kräftig weckt, bringt dich zurück."
+      },
+      "dead": {
+        "name": "Tot",
+        "description": "Dieser Charakter ist tot."
+      },
+      "invisible": {
+        "name": "Unsichtbar",
+        "description": "Dieser Charakter ist nicht zu sehen."
+      },
+      "blocked": "{condition}: Es sind keine Würfe möglich.",
+      "blockedDefenceOnly": "{condition}: Nur die Verteidigung gegen Angriffe ist möglich."
     }
   },
   "BEHAVIOR": {

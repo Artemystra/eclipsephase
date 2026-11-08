@@ -4,6 +4,7 @@ import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/
 import { strainSubstrate } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText, rollBlockReason } from "../api/registry.js";
+import { rollBlockContext } from "../common/conditions.js";
 import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
 import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
 import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
@@ -698,7 +699,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         outputData: null, message: null, blind: false, rollMode: null
     }
 
-    const blocked = rollBlockReason(actorWhole, roll.type)
+    const blocked = rollBlockReason(actorWhole, roll.type, rollBlockContext(dataset))
     if (blocked) {
         ui.notifications.warn(blocked)
         return

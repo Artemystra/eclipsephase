@@ -1,4 +1,4 @@
-import { isRunningEffect, watchedActors, rechargeTargets, runningEffectGroups } from "../../module/apps/time-panel.js";
+import { isRunningEffect, watchedActors, rechargeTargets, runningEffectGroups, remainingLabel } from "../../module/apps/time-panel.js";
 import { makeActor, makeUnlinkedToken, resetWorld } from "../setup/factories.js";
 
 /**
@@ -190,5 +190,15 @@ describe("unlinked tokens", () => {
     game.user.character = null;
 
     expect(watchedActors()).toEqual([]);
+  });
+});
+
+describe("how long an effect still runs", () => {
+  test("a duration in rounds at 0 ends this round, any other shows Foundry's label", () => {
+    expect(remainingLabel({ units: "rounds", remaining: 0, label: "0 Rounds" })).toBe("ep2e.time.endsThisRound");
+    expect(remainingLabel({ units: "rounds", remaining: 1, label: "1 Round" })).toBe("1 Round");
+    expect(remainingLabel({ units: "rounds", remaining: 0, expired: true, label: "0 Rounds" })).toBe("0 Rounds");
+    expect(remainingLabel({ units: "minutes", remaining: 0, label: "0 Minutes" })).toBe("0 Minutes");
+    expect(remainingLabel(undefined)).toBe("");
   });
 });

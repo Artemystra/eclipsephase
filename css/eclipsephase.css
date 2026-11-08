@@ -4906,3 +4906,8 @@ body #combat-dock h2,
 body .combat-dock-tooltip .combat-dock-tooltip-wrapper h2 {
   border-bottom: 1px solid var(--accentBackground);
 }
+
+/* Foundry sizes the token HUD's status palette for eight rows; it holds only the system's conditions. */
+#token-hud .status-effects {
+  height: auto;
+}

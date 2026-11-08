@@ -68,6 +68,17 @@ function rowActor(actorUuid) {
 }
 
 /**
+ * How long an effect still runs, as the panel shows it. A duration in rounds at 0 ends with the turn
+ * it began on, later this round, so it reads "Ends This Round" rather than "0 Rounds".
+ * @param {Object} duration - The effect's prepared duration
+ * @returns {String} The label
+ */
+export function remainingLabel(duration) {
+  if (duration?.units === "rounds" && duration.remaining === 0 && duration.expired !== true) return game.i18n.localize("ep2e.time.endsThisRound");
+  return duration?.label ?? "";
+}
+
+/**
  * Every running effect on the watched actors, grouped under the actor carrying them. Item-owned
  * effects are included, since that is where a sleight's or a drug's own effect lives. The GM may end
  * any of them; a player may end the sleights their character sustains. A sleight an async sustains
@@ -94,7 +105,7 @@ export function runningEffectGroups() {
         onItem: effect.parent !== actor,
         name: effect.name,
         expired: effect.duration?.expired === true,
-        remaining: effect.duration?.label ?? "",
+        remaining: remainingLabel(effect.duration),
         hasInfo: !!description,
         endable: game.user.isGM || (effect.getFlag?.("eclipsephase", "sustain") !== undefined && actor.isOwner),
         description

@@ -10,6 +10,7 @@ import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequis
 import { chemicalDoses, attackTargetCount } from "./weapon-functions.js";
 import { registerCard, renderCard, updateCard } from "./chat-cards.js";
 import { registerAttackEffect } from "../rolls/attacks.js";
+import { conditionEntry } from "./conditions.js";
 import { pickTokensOnCanvas } from "./targeting.js";
 import { damageFormula } from "../rolls/damage-formula.js";
 import { applyDamage, damageLine, appendDamageLines } from "../rolls/damage.js";
@@ -830,10 +831,10 @@ export async function chooseDoseTarget(messageId, mode, pickers = {}) {
 
 const CONDITION_KEY = "incapacitated";
 
-// The conditions a failed check can leave, each shown with a core status icon on the token.
+// The conditions a failed check can leave, each shown on the token with its condition's icon.
 const CONDITIONS = {
-  incapacitated: { status: "paralysis", img: "icons/svg/paralysis.svg", nameKey: "ep2e.chat.dose.incapacitatedEffect", outcomeKey: "ep2e.chat.dose.outcomeIncapacitated" },
-  immobilized: { status: "restrain", img: "icons/svg/net.svg", nameKey: "ep2e.chat.dose.immobilizedEffect", outcomeKey: "ep2e.chat.dose.outcomeImmobilized" }
+  incapacitated: { status: "incapacitated", nameKey: "ep2e.chat.dose.incapacitatedEffect", outcomeKey: "ep2e.chat.dose.outcomeIncapacitated" },
+  immobilized: { status: "immobilized", nameKey: "ep2e.chat.dose.immobilizedEffect", outcomeKey: "ep2e.chat.dose.outcomeImmobilized" }
 };
 
 /**
@@ -933,8 +934,8 @@ async function checkedDose(check) {
 }
 
 /**
- * The condition a dose leaves: an effect showing its status on the token - Paralyzed for
- * incapacitated, Restrained for immobilized - running for the given span or, without one, for as
+ * The condition a dose leaves: an effect showing its condition on the token - Incapacitated or
+ * Immobilized - running for the given span or, without one, for as
  * long as the dose does. Removed together with the dose. Its icon always shows: Foundry would hide
  * it on a condition without a span of its own.
  * @param {String} drugName - The drug's name, for the condition's own name
@@ -947,7 +948,7 @@ export function conditionData(drugName, effect, key, span) {
   const condition = CONDITIONS[key] ?? CONDITIONS.incapacitated;
   return timedEffectData({
     name: game.i18n.format(condition.nameKey, { name: drugName }),
-    img: condition.img,
+    img: conditionEntry(condition.status).img,
     statuses: [condition.status],
     showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS,
     span,

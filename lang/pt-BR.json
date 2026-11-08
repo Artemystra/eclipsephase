@@ -2395,6 +2395,7 @@
       "sectionThreats": "Personagens não jogadores e ameaças",
       "endNow": "Encerrar",
       "remaining": "Restante",
+      "endsThisRound": "Termina nesta rodada",
       "owner": "Personagem",
       "toggleFormat": "Alternar entre horas e beats",
       "hoursTooltip": "cerca de {hours} h",
@@ -2511,6 +2512,70 @@
       "armedElsewhere": "Esse explosivo está em outra cena - mostre essa cena primeiro.",
       "lockedOut": "A mente de {name} está fechada para você até a sua próxima recarga.",
       "notOnSelf": "Esta habilidade psi não pode ser usada em si."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Cego",
+        "description": "Você não consegue ver, mas ainda percebe por outros sentidos, entópticos e sensores em malha. −30 em ações físicas, Fray incluído; um ataque contra um alvo que você não percebe pode errar de vez."
+      },
+      "confused": {
+        "name": "Confuso",
+        "description": "A cada turno, um Teste de COG com −30. Em uma falha, você murmura, age ao acaso, foge ou ataca alguém por perto."
+      },
+      "dazed": {
+        "name": "Atordoado",
+        "description": "Mentalmente atordoado e desorientado: nenhuma ação além de um movimento básico e de se defender de ataques."
+      },
+      "deafened": {
+        "name": "Ensurdecido",
+        "description": "Você não consegue ouvir. −3 na Iniciativa e −30 em Testes de Perceive."
+      },
+      "grappled": {
+        "name": "Agarrado",
+        "description": "Contido fisicamente: Taxa de Movimento 0 e nenhuma ação física além de se soltar. Fray com −30 contra ataques de fora do agarrão."
+      },
+      "immobilized": {
+        "name": "Imobilizado",
+        "description": "Nenhuma ação física, Fray incluído, até você se recuperar. Ações mentais e de malha continuam possíveis."
+      },
+      "impaired10": {
+        "name": "Prejudicado (−10)",
+        "description": "Suas capacidades estão limitadas: −10 em todas as ações."
+      },
+      "impaired20": {
+        "name": "Prejudicado (−20)",
+        "description": "Suas capacidades estão limitadas: −20 em todas as ações."
+      },
+      "impaired30": {
+        "name": "Prejudicado (−30)",
+        "description": "Suas capacidades estão limitadas: −30 em todas as ações."
+      },
+      "incapacitated": {
+        "name": "Incapacitado",
+        "description": "Nenhuma ação, nem mental nem Fray. Você não pode se defender de ataques."
+      },
+      "prone": {
+        "name": "Caído",
+        "description": "No chão, ou girando em microgravidade. Levantar-se é uma ação rápida. Oponentes de pé em corpo a corpo recebem +20; quem atira de Range ou mais longe, −10."
+      },
+      "stunned": {
+        "name": "Sem fôlego",
+        "description": "Você perdeu o fôlego: −30 em ações físicas e −10 em ações mentais."
+      },
+      "unconscious": {
+        "name": "Inconsciente",
+        "description": "Desacordado e indefeso. Um estimulante, ou um Teste de INT com −30 quando alguém o sacode com força, o acorda."
+      },
+      "dead": {
+        "name": "Morto",
+        "description": "Este personagem está morto."
+      },
+      "invisible": {
+        "name": "Invisível",
+        "description": "Este personagem não pode ser visto."
+      },
+      "blocked": "{condition}: nenhum teste pode ser feito.",
+      "blockedDefenceOnly": "{condition}: só é possível se defender de ataques."
     }
   },
   "BEHAVIOR": {

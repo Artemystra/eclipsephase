@@ -248,7 +248,7 @@ describe("a modifier that grows", () => {
     const conditions = actor.effects.filter(effect => effect.getFlag("eclipsephase", "incapacitatedBy") === dose.id);
     expect(notYet).toBe(0);
     expect(conditions).toHaveLength(1);
-    expect(conditions[0].statuses).toContain("paralysis");
+    expect(conditions[0].statuses).toContain("incapacitated");
     expect(conditions[0].showIcon).toBe(CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS);
   });
 });

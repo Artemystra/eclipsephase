@@ -2388,6 +2388,7 @@
       "sectionThreats": "非玩家角色与威胁",
       "endNow": "结束",
       "remaining": "剩余",
+      "endsThisRound": "本回合结束",
       "owner": "角色",
       "toggleFormat": "在小时与 Beats 之间切换",
       "hoursTooltip": "约 {hours} 小时",
@@ -2503,6 +2504,70 @@
       "armedElsewhere": "该爆炸物位于另一个场景——请先查看该场景。",
       "lockedOut": "在你下次恢复之前，{name}的心智对你关闭。",
       "notOnSelf": "此异能不能对自己使用。"
+    },
+    "conditions": {
+      "blinded": {
+        "name": "失明",
+        "description": "你无法视物，但仍能通过其他感官、内视界面和联网传感器感知。物理行动 −30（含 Fray）；攻击你无法感知的目标可能直接落空。"
+      },
+      "confused": {
+        "name": "困惑",
+        "description": "每回合进行一次 −30 的 COG 检定。失败时你会喃喃自语、随机行动、逃跑或攻击附近的人。"
+      },
+      "dazed": {
+        "name": "恍惚",
+        "description": "精神上眩晕、失去方向：除基础移动和防御攻击外不能行动。"
+      },
+      "deafened": {
+        "name": "耳聋",
+        "description": "你无法听见。先攻 −3，Perceive 检定 −30。"
+      },
+      "grappled": {
+        "name": "被擒抱",
+        "description": "被物理束缚：移动速率为 0，除挣脱外不能进行物理行动。对来自擒抱之外的攻击，Fray −30。"
+      },
+      "immobilized": {
+        "name": "无法移动",
+        "description": "在恢复之前不能进行任何物理行动（含 Fray）。仍可进行精神和网络行动。"
+      },
+      "impaired10": {
+        "name": "受损（−10）",
+        "description": "你的能力受到妨碍：所有行动 −10。"
+      },
+      "impaired20": {
+        "name": "受损（−20）",
+        "description": "你的能力受到妨碍：所有行动 −20。"
+      },
+      "impaired30": {
+        "name": "受损（−30）",
+        "description": "你的能力受到妨碍：所有行动 −30。"
+      },
+      "incapacitated": {
+        "name": "失能",
+        "description": "不能进行任何行动，包括精神行动和 Fray。你无法防御攻击。"
+      },
+      "prone": {
+        "name": "倒地",
+        "description": "倒在地上，或在微重力中旋转。起身是一个快速动作。近战中站立的对手 +20，从 Range 或更远处射击 −10。"
+      },
+      "stunned": {
+        "name": "气窒",
+        "description": "你被打得喘不过气：物理行动 −30，精神行动 −10。"
+      },
+      "unconscious": {
+        "name": "昏迷",
+        "description": "失去意识、毫无防备。兴奋剂，或在被用力摇醒时进行 −30 的 INT 检定，可以让你醒来。"
+      },
+      "dead": {
+        "name": "死亡",
+        "description": "此角色已死亡。"
+      },
+      "invisible": {
+        "name": "隐形",
+        "description": "此角色无法被看见。"
+      },
+      "blocked": "{condition}：无法进行任何检定。",
+      "blockedDefenceOnly": "{condition}：只能防御攻击。"
     }
   },
   "BEHAVIOR": {

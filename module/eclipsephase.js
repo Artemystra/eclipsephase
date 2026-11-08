@@ -29,6 +29,7 @@ import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
 import { registerAreaSocket } from "./common/targeting.js";
+import { registerConditions } from "./common/conditions.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -222,6 +223,7 @@ Hooks.once('init', async function() {
   effectsPrep.registerExpiryCleanup();
   registerTargetedAttackHooks();
   registerDrugHooks();
+  registerConditions();
   registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
   registerWeaponAttacks();
   registerSleightAttacks();

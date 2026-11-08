@@ -147,13 +147,14 @@ describe("the check card", () => {
 });
 
 describe("what a failed check costs", () => {
-  test("Twitch: incapacitated for its own ten minutes, shown as Paralyzed", async () => {
+  test("Twitch: incapacitated for its own ten minutes, shown as the Incapacitated condition", async () => {
     const actor = carrying("Twitch", TWITCH);
 
     await takeAndRoll(actor, 95);
 
     const incapacitated = actor.effects.find(effect => effect.getFlag("eclipsephase", "incapacitatedBy"));
-    expect(incapacitated.statuses).toEqual(["paralysis"]);
+    expect(incapacitated.statuses).toEqual(["incapacitated"]);
+    expect(incapacitated.img).toBe("icons/svg/paralysis.svg");
     expect(incapacitated.duration).toMatchObject({ value: 10, units: "minutes" });
     expect(incapacitated.getFlag("eclipsephase", "effectKey")).toEqual("incapacitated");
     await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomeIncapacitated")));
@@ -280,13 +281,13 @@ describe("a check whose failure harms the body", () => {
 });
 
 describe("BTX2", () => {
-  test("a failed SOM Check leaves the target immobilized for an hour, shown as Restrained", async () => {
+  test("a failed SOM Check leaves the target immobilized for an hour, shown as the Immobilized condition", async () => {
     const actor = carrying("BTX2", { aptitude: "som", failure: "immobilized", duration: { value: 1, units: "hours" } });
 
     await takeAndRoll(actor, 95);
 
     const immobilized = actor.effects.find(effect => effect.getFlag("eclipsephase", "incapacitatedBy"));
-    expect(immobilized.statuses).toEqual(["restrain"]);
+    expect(immobilized.statuses).toEqual(["immobilized"]);
     expect(immobilized.duration).toMatchObject({ value: 1, units: "hours" });
     await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomeImmobilized")));
     expect(createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomeImmobilized"))).toBe(true);

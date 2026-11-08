@@ -2451,6 +2451,7 @@
       "sectionThreats": "Non Player Characters & Threats",
       "endNow": "End now",
       "remaining": "Remaining",
+      "endsThisRound": "Ends This Round",
       "owner": "Character",
       "toggleFormat": "Switch hours and beats",
       "hoursTooltip": "about {hours} h",
@@ -2584,6 +2585,70 @@
       "armedElsewhere": "That explosive lies on another scene - view that scene first.",
       "lockedOut": "{name}'s mind is closed to you until your next recharge.",
       "notOnSelf": "This sleight may not be used on yourself."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Blinded",
+        "description": "You cannot see, but still perceive through other senses, entoptics and meshed sensors. −30 to physical actions, Fray included; an attack on a target you do not perceive may miss outright."
+      },
+      "confused": {
+        "name": "Confused",
+        "description": "Each turn a COG Check at −30. On a failure you mutter, act at random, flee or attack someone nearby."
+      },
+      "dazed": {
+        "name": "Dazed",
+        "description": "Mentally stunned and disoriented: no actions but a base move and defending against attacks."
+      },
+      "deafened": {
+        "name": "Deafened",
+        "description": "You cannot hear. −3 to Initiative and −30 to Perceive Tests."
+      },
+      "grappled": {
+        "name": "Grappled",
+        "description": "Physically restrained: Movement Rate 0 and no physical actions but breaking free. Fray at −30 against attacks from outside the grapple."
+      },
+      "immobilized": {
+        "name": "Immobilized",
+        "description": "No physical actions, Fray included, until you recover. Mental and mesh actions remain."
+      },
+      "impaired10": {
+        "name": "Impaired (−10)",
+        "description": "Your abilities are hindered: −10 to all actions."
+      },
+      "impaired20": {
+        "name": "Impaired (−20)",
+        "description": "Your abilities are hindered: −20 to all actions."
+      },
+      "impaired30": {
+        "name": "Impaired (−30)",
+        "description": "Your abilities are hindered: −30 to all actions."
+      },
+      "incapacitated": {
+        "name": "Incapacitated",
+        "description": "No actions at all, mental actions and Fray included. You cannot defend against attacks."
+      },
+      "prone": {
+        "name": "Prone",
+        "description": "On the ground, or spinning in microgravity. Standing up is a quick action. Standing opponents in melee get +20, shooters at Range or farther −10."
+      },
+      "stunned": {
+        "name": "Stunned",
+        "description": "The wind is knocked out of you: −30 to physical and −10 to mental actions."
+      },
+      "unconscious": {
+        "name": "Unconscious",
+        "description": "Out cold and helpless. A stimulant, or an INT Check at −30 when vigorously disturbed, wakes you."
+      },
+      "dead": {
+        "name": "Dead",
+        "description": "This character is dead."
+      },
+      "invisible": {
+        "name": "Invisible",
+        "description": "This character cannot be seen."
+      },
+      "blocked": "{condition}: no tests can be made.",
+      "blockedDefenceOnly": "{condition}: only defending against attacks is possible."
     }
   },
   "BEHAVIOR": {

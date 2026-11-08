@@ -219,10 +219,14 @@ button appears once an attack reached its targets or when it would not worsen th
 
 ### `registerRollBlock(check)`
 
-Makes tests unusable: `check(actor, key)` gets the actor and the lower-case roll key and returns the
-reason as text, or `null`. A refused test shows the text as a toast, and the sheet shows a warning
-triangle with the text as its tooltip in place of the test's die. `rollBlockReason(actor, key)` asks
-all checks. Block Skill is the system's own check.
+Makes tests unusable: `check(actor, key, context)` gets the actor, the lower-case roll key and the
+roll's context and returns the reason as text, or `null`. The context says where the roll comes from:
+`defence` is true when it answers an attack, `check` when a card asked for it, such as a drug's check;
+the sheet's dice pass neither. A refused test shows the text as a toast, and the sheet shows a warning
+triangle with the text as its tooltip in place of the test's die. `rollBlockReason(actor, key,
+context)` asks all checks. Block Skill and the conditions are the system's own checks: Incapacitated
+and Unconscious refuse every test, Dazed every test but a defence and Fray, and neither refuses a
+check a card asked for.
 
 ### `registerRollSource(id, definition)`
 

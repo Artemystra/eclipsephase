@@ -231,7 +231,7 @@ export function getRezSpendOptions() {
 /**
  * Registers a check that can make a test unusable. A refused test shows the check's text as a toast,
  * and the sheet shows a warning triangle with that text in place of the test's die.
- * @param {Function} check - Takes the actor and the roll key, returns the reason or null
+ * @param {Function} check - Takes the actor, the roll key and the roll's context, returns the reason or null
  * @returns {Boolean} True when registered
  */
 export function registerRollBlock(check) {
@@ -247,11 +247,12 @@ export function registerRollBlock(check) {
  * Why an actor cannot make a test right now.
  * @param {Actor} actor - The actor
  * @param {String} key - The roll key, lower case
+ * @param {Object} [context] - defence: the roll answers an attack; check: a card asked for it
  * @returns {String|null} The first check's reason, or null when the test is free
  */
-export function rollBlockReason(actor, key) {
+export function rollBlockReason(actor, key, context = {}) {
   for (const check of rollBlocks) {
-    const reason = check(actor, key);
+    const reason = check(actor, key, context);
     if (reason) return reason;
   }
   return null;

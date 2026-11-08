@@ -4,6 +4,7 @@ import { endAllChiPushes, sustainSummary, actorStrainFamily } from "../rolls/psi
 import { getStrainFamily } from "../rolls/strain-families.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/morp-functions.js"
 import { globalModifiers } from "../rolls/modifiers.js";
+import { removeReplacedConditions } from "../common/conditions.js";
 
 const gammaAutoPushInFlight = new Set();
 
@@ -53,6 +54,20 @@ export default class EPactor extends Actor {
    */
   async onUpdateEffectDurations(effects, event, context) {
     Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
+  }
+
+  /**
+   * Toggles a status effect, and lets a condition set this way replace the others of its group, so
+   * only one Impaired level is ever on.
+   * @param {String} statusId - The status id
+   * @param {Object} [options] - Foundry's options: active, overlay
+   * @returns {Promise<ActiveEffect|Boolean|undefined>} What Foundry's toggle returned
+   */
+  async toggleStatusEffect(statusId, options = {}) {
+    const result = await super.toggleStatusEffect(statusId, options);
+    // Foundry returns the new effect when it set one, a Boolean otherwise.
+    if (result && typeof result === "object") await removeReplacedConditions(this, statusId);
+    return result;
   }
 
   /**
