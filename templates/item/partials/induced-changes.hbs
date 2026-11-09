@@ -1,0 +1,10 @@
+{{#if inducedChanges.length}}
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.item.inducedChanges.headline"}}</h3>
+</div>
+<ul class="ep-induced-changes">
+    {{#each inducedChanges as |line|}}
+    <li>{{line}}</li>
+    {{/each}}
+</ul>
+{{/if}}

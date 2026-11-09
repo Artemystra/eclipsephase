@@ -1,25 +1,37 @@
-{{!-- Compact single-line Armor summary, same for every actor type - full breakdown lives in the
-     hover tooltip instead of always taking up space. Cumulative Malus is dropped entirely since
-     it's already shown in the Current Status box above; the equip-toggle hint is dropped since
-     NPC/Goon have no toggle to point at. --}}
-<div class="sideCarBox armorSideCar flexrow" style="align-content: center;">
-    <div class="tooltip flexrow flex-group-center" style="width: 100%; align-items: center;">
-        <label class="resource-value" style="font-size: 16px; margin-right: 8px;">{{localize "ep2e.sideCar.armor.headline"}}:</label>
-        {{#if actor.system.additionalSystems.armorEquipped}}
-        <div class="flexrow flex-group-center" style="align-items: center;">
-            <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
-            <span class="resource-value alignLeft item-standard-margin-medium">{{actor.system.physical.energyArmorTotal}}</span>
-            <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important; margin-right: 5px;"/>
-            <span class="resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
+{{!-- Armor, built like Current Modifiers above it: Energy and Kinetic side by side, Mental beside them
+     when there is any, and a warning on the right. The full detail lives in the hover tooltip. --}}
+<div class="sideCarBox armorSideCar">
+    <span class="footnote ep-sidecar-caption">{{localize "ep2e.sideCar.armor.headline"}}</span>
+    <div class="tooltip ep-sidecar-main">
+        <div class="ep-sidecar-values">
+            {{#if actor.system.additionalSystems.armorEquipped}}
+            <div class="ep-sidecar-pair">
+                <span class="resource-label ep-sidecar-label">{{localize "ep2e.sideCar.armor.energy"}}</span>
+                <span class="resource-value ep-sidecar-value">{{actor.system.physical.energyArmorTotal}}</span>
+            </div>
+            <span class="ep-sidecar-divider">/</span>
+            <div class="ep-sidecar-pair">
+                <span class="resource-label ep-sidecar-label">{{localize "ep2e.sideCar.armor.kinetic"}}</span>
+                <span class="resource-value ep-sidecar-value">{{actor.system.physical.kineticArmorTotal}}</span>
+            </div>
+            {{else if (not actor.system.mental.armorTotal)}}
+            <span class="resource-value">{{localize "ep2e.sideCar.armor.noArmorSubheadline"}}</span>
+            {{/if}}
+            {{#if actor.system.mental.armorTotal}}
+            {{#if actor.system.additionalSystems.armorEquipped}}<span class="ep-sidecar-divider">/</span>{{/if}}
+            <div class="ep-sidecar-pair">
+                <span class="resource-label ep-sidecar-label">{{localize "ep2e.sideCar.armor.mental"}}</span>
+                <span class="resource-value ep-sidecar-value">{{actor.system.mental.armorTotal}}</span>
+            </div>
+            {{/if}}
         </div>
-        {{else}}
-        <span class="resource-value">{{localize "ep2e.sideCar.armor.noArmorSubheadline"}}</span>
-        {{/if}}
-        {{#if actor.system.physical.armorDurAnnounce}}
-        <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--negative); margin-left: 8px;" title="{{localize 'ep2e.sideCar.armor.encumberanceWarning'}}"></i>
-        {{else if actor.system.physical.armorVisibilityAnnounce}}
-        <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--warning); margin-left: 8px;" title="{{localize 'ep2e.sideCar.armor.concealWarning'}}"></i>
-        {{/if}}
+        <span class="ep-sidecar-aside">
+            {{#if actor.system.physical.armorDurAnnounce}}
+            <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--negative);" title="{{localize 'ep2e.sideCar.armor.encumberanceWarning'}}"></i>
+            {{else if actor.system.physical.armorVisibilityAnnounce}}
+            <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--warning);" title="{{localize 'ep2e.sideCar.armor.concealWarning'}}"></i>
+            {{/if}}
+        </span>
         <div role="tooltipNegative">
             <div class="tooltipTopBorder">
                 <div class="tooltipTop"></div>
@@ -33,6 +45,10 @@
                 {{/if}}
                 <p/>
                 <label style="color: var(--mainText);">{{localize "ep2e.sideCar.armor.armorSourceHint"}}</label>
+                {{#if actor.system.mental.armorTotal}}
+                <p/>
+                <label style="color: var(--mainText);">{{localize "ep2e.sideCar.armor.mentalHint"}}</label>
+                {{/if}}
             </div>
             <div class="tooltipBottomBorder">
                 <div class="tooltipBottom"></div>

@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "Time Format",
       "hint": "How the Time Panel shows the time of day. Hours uses a 24-hour clock, Beats uses Swatch Internet Time, where a day is 1000 beats.",
@@ -24,6 +20,10 @@
     "timePanelPlayers": {
       "name": "Show the Time Panel to players",
       "hint": "Lets players open the Time Panel and see the current day and time. They get the same panel without any of the controls."
+    },
+    "visionEffects": {
+      "name": "Vision Modifiers",
+      "hint": "Draws special sight, such as sight shared with others, with its own picture effects. Turn it off to see it without filters, for example if the effects are hard on your eyes. What you can see stays the same."
     },
     "editAll": {
       "name": "No edit restrictions",
@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laph's Special Brew",
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
+    },
+    "showTraps": {
+      "name": "Show Traps",
+      "hint": "Whether players may see the armed explosives - timers, remote charges, proximity mines - their fellow players or their opponents left lying on the map. Their owners and the GM always see them.",
+      "none": "None",
+      "all": "All",
+      "players": "Traps of Players Only"
     }
   },
   "TYPES": {
@@ -89,6 +96,9 @@
       "ammo": "Ammo",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "Suppressive Fire"
     }
   },
   "ep2e": {
@@ -139,9 +149,8 @@
         "doseNeedsBiomorph": "This drug only works in a biological body.",
         "doseNeedsCyberbrain": "This drug only runs on an infomorph or a cyberbrain.",
         "noDosesLeft": "{name} has no doses left.",
-        "doseCheckRolled": "This check has already been rolled.",
+        "checkRolled": "This check has already been rolled.",
         "doseNoScene": "Open a scene to pick a target on it.",
-        "doseNeedsGM": "A GM needs to be connected to hand this dose over.",
         "doseNoSelection": "Select a token first.",
         "doseNeedsClaimant": "Assign yourself a character, or as GM select a token, to take this dose.",
         "doseAlreadyUsed": "This dose has already been used.",
@@ -149,7 +158,8 @@
         "ammoPackNotTaken": "{name} is an ammunition pack: load it into a weapon instead.",
         "noPlacedToken": "This actor isn't represented by a placed token right now.",
         "attackDelivered": "This attack has already been applied to its targets.",
-        "attackNoPayload": "The weapon does not know which drug it is loaded with. Reload it first."
+        "attackNoPayload": "The weapon does not know which drug it is loaded with. Reload it first.",
+        "needsGM": "A GM needs to be connected to carry the effect over."
       },
       "button": {
         "edit": "Edit",
@@ -703,6 +713,7 @@
           },
           "result": {
             "stressCopy": "Changing my body stresses me out.",
+            "cleanCopy": "You slip into your new body without any trouble.",
             "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions.",
             "effectIntegrationIssues": {
               "title": "Integration Issues",
@@ -910,6 +921,96 @@
           "playWithPrey": "Play with Prey",
           "protectTribe": "Protect Tribe"
         }
+      },
+      "lockOut": {
+        "name": "Locked out: {target}",
+        "description": "{target} defended with a critical success: this async may not target their mind again until their next recharge."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Social skill tests against them",
+        "basiliskHacks": "Resisting basilisk hacks",
+        "lostSense": "Relies on {sense}",
+        "visualCoordination": "Visual coordination while staring"
+      },
+      "sustain": {
+        "name": "Sustaining: {sleight} ({targets})",
+        "description": "You sustain {sleight}: -10 to all other skill tests while it lasts. It ends when you end it, or when the async moves farther than Close range + 10 m from the target.",
+        "outOfReach": "{target} is {distance} m from {async} - beyond the {reach} m at which {sleight} can be sustained.",
+        "end": "End Sustaining",
+        "endCopy": "End sustaining this sleight? Its effect on the targets ends with it.",
+        "summary": "Sustains Psi",
+        "endTip": "Sustained - end sustaining",
+        "pickCopy": "You sustain this sleight on more than one target. Tick those you want to stop sustaining it on.",
+        "nameSelf": "Sustaining: {sleight}"
+      },
+      "healing": {
+        "card": "{name} heals {amount} {kind} ({sleight}).",
+        "stress": "stress",
+        "damage": "damage",
+        "rollTitle": "Healed"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} may spend their next complex action as a short recharge, without the usual time. It gives no extra recharge.",
+        "errorGM": "{sleight} on {target}: a skill test of your choice fails. Use the button on the test's card before the effect runs out.",
+        "blockSkill": "{sleight} landed on {target}. Choose the skill to block.",
+        "blockSkillButton": "Choose Skill",
+        "boostSkill": "{sleight} landed on {target}. Choose the physical skill to raise.",
+        "boostSkillButton": "Choose Skill",
+        "boostCopy": "Which physical skill does the sleight raise?",
+        "failSkill": "{sleight} landed on {target} with a superior success. Choose how the error strikes.",
+        "failSkillButton": "Choose",
+        "alterDuration": "{sleight} landed on {target}. Choose a running drug or toxin.",
+        "alterDurationButton": "Choose Substance",
+        "noSubstance": "{target} has no running drug or toxin.",
+        "alterHeader": "Alter a Substance",
+        "alterCopy": "Which drug or toxin do you alter?",
+        "shorter": "Halve Duration",
+        "longer": "Increase Duration",
+        "errorHeader": "Induce an Error",
+        "superiorFailure": "Superior Failure",
+        "errorCopy": "How does the error strike?",
+        "failSkillOption": "Fail Skill",
+        "alterQuestion": "How do you want to manipulate the effect?",
+        "forcedFailure": "Failed due to an induced error.",
+        "skillHeader": "Choose a Skill",
+        "skillCopy": "Which skill does the sleight strike?",
+        "shortened": "{effect} on {target} now lasts half as long as usual.",
+        "lengthened": "{effect} on {target} now lasts 1.5 times longer than usual.",
+        "superiorChosen": "{sleight} on {target}: a skill test of the GM's choice becomes a superior failure, with the button on the test's card.",
+        "errorKind": {
+          "auto": "Fail",
+          "superior": "Superior Fail"
+        },
+        "skillChosen": "{sleight} on {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} blocks {skill}: it cannot be used, not even by defaulting.",
+        "loseSense": "{sleight} landed on {target}. Choose the sense it takes.",
+        "loseSenseButton": "Choose Sense",
+        "senseHeader": "Choose a Sense",
+        "senseCopy": "Which sense does the target lose?",
+        "senseChosen": "{sleight} on {target}: {sense} lost."
+      },
+      "sleightLabel": "Sleight",
+      "contactLost": "<strong>{sleight}</strong>: eye contact with {target} is lost",
+      "sense": {
+        "sight": "Sight",
+        "hearing": "Hearing",
+        "touch": "Touch",
+        "smell": "Smell",
+        "taste": "Taste",
+        "hunger": "Hunger",
+        "balance": "Balance",
+        "direction": "Direction",
+        "proprioception": "Proprioception",
+        "facialRecognition": "Facial recognition",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "T-ray",
+        "electricalSense": "Electrical sense",
+        "radiationSense": "Radiation sense"
       }
     },
     "gmInfo": {
@@ -940,6 +1041,11 @@
         "specialModifiers": "Special Modifiers",
         "noModifiersSubHeader": "No modifiers present",
         "noModifiersCopy": "Whenever you receive any negative modifiers while exploring the world, you'll find them here. Just give it a bit of time and we'll see each other soon...",
+        "body": "Body",
+        "mind": "Mind",
+        "showBreakdown": "Where the modifiers come from",
+        "sourceColumn": "Source",
+        "totalRow": "Total",
         "statuses": {
           "wounded": "Wound",
           "woundsIgnored": "Wound(s) Ignored",
@@ -956,9 +1062,13 @@
       "armor": {
         "headline": "Armor",
         "noArmorSubheadline": "No Armor Equipped",
+        "energy": "Energy",
+        "kinetic": "Kinetic",
+        "mental": "Mental",
         "concealWarning": "Armor values higher than 11 are not concealable - think of it as at least a thick, noticeable layer of clothing.",
         "encumberanceWarning": "While your cumulative Armor exceeds your body's Durability, you are unable to move.",
-        "armorSourceHint": "To change your armor value, add it to your current Morph, or to the Remote Body you're jamming."
+        "armorSourceHint": "To change your armor value, add it to your current Morph, or to the Remote Body you're jamming.",
+        "mentalHint": "Mental Armor only counts against psi attacks and comes with the Psi Armor Sleight"
       },
       "ranged": {
         "headline": "Ranged Combat",
@@ -975,9 +1085,31 @@
       "consumables": {
         "headline": "Consumables",
         "noConsumablesSubheadline": "None Equipped"
+      },
+      "armed": {
+        "headline": "Armed Explosives",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Pools"},
+      "inducedChanges": {
+        "headline": "Induced Changes",
+        "allActions": "to all actions",
+        "physicalActions": "to all physical actions",
+        "mentalActions": "to all mental actions",
+        "durability": "Durability",
+        "lucidity": "Lucidity",
+        "initiative": "Initiative",
+        "energyArmor": "Energy Armor",
+        "kineticArmor": "Kinetic Armor",
+        "mentalArmor": "Mental Armor",
+        "rest": "on rest recovery",
+        "ignoreWounds": "Ignores {count} wound(s)",
+        "ignoreTrauma": "Ignores {count} trauma(s)",
+        "psiArmor": "Grants Mental Armor"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Details",
@@ -1011,6 +1143,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Type",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1030,6 +1165,7 @@
       "aspect": {
         "pushedBadge": "Pushed",
         "table": {
+          "targetHeadline": "Targets",
           "type": {
             "label": "Psi Type",
             "gamma": "Gamma",
@@ -1058,7 +1194,48 @@
           "damage": {
             "label": "Damage",
             "physical": "Physical",
-            "mental": "Mental"
+            "mental": "Mental",
+            "mode": {
+              "damage": "Inflicting",
+              "heal": "Healing",
+              "none": "No Damage"
+            },
+            "targetLabel": "Target"
+          },
+          "targetRule": {
+            "label": "Possible Targets",
+            "any": "Anyone",
+            "self": "Self only",
+            "others": "Others only"
+          },
+          "affects": {
+            "label": "Works on",
+            "target": "Target",
+            "async": "Async",
+            "both": "Both"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiply Effects",
+            "tip": "Each superior success applies the effect once more"
+          },
+          "landingRule": {
+            "label": "Special Effect",
+            "tip": "Add special effect on successful hit",
+            "select": "- Select -",
+            "boostSkill": "Raise a physical skill",
+            "blockSkill": "Block a skill",
+            "failSkill": "Induce an error",
+            "recharge": "Quick recharge",
+            "alterDuration": "Alter a substance's duration",
+            "shockEffect": "Shock effect",
+            "painEffect": "Pain effect",
+            "loseSense": "Take a sense",
+            "eyeContact": "Ends when the target is attacked or moved"
+          },
+          "condition": {
+            "label": "Condition",
+            "tip": "The condition the sleight leaves on its target while it lasts",
+            "impaired": "Impaired (-10 per time it applies)"
           }
         }
       },
@@ -1081,6 +1258,13 @@
           "weaponMode": "Weapon Mode",
           "addTrait": "Add Trait",
           "addAccessory": "Add Accessory",
+          "modeName": "Mode Name",
+          "section": {
+            "general": "General",
+            "attack": "Attack",
+            "traits": "Traits",
+            "accessories": "Accessories"
+          },
           "tooltips": {
             "multiShoot": "Multiplier for every round fired"
           },
@@ -1088,7 +1272,9 @@
             "label": "Armor Used",
             "none": "None",
             "kinetic": "Kinetic",
-            "energy": "Energy"
+            "energy": "Energy",
+            "mental": "Mental",
+            "asWeapon": "As weapon"
           },
           "firingMode": {
             "label": "Firing Mode",
@@ -1162,6 +1348,45 @@
             "silencer": "Silencer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazine"
+          },
+          "area": {
+            "none": "No area",
+            "uniform": "Uniform",
+            "centered": "Centered",
+            "radius": "Radius",
+            "reduction": "DV reduction per meter"
+          },
+          "size": {
+            "label": "Size",
+            "baseline": "Micromissile",
+            "standard": "Minimissile",
+            "missile": "Standard missile",
+            "select": "Select"
+          },
+          "trigger": {
+            "label": "Trigger",
+            "impact": "Impact",
+            "airburst": "Airburst",
+            "timer": "Timer",
+            "signal": "Signal (remote)",
+            "proximity": "Proximity"
+          },
+          "payload": {
+            "enabled": "Payload",
+            "select": "Select payload",
+            "sources": {
+              "drugs": "Drugs and Toxins"
+            },
+            "vector": "Payload vector",
+            "choose": "Select",
+            "smoke": "Smoke"
+          },
+          "cloud": "Forms a cloud",
+          "cloudColor": {
+            "smoke": "Smoke",
+            "toxin": "Toxin",
+            "drug": "Drug",
+            "custom": "Custom"
           }
         }
       },
@@ -1229,6 +1454,7 @@
           }
         },
         "mechanics": {
+          "grantHeadline": "Grants",
           "tab": "Mechanics",
           "none": "None",
           "checkHeadline": "Check on Taking",
@@ -1246,8 +1472,8 @@
           },
           "overTimeHeadline": "Effects over Time",
           "damage": "Damage per Tick",
-          "interval": "Every",
-          "ticks": "Ticks",
+          "interval": "Ticks Every",
+          "ticks": "Max. Ticks",
           "ticksTip": "Leave empty for as long as the dose runs",
           "intervals": {
             "turn": "Action Turn",
@@ -1260,7 +1486,6 @@
           "healing": "Healing Dialog",
           "healingTip": "While a dose runs, the healing dialog starts on this addition",
           "harm": "Damage",
-          "grantsHeadline": "Temporary Traits",
           "grantPack": "Compendium",
           "grantFolder": "Folder",
           "grantItem": "Item",
@@ -1272,7 +1497,9 @@
           "grantDescriptionHint": "Written above the item's own description.",
           "grantTitlePlaceholder": "Additional title (optional)",
           "grantDescriptionPlaceholder": "Additional description (optional)",
-          "grantTitleHint": "Shown in brackets after the item's name."
+          "grantTitleHint": "Shown in brackets after the item's name.",
+          "wearOffHeadline": "Wear Off Effect",
+          "addictionHeadline": "Addiction"
         }
       },
       "additionalSkill": {
@@ -1299,9 +1526,13 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Skills"
+        },
         "autoBot": "Add AI",
         "skillFieldDefault": "[appropriate field]",
         "table": {
+          "skillName": "Skill",
           "initiative": "Init",
           "threatValue": "TV",
           "durability": "DUR",
@@ -1446,13 +1677,15 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "{name} Roll"
         },
         "button": {
           "roll": "Roll",
           "cancel": "Cancel",
           "useSelection": "Use this Selection",
-          "withoutWeapon": "Roll without Weapon"
+          "withoutWeapon": "Roll without Weapon",
+          "rollWithoutTargets": "Roll without targets"
         },
         "reputationMode": {
           "headline": "Mode",
@@ -1487,11 +1720,13 @@
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
-              "burst": "Narrow Burst (+1d10)",
-              "fullAuto": "Narrow Full Auto (+2d10)",
-              "wBurst": "Wide Burst (+10 Hit)",
-              "wFullAuto": "Wide Full Auto (+30 Hit)",
-              "suppressive": "Suppressive (uses 20 rounds)"
+              "burst": "Burst: +1d10 DV",
+              "fullAuto": "Full auto: +2d10 DV",
+              "wBurst": "Burst: +10 to hit",
+              "wFullAuto": "Full auto: +30 to hit",
+              "suppressive": "Suppressive fire (20 rounds)",
+              "burstTargets": "Burst: two targets",
+              "fullAutoTargets": "Full auto: three targets"
             },
             "aim": {
               "label": "Aim",
@@ -1516,7 +1751,9 @@
               "major": "Major (-30)",
               "blind": "Blind (-30+)",
               "indirect": "Indirect (-20)"
-            }
+            },
+            "pickTargets": "Choose targets",
+            "vacuum": "In Vacuum"
           },
           "defender": {
             "isProne": "Is Prone (-10 if at range)",
@@ -1597,7 +1834,31 @@
           "exoticMorphology": "Exotic Morphology"
         },
         "augmentations": "Augmentations",
-        "dodgeCoverLabel": "Dodge behind cover"
+        "dodgeCoverLabel": "Dodge behind cover",
+        "fullDefenseLabel": "Full defense (+30)",
+        "psi": {
+          "touch": "Touch (+20)",
+          "willing": "Willing target (no resistance)"
+        },
+        "throw": {
+          "headline": "Throw",
+          "radius": "Blast radius",
+          "reduction": "DV Loss",
+          "note": "Everyone in the blast has to defend. Dialling the blast back takes a quick action.",
+          "place": "Place blast",
+          "noneLeft": "{name}: none left to throw.",
+          "blastHeadline": "Blast",
+          "timer": "Goes off after",
+          "unit": {
+            "rounds": "Rounds",
+            "seconds": "Seconds",
+            "minutes": "Minutes"
+          },
+          "proximity": "Sensor reach",
+          "payload": "Payload",
+          "noPayload": "No payload loaded"
+        },
+        "sleightOptions": "Sleights"
       },
       "successType": {
         "success": "Success",
@@ -1641,6 +1902,7 @@
         "baseValue": "Base Value",
         "rollTarget": "Target",
         "total": "Result",
+        "initiative": "rolls for Initiative",
         "damageDone": "Damage Done",
         "stressReceived": "Stress Received",
         "infectionRaise": "Infection raised to",
@@ -1665,7 +1927,10 @@
           "noBioBrain": "Psi only works from a biological brain. A Cyberbrain blocks it, and an infomorph has no nervous system to work through.",
           "blockedByDrug": "A drug is blocking your psi.",
           "substrateBlockedTooltip": "Psi needs a biological brain",
-          "substrateMismatch": "Biological brain in a synthetic body"
+          "substrateMismatch": "Biological brain in a synthetic body",
+          "touch": "Touch",
+          "cyberbrain": "Target with a cyberbrain",
+          "range": "Psi range: {band} ({distance} m)"
         },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."
@@ -1757,6 +2022,7 @@
             "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
             "multipleTargets": "Multiple Targets",
+            "proneTarget": "Target prone (superior position)",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -1794,7 +2060,9 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
-            "fray": "Fray Ranged"
+            "fray": "Fray Ranged",
+            "measured": "{band} ({distance} m)",
+            "proneAtRange": "Defender prone at range"
           },
           "damage": {
             "physicalDamage": "My morph took damage",
@@ -1803,7 +2071,8 @@
             "wounds": "Wound(s)",
             "stress": "Stress",
             "trauma": "Trauma"
-          }
+          },
+          "fullDefense": "Full defense"
         }
       },
       "psi": {
@@ -1883,6 +2152,16 @@
         "fewerHeadline": "Fewer targets than doses",
         "fewerCopy": "The weapon delivers {max} doses, are you sure that you want to select {count} targets only?",
         "fewerConfirm": "Confirm"
+      },
+      "selectPayload": {
+        "header": "Select payload",
+        "copy": "Which substance does this munition carry?",
+        "none": "No substance in the payload compendiums can be delivered this way."
+      },
+      "selectMunition": {
+        "header": "Prepare munition",
+        "copy": "Which substance does this munition carry?",
+        "noPayload": "No payload"
       }
     },
     "chat": {
@@ -1948,7 +2227,8 @@
         "addictionRaisedEgo": "My ego's addiction to <strong>{name}</strong> grows to level {level}",
         "addictionRaisedBody": "My body's addiction to <strong>{name}</strong> grows to level {level}",
         "addictionRaisedBoth": "My ego's and my body's addiction to <strong>{name}</strong> grows to level {level}",
-        "unaffected": "{drug} cannot act on {name}'s body."
+        "unaffected": "{drug} cannot act on {name}'s body.",
+        "sealedOff": "{name} is sealed against {drug}: it cannot reach them by {vector}."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
@@ -1968,19 +2248,177 @@
         "applyDose": "Apply dose to selected targets",
         "applyTargets": "Apply to selected targets",
         "targets": "Targets: {names}",
-        "hitByPool": "The pool spend turned the {weapon} attack into a hit."
+        "chooseTarget": "Choose target",
+        "rollDamage": "Roll damage",
+        "damageWithoutTarget": "Damage without target",
+        "damageReady": "Damage from the {weapon}",
+        "suppressiveArea": "Suppressive fire ({name})",
+        "suppressiveNote": "Suppressive fire laid down: whoever moves inside the cone has to defend.",
+        "blastArea": "Blast ({name})",
+        "blastNote": "The blast is marked on the map.",
+        "scatter": "Scatter",
+        "scattered": "Scattered {side}, {distance} m.",
+        "scatteredWall": "Scattered {side}, {distance} m - stopped short at a wall.",
+        "scatterAhead": "straight on",
+        "scatterBack": "straight back",
+        "scatterRight": "{degrees}° to the right",
+        "scatterLeft": "{degrees}° to the left",
+        "armedTimerRound": "Armed: goes off at the end of {name}'s turn in round {round}.",
+        "armedTimerClock": "Armed: the timer runs on the world clock.",
+        "armedSignal": "Armed: goes off when its owner sends the signal.",
+        "armedProximity": "Armed: goes off when someone comes within {reach} m - live after 3 action turns.",
+        "detonate": "Detonate",
+        "defuse": "Defuse",
+        "defusedNote": "Defused, it will not go off.",
+        "countdownTurns": "{count} turns",
+        "countdownSeconds": "{count} s",
+        "countdownMinutes": "{count} min",
+        "armedBy": "{name} · remote",
+        "armedLive": "{name} · sensor live",
+        "armedArming": "{name} · sensor live in {time}",
+        "armedTimer": "{name} · goes off in {time}",
+        "armedYours": "{name} (You)",
+        "gasArea": "Gas ({name})",
+        "smokeArea": "Smoke ({name})",
+        "gasNote": "The gas cloud lies for 3 action turns: whoever is in it, comes into it or begins their turn in it breathes the dose in.",
+        "smokeNote": "The smoke lies for 3 minutes and hides whatever is in or behind it (-20)."
+      },
+      "blindAttack": {
+        "headline": "Blind attack with the {weapon}",
+        "missed": "{name} is blinded. The attack misses outright.",
+        "through": "{name} is blinded. The attack goes ahead.",
+        "rollTitle": "Blind roll",
+        "accept": "Accept Result",
+        "gone": "No attack waits on this roll any more. Roll the attack again."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> must make a {check}",
+        "roll": "Roll {check}",
+        "resist": "Resist {effect}",
+        "resistFor": "{name}: Resist {effect}",
+        "rollRemaining": "Roll Remaining Checks",
+        "resolveRest": "Resolve Rest Without Roll",
+        "weapon": "Weapon",
+        "immune": "<strong>{name}</strong> is immune to {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> resists {effect}",
+        "flee": "<strong>{name}</strong> must flee with the next full action - as far from the pain as possible or into the nearest full cover",
+        "spanRound": "1 action turn",
+        "spanRounds": "{count} action turns",
+        "spanMinutes": "{count} min",
+        "armor": {
+          "energy": "Energy armor",
+          "kinetic": "Kinetic armor"
+        },
+        "attackSuperiors": "Superior successes of the attack",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Knockdown",
+          "rule": "Wound modifiers apply. Failure: prone."
+        },
+        "unconscious": {
+          "name": "Unconsciousness",
+          "rule": "Two or more wounds at once knock you prone. Wound modifiers apply. Failure: unconscious until woken or healed."
+        },
+        "shock": {
+          "name": "Shock",
+          "rule": "Energy armor adds to the check; add the size modifier in the dialog (very small -30, small -10, large +10, very large +30). Failure: prone, incapacitated for 1 action turn (+2 per superior failure) and stunned for 3 minutes. Success: stunned for 3 action turns."
+        },
+        "stun": {
+          "name": "Stun",
+          "rule": "Kinetic armor adds to the check; add the size modifier in the dialog (small -30, large +30). Failure: stunned for 1 action turn, +1 per superior failure. Critical failure: incapacitated for 1 action turn and stunned for 1 minute."
+        },
+        "blinding": {
+          "name": "Blinding",
+          "rule": "Failure: blinded for 1 action turn, +1 per superior failure. Critical failure: blinded until repaired or healed in a healing vat."
+        },
+        "entangling": {
+          "name": "Entangling",
+          "rule": "Each superior success of the attack: -10 to this check and to SOM Checks to break free. Failure: grappled."
+        },
+        "pain": {
+          "name": "Pain",
+          "rule": "-20 until the end of the next turn either way (Pain Tolerance I: +30 to the check and -10). Failure: flee with the next full action."
+        },
+        "confused": {
+          "name": "Confusion",
+          "rule": "-30 to the check. Success: act as normal. Failure: the d100 decides - 00-24 mutter incoherently, 25-49 act randomly as the GM decides, 50-74 flee in a random direction, 75-99 attack a random nearby target, even an ally, with whatever is in hand. Defend with Fray as normal."
+        }
+      },
+      "confusion": {
+        "headline": "Confused: <strong>{name}</strong>",
+        "mutter": "{name} does nothing but mutter incoherently.",
+        "random": "{name} acts at random - the GM decides how.",
+        "flee": "{name} flees in a random direction.",
+        "attack": "{name} attacks a random nearby target - even an ally - with whatever is in hand.",
+        "rollTitle": "Confusion roll",
+        "clear": "<strong>{name}</strong> sees through the confusion and acts as normal"
       },
       "defence": {
         "headline": "Defend against the {weapon}",
-        "doseLabel": "{name}, one dose each",
         "dodge": "Dodge",
         "parry": "Parry",
-        "rollAll": "Roll remaining at once",
+        "rollAll": "Dodge Rest",
         "outcome": {
           "hit": "Hit",
           "half": "Partly dodged: half",
-          "none": "Avoided"
-        }
+          "none": "Avoided",
+          "will": {
+            "hit": "Affected",
+            "half": "Affected",
+            "none": "Resisted"
+          },
+          "cover": "Moved into cover",
+          "remainCover": "Remained in cover",
+          "spared": "not reached",
+          "inCover": "in cover"
+        },
+        "severalTargets": "Several targets",
+        "resist": "Resist ({aptitude})",
+        "yield": "Don't resist",
+        "lockedOut": "Critical: the async is locked out of this mind until they recharge.",
+        "touchLabel": "{name} by touch",
+        "cover": "Moved into Cover",
+        "remainCover": "Remains in Cover",
+        "blastDistance": "{distance} m from the centre",
+        "blastEdge": "at the edge",
+        "inCover": "No Damage",
+        "spareRest": "Resolve Rest Without Roll",
+        "soak": "Soak Damage",
+        "soakRest": "Soak Rest",
+        "headlineCover": "Defend against the {weapon} from behind an obstacle",
+        "payloadLabel": "Payload",
+        "doseInfo": "Dose"
+      },
+      "failGone": "This failure is no longer available.",
+      "poolSpent": {
+        "swapped": "{name} used a {pool} point to swap the dice",
+        "upgraded": "{name} used a {pool} point to raise the result",
+        "mitigated": "{name} used a {pool} point to soften the failure"
+      },
+      "damage": {
+        "appliedPhysical": "{name} takes {taken} damage and {wounds} wounds",
+        "appliedMental": "{name} takes {taken} stress and {wounds} traumas",
+        "attackHit": "{name}: {share} - {armor} {armorType} armor = {damage}, {woundsTaken}",
+        "attackHalf": "{name} (half): {share} - {armor} {armorType} armor = {damage}, {woundsTaken}",
+        "attackMissed": "{name} was not hit",
+        "attackParried": "{name} parried",
+        "attackTookDamage": "{name} was hit and took damage",
+        "attackSoaked": "{name} was hit, but the armor soaked all damage",
+        "amountDamage": "{value} damage",
+        "amountWounds": "{value} wounds",
+        "amountStress": "{value} stress",
+        "amountTraumas": "{value} traumas",
+        "blastFalloff": "{name} ({distance} m, -{falloff} DV)"
+      },
+      "psiTouch": {
+        "headline": "Psi Touch-Attack ({sleight})",
+        "touched": "{target} was touched",
+        "avoided": "{target} avoided the touch",
+        "missed": "The touch missed {target}",
+        "useTouch": "Use {sleight} by touch (+20)",
+        "usePointBlank": "Use {sleight} at point-blank (+10)",
+        "used": "The sleight has been used."
       }
     },
     "rule": {
@@ -2131,6 +2569,7 @@
       "sectionThreats": "Non Player Characters & Threats",
       "endNow": "End now",
       "remaining": "Remaining",
+      "endsThisRound": "Ends This Round",
       "owner": "Character",
       "toggleFormat": "Switch hours and beats",
       "hoursTooltip": "about {hours} h",
@@ -2155,9 +2594,12 @@
         "day3": "+3 Days",
         "day7": "+7 Days",
         "beats": "{beats} Beats"
-      }
+      },
+      "sectionEnvironment": "Environment",
+      "locateCloud": "Show on map"
     },
     "migration": {
+      "28": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Know Your Armor<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Lasers burn, bullets punch, and some things just soak through your clothes. Every weapon mode now says which armor its damage meets:</p><ul><li>Each weapon mode has an <b>Armor Used</b> field right after its damage: <b>Energy</b>, <b>Kinetic</b> or <b>None</b>.</li><li>Weapons already on your sheets get the value of their compendium namesake. Weapons of your own get Energy for beam weapons and Kinetic for everything else - check the ones that should differ.</li><li>Psi now meets <b>mental armor</b>: Psi Armor sleights already on your sheets learn to report it.</li></ul></span>",
       "27": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>First time is free...!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:</p><ul><li>Every drug's <b>Duration</b> is now functional and runs on the clock.</li><li>Drugs come in <b>packs</b> of five doses by default, settable per drug.</li><li>Dropping the same drug, ammo or grenade again adds to your existing stack.</li><li>Only <b>ammunition packs</b> load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.</li><li>A drug's effects apply when you <b>take</b> it, not while you carry it.</li><li>Every drug is now either a <b>drug</b> or a <b>toxin</b>. The book's chapters live on as folders in the compendium.</li><li>Drugs now bring their <b>situational modifiers</b> into your rolls, call for <b>checks</b> when they take hold and can leave <b>stress</b> behind when they wear off. Drugs already on your sheets get these from the compendium.</li><li>Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.</li><li>Drugs now also work <b>over time</b>, can lend <b>traits</b> while they run, and meet your <b>defensive ware</b>: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.</li><li>Ware now brings its <b>situational bonuses</b> into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium.</li></ul></span>",
       "25": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Eclipse Phase Goes Modular, And Psi Interacts With Its Environment (Mostly Your Brain)<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This is a small step for you, but a huge one for the System, as I enabled the Eclipse Phase 2e system of having modules of its own! This will give you the opportunity to choose whether you want to go with the rules of your EP 100% verbatim or to tweak them a little or even create something your own and plug it in. Let me make the start:</p><p>From today on there are two all new modules to be had for EP!</p><p>First a module to have shops which gives you the option to create in game shops for buying or cashing in favors with the original EP system or some other rules I came up with. All fully customizable and completely changeable to convey your playstyle!</p><p>The second is the Ki module which introduces a new flavour of Psi called Ki. While it uses the same logic as Psi (Ki Gamma and Ki Chi) it has a suite of all new sleights that are all affecting the real space instead of one psyche. And require a Cyberbrain instead of being blocked by one.</p><p>Don't like any of these? You don't have to use them as standard Psi just remains in the core system and nothing changes for you if you don't want to... nothing that is but the following few things:</p><ul><li>Any Aspect item (Gamma/Epsilon sleights) can now carry an optional damage formula, set on its own sheet, and roll it via a new button after a successful cast - the GM still judges whether it actually hit, same as weapon damage.</li><li><b>Psychic Stab</b> and <b>Nightmare</b> are backfilled with their book damage automatically, on every character/NPC/goon that already owns a copy, and in the world items list.</li><li>Sub-strain <b>Influence Effect</b> tables are now kept per archetype, so you can switch archetype without the table you filled in for the previous one being deleted.</li><li>A Cyberbrain now has a concrete effect on Psi, and so does a synthmorph carrying a <b>Brain Box</b>; to make that possible, Cyberbrain and Core System ware you already own gets an invisible marker so the system can recognise it.</li></ul><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "25ki": "<p>One more thing, just for this world: it carries <b>Ki</b> characters from a pre-release build. Their sub-strain choices - The Crucible, Redline, Signal, Ruin and Colony - move into the Ki module's own data now. Nothing you see on the sheet changes, and the five Psi archetypes are not touched.</p>",
@@ -2192,7 +2634,8 @@
         "backup": "IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.",
         "reachOut": "Don't forget to reach out, agent!",
         "migrate": "Migrate Now!",
-        "close": "Close Without Migration"
+        "close": "Close Without Migration",
+        "unreadableRanges": "These weapon ranges could not be read as metres and were left as they were. Please enter them as a number on the weapon sheet:<br>{list}"
       }
     },
     "systemMessage": {
@@ -2225,12 +2668,142 @@
       }
     },
     "targeting": {
+      "needsGM": "Some functions are locked while no GM is connected, because they could otherwise cause errors in the system and lose items such as ammunition or grenades. They unlock as soon as a GM is present.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "Press ESC or right-click with no targets to cancel.",
       "confirmHint": "Right click to confirm",
       "remaining": "{count} targets left",
       "limitReached": "The maximum of {max} targets is reached. Click a marked target again to unmark it.",
       "selectTarget": "Select target",
-      "targetChosen": "Target chosen"
+      "targetChosen": "Target chosen",
+      "tooFar": "Further targets must be within {within} m of a marked one.",
+      "marked": "{count} targets marked",
+      "tooFew": "Pick at least {min} targets.",
+      "unsuitable": "{name} cannot be targeted by this: {kind}.",
+      "kind": {
+        "biomorph": "biomorph",
+        "synthmorph": "synthmorph",
+        "infomorph": "infomorph",
+        "bot": "bot",
+        "vehicle": "vehicle",
+        "animal": "animal",
+        "cyberbrain": "cyberbrain"
+      },
+      "band": {
+        "pointBlank": "Point Blank",
+        "close": "Close",
+        "range": "Range",
+        "beyond": "Beyond Range"
+      },
+      "outOfTouch": "{name} is beyond the reach of a touch (2 m).",
+      "areaName": "Area",
+      "outsideArea": "That token is outside the area.",
+      "tooMany": "At this range, this attack strikes at most {max} targets.",
+      "ownBlast": "{name} is caught in their own blast.",
+      "armedElsewhere": "That explosive lies on another scene - view that scene first.",
+      "lockedOut": "{name}'s mind is closed to you until your next recharge.",
+      "notOnSelf": "This sleight may not be used on yourself."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Blinded",
+        "description": "You cannot see, but still perceive through other senses, entoptics and meshed sensors. −30 to physical actions, Fray included; an attack on a target you do not perceive may miss outright."
+      },
+      "confused": {
+        "name": "Confused",
+        "description": "Each turn a COG Check at −30. On a failure you mutter, act at random, flee or attack someone nearby."
+      },
+      "dazed": {
+        "name": "Dazed",
+        "description": "Mentally stunned and disoriented: no actions but a base move and defending against attacks."
+      },
+      "deafened": {
+        "name": "Deafened",
+        "description": "You cannot hear. −3 to Initiative and −30 to Perceive Tests."
+      },
+      "grappled": {
+        "name": "Grappled",
+        "description": "Physically restrained: Movement Rate 0 and no physical actions but breaking free. Fray at −30 against attacks from outside the grapple."
+      },
+      "immobilized": {
+        "name": "Immobilized",
+        "description": "No physical actions, Fray included, until you recover. Mental and mesh actions remain."
+      },
+      "impaired10": {
+        "name": "Impaired (−10)",
+        "description": "Your abilities are hindered: −10 to all actions."
+      },
+      "impaired20": {
+        "name": "Impaired (−20)",
+        "description": "Your abilities are hindered: −20 to all actions."
+      },
+      "impaired30": {
+        "name": "Impaired (−30)",
+        "description": "Your abilities are hindered: −30 to all actions."
+      },
+      "incapacitated": {
+        "name": "Incapacitated",
+        "description": "No actions at all, mental actions and Fray included. You cannot defend against attacks."
+      },
+      "prone": {
+        "name": "Prone",
+        "description": "On the ground, or spinning in microgravity. Standing up is a quick action. Standing opponents in melee get +20, shooters at Range or farther −10."
+      },
+      "stunned": {
+        "name": "Stunned",
+        "description": "The wind is knocked out of you: −30 to physical and −10 to mental actions."
+      },
+      "unconscious": {
+        "name": "Unconscious",
+        "description": "Out cold and helpless. A stimulant, or an INT Check at −30 when vigorously disturbed, wakes you."
+      },
+      "dead": {
+        "name": "Dead",
+        "description": "This character is dead."
+      },
+      "invisible": {
+        "name": "Invisible",
+        "description": "This character cannot be seen."
+      },
+      "noteText": "{name}: {note}",
+      "notApplied": "{name} (Not applied)",
+      "notes": {
+        "blinded": "a Perceive Test before every attack; when it fails, the attack misses on a straight 50%",
+        "deafened": "−3 Initiative and −30 Perceive",
+        "grappled": "Fray −30 against attacks from outside the grapple",
+        "prone": "opponents in melee +20, shooters at Range or farther −10"
+      },
+      "blocked": "{condition}: no tests can be made.",
+      "blockedPhysical": "{condition}: no physical actions are possible.",
+      "blockedDefenceOnly": "{condition}: only defending against attacks is possible."
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Attack card",
+            "hint": "The chat message of the suppressive fire this area answers to."
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Attack card",
+            "hint": "The chat message of the explosive this sensor belongs to."
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Attack card",
+            "hint": "The chat message of the gas this cloud belongs to."
+          }
+        }
+      }
     }
   }
 }

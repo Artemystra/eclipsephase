@@ -1,6 +1,7 @@
 import { damageValueCalc } from "../../module/common/general-sheet-functions.js";
-import { applySuccessTierBonus, takeDamage } from "../../module/rolls/damage.js";
-import { resetWorld } from "../setup/factories.js";
+import { applySuccessTierBonus, takeDamage, applyDamage } from "../../module/rolls/damage.js";
+import { damageFormula, dropDice } from "../../module/rolls/damage-formula.js";
+import { resetWorld, makeActor } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 
@@ -182,5 +183,111 @@ describe("takeDamage", () => {
 
     expect(createdMessages).toHaveLength(0);
     expect(actor.updates).toHaveLength(1);
+  });
+});
+
+describe("damageFormula", () => {
+  test("parts join in order: the base, its extras, then the success tier's dice", () => {
+    expect(damageFormula({ base: "1d10+2", extras: ["+1d10", "", " + 1d6"] }, 4)).toBe("1d10+2+1d10 + 1d6+1d6");
+  });
+
+  test("a critical doubles everything, a multiplier wraps that, a halving wraps it all", () => {
+    expect(damageFormula({ base: "2d10" }, 7)).toBe("2*(2d10)");
+    expect(damageFormula({ base: "2d10", multiplier: 2 }, 7)).toBe("2*(2*(2d10))");
+    expect(damageFormula({ base: "2d10", multiplier: 2, halved: true }, 3)).toBe("ceil((2*(2d10))/2)");
+  });
+
+  test("damage that follows no attack takes only its own parts", () => {
+    expect(damageFormula({ base: "1d10+2", halved: true })).toBe("ceil((1d10+2)/2)");
+  });
+});
+
+describe("applyDamage", () => {
+  beforeEach(() => resetWorld());
+
+  /**
+   * A character of WIL 15 in a biomorph of Durability 30.
+   * @returns {Object} The prepared actor
+   */
+  function body() {
+    return makeActor({ type: "character", system: { activeMorph: "morph1", aptitudes: { wil: { value: 15 } } }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } }] });
+  }
+
+  test("damage lands on the sheet with its wounds, and says what was taken", async () => {
+    const actor = body();
+    const threshold = actor.system.physical.wt;
+
+    const result = await applyDamage(actor, 14);
+
+    expect(result).toEqual({ taken: 14, wounds: Math.floor(14 / threshold) });
+    expect(actor.system.health.physical.value).toBe(14);
+    expect(actor.system.physical.wounds).toBe(Math.floor(14 / threshold));
+  });
+
+  test("it posts no card of its own unless asked to", async () => {
+    await applyDamage(body(), 8, { woundCheck: false });
+    const quiet = createdMessages.length;
+    await applyDamage(body(), 8, { announce: true, woundCheck: false });
+
+    expect(quiet).toBe(0);
+    expect(createdMessages).toHaveLength(1);
+  });
+
+  test("damage beyond what the body can still take is held to it", async () => {
+    const actor = body();
+    const ceiling = actor.system.physical.dr;
+
+    const result = await applyDamage(actor, ceiling + 50);
+
+    expect(result.taken).toBe(ceiling);
+    expect(actor.system.health.physical.value).toBe(ceiling);
+  });
+
+  test("stress goes on the mind with its traumas", async () => {
+    const actor = body();
+
+    const result = await applyDamage(actor, 5, { target: "mental" });
+
+    expect(actor.system.health.mental.value).toBe(5);
+    expect(result.taken).toBe(5);
+  });
+
+  test("the bars move from where they stood, not from empty", async () => {
+    const actor = body();
+    await applyDamage(actor, 10);
+    const before = actor.system.physical.relativePhysicalDamage;
+
+    await applyDamage(actor, 5);
+
+    expect(before).toBeGreaterThan(1);
+    expect(actor.system.physical.oldHealthBarValue).toBe(before);
+    expect(actor.system.health.barModifier).toBe("physicalUp");
+  });
+
+  test("several amounts are each measured against the threshold, but written at once", async () => {
+    const actor = body();
+    const threshold = actor.system.physical.wt;
+    const update = jest.spyOn(actor, "update");
+
+    const result = await applyDamage(actor, [threshold, threshold - 1, threshold]);
+
+    expect(result).toEqual({ taken: 3 * threshold - 1, wounds: 2 });
+    expect(actor.system.physical.wounds).toBe(2);
+    expect(actor.system.health.physical.value).toBe(3 * threshold - 1);
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+});
+
+
+describe("a die less", () => {
+  test("-1d10 DV takes a die away (Core p.207) rather than rolling one to subtract, and never below none", () => {
+    expect(["2d10+6", "2d10 + 6", "3d10+12", "1d10+1d6+2", "1d10", "1d6+2"].map(formula => dropDice(formula, 10, 1))).toEqual(["1d10+6", "1d10 + 6", "2d10+12", "1d6+2", "0", "1d6+2"]);
+    expect(dropDice("1d10+1d10+6", 10, 2)).toBe("6");
+  });
+
+  test("a damage formula reads an extra like -1d10 as a die less, after the extras that add dice, and before a critical doubles it", () => {
+    expect(damageFormula({ base: "2d10+6", extras: ["-1d10"] }, 3)).toBe("1d10+6");
+    expect(damageFormula({ base: "2d10+6", extras: ["+1d10", "-1d10"] }, 3)).toBe("1d10+6+1d10");
+    expect(damageFormula({ base: "2d10+6", extras: ["-1d10"] }, 7)).toBe("2*(1d10+6)");
   });
 });

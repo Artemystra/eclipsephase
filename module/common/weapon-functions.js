@@ -1,6 +1,6 @@
-import { itemReduction, listSelection, gmList } from "./general-sheet-functions.js";
+import { itemReduction, listSelection, gmList, searchableListSelection, diceFormula } from "./general-sheet-functions.js";
 import { damageValueCalc } from "./general-sheet-functions.js";
-import { dosesRemaining, isAmmoPack } from "./drugs.js";
+import { dosesRemaining, isAmmoPack, payloadCandidates } from "./drugs.js";
 
 const DRUG_CHOICE = "drug-";
 /**
@@ -77,7 +77,652 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
     
   }
 
+  const blast = seekerBlast(weapon, weaponDamage);
+  if (blast) selection.blast = blast;
+  const payload = weapon?.type === "rangedWeapon" ? payloadInfo(weapon.system?.ammoSelected?.payload, weapon.system?.ammoSelected?.cloud) : null;
+  if (payload) selection.payload = payload;
   return selection
+}
+
+/**
+ * The armour a weapon's damage meets when the weapon names none: energy for a beam weapon, kinetic
+ * for any other (Core p.214: beams are energy, firearms and melee kinetic).
+ * @param {Item|Object} item - The weapon
+ * @returns {String} "energy" or "kinetic"
+ */
+export function defaultArmorUsed(item) {
+  return item?.type === "rangedWeapon" && item.system?.ammoType === "beam" ? "energy" : "kinetic";
+}
+
+/**
+ * The armour an attack meets: the loaded ammunition's when it names one, otherwise the fired
+ * mode's, otherwise the weapon's default.
+ * @param {Item} weapon - The weapon
+ * @param {String} [mode] - "1" or "2", the mode fired
+ * @returns {String} "energy", "kinetic" or "none"
+ */
+export function attackArmorUsed(weapon, mode = "1") {
+  const ammo = weapon?.system?.ammoSelected?.armorused;
+  if (ammo === "energy" || ammo === "kinetic" || ammo === "none") return ammo;
+  return weapon?.system?.[`mode${mode}`]?.armorused || defaultArmorUsed(weapon);
+}
+
+// An area that is none.
+export const NO_AREA = { kind: "none", radius: null, reduction: null };
+
+/**
+ * A weapon range in metres, read from a number or from text like "75m" or "100m (AoE 1m)".
+ * @param {*} value - The stored range
+ * @returns {Number|null} The metres, null when there is none or it cannot be read
+ */
+export function parseRangeText(value) {
+  if (typeof value === "number") return Number.isFinite(value) && value > 0 ? value : null;
+  const match = String(value ?? "").trim().match(/^(\d+(?:[.,]\d+)?)\s*m?(?![a-z])/i);
+  return match ? Number(match[1].replace(",", ".")) : null;
+}
+
+/**
+ * The area a range text names in its "(AoE 1m)" suffix, as a uniform blast.
+ * @param {*} value - The stored range
+ * @returns {Object|null} The area, null when the text names none
+ */
+export function parseRangeArea(value) {
+  const match = String(value ?? "").match(/AoE\s*(\d+(?:[.,]\d+)?)\s*m?/i);
+  return match ? { kind: "uniform", radius: Number(match[1].replace(",", ".")), reduction: null } : null;
+}
+
+/**
+ * An area effect read from text like "Uniform (50 m)" or "Centered (-2 DV/m)" (Core p.213).
+ * @param {*} value - The stored text
+ * @returns {Object} kind ("uniform", "centered" or "none"), radius in metres, reduction in DV per metre
+ */
+export function parseAreaText(value) {
+  const text = String(value ?? "");
+  const uniform = text.match(/uniform\s*\(\s*(\d+(?:[.,]\d+)?)/i);
+  if (uniform) return { kind: "uniform", radius: Number(uniform[1].replace(",", ".")), reduction: null };
+  const centered = text.match(/cent(?:ere|re)d\s*\(\s*[-–]?\s*(\d+)\s*DV/i);
+  if (centered) return { kind: "centered", radius: null, reduction: Number(centered[1]) };
+  return { ...NO_AREA };
+}
+
+/**
+ * A munition's area once its size is applied (Core p.213, baseline = minigrenades and
+ * micromissiles): standard grenades and minimissiles double a uniform radius and add +1d10 to a
+ * centred blast; standard missiles double both the uniform radius and a centred blast's damage.
+ * @param {Object} system - The ammunition's or grenade's system data
+ * @returns {Object} kind, radius, reduction, plus damage ("+1d10" or "") and damageMultiplier
+ */
+export function munitionArea(system) {
+  const area = { ...NO_AREA, ...(system?.area ?? {}), damage: "", damageMultiplier: 1 };
+  const size = system?.size;
+  if (size !== "standard" && size !== "missile") return area;
+  if (area.kind === "uniform" && area.radius) area.radius *= 2;
+  if (area.kind === "centered") {
+    if (size === "standard") area.damage = "+1d10";
+    else area.damageMultiplier = 2;
+  }
+  return area;
+}
+
+/**
+ * An area as the damage card names it, e.g. "Uniform (10 m)" or "Centered (-2 DV/m)".
+ * @param {Object} area - kind, radius and reduction
+ * @returns {String} The label, "" for no area
+ */
+export function areaText(area) {
+  if (area?.kind === "uniform") return `${game.i18n.localize("ep2e.item.weapon.table.area.uniform")} (${area.radius ?? "?"} m)`;
+  if (area?.kind === "centered") return `${game.i18n.localize("ep2e.item.weapon.table.area.centered")} (-${area.reduction ?? 2} DV/m)`;
+  return "";
+}
+
+// The seeker sizes a munition can be chosen as (Core p.213), baseline being the micromissile.
+const SEEKER_SIZES = ["baseline", "standard", "missile"];
+
+/**
+ * What is still open on a munition before it lands on a sheet: a seeker whose size reads "select",
+ * and a payload that is switched on but carries nothing yet.
+ * @param {String} type - The item type
+ * @param {Object} system - The item's system data
+ * @returns {Object} size and payload, each true when it still has to be chosen
+ */
+export function needsMunitionChoice(type, system) {
+  if (type !== "ammo" && type !== "grenade") return { size: false, payload: false };
+  return {
+    size: type === "ammo" && system?.type === "seeker" && system?.size === "select",
+    payload: system?.payload?.enabled === true && !system.payload.loaded?.length
+  };
+}
+
+/**
+ * Whether two munitions of one name are the same thing to stack: same size (none counts as the
+ * baseline) and same payload.
+ * @param {Object} a - One munition's system data
+ * @param {Object} b - The other's
+ * @returns {Boolean} True when they stack
+ */
+export function sameMunition(a, b) {
+  const payload = system => system?.payload?.enabled ? system.payload.loaded?.[0]?.uuid ?? "" : "";
+  return (a?.size || "baseline") === (b?.size || "baseline") && payload(a) === payload(b);
+}
+
+/**
+ * A munition as a list row names it beyond its name: a seeker's size and the payload it carries.
+ * @param {String} type - The item type
+ * @param {Object} system - The item's system data
+ * @returns {String} The label, "" when there is nothing to add
+ */
+export function munitionLabel(type, system) {
+  const parts = [];
+  if (type === "ammo" && system?.type === "seeker" && SEEKER_SIZES.includes(system.size)) parts.push(game.i18n.localize(`ep2e.item.weapon.table.size.${system.size}`));
+  if (system?.payload?.enabled && system.payload.loaded?.[0]?.name) parts.push(system.payload.loaded[0].name);
+  return parts.join(" · ");
+}
+
+/**
+ * Settles what a munition still leaves open, on its data before it is created: asks a seeker's size
+ * and a switched-on payload's substance in one dialog. Choosing no payload switches it off, except on
+ * a munition that forms a cloud, for which it means smoke. Anything
+ * else, and a munition with nothing open, passes through unasked.
+ * @param {Object} itemData - The incoming item's source data, changed in place
+ * @returns {Promise<Boolean>} False when the choice was cancelled
+ */
+export async function chooseMunition(itemData) {
+  const system = itemData?.system;
+  const open = needsMunitionChoice(itemData?.type, system);
+  if (!open.size && !open.payload) return true;
+
+  const entries = [];
+  if (open.payload) {
+    entries.push({ id: "none", label: game.i18n.localize(system.cloud === true ? "ep2e.item.weapon.table.payload.smoke" : "ep2e.dialog.selectMunition.noPayload") });
+    for (const entry of await payloadCandidates(system.payload.vector)) entries.push({ id: entry.uuid, label: entry.name });
+  }
+  const sizeChoice = open.size
+    ? { label: "ep2e.item.weapon.table.size.label", options: SEEKER_SIZES.map(id => ({ id, label: `ep2e.item.weapon.table.size.${id}` })) }
+    : null;
+  const result = await searchableListSelection(entries, "ep2e.dialog.selectMunition.header", open.payload ? "ep2e.dialog.selectMunition.copy" : "", { sizeChoice });
+  if (!result || result.cancelled) return false;
+
+  if (open.size) system.size = SEEKER_SIZES.includes(result.size) ? result.size : "baseline";
+  if (open.payload) {
+    const chosen = entries.find(entry => entry.id === result.selection && entry.id !== "none");
+    if (chosen) {
+      system.payload.loaded = [{ uuid: chosen.id, name: chosen.label }];
+      const kind = await payloadCloudKind(system, chosen.id);
+      if (kind) system.cloudColor = { ...(system.cloudColor ?? { custom: "#ffffff" }), kind };
+    }
+    else if (system.cloud !== true) system.payload.enabled = false;
+  }
+  return true;
+}
+
+// The armour types a munition can name.
+const ARMOR_TYPES = ["energy", "kinetic", "none"];
+
+// The vector each delivery a payload named before its vector was chosen stands for: a capsule
+// injects it, a splash spreads it on the skin, a gas cloud is breathed in.
+const LEGACY_DELIVERY = { inside: "injection", contact: "dermal", cloud: "inhalation" };
+
+/**
+ * What a weapon, ammunition or grenade written before 2.8.5 needs to fit its schema: ranges in
+ * metres, an area read from its text, a munition's armour type out of the key the old sheet wrote,
+ * a grenade's traits named after themselves, its old "delayed" trigger read as a timer, and a
+ * payload's old delivery read as its vector. Values that already fit are left out.
+ * @param {String} type - The item type
+ * @param {Object} system - The item's system data
+ * @returns {Object} The repairs, as system paths to values
+ */
+export function weaponDataRepairs(type, system) {
+  const repairs = {};
+  if (!system) return repairs;
+  if (type === "rangedWeapon") {
+    for (const mode of ["mode1", "mode2"]) {
+      const data = system[mode];
+      if (!data) continue;
+      const range = data.range;
+      if (range !== null && range !== undefined && typeof range !== "number") {
+        repairs[`${mode}.range`] = parseRangeText(range);
+        const area = parseRangeArea(range);
+        if (area && (!data.area || data.area.kind === "none")) repairs[`${mode}.area`] = area;
+      }
+    }
+  }
+  if (type === "ammo" || type === "grenade") {
+    if ((!system.area || system.area.kind === "none") && system.areaeffect) {
+      const area = parseAreaText(system.areaeffect);
+      if (area.kind !== "none") repairs.area = area;
+    }
+  }
+  if ((type === "ammo" || type === "grenade") && !ARMOR_TYPES.includes(system.armorused)) {
+    if (ARMOR_TYPES.includes(system.armorUsed)) repairs.armorused = system.armorUsed;
+    else if (type === "grenade") repairs.armorused = "none";
+  }
+  if (type === "grenade" && system.trigger === "delayed") repairs.trigger = "timer";
+  if ((type === "ammo" || type === "grenade") && system.payload && !system.payload.vector && LEGACY_DELIVERY[system.payload.delivery]) repairs["payload.vector"] = LEGACY_DELIVERY[system.payload.delivery];
+  if (type === "grenade") {
+    for (const [key, trait] of Object.entries(system.traits ?? {})) {
+      const name = `ep2e.item.weapon.table.trait.${key}`;
+      if (trait && trait.name !== name) repairs[`traits.${key}.name`] = name;
+    }
+  }
+  return repairs;
+}
+
+/**
+ * The range a weapon is fired at, in metres: the chosen mode's range rating, or for a grenade how
+ * far its thrower throws it.
+ * @param {Object} weaponSelected - The roll's weapon, with weapon and weaponMode
+ * @returns {Number|null} The metres, null for a weapon without one
+ */
+export function weaponRange(weaponSelected) {
+  if (weaponSelected?.rolledFrom === "grenade") return Number(weaponSelected.range) > 0 ? Number(weaponSelected.range) : null;
+  const mode = weaponSelected?.weaponMode ?? "1";
+  return parseRangeText(weaponSelected?.weapon?.system?.[`mode${mode}`]?.range);
+}
+
+/**
+ * The range category a distance falls into for a weapon (Core p.207): point-blank up to 2 m (+10),
+ * close up to 10 m (+0), range up to the weapon's rating (-10), and beyond it -10 per range multiple,
+ * so 200 m with range 50 is -40. A long weapon gets nothing at point-blank. select is the attack
+ * dialog's matching distance entry.
+ * @param {Number} distance - The distance in metres
+ * @param {Number|null} range - The weapon's range rating, none for a weapon without one
+ * @param {Object} [traits] - The weapon's automated traits, of which long counts
+ * @returns {Object} band ("pointBlank", "close", "range" or "beyond"), multiples beyond range, modifier and select
+ */
+export function rangeBand(distance, range, traits = {}) {
+  const metres = Math.max(0, Number(distance) || 0);
+  if (range > 0 && metres > range) {
+    const multiples = Math.ceil(metres / range);
+    return { band: "beyond", multiples, modifier: -10 * multiples, select: multiples > 2 ? "beyond+" : "beyond" };
+  }
+  if (metres <= 2) return { band: "pointBlank", multiples: 0, modifier: traits?.long?.value ? 0 : 10, select: "pointBlank" };
+  if (metres <= 10) return { band: "close", multiples: 0, modifier: 0, select: "none" };
+  return { band: "range", multiples: 0, modifier: -10, select: "range" };
+}
+
+/**
+ * The damage a kinetic weapon loses beyond its range (Core p.207): -1d10, unless in vacuum. A cone
+ * loses it through coneDamage, beams and seekers never do.
+ * @param {Object} weapon - The weapon item
+ * @param {String} range - The attack dialog's distance entry
+ * @param {Boolean} vacuum - Whether the attack is made in vacuum
+ * @returns {String} A formula fragment, "" for none
+ */
+export function beyondRangeDamage(weapon, range, vacuum) {
+  if (vacuum || (range !== "beyond" && range !== "beyond+")) return "";
+  const ammo = weapon?.system?.ammoType;
+  return ammo === "kinetic" || ammo === "rail" ? "-1d10" : "";
+}
+
+/**
+ * Why a weapon may not be fired at a distance: no point-blank within 2 m, no close within 10 m.
+ * @param {Number} distance - The distance in metres
+ * @param {Object} [traits] - The weapon's automated traits
+ * @returns {String|null} The localization key of the reason, null when it may
+ */
+export function rangeRefusal(distance, traits = {}) {
+  if (traits?.noClose?.value && distance <= 10) return "ep2e.item.weapon.table.trait.noCloseAndPointBlank";
+  if (traits?.noPointBlank?.value && distance <= 2) return "ep2e.item.weapon.table.trait.noPointBlank";
+  return null;
+}
+
+// The grenade traits the roll accounts for, and those its hit brings, as a weapon's are sorted.
+const GRENADE_AUTOMATED = ["noDamage"];
+const GRENADE_EFFECTS = ["armorPiercing", "blinding", "disablesRadio", "knockdown", "pain", "shock", "stunBiomorphs", "noDamage"];
+
+// The traits whose hit asks the target for a check (Core p.216, 219).
+export const STRIKE_TRAITS = ["shock", "stun", "stunBiomorphs", "blinding", "entangling", "knockdown", "pain"];
+
+/**
+ * The traits of a weapon or grenade whose hit asks the target for a check.
+ * @param {Object} [effects] - Its additional effects, as traitSubSetConstructor or grenadeTraits sort them
+ * @returns {String[]} The trait keys
+ */
+export function strikeTraits(effects) {
+  return STRIKE_TRAITS.filter(key => effects?.[key]?.value);
+}
+
+// The steepest a centred blast can be dialled back to, in DV per metre (Core p.212).
+export const MAX_BLAST_REDUCTION = 20;
+
+// The triggers that leave a blast lying until it goes off, and so let it scatter even on a hit (Core p.212).
+export const DELAYED_TRIGGERS = ["timer", "signal", "proximity"];
+
+// How far a proximity trigger's sensor reaches, in metres, and how many action turns it takes to arm (Core p.212).
+export const PROXIMITY_REACH = 3;
+export const PROXIMITY_ARMING = 3;
+
+/**
+ * Whether a trigger leaves its blast lying until it goes off.
+ * @param {String} trigger - The trigger
+ * @returns {Boolean} True for a timer, a signal or a proximity trigger
+ */
+export function isDelayedTrigger(trigger) {
+  return DELAYED_TRIGGERS.includes(trigger);
+}
+
+/**
+ * How long a timer runs, in action turns and in seconds: a turn is the system's round time (3
+ * seconds), and seconds or minutes count as the whole turns they reach into. A timer runs at least
+ * one turn - it goes off at the end of the next one (Core p.212).
+ * @param {Number} value - The number set
+ * @param {String} unit - "rounds", "seconds" or "minutes"
+ * @returns {Object} rounds and seconds
+ */
+export function timerSpan(value, unit) {
+  const turn = Number(globalThis.CONFIG?.time?.roundTime) || 3;
+  const amount = Math.max(0, Number(value) || 0);
+  const seconds = unit === "minutes" ? amount * 60 : unit === "seconds" ? amount : amount * turn;
+  const rounds = Math.max(1, Math.ceil(seconds / turn));
+  return { rounds, seconds: Math.max(seconds, turn) };
+}
+
+/**
+ * A grenade's active traits, sorted as traitSubSetConstructor sorts a weapon's.
+ * @param {Object} system - The grenade's system data
+ * @returns {Object} automatedEffects, confirmationEffects and additionalEffects
+ */
+export function grenadeTraits(system) {
+  const active = Object.entries(system?.traits ?? {}).filter(([, trait]) => trait?.value);
+  const pick = keys => Object.fromEntries(active.filter(([key]) => keys.includes(key)));
+  return { automatedEffects: pick(GRENADE_AUTOMATED), confirmationEffects: {}, additionalEffects: pick(GRENADE_EFFECTS) };
+}
+
+/**
+ * The most damage a damage value can roll.
+ * @param {Object} dv - d10, d6 and bonus
+ * @returns {Number} The highest total
+ */
+export function maxDamage(dv) {
+  return (Number(dv?.d10) || 0) * 10 + (Number(dv?.d6) || 0) * 6 + (Number(dv?.bonus) || 0);
+}
+
+// What a uniform blast's damage loses per metre outside its radius unless it says otherwise (Core p.218).
+const UNIFORM_BLAST_REDUCTION = 2;
+
+/**
+ * How far a blast reaches (Core p.212, p.218): a uniform blast as far as its radius, a centred one
+ * until its damage has fallen to nothing - its highest damage over what it loses per metre. Dialled
+ * back, a uniform blast reaches only the radius chosen, a centred one loses more per metre, up to 20.
+ * @param {Object} blast - kind ("uniform", "centered" or "none"), radius, reduction and maxDamage
+ * @param {Object} [dial] - radius and reduction chosen in the throw dialog
+ * @returns {Object} kind, radius in metres and reduction per metre (0 for a uniform blast)
+ */
+export function blastReach(blast, dial = {}) {
+  if (blast?.kind === "uniform") {
+    const full = Number(blast.radius) || 0;
+    const chosen = Number(dial.radius);
+    const radius = chosen > 0 ? Math.min(full, chosen) : full;
+    const damage = Number(blast.maxDamage) || 0;
+    if (!damage) return { kind: "uniform", radius, reduction: 0 };
+    const reduction = Number(blast.reduction) || UNIFORM_BLAST_REDUCTION;
+    return { kind: "uniform", radius, reduction, falloffFrom: radius, reach: radius + damage / reduction };
+  }
+  if (blast?.kind === "centered") {
+    const base = Number(blast.reduction) || 2;
+    const chosen = Number(dial.reduction);
+    const reduction = chosen > 0 ? Math.min(MAX_BLAST_REDUCTION, Math.max(base, chosen)) : base;
+    return { kind: "centered", radius: (Number(blast.maxDamage) || 0) / reduction, reduction };
+  }
+  return { kind: "none", radius: 0, reduction: 0 };
+}
+
+/**
+ * The dose a munition's payload brings to whoever it strikes (Core p.211-212): its substance, the
+ * vector it enters by, and when it takes hold - a munition that deals damage releases it inside once
+ * the damage gets through the armour (a capsule), one that deals none on striking (a splash). A gas
+ * is breathed in from its cloud instead, not from the strike.
+ * @param {Object} payload - The munition's payload: enabled, vector and loaded
+ * @param {Boolean} damaging - Whether the munition deals damage
+ * @returns {Object|null} uuid, name, vector and when ("dealt" or "struck"), or null for none
+ */
+export function munitionDose(payload, damaging) {
+  const loaded = payload?.enabled ? payload.loaded?.[0] : null;
+  if (!loaded?.uuid || payload.vector === "inhalation") return null;
+  return { uuid: loaded.uuid, name: loaded.name ?? "", vector: payload.vector || "", when: damaging ? "dealt" : "struck" };
+}
+
+/**
+ * What a munition's payload shows in the attack dialog: its substance and vector, smoke for a cloud
+ * with nothing loaded, or that nothing is loaded although it could carry something.
+ * @param {Object} payload - The munition's payload
+ * @param {Boolean} [cloud] - Whether the munition forms a cloud
+ * @returns {Object|null} name and vector (a localization key), or empty for a payload not loaded; null
+ *   for a munition without one
+ */
+export function payloadInfo(payload, cloud = false) {
+  if (!payload?.enabled) return null;
+  const loaded = payload.loaded?.[0];
+  const vector = payload.vector ? `ep2e.item.drug.table.applicationVectors.${payload.vector}Label` : "";
+  if (loaded?.name) return { name: loaded.name, vector };
+  return cloud === true ? { name: game.i18n.localize("ep2e.item.weapon.table.payload.smoke"), vector: "" } : { empty: true };
+}
+
+/**
+ * The name a munition's payload shows wherever the munition is listed: its substance, smoke for a
+ * cloud with nothing loaded, or that none is loaded although it could carry one.
+ * @param {Object} payload - The munition's payload
+ * @param {Boolean} [cloud] - Whether the munition forms a cloud
+ * @returns {String|null} The name or the "no payload" words, null for a munition without one
+ */
+export function loadedPayloadName(payload, cloud = false) {
+  if (!payload?.enabled) return null;
+  if (payload.loaded?.[0]?.name) return payload.loaded[0].name;
+  return game.i18n.localize(cloud === true ? "ep2e.item.weapon.table.payload.smoke" : "ep2e.roll.dialog.throw.noPayload");
+}
+
+// The colours a cloud can be drawn in, by the kind of cloud it is.
+export const CLOUD_COLORS = { smoke: "#e6e6e6", toxin: "#7cc96b", drug: "#c56be0" };
+
+/**
+ * The colour a munition's cloud is drawn in: the kind chosen on the munition, or a colour of its own.
+ * @param {Object} cloudColor - kind ("smoke", "toxin", "drug" or "custom") and custom
+ * @returns {String} The colour
+ */
+export function cloudColor(cloudColor) {
+  if (cloudColor?.kind === "custom" && /^#[0-9a-f]{6}$/i.test(cloudColor.custom ?? "")) return cloudColor.custom;
+  return CLOUD_COLORS[cloudColor?.kind] ?? CLOUD_COLORS.smoke;
+}
+
+/**
+ * The colour a cloud-forming munition takes once a substance is loaded: green for a toxin, purple for
+ * a drug. A munition given a colour of its own keeps it.
+ * @param {Object} system - The munition's system data
+ * @param {String} uuid - The loaded substance
+ * @returns {Promise<String|null>} "toxin" or "drug", or null when the colour stays
+ */
+export async function payloadCloudKind(system, uuid) {
+  if (system?.cloud !== true || system.cloudColor?.kind === "custom" || !uuid) return null;
+  const substance = await fromUuid(uuid);
+  if (substance?.type !== "drug") return null;
+  return substance.system?.category === "toxin" ? "toxin" : "drug";
+}
+
+/**
+ * The most a damage formula can roll: every die at its highest, flat values added or taken off.
+ * @param {String} formula - e.g. "3d10+6" or "1d10+2d6-1"
+ * @returns {Number} The highest total, 0 for a formula without dice or numbers, or for a label
+ */
+export function formulaMax(formula) {
+  const text = String(formula ?? "").replace(/\s/g, "");
+  if (!/^[\dd+-]*$/.test(text)) return 0;
+  let total = 0;
+  for (const [, sign, count, faces, flat] of text.matchAll(/([+-]?)(?:(\d*)d(\d+)|(\d+))/g)) {
+    const value = faces ? (Number(count) || 1) * Number(faces) : Number(flat);
+    total += sign === "-" ? -value : value;
+  }
+  return Math.max(0, total);
+}
+
+/**
+ * The blast a ranged weapon fires when the munition loaded carries one - a seeker missile (Core
+ * p.212): its area once its size is applied, reaching as a grenade's does, set off on impact.
+ * @param {Item} weapon - The weapon
+ * @param {String} weaponDamage - The damage the weapon deals with the munition, as a formula
+ * @returns {Object|null} kind, radius, reduction, maxDamage, trigger, and the size's damage and
+ *   damageMultiplier; null for a weapon whose munition has no blast
+ */
+export function seekerBlast(weapon, weaponDamage) {
+  if (weapon?.type !== "rangedWeapon") return null;
+  const area = weapon.system?.ammoSelected?.area;
+  if (area?.kind !== "uniform" && area?.kind !== "centered") return null;
+  const multiplier = Number(area.damageMultiplier) || 1;
+  const maxDamage = (formulaMax(weaponDamage) + formulaMax(area.damage)) * multiplier;
+  return { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage, trigger: "impact", damage: area.damage || "", damageMultiplier: multiplier };
+}
+
+/**
+ * A grenade made ready to throw, in the shape weaponPreparation gives a weapon: thrown with Athletics
+ * as far as its thrower's SOM in metres (Core p.209), with the blast the grenade carries.
+ * @param {Actor} actor - The thrower
+ * @param {String} itemId - The grenade
+ * @returns {Object|null} The selection, or null when the actor has no such grenade
+ */
+export function grenadePreparation(actor, itemId) {
+  const grenade = actor?.items?.get(itemId);
+  if (grenade?.type !== "grenade") return null;
+  const area = munitionArea(grenade.system);
+  return {
+    weapon: grenade,
+    weaponID: grenade.id,
+    weaponName: grenade.name,
+    weaponDamage: diceFormula(grenade.system.dv) || "ep2e.item.weapon.table.noDamage",
+    weaponType: "thrown",
+    rolledFrom: "grenade",
+    currentAmmo: Number(grenade.system.quantity) || 0,
+    weaponTraits: grenadeTraits(grenade.system),
+    weaponMode: "1",
+    range: Number(actor.system?.aptitudes?.som?.value) || null,
+    blast: { kind: area.kind, radius: area.radius, reduction: area.reduction, maxDamage: maxDamage(grenade.system.dv), trigger: grenade.system.trigger || "impact" },
+    ...(payloadInfo(grenade.system.payload, grenade.system.cloud) ? { payload: payloadInfo(grenade.system.payload, grenade.system.cloud) } : {})
+  };
+}
+
+/**
+ * Takes a thrown grenade off its stack; the last one thrown takes the stack with it, as any
+ * consumable used up.
+ * @param {Actor} actor - The thrower
+ * @param {Object} selected - What grenadePreparation returned
+ * @returns {Promise<Item|null>} The updated grenade, or null once the stack is gone
+ */
+export async function spendGrenade(actor, selected) {
+  const grenade = actor?.items?.get(selected?.weaponID);
+  if (!grenade) return null;
+  const left = (Number(grenade.system.quantity) || 0) - 1;
+  if (left < 1) {
+    await actor.deleteEmbeddedDocuments("Item", [grenade.id]);
+    return null;
+  }
+  return grenade.update({ "system.quantity": left });
+}
+
+// How wide suppressive fire's cone is at its far end, in metres (Core p.207); its length is the shooter's to choose.
+export const SUPPRESSIVE_WIDTH = 20;
+
+// The most targets a cone reaches (Core p.218).
+export const CONE_MAX_TARGETS = 3;
+
+// An attack's target count that stands for any number of targets. Kept as 0, since a card's flags
+// cannot hold Infinity.
+export const ANY_TARGETS = 0;
+
+// What each attack mode of the attack dialogs does (Core p.204-206): rounds a ranged mode uses,
+// the modifier it brings (kind says which dialog's modifiers it joins), the damage dice it adds,
+// the targets it strikes with one attack test, and what it leaves the attacker open to afterwards.
+// An aggressive attack takes either +10 to hit (Aggressive Hit) or +1d10 DV (Ruthless Attack), and
+// costs -10 on Fray until the attacker's next action.
+// Which of the attack dialog's modes a weapon's firing mode allows. Suppressive fire takes full-auto
+// mode (Core p.207).
+const BURST_ATTACKS = ["burst", "wBurst", "burstTargets"];
+const AUTO_ATTACKS = ["fullAuto", "wFullAuto", "fullAutoTargets", "suppressive"];
+const FIRING_MODE_ATTACKS = {
+  ss: ["single"],
+  sa: ["single"],
+  saBF: ["single", ...BURST_ATTACKS],
+  bfFA: [...BURST_ATTACKS, ...AUTO_ATTACKS],
+  saBFfa: ["single", ...BURST_ATTACKS, ...AUTO_ATTACKS]
+};
+
+/**
+ * The attack dialog's modes for a weapon: those its firing mode allows, all of them when it has none.
+ * @param {Object} selected - The roll's weapon, with weapon and weaponMode
+ * @returns {Object[]} value and label of each mode
+ */
+export function firingAttackModes(selected) {
+  const firing = selected?.weapon?.system?.[`mode${selected?.weaponMode ?? "1"}`]?.firingMode;
+  return (FIRING_MODE_ATTACKS[firing] ?? FIRING_MODE_ATTACKS.saBFfa).map(value => ({ value, label: `ep2e.roll.dialog.ranged.attacker.fireMode.${value}` }));
+}
+
+export const ATTACK_MODES = {
+  single: { rounds: 1 },
+  burst: { rounds: 3, damage: "+1d10" },
+  wBurst: { rounds: 3, hit: { kind: "ranged", value: 10, announce: "ep2e.roll.announce.combat.ranged.wBurst" } },
+  burstTargets: { rounds: 3, targets: 2 },
+  fullAuto: { rounds: 10, damage: "+2d10" },
+  wFullAuto: { rounds: 10, hit: { kind: "ranged", value: 30, announce: "ep2e.roll.announce.combat.ranged.wFullAuto" } },
+  fullAutoTargets: { rounds: 10, targets: 3 },
+  suppressive: { rounds: 20, targets: ANY_TARGETS },
+  charge: { damage: "+1d6", hit: { kind: "melee", value: -10, announce: "ep2e.roll.announce.combat.melee.charge", addition: "ep2e.roll.announce.combat.melee.chargeAddition" } },
+  aggressive: { hit: { kind: "melee", value: 10, announce: "ep2e.roll.announce.combat.melee.agressive" }, exposure: { nameKey: "ep2e.roll.announce.combat.melee.agressive", fray: -10 } },
+  aggressiveCharge: { damage: "+1d10", exposure: { nameKey: "ep2e.roll.announce.combat.melee.agressiveCharge", fray: -10 } }
+};
+
+/**
+ * The fewest targets an attack mode needs: two for a mode that strikes several, one otherwise.
+ * @param {String} attackMode - The mode chosen in the attack dialog
+ * @returns {Number} The minimum
+ */
+export function minimumTargets(attackMode) {
+  return ATTACK_MODES[attackMode]?.targets > 1 ? 2 : 1;
+}
+
+/**
+ * Whether a weapon fires in a cone: every spray weapon does (Core p.217).
+ * @param {Item} weapon - The weapon
+ * @returns {Boolean} True for a cone weapon
+ */
+export function isConeWeapon(weapon) {
+  return weapon?.type === "rangedWeapon" && weapon.system?.ammoType === "spray";
+}
+
+/**
+ * How many targets a cone reaches at a range (Core p.218): one at point-blank and close, two at
+ * range, three beyond it.
+ * @param {String} range - The distance chosen in the attack dialog
+ * @returns {Number} The targets
+ */
+export function coneTargets(range) {
+  if (range === "range") return 2;
+  if (range === "beyond" || range === "beyond+") return 3;
+  return 1;
+}
+
+/**
+ * The damage dice a cone adds or loses at a range (Core p.218): +1d10 at point-blank and close,
+ * -1d10 beyond range.
+ * @param {Item} weapon - The weapon
+ * @param {String} range - The distance chosen in the attack dialog
+ * @returns {String} A formula fragment, "" for none
+ */
+export function coneDamage(weapon, range) {
+  if (!isConeWeapon(weapon)) return "";
+  if (range === "beyond" || range === "beyond+") return "-1d10";
+  if (range === "range") return "";
+  return "+1d10";
+}
+
+
+/**
+ * How many targets a ranged attack strikes: a cone by its range, a burst or full auto at several
+ * targets by the mode, suppressive fire anyone who breaks cover, anything else one.
+ * @param {Item} weapon - The weapon
+ * @param {Object} options - attackMode and range from the attack dialog
+ * @returns {Number} The targets, ANY_TARGETS for any number
+ */
+export function attackTargetCount(weapon, { attackMode, range } = {}) {
+  if (attackMode === "suppressive") return ANY_TARGETS;
+  if (isConeWeapon(weapon)) return coneTargets(range);
+  return ATTACK_MODES[attackMode]?.targets ?? 1;
 }
 
 /**
@@ -198,7 +843,7 @@ export async function traitSubSetConstructor(weapon){
 
   //Effects that will effect the nature of the damage taken once the shot hit (e.g. "Shock", "Armor Piercing", "Stun" etc.)
   for (const key in joinedEffectsMode1){
-    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
+    if(key === "blinding" || key === "disablesRadio" || key === "entangling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
       effects[key] = joinedEffectsMode1[key]
     }
   }
@@ -206,7 +851,7 @@ export async function traitSubSetConstructor(weapon){
   effects = {}
 
   for (const key in joinedEffectsMode2){
-    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
+    if(key === "blinding" || key === "disablesRadio" || key === "entangling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
       effects[key] = joinedEffectsMode2[key]
     }
   }
@@ -414,7 +1059,7 @@ export async function reloadWeapon(html, actor) {
             traits = ammoType != "chemical" ? ammo.system.traits : {};
             dv = ammoType != "chemical" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
 
-            let ammoEntry = { "id": ammo.id, "name": ammo.name, "traits": traits, "dv": dv };
+            let ammoEntry = { "id": ammo.id, "name": ammo.name, "traits": traits, "dv": dv, "payload": loadedPayloadName(ammo.system?.payload, ammo.system?.cloud) };
             ammoList.push(ammoEntry);
           }
 
@@ -448,11 +1093,12 @@ export async function reloadWeapon(html, actor) {
         }
 
         traits = ammoSelected.system.traits;
-        ammoSelected.system.areaeffect ? traits["effectRadius"] = {
+        const loadedArea = munitionArea(ammoSelected.system);
+        if (loadedArea.kind !== "none") traits["effectRadius"] = {
           "name": "ep2e.item.weapon.table.trait.effectRadius",
           "value": true,
-          "radius": ammoSelected.system.areaeffect
-        } : null;
+          "radius": areaText(loadedArea)
+        };
 
         calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, traits, "ammo");
 
@@ -493,7 +1139,12 @@ export async function reloadWeapon(html, actor) {
             "system.ammoSelected.description": ammoSelected.system.description,
             "system.ammoSelected.dvModifier.calculated": dv,
             "system.ammoSelected.traits": ammoType != "chemical" ? traits : {},
-            "system.ammoSelected.dose": null
+            "system.ammoSelected.dose": null,
+            "system.ammoSelected.armorused": ammoSelected.system?.armorused ?? "",
+            "system.ammoSelected.area": loadedArea,
+            "system.ammoSelected.payload": ammoSelected.system?.payload?.enabled ? foundry.utils.deepClone(ammoSelected.system.payload) : null,
+            "system.ammoSelected.cloud": ammoSelected.system?.cloud === true,
+            "system.ammoSelected.cloudColor": foundry.utils.deepClone(ammoSelected.system?.cloudColor ?? { kind: "smoke", custom: "#ffffff" })
           };
           Hooks.callAll("eclipsephase.weaponLoaded", { actor, weapon, ammo: ammoSelected, ammoType, update: loaded });
           weaponUpdate.push(loaded);

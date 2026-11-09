@@ -1,6 +1,10 @@
-import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText } from "../common/general-sheet-functions.js";
+import { listLandingRules } from "../api/registry.js";
+import { inducedChanges, multiSelectPills, registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport, escapeText, followingTooltips } from "../common/general-sheet-functions.js";
+import { sleightDamageMode, SLEIGHT_CONDITIONS } from "../rolls/psi.js";
 import { folderTree, rowCandidates, RANDOM, learnedBy } from "../common/doses.js";
-import { hasSkillOptions, pickSpecialSkills } from "../common/ware-skills.js";
+import { hasSkillOptions, pickSpecialSkills } from "../rolls/modifiers.js";
+import { choosePayload } from "../common/drugs.js";
+import { payloadCloudKind } from "../common/weapon-functions.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -23,9 +27,29 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       height: 415
     },
     actions: {
-      editImage: this._onEditImage
+      editImage: this._onEditImage,
+      selectPayload: this._onSelectPayload
     }
   };
+
+  /**
+   * Picks the substance a munition carries as its payload.
+   * @returns {Promise<void>} Resolves once the choice is stored or cancelled
+   */
+  static async _onSelectPayload() {
+    const payload = this.document.system.payload;
+    if (!payload?.enabled) return;
+    const cloud = this.document.system.cloud === true;
+    const chosen = await choosePayload(payload.vector, { smoke: cloud });
+    if (!chosen) return;
+    if (chosen.smoke) {
+      const custom = this.document.system.cloudColor?.kind === "custom";
+      await this.document.update({ "system.payload.loaded": [], ...(custom ? {} : { "system.cloudColor.kind": "smoke" }) });
+      return;
+    }
+    const kind = await payloadCloudKind(this.document.system, chosen.uuid);
+    await this.document.update({ "system.payload.loaded": [chosen], ...(kind ? { "system.cloudColor.kind": kind } : {}) });
+  }
 
   // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders (see EPactorSheet.js)
   static PARTS = {
@@ -55,6 +79,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       tabs: [
         { id: "details", label: "ep2e.item.general.tabs.detailsTab" },
         { id: "details2", label: "ep2e.item.general.tabs.weaponMode2" },
+        { id: "aptitudes", label: "ep2e.item.vehicle.tabs.skills" },
         { id: "additions", label: "ep2e.roll.dialog.heal.additions.label" },
         { id: "mechanics", label: "ep2e.item.drug.mechanics.tab" },
         { id: "description", label: "ep2e.item.general.table.description" },
@@ -69,33 +94,8 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
 
   _getSheetDimensions() {
     const item = this.document;
-
-    if (item.type === "ccWeapon") {
-      return { width: 690, height: 445 };
-    }
-    else if (item.type === "rangedWeapon") {
-      return { width: 755, height: 445 };
-    }
-    else if (item.type === "drug") {
-      return { width: 520, height: 445 };
-    }
-    else if (item.type === "morph") {
-      return { width: 620, height: 380 };
-    }
-    else if (item.type === "specialSkill" || item.type === "knowSkill") {
-      return { width: 600, height: 192 };
-    }
-    else if (item.system?.type === "seeker" || item.type === "grenade") {
-      return { width: 680, height: 415 };
-    }
-    else if (item.system?.type !== "seeker" && item.type === "ammo") {
-      return { width: 520, height: 415 };
-    }
-    else if (item.type === "vehicle"){
-      return { width: 680, height: 380 };
-    }
-
-    return { width: 520, height: 415 };
+    const wide = ["ccWeapon", "rangedWeapon", "grenade", "morph", "vehicle", "drug"].includes(item.type) || item.system?.type === "seeker";
+    return { width: wide ? 750 : 560, height: "auto" };
   }
 
   _configureRenderParts(options) {
@@ -133,6 +133,13 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
 
     context.config = CONFIG.eclipsephase;
     context.item = item;
+    if (item.type === "ammo" || item.type === "grenade") context.cloudKind = item.system.cloud ? (item.system.cloudColor?.kind ?? "smoke") : "";
+    if (item.type === "aspect") context.sleightDamageMode = sleightDamageMode(item);
+    if (item.type === "aspect") {
+      context.landingRule = item.system.landingRule === "select" ? "none" : item.system.landingRule;
+      context.landingRules = { none: "ep2e.item.aspect.table.landingRule.select", ...Object.fromEntries(listLandingRules().map(rule => [rule.id, rule.label])) };
+      context.sleightConditions = { none: "ep2e.item.aspect.table.landingRule.select", ...Object.fromEntries(SLEIGHT_CONDITIONS.map(id => [id, id === "impaired" ? "ep2e.item.aspect.table.condition.impaired" : `ep2e.conditions.${id}.name`])) };
+    }
     context.editable = this.isEditable;
 
     if(item.type !== "knowSkill" && item.type !== "specialSkill"){
@@ -146,8 +153,15 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
         primaryTabs = primaryTabs.filter(tab => tab.id !== "additions");
       }
 
-      if (item.type !== "drug") {
+      if (item.type === "drug" || item.type === "aspect") context.inducedChanges = inducedChanges(item);
+
+      const chiWithoutChanges = item.type === "aspect" && item.system.psiType === "chi" && !context.inducedChanges.length;
+      if ((item.type !== "drug" && item.type !== "aspect") || chiWithoutChanges) {
         primaryTabs = primaryTabs.filter(tab => tab.id !== "mechanics");
+      }
+
+      if (item.type !== "vehicle") {
+        primaryTabs = primaryTabs.filter(tab => tab.id !== "aptitudes");
       }
 
       context.tabs = {
@@ -155,7 +169,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       };
 
       context.tabGroups = this.tabGroups;
-      item.showEffectsTab = !!(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM);
+      item.showEffectsTab = game.user.isGM;
     }
 
     if (item.type === "ccWeapon" || item.type === "rangedWeapon") {
@@ -385,6 +399,13 @@ async _onRender(context, options) {
   const item = this.document;
   if (!html) return;
 
+  html.querySelector("[data-cloud-kind]")?.addEventListener("change", event => {
+    event.stopPropagation();
+    const kind = event.currentTarget.value;
+    item.update(kind ? { "system.cloud": true, "system.cloudColor.kind": kind } : { "system.cloud": false });
+  });
+  followingTooltips(html, html);
+
   const windowHeader = html.querySelector('.window-header');
   if (windowHeader) windowHeader.style.display = 'none';
 
@@ -431,6 +452,7 @@ async _onRender(context, options) {
 
   registerEffectHandlers(html, item);
   registerCommonHandlers(html, item);
+  multiSelectPills(html, item);
 
   if (item.type === "drug") {
     this._activateGrantListeners(html, item);

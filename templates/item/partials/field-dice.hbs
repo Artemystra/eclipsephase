@@ -1,0 +1,12 @@
+{{!-- Dice and a bonus in one column. Params: label, path, values --}}
+<div class="ep-field">
+    <span class="resource-label">{{localize label}}</span>
+    <div class="ep-field-dice">
+        <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+        <input onFocus="this.select()" type="number" name="{{path}}.d10" value="{{values.d10}}" placeholder="0"/>
+        <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+        <input onFocus="this.select()" type="number" name="{{path}}.d6" value="{{values.d6}}" placeholder="0"/>
+        <i class="fas fa-plus awesomeIcon"></i>
+        <input onFocus="this.select()" type="number" name="{{path}}.bonus" value="{{values.bonus}}" placeholder="0"/>
+    </div>
+</div>

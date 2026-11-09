@@ -78,8 +78,8 @@
                     </div>
                     <div class="flexrow alignLeft wantToKnowMore" style="max-width: 90px; margin-right: 10px;">
                         <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
-                        <label class="truncate input-medium"><strong>{{item.system.mode1.range}}</strong></label>
-                        <label class="tooltipText">{{item.system.mode1.range}}</label>
+                        <label class="truncate input-medium"><strong>{{#if item.system.mode1.range}}{{item.system.mode1.range}} m{{/if}}</strong></label>
+                        <label class="tooltipText">{{#if item.system.mode1.range}}{{item.system.mode1.range}} m{{/if}}</label>
                     </div>
                     <div class="input-large flexrow flex-group-center icon-space">
                         <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small"/>
@@ -151,8 +151,8 @@
                     </div>
                     <div class="flexrow alignLeft wantToKnowMore" style="max-width: 90px; margin-right: 10px;">
                         <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
-                        <label class="truncate input-medium"><strong>{{item.system.mode2.range}}</strong></label>
-                        <label class="tooltipText">{{item.system.mode2.range}}</label>
+                        <label class="truncate input-medium"><strong>{{#if item.system.mode2.range}}{{item.system.mode2.range}} m{{/if}}</strong></label>
+                        <label class="tooltipText">{{#if item.system.mode2.range}}{{item.system.mode2.range}} m{{/if}}</label>
                     </div>
                     <div class="input-large flexrow flex-group-center icon-space">
                         <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small"/>

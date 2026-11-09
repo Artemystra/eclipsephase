@@ -1,10 +1,15 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
 import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
-import { strainSubstrate } from "../common/body-markers.js";
+import { strainSubstrate } from "../common/morp-functions.js";
 import { getStrainFamily } from "./strain-families.js";
-import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
-import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers } from "./modifiers.js";
+import { getRollSource, applicablePoolOptions, getTaskResultText, rollBlockReason } from "../api/registry.js";
+import { rollBlockContext, conditionSkillModifiers, isUnder, targetsUnder } from "../common/conditions.js";
+import { doseRollOptions, wareRollOptions, sleightRollOptions, chosenRollOptions, tickableRollOptions, optionValue, replacedDrugs, drugPsiPenalties, globalModifiers, rollScope, scopeModKey } from "./modifiers.js";
+import { TASK_RESULT_TEMPLATE, taskCardState, damageCardState } from "./cards.js";
+import { wirePreRollTargets, measuredDistances } from "../common/targeting.js";
+import { attackPicking, chosenTargets, blindAttacker, rollBlindPerceive, rollBlindAttack } from "./attacks.js";
+import { ATTACK_MODES, firingAttackModes, weaponRange, rangeBand, spendGrenade } from "../common/weapon-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -12,7 +17,7 @@ import { doseRollOptions, wareRollOptions, chosenRollOptions, tickableRollOption
 export const TASK_CHECK_DIALOG_TEMPLATE = "systems/eclipsephase/templates/chat/skill-test-dialog.html"
 export const GUNS_TASK_DIALOG = "systems/eclipsephase/templates/chat/gun-test-dialog.html"
 export const MELEE_TASK_DIALOG = "systems/eclipsephase/templates/chat/melee-test-dialog.html"
-export const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
+export { TASK_RESULT_TEMPLATE as TASK_RESULT_OUTPUT } from "./cards.js"
 export const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
 export const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
 export const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
@@ -39,6 +44,15 @@ export const TASK_RESULT = {
 const HITS = [TASK_RESULT.SUCCESS, TASK_RESULT.SUCCESS_ONE, TASK_RESULT.SUCCESS_TWO, TASK_RESULT.CRITICAL_SUCCESS, TASK_RESULT.AUTOSUCCESS]
 
 /**
+ * Whether a result is a critical success, which beats a higher roll in an opposed test.
+ * @param {Number} result - The task result tier
+ * @returns {Boolean} True for a critical success
+ */
+export function isCriticalSuccess(result) {
+    return result === TASK_RESULT.CRITICAL_SUCCESS || result === TASK_RESULT.AUTOSUCCESS
+}
+
+/**
  * Whether a task result is a success of any degree: an ordinary one, a critical one or an
  * automatic one.
  * @param {Number} result - The task result tier
@@ -46,6 +60,27 @@ const HITS = [TASK_RESULT.SUCCESS, TASK_RESULT.SUCCESS_ONE, TASK_RESULT.SUCCESS_
  */
 export function isHit(result) {
     return HITS.includes(result)
+}
+
+/**
+ * How many superior results a roll has (Core p.29): on a success one at 33 or more and two at 66 or
+ * more, on a failure one at 66 or less and two at 33 or less. The tier rollCalc gives tells, except
+ * for a critical, whose die does; an automatic result has none.
+ * @param {Number} result - The result tier
+ * @param {Number} value - The die
+ * @returns {Number} 0, 1 or 2
+ */
+export function superiorResults(result, value) {
+    const die = Number(value) || 0
+    switch (result) {
+        case TASK_RESULT.SUCCESS_TWO:
+        case TASK_RESULT.FAILURE_TWO: return 2
+        case TASK_RESULT.SUCCESS_ONE:
+        case TASK_RESULT.FAILURE_ONE: return 1
+        case TASK_RESULT.CRITICAL_SUCCESS: return die >= 66 ? 2 : die >= 33 ? 1 : 0
+        case TASK_RESULT.CRITICAL_FAILURE: return die <= 33 ? 2 : die <= 66 ? 1 : 0
+        default: return 0
+    }
 }
 
 /**
@@ -204,15 +239,21 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 
     return calcPool
 }
+
+/**
+ * The fields a roll dialog's values are read from, by their form names: a field the form names
+ * otherwise is never read.
+ */
+export const DIALOG_FIELDS = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'timerValue', 'timerUnit', 'proximityRadius', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"];
 
-async function defineRoll(dataset, actorWhole){
+async function defineRoll(dataset, actorWhole, rolledFrom){
 
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = [...DIALOG_FIELDS]
     let sleight = {}
     let template
     let templateSize = {width: 276}
-    let title = dataset.dialogTitle ?? game.i18n.localize('ep2e.roll.dialog.title.check')
+    let title = dataset.dialogTitle ?? (dataset.name ? game.i18n.format('ep2e.roll.dialog.title.named', { name: game.i18n.localize(dataset.name) }) : game.i18n.localize('ep2e.roll.dialog.title.check'))
 
     switch (type) {
         case 'fray':
@@ -228,6 +269,7 @@ async function defineRoll(dataset, actorWhole){
             sleight.duration = sleightItem.system.durationName
             sleight.infection = sleightItem.system.infection
             sleight.sleightID = dataset.itemid
+            sleight.gamma = sleightItem.system.psiType === "gamma"
             if (sleightItem.system.damage?.d10 || sleightItem.system.damage?.d6 || sleightItem.system.damage?.bonus) {
                 sleight.damage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv
                 sleight.damageTarget = sleightItem.system.damage.target
@@ -245,6 +287,11 @@ async function defineRoll(dataset, actorWhole){
         default:
             template = TASK_CHECK_DIALOG_TEMPLATE
           break;
+    }
+
+    if (rolledFrom === "grenade") {
+        template = GUNS_TASK_DIALOG
+        templateSize = {width: 1086}
     }
 
     return {type, title, template, templateSize, names, sleight}
@@ -384,6 +431,15 @@ export class TaskRoll {
   }
 
   /**
+   * Keeps only the modifiers a test allows, such as suppressive fire's range and wounds.
+   * @param {Function} keep - keep(modifier) for those that stay
+   * @returns {void}
+   */
+  keepModifiers(keep) {
+    this._modifiers = this.modifiers.filter(keep)
+  }
+
+  /**
    * Calculates the total value of all modifiers.
    * @type {Number}
    */
@@ -434,6 +490,15 @@ export class TaskRoll {
 
     this._rollValue = parseInt(this._roll.total)
     this._calculateResult()
+  }
+
+
+  /**
+   * Sets the result whatever the dice say.
+   * @param {Number} result - The result tier
+   */
+  forceResult(result) {
+    this._result = result
   }
 
 
@@ -635,7 +700,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let proceed
     let options = {}
     let specName = dataset.specname || "";
-    let roll = await defineRoll(dataset, actorWhole)
+    let roll = await defineRoll(dataset, actorWhole, rolledFrom)
 
     // Brain/nervous-system rules, plus Psi's jamming block
     if (roll.type === "psi" && dataset.itemid) {
@@ -655,6 +720,12 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         outputData: null, message: null, blind: false, rollMode: null
     }
 
+    const blocked = rollBlockReason(actorWhole, roll.type, rollBlockContext(dataset, rolledFrom))
+    if (blocked) {
+        ui.notifications.warn(blocked)
+        return
+    }
+
     if (Hooks.call("eclipsephase.preRollDialog", rollContext) === false) {
         if (rollContext.cancelReason) ui.notifications.warn(game.i18n.localize(rollContext.cancelReason))
         return
@@ -670,11 +741,14 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     if(values.cancelled)
         return
 
+    if (roll.type === "psi" && await psi.startTouch(rollContext, values))
+        return
+
     for (let entry in values){
         options[entry] = values[entry] || false
     }
 
-    const doseChoices = chosenRollOptions([...doseRollOptions(actorWhole, dataset), ...wareRollOptions(actorWhole, dataset)], values)
+    const doseChoices = chosenRollOptions([...doseRollOptions(actorWhole, dataset), ...wareRollOptions(actorWhole, dataset), ...sleightRollOptions(actorWhole, dataset)], values)
     options.doseChoices = await Promise.all(doseChoices.map(async entry => ({ ...entry, value: await optionValue(entry.option) })))
 
     // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
@@ -692,21 +766,48 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options.ownBodyEffectDelta = getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom);
     }
 
+    // Several melee targets are separate attacks (Core p.205): each is rolled on its own, at its own
+    // target, and a pool point chosen before the roll is spent on each of them in turn - one per
+    // test (Core p.35) - for as long as the pool lasts; the attacks after that roll without it.
+    const chosen = chosenTargets(options)
+    let rollResult
+
     for(let repitition = 1; repitition <= numberOfTargets; repitition++){
 
         let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
 
+        if (numberOfTargets > 1) {
+            rollContext.flags = foundry.utils.deepClone(dataset.contextFlags ?? {})
+            options.preTargets = chosen[repitition - 1] ?? false
+        }
+
+        // A blinded attacker first perceives the target with another sense; failing that, a straight
+        // 50% misses outright - the shot is still fired.
+        if (blindAttacker(actorWhole, rolledFrom, weaponSelected, options)) {
+            const perceived = await rollBlindPerceive(actorWhole)
+            if (perceived === null) return
+            if (!perceived && await rollBlindAttack(actorWhole, weaponSelected?.weaponName ?? dataset.name, rollVisibility(options, dataset))) {
+                if (rolledFrom === "rangedWeapon" && await checkAmmo(actorWhole, weaponSelected, options.attackMode) === "cancel") return
+                continue
+            }
+        }
+
         // While jamming, the pool choice comes from the jam-aware dropdowns and "own body" spends from the backup flag
-        const activePoolChoice = isJammingRoll
+        let activePoolChoice = isJammingRoll
             ? (options.jammingRollTarget === "own" ? options.jammingUsePoolOwn : options.jammingUsePoolRemote)
             : options.usePool;
         const activePool = (isJammingRoll && options.jammingRollTarget === "own" && pool.own) ? pool.own : pool;
+
+        if (activePoolChoice && repitition > 1 && !poolLeft(activePoolChoice, activePool)) activePoolChoice = ""
 
         if (activePoolChoice) {
 
             let updatedPools = await pools.update(activePoolChoice, activePool, task, actorWhole)
 
-            if (activePool.flexPoolValue) {
+            if (!updatedPools) {
+                activePoolChoice = ""
+            }
+            else if (activePool.flexPoolValue) {
                 activePool["skillPoolValue"] = updatedPools.skillPoolValue
                 activePool["flexPoolValue"] = updatedPools.flexPoolValue
             }
@@ -719,7 +820,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             options.totalInfection = await psi.infectionUpdate(actorWhole, options)
 
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
-            addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
+            addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected, rollScope(dataset, rolledFrom))
 
         rollContext.options = options
         rollContext.task = task
@@ -730,8 +831,10 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             if(modifier instanceof TaskRollModifier) task.addModifier(modifier)
             else if(modifier?.text) task.addModifier(new TaskRollModifier(modifier.text, modifier.value, modifier.comment))
         }
+        if (options.attackMode === "suppressive") task.keepModifiers(modifier => modifier.underSuppression === true)
 
         await task.performRoll()
+        if(rollContext.forcedResult != null) task.forceResult(rollContext.forcedResult)
 
         let itemData = {}
         if(weaponSelected)
@@ -744,7 +847,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
         outputData.skillKey = roll.type
+        if (roll.type === "psi") outputData.infectionLabel = getStrainFamily(psi.actorStrainFamily(actorWhole)).labels?.infection ?? null
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
+        if(rollContext.forcedResult != null) outputData.alternatives.options = {swap: false, upgrade: false, mitigate: false}
         outputData.rollContext = buildRollContext(outputData, actorWhole, options, itemData)
         if(Object.keys(rollContext.flags).length) Object.assign(outputData.rollContext, rollContext.flags)
         let diceRoll = task.roll
@@ -755,16 +860,16 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         else if(roll.type === "muse" && !actorModel.muse.name)
             actingPerson = game.i18n.localize("ep2e.muse.museOf") + " " + actorWhole.name
 
-        let blind = options.rollMode === "blind" ? true : false
-
-        let recipientList = prepareRecipients(options.rollMode)
+        const { blind, recipientList } = rollVisibility(options, dataset)
 
         if(rolledFrom === "rangedWeapon")
         proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)
+        else if (rolledFrom === "grenade")
+        await spendGrenade(actorWhole, weaponSelected)
 
         if(proceed === "cancel")
             return
-        const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
+        rollResult = await rollToChat(dataset, outputData, TASK_RESULT_TEMPLATE, diceRoll, actingPerson, recipientList, blind)
 
         rollContext.outputData = outputData
         rollContext.message = rollResult?.chatMessage ?? null
@@ -775,9 +880,20 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
             await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, options.rollMode)
-
-        return rollResult;
     }
+
+    return rollResult;
+}
+
+/**
+ * Who sees a roll's card: as the dialog's roll mode says, unless the caller set its visibility.
+ * @param {Object} options - The dialog's values
+ * @param {Object} dataset - The roll's dataset
+ * @returns {Object} blind and recipientList (user ids, empty for public)
+ */
+function rollVisibility(options, dataset) {
+    if (dataset.visibility) return { blind: dataset.visibility.blind === true, recipientList: [...(dataset.visibility.whisper ?? [])] }
+    return { blind: options.rollMode === "blind", recipientList: prepareRecipients(options.rollMode) }
 }
 
 /**
@@ -803,9 +919,13 @@ if (traits) {
 const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
 const doseOptions = tickableRollOptions(doseRollOptions(actorWhole, dataset));
 const wareOptions = tickableRollOptions(wareRollOptions(actorWhole, dataset));
-rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field));
+const sleightOptions = tickableRollOptions(sleightRollOptions(actorWhole, dataset));
+rollData.names.push(...doseOptions.map(entry => entry.field), ...wareOptions.map(entry => entry.field), ...sleightOptions.map(entry => entry.field));
 
+const attackModes = firingAttackModes(rollContext?.weapon);
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
+    attackModes,
+    singleAttackMode: attackModes.length === 1,
     specName,
     pool,
     actorWhole,
@@ -819,7 +939,9 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     poolOptions,
     doseOptions,
     wareOptions,
-    rollContext
+    sleightOptions,
+    rollContext,
+    sightBlind: isUnder(actorWhole, "blinded")
 });
 
 function extractFormValues(form) {
@@ -851,24 +973,25 @@ function extractFormValues(form) {
 
 const cancelButton = new Localizer("ep2e.roll.dialog.button.cancel");
 const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
+const picking = attackPicking(rollContext);
+const cancel = { action: "cancel", label: cancelButton.title, callback: () => ({ cancelled: true }) };
+const buttons = picking
+    ? [
+        { action: "pickTargets", label: game.i18n.localize("ep2e.roll.dialog.ranged.attacker.pickTargets"), default: true, callback: (event, button) => extractFormValues(button.form) },
+        { action: "roll", label: game.i18n.localize("ep2e.roll.dialog.button.rollWithoutTargets"), callback: (event, button) => ({ ...extractFormValues(button.form), preTargets: false }) },
+        cancel
+    ]
+    : [
+        { action: "roll", label: rollButton.title, default: true, callback: (event, button) => extractFormValues(button.form) },
+        cancel
+    ];
 
+const narrow = (rollData.templateSize?.width ?? 0) < 400
 const result = await foundry.applications.api.DialogV2.wait({
     window: { title: rollData.title },
-    classes: ["ep2e-primary-right"],
+    classes: picking && narrow ? ["ep2e-primary-right", "ep2e-primary-below"] : ["ep2e-primary-right"],
     content,
-    buttons: [
-    {
-        action: "roll",
-        label: rollButton.title,
-        default: true,
-        callback: (event, button) => extractFormValues(button.form)
-    },
-    {
-        action: "cancel",
-        label: cancelButton.title,
-        callback: () => ({ cancelled: true })
-    }
-    ],
+    buttons,
     modal: true,
     rejectClose: false,
     render: (event, dialog) => {
@@ -887,6 +1010,10 @@ const result = await foundry.applications.api.DialogV2.wait({
                 ownPoolContainer.style.display = ownSelected ? "" : "none";
             });
         }
+
+        wirePreRollTargets(root, dialog, picking);
+        wireSuppressiveFields(root);
+        wireTriggerFields(root);
     },
     ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
     ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
@@ -896,11 +1023,115 @@ return result ?? { cancelled: true };
 }
 
 /**
+ * Greys out the throw dialog's fields that belong to another trigger than the one chosen: the
+ * timer's span, the proximity sensor's reach. A timer is set in rounds during a combat - named, with
+ * nothing to choose - and in seconds or minutes outside one.
+ * @param {HTMLElement} root - The dialog's element
+ * @returns {void}
+ */
+export function wireTriggerFields(root) {
+    const trigger = root?.querySelector?.('select[name="trigger"]')
+    if (!trigger) return
+    const groups = Array.from(root.querySelectorAll(".ep-trigger-field"))
+    const unit = root.querySelector('select[name="timerUnit"]')
+    if (unit) {
+        const fighting = !!game.combat?.started
+        for (const option of unit.options) option.hidden = fighting ? option.value !== "rounds" : option.value === "rounds"
+        unit.value = fighting ? "rounds" : "seconds"
+        unit.hidden = fighting
+        if (fighting) {
+            const word = document.createElement("label")
+            word.className = "resource-label"
+            word.textContent = game.i18n.localize("ep2e.roll.dialog.throw.unit.rounds")
+            unit.after(word)
+        }
+    }
+    const sync = () => {
+        for (const group of groups) {
+            const off = group.dataset.trigger !== trigger.value
+            group.classList.toggle("ep-field-suppressed", off)
+            for (const field of group.querySelectorAll("input, select")) field.disabled = off
+        }
+    }
+    trigger.addEventListener("change", sync)
+    sync()
+}
+
+/**
+ * Marks the modifiers added since a point as those suppressive fire keeps: it takes no modifiers
+ * but range and wounds (Core p.207).
+ * @param {TaskRoll} task - The roll
+ * @param {Number} from - How many modifiers it had before them
+ * @returns {void}
+ */
+function markUnderSuppression(task, from) {
+    for (const modifier of task.modifiers.slice(from)) modifier.underSuppression = true
+}
+
+// The attack dialog's fields that still count under suppressive fire: the mode, the distance, what
+// the damage depends on, and how the roll is shown. Every other field is a modifier the fire ignores
+// (Core p.207) - a pool point spent before the roll included; one spent on the card still counts.
+const SUPPRESSIVE_FIELDS = new Set(["attackMode", "range", "vacuum", "biomorphTarget", "ammoEffect", "rollMode", "preTargets", "measuredRanges", "placedArea"]);
+
+/**
+ * Greys out the attack dialog's modifiers while suppressive fire is chosen, as its roll ignores them,
+ * and aiming on anything but a single shot (Core p.205).
+ * Fields the dialog shows disabled anyway stay so, and a locked one stays greyed.
+ * @param {HTMLElement} root - The dialog's element
+ * @returns {void}
+ */
+export function wireSuppressiveFields(root) {
+    const mode = root?.querySelector?.('select[name="attackMode"]')
+    if (!mode?.form) return
+    const fields = Array.from(mode.form.elements).filter(field => field.name && field.type !== "hidden" && field.tagName !== "BUTTON" && !SUPPRESSIVE_FIELDS.has(field.name) && !field.disabled)
+    const sync = () => {
+        const suppressive = mode.value === "suppressive"
+        for (const field of fields) {
+            field.disabled = suppressive
+            field.closest(".form-group")?.classList.toggle("ep-field-suppressed", suppressive || field.classList.contains("ep-locked-select"))
+        }
+        const aim = mode.form.elements.aim
+        if (aim) {
+            const noAim = mode.value !== "single"
+            aim.disabled = noAim
+            if (noAim) aim.value = "none"
+            aim.closest(".form-group")?.classList.toggle("ep-field-suppressed", noAim)
+        }
+    }
+    mode.addEventListener("change", sync)
+    sync()
+}
+
+/**
+ * Whether the pool a pre-roll choice draws on still has a point to spend.
+ * @param {String} choice - The dialog's pool choice, e.g. "pool" or "flexIgnore"
+ * @param {Object} pool - The roll's pool, with skillPoolValue and flexPoolValue kept current
+ * @returns {Boolean} True while a point is left
+ */
+function poolLeft(choice, pool) {
+    const left = choice === "flex" || choice === "flexIgnore" ? pool.flexPoolValue : pool.skillPoolValue
+    return Number(left) > 0
+}
+
+/**
+ * Adds the modifier an attack mode brings, when it belongs to the given kind of attack.
+ * @param {TaskRoll} task - The roll
+ * @param {String} attackMode - The mode chosen in the dialog
+ * @param {String} kind - "melee" or "ranged", where in the modifier list it is added
+ * @returns {void}
+ */
+function addModeModifier(task, attackMode, kind) {
+    const hit = ATTACK_MODES[attackMode]?.hit
+    if (hit?.kind === kind) task.addModifier(new TaskRollModifier(hit.announce, hit.value, hit.addition))
+}
+
+/**
  * Creates all the modifiers for one roll based on the options selected
  * in the dialog before.
  * @param {Object} options - The options selected in the dialog
+ * @param {String|null} scope - "body" or "mind" as rollScope reads the roll, null for neither
  */
-function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolledFrom, weaponSelected){
+function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolledFrom, weaponSelected, scope){
     let modValue
     let addition
     let announce
@@ -916,6 +1147,9 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     if(options.rangedFray)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
 
+    if(options.fullDefense)
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.fullDefense', 30))
+
     if(options.globalMod)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', Number(options.globalMod)))
 
@@ -930,11 +1164,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     // Jamming" block further down already applies the real body's own stashed ownBodyWoundMod
     // instead, so counting both here would double it up. Trauma is NOT suppressed - it's ego-level,
     // not body-level, so it applies regardless of which body is rolling.
+    const woundsFrom = task.modifiers.length
     if(wounds > 0 && rolledFrom !== "vehicleSkill" && !isOwnBodyJammingRoll)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
 
     if(trauma > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
+    markUnderSuppression(task, woundsFrom)
 
     if(rollType === "psi"){
         const strainFamily = psi.actorStrainFamily(actorWhole)
@@ -961,30 +1197,14 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     const totalWeaponMalusHere = actorModel.physical.totalWeaponMalus || 0;
     const totalGearMalusHere = actorModel.physical.totalGearMalus || 0;
 
-    if(rolledFrom !== "vehicleSkill" && (additionalArmorMalusHere || mainArmorMalusHere || totalWeaponMalusHere || totalGearMalusHere || armorSomMalusHere)){
+    // Encumbrance hinders physical actions only (Core p.214).
+    if(scope === "body" && (additionalArmorMalusHere || mainArmorMalusHere || totalWeaponMalusHere || totalGearMalusHere || armorSomMalusHere)){
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - additionalArmorMalusHere - mainArmorMalusHere - totalWeaponMalusHere - totalGearMalusHere - armorSomMalusHere))
     }
 
     /* Melee Roll */
 
-    if (options.attackMode === "charge"){
-        modValue = -10;
-        addition = "ep2e.roll.announce.combat.melee.agressiveAddition";
-        announce = "ep2e.roll.announce.combat.melee.charge";
-        task.addModifier(new TaskRollModifier(announce, modValue, addition))
-    }
-    else if (options.attackMode === "aggressive"){
-        modValue = 10;
-        addition = "ep2e.roll.announce.combat.melee.agressiveAddition";
-        announce = "ep2e.roll.announce.combat.melee.agressive";
-        task.addModifier(new TaskRollModifier(announce, modValue, addition))
-    }
-    else if (options.attackMode === "aggressiveCharge"){
-        modValue = 0
-        addition = "ep2e.roll.announce.combat.melee.agressiveChargeAddition"
-        announce = "ep2e.roll.announce.combat.melee.agressiveCharge";
-        task.addModifier(new TaskRollModifier(announce, modValue, addition))
-    }
+    addModeModifier(task, options.attackMode, "melee")
 
     if (options.sizeDifference){
         let modCalc = 0
@@ -1046,6 +1266,9 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.superiorPosition";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
+    // A standing attacker has superior position against a prone target in melee (Core p.226).
+    if (rolledFrom === "ccWeapon" && targetsUnder(options, "prone"))
+        task.addModifier(new TaskRollModifier("ep2e.roll.announce.combat.melee.proneTarget", 20))
     if (options.inMelee) {
         if (weaponTraits.automatedEffects.long){
             modValue = -30
@@ -1094,17 +1317,27 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.sizeXL";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    if (options.range === "range" && options.prone) {
+    const rangeFrom = task.modifiers.length
+    // Shooting at a prone target counts as the dialog's prone defender, when every target picked lies.
+    const prone = options.prone || (rolledFrom === "rangedWeapon" && targetsUnder(options, "prone"))
+    const measured = (rolledFrom === "rangedWeapon" || rolledFrom === "grenade") && !weaponTraits?.automatedEffects?.steady?.value ? measuredDistances(options) : []
+    if (measured.length) {
+        const farthest = Math.max(...measured)
+        const band = rangeBand(farthest, weaponRange(weaponSelected), weaponTraits?.automatedEffects)
+        if (band.modifier) task.addModifier(new TaskRollModifier(game.i18n.format("ep2e.roll.announce.combat.ranged.measured", { band: game.i18n.localize(`ep2e.targeting.band.${band.band}`), distance: Math.round(farthest) }), band.modifier))
+        if (prone && farthest >= 10) task.addModifier(new TaskRollModifier("ep2e.roll.announce.combat.ranged.proneAtRange", -10))
+    }
+    else if (options.range === "range" && prone) {
         modValue = -20
         announce = "ep2e.roll.announce.combat.ranged.rangeProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "beyond" && options.prone) {
+    else if (options.range === "beyond" && prone) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.beyondProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "beyond+" && options.prone) {
+    else if (options.range === "beyond+" && prone) {
         modValue = -40
         announce = "ep2e.roll.announce.combat.ranged.beyondPlusProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
@@ -1124,13 +1357,15 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.beyondPlus";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "pointBlank" || options.range === "pointBlank" && options.prone){
+    else if (options.range === "pointBlank" || options.range === "pointBlank" && prone){
         if (!weaponTraits?.automatedEffects?.long){
             modValue = 10
             announce = "ep2e.roll.announce.combat.ranged.pointBlank";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
     }
+
+    markUnderSuppression(task, rangeFrom)
 
     if (options.coverDefender === "minor") {
         modValue = -10
@@ -1158,7 +1393,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.visImpMaj";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.visualImpairment === "blind") {
+    // A Blinded attacker's -30 comes with the condition already; blindness from the scene is chosen here.
+    else if (options.visualImpairment === "blind" && !isUnder(actorWhole, "blinded")) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.blind";
         task.addModifier(new TaskRollModifier(announce, modValue))
@@ -1169,22 +1405,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
 
-    if (options.defenderHidden) {
+    if (options.hiddenDefender) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.defHidden";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
 
-    if (options.attackMode === "wBurst") {
-        modValue = 10
-        announce = "ep2e.roll.announce.combat.ranged.wBurst";
-        task.addModifier(new TaskRollModifier(announce, modValue))
-    }
-    else if (options.attackMode === "wFullAuto") {
-        modValue = 30
-        announce = "ep2e.roll.announce.combat.ranged.wFullAuto";
-        task.addModifier(new TaskRollModifier(announce, modValue))
-    }
+    addModeModifier(task, options.attackMode, "ranged")
 
     if (options.ammoEffect === "ammoSkillModifier"){
         modValue = 10
@@ -1220,7 +1447,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
                 announce = "ep2e.roll.announce.jamming.ownBodyWounds";
                 task.addModifier(new TaskRollModifier(announce, modValue));
             }
-            if (actorModel?.additionalSystems?.jamming?.ownBodyArmorMalus) {
+            if (scope === "body" && actorModel?.additionalSystems?.jamming?.ownBodyArmorMalus) {
                 modValue = actorModel.additionalSystems.jamming.ownBodyArmorMalus;
                 announce = "ep2e.roll.announce.jamming.ownBodyArmor";
                 task.addModifier(new TaskRollModifier(announce, modValue));
@@ -1228,7 +1455,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
             // The Homebrew weapon/gear/bulky/consumable encumbrance is suppressed on the drone's own
             // rolls (see _calculateHomebrewEncumberance), so the real body's stashed values apply here instead.
-            if (actorModel?.homebrew) {
+            if (scope === "body" && actorModel?.homebrew) {
                 const weapon = actorModel.additionalSystems?.jamming?.ownBodyWeaponMalus || 0;
                 const gear = actorModel.additionalSystems?.jamming?.ownBodyGearMalus || 0;
                 const homebrewEncumbrance = (weapon + gear) * -1;
@@ -1256,6 +1483,12 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         const exclude = replacedDrugs(options.doseChoices ?? [])
         for (const { label, modifier, comment } of globalModifiers(actorWhole, { exclude }))
             task.addModifier(new TaskRollModifier(label, modifier, comment))
+        const scopeKey = scopeModKey(scope)
+        if (scopeKey)
+            for (const { label, modifier, comment } of globalModifiers(actorWhole, { exclude, key: scopeKey }))
+                task.addModifier(new TaskRollModifier(label, modifier, comment))
+        for (const { label, modifier } of conditionSkillModifiers(actorWhole, rollType))
+            task.addModifier(new TaskRollModifier(label, modifier))
         for (const choice of options.doseChoices ?? [])
             task.addModifier(new TaskRollModifier(choice.drug, choice.value, choice.option.label))
     }
@@ -1317,23 +1550,9 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
     let ammoUpdate = [] 
     const multiShot = Number(weaponSelected.weaponTraits.additionalEffects.multiShot ? weaponSelected.weaponTraits.additionalEffects.multiShot.number : 1)
 
-    if (attackMode === "single") {
-        updateAmmo = weaponSelected.currentAmmo - (1 * multiShot);
-    }
-    else if (attackMode === "burst") {
-        updateAmmo = weaponSelected.currentAmmo - (3 * multiShot);
-    }
-    else if (attackMode === "fullAuto"){
-        updateAmmo = weaponSelected.currentAmmo - (10 * multiShot);
-    }
-    else if (attackMode === "wBurst") {
-        updateAmmo = weaponSelected.currentAmmo - (3 * multiShot);
-    }
-    else if (attackMode === "wFullAuto") {
-        updateAmmo = weaponSelected.currentAmmo - (10 * multiShot);
-    }
-    else if (attackMode === "suppressive") {
-        updateAmmo = weaponSelected.currentAmmo - (20 * multiShot);
+    const rounds = ATTACK_MODES[attackMode]?.rounds
+    if (rounds) {
+        updateAmmo = weaponSelected.currentAmmo - (rounds * multiShot);
     }
     //Rolls only if the weapon has enough amunition & updates the ammo accordingly
     if (updateAmmo>=0){
@@ -1436,13 +1655,62 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
         whisper: showTo,
         sound: message.sound,
         blind: blind,
-        flags: message.rollContext ? {eclipsephase: {roll: message.rollContext}} : {}
+        flags: rollCardFlags(message, htmlTemplate)
     })
 
     return message;
 }
 
-function breakdown(roll){
+/**
+ * The flags a roll's chat card carries: the roll context its buttons read, and for a task roll the
+ * card's own state, so a pool spend can redraw it.
+ * @param {Object} message - The data the card was drawn from
+ * @param {String} htmlTemplate - The card's template
+ * @returns {Object} The message flags
+ */
+function rollCardFlags(message, htmlTemplate){
+    const flags = {}
+    if (message.rollContext) flags.roll = message.rollContext
+    if (htmlTemplate === TASK_RESULT_TEMPLATE) flags.taskCard = taskCardState(message)
+    if (htmlTemplate === WEAPON_DAMAGE_OUTPUT) flags.damageCard = damageCardState(message)
+    return Object.keys(flags).length ? {eclipsephase: flags} : {}
+}
+
+/**
+ * The roll class of initiative: its card shows the system's dice tray instead of Foundry's roll card.
+ * @returns {Function} The roll class
+ */
+export function initiativeRollClass() {
+    return class EPinitiativeRoll extends foundry.dice.Roll {
+        async render({ isPrivate = false, ...options } = {}) {
+            if (isPrivate) return super.render({ isPrivate, ...options })
+            if (!this._evaluated) await this.evaluate()
+            // The total as text, so a total of 0 still shows.
+            return foundry.applications.handlebars.renderTemplate(DEFAULT_ROLL, {
+                mainMessage: "ep2e.roll.announce.initiative",
+                rollType: "rollOutput",
+                rollTitle: "ep2e.roll.announce.total",
+                total: String(this.total),
+                diceBreakdown: breakdown(this)
+            })
+        }
+    }
+}
+
+/**
+ * The combatant class, which rolls initiative with the given roll class.
+ * @param {Function} InitiativeRoll - The roll class of initiative
+ * @returns {Function} The combatant class
+ */
+export function combatantClass(InitiativeRoll) {
+    return class EPcombatant extends foundry.documents.Combatant {
+        getInitiativeRoll(formula) {
+            return new InitiativeRoll(formula || this._getInitiativeFormula(), this.actor?.getRollData() || {})
+        }
+    }
+}
+
+export function breakdown(roll){
     
     let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
     let i = 0
@@ -1464,6 +1732,10 @@ function breakdown(roll){
         }
     }
     diceBreakdown.bonus = flatBonus(roll)
+    diceBreakdown.bonusSign = diceBreakdown.bonus.slice(0, 1)
+    diceBreakdown.bonusValue = diceBreakdown.bonus.slice(1)
+    const factor = rollFactor(roll)
+    diceBreakdown.factor = factor !== 1 ? factor : null
     return diceBreakdown
 }
 
@@ -1473,11 +1745,40 @@ function breakdown(roll){
  * @returns {String} e.g. "+10" or "-2", empty when the roll has none
  */
 export function flatBonus(roll) {
+    const { bonus } = flatParts(roll)
+    return bonus ? signed(bonus) : ""
+}
+
+/**
+ * The numbers in a roll beside its dice, also inside its brackets.
+ * @param {Roll} roll - An evaluated roll
+ * @returns {Object} bonus, the added part, and factor, what the dice are multiplied by
+ */
+function flatParts(roll) {
+    const terms = roll?.terms ?? []
     let sign = 1
     let bonus = 0
-    for (const term of roll?.terms ?? []) {
+    let factor = 1
+    terms.forEach((term, index) => {
         if (typeof term.operator === "string") sign = term.operator === "-" ? -1 : 1
-        else if (typeof term.number === "number" && term.faces === undefined) bonus += sign * term.number
-    }
-    return bonus ? signed(bonus) : ""
+        else if (term.roll) {
+            const inner = flatParts(term.roll)
+            bonus += sign * inner.bonus
+            factor *= inner.factor
+        }
+        else if (typeof term.number === "number" && term.faces === undefined) {
+            if (terms[index - 1]?.operator === "*" || terms[index + 1]?.operator === "*") factor *= term.number
+            else bonus += sign * term.number
+        }
+    })
+    return { bonus, factor }
+}
+
+/**
+ * What a roll's dice are multiplied by, as a critical's 2*(...).
+ * @param {Roll} roll - An evaluated roll
+ * @returns {Number} The factor, 1 for none
+ */
+export function rollFactor(roll) {
+    return flatParts(roll).factor
 }

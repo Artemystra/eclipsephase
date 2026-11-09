@@ -5,7 +5,53 @@
     "core": {}
   },
   "img": "systems/eclipsephase/resources/icons/lotus.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "PsiArmorMark0001",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Psi Armor",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.psiArmor",
+            "value": "true",
+            "priority": null,
+            "type": "override"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!3jo1yxsTs5wwsn06.PsiArmorMark0001"
+    }
+  ],
   "system": {
     "additionalSystems": {},
     "description": "Your mind’s defenses are solidified. You gain mental armor equal to your WIL ÷ 3 against psi attacks.",

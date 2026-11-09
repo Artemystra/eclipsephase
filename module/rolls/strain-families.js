@@ -1,9 +1,12 @@
 import { drugBlockingPsi } from "./modifiers.js";
+import { PSI_TARGETING } from "./psi.js";
 const strainFamilies = new Map();
 
 const MISSING_FAMILY_KEY = "ep2e.roll.announce.strainFamilyMissing";
 
 const PERMISSIVE_SUBSTRATE = () => ({ blocked: false, jamBlocked: false, penalised: false, reasonKey: "", tooltipKey: "" });
+
+const OPEN_TARGETING = { refuses: () => null, modifiers: () => [], doublesRange: () => false, resist: { aptitude: "wil", pool: "Moxie" }, durationAptitude: "wil" };
 
 const MISSING_SUBSTRATE = () => ({ blocked: true, jamBlocked: false, penalised: false, reasonKey: MISSING_FAMILY_KEY, tooltipKey: MISSING_FAMILY_KEY });
 
@@ -28,7 +31,11 @@ function reject(what, reason) {
  * say - {label, copy, withRule} - or null when the family has nothing for that result. Every family
  * resolves its own, so no family is ever routed into another's rules.
  * @param {String} id - The value a sleight carries in system.strainFamily
- * @param {Object} definition - May hold label, tabLabel, substrate, subStrains, influence, tierTraits, feedback, mismatchKey, dataPath and detailsPartial
+ * targeting says who a family's sleights work on: refuses(actor, kinds) names the kind refused, or null;
+ * modifiers(actor, kinds) lists { text, value } for the test; doublesRange(actor) doubles the range categories;
+ * resist names the aptitude and pool a target resists with; durationAptitude what a sleight's span counts in.
+ * labels holds the keys of the family's own wording: spendRez and infection.
+ * @param {Object} definition - May hold label, tabLabel, substrate, subStrains, influence, tierTraits, feedback, mismatchKey, dataPath, detailsPartial, targeting and labels
  * @returns {Boolean} Whether the family was registered
  */
 export function registerStrainFamily(id, definition = {}) {
@@ -49,7 +56,9 @@ export function registerStrainFamily(id, definition = {}) {
     feedback: definition.feedback ?? { target: "physical", copyKey: "" },
     mismatchKey: definition.mismatchKey ?? "",
     dataPath: definition.dataPath ?? "system.subStrain.byArchetype",
-    detailsPartial: definition.detailsPartial ?? ""
+    detailsPartial: definition.detailsPartial ?? "",
+    targeting: { ...OPEN_TARGETING, ...(definition.targeting ?? {}) },
+    labels: definition.labels ?? {}
   });
   return true;
 }
@@ -62,7 +71,7 @@ export function registerStrainFamily(id, definition = {}) {
  * @returns {Object} The definition, or an object carrying missing: true
  */
 export function getStrainFamily(id) {
-  return strainFamilies.get(id) ?? { id, missing: true, substrate: MISSING_SUBSTRATE, tierTraits: {}, subStrains: {}, influence: null, mismatchKey: "", dataPath: "", detailsPartial: "" };
+  return strainFamilies.get(id) ?? { id, missing: true, substrate: MISSING_SUBSTRATE, tierTraits: {}, subStrains: {}, influence: null, mismatchKey: "", dataPath: "", detailsPartial: "", targeting: OPEN_TARGETING, labels: {} };
 }
 
 /**
@@ -160,6 +169,7 @@ export function registerCoreStrainFamilies() {
     feedback: { target: "physical", copyKey: "ep2e.psi.effect.takeDamage" },
     mismatchKey: "ep2e.roll.announce.psi.substrateMismatch",
     dataPath: "system.subStrain.byArchetype",
-    detailsPartial: "systems/eclipsephase/templates/actor/partials/tabs/strain-details-psi.html"
+    detailsPartial: "systems/eclipsephase/templates/actor/partials/tabs/strain-details-psi.html",
+    targeting: PSI_TARGETING
   });
 }

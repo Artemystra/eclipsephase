@@ -1,5 +1,105 @@
-import { wareAwaitingSetup } from "./ware-skills.js";
+import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
+import { defaultArmorUsed, weaponDataRepairs } from "./weapon-functions.js";
+import { TACNET_KEY } from "./morp-functions.js";
+
+// The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
+// only its own English text - a title, an introduction, the bullets of what changed and footnote
+// comments. **Words** in the text are set in bold; everything else is plain text.
+export const MIGRATION_NOTICE_TEMPLATE = "systems/eclipsephase/templates/chat/migration-notice.html";
+export const SUPPORT_LINKS = {
+  github: "https://github.com/Artemystra/eclipsephase",
+  kofi: "https://ko-fi.com/diemen",
+  discord: "https://discordapp.com/users/186786554230996993"
+};
+
+export const MIGRATION_NOTES = {
+  "2.7": {
+    title: "First time is free...!",
+    intro: "Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:",
+    bullets: [
+      "Every drug's **Duration** is now functional and runs on the clock.",
+      "Drugs come in **packs** of five doses by default, settable per drug.",
+      "Dropping the same drug, ammo or grenade again adds to your existing stack.",
+      "Only **ammunition packs** load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.",
+      "A drug's effects apply when you **take** it, not while you carry it.",
+      "Every drug is now either a **drug** or a **toxin**. The book's chapters live on as folders in the compendium.",
+      "Drugs now bring their **situational modifiers** into your rolls, call for **checks** when they take hold and can leave **stress** behind when they wear off. Drugs already on your sheets get these from the compendium.",
+      "Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.",
+      "Drugs now also work **over time**, can lend **traits** while they run, and meet your **defensive ware**: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.",
+      "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
+    ],
+    comments: []
+  },
+  "2.9": {
+    title: "We always aimed for that...",
+    intro: "Weapons are updated a great deal in this iteration, agent, so you better gear up! While just rolling damage has been around for a while, combat now works on actual targets - and because that wasn't enough, grenades finally landed on the map as well, and your sleights do what their descriptions have been promising all along. So buckle up champ 'cause here. we. go!",
+    bullets: [
+      "Using Weapons and damaging Psi abilities is now a **target practice**! Choose your way to do harm, select your targets and cave in their faces... or melt them... or whatever...",
+      "Weapons now have a **damage type** rather than just an ammo type, so armor knows whether it applies. The book's weapons get theirs here. For homebrew weapons we anticipate that energy weapons do energy damage and everything else is kinetic, so you might want to check on these items!",
+      "There's a new kind of armor: based on the glow-up of Psi with 2.5 we now have the optional **mental armor**. Psi Armor sleights on your sheets learn about it here. You're now far better off against TITAN mutants - asyncs, sorry. I meant to say asyncs...",
+      "Weapon **ranges** become numbers in metres, so the system can measure them for you. Ranges it cannot read stay as they are, and the GM gets a list of them in the chat.",
+      "Grenades and cones are on the canvas at last: we're Firewall, who would leave a lasting imprint if not us? Ammunition and grenades get a structured **area**, and their **payloads** a form: only substances in that form can be loaded.",
+      "Items named like a compendium entry pick up what they are missing from it. Your own values stay untouched.",
+      "Breathers and sealed suits learn to keep **gas and contact substances** out.",
+      "Psi sleights on your sheets get their **effects and target rules** from the compendium, unless they already have effects of their own.",
+      "The token HUD carries the rulebook's **conditions**, and they do what they say: Incapacitated, Unconscious, Dazed and Immobilized stop the actions they rule out, the others put their modifiers on your rolls.",
+      "Your side car shows what every **physical and mental** action costs you right now - one click shows where it comes from.",
+      "Blinded fighters **perceive** before they strike, a target on the floor is easier to hit up close, and whoever cannot defend simply gets hit.",
+      "Weapons with **Shock, Stun, Knockdown, Blinding, Pain and Entangling** ask their targets for the check, and a wound can knock you **prone** - or out cold.",
+      "**Pain Tolerance** and **Anti-Glare** on your sheets learn here what they protect you from.",
+      "Sleights that stun, blind, impair or freeze put their **conditions** on the target - Basilisk Stare, Short Circuit, Pain, Spam, Block Sense and their kin. The ones on your sheets learn it here.",
+      "Beside all that, every item sheet got a new look, and there's a full range of melee updates and GM quality of life hacks in the quiver, so to speak."
+    ],
+    comments: [
+      "Using the Ki module? Update it to 1.1 together with the system. Ki sleights already on your sheets keep their old data: drop them on the sheet again from the compendium to get the new effects."
+    ]
+  }
+};
+
+/**
+ * A release text as markup: escaped, with **words** set in bold.
+ * @param {String} text - The text
+ * @returns {String} The markup
+ */
+export function noticeText(text) {
+  return Handlebars.escapeExpression(String(text ?? "")).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+}
+
+/**
+ * Asks whether to migrate to a release, showing what the release brings. Several releases a world
+ * takes at once share one notice: the first one's title and introduction, and everything they bring.
+ * @param {String|String[]} versions - The release, or releases, keys of MIGRATION_NOTES
+ * @param {Object} [options] - extra: a further note for this world only
+ * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
+ */
+export async function migrationNotice(versions, { extra = "" } = {}) {
+  const list = [versions].flat();
+  const notes = list.map(version => MIGRATION_NOTES[version] ?? {});
+  const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
+    version: list.at(-1),
+    versions: list,
+    title: notes[0].title ?? list[0],
+    intro: noticeText(notes[0].intro),
+    bullets: notes.flatMap(note => note.bullets ?? []).map(noticeText),
+    comments: notes.flatMap(note => note.comments ?? []).map(noticeText),
+    extra: extra ? noticeText(extra) : "",
+    links: SUPPORT_LINKS
+  });
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.migration.notice.windowTitle") },
+    classes: ["ep2e-primary-right", "ep-migration-dialog"],
+    content,
+    buttons: [
+      { action: "start", label: game.i18n.localize("ep2e.migration.notice.migrate"), default: true, callback: () => ({ start: true }) },
+      { action: "cancel", label: game.i18n.localize("ep2e.migration.notice.close"), callback: () => ({ cancelled: true }) }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 700 }
+  });
+  return result ?? { cancelled: true };
+}
 
 export async function migrationLegacy(startMigration, endMigration){
     if (startMigration){
@@ -820,7 +920,6 @@ export async function migrationPre09(startMigration, endMigration){
                 number++
               }
 
-
               if(armorTotal === "-" || !armorTotal){
                 armor["system.armor.energy"] = 0;
                 armor["system.armor.kinetic"] = 0;
@@ -919,7 +1018,6 @@ export async function migrationPre093(startMigration, endMigration){
           }
         } 
       }
-
 
       game.settings.set("eclipsephase", "migrationVersion", "0.9.3");
       endMigration = true
@@ -1456,7 +1554,6 @@ export function migrationPre110(startMigration, endMigration){
 
       if(actor.type != "goon")
         update["system.psiStrain.infection"] = parseInt(actor.system.psiStrain.infection)
-
 
       update["system.updated"] = latestUpdate
 
@@ -2509,7 +2606,6 @@ async function _ep25_addBrainWareMarker(item) {
   await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
 }
 
-
 // The sub-strains the Ki module owns. The five Psi archetypes stay in system data.
 const _ep25_KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
 
@@ -2583,7 +2679,6 @@ export async function migrationPre25(startMigration, endMigration) {
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
     }
-
 
     try {
       for (const item of actor.items) await _ep25_addBrainWareMarker(item);
@@ -2817,77 +2912,6 @@ async function _ep27_flagWareSetup() {
   }
 }
 
-// The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
-// only its own English text - a title, an introduction, the bullets of what changed and footnote
-// comments. **Words** in the text are set in bold; everything else is plain text.
-export const MIGRATION_NOTICE_TEMPLATE = "systems/eclipsephase/templates/chat/migration-notice.html";
-export const SUPPORT_LINKS = {
-  github: "https://github.com/Artemystra/eclipsephase",
-  kofi: "https://ko-fi.com/diemen",
-  discord: "https://discordapp.com/users/186786554230996993"
-};
-
-export const MIGRATION_NOTES = {
-  "2.7": {
-    title: "First time is free...!",
-    intro: "Remember that shiny new world clock from our last patch? Turns out it makes a fantastic dealer. We hooked it up to every drug in the system, so you can stop counting hours on a napkin and get back to making questionable life choices with your characters. Here's what's in the bag...:",
-    bullets: [
-      "Every drug's **Duration** is now functional and runs on the clock.",
-      "Drugs come in **packs** of five doses by default, settable per drug.",
-      "Dropping the same drug, ammo or grenade again adds to your existing stack.",
-      "Only **ammunition packs** load into a sprayer, and they cannot be taken. You decide whether a pack is one when you drop it on a sheet.",
-      "A drug's effects apply when you **take** it, not while you carry it.",
-      "Every drug is now either a **drug** or a **toxin**. The book's chapters live on as folders in the compendium.",
-      "Drugs now bring their **situational modifiers** into your rolls, call for **checks** when they take hold and can leave **stress** behind when they wear off. Drugs already on your sheets get these from the compendium.",
-      "Drugs on your sheets that were missing their effects get them from the compendium. Your own effects stay untouched.",
-      "Drugs now also work **over time**, can lend **traits** while they run, and meet your **defensive ware**: Toxin Filters, Medichines, Nanophages, Digestive Symbiotes and Immunizers. Ware already on your sheets learns this here.",
-      "Ware now brings its **situational bonuses** into your rolls - Grip Pads when climbing, Enhanced Hearing when listening and many more. Ware already on your sheets gets them from the compendium."
-    ],
-    comments: []
-  }
-};
-
-/**
- * A release text as markup: escaped, with **words** set in bold.
- * @param {String} text - The text
- * @returns {String} The markup
- */
-export function noticeText(text) {
-  return Handlebars.escapeExpression(String(text ?? "")).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
-}
-
-/**
- * Asks whether to migrate to a release, showing what the release brings.
- * @param {String} version - The release, a key of MIGRATION_NOTES
- * @param {Object} [options] - extra: a further note for this world only
- * @returns {Promise<Object>} { start: true } to migrate, { cancelled: true } otherwise
- */
-export async function migrationNotice(version, { extra = "" } = {}) {
-  const note = MIGRATION_NOTES[version] ?? {};
-  const content = await foundry.applications.handlebars.renderTemplate(MIGRATION_NOTICE_TEMPLATE, {
-    version,
-    title: note.title ?? version,
-    intro: noticeText(note.intro),
-    bullets: (note.bullets ?? []).map(noticeText),
-    comments: (note.comments ?? []).map(noticeText),
-    extra: extra ? noticeText(extra) : "",
-    links: SUPPORT_LINKS
-  });
-  const result = await foundry.applications.api.DialogV2.wait({
-    window: { title: game.i18n.localize("ep2e.migration.notice.windowTitle") },
-    classes: ["ep2e-primary-right", "ep-migration-dialog"],
-    content,
-    buttons: [
-      { action: "start", label: game.i18n.localize("ep2e.migration.notice.migrate"), default: true, callback: () => ({ start: true }) },
-      { action: "cancel", label: game.i18n.localize("ep2e.migration.notice.close"), callback: () => ({ cancelled: true }) }
-    ],
-    modal: true,
-    rejectClose: false,
-    position: { width: 700 }
-  });
-  return result ?? { cancelled: true };
-}
-
 export async function migrationPre27Needed() {
   const blueprints = await _ep27_drugBlueprints();
   const wareOptions = await _ep27_wareOptions();
@@ -2957,6 +2981,402 @@ export async function migrationPre27(startMigration) {
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };
+}
+
+// The system compendiums that carry weapons.
+const _ep28_WEAPON_PACKS = ["eclipsephase.weapons", "eclipsephase.diemens-homebrew-items"];
+
+/**
+ * The armour type each weapon in the system compendiums names per mode, by weapon name.
+ * @returns {Promise<Map<String, Object>>} mode1 and mode2 armour types, per weapon name
+ */
+async function _ep28_weaponArmor() {
+  const catalogue = new Map();
+  for (const id of _ep28_WEAPON_PACKS) {
+    const pack = game.packs.get(id);
+    if (!pack) continue;
+    for (const weapon of await pack.getDocuments()) {
+      if (weapon.type !== "rangedWeapon" && weapon.type !== "ccWeapon") continue;
+      const source = weapon._source?.system ?? weapon.system ?? {};
+      catalogue.set(weapon.name, { mode1: source.mode1?.armorused, mode2: source.mode2?.armorused });
+    }
+  }
+  return catalogue;
+}
+
+/**
+ * The armour type a weapon placed before 2.8 is missing per mode: its compendium namesake's,
+ * otherwise the one its damage meets by default. A mode that names one keeps it.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep28_weaponArmor read
+ * @returns {Object|null} The item update, or null when nothing is missing
+ */
+export function _ep28_missingArmorUsed(item, catalogue) {
+  if (item.type !== "rangedWeapon" && item.type !== "ccWeapon") return null;
+  const source = item._source?.system ?? item.system ?? {};
+  const update = {};
+  for (const mode of ["mode1", "mode2"]) {
+    if (source[mode]?.armorused) continue;
+    update[`system.${mode}.armorused`] = catalogue.get(item.name)?.[mode] || defaultArmorUsed(item);
+  }
+  return Object.keys(update).length ? update : null;
+}
+
+// The change through which the Psi Armor sleight reports itself, so mental armour can be counted.
+const _ep28_PSI_ARMOR_KEY = "system.mods.psiArmor";
+
+/**
+ * The marker a Psi Armor sleight placed before 2.8 is missing, matched by name.
+ * @param {Item} item - The item
+ * @returns {Object|null} The effect data, or null when the item needs none
+ */
+export function _ep28_missingPsiArmorMarker(item) {
+  if (item.type !== "aspect" || item.name !== "Psi Armor") return null;
+  if (Array.from(item.effects ?? []).some(effect => (effect.changes ?? effect.system?.changes ?? []).some(change => change.key === _ep28_PSI_ARMOR_KEY))) return null;
+  const changes = [{ key: _ep28_PSI_ARMOR_KEY, value: "true", priority: null, type: "override" }];
+  return { name: item.name, img: "/icons/svg/mystery-man.svg", disabled: false, transfer: true, changes, flags: {}, system: { changes } };
+}
+
+/**
+ * Gives every weapon in the world the armour type its damage meets, per mode, and every Psi Armor
+ * sleight its marker: the world's own items, every actor's embedded ones and the world's item
+ * compendiums.
+ * @param {Boolean} startMigration - Whether the user confirmed the migration
+ * @returns {Promise<Object>} Whether the closing notice is due
+ */
+export async function migrationPre28(startMigration) {
+  const latestUpdate = "2.8";
+  if (!startMigration) return { endMigration: false };
+
+  const catalogue = await _ep28_weaponArmor();
+  await forEachItem(async item => {
+    const update = _ep28_missingArmorUsed(item, catalogue);
+    if (update) await item.update(update);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "rangedWeapon" || item.type === "ccWeapon",
+    includeCompendiums: true
+  });
+
+  await forEachItem(async item => {
+    const marker = _ep28_missingPsiArmorMarker(item);
+    if (marker) await item.createEmbeddedDocuments("ActiveEffect", [marker]);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "aspect",
+    includeCompendiums: true
+  });
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  return { endMigration: true };
+}
+
+// The system compendiums that carry ammunition and grenades.
+const _ep285_MUNITION_PACKS = ["eclipsephase.ammo", "eclipsephase.grenades"];
+
+/**
+ * The armour type and payload each munition in the system compendiums names, by type and name.
+ * @returns {Promise<Map<String, Object>>} armorused and payload, per "type:name"
+ */
+async function _ep285_munitions() {
+  const catalogue = new Map();
+  for (const id of _ep285_MUNITION_PACKS) {
+    const pack = game.packs.get(id);
+    if (!pack) continue;
+    for (const munition of await pack.getDocuments()) {
+      if (munition.type !== "ammo" && munition.type !== "grenade") continue;
+      const source = munition._source?.system ?? munition.system ?? {};
+      catalogue.set(`${munition.type}:${munition.name}`, { armorused: source.armorused, payload: source.payload, cloud: source.cloud === true, cloudColor: source.cloudColor });
+    }
+  }
+  return catalogue;
+}
+
+/**
+ * What a weapon, ammunition or grenade placed before 2.8.5 needs: ranges in metres, areas read from
+ * their text, a munition's armour type out of the key the old sheet wrote, its payload's vector in
+ * place of the delivery it named, and what its compendium namesake says about armour, payload and
+ * forming a cloud where the item says nothing. A range that cannot be
+ * read is left as it is and reported instead.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep285_munitions read
+ * @returns {Object|null} update (item update or null) and unreadable (the ranges left as text)
+ */
+export function _ep285_weaponUpdate(item, catalogue) {
+  if (!["rangedWeapon", "ammo", "grenade"].includes(item.type)) return null;
+  const source = item._source?.system ?? item.system ?? {};
+  const update = {};
+  const unreadable = [];
+  for (const [path, value] of Object.entries(weaponDataRepairs(item.type, source))) {
+    if (path.endsWith(".range") && value === null) {
+      const text = String(foundry.utils.getProperty(source, path) ?? "").trim();
+      if (text) unreadable.push(text);
+      if (text) continue;
+    }
+    update[`system.${path}`] = value;
+  }
+  if (source.payload && "delivery" in source.payload) update["system.payload.delivery"] = new foundry.data.operators.ForcedDeletion();
+  const namesake = catalogue.get(`${item.type}:${item.name}`);
+  if (namesake) {
+    if (item.type === "ammo" && !source.armorused && !("system.armorused" in update) && namesake.armorused) update["system.armorused"] = namesake.armorused;
+    if (!source.payload?.enabled && namesake.payload?.enabled) update["system.payload"] = foundry.utils.deepClone(namesake.payload);
+    if (namesake.cloud && source.cloud !== true) {
+      update["system.cloud"] = true;
+      if (namesake.cloudColor && !source.cloudColor) update["system.cloudColor"] = foundry.utils.deepClone(namesake.cloudColor);
+    }
+  }
+  if (!Object.keys(update).length && !unreadable.length) return null;
+  return { update: Object.keys(update).length ? update : null, unreadable };
+}
+
+// The system compendiums whose masks and suits keep substances out, and the keys their effects set.
+const _ep285_SEAL_PACKS = ["eclipsephase.gear", "eclipsephase.armor", "eclipsephase.ware"];
+const _ep285_SEAL_KEYS = ["system.additionalSystems.airSealed", "system.additionalSystems.skinSealed"];
+
+/**
+ * Whether an effect seals its bearer against a vector.
+ * @param {Object} effect - The effect or its data
+ * @returns {Boolean} True when one of its changes sets a seal
+ */
+function _ep285_seals(effect) {
+  const changes = effect?.system?.changes ?? effect?.changes ?? [];
+  return Array.from(changes).some(change => _ep285_SEAL_KEYS.includes(change.key));
+}
+
+/**
+ * The sealing effects of the masks and suits in the system compendiums, by type and name.
+ * @returns {Promise<Map<String, Object[]>>} The effects' data, per "type:name"
+ */
+async function _ep285_sealCatalogue() {
+  const catalogue = new Map();
+  for (const id of _ep285_SEAL_PACKS) {
+    const pack = game.packs.get(id);
+    if (!pack) continue;
+    for (const item of await pack.getDocuments()) {
+      const seals = Array.from(item.effects ?? []).filter(_ep285_seals).map(effect => {
+        const data = typeof effect.toObject === "function" ? effect.toObject() : foundry.utils.deepClone(effect);
+        delete data._id;
+        return data;
+      });
+      if (seals.length) catalogue.set(`${item.type}:${item.name}`, seals);
+    }
+  }
+  return catalogue;
+}
+
+/**
+ * The sealing effects a mask or suit placed before 2.8.5 lacks, taken from its compendium namesake.
+ * @param {Item} item - The item
+ * @param {Map<String, Object[]>} catalogue - What _ep285_sealCatalogue read
+ * @returns {Object[]} The effects' data to create, empty when it has them or has no namesake
+ */
+export function _ep285_sealEffects(item, catalogue) {
+  const seals = catalogue.get(`${item.type}:${item.name}`);
+  if (!seals || Array.from(item.effects ?? []).some(_ep285_seals)) return [];
+  return seals.map(data => foundry.utils.deepClone(data));
+}
+
+// The sleight compendium whose entries say where a sleight works and what it leaves behind.
+const _ep285_SLEIGHT_PACK = "eclipsephase.psi-sleights";
+const _ep285_SLEIGHT_FIELDS = ["targetRule", "affects", "repeatPerSuperior", "landingRule", "condition", "rollOptions", "damage"];
+
+/**
+ * The gamma and epsilon sleights of the system compendium, by name: their target rule, who they
+ * work on, whether superior successes repeat them, their options and their blueprint effects.
+ * @returns {Promise<Map<String, Object>>} system (the fields above) and effects, per name
+ */
+async function _ep285_sleightCatalogue() {
+  const catalogue = new Map();
+  const pack = game.packs.get(_ep285_SLEIGHT_PACK);
+  if (!pack) return catalogue;
+  for (const sleight of await pack.getDocuments()) {
+    if (sleight.type !== "aspect" || !["gamma", "epsilon"].includes(sleight.system?.psiType)) continue;
+    const source = sleight._source?.system ?? {};
+    const effects = Array.from(sleight.effects ?? []).map(effect => {
+      const data = typeof effect.toObject === "function" ? effect.toObject() : foundry.utils.deepClone(effect);
+      delete data._id;
+      return data;
+    });
+    catalogue.set(sleight.name, { system: Object.fromEntries(_ep285_SLEIGHT_FIELDS.filter(field => field in source).map(field => [field, foundry.utils.deepClone(source[field])])), effects });
+  }
+  return catalogue;
+}
+
+/**
+ * What a sleight placed before 2.8.5 needs: "Actions Turns" written as the action-turn key the
+ * sheet knows, and from its compendium namesake the target rule, who it works on, its options, its
+ * healing and its blueprint effects, where the sleight itself has none of them.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep285_sleightCatalogue read
+ * @returns {Object|null} update (item update or null) and effects (data to create), or null
+ */
+export function _ep285_sleightUpdate(item, catalogue) {
+  if (item.type !== "aspect") return null;
+  const source = item._source?.system ?? item.system ?? {};
+  const update = {};
+  if (source.duration === "Actions Turns") update["system.duration"] = "action";
+  const namesake = catalogue.get(item.name);
+  let effects = [];
+  if (namesake) {
+    for (const [field, value] of Object.entries(namesake.system)) {
+      const own = source[field];
+      if (field === "damage") {
+        if (value?.mode === "heal" && own?.mode !== "heal") update["system.damage"] = foundry.utils.deepClone(value);
+        continue;
+      }
+      const unset = own === undefined || own === null || (Array.isArray(own) && !own.length) || (field === "targetRule" && own === "any") || (field === "affects" && own === "target") || (["landingRule", "condition"].includes(field) && own === "none") || (field === "repeatPerSuperior" && own === false);
+      if (unset && JSON.stringify(own) !== JSON.stringify(value)) update[`system.${field}`] = foundry.utils.deepClone(value);
+    }
+    if (!Array.from(item.effects ?? []).length) effects = namesake.effects.map(data => foundry.utils.deepClone(data));
+  }
+  if (!Object.keys(update).length && !effects.length) return null;
+  return { update: Object.keys(update).length ? update : null, effects };
+}
+
+/**
+ * Turns every weapon range in the world into metres and every munition's area text into a
+ * structured area, fixes the munitions' armour type and fills payloads from the system
+ * compendiums, gives masks and suits the effect that seals their wearer, and gives sleights their
+ * target rule, options and blueprint effects from the system compendium: the world's own items,
+ * every actor's embedded ones and the world's item compendiums. Ranges that cannot be read are
+ * listed to the GM in one message.
+ * @param {Boolean} startMigration - Whether the user confirmed the migration
+ * @returns {Promise<Object>} Whether the closing notice is due
+ */
+export async function migrationPre285(startMigration) {
+  const latestUpdate = "2.8.5";
+  if (!startMigration) return { endMigration: false };
+
+  const catalogue = await _ep285_munitions();
+  const unreadable = [];
+  await forEachItem(async item => {
+    const result = _ep285_weaponUpdate(item, catalogue);
+    if (!result) return;
+    if (result.update) await item.update(result.update);
+    for (const text of result.unreadable) unreadable.push(`${item.parent?.name ? `${item.parent.name}: ` : ""}${item.name} (${text})`);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => ["rangedWeapon", "ammo", "grenade"].includes(item.type),
+    includeCompendiums: true
+  });
+
+  const seals = await _ep285_sealCatalogue();
+  await forEachItem(async item => {
+    const effects = _ep285_sealEffects(item, seals);
+    if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => ["gear", "armor", "ware"].includes(item.type),
+    includeCompendiums: true
+  });
+
+  const sleights = await _ep285_sleightCatalogue();
+  await forEachItem(async item => {
+    const result = _ep285_sleightUpdate(item, sleights);
+    if (!result) return;
+    if (result.update) await item.update(result.update);
+    if (result.effects.length) await item.createEmbeddedDocuments("ActiveEffect", result.effects);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "aspect",
+    includeCompendiums: true
+  });
+
+  if (unreadable.length) {
+    await ChatMessage.create({
+      whisper: game.users.filter(user => user.isGM).map(user => user.id),
+      content: game.i18n.format("ep2e.migration.notice.unreadableRanges", { list: unreadable.map(entry => Handlebars.escapeExpression(entry)).join("<br>") })
+    });
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  return { endMigration: true };
+}
+
+/**
+ * The effect a TacNet placed before 2.9 lacks.
+ * @param {Item} item - The item
+ * @returns {Object[]} The effect's data to create, empty when it has it or is no TacNet
+ */
+export function _ep29_tacnetEffects(item) {
+  if (item.type !== "gear" || item.name?.toLowerCase() !== "tacnet") return [];
+  if (Array.from(item.effects ?? []).some(effect => Array.from(effect.system?.changes ?? effect.changes ?? []).some(change => change.key === TACNET_KEY))) return [];
+  return [{ name: "TacNet", img: "icons/svg/aura.svg", type: "base", transfer: true, disabled: false, system: { changes: [{ key: TACNET_KEY, value: true, priority: null, type: "override" }] } }];
+}
+
+// The stamp of the conditions' migration: a world stamped 2.9 before the conditions came along picks
+// them up once, without a dialog of its own.
+export const CONDITIONS_MIGRATION = "2.9.0.1";
+
+// The items that tell the system what they protect against, found by their book name, and the effect
+// each of them gets.
+const _EP29_MARKERS = [
+  { type: "traits", name: "pain tolerance i", effect: "Pain Tolerance I", key: "system.additionalSystems.painTolerance", value: 1 },
+  { type: "traits", name: "pain tolerance ii", effect: "Pain Tolerance II", key: "system.additionalSystems.painTolerance", value: 2 },
+  { type: "ware", name: "anti-glare", effect: "Anti-Glare", key: "system.additionalSystems.antiGlare", value: true }
+];
+
+/**
+ * The effect a Pain Tolerance trait or Anti-Glare ware is missing, telling the system what it
+ * protects against.
+ * @param {Item} item - The item
+ * @returns {Object[]} The effect's data to create, empty when it has it or is none of them
+ */
+export function _ep29_markerEffects(item) {
+  const marker = _EP29_MARKERS.find(entry => entry.type === item.type && entry.name === item.name?.trim().toLowerCase());
+  if (!marker) return [];
+  if (Array.from(item.effects ?? []).some(effect => Array.from(effect.system?.changes ?? effect.changes ?? []).some(change => change.key === marker.key))) return [];
+  return [{ name: marker.effect, img: item.img, type: "base", transfer: true, disabled: false, system: { changes: [{ key: marker.key, value: marker.value, priority: null, type: "override" }] } }];
+}
+
+/**
+ * The blueprint effects of a sleight whose modifier its compendium namesake now leaves as a
+ * condition - Spam's -10 to all actions, now Impaired: effects that change nothing but that.
+ * @param {Item} item - The item
+ * @param {Map<String, Object>} catalogue - What _ep285_sleightCatalogue read
+ * @returns {String[]} The ids of the effects to remove
+ */
+export function _ep29_replacedBlueprints(item, catalogue) {
+  if (item.type !== "aspect" || catalogue.get(item.name)?.system?.condition !== "impaired") return [];
+  return Array.from(item.effects ?? []).filter(effect => {
+    const changes = Array.from(effect.system?.changes ?? effect.changes ?? []);
+    return changes.length && changes.every(change => change.key === "system.mods.globalMod");
+  }).map(effect => effect.id ?? effect._id);
+}
+
+/**
+ * Gives every Pain Tolerance trait and Anti-Glare ware the effect it is missing, and every sleight
+ * the condition or special effect its compendium namesake now leaves on its target - in place of
+ * the plain modifier it carried before.
+ * @param {Object} [options] - silent: without a progress bar, for a world catching up
+ * @returns {Promise<void>}
+ */
+export async function migrationPre29Conditions({ silent = false } = {}) {
+  const sleights = await _ep285_sleightCatalogue();
+  await forEachItem(async item => {
+    if (item.type === "aspect") {
+      const stale = _ep29_replacedBlueprints(item, sleights);
+      if (stale.length) await item.deleteEmbeddedDocuments("ActiveEffect", stale);
+      const result = _ep285_sleightUpdate(item, sleights);
+      if (result?.update) await item.update(result.update);
+      return;
+    }
+    const effects = _ep29_markerEffects(item);
+    if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
+  }, { label: "Migration 2.9", filter: item => ["traits", "ware", "aspect"].includes(item.type), includeCompendiums: true, silent });
+  await game.settings.set("eclipsephase", "migrationVersion", CONDITIONS_MIGRATION);
+}
+
+/**
+ * Gives every TacNet its effect, without a dialog or progress bar.
+ * @returns {Promise<void>}
+ */
+export async function migrationPre29() {
+  await forEachItem(async item => {
+    const effects = _ep29_tacnetEffects(item);
+    if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
+  }, { filter: item => item.type === "gear", includeCompendiums: true, silent: true });
+  await game.settings.set("eclipsephase", "migrationVersion", "2.9");
 }
 
 // Recovers the pre-1.5 legacy body type for an actor's active morph, or null if none can be found.
@@ -3117,11 +3537,12 @@ export function epCreateProgressDialog(title = "Migration") {
  * @param {Array} documents - The documents to process
  * @param {Function} fn - async (document) => void, run once per document
  * @param {String} label - The progress dialog's title
+ * @param {Boolean} [silent] - Whether to show no progress dialog
  * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
  */
-async function runOverDocuments(documents, fn, label) {
+async function runOverDocuments(documents, fn, label, silent = false) {
   const total = documents.length;
-  const uiBar = total ? epCreateProgressDialog(label) : null;
+  const uiBar = total && !silent ? epCreateProgressDialog(label) : null;
   const errors = [];
   let completed = 0;
 
@@ -3167,7 +3588,7 @@ export async function forEachActor(fn, { label = "Migration", filter } = {}) {
  * @param {Object} [options] - label; filter(item) => boolean; includeCompendiums to also cover world item packs
  * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
  */
-export async function forEachItem(fn, { label = "Migration", filter, includeCompendiums = false } = {}) {
+export async function forEachItem(fn, { label = "Migration", filter, includeCompendiums = false, silent = false } = {}) {
   const items = [];
   const passes = item => typeof filter !== "function" || filter(item);
 
@@ -3181,7 +3602,7 @@ export async function forEachItem(fn, { label = "Migration", filter, includeComp
     }
   }
 
-  return runOverDocuments(items, fn, label);
+  return runOverDocuments(items, fn, label, silent);
 }
 
 /**

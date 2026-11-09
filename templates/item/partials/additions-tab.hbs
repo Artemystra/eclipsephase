@@ -1,35 +1,39 @@
-<div class="tab details" data-group="primary" data-tab="additions">
-    <p class="headline5">{{localize "ep2e.inventory.npcInventory.wareLabel"}}</p>
-    <div class="grid grid-3col">
-        {{#each @root.visibleWare as |ware key|}}
-        <div class="itemGroup">
-            {{ware.label}}
-            <select name="system.ware.{{key}}.value" data-type="String" style="max-width: 150px; min-width: 100px;">
-                {{selectOptions @root.itemList.ware selected=ware.value}}
-            </select>
-        </div>
-        {{/each}}
-    </div>
-    <p class="headline5">{{localize "ep2e.ego.traits.headline"}}</p>
-    <div class="grid grid-3col">
-        {{#each @root.visibleTraits as |trait key|}}
-        <div class="itemGroup">
-            {{trait.label}}
-            <select name="system.traits.{{key}}.value" data-type="String" style="max-width: 150px; min-width: 100px;">
-                {{selectOptions @root.itemList.trait selected=trait.value}}
-            </select>
-        </div>
-        {{/each}}
-    </div>
-    <p class="headline5">{{localize "ep2e.ego.flaws.headline"}}</p>
-    <div class="grid grid-3col">
-        {{#each @root.visibleFlaws as |flaw key|}}
-        <div class="itemGroup">
-            {{flaw.label}}
-            <select name="system.flaws.{{key}}.value" data-type="String" style="max-width: 150px; min-width: 100px;">
-                {{selectOptions @root.itemList.flaw selected=flaw.value}}
-            </select>
-        </div>
-        {{/each}}
-    </div>
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.inventory.npcInventory.wareLabel"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-4">
+    {{#each @root.visibleWare as |ware key|}}
+    <label class="ep-field">
+        <span class="resource-label">{{ware.label}}</span>
+        <select name="system.ware.{{key}}.value" data-type="String">
+            {{selectOptions @root.itemList.ware selected=ware.value}}
+        </select>
+    </label>
+    {{/each}}
+</div>
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.ego.traits.headline"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-4">
+    {{#each @root.visibleTraits as |trait key|}}
+    <label class="ep-field">
+        <span class="resource-label">{{trait.label}}</span>
+        <select name="system.traits.{{key}}.value" data-type="String">
+            {{selectOptions @root.itemList.trait selected=trait.value}}
+        </select>
+    </label>
+    {{/each}}
+</div>
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.ego.flaws.headline"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-4">
+    {{#each @root.visibleFlaws as |flaw key|}}
+    <label class="ep-field">
+        <span class="resource-label">{{flaw.label}}</span>
+        <select name="system.flaws.{{key}}.value" data-type="String">
+            {{selectOptions @root.itemList.flaw selected=flaw.value}}
+        </select>
+    </label>
+    {{/each}}
 </div>

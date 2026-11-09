@@ -17,7 +17,8 @@
     "psiType": "epsilon",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "sustained"
+    "duration": "sustained",
+    "condition": "incapacitated"
   },
   "_stats": {
     "systemId": "eclipsephase",

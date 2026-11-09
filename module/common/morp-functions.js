@@ -1,5 +1,6 @@
 import * as sheetFunction from "./general-sheet-functions.js"
 import * as resleeving from "../rolls/resleeving.js"
+import { getStrainFamily } from "../rolls/strain-families.js";
 
 export async function resleeveMorph(actor, currentTarget, sheet){
     // Can't resleeve while jamming - your ego is off piloting a remote body. Also backs up the
@@ -511,4 +512,196 @@ export async function applyFrame(actor, body, boundTo) {
         sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemAddedToBody", { name: created[0].name, body: body.name });
     }
     return created[0] ?? null;
+}
+
+export const CYBERBRAIN_MARKER = "flags.eclipsephase.grantsCyberbrain";
+
+/**
+ * Resolves the value a body-bound item's boundTo holds for one particular body. Characters bind to
+ * the body item's own id, every other actor type binds to a fixed sentinel string, mirroring
+ * boundToFor in morp-functions.js - comparing a raw id would never match on an NPC or Goon.
+ * @param {Actor} actor - The actor the body belongs to
+ * @param {String} bodyId - The id of the Morph or Vehicle item
+ * @returns - The boundTo value used for this body, or null if the body does not exist
+ */
+export function bodyBindingKey(actor, bodyId){
+  if(!bodyId) return null;
+  if(actor?.type === "character") return bodyId;
+
+  const body = actor?.items?.get(bodyId);
+  if(!body) return null;
+
+  return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
+}
+
+/**
+ * Whether a body-bound item - ware, a trait - works in the body the actor acts through: bound to
+ * the sleeved morph, or to the jammed body unless it is meant to keep working while jamming. An
+ * NPC's or goon's items always work, and so does an item bound to no body at all.
+ * @param {Actor} actor - The actor
+ * @param {Item} item - The item
+ * @returns {Boolean} True while it works
+ */
+export function boundToActiveBody(actor, item) {
+  if (actor?.type !== "character") return true;
+  const boundTo = item.system?.boundTo;
+  const activeMorph = actor.system?.activeMorph;
+  if (!boundTo || !activeMorph) return true;
+  const activeJam = actor.system?.activeJam;
+  const keepsJamming = !!item.system?.additionalSystems?.staysActiveWhileJamming;
+  return boundTo === (activeJam && !keepsJamming ? activeJam : activeMorph);
+}
+
+/**
+ * Whether any Ware bound to one body carries a marker ActiveEffect. Markers are read raw off the
+ * effect's changes and are never applied, so they stay disabled on the Ware item.
+ * @param {Actor} actor - The actor owning both the body and the Ware
+ * @param {String} bodyId - The id of the Morph or Vehicle item the Ware must be bound to
+ * @param {String} markerKey - The change key identifying the marker
+ * @returns - True when at least one bound Ware item carries the marker
+ */
+export function bodyHasWareMarker(actor, bodyId, markerKey){
+  const bindingKey = bodyBindingKey(actor, bodyId);
+  if(!bindingKey) return false;
+
+  return !!actor.items?.some(wareCheck =>
+    wareCheck.type === "ware" &&
+    wareCheck.system?.boundTo === bindingKey &&
+    wareCheck.effects?.some(e => e.changes?.some(c => c.key === markerKey)));
+}
+
+/**
+ * Whether every body the ego currently inhabits carries a marker - the active morph and, while
+ * jamming, the jammed body as well.
+ * @param {Actor} actor - The actor to check
+ * @param {String} markerKey - The change key identifying the marker
+ * @returns - True when the whole chain carries the marker
+ */
+export function chainHasWareMarker(actor, markerKey){
+  const activeJam = actor?.system?.activeJam;
+
+  return bodyHasWareMarker(actor, actor?.system?.activeMorph, markerKey) &&
+    (!activeJam || bodyHasWareMarker(actor, activeJam, markerKey));
+}
+
+/**
+ * The nervous system of one body: "bio", "synth" or "info". A Morph reports its own type, a
+ * Vehicle counts as bio only for an animal chassis, mirroring the jammed-body branch of
+ * EPactor's health calculation. Falls back to "bio" for a missing body, matching the standard
+ * morph the actor falls back to elsewhere.
+ * @param {Actor} actor - The actor the body belongs to
+ * @param {String} bodyId - The id of the Morph or Vehicle item
+ * @returns - One of "bio", "synth" or "info"
+ */
+export function bodyNervousSystem(actor, bodyId){
+  const body = bodyId ? actor?.items?.get(bodyId) : null;
+  if(!body) return "bio";
+
+  if(body.type === "morph") return body.system?.type ?? "bio";
+
+  return body.system?.chassisType === "animal" ? "bio" : "synth";
+}
+
+/**
+ * The nervous system the ego currently acts through - the jammed body while jamming, otherwise the
+ * sleeved morph.
+ * @param {Actor} actor - The actor to check
+ * @returns - One of "bio", "synth" or "info"
+ */
+export function sleevedNervousSystem(actor){
+  const activeJam = actor?.system?.activeJam;
+
+  return bodyNervousSystem(actor, activeJam || actor?.system?.activeMorph);
+}
+
+// The vectors a sealed suit or a mask keeps out, by the flag an item's effect sets on the actor.
+// The vision mode a token seen through a tacnet is drawn in, and the key an effect joins one with.
+export const TACNET_VISION = "tacnet";
+export const TACNET_KEY = "system.additionalSystems.tacnet";
+export const PLAIN_TACNET_VISION = "tacnetPlain";
+
+/**
+ * The vision mode a tacnet's shared sight is drawn in: with its picture effects, or without them
+ * when the user turned sight effects off.
+ * @param {Boolean} effects - Whether the user wants sight effects
+ * @returns {String} The vision mode's id
+ */
+export function sharedSightMode(effects) {
+  return effects ? TACNET_VISION : PLAIN_TACNET_VISION;
+}
+
+/**
+ * The tacnet channel an actor shares its sight on (Core p.327): the one its effect names, or for a
+ * plain "true" the channel of everyone on its side.
+ * @param {Actor} actor - The actor
+ * @returns {String|null} The channel, null when it is on no tacnet
+ */
+export function tacnetChannel(actor) {
+  const value = actor?.system?.additionalSystems?.tacnet;
+  if (!value || value === "false") return null;
+  if (value === true || value === "true") return actor.hasPlayerOwner ? "player" : "nonPlayer";
+  return String(value);
+}
+
+/**
+ * Whether a token's sight reaches a user through a tacnet: it shares a channel with a token they are
+ * looking through, the ones they control or else, for a player, the ones they observe. The GM looks
+ * through controlled tokens only.
+ * @param {Object} token - The token that may share its sight
+ * @param {Object[]} tokens - The scene's tokens
+ * @param {User} user - The user
+ * @returns {Boolean} True when the user sees through it
+ */
+export function seesThroughTacnet(token, tokens, user) {
+  const channel = tacnetChannel(token.actor);
+  if (!channel) return false;
+  const controlled = tokens.filter(other => other.controlled);
+  const viewers = controlled.length || user.isGM ? controlled : tokens.filter(other => other.actor?.testUserPermission?.(user, "OBSERVER"));
+  return viewers.some(viewer => viewer !== token && tacnetChannel(viewer.actor) === channel);
+}
+
+const SEALS = { inhalation: "airSealed", dermal: "skinSealed" };
+
+/**
+ * Whether what the actor wears keeps a substance out that comes by this vector: a breather or a
+ * sealed suit against what is breathed in, a sealed suit against what touches the skin.
+ * @param {Actor} actor - The actor
+ * @param {String|null} vector - "oral", "injection", "inhalation" or "dermal"
+ * @returns {Boolean} True when it cannot reach them that way
+ */
+export function sealedAgainst(actor, vector) {
+  const flag = SEALS[vector];
+  return !!flag && actor?.system?.additionalSystems?.[flag] === true;
+}
+
+// The kind each body counts as when something picks it as a target.
+const MORPH_KINDS = { bio: "biomorph", synth: "synthmorph", info: "infomorph" };
+const CHASSIS_KINDS = { robot: "bot", vehicle: "vehicle", animal: "animal" };
+
+/**
+ * What an actor counts as when it is picked as a target: the kind of the body it acts through - a
+ * jammed bot, vehicle or animal, otherwise its morph - and "cyberbrain" when that body runs one.
+ * An attack names the kinds it cannot strike against these.
+ * @param {Actor} actor - The target
+ * @returns {String[]} e.g. ["synthmorph"] or ["biomorph", "cyberbrain"]
+ */
+export function targetKinds(actor) {
+  const activeJam = actor?.system?.activeJam;
+  const jammed = activeJam ? actor?.items?.get?.(activeJam) : null;
+  const kinds = [jammed?.type === "vehicle"
+    ? CHASSIS_KINDS[jammed.system?.chassisType] ?? "vehicle"
+    : MORPH_KINDS[actor?.system?.physical?.activeMorphType] ?? "biomorph"];
+  if (chainHasWareMarker(actor, CYBERBRAIN_MARKER)) kinds.push("cyberbrain");
+  return kinds;
+}
+
+/**
+ * Whether a strain family works in the body the ego currently acts through. Each family brings its
+ * own rule; a family nobody registered is refused outright rather than treated as Psi.
+ * @param {Actor} actor - The actor to check
+ * @param {String} strainFamily - The family a sleight names
+ * @returns - An object holding whether the family is blocked, whether jamming is what blocks it, whether it is penalised, and the keys explaining why
+ */
+export function strainSubstrate(actor, strainFamily){
+  return getStrainFamily(strainFamily).substrate(actor);
 }

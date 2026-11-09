@@ -320,8 +320,8 @@ class MockDocument {
     return this;
   }
 
-  async update(changes = {}) {
-    global.Hooks.callAll(`preUpdate${this.documentName}`, this, changes, {}, global.game.user.id);
+  async update(changes = {}, options = {}) {
+    global.Hooks.callAll(`preUpdate${this.documentName}`, this, changes, options, global.game.user.id);
     for (const [key, value] of Object.entries(changes)) {
       if (value instanceof ForcedDeletion) {
         deleteProperty(this._source, key);
@@ -332,7 +332,7 @@ class MockDocument {
       setProperty(this, key, value);
     }
     (this.actor ?? this).prepareData?.();
-    global.Hooks.callAll(`update${this.documentName}`, this, changes, {}, global.game.user.id);
+    global.Hooks.callAll(`update${this.documentName}`, this, changes, options, global.game.user.id);
     await new Promise(resolve => setTimeout(resolve, 0));
     return this;
   }
@@ -353,13 +353,13 @@ class MockDocument {
     return created;
   }
 
-  async deleteEmbeddedDocuments(documentName, ids = []) {
+  async deleteEmbeddedDocuments(documentName, ids = [], options = {}) {
     if (documentName !== "ActiveEffect") return [];
     const removed = this.effects.filter(effect => ids.includes(effect.id));
-    for (const effect of removed) global.Hooks.callAll("preDeleteActiveEffect", effect, {}, global.game.user.id);
+    for (const effect of removed) global.Hooks.callAll("preDeleteActiveEffect", effect, options, global.game.user.id);
     this.effects = this.effects.filter(effect => !ids.includes(effect.id));
     this.prepareData?.();
-    for (const effect of removed) global.Hooks.callAll("deleteActiveEffect", effect, {}, global.game.user.id);
+    for (const effect of removed) global.Hooks.callAll("deleteActiveEffect", effect, options, global.game.user.id);
     this.actor?.prepareData?.();
     await new Promise(resolve => setTimeout(resolve, 0));
     return removed;
@@ -579,8 +579,8 @@ class MockActor extends MockDocument {
     return updated;
   }
 
-  async deleteEmbeddedDocuments(documentName, ids = []) {
-    if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids);
+  async deleteEmbeddedDocuments(documentName, ids = [], options = {}) {
+    if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids, options);
 
     const removed = ids.map(id => this.items.get(id)).filter(Boolean);
     for (const item of removed) global.Hooks.callAll("preDeleteItem", item, {}, global.game.user.id);
@@ -648,6 +648,7 @@ const SETTING_DEFAULTS = {
   editAll: false,
   GMmenu: true,
   migrationVersion: "newInstall",
+  showTraps: "players",
   superBrew: false
 };
 
@@ -816,10 +817,15 @@ function getHandlebars() {
     or: (...args) => args.slice(0, -1).some(Boolean),
     not: value => !value,
     concat: (...args) => args.slice(0, -1).join(""),
+    percentile: value => Number.isFinite(value) ? Math.min(Math.max(value, 0), 100) : value,
     toLowerCase: value => String(value ?? "").toLowerCase(),
     checkedIf: condition => (condition ? "checked" : ""),
     checked: condition => (condition ? "checked" : ""),
-    numberFormat: value => String(value ?? "")
+    numberFormat: value => String(value ?? ""),
+    radioBoxes: () => new handlebars.SafeString(""),
+    selectOptions: (choices, options) => new handlebars.SafeString(Object.entries(choices ?? {})
+      .map(([value, label]) => `<option value="${value}"${String(options.hash.selected) === value ? " selected" : ""}>${label}</option>`)
+      .join(""))
   });
   handlebarsReady = true;
   global.Handlebars = handlebars;
@@ -1091,7 +1097,7 @@ global.game = {
     lang: "en"
   },
   user: { id: "testuser", _id: "testuser", isGM: true, name: "Tester" },
-  users: { activeGM: null, filter: () => [], find: () => null, get: () => null },
+  users: { activeGM: { id: "connected-gm" }, filter: () => [], find: () => null, get: () => null },
   messages: new MockCollection(),
   actors: new MockCollection(),
   items: new MockCollection(),

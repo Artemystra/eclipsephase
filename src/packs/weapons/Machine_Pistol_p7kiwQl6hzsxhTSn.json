@@ -135,11 +135,12 @@
     },
     "mode1": {
       "name": "",
-      "range": "25m",
+      "range": 25,
       "d10": 1,
       "d6": 1,
       "bonus": null,
       "dv": null,
+      "armorused": "kinetic",
       "firingMode": "saBFfa",
       "traits": {
         "armorPiercing": {
@@ -219,15 +220,21 @@
           "value": false,
           "number": null
         }
+      },
+      "area": {
+        "kind": "none",
+        "radius": null,
+        "reduction": null
       }
     },
     "mode2": {
       "name": "",
-      "range": "",
+      "range": null,
       "d10": null,
       "d6": null,
       "bonus": null,
       "dv": null,
+      "armorused": "kinetic",
       "firingMode": "ss",
       "traits": {
         "armorPiercing": {
@@ -307,6 +314,11 @@
           "value": false,
           "number": null
         }
+      },
+      "area": {
+        "kind": "none",
+        "radius": null,
+        "reduction": null
       }
     }
   },

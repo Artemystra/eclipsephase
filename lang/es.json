@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "Formato de hora",
       "hint": "Cómo muestra el Panel de Tiempo la hora del día. Horas usa un reloj de 24 horas, Beats usa el Swatch Internet Time, donde un día tiene 1000 beats.",
@@ -24,6 +20,10 @@
     "timePanelPlayers": {
       "name": "Mostrar el Panel de Tiempo a los jugadores",
       "hint": "Permite a los jugadores abrir el Panel de Tiempo y ver el día y la hora actuales. Reciben el mismo panel sin ningún control."
+    },
+    "visionEffects": {
+      "name": "Modificadores de visión",
+      "hint": "Muestra la visión especial, como la visión compartida con otros, con sus propios efectos de imagen. Desactívalo para verla sin filtros, por ejemplo si los efectos te molestan a la vista. Lo que puedes ver no cambia."
     },
     "editAll": {
       "name": "No edit restrictions",
@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laph's Special Brew",
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
+    },
+    "showTraps": {
+      "name": "Mostrar trampas",
+      "hint": "Si los jugadores pueden ver los explosivos armados - temporizadores, cargas remotas, minas de proximidad - que sus compañeros o sus oponentes dejan en el mapa. Sus dueños y el DJ siempre los ven.",
+      "none": "Ninguna",
+      "all": "Todas",
+      "players": "Solo trampas de jugadores"
     }
   },
   "TYPES": {
@@ -88,6 +95,9 @@
       "ammo": "Ammo",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "Fuego de supresión"
     }
   },
   "ep2e": {
@@ -135,9 +145,8 @@
         "doseNeedsBiomorph": "Esta droga solo actua en un cuerpo biologico.",
         "doseNeedsCyberbrain": "Esta droga solo funciona en un infomorfo o un cibercerebro.",
         "noDosesLeft": "{name} no tiene dosis restantes.",
-        "doseCheckRolled": "Este chequeo ya se ha tirado.",
+        "checkRolled": "Este chequeo ya se ha tirado.",
         "doseNoScene": "Abre una escena para elegir un objetivo en ella.",
-        "doseNeedsGM": "Debe haber un GM conectado para entregar esta dosis.",
         "doseNoSelection": "Selecciona primero un token.",
         "doseNeedsClaimant": "Asígnate un personaje o, como GM, selecciona un token para tomar esta dosis.",
         "doseAlreadyUsed": "Esta dosis ya se ha usado.",
@@ -145,7 +154,8 @@
         "ammoPackNotTaken": "{name} es un paquete de munición: cárgalo en un arma en lugar de tomarlo.",
         "noPlacedToken": "Este actor no está representado por un token colocado en este momento.",
         "attackDelivered": "Este ataque ya se ha aplicado a sus objetivos.",
-        "attackNoPayload": "El arma no sabe con qué droga está cargada. Recárgala primero."
+        "attackNoPayload": "El arma no sabe con qué droga está cargada. Recárgala primero.",
+        "needsGM": "Un GM debe estar conectado para transferir el efecto."
       },
       "button": {
         "edit": "Edit",
@@ -689,6 +699,7 @@
           },
           "result": {
             "stressCopy": "Changing my body stresses me out.",
+            "cleanCopy": "Te adaptas a tu nuevo cuerpo sin problemas.",
             "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions.",
             "effectIntegrationIssues": {
               "title": "Integration Issues",
@@ -886,6 +897,96 @@
           "playWithPrey": "Play with Prey",
           "protectTribe": "Protect Tribe"
         }
+      },
+      "lockOut": {
+        "name": "Bloqueado: {target}",
+        "description": "{target} se defendió con un éxito crítico: este async no puede volver a elegir su mente como objetivo hasta su próxima recarga."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Tiradas de habilidades sociales contra el objetivo",
+        "basiliskHacks": "Resistir hackeos basilisco",
+        "lostSense": "Depende de {sense}",
+        "visualCoordination": "Coordinación visual mientras mira fijamente"
+      },
+      "sustain": {
+        "name": "Manteniendo: {sleight} ({targets})",
+        "description": "Mantienes {sleight}: -10 a todas las demás tiradas de habilidad mientras dure. Termina cuando lo terminas o cuando el async se aleja más de Cerca + 10 m del objetivo.",
+        "outOfReach": "{target} está a {distance} m de {async}, más allá de los {reach} m a los que se puede mantener {sleight}.",
+        "end": "Dejar de mantener",
+        "endCopy": "¿Dejar de mantener esta habilidad psi? Su efecto sobre los objetivos termina con ella.",
+        "summary": "Mantiene psi",
+        "endTip": "Mantenida - dejar de mantener",
+        "pickCopy": "Mantienes esta habilidad psi sobre más de un objetivo. Marca aquellos sobre los que quieres dejar de mantenerla.",
+        "nameSelf": "Sosteniendo: {sleight}"
+      },
+      "healing": {
+        "card": "{name} se cura {amount} de {kind} ({sleight}).",
+        "stress": "estrés",
+        "damage": "daño",
+        "rollTitle": "Curado"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} puede usar su siguiente acción compleja como recarga corta, sin el tiempo habitual. No da una recarga adicional.",
+        "errorGM": "{sleight} en {target}: una prueba de habilidad que elijas falla. Usa el botón de la tarjeta de la prueba antes de que acabe el efecto.",
+        "blockSkill": "{sleight} afecta a {target}. Elige la habilidad a bloquear.",
+        "blockSkillButton": "Elegir habilidad",
+        "boostSkill": "{sleight} ha alcanzado a {target}. Elige la habilidad física que aumenta.",
+        "boostSkillButton": "Elegir habilidad",
+        "boostCopy": "¿Qué habilidad física aumenta el sleight?",
+        "failSkill": "{sleight} afecta a {target} con un éxito superior. Elige cómo actúa el error.",
+        "failSkillButton": "Elegir",
+        "alterDuration": "{sleight} afecta a {target}. Elige una droga o toxina activa.",
+        "alterDurationButton": "Elegir sustancia",
+        "noSubstance": "{target} no tiene drogas ni toxinas activas.",
+        "alterHeader": "Alterar sustancia",
+        "alterCopy": "¿Qué droga o toxina alteras?",
+        "shorter": "Reducir la duración a la mitad",
+        "longer": "Aumentar la duración",
+        "errorHeader": "Inducir error",
+        "superiorFailure": "Fallo superior",
+        "errorCopy": "¿Cómo se manifiesta el error?",
+        "failSkillOption": "Hacer fallar la habilidad",
+        "alterQuestion": "¿Cómo quieres manipular el efecto?",
+        "forcedFailure": "Fallo debido a un error inducido.",
+        "skillHeader": "Elegir habilidad",
+        "skillCopy": "¿A qué habilidad afecta el sleight?",
+        "shortened": "{effect} en {target} dura ahora la mitad de lo habitual.",
+        "lengthened": "{effect} en {target} dura ahora 1,5 veces más de lo habitual.",
+        "superiorChosen": "{sleight} en {target}: una prueba de habilidad que elija el GM será un fallo superior, con el botón de la tarjeta de la prueba.",
+        "errorKind": {
+          "auto": "Fallo",
+          "superior": "Fallo superior"
+        },
+        "skillChosen": "{sleight} en {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} bloquea {skill}: no se puede usar, ni siquiera por defecto.",
+        "loseSense": "{sleight} ha alcanzado a {target}. Elige el sentido que pierde.",
+        "loseSenseButton": "Elegir sentido",
+        "senseHeader": "Elegir un sentido",
+        "senseCopy": "¿Qué sentido pierde el objetivo?",
+        "senseChosen": "{sleight} sobre {target}: pierde {sense}."
+      },
+      "sleightLabel": "Habilidad",
+      "contactLost": "<strong>{sleight}</strong>: se pierde el contacto visual con {target}",
+      "sense": {
+        "sight": "Vista",
+        "hearing": "Oído",
+        "touch": "Tacto",
+        "smell": "Olfato",
+        "taste": "Gusto",
+        "hunger": "Hambre",
+        "balance": "Equilibrio",
+        "direction": "Orientación",
+        "proprioception": "Propiocepción",
+        "facialRecognition": "Reconocimiento facial",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "Rayos T",
+        "electricalSense": "Sentido eléctrico",
+        "radiationSense": "Sentido de radiación"
       }
     },
     "gmInfo": {
@@ -915,6 +1016,11 @@
         "gearModifiers": "Gear Encumberance",
         "noModifiersSubHeader": "No modifiers present",
         "noModifiersCopy": "Whenever you receive any negative modifiers while exploring the world, you'll find them here. Just give it a bit of time and we'll see each other soon...",
+        "body": "Cuerpo",
+        "mind": "Mente",
+        "showBreakdown": "De dónde vienen los modificadores",
+        "sourceColumn": "Origen",
+        "totalRow": "Total",
         "statuses": {
           "wounded": "Wound",
           "woundsIgnored": "Wound(s) Ignored",
@@ -931,9 +1037,13 @@
       "armor": {
         "headline": "Armor",
         "noArmorSubheadline": "No Armor Equipped",
+        "energy": "Energía",
+        "kinetic": "Cinética",
+        "mental": "Mental",
         "concealWarning": "Los valores de Armadura superiores a 11 no son ocultables - piénsalo como, al menos, una capa de ropa gruesa y llamativa.",
         "encumberanceWarning": "Mientras tu Armadura acumulada exceda la Durabilidad de tu cuerpo, serás incapaz de moverte.",
-        "armorSourceHint": "Para cambiar tu valor de Armadura, añádela a tu Morph actual o al Cuerpo Remoto que tengas en jamming."
+        "armorSourceHint": "Para cambiar tu valor de Armadura, añádela a tu Morph actual o al Cuerpo Remoto que tengas en jamming.",
+        "mentalHint": "El blindaje mental solo cuenta contra ataques psi y viene con el sleight Psi Armor"
       },
       "ranged": {
         "headline": "Ranged Combat",
@@ -950,9 +1060,31 @@
       "consumables": {
         "headline": "Consumables",
         "noConsumablesSubheadline": "None Equipped"
+      },
+      "armed": {
+        "headline": "Explosivos armados",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Reservas"},
+      "inducedChanges": {
+        "headline": "Cambios inducidos",
+        "allActions": "a todas las acciones",
+        "physicalActions": "a todas las acciones físicas",
+        "mentalActions": "a todas las acciones mentales",
+        "durability": "Durabilidad",
+        "lucidity": "Lucidez",
+        "initiative": "Iniciativa",
+        "energyArmor": "Armadura de energía",
+        "kineticArmor": "Armadura cinética",
+        "mentalArmor": "Armadura mental",
+        "rest": "a la recuperación",
+        "ignoreWounds": "Ignora {count} herida(s)",
+        "ignoreTrauma": "Ignora {count} trauma(s)",
+        "psiArmor": "Otorga armadura mental"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Item Details",
@@ -983,6 +1115,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Tipo",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1002,6 +1137,7 @@
       "aspect": {
         "pushedBadge": "Empujado",
         "table": {
+          "targetHeadline": "Objetivos",
           "type": {
             "label": "Psi Type",
             "gamma": "Gamma",
@@ -1030,12 +1166,60 @@
           "damage": {
             "label": "Daño",
             "physical": "Físico",
-            "mental": "Mental"
+            "mental": "Mental",
+            "mode": {
+              "damage": "Infligir",
+              "heal": "Curación",
+              "none": "Sin daño"
+            },
+            "targetLabel": "Objetivo"
+          },
+          "targetRule": {
+            "label": "Objetivos posibles",
+            "any": "Cualquiera",
+            "self": "Solo uno mismo",
+            "others": "Solo otros"
+          },
+          "affects": {
+            "label": "Afecta a",
+            "target": "Objetivo",
+            "async": "Async",
+            "both": "Ambos"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiplicar efectos",
+            "tip": "Cada éxito superior aplica el efecto una vez más"
+          },
+          "landingRule": {
+            "label": "Efecto especial",
+            "tip": "Añadir efecto especial al acertar",
+            "select": "- Seleccionar -",
+            "boostSkill": "Aumentar una habilidad física",
+            "blockSkill": "Bloquear habilidad",
+            "failSkill": "Inducir error",
+            "recharge": "Recarga rápida",
+            "alterDuration": "Alterar duración de sustancia",
+            "shockEffect": "Efecto de descarga",
+            "painEffect": "Efecto de dolor",
+            "loseSense": "Quitar un sentido",
+            "eyeContact": "Termina si el objetivo es atacado o movido"
+          },
+          "condition": {
+            "label": "Estado",
+            "tip": "El estado que la habilidad deja en su objetivo mientras dura",
+            "impaired": "Mermado (-10 por aplicación)"
           }
         }
       },
       "weapon": {
         "table": {
+          "modeName": "Nombre del modo",
+          "section": {
+            "general": "General",
+            "attack": "Ataque",
+            "traits": "Rasgos",
+            "accessories": "Accesorios"
+          },
           "range": "Range",
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
@@ -1050,7 +1234,9 @@
             "label": "Armor Used",
             "none": "None",
             "kinetic": "Kinetic",
-            "energy": "Energy"
+            "energy": "Energy",
+            "mental": "Mental",
+            "asWeapon": "Como el arma"
           },
           "firingMode": {
             "label": "Firing Mode",
@@ -1125,6 +1311,45 @@
             "silencer": "Silencer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazine"
+          },
+          "area": {
+            "none": "Sin área",
+            "uniform": "Uniforme",
+            "centered": "Centrada",
+            "radius": "Radio",
+            "reduction": "Reducción de VD por metro"
+          },
+          "size": {
+            "label": "Tamaño",
+            "baseline": "Micromisil",
+            "standard": "Minimisil",
+            "missile": "Misil estándar",
+            "select": "Elegir"
+          },
+          "trigger": {
+            "label": "Detonador",
+            "impact": "Impacto",
+            "airburst": "Explosión aérea",
+            "timer": "Temporizador",
+            "signal": "Señal (remota)",
+            "proximity": "Proximidad"
+          },
+          "payload": {
+            "enabled": "Carga",
+            "select": "Elegir carga",
+            "sources": {
+              "drugs": "Drogas y toxinas"
+            },
+            "vector": "Vector de la carga",
+            "choose": "Elegir",
+            "smoke": "Humo"
+          },
+          "cloud": "Forma una nube",
+          "cloudColor": {
+            "smoke": "Humo",
+            "toxin": "Toxina",
+            "drug": "Droga",
+            "custom": "Propio"
           }
         }
       },
@@ -1192,7 +1417,8 @@
           }
         },
         "mechanics": {
-          "tab": "Mecánica",
+          "grantHeadline": "Concede",
+          "tab": "Mecánicas",
           "none": "Ninguno",
           "checkHeadline": "Chequeo al tomarla",
           "aptitude": "Aptitud",
@@ -1209,8 +1435,8 @@
           },
           "overTimeHeadline": "Efectos con el tiempo",
           "damage": "Daño por tic",
-          "interval": "Cada",
-          "ticks": "Tics",
+          "interval": "Tic cada",
+          "ticks": "Tics máx.",
           "ticksTip": "Déjalo vacío mientras dure la dosis",
           "intervals": {
             "turn": "Turno de acción",
@@ -1223,7 +1449,6 @@
           "healing": "Diálogo de curación",
           "healingTip": "Mientras dure una dosis, el diálogo de curación empieza con este añadido",
           "harm": "Daño",
-          "grantsHeadline": "Rasgos temporales",
           "grantPack": "Compendio",
           "grantFolder": "Carpeta",
           "grantItem": "Objeto",
@@ -1235,7 +1460,9 @@
           "grantDescriptionHint": "Se escribe sobre la descripción del objeto.",
           "grantTitlePlaceholder": "Título adicional (opcional)",
           "grantDescriptionPlaceholder": "Descripción adicional (opcional)",
-          "grantTitleHint": "Aparece entre paréntesis tras el nombre del objeto."
+          "grantTitleHint": "Aparece entre paréntesis tras el nombre del objeto.",
+          "wearOffHeadline": "Efecto al desaparecer",
+          "addictionHeadline": "Adicción"
         }
       },
       "additionalSkill": {
@@ -1258,7 +1485,11 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Habilidades"
+        },
         "table": {
+          "skillName": "Habilidad",
           "initiative": "Init",
           "threatValue": "TV",
           "durability": "DUR",
@@ -1394,12 +1625,14 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "Tirada de {name}"
         },
         "button": {
           "roll": "Roll",
           "cancel": "Cancel",
-          "useSelection": "Use this Selection"
+          "useSelection": "Use this Selection",
+          "rollWithoutTargets": "Tirar sin objetivos"
         },
         "reputationMode": {
           "headline": "Mode",
@@ -1426,11 +1659,13 @@
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
-              "burst": "Narrow Burst (+1d10)",
-              "fullAuto": "Narrow Full Auto (+2d10)",
-              "wBurst": "Wide Burst (+10 Hit)",
-              "wFullAuto": "Wide Full Auto (+30 Hit)",
-              "suppressive": "Suppressive (uses 20 rounds)"
+              "burst": "Burst: +1d10 DV",
+              "fullAuto": "Full auto: +2d10 DV",
+              "wBurst": "Burst: +10 to hit",
+              "wFullAuto": "Full auto: +30 to hit",
+              "suppressive": "Suppressive fire (20 rounds)",
+              "burstTargets": "Ráfaga: dos objetivos",
+              "fullAutoTargets": "Automático: tres objetivos"
             },
             "aim": {
               "label": "Aim",
@@ -1454,7 +1689,9 @@
               "major": "Major (-30)",
               "blind": "Blind (-30+)",
               "indirect": "Indirect (-20)"
-            }
+            },
+            "pickTargets": "Elegir objetivos",
+            "vacuum": "En el vacío"
           },
           "defender": {
             "isProne": "Is Prone (-10 if at range)",
@@ -1538,7 +1775,31 @@
           "exoticMorphology": "Exotic Morphology"
         },
         "augmentations": "Aumentos",
-        "dodgeCoverLabel": "Esquivar tras cobertura"
+        "dodgeCoverLabel": "Esquivar tras cobertura",
+        "fullDefenseLabel": "Defensa total (+30)",
+        "psi": {
+          "touch": "Contacto (+20)",
+          "willing": "Objetivo voluntario (sin resistencia)"
+        },
+        "throw": {
+          "headline": "Lanzar",
+          "radius": "Radio de explosión",
+          "reduction": "Pérdida de VD",
+          "note": "Todos en la explosión deben defenderse. Reducir la explosión cuesta una acción rápida.",
+          "place": "Colocar explosión",
+          "noneLeft": "{name}: no quedan para lanzar.",
+          "blastHeadline": "Explosión",
+          "timer": "Estalla tras",
+          "unit": {
+            "rounds": "Asaltos",
+            "seconds": "Segundos",
+            "minutes": "Minutos"
+          },
+          "proximity": "Alcance del sensor",
+          "payload": "Carga",
+          "noPayload": "Sin carga"
+        },
+        "sleightOptions": "Habilidades psi"
       },
       "successType": {
         "success": "Success",
@@ -1582,6 +1843,7 @@
         "baseValue": "Base Value",
         "rollTarget": "Target",
         "total": "Result",
+        "initiative": "tira por Iniciativa",
         "damageDone": "Damage Done",
         "infectionRaise": "Infection raised to",
         "jamming": {
@@ -1604,7 +1866,10 @@
           "noBioBrain": "El Psi solo funciona desde un cerebro biológico. Un Cerebro Cibernético lo bloquea, y un infomorfo no tiene sistema nervioso alguno.",
           "blockedByDrug": "Una droga bloquea tu psi.",
           "substrateBlockedTooltip": "El Psi necesita un cerebro biológico",
-          "substrateMismatch": "Cerebro biológico en un cuerpo sintético"
+          "substrateMismatch": "Cerebro biológico en un cuerpo sintético",
+          "touch": "Contacto",
+          "cyberbrain": "Objetivo con cibercerebro",
+          "range": "Alcance psi: {band} ({distance} m)"
         },
         "armor": {
           "equipped": "He equipado a {morph} con armadura."
@@ -1696,6 +1961,7 @@
             "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
             "multipleTargets": "Multiple Targets",
+            "proneTarget": "Objetivo derribado (posición superior)",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -1733,8 +1999,11 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
-            "fray": "Fray Ranged"
-          }
+            "fray": "Fray Ranged",
+            "measured": "{band} ({distance} m)",
+            "proneAtRange": "Defensor tumbado a distancia"
+          },
+          "fullDefense": "Defensa total"
         }
       },
       "psi": {
@@ -1814,6 +2083,16 @@
         "fewerHeadline": "Menos objetivos que dosis",
         "fewerCopy": "El arma reparte {max} dosis. ¿Seguro que quieres seleccionar solo {count} objetivos?",
         "fewerConfirm": "Confirmar"
+      },
+      "selectPayload": {
+        "header": "Elegir carga",
+        "copy": "¿Qué sustancia lleva esta munición?",
+        "none": "Ninguna sustancia de los compendios de carga puede administrarse así."
+      },
+      "selectMunition": {
+        "header": "Preparar munición",
+        "copy": "¿Qué sustancia lleva esta munición?",
+        "noPayload": "Sin carga"
       }
     },
     "chat": {
@@ -1879,7 +2158,8 @@
         "addictionRaisedEgo": "La adicción de mi ego a <strong>{name}</strong> sube al nivel {level}",
         "addictionRaisedBody": "La adicción de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
         "addictionRaisedBoth": "La adicción de mi ego y de mi cuerpo a <strong>{name}</strong> sube al nivel {level}",
-        "unaffected": "{drug} no puede actuar en el cuerpo de {name}."
+        "unaffected": "{drug} no puede actuar en el cuerpo de {name}.",
+        "sealedOff": "{name} está sellado(a): {drug} no llega por la vía {vector}."
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
@@ -1898,19 +2178,177 @@
         "applyDose": "Aplicar dosis a los objetivos seleccionados",
         "applyTargets": "Aplicar a los objetivos seleccionados",
         "targets": "Objetivos: {names}",
-        "hitByPool": "El gasto de reserva convirtió el ataque con {weapon} en un impacto."
+        "chooseTarget": "Elegir objetivo",
+        "rollDamage": "Tirar daño",
+        "damageWithoutTarget": "Daño sin objetivo",
+        "damageReady": "Daño de {weapon}",
+        "suppressiveArea": "Fuego de supresión ({name})",
+        "suppressiveNote": "Fuego de supresión: quien se mueva dentro del cono debe defenderse.",
+        "blastArea": "Explosión ({name})",
+        "blastNote": "La explosión está marcada en el mapa.",
+        "scatter": "Dispersar",
+        "scattered": "Dispersión {side}, {distance} m.",
+        "scatteredWall": "Dispersión {side}, {distance} m - detenida ante un muro.",
+        "scatterAhead": "de frente",
+        "scatterBack": "hacia atrás",
+        "scatterRight": "{degrees}° a la derecha",
+        "scatterLeft": "{degrees}° a la izquierda",
+        "armedTimerRound": "Armado: estalla al final del turno de {name} en el asalto {round}.",
+        "armedTimerClock": "Armado: el temporizador corre en el reloj del mundo.",
+        "armedSignal": "Armado: estalla cuando su dueño envía la señal.",
+        "armedProximity": "Armado: estalla cuando alguien se acerca a menos de {reach} m - activo tras 3 turnos de acción.",
+        "detonate": "Detonar",
+        "defuse": "Desactivar",
+        "defusedNote": "Desactivado, ya no estallará.",
+        "countdownTurns": "{count} turnos",
+        "countdownSeconds": "{count} s",
+        "countdownMinutes": "{count} min",
+        "armedBy": "{name} · remoto",
+        "armedLive": "{name} · sensor activo",
+        "armedArming": "{name} · sensor activo en {time}",
+        "armedTimer": "{name} · estalla en {time}",
+        "armedYours": "{name} (Tú)",
+        "gasArea": "Gas ({name})",
+        "smokeArea": "Humo ({name})",
+        "gasNote": "La nube de gas dura 3 turnos de acción: quien esté en ella, entre o empiece su turno en ella inhala la dosis.",
+        "smokeNote": "El humo dura 3 minutos y oculta lo que está dentro o detrás (-20)."
+      },
+      "blindAttack": {
+        "headline": "Ataque a ciegas con {weapon}",
+        "missed": "{name} está cegado. El ataque falla sin más.",
+        "through": "{name} está cegado. El ataque sigue adelante.",
+        "rollTitle": "Tirada a ciegas",
+        "accept": "Aceptar resultado",
+        "gone": "Ningún ataque espera ya esta tirada. Vuelve a tirar el ataque."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> debe hacer un {check}",
+        "roll": "Tirar {check}",
+        "resist": "Resistir {effect}",
+        "resistFor": "{name}: resistir {effect}",
+        "rollRemaining": "Tirar los chequeos restantes",
+        "resolveRest": "Resolver el resto sin tirar",
+        "weapon": "Arma",
+        "immune": "<strong>{name}</strong> es inmune a {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> resiste: {effect}",
+        "flee": "<strong>{name}</strong> debe huir con su siguiente acción completa: lo más lejos posible del dolor o a la cobertura total más cercana",
+        "spanRound": "1 turno de acción",
+        "spanRounds": "{count} turnos de acción",
+        "spanMinutes": "{count} min",
+        "armor": {
+          "energy": "Armadura de energía",
+          "kinetic": "Armadura cinética"
+        },
+        "attackSuperiors": "Éxitos superiores del ataque",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Derribo",
+          "rule": "Se aplican los modificadores por herida. Fallo: derribado."
+        },
+        "unconscious": {
+          "name": "Inconsciencia",
+          "rule": "Dos o más heridas a la vez te derriban. Se aplican los modificadores por herida. Fallo: inconsciente hasta que te despierten o te curen."
+        },
+        "shock": {
+          "name": "Descarga",
+          "rule": "La armadura de energía suma al chequeo; añade el modificador de tamaño en el diálogo (muy pequeño -30, pequeño -10, grande +10, muy grande +30). Fallo: derribado, incapacitado 1 turno de acción (+2 por fallo superior) y aturdido 3 minutos. Éxito: aturdido 3 turnos de acción."
+        },
+        "stun": {
+          "name": "Aturdimiento",
+          "rule": "La armadura cinética suma al chequeo; añade el modificador de tamaño en el diálogo (pequeño -30, grande +30). Fallo: aturdido 1 turno de acción, +1 por fallo superior. Fallo crítico: incapacitado 1 turno de acción y aturdido 1 minuto."
+        },
+        "blinding": {
+          "name": "Cegador",
+          "rule": "Fallo: cegado 1 turno de acción, +1 por fallo superior. Fallo crítico: ciego hasta ser reparado o curado en un tanque de curación."
+        },
+        "entangling": {
+          "name": "Enredador",
+          "rule": "Cada éxito superior del ataque: -10 a este chequeo y a los chequeos de SOM para liberarse. Fallo: apresado."
+        },
+        "pain": {
+          "name": "Dolor",
+          "rule": "-20 hasta el final del siguiente turno en cualquier caso (Pain Tolerance I: +30 al chequeo y -10). Fallo: huir con la siguiente acción completa."
+        },
+        "confused": {
+          "name": "Confusión",
+          "rule": "-30 al chequeo. Éxito: actúa con normalidad. Fallo: decide el d100 - 00-24 solo murmura incoherencias, 25-49 actúa al azar según decida el DJ, 50-74 huye en una dirección aleatoria, 75-99 ataca a un objetivo cercano al azar, incluso a un aliado, con lo que tenga en la mano. Se defiende con Fray como siempre."
+        }
+      },
+      "confusion": {
+        "headline": "Confundido: <strong>{name}</strong>",
+        "mutter": "{name} no hace nada salvo murmurar incoherencias.",
+        "random": "{name} actúa al azar: el DJ decide cómo.",
+        "flee": "{name} huye en una dirección aleatoria.",
+        "attack": "{name} ataca a un objetivo cercano al azar, incluso a un aliado, con lo que tenga en la mano.",
+        "rollTitle": "Tirada de confusión",
+        "clear": "<strong>{name}</strong> supera la confusión y actúa con normalidad"
       },
       "defence": {
         "headline": "Defenderse de {weapon}",
-        "doseLabel": "{name}, una dosis cada uno",
         "dodge": "Esquivar",
         "parry": "Parar",
-        "rollAll": "Tirar el resto a la vez",
+        "rollAll": "Esquivar el resto",
         "outcome": {
           "hit": "Impacto",
           "half": "Esquivado en parte: media dosis",
-          "none": "Evitado"
-        }
+          "none": "Evitado",
+          "will": {
+            "hit": "Afectado",
+            "half": "Afectado",
+            "none": "Resistido"
+          },
+          "cover": "Se puso a cubierto",
+          "remainCover": "Permaneció a cubierto",
+          "spared": "no alcanzado",
+          "inCover": "a cubierto"
+        },
+        "severalTargets": "Varios objetivos",
+        "resist": "Resistir ({aptitude})",
+        "yield": "No resistir",
+        "lockedOut": "Crítico: el async queda bloqueado de esta mente hasta que se recupere.",
+        "touchLabel": "{name} por toque",
+        "cover": "Se puso a cubierto",
+        "remainCover": "Permanece a cubierto",
+        "blastDistance": "a {distance} m del centro",
+        "blastEdge": "en el borde",
+        "inCover": "Sin daño",
+        "spareRest": "Resolver el resto sin tirada",
+        "soak": "Encajar el daño",
+        "soakRest": "Encajar el resto",
+        "headlineCover": "Defiéndete de {weapon} tras un obstáculo",
+        "payloadLabel": "Carga",
+        "doseInfo": "Dosis"
+      },
+      "failGone": "Este fallo ya no está disponible.",
+      "poolSpent": {
+        "swapped": "{name} gastó un punto de {pool} para intercambiar los dados",
+        "upgraded": "{name} gastó un punto de {pool} para mejorar el resultado",
+        "mitigated": "{name} gastó un punto de {pool} para suavizar el fallo"
+      },
+      "damage": {
+        "appliedPhysical": "{name} recibe {taken} de daño y {wounds} heridas",
+        "appliedMental": "{name} recibe {taken} de estrés y {wounds} traumas",
+        "attackHit": "{name}: {share} - {armor} de blindaje ({armorType}) = {damage}, {woundsTaken}",
+        "attackHalf": "{name} (mitad): {share} - {armor} de blindaje ({armorType}) = {damage}, {woundsTaken}",
+        "attackMissed": "{name} no fue alcanzado",
+        "attackParried": "{name} paró el ataque",
+        "attackTookDamage": "{name} fue alcanzado y sufrió daño",
+        "attackSoaked": "{name} fue alcanzado, pero el blindaje absorbió todo el daño",
+        "amountDamage": "{value} de daño",
+        "amountWounds": "{value} heridas",
+        "amountStress": "{value} de estrés",
+        "amountTraumas": "{value} traumas",
+        "blastFalloff": "{name} ({distance} m, -{falloff} VD)"
+      },
+      "psiTouch": {
+        "headline": "Ataque psi de toque ({sleight})",
+        "touched": "{target} ha sido tocado",
+        "avoided": "{target} esquivó el toque",
+        "missed": "El toque no alcanzó a {target}",
+        "useTouch": "Usar {sleight} por toque (+20)",
+        "usePointBlank": "Usar {sleight} a quemarropa (+10)",
+        "used": "El truco psi ya se ha usado."
       }
     },
     "rule": {
@@ -2061,6 +2499,7 @@
       "sectionThreats": "Personajes no jugadores y amenazas",
       "endNow": "Terminar",
       "remaining": "Restante",
+      "endsThisRound": "Termina esta ronda",
       "owner": "Personaje",
       "toggleFormat": "Alternar horas y beats",
       "hoursTooltip": "unas {hours} h",
@@ -2085,7 +2524,9 @@
         "day3": "+3 días",
         "day7": "+7 días",
         "beats": "{beats} beats"
-      }
+      },
+      "sectionEnvironment": "Entorno",
+      "locateCloud": "Mostrar en el mapa"
     },
     "migration": {
       "armorBoundNotice": "<p><b>Actualización de Armadura:</b> {count} objeto(s) de Armadura de este personaje se vincularon automáticamente a <b>{body}</b>, ya que ahora la Armadura pertenece a un cuerpo específico en lugar de simplemente estar en tu inventario. Usa el botón de reasignar junto a un objeto de Armadura (en la pestaña de Morph) para moverlo a otro cuerpo cuando quieras.</p>",
@@ -2105,7 +2546,8 @@
         "backup": "IMPORTANTE: Hasta ahora tus datos no se han actualizado ni modificado. Si aún no has guardado tu mundo, cierra sin migrar y crea una copia de seguridad para no perder datos durante la migración.",
         "reachOut": "¡No olvides ponerte en contacto, agente!",
         "migrate": "¡Migrar ahora!",
-        "close": "Cerrar sin migrar"
+        "close": "Cerrar sin migrar",
+        "unreadableRanges": "Estos alcances de armas no se pudieron leer como metros y se dejaron como estaban. Introdúcelos como número en la hoja del arma:<br>{list}"
       }
     },
     "systemMessage": {
@@ -2138,12 +2580,142 @@
       }
     },
     "targeting": {
+      "needsGM": "Algunas funciones están bloqueadas mientras no haya un DJ conectado, porque podrían causar errores en el sistema y la pérdida de objetos como munición o granadas. Se reactivan en cuanto haya un DJ presente.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "Pulsa ESC o haz clic derecho sin objetivos para cancelar.",
       "confirmHint": "Clic derecho para confirmar",
       "remaining": "Quedan {count} objetivos",
       "limitReached": "Se ha alcanzado el máximo de {max} objetivos. Vuelve a hacer clic en un objetivo marcado para desmarcarlo.",
       "selectTarget": "Elegir objetivo",
-      "targetChosen": "Objetivo elegido"
+      "targetChosen": "Objetivo elegido",
+      "tooFar": "Los demás objetivos deben estar a {within} m como mucho de uno marcado.",
+      "marked": "{count} objetivos marcados",
+      "tooFew": "Elige al menos {min} objetivos.",
+      "unsuitable": "{name} no puede ser objetivo de esto: {kind}.",
+      "kind": {
+        "biomorph": "biomorfo",
+        "synthmorph": "sintemorfo",
+        "infomorph": "infomorfo",
+        "bot": "bot",
+        "vehicle": "vehículo",
+        "animal": "animal",
+        "cyberbrain": "cibercerebro"
+      },
+      "band": {
+        "pointBlank": "A quemarropa",
+        "close": "Cerca",
+        "range": "Alcance",
+        "beyond": "Fuera de alcance"
+      },
+      "outOfTouch": "{name} está fuera del alcance de un toque (2 m).",
+      "areaName": "Área",
+      "outsideArea": "Esa ficha está fuera del área.",
+      "tooMany": "A este alcance, este ataque alcanza como máximo {max} objetivos.",
+      "ownBlast": "{name} está atrapado en su propia explosión.",
+      "armedElsewhere": "Ese explosivo está en otra escena - muestra esa escena primero.",
+      "lockedOut": "La mente de {name} está cerrada para ti hasta tu próxima recarga.",
+      "notOnSelf": "Esta habilidad psi no se puede usar sobre uno mismo."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Cegado",
+        "description": "No puedes ver, pero sigues percibiendo con otros sentidos, entópticos y sensores en malla. −30 a las acciones físicas, Fray incluido; un ataque contra un objetivo que no percibes puede fallar sin más."
+      },
+      "confused": {
+        "name": "Confundido",
+        "description": "Cada turno, un Chequeo de COG a −30. Si fallas, murmuras, actúas al azar, huyes o atacas a alguien cercano."
+      },
+      "dazed": {
+        "name": "Aturdido",
+        "description": "Mentalmente aturdido y desorientado: ninguna acción salvo un movimiento básico y defenderte de ataques."
+      },
+      "deafened": {
+        "name": "Ensordecido",
+        "description": "No puedes oír. −3 a la Iniciativa y −30 a las Pruebas de Perceive."
+      },
+      "grappled": {
+        "name": "Apresado",
+        "description": "Sujeto físicamente: Tasa de Movimiento 0 y ninguna acción física salvo liberarte. Fray a −30 contra ataques desde fuera de la presa."
+      },
+      "immobilized": {
+        "name": "Inmovilizado",
+        "description": "Ninguna acción física, Fray incluido, hasta que te recuperes. Las acciones mentales y de malla siguen siendo posibles."
+      },
+      "impaired10": {
+        "name": "Mermado (−10)",
+        "description": "Tus capacidades están limitadas: −10 a todas las acciones."
+      },
+      "impaired20": {
+        "name": "Mermado (−20)",
+        "description": "Tus capacidades están limitadas: −20 a todas las acciones."
+      },
+      "impaired30": {
+        "name": "Mermado (−30)",
+        "description": "Tus capacidades están limitadas: −30 a todas las acciones."
+      },
+      "incapacitated": {
+        "name": "Incapacitado",
+        "description": "Ninguna acción, tampoco mental ni Fray. No puedes defenderte de ataques."
+      },
+      "prone": {
+        "name": "Derribado",
+        "description": "En el suelo, o girando en microgravedad. Levantarse es una acción rápida. Los oponentes de pie en cuerpo a cuerpo obtienen +20; quien dispara desde Range o más lejos, −10."
+      },
+      "stunned": {
+        "name": "Sin aliento",
+        "description": "Te han dejado sin aire: −30 a las acciones físicas y −10 a las mentales."
+      },
+      "unconscious": {
+        "name": "Inconsciente",
+        "description": "Sin sentido e indefenso. Un estimulante, o un Chequeo de INT a −30 si alguien te sacude con fuerza, te despierta."
+      },
+      "dead": {
+        "name": "Muerto",
+        "description": "Este personaje está muerto."
+      },
+      "invisible": {
+        "name": "Invisible",
+        "description": "Este personaje no se puede ver."
+      },
+      "noteText": "{name}: {note}",
+      "notApplied": "{name} (No aplicado)",
+      "notes": {
+        "blinded": "una tirada de Percibir antes de cada ataque; si falla, el ataque falla sin más con un 50 %",
+        "deafened": "−3 a la Iniciativa y −30 a Perceive",
+        "grappled": "Fray −30 contra ataques desde fuera de la presa",
+        "prone": "oponentes en cuerpo a cuerpo +20, disparos desde Range o más lejos −10"
+      },
+      "blocked": "{condition}: no se puede hacer ninguna tirada.",
+      "blockedPhysical": "{condition}: no es posible ninguna acción física.",
+      "blockedDefenceOnly": "{condition}: solo es posible defenderse de ataques."
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Tarjeta de ataque",
+            "hint": "El mensaje de chat del fuego de supresión al que pertenece esta área."
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Tarjeta de ataque",
+            "hint": "El mensaje de chat del explosivo al que pertenece este sensor."
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Tarjeta de ataque",
+            "hint": "El mensaje de chat del gas al que pertenece esta nube."
+          }
+        }
+      }
     }
   }
 }

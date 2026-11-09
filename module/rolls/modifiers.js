@@ -1,5 +1,7 @@
 import { signed } from "./dice.js";
-import { boundToActiveBody } from "../common/body-markers.js";
+import { boundToActiveBody } from "../common/morp-functions.js";
+import { isChecked, escapeText } from "../common/general-sheet-functions.js";
+import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 
 // What an actor's items and effects contribute to a roll beyond its skill and aptitude, in one
 // place for the roll pipeline:
@@ -67,6 +69,27 @@ export function doseRollOptions(actor, dataset) {
 }
 
 /**
+ * The conditional modifiers the sleights working on the actor offer for this check - Empathic Scan's
+ * bonus to social tests against the one it was used on.
+ * @param {Actor} actor - The rolling actor
+ * @param {Object} dataset - The roll's dataset
+ * @returns {Object[]} One entry per option, as doseRollOptions gives them, with source "sleight"
+ */
+export function sleightRollOptions(actor, dataset) {
+  const keys = checkKeys(actor, dataset);
+  const offered = [];
+  for (const effect of actor?.effects ?? []) {
+    const sleight = effect.getFlag?.("eclipsephase", "sleight");
+    if (!sleight || !effect.active) continue;
+    for (const option of sleight.rollOptions ?? []) {
+      if (!optionFits(option, keys, dataset)) continue;
+      offered.push({ field: `sleightOption-${effect.id}-${option.id}`, drug: sleight.name ?? effect.name, option, shown: shownValue(option), source: "sleight" });
+    }
+  }
+  return offered;
+}
+
+/**
  * Whether an option fits this check. A special-skill option - Hardware, Exotic Skill: Disguise -
  * fits the special skills the player picked for it on the ware, whatever they are called.
  * @param {Object} option - The option
@@ -108,7 +131,7 @@ export function wareRollOptions(actor, dataset) {
  * @returns {Object[]} The entries that apply to this roll
  */
 export function chosenRollOptions(offered, values = {}) {
-  return offered.filter(entry => entry.option.automatic || values[entry.field] === true || values[entry.field] === "true");
+  return offered.filter(entry => entry.option.automatic || isChecked(values[entry.field]));
 }
 
 /**
@@ -144,6 +167,38 @@ export function replacedDrugs(chosen) {
 }
 
 export const GLOBAL_MOD_KEY = "system.mods.globalMod";
+export const PHYSICAL_MOD_KEY = "system.mods.physicalMod";
+export const MENTAL_MOD_KEY = "system.mods.mentalMod";
+
+// Rolls by Reflexes or Somatics are physical actions, all others mental (Core p.34: Vigor is linked
+// to physical efforts, Reflexes and Somatics; Insight and Moxie to the rest).
+const BODY_APTITUDES = ["ref", "som"];
+const ATTACKS = ["rangedWeapon", "ccWeapon", "grenade"];
+
+/**
+ * Whether a roll is a physical or a mental action, read from what it already carries: an attack is
+ * physical, an aptitude check or a special skill goes by its aptitude, a skill by its pool. A
+ * vehicle's own skill is not the character acting and has neither.
+ * @param {Object} dataset - The roll's dataset
+ * @param {String} rolledFrom - Where the roll comes from
+ * @returns {String|null} "body", "mind" or null
+ */
+export function rollScope(dataset, rolledFrom) {
+  if (rolledFrom === "vehicleSkill") return null;
+  if (ATTACKS.includes(rolledFrom)) return "body";
+  const aptitude = String(dataset?.apttype ?? "").toLowerCase();
+  if (aptitude) return BODY_APTITUDES.includes(aptitude) ? "body" : "mind";
+  return String(dataset?.pooltype ?? "").toLowerCase() === "vigor" ? "body" : "mind";
+}
+
+/**
+ * The effect field that holds the modifiers to every roll of a scope.
+ * @param {String} scope - "body" or "mind"
+ * @returns {String|null} The key, or null for no scope
+ */
+export function scopeModKey(scope) {
+  return { body: PHYSICAL_MOD_KEY, mind: MENTAL_MOD_KEY }[scope] ?? null;
+}
 
 /**
  * The number a modifier value stands for. Foundry hands a change on a field without a default
@@ -173,30 +228,33 @@ function breakdownEntry(name, modifier) {
  * not bring them back.
  * @param {Actor} actor - The actor
  * @param {Set<String>} exclude - Drug names left out
+ * @param {String} key - The effect field summed
  * @returns {Number} Their combined modifier
  */
-function excludedTotal(actor, exclude) {
+function excludedTotal(actor, exclude, key) {
   if (!exclude.size) return 0;
   let total = 0;
   for (const effect of actor?.allApplicableEffects?.() ?? []) {
     if (!effect.active || !exclude.has(effect.name) || effect.getFlag?.("eclipsephase", "dose") === undefined) continue;
-    for (const change of effect.changes ?? []) if (change.key === GLOBAL_MOD_KEY) total += modifierValue(change.value);
+    for (const change of effect.changes ?? []) if (change.key === key) total += modifierValue(change.value);
   }
   return total;
 }
 
 /**
- * Every modifier to all actions currently on the actor. The running doses of drugs and toxins are
+ * Every modifier to all actions currently on the actor - or, given another field, to all physical
+ * or all mental actions. The running doses of drugs and toxins are
  * summed into one line labelled intoxicated, with the drugs it is made of as its comment, one per
  * line; any other effect keeps a line of its own, so the label never claims a drug where there is
  * none.
  * Whatever part of the actor's total no active effect explains - a value a module wrote straight
  * into the field - is listed once more under a general label, so the sum always matches.
  * @param {Actor} actor - The actor
- * @param {Object} [options] - exclude: drug names whose penalty a ticked roll option replaces
+ * @param {Object} [options] - exclude: drug names whose penalty a ticked roll option replaces;
+ *   key: the effect field, all actions by default
  * @returns {Object[]} label, modifier and, for the intoxicated line, comment; without zero entries
  */
-export function globalModifiers(actor, { exclude = new Set() } = {}) {
+export function globalModifiers(actor, { exclude = new Set(), key = GLOBAL_MOD_KEY } = {}) {
   const doses = new Map();
   const others = new Map();
   for (const effect of actor?.allApplicableEffects?.() ?? []) {
@@ -205,7 +263,7 @@ export function globalModifiers(actor, { exclude = new Set() } = {}) {
     if (isDose && exclude.has(effect.name)) continue;
     const bucket = isDose ? doses : others;
     for (const change of effect.changes ?? []) {
-      if (change.key !== GLOBAL_MOD_KEY) continue;
+      if (change.key !== key) continue;
       bucket.set(effect.name, (bucket.get(effect.name) ?? 0) + modifierValue(change.value));
     }
   }
@@ -222,9 +280,53 @@ export function globalModifiers(actor, { exclude = new Set() } = {}) {
   for (const [label, modifier] of others) if (modifier) sources.push({ label, modifier });
 
   const counted = sources.reduce((sum, entry) => sum + entry.modifier, 0);
-  const total = modifierValue(actor?.system?.mods?.globalMod) - excludedTotal(actor, exclude);
+  const total = modifierValue(foundry.utils.getProperty(actor ?? {}, key)) - excludedTotal(actor, exclude, key);
   if (total !== counted) sources.push({ label: FALLBACK_LABEL, modifier: total - counted });
   return sources;
+}
+
+/**
+ * Where an actor's current modifiers come from and what they add up to on a physical and on a
+ * mental action. Wounds, trauma and the modifiers to all actions count for both; encumbrance - each
+ * armour layer past the first and armour beyond SOM (Core p.214) - and the modifiers to physical
+ * actions for the body; those to mental actions for the mind. An effect with a modifier to each, such
+ * as Stunned, is one row with both.
+ * @param {Object} status - The actor's currentStatus, its sums already worked out
+ * @param {Object} counts - wounds and trauma as the actor has them, and its armour: layers,
+ *   layerMalus and somMalus, each a positive penalty
+ * @param {Object[]} physical - globalModifiers on the physical field
+ * @param {Object[]} mental - globalModifiers on the mental field
+ * @returns {Object} rows (label, count, times, comment, scope - "split" for one with both -
+ *   modifier, bodyValue and mindValue, and body and mind as text), body and mind as numbers and as text
+ */
+export function modifierSummary(status, counts, physical, mental) {
+  const rows = [];
+  const add = (scope, modifier, entry) => {
+    const value = Number(modifier) || 0;
+    if (!value) return;
+    const text = signed(value);
+    rows.push({ ...entry, scope, modifier: value, bodyValue: scope === "mind" ? 0 : value, mindValue: scope === "body" ? 0 : value, body: scope === "mind" ? "" : text, mind: scope === "body" ? "" : text });
+  };
+  add("all", status.woundModifierSum, { label: "ep2e.sideCar.currentStatus.statuses.wounded", count: counts.wounds, times: true });
+  add("all", status.traumaModifierSum, { label: "ep2e.sideCar.currentStatus.statuses.traumatized", count: counts.trauma, times: true });
+  for (const { label, modifier, comment } of status.specialModifiers ?? []) add("all", modifier, { label, comment });
+  add("body", -(Number(counts.layerMalus) || 0), { label: "ep2e.sideCar.currentStatus.statuses.layersOfArmor", count: counts.layers });
+  add("body", -(Number(counts.somMalus) || 0), { label: "ep2e.sideCar.currentStatus.statuses.somExceeded" });
+  add("body", status.encumberanceModifierSum, { label: "ep2e.sideCar.currentStatus.gearModifiers" });
+  for (const { label, modifier, comment } of physical) add("body", modifier, { label, comment, effect: true });
+  for (const { label, modifier, comment } of mental) {
+    const value = Number(modifier) || 0;
+    const twin = value && rows.find(row => row.effect && row.scope === "body" && row.label === label);
+    if (!twin) {
+      add("mind", modifier, { label, comment, effect: true });
+      continue;
+    }
+    Object.assign(twin, { scope: "split", mindValue: value, mind: signed(value) });
+  }
+
+  const body = rows.reduce((total, row) => total + row.bodyValue, 0);
+  const mind = rows.reduce((total, row) => total + row.mindValue, 0);
+  return { rows, body, mind, bodyText: signed(body), mindText: signed(mind) };
 }
 
 /**
@@ -268,4 +370,174 @@ export function drugPsiPenalties(actor) {
   return runningDoses(actor)
     .filter(dose => Number(dose.psiPenalty))
     .map(dose => ({ name: dose.name, modifier: Number(dose.psiPenalty) }));
+}
+
+// Ware whose bonus applies to a special skill - Fractal Digits to Hardware, Skinflex to Exotic
+// Skill: Disguise. Special skills are named freely ("HW: Robotics"), so the player says once, per
+// ware, which of their special skills are meant; the choice is kept on the ware's options.
+
+const SETUP_CARD = "systems/eclipsephase/templates/chat/ware-setup.html";
+
+/**
+ * Whether a ware item has a bonus for a kind of special skill.
+ * @param {Item} item - The item
+ * @returns {Boolean} True for ware with at least one such option
+ */
+export function hasSkillOptions(item) {
+  return item?.type === "ware" && (item.system?.rollOptions ?? []).some(option => option.specialSkill);
+}
+
+/**
+ * Whether the player still has to say which special skills a ware's bonus is for.
+ * @param {Item} item - The item
+ * @returns {Boolean} True until the choice was made once
+ */
+export function needsSkillSetup(item) {
+  return hasSkillOptions(item) && item.getFlag?.("eclipsephase", "specialSkillsSet") !== true;
+}
+
+/**
+ * The ware on an actor still waiting for that choice.
+ * @param {Actor} actor - The actor
+ * @returns {Item[]} The ware items
+ */
+export function wareAwaitingSetup(actor) {
+  return Array.from(actor?.items ?? []).filter(needsSkillSetup);
+}
+
+/**
+ * Writes the player's choice into the ware: each special-skill option gets the names of the
+ * special skills it applies to, and the ware is marked as set up.
+ * @param {Item} item - The ware
+ * @param {Object} picks - Option id to the chosen special skill names
+ * @returns {Promise<Item>} The ware
+ */
+export async function applySkillPicks(item, picks) {
+  const rollOptions = (item.system.rollOptions ?? []).map(option =>
+    option.specialSkill ? { ...option, specialSkills: picks[option.id] ?? [] } : option);
+  await item.update({ "system.rollOptions": rollOptions, "flags.eclipsephase.specialSkillsSet": true });
+  return item;
+}
+
+/**
+ * The dialog's content: per special-skill option, a line saying what kind is meant, then a
+ * checkbox for each of the actor's special skills.
+ * @param {Actor} actor - The actor
+ * @param {Item} item - The ware
+ * @returns {HTMLElement} The content
+ */
+function setupContent(actor, item) {
+  const skills = Array.from(actor.items ?? []).filter(entry => entry.type === "specialSkill").map(entry => entry.name).sort();
+  const sections = item.system.rollOptions.filter(option => option.specialSkill).map(option => {
+    const chosen = new Set(option.specialSkills ?? []);
+    const boxes = skills.map((name, index) => {
+      const id = `ware-skill-${escapeText(option.id)}-${index}`;
+      return `<div class="form-group"><input type="checkbox" class="sheet" id="${id}" name="${escapeText(option.id)}" value="${escapeText(name)}"${chosen.has(name) ? " checked" : ""}/><label class="resource-label" for="${id}">${escapeText(name)}</label></div>`;
+    }).join("");
+    return `<p class="hint">${game.i18n.format(`ep2e.dialog.wareSkills.kind.${option.specialSkill}`, { ware: escapeText(item.name), bonus: game.i18n.localize(option.label) })}</p>${boxes}`;
+  });
+  const element = document.createElement("div");
+  element.innerHTML = skills.length ? sections.join("") : `<p>${game.i18n.localize("ep2e.dialog.wareSkills.noSkills")}</p>`;
+  return element;
+}
+
+/**
+ * Asks which of the actor's special skills a ware's bonus applies to, and keeps the answer on the
+ * ware. An actor without special skills is not asked; the ware is still marked, and the choice can
+ * be made later from its sheet.
+ * @param {Actor} actor - The actor
+ * @param {Item} item - The ware
+ * @returns {Promise<Boolean>} True once the choice is kept, false when cancelled
+ */
+export async function pickSpecialSkills(actor, item) {
+  if (!hasSkillOptions(item)) return false;
+  const skills = Array.from(actor.items ?? []).filter(entry => entry.type === "specialSkill");
+  if (!skills.length) {
+    await applySkillPicks(item, {});
+    return true;
+  }
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.format("ep2e.dialog.wareSkills.header", { ware: item.name }) },
+    classes: ["ep2e-primary-right"],
+    content: setupContent(actor, item),
+    buttons: [
+      {
+        action: "confirm",
+        label: game.i18n.localize("ep2e.actorSheet.button.confirm"),
+        default: true,
+        callback: (event, button) => {
+          const picks = {};
+          for (const box of button.form.querySelectorAll("input[type=checkbox]:checked")) (picks[box.name] ??= []).push(box.value);
+          return { picks };
+        }
+      },
+      { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
+    ],
+    position: { width: 380 },
+    modal: true,
+    rejectClose: false
+  });
+  if (!result?.picks) return false;
+  await applySkillPicks(item, result.picks);
+  return true;
+}
+
+/**
+ * The entries a setup card lists for one user: every ware still waiting on the characters they own.
+ * @param {User} user - The user
+ * @returns {Object[]} actorUuid, itemId and label per ware
+ */
+export function setupEntries(user) {
+  return game.actors.filter(actor => actor.type === "character" && actor.testUserPermission?.(user, "OWNER"))
+    .flatMap(actor => wareAwaitingSetup(actor).map(item => ({ actorUuid: actor.uuid, itemId: item.id, label: `${actor.name}: ${item.name}` })));
+}
+
+registerCard("wareSetup", { render: state => setupCardContent(state.entries) });
+
+/**
+ * Renders a setup card: a button for each ware still waiting, or the note that all is done.
+ * @param {Object[]} entries - What setupEntries listed
+ * @returns {Promise<String>} The card's content
+ */
+async function setupCardContent(entries) {
+  const open = [];
+  for (const entry of entries) {
+    const actor = fromUuidSync?.(entry.actorUuid);
+    const item = actor?.items?.get?.(entry.itemId);
+    if (item && needsSkillSetup(item)) open.push(entry);
+  }
+  return foundry.applications.handlebars.renderTemplate(SETUP_CARD, { entries: open, done: !open.length });
+}
+
+/**
+ * Posts the card asking a user to set up the ware their characters carried into this version,
+ * whispered to that user alone.
+ * @param {User} [user] - The user, the current one by default
+ * @returns {Promise<ChatMessage|null>} The card, or null when nothing waits
+ */
+export async function postWareSetupCard(user = game.user) {
+  const entries = setupEntries(user);
+  if (!entries.length) return null;
+  return ChatMessage.create({
+    speaker: { alias: "System" },
+    whisper: [user.id],
+    content: await renderCard("wareSetup", { entries }),
+    flags: { eclipsephase: { wareSetup: { entries } } }
+  });
+}
+
+/**
+ * Answers a setup button: asks for the special skills, then redraws every setup card of the user,
+ * so the button is gone - and "all done" shows once nothing is left.
+ * @param {String} actorUuid - The actor
+ * @param {String} itemId - The ware
+ * @returns {Promise<void>} Resolves once the choice is kept and the cards redrawn
+ */
+export async function setupFromCard(actorUuid, itemId) {
+  const actor = await fromUuid(actorUuid);
+  const item = actor?.items?.get(itemId);
+  if (!item || !(await pickSpecialSkills(actor, item))) return;
+  for (const message of game.messages.filter(entry => entry.getFlag?.("eclipsephase", "wareSetup") && entry.isOwner)) {
+    await updateCard(message, "wareSetup");
+  }
 }

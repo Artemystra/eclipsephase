@@ -3,11 +3,14 @@ import EPactor from "../../actor/EPactor.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
 import { _ep25_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
 import { getStrainFamily, listStrainFamilies, hasStrainFamily } from "../../rolls/strain-families.js";
-import { strainSubstrate } from "../../common/body-markers.js";
+import { strainSubstrate } from "../../common/morp-functions.js";
 import { forceDose, takeDose } from "../../common/doses.js";
-import { owningActor } from "../../common/pool-rule.js";
+import { owningActor } from "../../rolls/pools.js";
 import { durationRunOut } from "../../common/time.js";
-import { applyTargetedAttack } from "../../rolls/targeted-attacks.js";
+import { applyTargetedAttack } from "../../rolls/attacks.js";
+import { registerChatCardBatch } from "./chat-cards.js";
+import { registerHealthBatch } from "./health.js";
+import { registerAreasBatch } from "./areas.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
@@ -64,6 +67,10 @@ function skipDialogOptions(overrides = {}) {
 }
 
 Hooks.on("quenchReady", quench => {
+  registerChatCardBatch(quench);
+  registerHealthBatch(quench);
+  registerAreasBatch(quench);
+
   quench.registerBatch("eclipsephase.core.actors", context => {
     const { describe, it, assert } = context;
 
@@ -523,12 +530,13 @@ Hooks.on("quenchReady", quench => {
     const TARGET = { type: "character", name: "Quench Target" };
 
     /**
-     * The cards a pool spend posted to offer the target button, since a given point in the chat log.
+     * The cards posted since a given point in the chat log, apart from the attack card itself.
      * @param {Set<String>} before - Message ids that existed before the test
+     * @param {ChatMessage} attack - The attack card
      * @returns {ChatMessage[]} The cards
      */
-    function newHitCards(before) {
-      return game.messages.contents.filter(message => !before.has(message.id) && message.getFlag("eclipsephase", "targetedAttack"));
+    function otherNewCards(before, attack) {
+      return game.messages.contents.filter(message => !before.has(message.id) && message.id !== attack.id);
     }
 
     /**
@@ -574,9 +582,9 @@ Hooks.on("quenchReady", quench => {
     }
 
     describe("forcing a dose on an unwilling target", function () {
-      it("a hit offers the target button, and the dose stays in the pack until a target is picked", async function () {
+      it("a hit rolled without targets offers no target button, and the dose stays in the pack", async function () {
         await attackWithFace(5, async (actor, drug, attack) => {
-          assert.include(attack.content, "targetedAttack");
+          assert.notInclude(attack.content, "targetedAttack");
           assert.isFalse(attack.getFlag("eclipsephase", "roll").targetedAttack.delivered);
           assert.strictEqual(drug.system.usagesUsed, 0);
         });
@@ -598,16 +606,16 @@ Hooks.on("quenchReady", quench => {
         await attackWithFace(95, async (actor, drug, attack, before) => {
           await new Promise(resolve => setTimeout(resolve, 300));
           assert.notInclude(attack.content, "targetedAttack");
-          assert.strictEqual(newHitCards(before).length, 0);
+          assert.strictEqual(otherNewCards(before, attack).length, 0);
         });
       });
 
-      it("a miss a pool spend turns into a hit offers the target button on a card of its own", async function () {
+      it("a miss a pool spend turns into a hit stays one card, still without a target button when rolled without targets", async function () {
         await attackWithFace(91, async (actor, drug, attack, before) => {
-          assert.strictEqual(newHitCards(before).length, 0, "the flipped 19 must not count before the pool is spent");
           await spendPoolOn(attack);
-          await waitUntil(() => newHitCards(before).length === 1);
-          assert.strictEqual(newHitCards(before).length, 1);
+          await waitUntil(() => game.messages.get(attack.id).content.includes("ep-pool-spent"));
+          assert.notInclude(game.messages.get(attack.id).content, "targetedAttack");
+          assert.strictEqual(otherNewCards(before, attack).length, 0);
           assert.strictEqual(drug.system.usagesUsed, 0);
         });
       });
@@ -616,7 +624,7 @@ Hooks.on("quenchReady", quench => {
         await attackWithFace(5, async (actor, drug, attack, before) => {
           await spendPoolOn(attack);
           await new Promise(resolve => setTimeout(resolve, 300));
-          assert.strictEqual(newHitCards(before).length, 0);
+          assert.strictEqual(otherNewCards(before, attack).length, 0);
         });
       });
     });
@@ -662,7 +670,7 @@ Hooks.on("quenchReady", quench => {
      */
     async function poisonedThenSkipped(linked) {
       const before = new Set(game.messages.contents.map(message => message.id));
-      const seen = { taken: false, ticksAtOnset: null, ticksAtDeletion: null, deleted: false, expiry: [] };
+      const seen = { taken: false, ticksAtOnset: null, ticksAtDeletion: null, deleted: false, expiry: [], clock: null };
       const onExpire = Hooks.on("updateActiveEffect", (effect, changes) => {
         if (foundry.utils.getProperty(changes ?? {}, "duration.expired") !== true) return;
         seen.expiry.push({ parent: effect.parent?.documentName, parentIsToken: effect.parent?.isToken ?? null, owner: owningActor(effect)?.uuid ?? null, runOut: durationRunOut(effect), ticks: ticksOf(effect) });
@@ -683,8 +691,12 @@ Hooks.on("quenchReady", quench => {
           seen.taken = !!poisonOn(token.actor);
           await waitUntil(() => ticksOf(poisonOn(token.actor)) >= 1, 3000).catch(() => {});
           seen.ticksAtOnset = ticksOf(poisonOn(token.actor));
+          seen.clock = { before: game.time.worldTime, combat: !!game.combat?.started, paused: game.paused === true };
           await game.time.advance(120);
+          seen.clock.after = game.time.worldTime;
           await waitUntil(() => seen.deleted, 8000).catch(() => {});
+          const left = poisonOn(token.actor);
+          if (left) seen.after = { ticks: ticksOf(left), start: left.start?.time ?? null, units: left.duration?.units, value: left.duration?.value, remaining: left.duration?.remaining, expired: left.duration?.expired === true, isTemporary: left.isTemporary, gm: game.users.activeGM?.isSelf === true, inRegistry: Array.from(ActiveEffect.registry ?? []).includes(left), expiry: left.duration?.expiry ?? null };
           await new Promise(resolve => setTimeout(resolve, 300));
         });
       } finally {

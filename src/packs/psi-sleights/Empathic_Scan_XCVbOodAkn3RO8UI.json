@@ -16,7 +16,22 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "Actions Turns"
+    "duration": "action",
+    "rollOptions": [
+      {
+        "id": "social",
+        "label": "ep2e.psi.option.socialTests",
+        "value": 10,
+        "appliesTo": [
+          "deceive",
+          "kinesics",
+          "persuade",
+          "provoke"
+        ]
+      }
+    ],
+    "repeatPerSuperior": true,
+    "affects": "async"
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

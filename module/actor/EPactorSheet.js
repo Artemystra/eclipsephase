@@ -1,7 +1,9 @@
+import { armedExplosives, detonateArmed, defuseArmed, openArmedItem, panToArmed } from "../rolls/attacks.js";
 import { eclipsephase } from "../config.js";
 import { registerCommonHandlers,tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
-import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
+import { healthBarChange } from "../rolls/health.js";
+import { weaponPreparation,reloadWeapon, chooseMunition } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
 import { drugVector, isAmmoPack, dosesRemaining, chooseDrugForm, selectDoseRecipient } from "../common/drugs.js";
@@ -11,11 +13,13 @@ import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
-import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
+import { endChiPush, confirmChiPush, actorStrainFamily, sustainedSleights, endSustaining, sustainedTargets, pickSustainedTargets, endSustainingOn } from "../rolls/psi.js";
 import { getStrainFamily } from "../rolls/strain-families.js";
-import { needsSkillSetup, pickSpecialSkills } from "../common/ware-skills.js";
+import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 import { getRezSpendOptions } from "../api/registry.js";
+
+const MODIFIER_BREAKDOWN = "systems/eclipsephase/templates/actor/partials/currentStatus/modifier-breakdown.hbs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -119,6 +123,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     },
     actions: {
       editImage: this._onEditImage,
+      modifierBreakdown: this._onModifierBreakdown,
       // Guards a rare core edge case (actor.token null despite the "Configure Token" control being
       // shown) instead of letting ActorSheetV2's own handler throw.
       configureToken: function () {
@@ -225,6 +230,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   // it never syncs to other owners' simultaneously-open sheets of the same actor.
   _psiDetailsOpen = true;
 
+  /**
+   * Opens where the actor's current modifiers come from: each source with the actions it reaches,
+   * and their sums on a physical and on a mental action.
+   * @returns {Promise<void>} Resolves once the dialog is closed
+   */
+  static async _onModifierBreakdown() {
+    const content = await foundry.applications.handlebars.renderTemplate(MODIFIER_BREAKDOWN, this.actor.system.currentStatus ?? {});
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: game.i18n.localize("ep2e.sideCar.currentStatus.headline") },
+      classes: ["eclipsephase", "ep-modifier-breakdown-dialog"],
+      content,
+      buttons: [{ action: "close", label: game.i18n.localize("Close"), default: true }],
+      modal: true,
+      rejectClose: false,
+      position: { width: 420 }
+    });
+  }
+
   static async _onEditImage(event, target) {
     const field = target.dataset.field || "img";
     const current = foundry.utils.getProperty(this.document, field) || "";
@@ -252,6 +275,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
     context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
+    context.sustaining = sustainedSleights(actor);
 
     const strainFamily = getStrainFamily(actorStrainFamily(actor));
     const substrate = strainFamily.substrate(actor);
@@ -423,7 +447,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const special = [];
       const trait = [];
       const flaw = [];
-      const effects = [];
       const rangedweapon = [];
       const ccweapon = [];
       const armor = [];
@@ -788,6 +811,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             switch (item.type) {
               case 'grenade':
               itemModel.slotName = "ep2e.item.general.table.slot.grenade";
+              itemModel.canThrow = true;
               break;
               case 'ammo':
               itemModel.slotName = "ep2e.item.general.table.slot.ammo";
@@ -877,14 +901,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         }
       }
 
-      actor.showEffectsTab=false
-      if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-        const effectList = this.document.getEmbeddedCollection("ActiveEffect");
-        for(let item of effectList){
-          effects.push(item);
-        }
-        actor.showEffectsTab=true;
-      }
 
       // Assign and return
       actor.trait = trait;
@@ -900,6 +916,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.program = program;
       actor.gear = gear;
       actor.consumable = consumable;
+      actor.armedExplosives = armedExplosives(actor);
       actor.gearActive = gear.filter(item => item.system.active);
       actor.consumableActive = actor.type === "character" ? consumable.filter(item => item.system.active) : consumable;
       actor.knowSkill = know;
@@ -919,7 +936,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         v.hasMovement = hasAnyMovement(v);
         return v;
       });
-      actor.activeEffects=effects;
       actor.actorType = "PC";
       actor.ammo = ammo;
       actor.morph = morph;
@@ -937,6 +953,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const actor = this.document;
 
       await super._onRender(context, options);
+
+      SHEET.markBlockedRolls(this.element, actor);
 
       if (game.user.isGM || actor.isOwner){
       try {
@@ -965,6 +983,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     SHEET.registerEffectHandlers(html, this.actor);
     SHEET.registerCommonHandlers(html, this.actor);
+    SHEET.followingTooltips(html, html);
+    for (const control of html.querySelectorAll(".ep-armed-detonate, .ep-armed-defuse, .ep-armed-open, .ep-armed-locate")) {
+      control.addEventListener("click", event => {
+        event.preventDefault();
+        const message = game.messages.get(control.dataset.messageId);
+        if (!message) return;
+        if (control.classList.contains("ep-armed-detonate")) detonateArmed(message);
+        else if (control.classList.contains("ep-armed-defuse")) defuseArmed(message);
+        else if (control.classList.contains("ep-armed-open")) openArmedItem(message);
+        else panToArmed(message);
+      });
+    }
 
     // Hide native window header and wire custom title bar instead
     const windowHeader = html.querySelector('.window-header');
@@ -1231,6 +1261,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     }
 
     if (!(await chooseDrugForm(itemData))) return null;
+    if (!(await chooseMunition(itemData))) return null;
 
     itemModel.updated = game.system.version;
 
@@ -1728,6 +1759,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
+    html.querySelectorAll(".endSustain").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        const targets = sustainedTargets(actor, itemId);
+        if (targets.length > 1) {
+          const picks = await pickSustainedTargets(actor.items.get(itemId)?.name ?? "", targets);
+          if (picks?.length) await endSustainingOn(actor, picks);
+          return;
+        }
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.psi.sustain.end");
+        const { confirm } = await confirmation(popUpTitle, popUpHeadline, "ep2e.psi.sustain.endCopy", undefined, "", "ep2e.psi.sustain.end");
+        if (!confirm) return;
+
+        await endSustaining(actor, { itemId });
+      });
+    });
+
     html.querySelectorAll(".endChiPush").forEach(element => {
       element.addEventListener("click", async ev => {
         const itemId = ev.currentTarget.dataset.itemId;
@@ -1771,7 +1820,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     });
 
     //Healthbar Change
-    damage.healthBarChange(actor, html, actorModel);
+    healthBarChange(actor, html, actorModel);
 
     //Spend Rez
     html.querySelectorAll("#spendRez").forEach(element => {
@@ -1782,7 +1831,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const ledger = actorModel.rezPoints.ledger;
 
         const rezTable = EPactorSheet.rezSpendTable(brewStatus);
-        object = rezTable.options;
+        const familyRezLabel = getStrainFamily(actorStrainFamily(this.actor)).labels?.spendRez;
+        object = familyRezLabel ? Object.fromEntries(Object.entries(rezTable.options).map(([key, option]) => [key, ["psi", "psiH"].includes(option.id) ? { ...option, label: familyRezLabel } : option])) : rezTable.options;
 
         const costMatrix = rezTable.costMatrix;
 

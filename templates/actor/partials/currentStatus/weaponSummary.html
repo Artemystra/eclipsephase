@@ -73,8 +73,8 @@
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-left wantToKnowMore">
                                             <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
-                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{item.system.mode1.range}}</span>
-                                            <label class="labelWidth-medium noMargin truncate"><strong>{{item.system.mode1.range}}</strong></label>
+                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{#if item.system.mode1.range}}{{item.system.mode1.range}} m{{/if}}</span>
+                                            <label class="labelWidth-medium noMargin truncate"><strong>{{#if item.system.mode1.range}}{{item.system.mode1.range}} m{{/if}}</strong></label>
                                         </div>
                                     </div>
                                 </div>
@@ -143,8 +143,8 @@
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-left wantToKnowMore">
                                             <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
-                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{item.system.mode2.range}}</span>
-                                            <label class="labelWidth-medium noMargin truncate"><strong>{{item.system.mode2.range}}</strong></label>
+                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{#if item.system.mode2.range}}{{item.system.mode2.range}} m{{/if}}</span>
+                                            <label class="labelWidth-medium noMargin truncate"><strong>{{#if item.system.mode2.range}}{{item.system.mode2.range}} m{{/if}}</strong></label>
                                         </div>
                                     </div>
                                 </div>

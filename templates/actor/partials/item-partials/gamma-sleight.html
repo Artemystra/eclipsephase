@@ -6,7 +6,7 @@
                 <div class="flexrow flex-group-left reveal">
                     <h3 class="subheader truncate">
                         <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image icon-small icon-space"/>
-                        <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label noShow" style="margin-right: 5px;" data-type="skill" data-key="psi" data-name="{{localize 'ep2e.skills.moxieSkills.psi'}}" data-rolledfrom="psiSleight" data-itemid="{{item._id}}"/>
+                        <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label noShow" style="margin-right: 5px;" data-type="skill" data-key="psi" data-name="{{localize @root.actor.system.skillsMox.psi.name}}" data-rolledfrom="psiSleight" data-itemid="{{item._id}}"/>
                         <span style="max-width: 150px; padding-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
                     </h3>
                 </div>
@@ -23,6 +23,9 @@
                         <i class="fa-solid fa-triangle-exclamation awesomeIcon" style="color: var(--warning);"></i>
                         <span class="tooltipText" style="font-size: 13px;">{{../sleightPenaltyLabel}}</span>
                     </div>
+                    {{/if}}
+                    {{#if (lookup ../sustaining item._id)}}
+                    <a class="endSustain" data-item-id="{{item._id}}" data-tooltip="{{localize 'ep2e.psi.sustain.endTip'}}" style="display: flex; flex: 0 0 auto; align-items: center; margin-right: 6px;"><i class="fa-solid fa-circle-stop awesomeIcon" style="color: var(--negative);"></i></a>
                     {{/if}}
                     {{#if ../autoPushLabel}}
                     <div class="wantToKnowMore" style="display: flex; align-items: center; margin-right: 6px;">

@@ -3,7 +3,8 @@ import { sameDrugForm } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
-import { getRollSource } from "../api/registry.js";
+import { getRollSource, rollBlockReason } from "../api/registry.js";
+import { rollBlockContext } from "./conditions.js";
 
 /**
  * Foundry VTTs active effect creation & deletion functions
@@ -163,6 +164,47 @@ export function timedEffectData({ name, img, span, flags = {}, changes = [], sta
     showIcon,
     flags: { eclipsephase: flags }
   };
+}
+
+/**
+ * Shows an item's sheet that nobody can edit, not even the GM - to look up what a card names, such
+ * as the payload an attack brings. It is a copy of the item, so its own sheet may stay open beside it.
+ * @param {String} uuid - The item
+ * @returns {Promise<Object|null>} The sheet, or null when there is no such item
+ */
+export async function viewItemSheet(uuid) {
+  const item = uuid ? await fromUuid(uuid) : null;
+  if (!(item instanceof Item)) return null;
+  const data = item.toObject();
+  delete data._id;
+  const copy = new CONFIG.Item.documentClass(data);
+  const Sheet = item.sheet?.constructor;
+  if (!Sheet) return null;
+  return new Sheet({ document: copy, editPermission: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER + 1 }).render(true);
+}
+
+/**
+ * Shows the tooltips inside an area centred above the mouse pointer, 10 pixels up, instead of at a
+ * fixed spot where they cover what lies above. They are fixed in place, so the sheet's frame does not
+ * clip them; a zoomed sheet is its own frame of reference, which the position is scaled into.
+ * @param {HTMLElement} root - The sheet's element
+ * @param {HTMLElement|null} area - The part of the sheet whose tooltips follow the pointer
+ * @returns {void}
+ */
+export function followingTooltips(root, area) {
+  if (!root || !area) return;
+  for (const holder of area.querySelectorAll(".wantToKnowMore, .wantToKnowMoreFixed")) {
+    const tip = holder.querySelector(":scope > .tooltipText");
+    if (!tip) continue;
+    tip.classList.add("ep-tooltip-follow");
+    holder.addEventListener("mousemove", event => {
+      const frame = root.getBoundingClientRect();
+      const zoomed = getComputedStyle(root).transform !== "none";
+      const scale = zoomed && root.offsetWidth ? frame.width / root.offsetWidth : 1;
+      tip.style.left = `${zoomed ? (event.clientX - frame.left) / scale : event.clientX}px`;
+      tip.style.top = `${(zoomed ? (event.clientY - frame.top) / scale : event.clientY) - 10}px`;
+    });
+  }
 }
 
 /**
@@ -436,6 +478,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
     return { confirm: result === true || result === "confirm" };
   }
 
+// The width of the system's information dialogs.
+export const INFO_DIALOG_WIDTH = 325;
+
 /**
  * A simple dialog with only the option to confirm. This is used for simple information messages.
  * @param {*} event 
@@ -488,7 +533,7 @@ export async function itemReduction(actor, itemID, itemQuantity){
             callback: () => ({ cancelled: true })
           }
         ],
-        position: { width: 325 },
+        position: { width: INFO_DIALOG_WIDTH },
         modal: true,
         rejectClose: false
       });
@@ -548,14 +593,73 @@ export function embeddedItemToggle(html, actor) {
   });
 }
 
+// What an effect's change reads as, for the changes with a fixed wording.
+const INDUCED_LABELS = {
+  "system.mods.globalMod": "allActions",
+  "system.mods.physicalMod": "physicalActions",
+  "system.mods.mentalMod": "mentalActions",
+  "system.mods.durmod": "durability",
+  "system.mods.lucmod": "lucidity",
+  "system.mods.iniMod": "initiative",
+  "system.mods.iniChiMod": "initiative",
+  "system.mods.energyMod": "energyArmor",
+  "system.mods.kineticMod": "kineticArmor",
+  "system.mods.mentalArmorMod": "mentalArmor",
+  "system.additionalSystems.restChiMod": "rest"
+};
+const INDUCED_IGNORED = {
+  "system.mods.woundMod": "ignoreWounds",
+  "system.mods.woundChiMod": "ignoreWounds",
+  "system.mods.traumaMod": "ignoreTrauma",
+  "system.mods.traumaChiMod": "ignoreTrauma"
+};
+const INDUCED_FLAGS = { "system.mods.psiArmor": "psiArmor" };
+const SKILL_GROUPS = { skillsIns: "insightSkills", skillsMox: "moxieSkills", skillsVig: "vigorSkills" };
+
+/**
+ * One change of an effect as readable text.
+ * @param {Object} change - The change: key and value
+ * @returns {String|null} The text, or null when the key has no wording
+ */
+function inducedChangeText({ key, value }) {
+  const label = id => game.i18n.localize(`ep2e.item.inducedChanges.${id}`);
+  const amount = /^\d/.test(String(value)) ? `+${value}` : String(value);
+  if (INDUCED_LABELS[key]) return `${amount} ${label(INDUCED_LABELS[key])}`;
+  if (INDUCED_IGNORED[key]) return game.i18n.format(`ep2e.item.inducedChanges.${INDUCED_IGNORED[key]}`, { count: Math.abs(Number(value)) });
+  if (INDUCED_FLAGS[key]) return label(INDUCED_FLAGS[key]);
+  const skill = key.match(/^system\.(skillsIns|skillsMox|skillsVig)\.(.+)\.(?:mod|chiMod)$/);
+  if (skill) return `${amount} ${game.i18n.localize(`ep2e.skills.${SKILL_GROUPS[skill[1]]}.${skill[2]}`)}`;
+  const pool = key.match(/^system\.pools\.(insight|moxie|vigor|flex)\.(?:mod|chiMod)$/);
+  if (pool) return `${amount} ${game.i18n.localize(`ep2e.morph.currentMorph.${pool[1]}Label`)}`;
+  const aptitude = key.match(/^system\.aptitudes\.(\w+)\.(?:mod|chiMod)$/);
+  if (aptitude) return `${amount} ${game.i18n.localize(`ep2e.actorSheet.aptitudes.${aptitude[1]}`)}`;
+  return null;
+}
+
+/**
+ * What an item's effects change, as readable lines: an effect with a change that has no wording
+ * reads as its name.
+ * @param {Item} item - A drug or a sleight
+ * @returns {String[]} The lines, one per change
+ */
+export function inducedChanges(item) {
+  return Array.from(item.effects ?? []).flatMap(effect => {
+    const changes = Array.from(effect.changes ?? effect.system?.changes ?? []);
+    const lines = changes.map(inducedChangeText);
+    return lines.some(line => line === null) ? [effect.name] : lines;
+  });
+}
+
 /**
  * Powers any ".multiselect-widget" (see templates/actor/partials/multiselect-pills.html) - a
  * reusable multi-select that stores its values as an array on the widget's data-path.
  * Add: type into .multiselect-input and press Enter (free text allowed), or pick a suggestion
  * from the custom .multiselect-dropdown (filtered while typing, arrow keys to highlight).
  * Remove: click a .multiselect-pill-remove.
+ * A widget with data-toggles offers fixed choices instead: each is switched at <path>.<key>.value,
+ * and text that matches no single choice adds nothing.
  * @param {Object} html - The HTML object to which the event listeners are added
- * @param {Object} actor - The actor object whose data-path array fields are being edited
+ * @param {Object} actor - The actor or item whose data-path fields are being edited
  */
 export function multiSelectPills(html, actor) {
   html.querySelectorAll(".multiselect-widget").forEach(widget => {
@@ -564,6 +668,8 @@ export function multiSelectPills(html, actor) {
 
     const input = widget.querySelector(".multiselect-input");
     const dropdown = widget.querySelector(".multiselect-dropdown");
+    const toggles = "toggles" in widget.dataset;
+    const switchChoice = (key, value) => actor.update({ [`${path}.${key}.value`]: value });
 
     // shared by the Enter-key path and the option-click path
     const addValue = async rawValue => {
@@ -594,6 +700,15 @@ export function multiSelectPills(html, actor) {
       dropdown.querySelectorAll(".multiselect-option-active").forEach(option => option.classList.remove("multiselect-option-active"));
     };
 
+    // A list set to position: fixed sits under the input, or above it when the screen ends first.
+    const placeFixed = () => {
+      const box = input.getBoundingClientRect();
+      const height = dropdown.offsetHeight;
+      const fits = box.bottom + height + 2 <= input.ownerDocument.defaultView.innerHeight;
+      dropdown.style.left = `${box.left}px`;
+      dropdown.style.top = `${fits ? box.bottom + 2 : Math.max(0, box.top - height - 2)}px`;
+    };
+
     const visibleOptions = () => dropdown ? [...dropdown.querySelectorAll(".multiselect-option:not(.noShow)")] : [];
 
     // Show options whose text contains the typed value (all of them while the input is empty,
@@ -613,7 +728,8 @@ export function multiSelectPills(html, actor) {
 
       // left:0 in CSS would anchor to the whole widget's left edge, not the input's - wrong once
       // pills push the input rightward (or onto a wrapped second row). Align under the input itself.
-      if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
+      if (anyMatch && toggles) placeFixed();
+      else if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
     };
 
     if (input) {
@@ -655,6 +771,14 @@ export function multiSelectPills(html, actor) {
         // Enter picks the arrow-key-highlighted suggestion if there is one,
         // otherwise it adds the literal typed text (free-text entries stay allowed)
         const highlighted = dropdownOpen ? dropdown.querySelector(".multiselect-option-active:not(.noShow)") : null;
+        if (toggles) {
+          const options = visibleOptions();
+          const choice = highlighted ?? (options.length === 1 ? options[0] : null);
+          if (!choice) return;
+          hideDropdown();
+          await switchChoice(choice.dataset.key, true);
+          return;
+        }
         if (highlighted) {
           hideDropdown();
           await addValue(highlighted.dataset.value);
@@ -673,13 +797,15 @@ export function multiSelectPills(html, actor) {
         option.addEventListener("click", async ev => {
           ev.preventDefault();
           hideDropdown();
-          await addValue(ev.currentTarget.dataset.value);
+          if (toggles) await switchChoice(ev.currentTarget.dataset.key, true);
+          else await addValue(ev.currentTarget.dataset.value);
         });
       });
     }
 
     widget.querySelectorAll(".multiselect-pill-remove").forEach(element => {
       element.addEventListener("click", async ev => {
+        if (toggles) return switchChoice(ev.currentTarget.dataset.key, false);
         const index = Number(ev.currentTarget.dataset.index);
         const values = foundry.utils.duplicate(foundry.utils.getProperty(actor, path) ?? []);
         if (Number.isNaN(index) || !values[index]) return;
@@ -826,12 +952,12 @@ export function itemToggle(html, item) {
       classes: ["ep2e-primary-right"],
       content,
       buttons: [
-        {
-          action: "select",
-          label: useButton,
-          default: true,
-          callback: (event, button) => listSelectionOutcome(button.form)
-        },
+        ...(extras.answers ?? [{ action: "select", label: useButton }]).map((answer, index) => ({
+          action: answer.action,
+          label: game.i18n.localize(answer.label),
+          default: index === 0,
+          callback: (event, button) => ({ ...listSelectionOutcome(button.form), answer: answer.action })
+        })),
         {
           action: "cancel",
           label: cancelButton,
@@ -848,14 +974,17 @@ export function itemToggle(html, item) {
   }
 
 /**
- * Asks for one entry out of a list long enough to need a filter: a search field above a list that
- * narrows as the user types. Enter takes the first entry still shown.
+ * The searchable list with its whole answer, for a dialog that asks for more than the entry, such
+ * as a size chosen above the list.
  * @param {Object[]} entries - id and label per entry
  * @param {String} header - The dialog title's localization key
  * @param {String} copy - The explanation's localization key
- * @returns {Promise<String|null>} The chosen id, or null when cancelled or nothing was chosen
+ * @param {Object} [extras] - Further template data: sizeChoice for a size select above the list,
+ *   listMode for radios above it of which one may open the list, listQuestion for a line below it,
+ *   answers for buttons that replace the select button
+ * @returns {Promise<Object>} selection (and size, mode or answer when asked), or cancelled
  */
-  export async function selectFromSearchableList(entries, header, copy) {
+  export async function searchableListSelection(entries, header, copy, extras = {}) {
     const renderHook = (event, dialog) => {
       const root = dialog.element;
       const filter = root.querySelector('input[name="Filter"]');
@@ -871,236 +1000,56 @@ export function itemToggle(html, item) {
       };
       filter.addEventListener("input", narrow);
       narrow();
-      filter.focus();
+      const modes = [...root.querySelectorAll('input[name="ListMode"]')];
+      const followMode = () => {
+        const open = !modes.length || modes.some(mode => mode.checked && "enablesList" in mode.dataset);
+        filter.disabled = !open;
+        select.disabled = !open;
+        if (open) filter.focus();
+      };
+      modes.forEach(mode => mode.addEventListener("change", followMode));
+      followMode();
     };
 
-    const result = await listSelection(entries, "searchableList", 320, header, "", copy, renderHook);
+    return listSelection(entries, "searchableList", 320, header, "", copy, renderHook, extras);
+  }
+
+/**
+ * Asks for one entry out of a list long enough to need a filter: a search field above a list that
+ * narrows as the user types. Enter takes the first entry still shown.
+ * @param {Object[]} entries - id and label per entry
+ * @param {String} header - The dialog title's localization key
+ * @param {String} copy - The explanation's localization key
+ * @returns {Promise<String|null>} The chosen id, or null when cancelled or nothing was chosen
+ */
+  export async function selectFromSearchableList(entries, header, copy) {
+    const result = await searchableListSelection(entries, header, copy);
     if (result?.cancelled) return null;
     return result?.selection || null;
   }
 
-/**
- * The token under a point on the canvas, the topmost one where several overlap. Tokens the user
- * cannot see are skipped.
- * @param {Object} point - Canvas coordinates
- * @param {Object[]} tokens - The canvas tokens, in draw order
- * @returns {Object|null} The token, or null over empty canvas
- */
-export function tokenAt(point, tokens) {
-  const hits = tokens.filter(token => token.isVisible !== false && token.bounds?.contains(point.x, point.y));
-  return hits.at(-1) ?? null;
-}
-
-// The system's colours for picking targets: the cursor turquoise, the mark on a picked token red.
-export const TARGET_COLOR = "#00f5e4";
-export const MARK_COLOR = "#db2a2a";
 
 /**
- * The default picking cursor as an image: a ring, four strokes and a centre dot, 32 pixels across.
- * @param {String} color - The colour, as CSS
- * @returns {String} A data URL
- */
-function crosshairImage(color) {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='${color}' stroke-width='2.5'><circle cx='16' cy='16' r='9'/><path d='M16 1v9M16 22v9M1 16h9M22 16h9'/></g><circle cx='16' cy='16' r='1.5' fill='${color}'/></svg>`;
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
-}
-
-/**
- * The character a Font Awesome icon draws, from the value its stylesheet gives `content` or `--fa`:
- * the first quoted string, with CSS escapes like \f48e decoded. Font Awesome 7 adds an empty
- * alternative text after a slash (`"\f48e" / ""`), which is not part of the glyph.
- * @param {String} value - The computed value
- * @returns {String} The glyph, or "" when there is none
- */
-export function iconGlyph(value) {
-  const quoted = String(value ?? "").match(/^\s*(["'])((?:\\.|(?!\1).)*)\1/);
-  if (!quoted) return "";
-  return quoted[2].replace(/\\([0-9a-fA-F]{1,6})\s?/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))).replace(/\\(.)/g, "$1");
-}
-
-/**
- * A Font Awesome icon drawn as an image, 32 pixels across, in a colour with a 1-pixel white border:
- * the same glyph the chat cards show, read from the icon font Foundry already loaded and scaled to
- * fit the image whatever its proportions.
- * @param {String} icon - The icon's class, e.g. "fa-syringe"
- * @param {String} color - The colour, as CSS
- * @returns {String} A data URL
- */
-export function iconImage(icon, color) {
-  const size = 32;
-  const probe = document.createElement("i");
-  probe.className = `fa-solid ${icon}`;
-  probe.style.position = "absolute";
-  probe.style.visibility = "hidden";
-  document.body.append(probe);
-  const style = getComputedStyle(probe, "::before");
-  const glyph = iconGlyph(getComputedStyle(probe).getPropertyValue("--fa")) || iconGlyph(style.content);
-  const family = style.fontFamily;
-  const weight = style.fontWeight;
-  probe.remove();
-
-  const image = document.createElement("canvas");
-  image.width = size;
-  image.height = size;
-  const context = image.getContext("2d");
-  const fit = size - 4;
-  context.font = `${weight} ${fit}px ${family}`;
-  const measured = context.measureText(glyph);
-  const width = (measured.actualBoundingBoxLeft + measured.actualBoundingBoxRight) || fit;
-  const height = (measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent) || fit;
-  const scale = Math.min(1, fit / Math.max(width, height));
-  context.font = `${weight} ${fit * scale}px ${family}`;
-  const box = context.measureText(glyph);
-  const x = (size - (box.actualBoundingBoxLeft + box.actualBoundingBoxRight)) / 2 + box.actualBoundingBoxLeft;
-  const y = (size - (box.actualBoundingBoxAscent + box.actualBoundingBoxDescent)) / 2 + box.actualBoundingBoxAscent;
-  context.lineJoin = "round";
-  context.lineWidth = 2;
-  context.strokeStyle = "#ffffff";
-  context.strokeText(glyph, x, y);
-  context.fillStyle = color;
-  context.fillText(glyph, x, y);
-  return image.toDataURL();
-}
-
-/**
- * Draws one crosshair of the default cursor's shape: a ring, four strokes and a centre dot.
- * @param {Object} graphics - The PIXI graphics to draw into
- * @param {Number} pixel - One screen pixel, in canvas units
- * @param {Number} color - The colour
- * @param {Number} grow - Screen pixels added on every side, for an outline drawn beneath
+ * Turns the die of every test the actor cannot make into a warning triangle that says why. It stays
+ * visible and keeps the die's size and place, so nothing moves.
+ * @param {HTMLElement} root - The rendered sheet
+ * @param {Actor} actor - The actor
  * @returns {void}
  */
-function drawCrosshair(graphics, pixel, color, grow) {
-  graphics.lineStyle((2.5 + 2 * grow) * pixel, color, 1);
-  graphics.drawCircle(0, 0, 9 * pixel);
-  for (const [x, y] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) graphics.moveTo(x * (6 - grow) * pixel, y * (6 - grow) * pixel).lineTo(x * (15 + grow) * pixel, y * (15 + grow) * pixel);
-  graphics.lineStyle(0);
-  graphics.beginFill(color, 1).drawCircle(0, 0, (1.5 + grow) * pixel).endFill();
-}
-
-/**
- * Draws the mark of a picked target on a token where it was clicked: the cursor's shape - the
- * crosshair, or the icon picking ran with - in its colour (red by default) with a 1-pixel white
- * border, as large on screen as the cursor (32 pixels across) at the zoom it was clicked at.
- * @param {Object} token - The token placeable
- * @param {Object} point - The click, in canvas coordinates
- * @param {Object} [options] - icon: the Font Awesome class picking ran with, or none for the
- *   crosshair; color: the mark's colour as a CSS hex value, MARK_COLOR by default
- * @returns {Function} Removes the mark again
- */
-export function drawTargetMarker(token, point, { icon = null, color = MARK_COLOR } = {}) {
-  const pixel = 1 / (globalThis.canvas?.stage?.scale?.x || 1);
-  let mark;
-  if (icon) {
-    mark = PIXI.Sprite.from(iconImage(icon, color));
-    mark.anchor.set(0.5);
-    mark.scale.set(pixel);
+export function markBlockedRolls(root, actor) {
+  for (const die of root.querySelectorAll("img.task-check[data-key]")) {
+    const reason = rollBlockReason(actor, die.dataset.key.toLowerCase(), rollBlockContext(die.dataset));
+    if (!reason) continue;
+    const triangle = document.createElement("i");
+    triangle.className = die.className;
+    triangle.style.cssText = die.style.cssText;
+    triangle.classList.remove("task-check", "info", "icon-hidden", "toggle", "noShow");
+    triangle.classList.add("fa-solid", "fa-triangle-exclamation", "awesomeIcon", "ep-roll-blocked");
+    triangle.dataset.tooltip = reason;
+    const placeholder = die.previousElementSibling;
+    if (die.classList.contains("toggle") && placeholder?.classList.contains("toggle")) placeholder.remove();
+    die.replaceWith(triangle);
   }
-  else {
-    mark = new PIXI.Graphics();
-    drawCrosshair(mark, pixel, 0xffffff, 1);
-    drawCrosshair(mark, pixel, Number.parseInt(color.replace("#", ""), 16), 0);
-  }
-  mark.position.set(point.x - (token.x ?? 0), point.y - (token.y ?? 0));
-  token.addChild(mark);
-  return () => mark.destroy();
-}
-
-/**
- * The text that follows the cursor while targets are picked. Below it: for several targets how
- * many are left, for one target whether it is chosen yet. Above it, once something is marked, how
- * to confirm.
- * @param {Object} state - multi: several targets; left: targets still to pick; marked: targets marked
- * @returns {String} The label's HTML
- */
-export function targetLabel({ multi, left, marked }) {
-  const hint = marked ? `<span class="ep-targeting-hint">${escapeText(game.i18n.localize("ep2e.targeting.confirmHint"))}</span>` : "";
-  const text = multi
-    ? game.i18n.format("ep2e.targeting.remaining", { count: left })
-    : game.i18n.localize(marked ? "ep2e.targeting.targetChosen" : "ep2e.targeting.selectTarget");
-  return `${hint}<span class="ep-targeting-count">${escapeText(text)}</span>`;
-}
-
-/**
- * Lets the user pick targets on the canvas. A click marks a token, another click on it unmarks it;
- * a right-click confirms what is marked, and Escape, or a right-click with nothing marked, cancels.
- * With several targets a click past the limit is refused with a notice; with one, a click on
- * another token moves the mark over to it. The clicks are kept from the canvas itself, so picking
- * targets does not also select or deselect tokens. The cursor is set by a stylesheet rule rather
- * than on the board, since the canvas writes its own cursor onto the board over every token.
- * @param {Object} [options] - icon: a Font Awesome class for the cursor and the marks, none for
- *   the crosshair; color: the cursor's colour, the turquoise TARGET_COLOR by default; markColor: the
- *   marks' colour, the red MARK_COLOR by default; multi: several targets; max: how many, with multi;
- *   marker: marker(token, point, {icon, color}) draws a mark and returns what removes it
- * @returns {Promise<Object[]|null>} The marked tokens in the order they were marked, or null when
- *   cancelled
- */
-export function pickTokensOnCanvas({ icon = null, color = TARGET_COLOR, markColor = MARK_COLOR, multi = false, max = 1, marker = drawTargetMarker } = {}) {
-  const board = document.getElementById("board");
-  if (!globalThis.canvas?.ready || !board) return Promise.resolve(null);
-  ui.notifications.info(game.i18n.localize("ep2e.targeting.cancelHint"));
-  const limit = multi ? Math.max(1, Number(max) || 1) : 1;
-
-  return new Promise(resolve => {
-    const marked = new Map();
-    const label = document.createElement("div");
-    label.className = "ep-targeting-counter";
-    const refresh = () => { label.innerHTML = targetLabel({ multi, left: limit - marked.size, marked: marked.size }); };
-    const unmark = token => {
-      marked.get(token)?.();
-      marked.delete(token);
-    };
-    const cursor = document.createElement("style");
-    cursor.textContent = `#board { cursor: url("${icon ? iconImage(icon, color) : crosshairImage(color)}") 16 16, crosshair !important; }`;
-    const finish = tokens => {
-      board.removeEventListener("pointerdown", onPointer, true);
-      board.removeEventListener("contextmenu", onContext, true);
-      document.removeEventListener("pointermove", onMove, true);
-      document.removeEventListener("keydown", onKey, true);
-      cursor.remove();
-      for (const token of Array.from(marked.keys())) unmark(token);
-      label.remove();
-      resolve(tokens);
-    };
-    const onPointer = event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (event.button === 2) return finish(marked.size ? Array.from(marked.keys()) : null);
-      if (event.button !== 0) return;
-      const point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY });
-      const token = tokenAt(point, canvas.tokens.placeables);
-      if (!token) return;
-      if (marked.has(token)) unmark(token);
-      else if (!multi) {
-        for (const other of Array.from(marked.keys())) unmark(other);
-        marked.set(token, marker(token, point, { icon, color: markColor }));
-      }
-      else if (marked.size >= limit) ui.notifications.warn(game.i18n.format("ep2e.targeting.limitReached", { max: limit }));
-      else marked.set(token, marker(token, point, { icon, color: markColor }));
-      refresh();
-    };
-    const onContext = event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    };
-    const onMove = event => {
-      label.style.left = `${event.clientX}px`;
-      label.style.top = `${event.clientY}px`;
-    };
-    const onKey = event => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      finish(null);
-    };
-
-    refresh();
-    document.body.append(label);
-    document.head.append(cursor);
-    board.addEventListener("pointerdown", onPointer, true);
-    board.addEventListener("contextmenu", onContext, true);
-    document.addEventListener("pointermove", onMove, true);
-    document.addEventListener("keydown", onKey, true);
-  });
 }
 
 /**
@@ -1126,12 +1075,14 @@ export async function pickActorFromList(actors, header, copy) {
   function listSelectionOutcome(form) {
     let returnValue;
 
-    if (form?.ItemSelect) {
-      const result = { selection: form.ItemSelect.value };
+    if (form?.ItemSelect || form?.SizeSelect) {
+      const result = { selection: form.ItemSelect?.value ?? "" };
       // Only present when a dialog embeds a nested body-picker dropdown next to a radio option
       // (e.g. the Ego/Morph trait dialog's "Morph" option) - absent for every other radio-only caller.
       if (form?.BodySelect) result.body = form.BodySelect.value;
       if (form?.ExtraOption) result.extraOption = form.ExtraOption.checked === true;
+      if (form?.SizeSelect) result.size = form.SizeSelect.value;
+      if (form?.ListMode) result.mode = form.ListMode.value;
       return result;
     }
 
@@ -1324,6 +1275,14 @@ export async function pickActorFromList(actors, header, copy) {
         rolledFrom = weaponSelected.rolledFrom
 
       }
+      else if (rolledFrom === "grenade") {
+        weaponSelected = WEAPON.grenadePreparation(actorWhole, weaponID)
+        if (!weaponSelected) return;
+        if (weaponSelected.currentAmmo < 1) {
+          ui.notifications.warn(game.i18n.format("ep2e.roll.dialog.throw.noneLeft", { name: weaponSelected.weaponName }));
+          return;
+        }
+      }
 
       DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }
@@ -1405,6 +1364,16 @@ export function cloneCompendiumItem(document) {
   delete data._id;
   delete data.folder;
   return data;
+}
+
+/**
+ * Whether a roll dialog's checkbox came back ticked: the dialog reports true, a stored option may
+ * read "true", and a plain form field "on".
+ * @param {*} value - The option's value
+ * @returns {Boolean} True when ticked
+ */
+export function isChecked(value) {
+  return value === true || value === "true" || value === "on";
 }
 
 /**
@@ -1495,8 +1464,10 @@ export function buildRollContext(outputData, actorWhole, options, itemData){
     options: {
       push: options?.push || false,
       attackMode: options?.attackMode ?? "",
-      biomorphTarget: options?.biomorphTarget === true || options?.biomorphTarget === "true",
-      touchOnly: options?.touchOnly === true || options?.touchOnly === "true",
+      biomorphTarget: isChecked(options?.biomorphTarget),
+      touchOnly: isChecked(options?.touchOnly),
+      range: options?.range || "",
+      vacuum: isChecked(options?.vacuum),
       rollMode: outputData?.rollMode || ""
     },
     item: {
@@ -1547,6 +1518,8 @@ export function legacyRollContext(dataset = {}){
       attackMode: dataset.attackmode ?? "",
       biomorphTarget: dataset.biomorphtarget === "true",
       touchOnly: dataset.touchonly === "true",
+      range: "",
+      vacuum: false,
       rollMode: dataset.rollmode ?? ""
     },
     item: {
@@ -1775,7 +1748,8 @@ export async function mergeOrCreateItem(actor, itemData) {
   const existing = actor.items.find(i =>
     i.type === itemData.type &&
     i.name === itemData.name &&
-    (i.type !== "drug" || sameDrugForm(i.system, itemData.system))
+    (i.type !== "drug" || sameDrugForm(i.system, itemData.system)) &&
+    ((i.type !== "ammo" && i.type !== "grenade") || WEAPON.sameMunition(i.system, itemData.system))
   );
 
   if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {

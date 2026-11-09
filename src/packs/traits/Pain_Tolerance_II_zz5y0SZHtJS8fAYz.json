@@ -28,6 +28,12 @@
             "value": -2,
             "priority": null,
             "type": "add"
+          },
+          {
+            "key": "system.additionalSystems.painTolerance",
+            "value": 2,
+            "priority": null,
+            "type": "override"
           }
         ]
       },

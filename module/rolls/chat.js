@@ -1,11 +1,15 @@
+import { viewItemSheet } from "../common/general-sheet-functions.js";
 import { moreInfo, registerCommonHandlers } from "../common/general-sheet-functions.js";
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
+import { requestStrikeCheck, rollRemainingStrikes, resolveRemainingStrikes, acceptStrikeCheck } from "./damage.js";
 import * as resleeving from "./resleeving.js";
 import { requestDoseClaim, requestWearOffRoll, chooseDoseTarget, requestUseCheck, requestDoseHarm, requestFilterCheck, demandWillpower, showDoseHistory, requestAddictionCheck } from "../common/doses.js";
-import { setupFromCard } from "../common/ware-skills.js";
-import { applyTargetedAttack, rollDefence, rollRemainingDefences } from "./targeted-attacks.js";
+import { setupFromCard } from "./modifiers.js";
+import { failCard, drawFailButtons } from "./cards.js";
+export { drawFailButtons };
+import { rollDefence, rollRemainingDefences, yieldDefence, takeCover, spareRemaining, soakRemaining, scatterBlast, detonateArmed, defuseArmed, acceptBlindPerceive } from "./attacks.js";
 
 /**
  * Hides GM info from players
@@ -68,6 +72,11 @@ export async function ownerVision(html){
         const actor = fromUuidSync(control.dataset.actorUuid ?? "")
         if(actor?.isOwner) control.classList.add("noShow")
     }
+    // A row of buttons none of which is for this user leaves no empty space behind.
+    for(const controls of html.querySelectorAll(".chatControls")){
+        const buttons = Array.from(controls.querySelectorAll("button"))
+        if(buttons.length && buttons.every(button => button.classList.contains("noShow"))) controls.classList.add("noShow")
+    }
 }
 
 export async function addChatListeners(html) {
@@ -102,10 +111,18 @@ export async function addChatListeners(html) {
       return;
     }
 
-    const targetedAttack = event.target.closest("button.targetedAttack");
-    if (targetedAttack) {
-      const message = game.messages.get(targetedAttack.closest("[data-message-id]")?.dataset.messageId);
-      if (message) applyTargetedAttack(message);
+
+    const psiTouchUse = event.target.closest("button.psiTouchUse");
+    if (psiTouchUse) {
+      const message = game.messages.get(psiTouchUse.closest("[data-message-id]")?.dataset.messageId);
+      if (message) psiFunctions.useSleightAfterTouch(message);
+      return;
+    }
+
+    const attackDamage = event.target.closest("button.attackDamage");
+    if (attackDamage) {
+      const message = game.messages.get(attackDamage.closest("[data-message-id]")?.dataset.messageId);
+      if (message) damageFunctions.rollAttackDamage(message);
       return;
     }
 
@@ -113,6 +130,90 @@ export async function addChatListeners(html) {
     if (defenceRoll) {
       const message = game.messages.get(defenceRoll.closest("[data-message-id]")?.dataset.messageId);
       if (message) rollDefence(message, defenceRoll.dataset.targetUuid, defenceRoll.dataset.kind);
+      return;
+    }
+
+    const acceptResult = event.target.closest("button.acceptResult");
+    if (acceptResult) {
+      const message = game.messages.get(acceptResult.closest("[data-message-id]")?.dataset.messageId);
+      if (message?.getFlag("eclipsephase", "roll")?.blindPerceive) acceptBlindPerceive(message);
+      else if (message) acceptStrikeCheck(message);
+      return;
+    }
+
+    const defenceYield = event.target.closest("button.defenceYield");
+    if (defenceYield) {
+      const message = game.messages.get(defenceYield.closest("[data-message-id]")?.dataset.messageId);
+      if (message) yieldDefence(message, defenceYield.dataset.targetUuid);
+      return;
+    }
+
+    const defenceCover = event.target.closest("button.defenceCover");
+    if (defenceCover) {
+      const message = game.messages.get(defenceCover.closest("[data-message-id]")?.dataset.messageId);
+      if (message) takeCover(message, defenceCover.dataset.targetUuid);
+      return;
+    }
+
+    const endSustain = event.target.closest("button.endSustain");
+    if (endSustain) {
+      const message = game.messages.get(endSustain.closest("[data-message-id]")?.dataset.messageId);
+      if (message) psiFunctions.endSustainFromCard(message);
+      return;
+    }
+
+    const failButton = event.target.closest("button.failCard");
+    if (failButton) {
+      const message = game.messages.get(failButton.closest("[data-message-id]")?.dataset.messageId);
+      if (message && game.user.isGM) failCard(message, failButton.dataset.failId);
+      return;
+    }
+
+    const sleightChoice = event.target.closest("button.sleightChoice");
+    if (sleightChoice) {
+      const message = game.messages.get(sleightChoice.closest("[data-message-id]")?.dataset.messageId);
+      if (message) psiFunctions.chooseFromCard(message);
+      return;
+    }
+
+    const armedDetonate = event.target.closest("button.armedDetonate");
+    if (armedDetonate) {
+      const message = game.messages.get(armedDetonate.closest("[data-message-id]")?.dataset.messageId);
+      if (message) detonateArmed(message);
+      return;
+    }
+
+    const armedDefuse = event.target.closest("button.armedDefuse");
+    if (armedDefuse) {
+      const message = game.messages.get(armedDefuse.closest("[data-message-id]")?.dataset.messageId);
+      if (message) defuseArmed(message);
+      return;
+    }
+
+    const effectInfo = event.target.closest("a.ep-effect-info");
+    if (effectInfo) {
+      viewItemSheet(effectInfo.dataset.uuid);
+      return;
+    }
+
+    const blastScatter = event.target.closest("button.blastScatter");
+    if (blastScatter) {
+      const message = game.messages.get(blastScatter.closest("[data-message-id]")?.dataset.messageId);
+      if (message) scatterBlast(message);
+      return;
+    }
+
+    const defenceSoakRest = event.target.closest("button.defenceSoakRest");
+    if (defenceSoakRest) {
+      const message = game.messages.get(defenceSoakRest.closest("[data-message-id]")?.dataset.messageId);
+      if (message) soakRemaining(message);
+      return;
+    }
+
+    const defenceSpare = event.target.closest("button.defenceSpare");
+    if (defenceSpare) {
+      const message = game.messages.get(defenceSpare.closest("[data-message-id]")?.dataset.messageId);
+      if (message) spareRemaining(message);
       return;
     }
 
@@ -145,6 +246,27 @@ export async function addChatListeners(html) {
     if (useDose) {
       const messageId = useDose.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestDoseClaim(messageId, { selection: useDose.dataset.selection === "true" });
+      return;
+    }
+
+    const rollStrikeCheck = event.target.closest("button.rollStrikeCheck");
+    if (rollStrikeCheck) {
+      const messageId = rollStrikeCheck.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestStrikeCheck(messageId, rollStrikeCheck.dataset.checkId ?? null);
+      return;
+    }
+
+    const rollRemaining = event.target.closest("button.rollRemainingStrikes");
+    if (rollRemaining) {
+      const message = game.messages.get(rollRemaining.closest("[data-message-id]")?.dataset.messageId);
+      if (message && game.user.isGM) rollRemainingStrikes(message);
+      return;
+    }
+
+    const resolveRemaining = event.target.closest("button.resolveRemainingStrikes");
+    if (resolveRemaining) {
+      const message = game.messages.get(resolveRemaining.closest("[data-message-id]")?.dataset.messageId);
+      if (message && game.user.isGM) resolveRemainingStrikes(message);
       return;
     }
 

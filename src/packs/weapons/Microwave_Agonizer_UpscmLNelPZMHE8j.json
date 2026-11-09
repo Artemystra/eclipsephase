@@ -135,11 +135,12 @@
     },
     "mode1": {
       "name": "Roast",
-      "range": "15m",
+      "range": 15,
       "d10": 2,
       "d6": null,
       "bonus": null,
       "dv": null,
+      "armorused": "energy",
       "firingMode": "ss",
       "traits": {
         "armorPiercing": {
@@ -219,15 +220,21 @@
           "value": false,
           "number": null
         }
+      },
+      "area": {
+        "kind": "none",
+        "radius": null,
+        "reduction": null
       }
     },
     "mode2": {
       "name": "Pain",
-      "range": "",
+      "range": null,
       "d10": null,
       "d6": null,
       "bonus": null,
       "dv": null,
+      "armorused": "energy",
       "firingMode": "sa",
       "traits": {
         "armorPiercing": {
@@ -307,6 +314,11 @@
           "value": false,
           "number": null
         }
+      },
+      "area": {
+        "kind": "none",
+        "radius": null,
+        "reduction": null
       }
     }
   },

@@ -1,5 +1,11 @@
 import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } from "../setup/factories.js";
 
+// The version of the last migration step: what a world is stamped with once it has climbed the whole
+// ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
+const LATEST_MIGRATION = "2.9.0.1";
+// What every world below 2.9 sees, whatever its data: the 2.9 notice and its closing dialog.
+const ONLY_THE_NOTICE = ["notice:2.9", "ep2e.migration.done"];
+
 
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
 // of Foundry's canvas API stubbed than the rest of the suite needs.
@@ -33,7 +39,7 @@ async function runLadderFrom(from, answer = { start: true }) {
   const realRender = foundry.applications.handlebars.renderTemplate;
   foundry.applications.handlebars.renderTemplate = async (template, data = {}) => {
     if (String(template).includes("migration-dialog")) rendered.push({ copy: data.messageCopy, extra: data.messageCopyExtra });
-    if (String(template).includes("migration-notice")) rendered.push({ copy: `notice:${data.version}`, extra: data.extra || undefined });
+    if (String(template).includes("migration-notice")) rendered.push({ copy: `notice:${(data.versions ?? [data.version]).join("+")}`, extra: data.extra || undefined });
     return realRender(template, data);
   };
 
@@ -53,21 +59,28 @@ beforeAll(async () => {
 });
 
 describe("the migration ladder's closing dialog", () => {
-  test("a world coming from the last released version is told it is done exactly once", async () => {
+  test("a world coming from the last released version is told it is done once per migration", async () => {
     const rendered = await runLadderFrom("2.1.5");
     const done = rendered.filter(entry => entry.copy === "ep2e.migration.done");
 
-    expect(done).toHaveLength(1);
+    expect(done).toHaveLength(2);
   });
 
-  test("it still ends up stamped at the current version", async () => {
+  test("it still ends up stamped at the latest migration", async () => {
     await runLadderFrom("2.1.5");
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 
-  test("a world with nothing to migrate is not told anything at all", async () => {
+  test("a world with nothing to migrate still gets the 2.9 notice and nothing else", async () => {
     const rendered = await runLadderFrom("2.5");
-    expect(rendered).toEqual([]);
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+  });
+
+  test("a new world gets no 2.9 notice; one already on 2.9 picks the conditions up without any dialog, and is then done", async () => {
+    expect((await runLadderFrom("newInstall")).map(entry => entry.copy)).not.toContain("notice:2.9");
+    expect(await runLadderFrom("2.9")).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+    expect(await runLadderFrom(LATEST_MIGRATION)).toEqual([]);
   });
 });
 
@@ -81,10 +94,10 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
     return rendered.filter(entry => entry.copy !== "ep2e.migration.done");
   }
 
-  test("a world from the last released version is offered exactly one migration", async () => {
+  test("a world from the last released version is offered 2.5 and 2.9 and nothing else", async () => {
     const rendered = await runLadderFrom("2.1.5");
 
-    expect(offers(rendered).map(entry => entry.copy)).toEqual(["ep2e.migration.25"]);
+    expect(offers(rendered).map(entry => entry.copy)).toEqual(["ep2e.migration.25", "notice:2.9"]);
   });
 
   test("that one migration is not the retired 2.3 notice", async () => {
@@ -96,8 +109,8 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
   test("a world off the released line is never silently stamped, whatever the Ki gate says", async () => {
     const rendered = await runLadderFrom("2.1.5");
 
-    expect(offers(rendered)).toHaveLength(1);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(offers(rendered)).toHaveLength(2);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 
   test("a world with no Ki data is offered the notice without the Ki block", async () => {
@@ -106,11 +119,11 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
     expect(offers(rendered)[0].extra).toBeUndefined();
   });
 
-  test("a world already on 2.3 with nothing to move is told nothing at all", async () => {
+  test("a world already on 2.3 with nothing to move only gets the 2.9 notice", async () => {
     const rendered = await runLadderFrom("2.3");
 
-    expect(rendered).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 });
 
@@ -175,7 +188,7 @@ describe("the 2.7 drug schema", () => {
     }
   });
 
-  test("a world whose drugs are already current is stamped without being asked", async () => {
+  test("a world whose drugs are already current only gets the 2.9 notice", async () => {
     const drug = worldItem({
       name: "Grin",
       type: "drug",
@@ -184,8 +197,8 @@ describe("the 2.7 drug schema", () => {
 
     try {
       const rendered = await runLadderFrom("2.5");
-      expect(rendered).toEqual([]);
-      expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+      expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+      expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
     } finally {
       game.items.delete(drug.id);
     }
@@ -272,18 +285,18 @@ describe("the 2.7 blueprint backfill", () => {
 
     const rendered = await runLadderFrom("2.5");
 
-    expect(rendered).toEqual([]);
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
     expect(Array.from(drug.effects).map(effect => effect.name)).toEqual(["House Grin"]);
   });
 
-  test("a drug whose namesake has no blueprint, or which has no namesake, asks nothing", async () => {
+  test("a drug whose namesake has no blueprint, or which has no namesake, asks nothing of its own", async () => {
     worldItem({ name: "Retcon", type: "drug", system: CURRENT });
     worldItem({ name: "Garage Brew", type: "drug", system: CURRENT });
 
     const rendered = await runLadderFrom("2.5");
 
-    expect(rendered).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 
   test("a world without the drug compendium still migrates its schema", async () => {
@@ -297,6 +310,156 @@ describe("the 2.7 blueprint backfill", () => {
   });
 });
 
+describe("the 2.8 armour type per weapon mode", () => {
+  afterEach(() => {
+    game.items.clear();
+    game.actors.clear();
+    game.packs.clear();
+  });
+
+  test("weapons on a sheet get their compendium namesake's armour, others the default, and set ones stay", async () => {
+    registerSystemPacks();
+    const actor = makeActor({ type: "character", items: [
+      { _id: "frz1", name: "Freezer", type: "rangedWeapon", system: { ammoType: "spray" } },
+      { _id: "own1", name: "Garage Laser", type: "rangedWeapon", system: { ammoType: "beam" } },
+      { _id: "set1", name: "Torch", type: "rangedWeapon", system: { ammoType: "spray", mode1: { armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    const rendered = await runLadderFrom("2.7");
+
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9");
+    expect(actor.items.get("frz1")._source.system.mode1.armorused).toBe("none");
+    expect(actor.items.get("own1")._source.system.mode1.armorused).toBe("energy");
+    expect(actor.items.get("set1")._source.system.mode1.armorused).toBe("kinetic");
+  });
+
+  test("a world whose weapons all name their armour only gets the 2.9 notice", async () => {
+    makeActor({ type: "character", items: [
+      { _id: "kn1", name: "Knife", type: "ccWeapon", system: { mode1: { armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    const rendered = await runLadderFrom("2.7");
+
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+});
+
+describe("the 2.8.5 ranges, areas and munitions", () => {
+  afterEach(() => {
+    game.items.clear();
+    game.actors.clear();
+    game.packs.clear();
+  });
+
+  test("ranges turn into metres, area texts into areas, old armour keys into the read one, and munitions get their compendium payload", async () => {
+    registerSystemPacks();
+    const actor = makeActor({ type: "character", items: [
+      { _id: "pul1", name: "Laser Pulsar", type: "rangedWeapon", system: { ammoType: "beam", mode1: { range: "100m", armorused: "energy" }, mode2: { range: "100m (AoE 1m)", armorused: "energy" } } },
+      { _id: "gre1", name: "Plasmaburst", type: "grenade", system: { areaeffect: "Centered (-2DV/m)", armorused: ["none", "none"], armorUsed: "energy" } },
+      { _id: "spl1", name: "Splash", type: "ammo", system: { type: "seeker", areaeffect: "Uniform (10 m)", armorused: null, armorUsed: "none" } },
+      { _id: "cap1", name: "Capsule (Kinetic)", type: "ammo", system: { type: "kinetic" } }
+    ] });
+
+    const rendered = await runLadderFrom("2.8");
+
+    expect(rendered.map(entry => entry.copy)).toContain("notice:2.9");
+    const source = id => actor.items.get(id)._source.system;
+    expect([source("pul1").mode1.range, source("pul1").mode2.range, source("pul1").mode2.area]).toEqual([100, 100, { kind: "uniform", radius: 1, reduction: null }]);
+    expect([source("gre1").area, source("gre1").armorused]).toEqual([{ kind: "centered", radius: null, reduction: 2 }, "energy"]);
+    expect([source("spl1").area.radius, source("spl1").armorused, source("spl1").payload.enabled, source("spl1").payload.vector]).toEqual([10, "none", true, "dermal"]);
+    expect([source("cap1").payload.enabled, source("cap1").payload.vector]).toEqual([true, "injection"]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+
+  test("a payload that named its delivery names its vector instead, and the old key is gone", async () => {
+    const actor = makeActor({ type: "character", items: [
+      { _id: "gas1", name: "Homebrew Gas", type: "grenade", system: { armorused: "none", area: { kind: "uniform", radius: 10, reduction: null }, payload: { enabled: true, delivery: "cloud", loaded: [] } } }
+    ] });
+
+    await runLadderFrom("2.8");
+
+    expect(actor.items.get("gas1")._source.system.payload).toEqual({ enabled: true, vector: "inhalation", loaded: [] });
+  });
+
+  test("a munition its compendium namesake has form a cloud forms one, in the namesake's colour", async () => {
+    const { _ep285_weaponUpdate } = await import("../../module/common/migration.js");
+    const catalogue = new Map([["grenade:Gas/Smoke", { cloud: true, cloudColor: { kind: "smoke", custom: "#ffffff" } }]]);
+    const item = { type: "grenade", name: "Gas/Smoke", _source: { system: { armorused: "none", area: { kind: "uniform", radius: 10, reduction: null } } } };
+
+    expect(_ep285_weaponUpdate(item, catalogue).update).toMatchObject({ "system.cloud": true, "system.cloudColor": { kind: "smoke", custom: "#ffffff" } });
+  });
+
+  test("a mask or suit without its seal gets it from its compendium namesake, once", async () => {
+    const { _ep285_sealEffects } = await import("../../module/common/migration.js");
+    const seal = { name: "Sealed", system: { changes: [{ key: "system.additionalSystems.airSealed", value: true, type: "override" }] } };
+    const catalogue = new Map([["armor:Vacsuit (Light)", [seal]]]);
+    const bare = { type: "armor", name: "Vacsuit (Light)", effects: [] };
+
+    expect(_ep285_sealEffects(bare, catalogue)).toEqual([seal]);
+    expect(_ep285_sealEffects({ ...bare, effects: [seal] }, catalogue)).toEqual([]);
+    expect(_ep285_sealEffects({ ...bare, name: "Homebrew Suit" }, catalogue)).toEqual([]);
+  });
+
+  test("a TacNet gets its effect once, and no other item does", async () => {
+    const { _ep29_tacnetEffects } = await import("../../module/common/migration.js");
+    const bare = { type: "gear", name: "TacNet", effects: [] };
+    const effects = _ep29_tacnetEffects(bare);
+
+    expect(effects[0].system.changes[0]).toMatchObject({ key: "system.additionalSystems.tacnet", value: true });
+    expect(_ep29_tacnetEffects({ ...bare, effects })).toEqual([]);
+    expect(_ep29_tacnetEffects({ ...bare, name: "Ecto" })).toEqual([]);
+    expect(_ep29_tacnetEffects({ ...bare, type: "ware" })).toEqual([]);
+  });
+
+  test("a world already at 2.8.5 runs again and gets its TacNets' effects", async () => {
+    const actor = makeActor({ type: "character", items: [{ _id: "tac1", name: "TacNet", type: "gear", system: {} }] });
+
+    const rendered = await runLadderFrom("2.8.5");
+
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+    expect(Array.from(actor.items.get("tac1").effects).length).toBe(1);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+
+  test("a world that puts the migration off is not stamped past it", async () => {
+    makeActor({ type: "character", items: [
+      { _id: "gun1", name: "Pistol", type: "rangedWeapon", system: { mode1: { range: "30m", armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    await runLadderFrom("2.8", { start: false });
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8");
+
+    await runLadderFrom("2.8.5", { start: false });
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.8.5");
+  });
+
+  test("a range that cannot be read stays as written and is listed to the GM", async () => {
+    const actor = makeActor({ name: "Sava", type: "character", items: [
+      { _id: "thr1", name: "Throwing Knife", type: "rangedWeapon", system: { mode1: { range: "SOM", armorused: "kinetic" }, mode2: { range: "", armorused: "kinetic" } } },
+      { _id: "gun1", name: "Pistol", type: "rangedWeapon", system: { mode1: { range: "30m", armorused: "kinetic" }, mode2: { armorused: "kinetic" } } }
+    ] });
+
+    await runLadderFrom("2.8");
+
+    expect(actor.items.get("thr1")._source.system.mode1.range).toBe("SOM");
+    expect(actor.items.get("thr1")._source.system.mode2.range).toBeNull();
+    const notices = global.__ep.createdMessages.filter(message => String(message.content).includes("Throwing Knife"));
+    expect(notices.map(message => message.content)).toEqual([expect.stringContaining("Sava: Throwing Knife (SOM)")]);
+  });
+
+  test("a world whose weapons already carry metres only gets the 2.9 notice", async () => {
+    makeActor({ type: "character", items: [
+      { _id: "gun1", name: "Pistol", type: "rangedWeapon", system: { mode1: { range: 30, armorused: "kinetic" }, mode2: { range: null, armorused: "kinetic" } } }
+    ] });
+
+    const rendered = await runLadderFrom("2.8");
+
+    expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+});
+
 describe("the whole ladder on an old world", () => {
   afterEach(() => {
     game.actors.clear();
@@ -304,7 +467,7 @@ describe("the whole ladder on an old world", () => {
     jest.restoreAllMocks();
   });
 
-  test.each(["1.5", "2.0"])("a world last migrated at %s with every sample actor climbs to the current version without an error", async from => {
+  test.each(["1.5", "2.0"])("a world last migrated at %s with every sample actor climbs to the latest migration without an error", async from => {
     registerSystemPacks();
     for (const name of fixtureNames()) makeActorFromFixture(name);
     const errors = jest.spyOn(console, "error").mockImplementation(() => {});
@@ -312,7 +475,7 @@ describe("the whole ladder on an old world", () => {
     await runLadderFrom(from, { start: true, weaponUpdateList: [] });
 
     expect(errors.mock.calls).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
   });
 });
 

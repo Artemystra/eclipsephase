@@ -5,7 +5,7 @@
   "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
   "system": {
     "additionalSystems": {},
-    "description": "TMP devices can be set to detonate in either fragmentation or high-explosive mode. Fragmentation explosives spread a cloud of lethal flechettes over the area of effect.",
+    "description": "<p><b>Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.</b></p><p>TMP devices can be set to detonate in either fragmentation or high-explosive mode. Fragmentation explosives spread a cloud of lethal flechettes over the area of effect.</p>",
     "active": true,
     "displayCategory": "consumable",
     "updated": "",
@@ -83,9 +83,20 @@
         "value": false
       }
     },
-    "armorused": null,
+    "armorused": "kinetic",
     "quantity": 1,
-    "armorUsed": "kinetic"
+    "area": {
+      "kind": "centered",
+      "radius": null,
+      "reduction": 2
+    },
+    "size": "select",
+    "payload": {
+      "enabled": false,
+      "vector": "",
+      "loaded": []
+    },
+    "cloud": false
   },
   "effects": [],
   "flags": {},

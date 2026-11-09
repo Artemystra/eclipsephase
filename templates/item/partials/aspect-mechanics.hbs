@@ -1,0 +1,64 @@
+{{> systems/eclipsephase/templates/item/partials/induced-changes.hbs}}
+{{#if (ne item.system.psiType "chi")}}
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.item.aspect.table.targetHeadline"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-3">
+    <label class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.targetRule.label"}}</span>
+        <select name="system.targetRule" data-type="String">
+            {{selectOptions config.sleightTargetRules selected=item.system.targetRule localize=true}}
+        </select>
+    </label>
+    <label class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.affects.label"}}</span>
+        <select name="system.affects" data-type="String">
+            {{selectOptions config.sleightAffects selected=item.system.affects localize=true}}
+        </select>
+    </label>
+    <div class="ep-field" data-tooltip="{{localize 'ep2e.item.aspect.table.repeatPerSuperior.tip'}}">
+        <label class="resource-label" for="repeatPerSuperior-{{item._id}}">{{localize "ep2e.item.aspect.table.repeatPerSuperior.label"}}</label>
+        <input type="checkbox" class="sheet" name="system.repeatPerSuperior" id="repeatPerSuperior-{{item._id}}" {{checked item.system.repeatPerSuperior}}/>
+    </div>
+    <label class="ep-field ep-span-2" data-tooltip="{{localize 'ep2e.item.aspect.table.landingRule.tip'}}">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.landingRule.label"}}</span>
+        <select name="system.landingRule" data-type="String">
+            {{selectOptions landingRules selected=landingRule localize=true}}
+        </select>
+    </label>
+    <label class="ep-field" data-tooltip="{{localize 'ep2e.item.aspect.table.condition.tip'}}">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.condition.label"}}</span>
+        <select name="system.condition" data-type="String">
+            {{selectOptions sleightConditions selected=item.system.condition localize=true}}
+        </select>
+    </label>
+</div>
+<div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.item.aspect.table.damage.label"}}</h3>
+</div>
+<div class="ep-sheet-grid ep-sheet-grid-3">
+    <label class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.damage.label"}}</span>
+        <select name="system.damage.mode" data-type="String">
+            {{selectOptions config.sleightDamageModes selected=sleightDamageMode localize=true}}
+        </select>
+    </label>
+    {{#if (ne sleightDamageMode "none")}}
+    <label class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.aspect.table.damage.targetLabel"}}</span>
+        <select name="system.damage.target" data-type="String">
+            {{selectOptions config.damageTargets selected=item.system.damage.target localize=true}}
+        </select>
+    </label>
+    {{> systems/eclipsephase/templates/item/partials/field-dice.hbs label="ep2e.item.weapon.table.damageValue" path="system.damage" values=item.system.damage}}
+    {{/if}}
+    {{#if (eq sleightDamageMode "damage")}}
+    <label class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</span>
+        <select name="system.damage.armorUsed" data-type="String">
+            {{selectOptions config.sleightArmor selected=item.system.damage.armorUsed localize=true}}
+        </select>
+    </label>
+    {{/if}}
+</div>
+{{/if}}

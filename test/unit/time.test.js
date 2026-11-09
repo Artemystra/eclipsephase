@@ -255,8 +255,13 @@ describe("secondsForBeat", () => {
 
 describe("durationRunOut", () => {
   test("it is true once the remaining time reaches zero, before the expired flag is written", () => {
-    expect(durationRunOut({ duration: { remaining: 0 } })).toBe(true);
-    expect(durationRunOut({ duration: { remaining: -30 } })).toBe(true);
+    expect(durationRunOut({ duration: { value: 1, remaining: 0 } })).toBe(true);
+    expect(durationRunOut({ duration: { value: 1, remaining: -30 } })).toBe(true);
+  });
+
+  test("an effect without a duration never runs out on its own, whatever Foundry 14 reports as remaining", () => {
+    expect(durationRunOut({ duration: { value: null, units: "seconds", remaining: -5 } })).toBe(false);
+    expect(durationRunOut({ duration: { value: null, expired: true } })).toBe(true);
   });
 
   test("it is true for an effect already flagged expired", () => {

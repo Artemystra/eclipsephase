@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js"
 import { normaliseDrugSystem } from "../common/drugs.js"
+import { defaultArmorUsed, weaponDataRepairs } from "../common/weapon-functions.js";
 
 // Default Morph Points -> cost-tier thresholds. RAW MP range is 0-12. A feature may override
 // the resulting tier through the prepareItemData hook.
@@ -78,6 +79,16 @@ export default class EPitem extends Item {
               itemModel.active = itemModel.boundTo === activeBody;
             }
           }
+        }
+
+        if (item.type === "rangedWeapon" || item.type === "ccWeapon") {
+          for (const mode of ["mode1", "mode2"]) {
+            if (itemModel[mode] && !itemModel[mode].armorused) itemModel[mode].armorused = defaultArmorUsed(item);
+          }
+        }
+
+        if (["rangedWeapon", "ammo", "grenade"].includes(item.type)) {
+          for (const [path, value] of Object.entries(weaponDataRepairs(item.type, itemModel))) foundry.utils.setProperty(itemModel, path, value);
         }
 
         // Morph cost tier is derived live from Morph Points, unlike Gear/Ware's manually-set

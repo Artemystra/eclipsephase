@@ -5,7 +5,53 @@
     "core": {}
   },
   "img": "systems/eclipsephase/resources/icons/bond.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "1C8ccatWmWB1P6Fp",
+      "name": "Burst of Adrenaline",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.pools.vigor.mod",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!vXDZpQKmd0MXn7D3.1C8ccatWmWB1P6Fp"
+    }
+  ],
   "system": {
     "additionalSystems": {},
     "description": "You revive the target with a rush of endorphins and energy. They receive +1 Vigor pool for WIL ÷ 5 minutes. A target may only benefit from one burst of adrenaline at a time.",

@@ -100,6 +100,9 @@
                         <div style="display: block;">
                             <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b></label>
                     {{/if}}
+                        {{#if payload}}
+                        <div class="ep-payload-tag"><i class="fa-regular fa-flask"></i> {{payload}}</div>
+                        {{/if}}
                         <div style="display: flex; flex-wrap: wrap;">
                             {{#each traits as |item key|}}
                                 {{#if (eq item.value true)}}
@@ -213,15 +216,39 @@
 
     {{else if (eq dialogType "searchableList")}}
 
+        {{#if sizeChoice}}
+        <div class="flexrow" style="align-items: center; gap: 8px; padding: 10px 0 0 0;">
+            <label for="sizeSelect" style="flex: 0 0 auto;">{{localize sizeChoice.label}}</label>
+            <select name="SizeSelect" id="sizeSelect">
+                {{#each sizeChoice.options}}
+                <option value="{{id}}">{{localize label}}</option>
+                {{/each}}
+            </select>
+        </div>
+        {{/if}}
+        {{#if listMode}}
+        <div style="padding: 10px 0 4px 0;">{{localize listMode.copy}}</div>
+        {{#each listMode.options}}
+        <div style="display: flex; align-items: center; gap: 4px;">
+            <input type="radio" name="ListMode" id="listMode-{{id}}" value="{{id}}" style="flex: 0 0 auto;" {{#if @first}}checked{{/if}} {{#if enablesList}}data-enables-list{{/if}}>
+            <label for="listMode-{{id}}">{{localize label}}</label>
+        </div>
+        {{/each}}
+        {{/if}}
         {{#if copy}}
             <div style="padding: 10px 0;">{{localize copy}}</div>
         {{/if}}
+        {{#if objectList.length}}
         <input type="search" name="Filter" placeholder="{{localize 'ep2e.dialog.selectDoseNpc.search'}}" autocomplete="off" style="width: 100%; margin-bottom: 8px;">
         <select name="ItemSelect" size="10" style="width: 100%; height: auto; margin-bottom: 10px;">
             {{#each objectList}}
             <option value="{{id}}">{{label}}</option>
             {{/each}}
         </select>
+        {{/if}}
+        {{#if listQuestion}}
+            <div style="padding: 0 0 10px 0;">{{localize listQuestion}}</div>
+        {{/if}}
 
     {{else if (eq dialogType "selectBody")}}
 

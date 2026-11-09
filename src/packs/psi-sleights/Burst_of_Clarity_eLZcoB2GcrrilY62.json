@@ -5,7 +5,53 @@
     "core": {}
   },
   "img": "systems/eclipsephase/resources/icons/bond.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "Ls6ejjiZIfIFHciG",
+      "name": "Burst of Clarity",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.pools.insight.mod",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!eLZcoB2GcrrilY62.Ls6ejjiZIfIFHciG"
+    }
+  ],
   "system": {
     "additionalSystems": {},
     "description": "You refresh the target’s mind, enabling them to see things in a new light. They receive +1 Insight pool for WIL ÷ 5 minutes. A target may only benefit from one burst of clarity at a time.",

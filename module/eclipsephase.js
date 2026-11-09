@@ -12,20 +12,24 @@ import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
-import  { registerPsiEffectSocket } from "./rolls/psi.js"
-import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
+import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
+import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
-import EPtoken from "./canvas/EPtoken.js";
+import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
-import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
+import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
-import { registerPoolRule } from "./common/pool-rule.js";
+import { registerPoolRule } from "./rolls/pools.js";
 import { registerDrugHooks, registerDoseSocket } from "./common/doses.js";
-import { registerTargetedAttackHooks, registerTargetedAttackSocket } from "./rolls/targeted-attacks.js";
-import { registerExpiryCleanup } from "./common/expiry.js";
-import { postWareSetupCard } from "./common/ware-skills.js";
+import { registerTargetedAttackHooks, registerSuppressiveFire, registerArmedBlasts, applyTrapVisibility } from "./rolls/attacks.js";
+import { registerCardSocket } from "./common/chat-cards.js";
+import { postWareSetupCard } from "./rolls/modifiers.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
+import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
+import { registerAreaSocket } from "./common/targeting.js";
+import { registerConditions } from "./common/conditions.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -64,6 +68,21 @@ async function registerSystemSettings() {
     default: false
   });
 
+  game.settings.register("eclipsephase", "showTraps", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.showTraps.name",
+    hint: "SETTINGS.showTraps.hint",
+    type: String,
+    default: "players",
+    choices: {
+      none: "SETTINGS.showTraps.none",
+      all: "SETTINGS.showTraps.all",
+      players: "SETTINGS.showTraps.players"
+    },
+    onChange: () => applyTrapVisibility()
+  });
+
    // Register initiative rule
    game.settings.register("eclipsephase", "ammoRules", {
     config: true,
@@ -86,15 +105,6 @@ async function registerSystemSettings() {
     hint: 'SETTINGS.hideNPCs.hint',
     type: Boolean,
     default: true
-  });
-
-  game.settings.register("eclipsephase", "effectPanel", {
-    config: true,
-    scope: "world",
-    name: "SETTINGS.effectPanel.name",
-    hint: 'SETTINGS.effectPanel.hint',
-    type: Boolean,
-    default: false
   });
 
   game.settings.register("eclipsephase", "timeFormat", {
@@ -126,6 +136,16 @@ async function registerSystemSettings() {
     hint: 'SETTINGS.timePanelPlayers.hint',
     type: Boolean,
     default: false
+  });
+
+  game.settings.register("eclipsephase", "visionEffects", {
+    config: true,
+    scope: "client",
+    name: "SETTINGS.visionEffects.name",
+    hint: 'SETTINGS.visionEffects.hint',
+    type: Boolean,
+    default: true,
+    onChange: () => refreshSharedSight()
   });
 
   game.settings.register("eclipsephase", "editAll", {
@@ -186,6 +206,11 @@ Hooks.once('init', async function() {
     decimals: 0
   };
 
+  // Initiative is rolled with its own roll class, whose card shows the system's dice tray.
+  const InitiativeRoll = initiativeRollClass();
+  CONFIG.Dice.rolls.push(InitiativeRoll);
+  CONFIG.Combatant.documentClass = combatantClass(InitiativeRoll);
+
   // An action turn is roughly three seconds (Core), so a combat round advances the world clock by
   // that much - which is what lets a duration counted in turns expire during a fight.
   CONFIG.time.roundTime = 3;
@@ -195,11 +220,35 @@ Hooks.once('init', async function() {
   CONFIG.eclipsephase = eclipsephase;
   registerCoreStrainFamilies();
   registerPoolRule();
-  registerExpiryCleanup();
+  effectsPrep.registerExpiryCleanup();
   registerTargetedAttackHooks();
   registerDrugHooks();
+  registerConditions();
+  registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
+  registerWeaponAttacks();
+  registerSleightAttacks();
+  registerSuppressiveFire();
+  registerArmedBlasts();
+  registerPsiTouch();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
+  const VisionMode = foundry.canvas.perception?.VisionMode;
+  if (VisionMode) {
+    CONFIG.Canvas.visionModes[TACNET_VISION] = new VisionMode({
+      id: TACNET_VISION,
+      label: "ep2e.targeting.tacnetVision",
+      tokenConfig: false,
+      vision: { background: { shader: tacnetVisionShader() }, darkness: { adaptive: false }, defaults: { attenuation: 0, contrast: 0, saturation: 0, brightness: 0 }, preferred: false }
+    });
+    // The same sight without picture effects, for users who turned them off.
+    CONFIG.Canvas.visionModes[PLAIN_TACNET_VISION] = new VisionMode({
+      id: PLAIN_TACNET_VISION,
+      label: "ep2e.targeting.tacnetVision",
+      tokenConfig: false,
+      vision: { darkness: { adaptive: false }, defaults: { attenuation: 0, contrast: 0, saturation: 0, brightness: 0 }, preferred: false }
+    });
+  }
+  registerTacnetVision();
   CONFIG.Token.rulerClass = EPtokenRuler;
 
   // Register sheet application classes
@@ -207,6 +256,8 @@ Hooks.once('init', async function() {
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
+  Handlebars.registerHelper('percentile', value => Number.isFinite(value) ? Math.clamp(value, 0, 100) : value);
+
   Handlebars.registerHelper('concat', function() {
 
     var outStr = '';
@@ -247,12 +298,22 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
+    "systems/eclipsephase/templates/chat/partials/card-header.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
+    "systems/eclipsephase/templates/item/partials/weapon-tabs.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-titlebar.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-tabs.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-description.hbs",
+    "systems/eclipsephase/templates/item/partials/sheet-effects.hbs",
+    "systems/eclipsephase/templates/item/partials/field-dice.hbs",
+    "systems/eclipsephase/templates/item/partials/field-cost.hbs",
+    "systems/eclipsephase/templates/item/partials/induced-changes.hbs",
+    "systems/eclipsephase/templates/item/partials/aspect-mechanics.hbs",
+    "systems/eclipsephase/templates/item/partials/weapon-choice-pills.hbs",
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
-    "systems/eclipsephase/templates/item/partials/item-traits.hbs",
+    "systems/eclipsephase/templates/item/partials/munition-payload.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
     "systems/eclipsephase/templates/item/partials/movement-grid.hbs",
-    "systems/eclipsephase/templates/item/partials/aspect-damage-fields.hbs",
     "systems/eclipsephase/templates/apps/time-panel.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);
@@ -311,6 +372,13 @@ function registerCoreRollSources() {
     skillRoll: actorSystem => ({
       rollvalue: actorSystem.skillsVig?.melee?.roll,
       specname: actorSystem.skillsVig?.melee?.specname,
+      poolType: "Vigor"
+    })
+  });
+  registerRollSource("grenade", {
+    skillRoll: actorSystem => ({
+      rollvalue: actorSystem.skillsVig?.athletics?.roll,
+      specname: actorSystem.skillsVig?.athletics?.specname,
       poolType: "Vigor"
     })
   });
@@ -401,6 +469,8 @@ Hooks.once("ready", async function() {
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
+  const before29 = gameVersion !== "newInstall" && foundry.utils.isNewerVersion("2.9", gameVersion);
+  const beforeConditions = gameVersion !== "newInstall" && foundry.utils.isNewerVersion(update.CONDITIONS_MIGRATION, gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -701,6 +771,19 @@ Hooks.once("ready", async function() {
     endMigration = Migration27["endMigration"];
   }
 
+  // Every world below 2.9 runs these again, even if stamped past them: they only fill what is missing.
+  if (before29) {
+    const migration = await update.migrationNotice("2.9");
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+    endMigration = (await update.migrationPre28(startMigration))["endMigration"] || endMigration;
+    endMigration = (await update.migrationPre285(startMigration))["endMigration"] || endMigration;
+    if (startMigration) await update.migrationPre29();
+    if (startMigration) await update.migrationPre29Conditions();
+  }
+  // A world already on 2.9 when the conditions came along picks them up quietly.
+  else if (beforeConditions) await update.migrationPre29Conditions({ silent: true });
+
     if(endMigration){
       await migrationEnd(endMigration)
   }
@@ -819,7 +902,9 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
   registerPsiEffectSocket();
   registerDoseSocket();
-  registerTargetedAttackSocket();
+  registerCardSocket();
+  registerWeaponAttackSocket();
+  registerAreaSocket();
 });
 
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll
@@ -874,6 +959,11 @@ Hooks.once("ready", async () => {
   await game.user.unsetFlag("eclipsephase", "pendingWareSetup");
 });
 
+// An initiative card names the combatant in its header, so it needs no line of its own saying who rolls.
+Hooks.on("preCreateChatMessage", message => {
+  if (message.getFlag("core", "initiativeRoll")) message.updateSource({ flavor: "" });
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);
@@ -881,6 +971,7 @@ Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.ownerVision(html, data);
   EPchat.playerVision(html, data);
   EPchat.doseHarmVision(message, html);
+  EPchat.drawFailButtons(message, html);
 });
 
 //Renders the ChatLog according to given visibility options
@@ -918,8 +1009,9 @@ Hooks.on('renderSceneControls', (app, html) => {
 });
 
 // Everything that changes what the panel shows: the clock itself, effects coming and going, and
-// the scene in view or its tokens changing, since a GM's list covers the unlinked tokens on it.
-for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected", "canvasReady", "createToken", "deleteToken"]) {
+// the scene in view or its tokens changing, since a GM's list covers the unlinked tokens on it, and
+// its clouds coming, going or counting down.
+for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected", "canvasReady", "createToken", "deleteToken", "createRegion", "updateRegion", "deleteRegion", "updateCombat"]) {
   Hooks.on(hook, () => EPtimePanel.refresh());
 }
 

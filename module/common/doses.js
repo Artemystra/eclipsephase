@@ -1,15 +1,23 @@
 import { drugVector, doseOnset, dosesRemaining, isAmmoPack, consumeDose, parseAddictionMod } from "./drugs.js";
 import { durationRunOut, isTimedSpan, SECONDS_PER } from "./time.js";
-import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
-import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, pickTokensOnCanvas, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
+import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
 import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
-import { settleOnRoll, postCheckCard, markCardRolled, rollAptitudeCheck, modifiersOnRoll } from "../rolls/check-cards.js";
+import { settleOnRoll, postCheckCard, requestCardCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
-import { getBodyBindingInfo } from "./morp-functions.js";
+import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER, getBodyBindingInfo, sealedAgainst } from "./morp-functions.js";
 import { neededTierTrait, ownsOtherFamily, findTrait } from "./sleight-prerequisite.js";
-import { chemicalDoses } from "./weapon-functions.js";
-import { registerAttackEffect } from "../rolls/targeted-attacks.js";
+import { chemicalDoses, attackTargetCount } from "./weapon-functions.js";
+import { registerCard, renderCard, updateCard } from "./chat-cards.js";
+import { registerAttackEffect } from "../rolls/attacks.js";
+import { conditionEntry } from "./conditions.js";
+import { pickTokensOnCanvas } from "./targeting.js";
+import { damageFormula } from "../rolls/damage-formula.js";
+import { applyDamage, damageLine, appendDamageLines } from "../rolls/damage.js";
+
+for (const key of ["doseCheck", "doseFilter", "addictionCheck"]) registerCheckCard(key);
+registerCard("doseOffer", { render: renderOfferCard, mutations: { claim: (state, { usedBy, addiction }) => ({ ...state, usedBy, addiction }) } });
+registerCard("wearOff", { render: renderWearOffCard });
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
 // biological body; an electronic drug is software and needs an infomorph or a cyberbrain.
@@ -156,7 +164,6 @@ function doseRows(system, outcome) {
 async function postDoseCard(actor, item, outcome, renewed) {
   await postCard(actor, {
     icon: "fa-syringe",
-    color: "--negative",
     headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
     rows: doseRows(item.system, outcome),
     addiction: addictionControls(actor, { name: item.name, addiction: drugAddiction(item.system) })
@@ -190,6 +197,16 @@ export async function postWearOffCard(actor, effect) {
 }
 
 /**
+ * Draws a wear-off card: its stress button until the stress is rolled.
+ * @param {Object} state - The card's wearOff flag
+ * @returns {Promise<String>} The card's HTML
+ */
+function renderWearOffCard(state) {
+  const button = state.rolled ? null : { action: "rollWearOff", label: game.i18n.localize("ep2e.chat.dose.rollWearOff") };
+  return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...state.card, button, actorUuid: state.actorUuid });
+}
+
+/**
  * Rolls the harm a drug does - stress or damage - through the system's roll output, so the 3D dice
  * play before the result shows, and applies it through the ordinary damage path, trauma and wounds
  * included.
@@ -200,8 +217,9 @@ export async function postWearOffCard(actor, effect) {
 export async function rollDrugHarm(actor, { formula, target, copy }) {
   const roll = await new Roll(formula).evaluate();
   const output = { type: "defaultDamage", copy, rollTitle: "ep2e.roll.announce.total" };
-  await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
-  await actor.modifyTokenAttribute(target === "physical" ? "health.physical" : "health.mental", roll.total, true, true);
+  const posted = await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
+  const result = await applyDamage(actor, roll.total, { target });
+  await appendDamageLines(posted, [damageLine(actor, result, target)]);
   return roll.total;
 }
 
@@ -217,12 +235,8 @@ export async function rollWearOffStress(message) {
   const actor = await fromUuid(wearOff.actorUuid);
   if (!actor) return null;
 
-  await message.update({ "flags.eclipsephase.wearOff.rolled": true });
-  const taken = await rollDrugHarm(actor, { formula: wearOff.sv, target: "mental", copy: game.i18n.format("ep2e.chat.dose.wearOffFlavor", { name: wearOff.name }) });
-
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, wearOff.card);
-  await message.update({ content });
-  return taken;
+  await updateCard(message, "wearOff", "merge", { rolled: true });
+  return rollDrugHarm(actor, { formula: wearOff.sv, target: "mental", copy: game.i18n.format("ep2e.chat.dose.wearOffFlavor", { name: wearOff.name }) });
 }
 
 /**
@@ -346,7 +360,7 @@ export async function defendDose(actor, data, { willing = true, ask = true } = {
  */
 function postNullifiedCard(actor, name, defense) {
   const key = defense.immune ? "ep2e.chat.dose.immune" : "ep2e.chat.dose.nullified";
-  return postCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format(key, { name, ware: wareNames(defense) }) });
+  return postCard(actor, { icon: "fa-shield-virus", headline: game.i18n.format(key, { name, ware: wareNames(defense) }) });
 }
 
 /**
@@ -446,17 +460,33 @@ export async function offerDose(actor, item) {
   const drugType = item.system.drugType ?? "";
   const card = {
     icon: "fa-syringe",
-    color: "--negative",
     headline: game.i18n.format("ep2e.chat.dose.offered", { name: item.name }),
     rows: doseRows(item.system, null)
   };
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...card, offer: true, actorUuid: actor.uuid });
+  const state = { data, drugType, name: item.name, card, usedBy: null, addiction: null, giverUuid: actor.uuid, itemId: item.id };
   const message = await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
-    content,
-    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null, giverUuid: actor.uuid, itemId: item.id } } }
+    content: await renderCard("doseOffer", state),
+    flags: { eclipsephase: { doseOffer: state } }
   });
   return { offered: true, message };
+}
+
+/**
+ * Draws a dose offer card: its buttons while nobody has taken the dose, then who took it and, for
+ * an addictive drug, the GM's controls for that person.
+ * @param {Object} state - The card's doseOffer flag
+ * @returns {Promise<String>} The card's HTML
+ */
+function renderOfferCard(state) {
+  const taken = !!state.usedBy;
+  return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, {
+    ...state.card,
+    offer: !taken,
+    actorUuid: state.giverUuid,
+    footnote: taken ? game.i18n.format("ep2e.chat.dose.usedBy", { name: state.usedBy }) : "",
+    addiction: taken ? state.addiction : null
+  });
 }
 
 /**
@@ -484,10 +514,8 @@ export async function claimDose(message, actor) {
   if (!spent.taken) return { claimed: false, reasonKey: "ep2e.actorSheet.warnings.offerPackEmpty" };
 
   const defended = await defendDose(actor, offer.data, { willing: true, ask: false });
-  const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
-  const addiction = addictionControls(actor, offer.data?.flags?.eclipsephase?.dose);
-  const content = await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, { ...offer.card, footnote, offer: false, addiction });
-  await message.update({ content, "flags.eclipsephase.doseOffer.usedBy": actor.name });
+  const addiction = addictionControls(actor, offer.data?.flags?.eclipsephase?.dose) ?? null;
+  await updateCard(message, "doseOffer", "claim", { usedBy: actor.name, addiction });
   await letDoseIn(actor, { ...defended, name: offer.name });
   return { claimed: true, reasonKey: null };
 }
@@ -565,7 +593,7 @@ export async function forceDose(actor, item, systemOptions = {}) {
         area: false,
         labelKey: "ep2e.chat.attack.applyDose",
         weaponName: item.name,
-        effectLabel: game.i18n.format("ep2e.chat.defence.doseLabel", { name: item.name }),
+        effectInfo: { label: game.i18n.localize("ep2e.chat.defence.doseInfo"), text: item.name, uuid: item.uuid },
         cursor: DOSE_CURSOR,
         payload: { ...chemicalPayload(item), giverUuid: actor.uuid, itemId: item.id, spend: true }
       }
@@ -613,35 +641,61 @@ async function undoAttackDose(actor, defenceId) {
 }
 
 /**
- * Carries out what an attack's dose does to one target after their defence: the full dose on a
- * hit, half of it when they only partly dodged, nothing when they got away. The dose meets the
- * target's body and their defensive ware as any unwilling dose does.
+ * Carries out what an attack's dose does to one target after their defence: a dose takes hold whole
+ * or not at all (Core p.209: each target is hit with one dose) - a target struck gets it, also one
+ * who dodged inside an area and still took half its damage; one who got away gets none. The
+ * dose meets the target's body and their defensive ware as any unwilling dose does.
  * @param {Object} attack - The attack, with its payload
  * @param {Actor} target - The target
  * @param {String} outcome - "hit", "half" or "none"
  * @param {Object} [options] - byPool: a pool spend changed the defence, so the earlier dose goes;
- *   defenceId: the defence it comes through
+ *   defenceId: the defence it comes through; vector: how it reaches the target, the drug's own by
+ *   default
  * @returns {Promise<Object|null>} What letting the dose in reported, or null when none went in
  */
-export async function doseFromAttack(attack, target, outcome, { byPool = false, defenceId = null } = {}) {
+export async function doseFromAttack(attack, target, outcome, { byPool = false, defenceId = null, vector = null } = {}) {
   if (byPool) await undoAttackDose(target, defenceId);
   const payload = attack.payload;
   if (outcome === "none" || !payload?.data) return null;
-  const substrate = doseSubstrate(target, { system: { drugType: payload.drugType } });
-  if (!substrate.allowed) {
-    await postCard(target, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
+  const reaches = vector ?? payload.data.flags?.eclipsephase?.dose?.vector ?? null;
+  if (sealedAgainst(target, reaches)) {
+    const how = game.i18n.localize(`ep2e.item.drug.table.applicationVectors.${reaches}Label`);
+    await postCard(target, { icon: "fa-mask-ventilator", headline: game.i18n.format("ep2e.chat.dose.sealedOff", { name: target.name, drug: payload.name, vector: how }) });
     return null;
   }
-  let data = foundry.utils.deepClone(payload.data);
+  const substrate = doseSubstrate(target, { system: { drugType: payload.drugType } });
+  if (!substrate.allowed) {
+    await postCard(target, { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.unaffected", { name: target.name, drug: payload.name }) });
+    return null;
+  }
+  const data = foundry.utils.deepClone(payload.data);
   data.flags.eclipsephase.dose.defenceId = defenceId;
-  if (outcome === "half") data = defendedDoseData(data, { halve: true, by: [], checkBonus: false });
   const defended = await defendDose(target, data, { willing: false, ask: false });
   return letDoseIn(target, { ...defended, name: payload.name });
 }
 
 /**
+ * Gives a target the dose a munition's payload carries, in full - a dose takes hold or it does not:
+ * a target struck gets it, also one who dodged inside an area; one who got away does not. The substance is read from
+ * where the payload names it. A pool spend that turns the defence around takes it back.
+ * @param {Object} attack - The attack, with dose ({ uuid, name })
+ * @param {Actor} target - The target
+ * @param {String} outcome - "hit", "half" or "none"
+ * @param {Object} [options] - byPool and defenceId, as for doseFromAttack
+ * @returns {Promise<*>} What letting the dose in reported, or null when none was given
+ */
+export async function doseFromPayload(attack, target, outcome, { byPool = false, defenceId = null } = {}) {
+  if (byPool) await undoAttackDose(target, defenceId);
+  if (outcome === "none" || !attack?.dose?.uuid) return null;
+  const substance = await fromUuid(attack.dose.uuid);
+  if (substance?.type !== "drug") return null;
+  return doseFromAttack({ payload: chemicalPayload(substance) }, target, outcome, { defenceId, vector: attack.dose.vector ?? null });
+}
+
+/**
  * Lets attacks carry doses: a weapon that fires chemicals keeps a copy of the drug it is loaded
- * with, its hits and a forced dose's hit deliver it to the targets the attacker picks.
+ * with, its hits and a forced dose's hit deliver it to the targets the attacker picks; a munition's
+ * payload is given through the "payload" effect, which a damaging attack calls on.
  * @returns {void}
  */
 export function registerChemicalAttacks() {
@@ -654,8 +708,9 @@ export function registerChemicalAttacks() {
       const doses = chemicalDoses(context.weapon?.weaponTraits);
       if (!doses) return null;
       const payload = weaponPayload(context.actor, context.weapon?.weapon);
-      const effectLabel = payload ? game.i18n.format("ep2e.chat.defence.doseLabel", { name: payload.name }) : "";
-      return { targets: doses, area: true, payload, labelKey: "ep2e.chat.attack.applyDose", effectLabel };
+      const effectInfo = payload ? { label: game.i18n.localize("ep2e.chat.defence.payloadLabel"), text: payload.name, uuid: payload.data?.origin ?? "" } : null;
+      const targets = attackTargetCount(context.weapon?.weapon, context.options ?? {});
+      return { targets, area: false, within: targets > 1 ? 1 : null, payload, labelKey: "ep2e.chat.attack.applyDose", ...(effectInfo ? { effectInfo } : {}) };
     },
     ready(attack) {
       if (attack.payload?.data) return true;
@@ -672,6 +727,7 @@ export function registerChemicalAttacks() {
     },
     resolve: doseFromAttack
   });
+  registerAttackEffect("payload", { resolve: doseFromPayload });
 }
 
 /**
@@ -686,10 +742,7 @@ export function registerDoseSocket() {
       const result = await claimDose(card(payload), await fromUuid(payload.actorUuid));
       if (result.reasonKey) game.socket.emit(SYSTEM_SOCKET, { action: "claimDoseRefused", userId: payload.userId, reasonKey: result.reasonKey });
     },
-    markDoseCheckRolled: payload => markCheckCardRolled(card(payload)),
     rollWearOff: payload => rollWearOffStress(card(payload)),
-    markAddictionRolled: payload => markAddictionCardRolled(card(payload)),
-    markFilterRolled: payload => markFilterCardRolled(card(payload)),
     rollDoseHarm: payload => rollDoseHarm(card(payload))
   });
   registerSocketActions({
@@ -778,10 +831,10 @@ export async function chooseDoseTarget(messageId, mode, pickers = {}) {
 
 const CONDITION_KEY = "incapacitated";
 
-// The conditions a failed check can leave, each shown with a core status icon on the token.
+// The conditions a failed check can leave, each shown on the token with its condition's icon.
 const CONDITIONS = {
-  incapacitated: { status: "paralysis", img: "icons/svg/paralysis.svg", nameKey: "ep2e.chat.dose.incapacitatedEffect", outcomeKey: "ep2e.chat.dose.outcomeIncapacitated" },
-  immobilized: { status: "restrain", img: "icons/svg/net.svg", nameKey: "ep2e.chat.dose.immobilizedEffect", outcomeKey: "ep2e.chat.dose.outcomeImmobilized" }
+  incapacitated: { status: "incapacitated", nameKey: "ep2e.chat.dose.incapacitatedEffect", outcomeKey: "ep2e.chat.dose.outcomeIncapacitated" },
+  immobilized: { status: "immobilized", nameKey: "ep2e.chat.dose.immobilizedEffect", outcomeKey: "ep2e.chat.dose.outcomeImmobilized" }
 };
 
 /**
@@ -829,20 +882,10 @@ export async function postUseCheckCard(actor, effect) {
   if (!needsUseCheck(dose?.useCheck)) return null;
   const label = checkLabel(dose.useCheck);
   return postCheckCard(actor, "doseCheck", {
-    card: { icon: "fa-syringe", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.checkNeeded", { name: dose.name, check: label }) },
+    card: { icon: "fa-syringe", headline: game.i18n.format("ep2e.chat.dose.checkNeeded", { name: dose.name, check: label }) },
     button: { action: "rollDoseCheck", label: game.i18n.format("ep2e.chat.dose.rollCheck", { check: label }) },
     payload: { effectId: effect.id }
   });
-}
-
-/**
- * Turns a check card into a record once its check is rolled: the button gives way to a note.
- * Done where the card may be changed; anyone else asks the active GM.
- * @param {ChatMessage} message - The check card
- * @returns {Promise<void>} Resolves once marked or asked
- */
-export function markCheckCardRolled(message) {
-  return markCardRolled(message, "doseCheck", "markDoseCheckRolled");
 }
 
 /**
@@ -853,20 +896,18 @@ export function markCheckCardRolled(message) {
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
  */
-export async function requestUseCheck(messageId, systemOptions = {}) {
-  const request = game.messages.get(messageId)?.getFlag?.("eclipsephase", "doseCheck");
-  const actor = request ? await fromUuid(request.actorUuid) : null;
-  const effect = Array.from(actor?.effects ?? []).find(entry => entry.id === request?.effectId);
-  const dose = effect?.getFlag?.("eclipsephase", "dose");
-  if (!dose) return null;
-  if (dose.checkOutcome) {
-    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseCheckRolled"));
-    return null;
-  }
-
-  await markCheckCardRolled(game.messages.get(messageId));
-  const check = { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck, dose), filterBonus: dose.defense?.checkBonus === true };
-  return rollAptitudeCheck(actor, dose.useCheck.aptitude, { doseCheck: check }, systemOptions);
+export function requestUseCheck(messageId, systemOptions = {}) {
+  return requestCardCheck(messageId, "doseCheck", (request, actor) => {
+    const effect = Array.from(actor.effects ?? []).find(entry => entry.id === request.effectId);
+    const dose = effect?.getFlag?.("eclipsephase", "dose");
+    if (!dose) return null;
+    if (dose.checkOutcome) {
+      ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.checkRolled"));
+      return null;
+    }
+    const check = { actorUuid: actor.uuid, effectId: effect.id, name: dose.name, modifier: Number(dose.useCheck.modifier) || 0, ...harmOf(dose.useCheck, dose), filterBonus: dose.defense?.checkBonus === true };
+    return { aptitude: dose.useCheck.aptitude, check };
+  }, systemOptions);
 }
 
 /**
@@ -881,8 +922,8 @@ async function checkedDose(check) {
 }
 
 /**
- * The condition a dose leaves: an effect showing its status on the token - Paralyzed for
- * incapacitated, Restrained for immobilized - running for the given span or, without one, for as
+ * The condition a dose leaves: an effect showing its condition on the token - Incapacitated or
+ * Immobilized - running for the given span or, without one, for as
  * long as the dose does. Removed together with the dose. Its icon always shows: Foundry would hide
  * it on a condition without a span of its own.
  * @param {String} drugName - The drug's name, for the condition's own name
@@ -895,7 +936,7 @@ export function conditionData(drugName, effect, key, span) {
   const condition = CONDITIONS[key] ?? CONDITIONS.incapacitated;
   return timedEffectData({
     name: game.i18n.format(condition.nameKey, { name: drugName }),
-    img: condition.img,
+    img: conditionEntry(condition.status).img,
     statuses: [condition.status],
     showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS,
     span,
@@ -977,7 +1018,7 @@ export async function settleUseCheck(check, passed) {
  * @returns {Promise<ChatMessage>} The card
  */
 function postOutcomeCard(actor, key, name) {
-  return postCard(actor, { icon: "fa-syringe", color: "--negative", headline: game.i18n.format(key, { name }) });
+  return postCard(actor, { icon: "fa-syringe", headline: game.i18n.format(key, { name }) });
 }
 
 /**
@@ -1215,7 +1256,7 @@ export function defendedDoseData(data, defense) {
  * @returns {String} The formula, halved when the dose is
  */
 export function defendedFormula(formula, dose) {
-  return dose?.defense?.halved && formula ? `ceil((${formula}) / 2)` : formula;
+  return dose?.defense?.halved && formula ? damageFormula({ base: formula, halved: true }) : formula;
 }
 
 /**
@@ -1241,20 +1282,10 @@ export function postFilterCheckCard(actor, data, defense, wanted = true) {
   const name = data.flags.eclipsephase.dose.name;
   const ware = wareNames({ by: defense?.filterBy ?? [] });
   return postCheckCard(actor, "doseFilter", {
-    card: { icon: "fa-shield-virus", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.filterCheckNeeded", { name, ware }) },
+    card: { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.filterCheckNeeded", { name, ware }) },
     button: { action: "rollFilterCheck", label: game.i18n.format("ep2e.chat.dose.rollFilterCheck", { ware }) },
     payload: { name, ware, data, wanted }
   });
-}
-
-/**
- * Turns a filter card into a record once its check is rolled. Done where the card may be changed;
- * anyone else asks the active GM.
- * @param {ChatMessage} message - The filter card
- * @returns {Promise<void>} Resolves once marked or asked
- */
-export function markFilterCardRolled(message) {
-  return markCardRolled(message, "doseFilter", "markFilterRolled");
 }
 
 /**
@@ -1264,16 +1295,11 @@ export function markFilterCardRolled(message) {
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
  */
-export async function requestFilterCheck(messageId, systemOptions = {}) {
-  const message = game.messages.get(messageId);
-  const request = message?.getFlag?.("eclipsephase", "doseFilter");
-  if (!request || request.rolled) return null;
-  const actor = await fromUuid(request.actorUuid);
-  if (!actor) return null;
-
-  await markFilterCardRolled(message);
-  const filter = { actorUuid: actor.uuid, cardId: messageId, name: request.name, ware: request.ware, data: request.data, wanted: request.wanted };
-  return rollAptitudeCheck(actor, "som", { doseFilter: filter }, systemOptions);
+export function requestFilterCheck(messageId, systemOptions = {}) {
+  return requestCardCheck(messageId, "doseFilter", (request, actor) => ({
+    aptitude: "som",
+    check: { actorUuid: actor.uuid, cardId: messageId, name: request.name, ware: request.ware, data: request.data, wanted: request.wanted }
+  }), systemOptions);
 }
 
 /**
@@ -1316,7 +1342,7 @@ export async function filterOut(filter) {
     await effect.update({ "flags.eclipsephase.dose.filteredOut": true });
     await actor.deleteEmbeddedDocuments("ActiveEffect", [effect.id]);
   }
-  await postCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.filteredOut", { name: filter.name, ware: filter.ware ?? "" }) });
+  await postCard(actor, { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.filteredOut", { name: filter.name, ware: filter.ware ?? "" }) });
   return true;
 }
 
@@ -1353,7 +1379,7 @@ export async function becomeImmune(immunizer) {
   const ware = workingImmunizers(actor)[0];
   if (!ware || immunities(actor).includes(immunizer.name)) return false;
   await ware.setFlag("eclipsephase", "immunities", [...learnedBy(ware), immunizer.name]);
-  await postCard(actor, { icon: "fa-shield-virus", color: "--positive", headline: game.i18n.format("ep2e.chat.dose.becameImmune", { name: immunizer.name }) });
+  await postCard(actor, { icon: "fa-shield-virus", headline: game.i18n.format("ep2e.chat.dose.becameImmune", { name: immunizer.name }) });
   return true;
 }
 
@@ -1501,8 +1527,9 @@ async function dealTickDamage(actor, dose, ticks) {
     rollTitle: "ep2e.roll.announce.total",
     diceArray: perTick.length > 1 ? perTick : null
   };
-  await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
-  for (const tick of perTick) await actor.modifyTokenAttribute("health.physical", tick.total, true, true);
+  const posted = await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actorAudience(actor), false, "rollOutput");
+  const result = await applyDamage(actor, perTick.map(tick => tick.total));
+  await appendDamageLines(posted, [damageLine(actor, result)]);
   return perTick.map(tick => tick.total);
 }
 
@@ -1539,7 +1566,7 @@ async function incapacitateAtDurability(actor, effect, dose, value) {
   const already = Array.from(actor.effects ?? []).some(entry => entry.getFlag?.("eclipsephase", "incapacitatedBy") === effect.id);
   if (already) return false;
   await actor.createEmbeddedDocuments("ActiveEffect", [conditionData(dose.name, effect, "incapacitated", null)]);
-  await postCard(actor, { icon: "fa-syringe", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.outcomeIncapacitated", { name: dose.name }) });
+  await postCard(actor, { icon: "fa-syringe", headline: game.i18n.format("ep2e.chat.dose.outcomeIncapacitated", { name: dose.name }) });
   return true;
 }
 
@@ -1875,7 +1902,6 @@ export async function grantTemporaryItems(actor, effect, random = Math.random) {
   const created = await actor.createEmbeddedDocuments("Item", incoming);
   await postCard(actor, {
     icon: "fa-syringe",
-    color: "--negative",
     headline: game.i18n.format("ep2e.chat.dose.granted", { name: dose.name, items: created.map(item => item.name).join(", ") })
   });
   return created;
@@ -2015,20 +2041,10 @@ export async function demandWillpower(actorUuid, name, addiction = null) {
   const known = knownAddiction(actor, name, addiction);
   if (!actor || !known) return null;
   return postCheckCard(actor, "addictionCheck", {
-    card: { icon: "fa-brain", color: "--negative", headline: game.i18n.format("ep2e.chat.dose.addictionCheckNeeded", { name, modifier: signed(known.modifier) }) },
+    card: { icon: "fa-brain", headline: game.i18n.format("ep2e.chat.dose.addictionCheckNeeded", { name, modifier: signed(known.modifier) }) },
     button: { action: "rollAddictionCheck", label: game.i18n.format("ep2e.chat.dose.rollAddictionCheck", { modifier: signed(known.modifier) }) },
     payload: { name, ...known }
   });
-}
-
-/**
- * Turns an addiction check card into a record once it is rolled. Done where the card may be
- * changed; a player rolling from the GM's card asks the active GM.
- * @param {ChatMessage} message - The card
- * @returns {Promise<void>} Resolves once marked or asked
- */
-export function markAddictionCardRolled(message) {
-  return markCardRolled(message, "addictionCheck", "markAddictionRolled");
 }
 
 /**
@@ -2037,16 +2053,11 @@ export function markAddictionCardRolled(message) {
  * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
  * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
  */
-export async function requestAddictionCheck(messageId, systemOptions = {}) {
-  const message = game.messages.get(messageId);
-  const request = message?.getFlag?.("eclipsephase", "addictionCheck");
-  if (!request || request.rolled) return null;
-  const actor = await fromUuid(request.actorUuid);
-  if (!actor) return null;
-
-  await markAddictionCardRolled(message);
-  const check = { actorUuid: actor.uuid, name: request.name, type: request.type, modifier: request.modifier, checkId: messageId };
-  return rollAptitudeCheck(actor, "wil", { addictionCheck: check }, systemOptions);
+export function requestAddictionCheck(messageId, systemOptions = {}) {
+  return requestCardCheck(messageId, "addictionCheck", (request, actor) => ({
+    aptitude: "wil",
+    check: { actorUuid: actor.uuid, name: request.name, type: request.type, modifier: request.modifier, checkId: messageId }
+  }), systemOptions);
 }
 
 /**
@@ -2141,7 +2152,7 @@ export async function becomeAddicted(check) {
   const created = await actor.createEmbeddedDocuments("Item", incoming);
   const where = incoming.length > 1 ? "Both" : incoming[0].system.ego ? "Ego" : "Body";
   const key = level > 1 ? `ep2e.chat.dose.addictionRaised${where}` : `ep2e.chat.dose.addicted${where}`;
-  await postCard(actor, { icon: "fa-brain", color: "--negative", headline: game.i18n.format(key, { name: check.name, level: "I".repeat(level) }) });
+  await postCard(actor, { icon: "fa-brain", headline: game.i18n.format(key, { name: check.name, level: "I".repeat(level) }) });
   return created;
 }
 

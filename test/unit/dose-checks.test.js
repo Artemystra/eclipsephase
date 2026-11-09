@@ -1,6 +1,6 @@
 import { postUseCheckCard, requestUseCheck, settleUseCheck, registerUseCheckHooks, rollDoseHarm, takeDose, registerDoseHooks } from "../../module/common/doses.js";
 import { drugBlockingPsi, drugPsiPenalties } from "../../module/rolls/modifiers.js";
-import { strainSubstrate } from "../../module/common/body-markers.js";
+import { strainSubstrate } from "../../module/common/morp-functions.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
 import { TASK_RESULT } from "../../module/rolls/dice.js";
 import { makeActor, resetWorld, seedRolls } from "../setup/factories.js";
@@ -142,18 +142,19 @@ describe("the check card", () => {
     await requestUseCheck(checkCard().id, SKIP_DIALOG);
 
     expect(createdMessages).toHaveLength(before);
-    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.doseCheckRolled");
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.checkRolled");
   });
 });
 
 describe("what a failed check costs", () => {
-  test("Twitch: incapacitated for its own ten minutes, shown as Paralyzed", async () => {
+  test("Twitch: incapacitated for its own ten minutes, shown as the Incapacitated condition", async () => {
     const actor = carrying("Twitch", TWITCH);
 
     await takeAndRoll(actor, 95);
 
     const incapacitated = actor.effects.find(effect => effect.getFlag("eclipsephase", "incapacitatedBy"));
-    expect(incapacitated.statuses).toEqual(["paralysis"]);
+    expect(incapacitated.statuses).toEqual(["incapacitated"]);
+    expect(incapacitated.img).toBe("icons/svg/paralysis.svg");
     expect(incapacitated.duration).toMatchObject({ value: 10, units: "minutes" });
     expect(incapacitated.getFlag("eclipsephase", "effectKey")).toEqual("incapacitated");
     await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomeIncapacitated")));
@@ -221,6 +222,18 @@ describe("a check whose failure harms the body", () => {
     expect(actor.system.health.mental.value ?? 0).toEqual(0);
   });
 
+  test("the damage card itself says what was taken, and no second card repeats it", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+
+    seedRolls([95, 7]);
+    await requestUseCheck(checkCard().id, SKIP_DIALOG);
+    await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.damage.appliedPhysical")));
+
+    expect(createdMessages.filter(message => message.content?.includes("ep2e.chat.damage.appliedPhysical"))).toHaveLength(1);
+    expect(createdMessages.some(message => message.flavor?.includes("ep2e.roll.announce.combat.damage"))).toBe(false);
+  });
+
   test("with pool left, nothing is rolled until the card's button is pressed", async () => {
     const actor = carrying("Caustic", CAUSTIC);
     await takeDose(actor, actor.items.get("drug1"));
@@ -268,13 +281,13 @@ describe("a check whose failure harms the body", () => {
 });
 
 describe("BTX2", () => {
-  test("a failed SOM Check leaves the target immobilized for an hour, shown as Restrained", async () => {
+  test("a failed SOM Check leaves the target immobilized for an hour, shown as the Immobilized condition", async () => {
     const actor = carrying("BTX2", { aptitude: "som", failure: "immobilized", duration: { value: 1, units: "hours" } });
 
     await takeAndRoll(actor, 95);
 
     const immobilized = actor.effects.find(effect => effect.getFlag("eclipsephase", "incapacitatedBy"));
-    expect(immobilized.statuses).toEqual(["restrain"]);
+    expect(immobilized.statuses).toEqual(["immobilized"]);
     expect(immobilized.duration).toMatchObject({ value: 1, units: "hours" });
     await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomeImmobilized")));
     expect(createdMessages.some(message => message.content?.includes("ep2e.chat.dose.outcomeImmobilized"))).toBe(true);

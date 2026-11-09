@@ -10,15 +10,13 @@ import {
   selectBody,
   moreInfo,
   systemMessage,
+  postCard,
   addWindowControls,
   addDragSupport,
   addMinimizeSupport,
   registerCommonHandlers,
   itemTypeFilterPills,
   selectFromSearchableList,
-  tokenAt,
-  pickTokensOnCanvas,
-  drawTargetMarker,
   selectedTokenActor,
   pickActorFromList,
   readRollContext,
@@ -36,21 +34,36 @@ import {
   chainHasWareMarker,
   bodyNervousSystem,
   sleevedNervousSystem,
-  CYBERBRAIN_MARKER
-} from "../common/body-markers.js";
-import { getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame } from "../common/morp-functions.js";
+  CYBERBRAIN_MARKER,
+  targetKinds,
+  getBodyBindingInfo,
+  resolveBodyForItem,
+  applyStandardEnhancements,
+  applyFrame
+} from "../common/morp-functions.js";
 import {
   registerRollSource,
   registerPoolOption,
   registerSlot,
   registerRezSpendOptions,
-  registerTaskResultText
+  registerTaskResultText,
+  registerPayloadSource,
+  listPayloadSources,
+  registerRollBlock,
+  rollBlockReason,
+  registerFailOption,
+  listFailOptions,
+  registerLandingRule,
+  listLandingRules
 } from "./registry.js";
+import { sleightPotency } from "../rolls/psi.js";
 import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 import { takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData, chemicalPayload } from "../common/doses.js";
-import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome } from "../rolls/targeted-attacks.js";
-import { chemicalDoses } from "../common/weapon-functions.js";
-import { runningDoses, drugBlockingPsi, drugPsiPenalties } from "../rolls/modifiers.js";
+import { registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence, defenceOutcome, followUpVisibility, yieldDefence, unsuitableTarget, blastTargets, detonateArmed, defuseArmed, acceptBlindPerceive } from "../rolls/attacks.js";
+import { tokenAt, pickTokensOnCanvas, attackerToken, drawTargetMarker, placeArea, areaPolygon, tokensInArea, scatterPoint, wallBetween, createAreaRegion, createShadowedArea, areaSquares, squareShapes, clearAreas } from "../common/targeting.js";
+import { chemicalDoses, chooseMunition, needsMunitionChoice, munitionLabel } from "../common/weapon-functions.js";
+import { runningDoses, drugBlockingPsi, drugPsiPenalties, rollScope } from "../rolls/modifiers.js";
+import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -67,7 +80,8 @@ export const rolls = {
   gmList,
   inheritChatVisibility,
   damageValueCalc,
-  applySuccessTierBonus
+  applySuccessTierBonus,
+  rollScope
 };
 
 /**
@@ -81,12 +95,16 @@ export const actors = {
   bodyNervousSystem,
   sleevedNervousSystem,
   CYBERBRAIN_MARKER,
+  targetKinds,
   getBodyBindingInfo,
   resolveBodyForItem,
   applyStandardEnhancements,
   applyFrame,
   transferItemBetweenActors,
   mergeOrCreateItem,
+  chooseMunition,
+  needsMunitionChoice,
+  munitionLabel,
   requestGMItemTransfer,
   tempEffectCreation,
   tempEffectDeletion
@@ -97,6 +115,7 @@ export const actors = {
  * @since 2.5
  */
 export const ui = {
+  postCard,
   confirmation,
   selectBody,
   moreInfo,
@@ -110,17 +129,33 @@ export const ui = {
   selectFromSearchableList,
   tokenAt,
   pickTokensOnCanvas,
+  attackerToken,
+  placeArea,
+  areaPolygon,
+  tokensInArea,
+  scatterPoint,
+  wallBetween,
+  createAreaRegion,
+  createShadowedArea,
+  blastTargets,
+  areaSquares,
+  squareShapes,
+  clearAreas,
   drawTargetMarker,
   selectedTokenActor,
   pickActorFromList
 };
 
 /**
- * Reads the roll context a chat card carries in its message flags.
+ * Reads the roll context a chat card carries in its message flags, and changes cards that keep
+ * their own state.
  * @since 2.5
  */
 export const chat = {
-  readRollContext
+  readRollContext,
+  registerCard,
+  renderCard,
+  updateCard
 };
 
 /**
@@ -143,6 +178,14 @@ export const migration = {
  */
 export const registry = {
   registerRollSource,
+  registerFailOption,
+  listFailOptions,
+  registerLandingRule,
+  listLandingRules,
+  registerRollBlock,
+  rollBlockReason,
+  registerPayloadSource,
+  listPayloadSources,
   registerPoolOption,
   registerSlot,
   registerRezSpendOptions,
@@ -175,7 +218,8 @@ export const drugs = {
 };
 
 /**
- * Attacks whose targets are picked after the hit, each defending from a card of their own.
+ * Attacks on targets: picked before the roll or after the hit, each target defending from a card
+ * of its own (2.7); follow-up visibility, not resisting and unsuitable targets (2.8).
  * @since 2.7
  */
 export const attacks = {
@@ -184,7 +228,14 @@ export const attacks = {
   postDefenceCards,
   rollDefence,
   defenceOutcome,
-  chemicalDoses
+  chemicalDoses,
+  followUpVisibility,
+  yieldDefence,
+  unsuitableTarget,
+  sleightPotency,
+  detonateArmed,
+  defuseArmed,
+  acceptBlindPerceive
 };
 
 /**

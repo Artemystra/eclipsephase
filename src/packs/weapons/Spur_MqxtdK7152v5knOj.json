@@ -33,6 +33,7 @@
       "d6": 2,
       "bonus": 3,
       "dv": null,
+      "armorused": "kinetic",
       "traits": {
         "armorPiercing": {
           "name": "ep2e.item.weapon.table.trait.armorPiercing",
@@ -79,6 +80,7 @@
       "d6": null,
       "bonus": null,
       "dv": null,
+      "armorused": "kinetic",
       "traits": {
         "armorPiercing": {
           "name": "ep2e.item.weapon.table.trait.armorPiercing",

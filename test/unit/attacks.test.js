@@ -1,0 +1,1058 @@
+import { JSDOM } from "jsdom";
+import { registerTargetedAttackHooks, applyTargetedAttack, defenceGroups, rollDefence, rollRemainingDefences, defenceOutcome, unsuitableTarget } from "../../module/rolls/attacks.js";
+import { targetKinds, CYBERBRAIN_MARKER } from "../../module/common/morp-functions.js";
+import { registerChemicalAttacks, registerDoseHooks, forceDose, chemicalPayload, activeDoseFor, DOSE_CURSOR } from "../../module/common/doses.js";
+import { chemicalDoses, weaponPreparation, forceableDrugs } from "../../module/common/weapon-functions.js";
+import { RollCheck, TASK_RESULT } from "../../module/rolls/dice.js";
+import { usePoolFromChat } from "../../module/rolls/pools.js";
+import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenGap, measuredDistances, tokensInArea, scatterPoint, unitsToPixels, createAreaRegion, clearAreas, coneAngleForWidth, AREA_FLAG, MARK_COLOR, TARGET_SHAPES, aimOrigin, taperedLine, laserPieces, arcShape, waveBulges, waveShape, dashSegments, aimKind, aimFlicker, wirePreRollTargets } from "../../module/common/targeting.js";
+import { ownerVision } from "../../module/rolls/chat.js";
+import { cardFailures, failCard } from "../../module/rolls/cards.js";
+import { registerFailOption, resetRegistry } from "../../module/api/registry.js";
+import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
+
+const { createdMessages } = global.__ep;
+const SKIP_DIALOG = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } };
+const SINGLE_SHOT = { skipDialog: true, presetOptions: { ...SKIP_DIALOG.presetOptions, attackMode: "single", range: "beyond" } };
+const DODGE = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0, rangedFray: true, behindCover: false } };
+const DODGE_IN_COVER = { skipDialog: true, presetOptions: { ...DODGE.presetOptions, behindCover: true } };
+const GRIN = { _id: "grin1", name: "Grin", type: "drug", system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" } } };
+
+/**
+ * Waits until a condition holds, for work a hook starts without awaiting. Gives up after a second.
+ * @param {Function} predicate - Checked after every tick
+ * @returns {Promise<void>} Resolves once the predicate holds
+ */
+async function until(predicate) {
+  for (let tick = 0; tick < 200 && !predicate(); tick++) await new Promise(resolve => setTimeout(resolve, 5));
+}
+
+/**
+ * A character holding the compendium's sprayer, full and loaded with Grin.
+ * @returns {Promise<Actor>} The shooter
+ */
+async function shooter() {
+  const sprayer = { ...loadPackItem("weapons/Sprayer_VtPETs2TTFaeEec7.json"), _id: "gun1" };
+  sprayer.system = { ...sprayer.system, active: true, ammoMin: 15, ammoSelected: { id: "grin1", name: "Grin" } };
+  const actor = makeActor({ type: "character", system: { aptitudes: { ref: { value: 15 } } }, items: [sprayer, GRIN] });
+  await actor.items.get("gun1").update({ "system.ammoSelected.dose": chemicalPayload(actor.items.get("grin1")) });
+  return actor;
+}
+
+/**
+ * Someone to be hit, in a body of the given type.
+ * @param {String} name - Their name
+ * @param {String} [morphType] - "bio" or "synth"
+ * @returns {Actor} The target
+ */
+function target(name, morphType = "bio") {
+  return makeActor({
+    type: "character",
+    name,
+    system: { activeMorph: "morph1", aptitudes: { ref: { value: 15 }, som: { value: 15 } }, skillsVig: { melee: { value: 40 } } },
+    items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: morphType } }]
+  });
+}
+
+/**
+ * Fires the sprayer beyond its range, where its cone reaches three targets, with the d100 showing
+ * the given value.
+ * @param {Actor} actor - The shooter
+ * @param {Number} die - The d100 result
+ * @returns {Promise<Object>} The attack card
+ */
+async function fire(actor, die) {
+  const weapon = await weaponPreparation(actor, "guns", "rangedWeapon", "gun1");
+  seedRolls([die]);
+  await RollCheck({ type: "skill", key: "guns", name: "Guns", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, SINGLE_SHOT, weapon, "rangedWeapon");
+  return createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack).at(-1);
+}
+
+/**
+ * Picks the given actors as the attack's targets, confirming fewer than it delivers to.
+ * @param {Object} card - The attack card
+ * @param {Actor[]} actors - The targets
+ * @param {Boolean} [confirmed] - The answer to fewer targets
+ * @returns {Promise<Actor[]|null>} What applyTargetedAttack returned
+ */
+function aimAt(card, actors, confirmed = true) {
+  return applyTargetedAttack(card, { pick: async () => actors.map(actor => ({ actor })), confirm: async () => confirmed });
+}
+
+/**
+ * The defence cards posted so far.
+ * @returns {Object[]} The cards
+ */
+function defenceCards() {
+  return createdMessages.filter(message => message.getFlag?.("eclipsephase", "attackDefence"));
+}
+
+/**
+ * A target's outcome as their defence card records it.
+ * @param {Actor} actor - The target
+ * @returns {String|null} The outcome
+ */
+function outcomeOf(actor) {
+  for (const card of defenceCards()) {
+    const entry = card.getFlag("eclipsephase", "attackDefence").entries.find(candidate => candidate.uuid === actor.uuid);
+    if (entry) return entry.outcome;
+  }
+  return null;
+}
+
+let realDocument;
+beforeEach(() => {
+  resetWorld();
+  realDocument = global.document;
+  global.document = new JSDOM("").window.document;
+  registerDoseHooks();
+  registerTargetedAttackHooks();
+  registerChemicalAttacks();
+  jest.spyOn(ui.notifications, "warn").mockImplementation(() => {});
+  jest.spyOn(ui.notifications, "info").mockImplementation(() => {});
+});
+
+afterEach(() => {
+  global.document = realDocument;
+  jest.restoreAllMocks();
+});
+
+describe("what a chemical weapon delivers", () => {
+  test("a weapon firing chemicals delivers one dose per round a shot uses, a single dose without Multi Shot, and anything else none", () => {
+    expect(chemicalDoses({ automatedEffects: { specialAmmoDrugs: { value: true } }, additionalEffects: { multiShot: { number: 3 } } })).toBe(3);
+    expect(chemicalDoses({ automatedEffects: { specialAmmoDrugs: { value: true } }, additionalEffects: {} })).toBe(1);
+    expect(chemicalDoses({ automatedEffects: {}, additionalEffects: { multiShot: { number: 3 } } })).toBe(0);
+  });
+
+  test("a sprayer's hit beyond range carries a dose for three targets instead of damage, offers no target button rolled without targets, and uses three rounds", async () => {
+    const actor = await shooter();
+
+    const card = await fire(actor, 5);
+
+    const attack = card.getFlag("eclipsephase", "roll").targetedAttack;
+    expect(attack).toMatchObject({ effect: "dose", targets: 3, area: false, defence: "ranged", delivered: false });
+    expect(attack.payload.name).toBe("Grin");
+    expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
+    expect(card.content).not.toContain("ep2e.chat.buttonLabel.weaponDamage");
+    expect(actor.items.get("gun1").system.ammoMin).toBe(12);
+  });
+
+  test("a miss offers nothing", async () => {
+    const actor = await shooter();
+
+    const card = await fire(actor, 95);
+
+    expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
+  });
+
+  test("a pool spend that turns the miss into a hit keeps the same card, which offers no target button rolled without targets", async () => {
+    const actor = await shooter();
+    await actor.update({ "system.pools.vigor.value": 2 });
+    const card = await fire(actor, 91);
+    const posted = createdMessages.length;
+
+    await usePoolFromChat({ currentTarget: { dataset: { usepool: "pool" }, closest: () => ({ dataset: { messageId: card.id } }) } });
+    const holder = document.createElement("div");
+    holder.innerHTML = card.content;
+    await ownerVision(holder);
+
+    expect(createdMessages).toHaveLength(posted);
+    expect(holder.querySelector("button.targetedAttack")).toBeNull();
+  });
+});
+
+describe("picking the targets", () => {
+  test("the picked targets are named on the attack card and the button is gone", async () => {
+    const card = await fire(await shooter(), 5);
+
+    await aimAt(card, [target("Ana"), target("Bo"), target("Cy")]);
+
+    expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ delivered: true, targetNames: ["Ana", "Bo", "Cy"], roll: { value: 5 } });
+    expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
+    expect(card.content).not.toContain("data-usepool");
+  });
+
+  test("a sprayer's targets are picked several at once, with the default crosshair", async () => {
+    const card = await fire(await shooter(), 5);
+    const pick = jest.fn(async () => [{ actor: target("Ana") }]);
+
+    await applyTargetedAttack(card, { pick, confirm: async () => true });
+
+    expect(pick).toHaveBeenCalledWith({ multi: true, max: 3, within: 1, refuse: null });
+  });
+
+  test("fewer targets than doses go ahead only once confirmed", async () => {
+    const card = await fire(await shooter(), 5);
+
+    expect(await aimAt(card, [target("Ana")], false)).toBeNull();
+    expect(defenceCards()).toHaveLength(0);
+    expect(await aimAt(card, [target("Ana")], true)).toHaveLength(1);
+    expect(defenceCards()).toHaveLength(1);
+  });
+
+  test("an attack applied once cannot be applied again", async () => {
+    const card = await fire(await shooter(), 5);
+    await aimAt(card, [target("Ana"), target("Bo"), target("Cy")]);
+
+    expect(await aimAt(card, [target("Dee")])).toBeNull();
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.attackDelivered");
+  });
+});
+
+describe("what a defence card names", () => {
+  test("a card names every target it is for in a line of its own, one alone as well as several", async () => {
+    await aimAt(await fire(await shooter(), 5), [target("Ana")]);
+    await aimAt(await fire(await shooter(), 5), [target("Bo"), target("Cy")]);
+
+    const [single, several] = defenceCards();
+    expect(single.content).toContain(">Ana<");
+    expect(several.content).toContain(">Bo<");
+    expect(several.content).toContain(">Cy<");
+  });
+});
+
+describe("targets an attack cannot strike", () => {
+  test("a target counts as the kind of body it acts through, and as a cyberbrain when it runs one", () => {
+    const brain = { _id: "brain1", name: "Cyberbrain", type: "ware", system: { boundTo: "morph1" }, effects: [{ name: "Cyberbrain", disabled: true, changes: [{ key: CYBERBRAIN_MARKER, value: "true", type: "override" }] }] };
+    const pod = makeActor({ type: "character", name: "Pod", system: { activeMorph: "morph1" }, items: [{ _id: "morph1", name: "Pod", type: "morph", system: { type: "bio" } }, brain] });
+    const jammer = makeActor({ type: "character", name: "Jammer", system: { activeMorph: "morph1", activeJam: "bot1" }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } }, { _id: "bot1", name: "Drone", type: "vehicle", system: { chassisType: "robot" } }] });
+
+    expect(targetKinds(target("Ana"))).toEqual(["biomorph"]);
+    expect(targetKinds(target("Bo", "synth"))).toEqual(["synthmorph"]);
+    expect(targetKinds(pod)).toEqual(["biomorph", "cyberbrain"]);
+    expect(targetKinds(jammer)).toEqual(["bot"]);
+  });
+
+  test("an attack names the kinds it cannot strike, and a target of such a kind is refused with a notice", () => {
+    expect(unsuitableTarget(target("Bo", "synth"), ["synthmorph", "bot"])).toContain("ep2e.targeting.unsuitable");
+    expect(unsuitableTarget(target("Ana"), ["synthmorph", "bot"])).toBeNull();
+    expect(unsuitableTarget(target("Bo", "synth"))).toBeNull();
+  });
+
+  test("picking an attack's targets refuses the kinds it names", async () => {
+    const card = await fire(await shooter(), 5);
+    await card.update({ "flags.eclipsephase.roll.targetedAttack.unsuitable": ["synthmorph"] });
+    let refuse = null;
+
+    await applyTargetedAttack(card, { pick: async options => { refuse = options.refuse; return null; } });
+
+    expect(refuse({ actor: target("Bo", "synth") })).toContain("ep2e.targeting.unsuitable");
+    expect(refuse({ actor: target("Ana") })).toBeNull();
+  });
+});
+
+describe("who a defence card speaks as", () => {
+  test("a card for one target speaks as that target, a card for several says so", async () => {
+    const ana = target("Ana");
+    const card = await fire(await shooter(), 5);
+    await aimAt(card, [ana]);
+    const second = await fire(await shooter(), 5);
+    await aimAt(second, [target("Bo"), target("Cy")]);
+
+    const [single, several] = defenceCards();
+    expect(single.speaker.actor).toBe(ana.id);
+    expect(several.speaker.alias).toBe("ep2e.chat.defence.severalTargets");
+  });
+});
+
+describe("who defends", () => {
+  test("each owner gets one card for their targets, and targets no player owns go to the GM", () => {
+    const realUsers = game.users;
+    const players = [{ id: "p1", isGM: false }, { id: "p2", isGM: false }];
+    game.users = Object.assign([...players], { activeGM: null, get: () => null });
+    const owned = (...ids) => user => ids.includes(user.id);
+    const ana = Object.assign(target("Ana"), { testUserPermission: owned("p1") });
+    const bo = Object.assign(target("Bo"), { testUserPermission: owned("p2") });
+    const goonA = Object.assign(target("Goon A"), { testUserPermission: owned() });
+    const goonB = Object.assign(target("Goon B"), { testUserPermission: owned() });
+
+    try {
+      const groups = defenceGroups([ana, goonA, bo, goonB]).map(group => ({ users: group.users, names: group.targets.map(actor => actor.name) }));
+      expect(groups).toEqual([
+        { users: ["p1"], names: ["Ana"] },
+        { users: [], names: ["Goon A", "Goon B"] },
+        { users: ["p2"], names: ["Bo"] }
+      ]);
+    } finally {
+      game.users = realUsers;
+    }
+  });
+
+  test("a card holding several targets offers to roll the rest at once", async () => {
+    const card = await fire(await shooter(), 5);
+
+    await aimAt(card, [target("Ana"), target("Bo")]);
+
+    expect(defenceCards()[0].content).toContain("ep2e.chat.defence.rollAll");
+  });
+});
+
+describe("dodging a sprayer's dose", () => {
+  /**
+   * Fires at one target and returns their defence card.
+   * @param {Actor} victim - The target
+   * @returns {Promise<Object>} The defence card
+   */
+  async function sprayed(victim) {
+    const card = await fire(await shooter(), 5);
+    await aimAt(card, [victim]);
+    return defenceCards().at(-1);
+  }
+
+  test.each([
+    ["a failed dodge vs an area attack", { defence: "ranged", area: true }, { passed: false }, "hit"],
+    ["a dodge in the open vs an area attack", { defence: "ranged", area: true }, { passed: true, result: 3, value: 90 }, "half"],
+    ["a dodge behind cover vs an area attack", { defence: "ranged", area: true }, { passed: true, result: 3, value: 90, behindCover: true }, "none"],
+    ["a failed defence", { defence: "melee", roll: { value: 20, result: 3 } }, { passed: false }, "hit"],
+    ["both succeed, the attacker rolled higher", { defence: "melee", roll: { value: 40, result: 4 } }, { passed: true, result: 3, value: 30 }, "hit"],
+    ["both succeed, the defender rolled higher", { defence: "melee", roll: { value: 30, result: 3 } }, { passed: true, result: 4, value: 40 }, "none"],
+    ["both succeed with the same die", { defence: "ranged", roll: { value: 30, result: 3 } }, { passed: true, result: 3, value: 30 }, "none"],
+    ["the attacker's critical beats a higher defence", { defence: "melee", roll: { value: 22, result: 7 } }, { passed: true, result: 4, value: 50 }, "hit"],
+    ["the defender's critical beats a higher attack", { defence: "melee", roll: { value: 50, result: 4 } }, { passed: true, result: 7, value: 33 }, "none"],
+    ["a successful defence against an attack whose roll is unknown", { defence: "melee" }, { passed: true, result: 3, value: 10 }, "none"]
+  ])("%s", (label, attack, defence, outcome) => {
+    expect(defenceOutcome(attack, defence)).toBe(outcome);
+  });
+
+  test("a failed dodge puts the full dose on the target", async () => {
+    const victim = target("Ana");
+    const defence = await sprayed(victim);
+
+    seedRolls([95]);
+    await rollDefence(defence, victim.uuid, "dodge", DODGE);
+    await until(() => activeDoseFor(victim, "Grin"));
+
+    expect(outcomeOf(victim)).toBe("hit");
+    expect(activeDoseFor(victim, "Grin").getFlag("eclipsephase", "dose").defense).toBeUndefined();
+  });
+
+  test("a sprayer's cone is no area: a dodge in the open keeps the dose out entirely", async () => {
+    const victim = target("Ana");
+    const defence = await sprayed(victim);
+
+    seedRolls([5]);
+    await rollDefence(defence, victim.uuid, "dodge", DODGE);
+    await until(() => outcomeOf(victim));
+
+    expect(outcomeOf(victim)).toBe("none");
+    expect(activeDoseFor(victim, "Grin")).toBeNull();
+  });
+
+  test("a dodge behind cover keeps the dose out entirely", async () => {
+    const victim = target("Ana");
+    const defence = await sprayed(victim);
+
+    seedRolls([5]);
+    await rollDefence(defence, victim.uuid, "dodge", DODGE_IN_COVER);
+    await until(() => outcomeOf(victim));
+
+    expect(outcomeOf(victim)).toBe("none");
+    expect(activeDoseFor(victim, "Grin")).toBeNull();
+  });
+
+  test("a pool spend that turns a failed dodge into a successful one takes the dose back, with no wear-off card", async () => {
+    const victim = target("Ana");
+    const defence = await sprayed(victim);
+    seedRolls([95]);
+    await rollDefence(defence, victim.uuid, "dodge", DODGE);
+    await until(() => activeDoseFor(victim, "Grin"));
+    const roll = createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.attackDefence).at(-1);
+
+    Hooks.callAll("eclipsephase.poolResult", { context: { ...roll.flags.eclipsephase.roll, messageId: roll.id }, newResult: TASK_RESULT.SUCCESS });
+    await until(() => outcomeOf(victim) === "none" && !activeDoseFor(victim, "Grin"));
+
+    expect(outcomeOf(victim)).toBe("none");
+    expect(activeDoseFor(victim, "Grin")).toBeNull();
+    expect(createdMessages.some(message => message.content?.includes("ep2e.chat.dose.endedEarly"))).toBe(false);
+  });
+
+  test("a synthmorph is not touched by a biochemical spray", async () => {
+    const victim = target("Rusty", "synth");
+    const defence = await sprayed(victim);
+
+    seedRolls([95]);
+    await rollDefence(defence, victim.uuid, "dodge", DODGE);
+    await until(() => createdMessages.some(message => message.content?.includes("ep2e.chat.dose.unaffected")));
+
+    expect(activeDoseFor(victim, "Grin")).toBeNull();
+  });
+
+  test("rolling the rest at once rolls every remaining dodge together, and the card keeps every outcome", async () => {
+    const card = await fire(await shooter(), 5);
+    const targets = [target("Ana"), target("Bo"), target("Cy")];
+    await aimAt(card, targets);
+    let inFlight = 0;
+    let mostAtOnce = 0;
+    Hooks.on("eclipsephase.preRoll", () => { inFlight++; mostAtOnce = Math.max(mostAtOnce, inFlight); });
+    Hooks.on("eclipsephase.postRoll", () => { inFlight--; });
+
+    seedRolls([95, 95, 95]);
+    await rollRemainingDefences(defenceCards().at(-1));
+    await until(() => targets.every(outcomeOf));
+
+    expect(mostAtOnce).toBe(3);
+    expect(targets.map(outcomeOf)).toEqual(["hit", "hit", "hit"]);
+  });
+});
+
+describe("forcing a drug on someone in melee", () => {
+  /**
+   * A character with Kick at hand.
+   * @param {Object} [drug] - Drug system fields to override
+   * @returns {Actor} The attacker
+   */
+  function attacker(drug = {}) {
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", skillsVig: { melee: { value: 40 } } },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" }, ...drug } }
+      ]
+    });
+  }
+
+  /**
+   * Forces Kick with the d100 showing the given value and returns the attack card.
+   * @param {Actor} actor - The attacker
+   * @param {Number} die - The d100 result
+   * @returns {Promise<Object>} The attack card
+   */
+  async function lunge(actor, die) {
+    seedRolls([die]);
+    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.targetedAttack).at(-1);
+  }
+
+  test("the drugs offered in the weapon selection are those at hand with a dose left that are not ammunition", () => {
+    const actor = makeActor({
+      type: "character",
+      items: [
+        { _id: "d1", name: "Kick", type: "drug", system: { active: true, usagesUsed: 0, usagesMax: 5, quantity: 1 } },
+        { _id: "d2", name: "Stowed", type: "drug", system: { active: false, usagesUsed: 0, usagesMax: 5, quantity: 1 } },
+        { _id: "d3", name: "Spent", type: "drug", system: { active: true, usagesUsed: 5, usagesMax: 5, quantity: 1 } },
+        { _id: "d4", name: "Ammo", type: "drug", system: { active: true, isAmmo: true, inhalation: true, usagesUsed: 0, usagesMax: 5, quantity: 1 } }
+      ]
+    });
+
+    expect(forceableDrugs(actor).map(item => item.name)).toEqual(["Kick"]);
+  });
+
+  test("a hit offers the dose to one target, defended in melee, picked with the dose cards' syringe", async () => {
+    const card = await lunge(attacker(), 5);
+    const pick = jest.fn(async () => null);
+    await applyTargetedAttack(card, { pick });
+
+    expect(pick).toHaveBeenCalledWith({ multi: false, max: 1, within: null, refuse: null, ...DOSE_CURSOR });
+
+    expect(card.getFlag("eclipsephase", "roll").targetedAttack).toMatchObject({ effect: "dose", targets: 1, area: false, defence: "melee" });
+    expect(card.content).not.toContain("ep2e.chat.attack.applyDose");
+  });
+
+  test("the dose leaves the pack once the target is picked, and the defence card offers dodging and parrying", async () => {
+    const actor = attacker();
+    const card = await lunge(actor, 5);
+
+    await aimAt(card, [target("Ana")]);
+
+    expect(actor.items.get("kick1").system.usagesUsed).toBe(1);
+    const defence = defenceCards().at(-1);
+    expect(defence.content).toContain("ep2e.chat.defence.dodge");
+    expect(defence.content).toContain("ep2e.chat.defence.parry");
+    expect(defence.content).not.toContain("ep2e.chat.defence.rollAll");
+  });
+
+  test("a parry that succeeds but rolls lower than the attack still lets the dose in", async () => {
+    const parrier = target("Ana");
+    await aimAt(await lunge(attacker(), 30), [parrier]);
+
+    seedRolls([20]);
+    await rollDefence(defenceCards().at(-1), parrier.uuid, "parry", SKIP_DIALOG);
+    await until(() => outcomeOf(parrier));
+
+    expect(outcomeOf(parrier)).toBe("hit");
+  });
+
+  test("full defence adds +30 to the defence roll", async () => {
+    const parrier = target("Ana");
+    await aimAt(await lunge(attacker(), 5), [parrier]);
+
+    seedRolls([50]);
+    await rollDefence(defenceCards().at(-1), parrier.uuid, "dodge", { skipDialog: true, presetOptions: { ...SKIP_DIALOG.presetOptions, fullDefense: true } });
+    const roll = createdMessages.filter(message => message.getFlag?.("eclipsephase", "roll")?.attackDefence).at(-1);
+
+    expect(roll.getFlag("eclipsephase", "taskCard").data.modifiers).toContainEqual(expect.objectContaining({ text: "ep2e.roll.announce.combat.fullDefense" }));
+  });
+
+  test("a successful parry keeps the dose out, a failed dodge lets it in", async () => {
+    const actor = attacker({ quantity: 2 });
+    const parrier = target("Ana");
+    await aimAt(await lunge(actor, 5), [parrier]);
+    seedRolls([5]);
+    await rollDefence(defenceCards().at(-1), parrier.uuid, "parry", SKIP_DIALOG);
+    await until(() => outcomeOf(parrier));
+
+    const dodger = target("Bo");
+    await aimAt(await lunge(actor, 5), [dodger]);
+    seedRolls([95]);
+    await rollDefence(defenceCards().at(-1), dodger.uuid, "dodge", SKIP_DIALOG);
+    await until(() => activeDoseFor(dodger, "Kick"));
+
+    expect(outcomeOf(parrier)).toBe("none");
+    expect(activeDoseFor(parrier, "Kick")).toBeNull();
+    expect(outcomeOf(dodger)).toBe("hit");
+  });
+
+  test("a pack emptied before the target is picked delivers nothing", async () => {
+    const actor = attacker();
+    const card = await lunge(actor, 5);
+    await actor.deleteEmbeddedDocuments("Item", ["kick1"]);
+
+    expect(await aimAt(card, [target("Ana")])).toBeNull();
+    expect(defenceCards()).toHaveLength(0);
+  });
+
+  test("an ammunition pack or an empty pack is refused before any attack is rolled", async () => {
+    const ammo = attacker({ isAmmo: true });
+    const empty = attacker({ usagesUsed: 5 });
+
+    expect(await forceDose(ammo, ammo.items.get("kick1"), SKIP_DIALOG)).toBeNull();
+    expect(await forceDose(empty, empty.items.get("kick1"), SKIP_DIALOG)).toBeNull();
+    expect(createdMessages).toHaveLength(0);
+  });
+});
+
+describe("marking targets on the canvas", () => {
+  let board;
+  let tokens;
+  let marks;
+
+  /**
+   * A token stand-in covering a square of the canvas.
+   * @param {String} name - Its name
+   * @param {Number} x - Its left edge
+   * @returns {Object} The token
+   */
+  function token(name, x) {
+    return { name, x, y: 0, w: 100, h: 100, actor: { name }, bounds: { x, y: 0, width: 100, height: 100, contains: (px, py) => px >= x && px < x + 100 && py >= 0 && py < 100 } };
+  }
+
+  /**
+   * Presses a mouse button on the board at a point.
+   * @param {Number} x - Where, across
+   * @param {Number} [button] - 0 for the left, 2 for the right button
+   * @returns {void}
+   */
+  function press(x, button = 0) {
+    board.dispatchEvent(new document.defaultView.MouseEvent("pointerdown", { button, clientX: x, clientY: 50, bubbles: true }));
+  }
+
+  beforeEach(() => {
+    board = document.createElement("div");
+    board.id = "board";
+    document.body.append(board);
+    tokens = [token("Ana", 0), token("Bo", 200), token("Cy", 400)];
+    marks = new Set();
+    global.canvas = { ready: true, canvasCoordinatesFromClient: point => point, tokens: { placeables: tokens } };
+  });
+
+  afterEach(() => {
+    delete global.canvas;
+  });
+
+  /**
+   * Starts picking with a marker that records which tokens are marked.
+   * @param {Number} max - How many may be marked
+   * @param {Object} [options] - Further picker options, e.g. multi or color
+   * @returns {Promise<Object[]|null>} What the picker resolves to
+   */
+  function picking(max, options = { multi: true }) {
+    return pickTokensOnCanvas({ max, ...options, marker: picked => { marks.add(picked.name); return () => marks.delete(picked.name); } });
+  }
+
+  test("clicked tokens are marked, a second click unmarks, and a right-click confirms them in order", async () => {
+    const pick = picking(3);
+    press(10);
+    press(210);
+    press(10);
+    press(410);
+    expect(marks).toEqual(new Set(["Bo", "Cy"]));
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Bo", "Cy"]);
+    expect(marks.size).toBe(0);
+  });
+
+  test("with a distance limit, a token too far from every marked one is refused, one near any of them is not", async () => {
+    canvas.grid = { size: 100, distance: 1 };
+    const pick = picking(3, { multi: true, within: 1 });
+    press(10);
+    press(410);
+    press(210);
+    press(410);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Ana", "Bo", "Cy"]);
+    expect(ui.notifications.warn).toHaveBeenCalledTimes(1);
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooFar"));
+  });
+
+  test("a token the caller refuses is not marked, and the caller's notice is shown", async () => {
+    const pick = picking(3, { multi: true, refuse: token => (token.name === "Bo" ? "not Bo" : null) });
+    press(210);
+    press(10);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Ana"]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith("not Bo");
+  });
+
+  test("a measured pick shows the distance to the token under the cursor, else to the cursor itself", async () => {
+    canvas.grid = { size: 100, distance: 1 };
+    const describe = jest.fn(distance => `${distance} m`);
+    const pick = picking(1, { multi: false, measure: { from: tokens[0], describe } });
+    const label = () => document.querySelector(".ep-targeting-range")?.textContent;
+
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 450, clientY: 50, bubbles: true }));
+    expect(label()).toBe("3 m");
+    expect(describe).toHaveBeenLastCalledWith(3, tokens[2]);
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 150, clientY: 50, bubbles: true }));
+    expect(label()).toBe("0.5 m");
+    expect(describe).toHaveBeenLastCalledWith(0.5, null);
+    press(10, 2);
+    await pick;
+  });
+
+  test("distances run edge to edge, and the dialog's measured distances read back in order", () => {
+    expect(pointGap(tokens[0], { x: 150, y: 50 }, { size: 100, distance: 2 })).toBe(1);
+    expect(pointGap(tokens[0], { x: 50, y: 50 }, { size: 100, distance: 2 })).toBe(0);
+    expect(measuredDistances({ measuredRanges: "12.5,3" })).toEqual([12.5, 3]);
+    expect(measuredDistances({ measuredRanges: "" })).toEqual([]);
+  });
+
+  test("on a grid, the gap counts whole cells by the scene's diagonal rule, so a diagonal step costs one cell", () => {
+    const grid = {
+      isSquare: true, size: 100, distance: 2,
+      getOffset: ({ x, y }) => ({ i: Math.floor(y / 100), j: Math.floor(x / 100) }),
+      getCenterPoint: ({ i, j }) => ({ x: j * 100 + 50, y: i * 100 + 50 }),
+      measurePath: ([a, b]) => ({ distance: Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)) / 100 * 2 })
+    };
+    const at = (j, i) => ({ bounds: { x: j * 100, y: i * 100, width: 100, height: 100 } });
+
+    expect(tokenGap(at(0, 0), at(1, 1), grid)).toBe(0);
+    expect(tokenGap(at(0, 0), at(11, 7), grid)).toBe(20);
+    expect(tokenGap(at(0, 0), at(12, 7), grid)).toBe(22);
+    expect(tokenGap(at(0, 0), at(0, 0), grid)).toBe(0);
+  });
+
+  test("a measured limit keeps the marks to what the farthest of them allows, and the counter counts down from it, what is under the cursor included", async () => {
+    canvas.grid = { size: 100, distance: 1 };
+    const limit = distance => (distance >= 3 ? 1 : 3);
+    const pick = picking(3, { multi: true, measure: { from: tokens[0], describe: () => "", limit } });
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 450, clientY: 50, bubbles: true }));
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":1');
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 250, clientY: 50, bubbles: true }));
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":3');
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 550, clientY: 50, bubbles: true }));
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":1');
+    document.dispatchEvent(new document.defaultView.MouseEvent("pointermove", { clientX: 250, clientY: 50, bubbles: true }));
+    press(210);
+    expect(document.querySelector(".ep-targeting-counter").textContent).toContain('"count":2');
+    press(410);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Bo"]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.tooMany"));
+  });
+
+  test("a click past the limit marks nothing and says the limit is reached", async () => {
+    const pick = picking(1, { multi: true });
+    press(10);
+    press(210);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Ana"]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.targeting.limitReached"));
+  });
+
+  test("a right-click with nothing marked, or Escape, cancels", async () => {
+    const first = picking(2);
+    press(10, 2);
+    expect(await first).toBeNull();
+
+    const second = picking(2);
+    press(10);
+    document.dispatchEvent(new document.defaultView.KeyboardEvent("keydown", { key: "Escape" }));
+    expect(await second).toBeNull();
+    expect(marks.size).toBe(0);
+  });
+
+  test("with one target, a click on another token moves the mark over, and a click on the marked one unmarks it", async () => {
+    const pick = picking(1, {});
+    press(10);
+    press(210);
+    expect(marks).toEqual(new Set(["Bo"]));
+    press(210);
+    expect(marks.size).toBe(0);
+    press(410);
+    press(10, 2);
+
+    expect((await pick).map(picked => picked.name)).toEqual(["Cy"]);
+    expect(ui.notifications.warn).not.toHaveBeenCalled();
+  });
+
+  test("marks are drawn in the system's red unless the caller names another colour", async () => {
+    const colours = [];
+    const marker = (picked, point, { color }) => { colours.push(color); return () => {}; };
+    const standard = pickTokensOnCanvas({ marker });
+    press(10);
+    press(10, 2);
+    await standard;
+    const custom = pickTokensOnCanvas({ marker, markColor: "#00ff00" });
+    press(10);
+    press(10, 2);
+    await custom;
+
+    expect(colours).toEqual([MARK_COLOR, "#00ff00"]);
+  });
+
+  test("the cursor shows how many targets are left, or for one target whether it is chosen, and how to confirm once one is marked", () => {
+    const format = jest.spyOn(game.i18n, "format");
+
+    expect(targetLabel({ multi: true, left: 3, marked: 0 })).not.toContain("ep2e.targeting.confirmHint");
+    expect(targetLabel({ multi: true, left: 2, marked: 1 })).toContain("ep2e.targeting.confirmHint");
+    expect(format).toHaveBeenLastCalledWith("ep2e.targeting.remaining", { count: 2 });
+    expect(targetLabel({ multi: false, left: 1, marked: 0 })).toContain("ep2e.targeting.selectTarget");
+    expect(targetLabel({ multi: false, left: 0, marked: 1 })).toContain("ep2e.targeting.targetChosen");
+  });
+
+  test("the system's own shapes are drawn in the colour asked for, with a white border, from their traced paths", () => {
+    for (const key of ["ep-slash", "ep-lightning"]) {
+      const svg = decodeURIComponent(iconImage(key, "#123456").replace("data:image/svg+xml,", ""));
+
+      expect(svg).toContain("fill='#123456'");
+      expect(svg).toContain("stroke='#ffffff'");
+      expect(svg).toContain(TARGET_SHAPES[key].d);
+    }
+  });
+
+  test("a picker started with a shape shows it as the cursor", async () => {
+    const cursorRule = () => Array.from(document.head.querySelectorAll("style")).map(style => style.textContent).find(text => text.includes("#board"));
+    const pick = picking(1, { icon: "ep-slash" });
+    const during = cursorRule();
+    press(10, 2);
+    await pick;
+
+    expect(during).toContain(encodeURIComponent(TARGET_SHAPES["ep-slash"].d.slice(0, 20)));
+  });
+
+  test("an icon's glyph is read without Font Awesome 7's alternative text, escaped or not", () => {
+    const syringe = String.fromCodePoint(0xf48e);
+
+    expect(iconGlyph(`"${syringe}" / ""`)).toBe(syringe);
+    expect(iconGlyph(String.raw`"\f48e" / ""`)).toBe(syringe);
+    expect(iconGlyph(String.raw`"\f48e"`)).toBe(syringe);
+    expect(iconGlyph("none")).toBe("");
+  });
+
+  test("the cursor takes the colour it is given while picking, outranks the canvas's own cursor, and goes again afterwards", async () => {
+    const cursorRules = () => Array.from(document.head.querySelectorAll("style")).map(style => style.textContent).filter(text => text.includes("#board"));
+    const pick = picking(1, { color: "#123456" });
+    const during = cursorRules();
+    press(10, 2);
+    await pick;
+
+    expect(during).toHaveLength(1);
+    expect(during[0]).toContain(encodeURIComponent("#123456"));
+    expect(during[0]).toContain("!important");
+    expect(cursorRules()).toEqual([]);
+  });
+});
+
+
+describe("areas on the canvas", () => {
+  afterEach(() => { delete global.canvas; });
+
+  /**
+   * A token stand-in covering a square.
+   * @param {String} name - Its name
+   * @param {Number} x - Its left edge
+   * @returns {Object} The token
+   */
+  const token = (name, x) => ({ name, bounds: { x, y: 0, width: 100, height: 100 } });
+
+  test("a token is in an area when its centre or an inset corner is; one only grazing its edge is not", () => {
+    const area = { contains: (x, y) => x <= 150 && y >= 0 };
+
+    expect(tokensInArea(area, [token("Ana", 0), token("Bo", 100), token("Cy", 145)]).map(entry => entry.name)).toEqual(["Ana", "Bo"]);
+  });
+
+  test("something flying comes down at the full distance, or short of the first wall in its way", () => {
+    const origin = { x: 0, y: 0 };
+    const free = scatterPoint(origin, 0, 500, () => null);
+    const walled = scatterPoint(origin, 0, 500, () => ({ x: 200, y: 0 }), 5);
+    const atOnce = scatterPoint(origin, Math.PI / 2, 500, () => ({ x: 0, y: 2 }), 5);
+
+    expect(free).toEqual({ point: { x: 500, y: 0 }, blocked: false });
+    expect(walled.point.x).toBeCloseTo(195);
+    expect(walled.blocked).toBe(true);
+    expect(atOnce.point.x).toBeCloseTo(0);
+    expect(atOnce.point.y).toBeCloseTo(0);
+  });
+
+  test("a cone keeps its far end as wide as asked: 20 m across at 24 m is about 49 degrees, and a cone too short for that width opens to 180", () => {
+    expect(coneAngleForWidth(24, 20)).toBeCloseTo(49.25, 1);
+    expect(coneAngleForWidth(100, 20)).toBeCloseTo(11.48, 1);
+    expect(coneAngleForWidth(8, 20)).toBe(180);
+  });
+
+  test("scene units become pixels by the scene's own scale", () => {
+    global.canvas = { dimensions: { distancePixels: 50 } };
+
+    expect(unitsToPixels(10)).toBe(500);
+  });
+
+  test("an area is left as a Region in the shape walls cut it to, by the GM for a user who may not create one", async () => {
+    const created = [];
+    const scene = { id: "scene1", regions: [], createEmbeddedDocuments: async (type, data) => { created.push(...data); return data; } };
+    global.canvas = { scene, level: null };
+    const canCreate = jest.fn(() => true);
+    CONFIG.Region = { documentClass: { canUserCreate: canCreate } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    const area = { kind: "circle", origin: { x: 1, y: 2 }, radius: 10, polygon: { points: [0, 0, 10, 0, 10, 10] } };
+
+    await createAreaRegion(area, { flags: { attackId: "a1" } });
+    expect(created[0]).toMatchObject({ name: "ep2e.targeting.areaName", shapes: [{ type: "polygon", points: [0, 0, 10, 0, 10, 10] }], flags: { eclipsephase: { [AREA_FLAG]: { kind: "circle", radius: 10, attackId: "a1" } } } });
+
+    canCreate.mockReturnValue(false);
+    game.users.activeGM = { id: "gm" };
+    const emit = jest.spyOn(game.socket, "emit");
+    expect(await createAreaRegion(area)).toBeNull();
+    expect(emit).toHaveBeenCalledWith("system.eclipsephase", expect.objectContaining({ action: "createAreaRegion", sceneId: "scene1" }));
+    expect(created).toHaveLength(1);
+    game.users.activeGM = { id: "connected-gm" };
+  });
+
+  test("a Region with behaviors is only for the GM to create, even for a user who may create Regions", async () => {
+    const created = [];
+    const scene = { id: "scene1", regions: [], createEmbeddedDocuments: async (type, data) => { created.push(...data); return data; } };
+    global.canvas = { scene, level: null };
+    CONFIG.Region = { documentClass: { canUserCreate: () => true } };
+    global.CONST.REGION_VISIBILITY = { ALWAYS: 2 };
+    const area = { kind: "circle", origin: { x: 1, y: 2 }, radius: 10, polygon: { points: [0, 0, 10, 0, 10, 10] } };
+    const behaviors = [{ type: "suppressive", name: "Fire", system: {} }];
+    const realUser = game.user;
+    game.users.activeGM = { id: "gm" };
+    const emit = jest.spyOn(game.socket, "emit");
+    try {
+      game.user = { ...realUser, isGM: false };
+      await createAreaRegion(area);
+      expect(created).toHaveLength(1);
+
+      expect(await createAreaRegion(area, { behaviors })).toBeNull();
+      expect(created).toHaveLength(1);
+      expect(emit).toHaveBeenCalledWith("system.eclipsephase", expect.objectContaining({ action: "createAreaRegion", sceneId: "scene1" }));
+
+      game.user = { ...realUser, isGM: true };
+      await createAreaRegion(area, { behaviors });
+      expect(created).toHaveLength(2);
+    } finally {
+      game.user = realUser;
+      game.users.activeGM = { id: "connected-gm" };
+      emit.mockRestore();
+    }
+  });
+
+  test("without a connected GM the pick button only warns: nothing is picked, placed or rolled", async () => {
+    const document = new JSDOM("").window.document;
+    const root = document.createElement("div");
+    root.innerHTML = `<form><input type="hidden" name="preTargets"><button type="button" data-action="pickTargets"><span></span></button></form>`;
+    const pick = jest.fn(async () => []);
+    const place = jest.fn(async () => null);
+    const area = jest.fn(() => ({ kind: "circle", radius: 5 }));
+    const close = jest.fn();
+    wirePreRollTargets(root, { close }, { count: () => 1, minimum: () => 1, area }, { pick, place });
+    const realGM = game.users.activeGM;
+    game.users.activeGM = null;
+    const warn = jest.spyOn(ui.notifications, "warn").mockImplementation(() => {});
+    try {
+      root.querySelector("button").click();
+      await Promise.resolve();
+      expect(warn).toHaveBeenCalledWith("ep2e.targeting.needsGM");
+      expect(close).toHaveBeenCalledTimes(1);
+      expect(area).not.toHaveBeenCalled();
+      expect(place).not.toHaveBeenCalled();
+      expect(pick).not.toHaveBeenCalled();
+      expect(root.querySelector('[name="preTargets"]').value).toEqual("");
+    } finally {
+      game.users.activeGM = realGM;
+      warn.mockRestore();
+    }
+  });
+
+  test("only the areas asked for are cleared, and nothing that is no area", async () => {
+    const region = (id, flag) => ({ id, isOwner: true, getFlag: () => flag });
+    const deleted = [];
+    const regions = [region("r1", { attackId: "a1" }), region("r2", { attackId: "a2" }), region("r3", undefined)];
+    regions.get = id => regions.find(entry => entry.id === id);
+    const scene = { id: "scene1", regions, deleteEmbeddedDocuments: async (type, ids) => { deleted.push(...ids); } };
+
+    expect(await clearAreas(flag => flag.attackId === "a1", scene)).toBe(1);
+    expect(deleted).toEqual(["r1"]);
+  });
+});
+
+describe("a failure put on an attack card", () => {
+  /**
+   * A shooter whose card offers one failure, after a hit on the given targets.
+   * @param {Actor[]} actors - The targets
+   * @returns {Promise<Object>} The card and how often the failure was spent
+   */
+  async function hitCard(actors) {
+    const spent = jest.fn();
+    registerFailOption(() => [{ id: "plain", label: "Fail", result: TASK_RESULT.FAILURE, note: "Failed", spend: spent }]);
+    const actor = await shooter();
+    globalThis.fromUuidSync = () => actor;
+    const card = await fire(actor, 11);
+    await aimAt(card, actors);
+    return { card, spent };
+  }
+
+  afterEach(() => resetRegistry());
+
+  test("withdraws the defence cards still open and leaves no further failure", async () => {
+    const { card, spent } = await hitCard([target("Ana")]);
+    expect(defenceCards()).toHaveLength(1);
+    expect(cardFailures(card).map(entry => entry.id)).toEqual(["plain"]);
+
+    expect(await failCard(card, "plain")).toBe(true);
+
+    expect(defenceCards()).toHaveLength(0);
+    expect(spent).toHaveBeenCalledTimes(1);
+    expect(card.getFlag("eclipsephase", "taskCard").targets).toEqual([]);
+    expect(card.getFlag("eclipsephase", "roll").targetedAttack.delivered).toBe(false);
+    expect(cardFailures(card)).toEqual([]);
+  });
+
+  test("is no longer offered once a defence is in", async () => {
+    const ana = target("Ana");
+    const { card } = await hitCard([ana]);
+    seedRolls([99]);
+    await rollDefence(defenceCards()[0], ana.uuid, "dodge", DODGE);
+    await until(() => outcomeOf(ana));
+
+    expect(outcomeOf(ana)).toBeTruthy();
+    expect(cardFailures(card)).toEqual([]);
+  });
+});
+
+describe("the line an attack aims with", () => {
+  const center = { x: 100, y: 100 };
+
+  test("it starts two thirds of the token's radius out, on the side of the cursor", () => {
+    expect(aimOrigin(center, 30, { x: 500, y: 100 })).toEqual({ x: 120, y: 100 });
+    const below = aimOrigin(center, 30, { x: 100, y: 500 });
+    expect(below.x).toBeCloseTo(100);
+    expect(below.y).toBeCloseTo(120);
+  });
+
+  test("a laser tapers from its start to its end", () => {
+    const [ax, ay, bx, by, cx, cy, dx, dy] = taperedLine({ x: 0, y: 0 }, { x: 100, y: 0 }, 4, 1);
+
+    expect([ax, dx]).toEqual([0, 0]);
+    expect([bx, cx]).toEqual([100, 100]);
+    expect(Math.abs(ay - dy)).toBeCloseTo(4);
+    expect(Math.abs(by - cy)).toBeCloseTo(1);
+  });
+
+  test("a laser tapers to nothing and all but fades out over the last fifth", () => {
+    const pieces = laserPieces({ x: 0, y: 0 }, { x: 100, y: 0 }, 4, 10);
+    const widthAt = piece => Math.abs(piece.corners[1] - piece.corners[7]);
+
+    expect(pieces).toHaveLength(10);
+    expect(widthAt(pieces[0])).toBeCloseTo(4);
+    expect(Math.abs(pieces[9].corners[3] - pieces[9].corners[5])).toBeCloseTo(0);
+    expect(pieces.slice(0, 8).every(piece => piece.alpha === 1)).toBe(true);
+    expect(pieces[8].alpha).toBeCloseTo(1);
+    expect(pieces[9].alpha).toBeCloseTo(0.5);
+    expect(laserPieces({ x: 0, y: 0 }, { x: 100, y: 0 }, 4, 100).at(-1).alpha).toBeLessThan(0.1);
+  });
+
+  test("a blade's arc faces the cursor, sits at its radius and is pointed at both ends", () => {
+    const corners = arcShape(center, 50, 0, 8, Math.PI / 2, 4);
+    const points = [];
+    for (let index = 0; index < corners.length; index += 2) points.push({ x: corners[index], y: corners[index + 1] });
+
+    expect(points).toHaveLength(10);
+    expect(points[2].x).toBeCloseTo(150);
+    expect(points[2].y).toBeCloseTo(100);
+    expect(points[7].x).toBeCloseTo(142);
+    expect(points[0].x).toBeCloseTo(points[9].x);
+    expect(points[0].y).toBeCloseTo(points[9].y);
+    expect(points[4].x).toBeCloseTo(points[5].x);
+    expect(points[4].y).toBeCloseTo(points[5].y);
+  });
+
+  test("a wavering mass closes at both ends and bulges most around its middle", () => {
+    const sum = values => values.reduce((total, value) => total + value, 0);
+    for (const time of [0, 400, 3000]) {
+      const bulges = waveBulges(time, 1, 48);
+      expect(bulges[0]).toBeCloseTo(0);
+      expect(bulges[48]).toBeCloseTo(0);
+      expect(sum(bulges.slice(16, 33))).toBeGreaterThan(sum(bulges.slice(0, 16)));
+      expect(sum(bulges.slice(16, 33))).toBeGreaterThan(sum(bulges.slice(33)));
+      expect(Math.max(...bulges)).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test("a wavering mass changes over time, in its own rhythm per side", () => {
+    expect(waveBulges(0, 1)).not.toEqual(waveBulges(1000, 1));
+    expect(waveBulges(0, 1)).not.toEqual(waveBulges(0, -1));
+  });
+
+  test("a wavering mass runs around the line between its ends", () => {
+    const corners = waveShape({ x: 0, y: 0 }, { x: 100, y: 0 }, 500, 20);
+    const points = [];
+    for (let index = 0; index < corners.length; index += 2) points.push({ x: corners[index], y: corners[index + 1] });
+
+    expect(points).toHaveLength(98);
+    expect(points[0].x).toBeCloseTo(0);
+    expect(points[48].x).toBeCloseTo(100);
+    expect(points[49].x).toBeCloseTo(100);
+    expect(points[97].x).toBeCloseTo(0);
+    expect(points.slice(1, 48).every(point => point.y >= 0)).toBe(true);
+    expect(points.slice(50, 97).every(point => point.y <= 0)).toBe(true);
+    expect(Math.max(...points.map(point => Math.abs(point.y)))).toBeLessThanOrEqual(20);
+  });
+
+  test("dashes stay on the line and wander towards its end", () => {
+    const from = { x: 0, y: 0 };
+    const to = { x: 100, y: 0 };
+    const still = dashSegments(from, to, 0, 10, 8);
+    const moved = dashSegments(from, to, 5, 10, 8);
+
+    expect(still[0]).toEqual([{ x: 0, y: 0 }, { x: 10, y: 0 }]);
+    expect(moved[1][0].x).toBe(still[1][0].x + 5);
+    for (const [start, end] of [...still, ...moved]) {
+      expect(start.x).toBeGreaterThanOrEqual(0);
+      expect(end.x).toBeLessThanOrEqual(100);
+    }
+    expect(dashSegments(from, from, 0, 10, 8)).toEqual([]);
+  });
+
+  test("the picker's icon chooses the line", () => {
+    expect(aimKind("ep-slash")).toEqual("arc");
+    expect(aimKind("ep-lightning")).toEqual("wave");
+    expect(aimKind(null)).toEqual("laser");
+    expect(aimKind("fa-syringe")).toEqual("laser");
+  });
+
+  test("a flicker dips now and then and otherwise stays bright", () => {
+    expect(aimFlicker(100, () => 0)).toEqual(0.25);
+    for (const time of [0, 50, 500, 5000]) {
+      const bright = aimFlicker(time, () => 1);
+      expect(bright).toBeGreaterThanOrEqual(0.5);
+      expect(bright).toBeLessThanOrEqual(1);
+    }
+  });
+});

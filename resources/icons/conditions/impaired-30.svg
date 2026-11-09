@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128">
+  <title>Impaired −30</title>
+  <path fill="#fff" d="M10 13l12 8 12-8v7l-12 8-12-8z"/><path fill="#fff" d="M10 25l12 8 12-8v7l-12 8-12-8z"/><path fill="#fff" d="M10 37l12 8 12-8v7l-12 8-12-8z"/>
+  <path d="M53 72 L69 92 L36 92" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M46 73 L57 108 H21" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M46 74 Q53 43 82 54" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M81 56 L78 82 L91 107" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="103" cy="73" r="12" fill="#fff"/>
+</svg>

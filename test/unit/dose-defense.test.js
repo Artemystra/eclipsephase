@@ -120,7 +120,7 @@ describe("halving, rounded up", () => {
     expect(defended.duration).toMatchObject({ value: 30, units: "minutes" });
     expect(defended.flags.eclipsephase.dose.rollOptions[0].value).toBe(15);
     expect(defended.flags.eclipsephase.dose.overTime.modifier).toBe(-3);
-    expect(defendedFormula("1d10", defended.flags.eclipsephase.dose)).toBe("ceil((1d10) / 2)");
+    expect(defendedFormula("1d10", defended.flags.eclipsephase.dose)).toBe("ceil((1d10)/2)");
   });
 });
 

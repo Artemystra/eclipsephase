@@ -77,6 +77,8 @@
         },
         "mods": {
           "globalMod": null,
+          "physicalMod": null,
+          "mentalMod": null,
           "traumaMod": null,
           "woundMod": null,
           "woundMultiplier": 1,
@@ -87,6 +89,8 @@
           "ttMod": null,
           "energyMod": null,
           "kineticMod": null,
+          "mentalArmorMod": null,
+          "psiArmor": false,
           "meleeDamageMod": null
         },
         "additionalSystems": {
@@ -101,7 +105,11 @@
       "toxinFilters": false,
       "nanophages": false,
       "digestiveSymbiotes": false,
-      "immunizers": false
+      "immunizers": false,
+      "airSealed": false,
+      "skinSealed": false,
+      "painTolerance": 0,
+      "antiGlare": false
         },
         "initiative": {
           "value": null,
@@ -631,6 +639,11 @@
         "_id": "-",
         "name": "",
         "dose": null,
+        "armorused": "",
+        "area": { "kind": "none", "radius": null, "reduction": null },
+        "payload": null,
+        "cloud": false,
+        "cloudColor": { "kind": "smoke", "custom": "#ffffff" },
         "dvModifier": {
           "d10": null,
           "d6": null,
@@ -753,10 +766,12 @@
       "mode1": {
         "name": "",
         "range": null,
+        "area": { "kind": "none", "radius": null, "reduction": null },
         "d10": null,
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "firingMode": "",
         "traits": {
           "armorPiercing": {
@@ -841,10 +856,12 @@
       "mode2": {
         "name": "",
         "range": null,
+        "area": { "kind": "none", "radius": null, "reduction": null },
         "d10": null,
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "firingMode": "",
         "traits": {
           "armorPiercing": {
@@ -933,6 +950,11 @@
         "buyable"
       ],
       "areaeffect": null,
+      "area": { "kind": "none", "radius": null, "reduction": null },
+      "trigger": "impact",
+      "payload": { "enabled": false, "vector": "", "loaded": [] },
+      "cloud": false,
+      "cloudColor": { "kind": "smoke", "custom": "#ffffff" },
       "dv": {
         "d10": null,
         "d6": null,
@@ -944,11 +966,11 @@
           "value": false
         },
         "blinding": {
-          "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+          "name": "ep2e.item.weapon.table.trait.blinding",
           "value": false
         },
         "disablesRadio": {
-          "name": "ep2e.item.weapon.table.accessory.Gyromount",
+          "name": "ep2e.item.weapon.table.trait.disablesRadio",
           "value": false
         },
         "knockdown": {
@@ -981,6 +1003,11 @@
       ],
       "type": null,
       "areaeffect": null,
+      "area": { "kind": "none", "radius": null, "reduction": null },
+      "size": "baseline",
+      "payload": { "enabled": false, "vector": "", "loaded": [] },
+      "cloud": false,
+      "cloudColor": { "kind": "smoke", "custom": "#ffffff" },
       "dv": {
         "d10": null,
         "d6": null,
@@ -1083,6 +1110,7 @@
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "traits": {
           "armorPiercing": {
             "name": "ep2e.item.weapon.table.trait.armorPiercing",
@@ -1129,6 +1157,7 @@
         "d6": null,
         "bonus": null,
         "dv": null,
+        "armorused": "",
         "traits": {
           "armorPiercing": {
             "name": "ep2e.item.weapon.table.trait.armorPiercing",
@@ -1270,7 +1299,15 @@
       "actionType": "",
       "duration": "",
       "pushed": false,
+      "targetRule": "any",
+      "affects": "target",
+      "repeatPerSuperior": false,
+      "landingRule": "none",
+      "condition": "none",
+      "rollOptions": [],
       "damage": {
+        "mode": "",
+        "armorUsed": "mental",
         "target": "physical",
         "d10": null,
         "d6": null,

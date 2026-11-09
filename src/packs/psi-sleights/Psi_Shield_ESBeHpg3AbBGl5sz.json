@@ -5,7 +5,53 @@
     "core": {}
   },
   "img": "systems/eclipsephase/resources/icons/bond.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "G7F690GOhWRY7TmY",
+      "name": "Psi Shield",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.mentalArmorMod",
+            "value": "1d6",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!ESBeHpg3AbBGl5sz.G7F690GOhWRY7TmY"
+    }
+  ],
   "system": {
     "additionalSystems": {},
     "description": "You rally the mind’s defenses against psychic attacks. Increase mental armor by 1d6, +1d6 per superior success.",
@@ -16,7 +62,8 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "sustained"
+    "duration": "sustained",
+    "repeatPerSuperior": true
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

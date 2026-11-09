@@ -1,7 +1,7 @@
 import { isHit, signed, TASK_RESULT } from "../../module/rolls/dice.js";
 import { isTimedSpan, SECONDS_PER } from "../../module/common/time.js";
 import { ownersAndGMs, actorAudience, findCompendiumItem, cloneCompendiumItem, escapeText } from "../../module/common/general-sheet-functions.js";
-import { boundToActiveBody } from "../../module/common/body-markers.js";
+import { boundToActiveBody } from "../../module/common/morp-functions.js";
 import { makeActor, resetWorld, registerSystemPacks } from "../setup/factories.js";
 
 beforeEach(() => resetWorld());

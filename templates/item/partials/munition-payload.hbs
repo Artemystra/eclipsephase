@@ -1,0 +1,28 @@
+{{!-- What a munition can carry besides its own effect: whether it carries anything, which substance, the one vector it reaches the target by, and whether it bursts into a cloud - smoke when nothing is loaded. Every field stays in place and is greyed out while it does not apply. Param: columns --}}
+<div class="ep-sheet-grid ep-sheet-grid-{{columns}} munition-fields">
+    <div class="ep-field">
+        <label class="resource-label" for="payload-enabled-{{item._id}}">{{localize "ep2e.item.weapon.table.payload.enabled"}}</label>
+        <input type="checkbox" class="sheet" id="payload-enabled-{{item._id}}" name="system.payload.enabled" {{checked item.system.payload.enabled}}/>
+    </div>
+    <div class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.weapon.table.payload.select"}}</span>
+        <button type="button" class="munition-payload-select truncate" data-action="selectPayload"{{#unless item.system.payload.enabled}} disabled{{/unless}}>
+            <i class="fa-regular fa-flask"></i> {{#if item.system.payload.loaded.length}}{{item.system.payload.loaded.0.name}}{{else if item.system.cloud}}{{localize "ep2e.item.weapon.table.payload.smoke"}}{{else}}{{localize "ep2e.item.weapon.table.payload.choose"}}{{/if}}
+        </button>
+    </div>
+    <label class="ep-field">
+        <span class="resource-label">{{localize "ep2e.item.weapon.table.payload.vector"}}</span>
+        <select name="system.payload.vector" data-type="String"{{#unless item.system.payload.enabled}} disabled{{/unless}}>
+            {{selectOptions config.payloadVectors selected=item.system.payload.vector blank="" localize=true}}
+        </select>
+    </label>
+    <div class="ep-field">
+        <label class="resource-label" for="cloud-{{item._id}}">{{localize "ep2e.item.weapon.table.cloud"}}</label>
+        <div class="ep-field-unit ep-cloud-toggle">
+            <select id="cloud-{{item._id}}" class="ep-cloud-color" data-cloud-kind{{#unless item.system.payload.enabled}} disabled{{/unless}}>
+                {{selectOptions config.cloudColors selected=cloudKind blank=(localize "ep2e.item.aspect.table.landingRule.select") localize=true}}
+            </select>
+            <input type="color" class="ep-cloud-custom{{#unless (eq cloudKind "custom")}} ep-cloud-custom-unused{{/unless}}" name="system.cloudColor.custom" value="{{item.system.cloudColor.custom}}"{{#unless (and item.system.cloud item.system.payload.enabled)}} disabled{{/unless}}/>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import { getStrainFamily, resetStrainFamilies, registerCoreStrainFamilies } from "../../module/rolls/strain-families.js";
-import { strainSubstrate } from "../../module/common/body-markers.js";
+import { strainSubstrate } from "../../module/common/morp-functions.js";
 import { tierTraitNames } from "../../module/common/sleight-prerequisite.js";
 import { resolvePhysicalDamageFormula } from "../../module/rolls/psi.js";
 

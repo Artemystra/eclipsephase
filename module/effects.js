@@ -1,4 +1,9 @@
-import { strainSubstrate, boundToActiveBody } from "./common/body-markers.js";
+import { strainSubstrate, boundToActiveBody } from "./common/morp-functions.js";
+import { endExpiredChiPushes } from "./rolls/psi.js";
+import { deleteRunOutTempEffects } from "./common/general-sheet-functions.js";
+import { endRunOutDoses } from "./common/doses.js";
+import { durationRunOut, TEMP_EFFECT_FLAGS } from "./common/time.js";
+import { owningActor } from "./rolls/pools.js";
 
 const EP2eActiveEffectBaseDataModel =
   foundry.data?.ActiveEffectTypeDataModel ??
@@ -8,11 +13,13 @@ const EP2eActiveEffectBaseDataModel =
  * Whether an item's own effects are a blueprint rather than effects that ever apply by themselves.
  * A drug's effects describe what one dose does: taking a dose copies them onto the actor for as
  * long as the dose lasts, so the copies sitting on the item must never apply - least of all
- * because the item is at hand, which only ever meant the drug is carried, not taken.
+ * because the item is at hand, which only ever meant the drug is carried, not taken. A gamma or
+ * epsilon sleight's effects likewise describe what it does where it lands.
  * @param {Item} item - The item carrying the effect
  * @returns {Boolean} True when the item's own effects never apply
  */
-function isEffectBlueprint(item) {
+export function isEffectBlueprint(item) {
+  if (item.type === "aspect") return ["gamma", "epsilon"].includes(item.system?.psiType);
   return item.type === "drug";
 }
 
@@ -78,4 +85,129 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
     Hooks.callAll("eclipsephase.effectSuppression", item, actor, result);
     return result.suppressed;
   }
+}
+
+/**
+ * Takes a system effect off once Foundry has marked it expired: a chi push ends, a temporary
+ * effect and a dose are deleted. Anything else Foundry marked is left alone.
+ * @param {ActiveEffect} effect - The effect just marked expired
+ * @returns {Promise<void>} Resolves once the clean-up has run
+ */
+export async function cleanUpExpired(effect) {
+  const actor = owningActor(effect);
+  if (!actor) return;
+  await endExpiredChiPushes(actor, [effect]);
+  await deleteRunOutTempEffects(actor, [effect]);
+  await endRunOutDoses(actor, [effect]);
+  await sweepTokenCopies(actor, effect);
+}
+
+/**
+ * Removes what an expired effect of a world actor leaves behind on its unlinked tokens. Foundry
+ * marks the tokens' inherited copies expired too, and marking an inherited copy writes it into the
+ * token's own data; once the world actor's effect is gone, that written copy stays behind,
+ * inactive. Waits a tick so the tokens have rebuilt from the world actor first.
+ * @param {Actor} actor - The actor the effect expired on
+ * @param {ActiveEffect} effect - The expired effect
+ * @returns {Promise<void>} Resolves once every left-behind copy is gone
+ */
+export async function sweepTokenCopies(actor, effect) {
+  if (actor.isToken || typeof actor.getDependentTokens !== "function") return;
+  const systemEffect = TEMP_EFFECT_FLAGS.some(flag => effect.getFlag?.("eclipsephase", flag) !== undefined);
+  if (!systemEffect) return;
+
+  await new Promise(resolve => setTimeout(resolve, 0));
+  for (const token of actor.getDependentTokens()) {
+    const copy = Array.from(token.actor?.effects ?? []).find(candidate => candidate.id === effect.id);
+    if (copy && durationRunOut(copy)) await token.actor.deleteEmbeddedDocuments("ActiveEffect", [copy.id]);
+  }
+}
+
+/**
+ * Hangs the clean-up on Foundry's own expiry, and marks the system's clock-timed effects whose time
+ * is up when the clock moves, which Foundry leaves running during a combat. When the clock runs an
+ * effect out, Foundry's effect registry marks it expired with an update and does not wait for the
+ * actor's duration hook;
+ * deleting from that hook raced the update and left the server updating effects already gone.
+ * Waiting for the update to land - on the client that made it, the active GM's - lets the two
+ * happen one after the other.
+ * @returns {void}
+ */
+export function registerExpiryCleanup() {
+  Hooks.on("updateActiveEffect", (effect, changes, options, userId) => {
+    if (userId !== game.user.id) return;
+    const expired = changes?.["duration.expired"] ?? foundry.utils.getProperty(changes ?? {}, "duration.expired");
+    if (expired !== true) return;
+    cleanUpExpired(effect);
+  });
+  Hooks.on("updateWorldTime", () => expireOverdue());
+}
+
+// The duration units an effect runs on the clock with, rather than on combat turns.
+const CLOCK_UNITS = ["seconds", "minutes", "hours", "days", "weeks", "months", "years"];
+
+/**
+ * The system's clock-timed effects whose time is up but which Foundry has not marked expired. An
+ * effect given an expiry event - Foundry sets "turnStart" once its duration is changed - waits for
+ * its actor's next turn while that actor is in combat, however far the clock was moved. An effect
+ * counted in rounds is meant to end on a turn and is left alone.
+ * @param {ActiveEffect[]} effects - The effects to look through
+ * @returns {ActiveEffect[]} The overdue ones
+ */
+export function overdueByClock(effects) {
+  const units = CONST.ACTIVE_EFFECT_TIME_DURATION_UNITS ?? CLOCK_UNITS;
+  return effects.filter(effect => TEMP_EFFECT_FLAGS.some(flag => effect.getFlag?.("eclipsephase", flag) !== undefined)
+    && units.includes(effect.duration?.units)
+    && effect.duration?.expired !== true
+    && durationRunOut(effect));
+}
+
+/**
+ * Marks the system's overdue clock-timed effects expired once the clock has moved, so they end on
+ * time during a combat as well; their clean-up follows from the mark. Runs on the active GM. An
+ * effect whose actor was deleted is passed over, and one that cannot be marked never stops the
+ * others from being marked.
+ * @returns {Promise<void>} Resolves once they are marked
+ */
+export async function expireOverdue() {
+  if (!game.users?.activeGM?.isSelf) return;
+  for (const effect of overdueByClock(trackedEffects())) {
+    if (!stillExists(effect)) continue;
+    try {
+      await effect.update({ "duration.expired": true });
+    } catch (error) {
+      console.warn(`Eclipse Phase | Could not mark ${effect.name} expired`, error);
+    }
+  }
+}
+
+/**
+ * Every effect that may run on the clock: those Foundry's registry tracks, and those on the world's
+ * actors and on the unlinked tokens of every scene. Foundry drops an effect from its registry once
+ * it counts it expired, even when marking it then fails, so the registry alone can miss one.
+ * @returns {ActiveEffect[]} The effects, each once
+ */
+function trackedEffects() {
+  const found = new Set(ActiveEffect.registry ? Array.from(ActiveEffect.registry) : []);
+  for (const actor of game.actors ?? []) for (const effect of actor.effects ?? []) found.add(effect);
+  for (const scene of game.scenes?.contents ?? []) {
+    for (const token of scene.tokens?.contents ?? []) {
+      if (token.actorLink || !token.actor) continue;
+      for (const effect of token.actor.effects ?? []) found.add(effect);
+    }
+  }
+  return [...found];
+}
+
+/**
+ * Whether an effect still belongs to a document in the world: its actor, or the token it sits on,
+ * has not been deleted since Foundry registered it.
+ * @param {ActiveEffect} effect - The effect
+ * @returns {Boolean} True while it can still be updated
+ */
+function stillExists(effect) {
+  const actor = owningActor(effect);
+  if (!actor) return false;
+  if (actor.isToken) return !!actor.token?.parent?.tokens?.get?.(actor.token.id);
+  return !actor.id || !game.actors?.get || !!game.actors.get(actor.id);
 }

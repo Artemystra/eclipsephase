@@ -1,0 +1,11 @@
+<nav class="sheet-tabs itemnav tabs" data-group="primary">
+    {{#each tabs.primary as |tab|}}
+        {{#if (eq tab.id "effects")}}
+            {{#if @root.item.showEffectsTab}}
+                <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}"><span class="ep-tab-label">{{localize tab.label}}</span></a>
+            {{/if}}
+        {{else}}
+            <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}"><span class="ep-tab-label">{{localize tab.label}}</span></a>
+        {{/if}}
+    {{/each}}
+</nav>

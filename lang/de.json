@@ -11,10 +11,6 @@
       "survival": "Überleben",
       "grenadesOnly": "Nur Granaten"
     },
-    "effectPanel": {
-      "name": "Active Effect Tab",
-      "hint": "Aktiviert Active Effect Tabs für Spielleiter:innen"
-    },
     "timeFormat": {
       "name": "Zeitformat",
       "hint": "Wie das Zeit-Panel die Tageszeit anzeigt. Stunden nutzt eine 24-Stunden-Uhr, Beats die Swatch Internet Time, bei der ein Tag 1000 Beats hat.",
@@ -24,6 +20,10 @@
     "timePanelPlayers": {
       "name": "Zeit-Panel für Spieler anzeigen",
       "hint": "Erlaubt Spielern, das Zeit-Panel zu öffnen und Tag und Uhrzeit zu sehen. Sie bekommen dasselbe Panel ohne die Bedienelemente."
+    },
+    "visionEffects": {
+      "name": "Sichtmodifikatoren",
+      "hint": "Zeigt besondere Sicht, etwa mit anderen geteilte Sicht, mit eigenen Bildeffekten. Schalte sie aus, um sie ohne Filter zu sehen, zum Beispiel wenn die Effekte deinen Augen schaden. Was du sehen kannst, bleibt gleich."
     },
     "editAll": {
       "name": "Keine Editiereinschränkungen",
@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laphs Spezialbräu",
       "hint": "Macht Dinge die Laph in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
+    },
+    "showTraps": {
+      "name": "Fallen anzeigen",
+      "hint": "Ob Spieler:innen die scharfen Sprengsätze - Zeitzünder, Fernzünder, Näherungsminen - sehen dürfen, die Mitspieler:innen oder Gegner auf der Karte hinterlassen. Besitzer:innen und die SL sehen sie immer.",
+      "none": "Keine",
+      "all": "Alle",
+      "players": "Nur Fallen von Spieler:innen"
     }
   },
   "TYPES": {
@@ -88,6 +95,9 @@
       "ammo": "Munition",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "Sperrfeuer"
     }
   },
   "ep2e": {
@@ -138,9 +148,8 @@
         "doseNeedsBiomorph": "Diese Droge wirkt nur in einem biologischen Koerper.",
         "doseNeedsCyberbrain": "Diese Droge laeuft nur auf einem Infomorph oder einem Cyberbrain.",
         "noDosesLeft": "{name} hat keine Dosen mehr.",
-        "doseCheckRolled": "Diese Probe wurde schon gewürfelt.",
+        "checkRolled": "Diese Probe wurde schon gewürfelt.",
         "doseNoScene": "Öffne eine Szene, um dort ein Ziel zu wählen.",
-        "doseNeedsGM": "Ein GM muss verbunden sein, damit die Dosis übergeben werden kann.",
         "doseNoSelection": "Wähle zuerst ein Token aus.",
         "doseNeedsClaimant": "Weise dir einen Charakter zu oder wähle als GM ein Token aus, um diese Dosis zu nehmen.",
         "doseAlreadyUsed": "Diese Dosis wurde schon genommen.",
@@ -148,7 +157,8 @@
         "ammoPackNotTaken": "{name} ist ein Munitionspack: Lade es in eine Waffe, statt es einzunehmen.",
         "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert.",
         "attackDelivered": "Dieser Angriff wurde bereits auf seine Ziele angewendet.",
-        "attackNoPayload": "Die Waffe weiß nicht, mit welcher Droge sie geladen ist. Lade sie zuerst nach."
+        "attackNoPayload": "Die Waffe weiß nicht, mit welcher Droge sie geladen ist. Lade sie zuerst nach.",
+        "needsGM": "Ein GM muss verbunden sein, um die Wirkung zu übertragen."
       },
       "button": {
         "edit": "Editieren",
@@ -696,6 +706,7 @@
           },
           "result": {
             "stressCopy": "Den Körper zu wechseln versetzt mich in Stress",
+            "cleanCopy": "Du gleitest ohne Probleme in deinen neuen Körper.",
             "integrationCopy": "Ich fühle mich noch unwohl in meinem Körper und erhalte -10 auf alle Aktionen.",
             "effectIntegrationIssues": {
               "title": "Integrationsprobleme",
@@ -898,6 +909,96 @@
           "playWithPrey": "Mit der Beute spielen",
           "protectTribe": "Den Stamm schützen"
         }
+      },
+      "lockOut": {
+        "name": "Ausgesperrt: {target}",
+        "description": "{target} hat sich mit einem kritischen Erfolg verteidigt: Das Async darf diesen Geist nicht mehr anvisieren, bis es sich erholt."
+      },
+      "sleightEffect": {
+        "against": "{sleight} ({target})"
+      },
+      "option": {
+        "socialTests": "Soziale Fertigkeitstests gegen das Ziel",
+        "basiliskHacks": "Widerstand gegen Basilisk-Hacks",
+        "lostSense": "Braucht {sense}",
+        "visualCoordination": "Visuelle Koordination während des Starrens"
+      },
+      "sustain": {
+        "name": "Hält: {sleight} ({targets})",
+        "description": "Du hältst {sleight}: -10 auf alle anderen Fertigkeitstests, solange es läuft. Es endet, wenn du es beendest oder das Async sich weiter als Nah + 10 m vom Ziel entfernt.",
+        "outOfReach": "{target} ist {distance} m von {async} entfernt - weiter als die {reach} m, auf die sich {sleight} halten lässt.",
+        "end": "Halten beenden",
+        "endCopy": "Das Halten dieses Sleights beenden? Seine Wirkung auf die Ziele endet mit.",
+        "summary": "Hält Psi",
+        "endTip": "Gehalten - Halten beenden",
+        "pickCopy": "Du hältst diesen Sleight auf mehr als einem Ziel. Hake die an, auf denen du ihn nicht mehr halten willst.",
+        "nameSelf": "Hält: {sleight}"
+      },
+      "healing": {
+        "card": "{name} heilt {amount} {kind} ({sleight}).",
+        "stress": "Stress",
+        "damage": "Schaden",
+        "rollTitle": "Geheilt"
+      },
+      "choice": {
+        "recharge": "{sleight}: {target} kann die nächste komplexe Aktion als kurze Erholung nutzen, ohne die übliche Zeit. Das gibt keine zusätzliche Erholung.",
+        "errorGM": "{sleight} auf {target}: Ein Fertigkeitstest deiner Wahl schlägt fehl. Nutze den Button auf der Testkarte, bevor die Wirkung endet.",
+        "blockSkill": "{sleight} ist auf {target} gelandet. Wähle die Fertigkeit, die gesperrt wird.",
+        "blockSkillButton": "Fertigkeit wählen",
+        "boostSkill": "{sleight} ist auf {target} gelandet. Wähle den physischen Skill, der steigt.",
+        "boostSkillButton": "Skill wählen",
+        "boostCopy": "Welchen physischen Skill erhöht der Sleight?",
+        "failSkill": "{sleight} ist mit einem überragenden Erfolg auf {target} gelandet. Wähle, wie der Fehler wirkt.",
+        "failSkillButton": "Wählen",
+        "alterDuration": "{sleight} ist auf {target} gelandet. Wähle eine laufende Droge oder ein Toxin.",
+        "alterDurationButton": "Substanz wählen",
+        "noSubstance": "{target} hat keine laufende Droge und kein Toxin.",
+        "alterHeader": "Substanz verändern",
+        "alterCopy": "Welche Droge oder welches Toxin veränderst du?",
+        "shorter": "Dauer halbieren",
+        "longer": "Dauer verlängern",
+        "errorHeader": "Fehler auslösen",
+        "superiorFailure": "Überragender Fehlschlag",
+        "errorCopy": "Wie schlägt der Fehler zu?",
+        "failSkillOption": "Fertigkeit fehlschlagen lassen",
+        "alterQuestion": "Wie möchtest du den Effekt manipulieren?",
+        "forcedFailure": "Fehlgeschlagen durch einen induzierten Fehler.",
+        "skillHeader": "Fertigkeit wählen",
+        "skillCopy": "Welche Fertigkeit trifft der Sleight?",
+        "shortened": "{effect} auf {target} wirkt nun nur halb so lange wie üblich.",
+        "lengthened": "{effect} auf {target} wirkt nun 1,5-mal so lange wie üblich.",
+        "superiorChosen": "{sleight} auf {target}: Ein Fertigkeitstest nach Wahl des GM wird zum Superior Failure, über den Button auf der Testkarte.",
+        "errorKind": {
+          "auto": "Fail",
+          "superior": "Superior Fail"
+        },
+        "skillChosen": "{sleight} auf {target}: {skill}.",
+        "effectName": "{sleight}: {skill}",
+        "blocked": "{sleight} sperrt {skill}: Die Fertigkeit kann nicht genutzt werden, auch nicht per Default.",
+        "loseSense": "{sleight} ist auf {target} gelandet. Wähle den Sinn, der verloren geht.",
+        "loseSenseButton": "Sinn wählen",
+        "senseHeader": "Sinn wählen",
+        "senseCopy": "Welchen Sinn verliert das Ziel?",
+        "senseChosen": "{sleight} auf {target}: {sense} verloren."
+      },
+      "sleightLabel": "Sleight",
+      "contactLost": "<strong>{sleight}</strong>: Der Blickkontakt mit {target} ist abgerissen",
+      "sense": {
+        "sight": "Sehen",
+        "hearing": "Hören",
+        "touch": "Tasten",
+        "smell": "Riechen",
+        "taste": "Schmecken",
+        "hunger": "Hunger",
+        "balance": "Gleichgewicht",
+        "direction": "Orientierung",
+        "proprioception": "Propriozeption",
+        "facialRecognition": "Gesichtserkennung",
+        "radar": "Radar",
+        "lidar": "Lidar",
+        "tRay": "T-Ray",
+        "electricalSense": "Elektrosinn",
+        "radiationSense": "Strahlungssinn"
       }
     },
     "gmInfo": {
@@ -927,6 +1028,11 @@
         "gearModifiers": "Ausrüstungsbehinderung",
         "noModifiersSubHeader": "Kein Modifikator",
         "noModifiersCopy": "Wann immer der Charakter negative Effekte erleidet werden sie hier zu finden sein. Warte nur ab. Wir werden uns bald wiedersehen...",
+        "body": "Körper",
+        "mind": "Geist",
+        "showBreakdown": "Woher die Modifikatoren kommen",
+        "sourceColumn": "Quelle",
+        "totalRow": "Summe",
         "statuses": {
           "wounded": "Wunde",
           "woundsIgnored": "Wunde(n) ignoriert",
@@ -943,9 +1049,13 @@
       "armor": {
         "headline": "Rüstung",
         "noArmorSubheadline": "Keine Rüstung",
+        "energy": "Energie",
+        "kinetic": "Kinetisch",
+        "mental": "Mental",
         "concealWarning": "Rüstungswerte über 11 lassen sich nicht verbergen - stell es dir wie mindestens eine dicke, auffällige Kleidungsschicht vor.",
         "encumberanceWarning": "Solange deine kumulierte Rüstung die Ausdauer deines Körpers übersteigt, bist du bewegungsunfähig.",
-        "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst."
+        "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst.",
+        "mentalHint": "Mentale Rüstung zählt nur gegen Psi-Angriffe und kommt mit dem Sleight Psi Armor"
       },
       "ranged": {
         "headline": "Fernkampf",
@@ -962,9 +1072,31 @@
       "consumables": {
         "headline": "Konsumgüter",
         "noConsumablesSubheadline": "Keine ausgerüstet"
+      },
+      "armed": {
+        "headline": "Scharfe Sprengsätze",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "Pools"},
+      "inducedChanges": {
+        "headline": "Ausgelöste Änderungen",
+        "allActions": "auf alle Aktionen",
+        "physicalActions": "auf alle körperlichen Aktionen",
+        "mentalActions": "auf alle geistigen Aktionen",
+        "durability": "Durability",
+        "lucidity": "Lucidity",
+        "initiative": "Initiative",
+        "energyArmor": "Energierüstung",
+        "kineticArmor": "Kinetische Rüstung",
+        "mentalArmor": "Mentale Rüstung",
+        "rest": "auf Erholung",
+        "ignoreWounds": "Ignoriert {count} Wunde(n)",
+        "ignoreTrauma": "Ignoriert {count} Trauma(ta)",
+        "psiArmor": "Gewährt mentale Rüstung"
+      },
       "general": {
         "tabs": {
           "detailsTab": "Details",
@@ -998,6 +1130,9 @@
         }
       },
       "traits": {
+        "traitShort": "Pos",
+        "flawShort": "Neg",
+        "typeLabel": "Typ",
         "traitLabel": "Positiv",
         "flawLabel": "Negativ"
       },
@@ -1017,6 +1152,7 @@
       "aspect": {
         "pushedBadge": "Gepusht",
         "table": {
+          "targetHeadline": "Ziele",
           "type": {
             "label": "Psi Typ",
             "gamma": "Gamma",
@@ -1045,7 +1181,48 @@
           "damage": {
             "label": "Schaden",
             "physical": "Körperlich",
-            "mental": "Geistig"
+            "mental": "Geistig",
+            "mode": {
+              "damage": "Zufügen",
+              "heal": "Heilung",
+              "none": "Kein Schaden"
+            },
+            "targetLabel": "Ziel"
+          },
+          "targetRule": {
+            "label": "Mögliche Ziele",
+            "any": "Jeder",
+            "self": "Nur selbst",
+            "others": "Nur andere"
+          },
+          "affects": {
+            "label": "Wirkt auf",
+            "target": "Ziel",
+            "async": "Async",
+            "both": "Beide"
+          },
+          "repeatPerSuperior": {
+            "label": "Multiapplikation",
+            "tip": "Jeder Überragende Erfolg wendet die Wirkung einmal mehr an"
+          },
+          "landingRule": {
+            "label": "Spezialeffekt",
+            "tip": "Spezialeffekt bei erfolgreichem Treffer hinzufügen",
+            "select": "- Auswählen -",
+            "boostSkill": "Physischen Skill erhöhen",
+            "blockSkill": "Fertigkeit sperren",
+            "failSkill": "Fehler auslösen",
+            "recharge": "Schnelle Erholung",
+            "alterDuration": "Dauer einer Substanz ändern",
+            "shockEffect": "Schock-Effekt",
+            "painEffect": "Schmerz-Effekt",
+            "loseSense": "Einen Sinn nehmen",
+            "eyeContact": "Endet, wenn das Ziel angegriffen oder bewegt wird"
+          },
+          "condition": {
+            "label": "Zustand",
+            "tip": "Der Zustand, den der Sleight auf dem Ziel hinterlässt, solange er wirkt",
+            "impaired": "Beeinträchtigt (-10 je Anwendung)"
           }
         }
       },
@@ -1068,11 +1245,20 @@
           "weaponMode": "Waffenmodus",
           "addTrait": "Eigenschaft Hinzufügen",
           "addAccessory": "Zubehör Hinzufügen",
+          "modeName": "Modusname",
+          "section": {
+            "general": "Allgemein",
+            "attack": "Angriff",
+            "traits": "Traits",
+            "accessories": "Zubehör"
+          },
           "armorUsed": {
             "label": "Widerstandsart",
             "none": "Keine",
             "kinetic": "Kinetisch",
-            "energy": "Energie"
+            "energy": "Energie",
+            "mental": "Mental",
+            "asWeapon": "Wie Waffe"
           },
           "firingMode": {
             "label": "Feuermodus",
@@ -1146,6 +1332,45 @@
             "silencer": "Schalldämpfer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazin"
+          },
+          "area": {
+            "none": "Keine Fläche",
+            "uniform": "Gleichmäßig",
+            "centered": "Zentriert",
+            "radius": "Radius",
+            "reduction": "SW-Abzug pro Meter"
+          },
+          "size": {
+            "label": "Größe",
+            "baseline": "Mikrorakete",
+            "standard": "Minirakete",
+            "missile": "Standardrakete",
+            "select": "Auswählen"
+          },
+          "trigger": {
+            "label": "Zünder",
+            "impact": "Aufschlag",
+            "airburst": "Luftdetonation",
+            "timer": "Timer",
+            "signal": "Signal (Fernzündung)",
+            "proximity": "Annäherung"
+          },
+          "payload": {
+            "enabled": "Nutzlast",
+            "select": "Ladung wählen",
+            "sources": {
+              "drugs": "Drogen und Toxine"
+            },
+            "vector": "Vektor der Ladung",
+            "choose": "Wählen",
+            "smoke": "Rauch"
+          },
+          "cloud": "Bildet eine Wolke",
+          "cloudColor": {
+            "smoke": "Rauch",
+            "toxin": "Toxin",
+            "drug": "Droge",
+            "custom": "Eigene"
           }
         }
       },
@@ -1213,6 +1438,7 @@
           }
         },
         "mechanics": {
+          "grantHeadline": "Gewährt",
           "tab": "Mechanik",
           "none": "Keine",
           "checkHeadline": "Check beim Nehmen",
@@ -1230,8 +1456,8 @@
           },
           "overTimeHeadline": "Wirkung über Zeit",
           "damage": "Schaden pro Tick",
-          "interval": "Alle",
-          "ticks": "Ticks",
+          "interval": "Tick alle",
+          "ticks": "Max. Ticks",
           "ticksTip": "Leer lassen: solange die Dosis wirkt",
           "intervals": {
             "turn": "Aktionsrunde",
@@ -1244,7 +1470,6 @@
           "healing": "Heilungsdialog",
           "healingTip": "Solange eine Dosis wirkt, startet der Heilungsdialog mit dieser Ergänzung",
           "harm": "Schaden",
-          "grantsHeadline": "Temporäre Traits",
           "grantPack": "Kompendium",
           "grantFolder": "Ordner",
           "grantItem": "Item",
@@ -1256,7 +1481,9 @@
           "grantDescriptionHint": "Steht über der Beschreibung des Items.",
           "grantTitlePlaceholder": "Zusätzlicher Titel (optional)",
           "grantDescriptionPlaceholder": "Zusätzliche Beschreibung (optional)",
-          "grantTitleHint": "Steht in Klammern hinter dem Namen des Items."
+          "grantTitleHint": "Steht in Klammern hinter dem Namen des Items.",
+          "wearOffHeadline": "Effekt beim Nachlassen",
+          "addictionHeadline": "Sucht"
         }
       },
       "additionalSkill": {
@@ -1279,8 +1506,12 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "Skills"
+        },
         "autoBot": "AI Hinzufügen",
         "table": {
+          "skillName": "Skill",
           "initiative": "Init",
           "threatValue": "BW",
           "durability": "AUS",
@@ -1423,13 +1654,15 @@
           "damageRoll": "Schadenswurf",
           "swap": "Ergebnis Drehen",
           "raise": "Ergebnis Verbessern",
-          "check": "Würfelwurf"
+          "check": "Würfelwurf",
+          "named": "Wurf auf {name}"
         },
         "button": {
           "roll": "Würfeln",
           "cancel": "Abbrechen",
           "useSelection": "Auswahl bestätigen",
-          "withoutWeapon": "Wurf ohne Waffe"
+          "withoutWeapon": "Wurf ohne Waffe",
+          "rollWithoutTargets": "Ohne Ziel würfeln"
         },
         "reputationMode": {
           "headline": "Reputationsmod",
@@ -1461,11 +1694,13 @@
             "fireMode": {
               "label": "Feuermodus",
               "single": "Einzelschuss",
-              "burst": "Enge Salve (+1d10)",
-              "fullAuto": "Fokussiert und Vollautomatisch (+2d10)",
-              "wBurst": "Weite Salve (+10 Hit)",
-              "wFullAuto": "Vollautomatischer Streuschuss (+30 Hit)",
-              "suppressive": "Niederhalten (verbraucht 20 Schuss)"
+              "burst": "Salve: +1d10 SW",
+              "fullAuto": "Vollautomatisch: +2d10 SW",
+              "wBurst": "Salve: +10 Treffen",
+              "wFullAuto": "Vollautomatisch: +30 Treffen",
+              "suppressive": "Niederhalten (20 Schuss)",
+              "burstTargets": "Salve: zwei Ziele",
+              "fullAutoTargets": "Vollautomatisch: drei Ziele"
             },
             "aim": {
               "label": "Zielen",
@@ -1490,7 +1725,9 @@
               "major": "Gross (-30)",
               "blind": "Blind (-30+)",
               "indirect": "Indirekt (-20)"
-            }
+            },
+            "pickTargets": "Ziele wählen",
+            "vacuum": "Im Vakuum"
           },
           "defender": {
             "isProne": "Gestürzt (-10 auf Reichweite)",
@@ -1571,7 +1808,31 @@
           "exoticMorphology": "Exotische Morphologie"
         },
         "augmentations": "Augmentierungen",
-        "dodgeCoverLabel": "Hinter Deckung ausweichen"
+        "dodgeCoverLabel": "Hinter Deckung ausweichen",
+        "fullDefenseLabel": "Volle Verteidigung (+30)",
+        "psi": {
+          "touch": "Berührung (+20)",
+          "willing": "Freiwilliges Ziel (kein Widerstand)"
+        },
+        "throw": {
+          "headline": "Wurf",
+          "radius": "Explosionsradius",
+          "reduction": "SW-Verlust",
+          "note": "Alle in der Explosion müssen sich verteidigen. Die Explosion herunterzuregeln kostet eine schnelle Aktion.",
+          "place": "Explosion platzieren",
+          "noneLeft": "{name}: keine mehr zum Werfen übrig.",
+          "blastHeadline": "Explosion",
+          "timer": "Explodiert nach",
+          "unit": {
+            "rounds": "Runden",
+            "seconds": "Sekunden",
+            "minutes": "Minuten"
+          },
+          "proximity": "Sensorreichweite",
+          "payload": "Ladung",
+          "noPayload": "Keine Ladung geladen"
+        },
+        "sleightOptions": "Sleights"
       },
       "successType": {
         "success": "Erfolg",
@@ -1615,6 +1876,7 @@
         "baseValue": "Grundwert",
         "rollTarget": "Ziel",
         "total": "Resultat",
+        "initiative": "würfelt Initiative",
         "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
         "jamming": {
@@ -1638,7 +1900,10 @@
           "noBioBrain": "Psi funktioniert nur aus einem biologischen Gehirn. Ein Cyberhirn blockiert es, und ein Infomorph hat gar kein Nervensystem.",
           "blockedByDrug": "Eine Droge blockiert dein Psi.",
           "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
-          "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper"
+          "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper",
+          "touch": "Berührung",
+          "cyberbrain": "Ziel mit Cyberbrain",
+          "range": "Psi-Reichweite: {band} ({distance} m)"
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
@@ -1730,6 +1995,7 @@
             "agressiveCharge": "Rücksichtsloser Angriff",
             "agressiveChargeAddition": "(+1d10SW & Ausweichen -10)",
             "multipleTargets": "Mehrere Ziele",
+            "proneTarget": "Ziel liegt (erhabene Position)",
             "touchOnly": "Berührungsangriff"
           },
           "ranged": {
@@ -1767,7 +2033,9 @@
             "noAmmoPresent": "Keine passende Munition vorhanden.",
             "ammoSkillModifier": "Skillmodifikator (Munition)",
             "weaponFixated": "Aus der Hüfte geschossen",
-            "fray": "Schuss Ausweichen"
+            "fray": "Schuss Ausweichen",
+            "measured": "{band} ({distance} m)",
+            "proneAtRange": "Verteidiger liegt auf Entfernung"
           },
           "damage": {
             "physicalDamage": "Mein Morph wurde beschädigt",
@@ -1776,7 +2044,8 @@
             "wounds": "Wunde(n)",
             "stress": "Stress",
             "trauma": "Trauma"
-          }
+          },
+          "fullDefense": "Volle Verteidigung"
         }
       },
       "psi": {
@@ -1856,6 +2125,16 @@
         "fewerHeadline": "Weniger Ziele als Dosen",
         "fewerCopy": "Die Waffe verteilt {max} Dosen. Willst du wirklich nur {count} Ziele auswählen?",
         "fewerConfirm": "Bestätigen"
+      },
+      "selectPayload": {
+        "header": "Ladung wählen",
+        "copy": "Welchen Wirkstoff trägt diese Munition?",
+        "none": "Kein Wirkstoff in den Ladungs-Kompendien lässt sich so abgeben."
+      },
+      "selectMunition": {
+        "header": "Munition vorbereiten",
+        "copy": "Welchen Wirkstoff trägt diese Munition?",
+        "noPayload": "Keine Ladung"
       }
     },
     "chat": {
@@ -1921,7 +2200,8 @@
         "addictionRaisedEgo": "Die Sucht meines Egos nach <strong>{name}</strong> steigt auf Stufe {level}",
         "addictionRaisedBody": "Die Sucht meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
         "addictionRaisedBoth": "Die Sucht meines Egos und meines Körpers nach <strong>{name}</strong> steigt auf Stufe {level}",
-        "unaffected": "{drug} kann im Körper von {name} nicht wirken."
+        "unaffected": "{drug} kann im Körper von {name} nicht wirken.",
+        "sealedOff": "{name} ist abgedichtet: {drug} kann nicht per {vector} wirken."
       },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",
@@ -1940,19 +2220,177 @@
         "applyDose": "Dosis auf ausgewählte Ziele anwenden",
         "applyTargets": "Auf ausgewählte Ziele anwenden",
         "targets": "Ziele: {names}",
-        "hitByPool": "Der Poolpunkt hat den Angriff mit {weapon} zum Treffer gemacht."
+        "chooseTarget": "Ziel wählen",
+        "rollDamage": "Schaden würfeln",
+        "damageWithoutTarget": "Schaden ohne Ziel",
+        "damageReady": "Schaden durch {weapon}",
+        "suppressiveArea": "Sperrfeuer ({name})",
+        "suppressiveNote": "Sperrfeuer gelegt: Wer sich im Kegel bewegt, muss sich verteidigen.",
+        "blastArea": "Explosion ({name})",
+        "blastNote": "Die Explosion ist auf der Karte markiert.",
+        "scatter": "Streuen",
+        "scattered": "Gestreut {side}, {distance} m.",
+        "scatteredWall": "Gestreut {side}, {distance} m - an einer Wand gestoppt.",
+        "scatterAhead": "geradeaus",
+        "scatterBack": "zurück",
+        "scatterRight": "{degrees}° nach rechts",
+        "scatterLeft": "{degrees}° nach links",
+        "armedTimerRound": "Scharf: explodiert am Ende von {name}s Zug in Runde {round}.",
+        "armedTimerClock": "Scharf: der Timer läuft auf der Weltuhr.",
+        "armedSignal": "Scharf: explodiert, wenn der Besitzer das Signal gibt.",
+        "armedProximity": "Scharf: explodiert, wenn jemand näher als {reach} m kommt - aktiv nach 3 Aktionszügen.",
+        "detonate": "Zünden",
+        "defuse": "Entschärfen",
+        "defusedNote": "Entschärft, sie geht nicht mehr los.",
+        "countdownTurns": "{count} Züge",
+        "countdownSeconds": "{count} s",
+        "countdownMinutes": "{count} min",
+        "armedBy": "{name} · Fernzündung",
+        "armedLive": "{name} · Sensor aktiv",
+        "armedArming": "{name} · Sensor aktiv in {time}",
+        "armedTimer": "{name} · explodiert in {time}",
+        "armedYours": "{name} (Du)",
+        "gasArea": "Gas ({name})",
+        "smokeArea": "Rauch ({name})",
+        "gasNote": "Die Gaswolke liegt 3 Aktionszüge: Wer darin steht, hineinläuft oder seinen Zug darin beginnt, atmet die Dosis ein.",
+        "smokeNote": "Der Rauch liegt 3 Minuten und verbirgt, was darin oder dahinter ist (-20)."
+      },
+      "blindAttack": {
+        "headline": "Blinder Angriff mit {weapon}",
+        "missed": "{name} ist geblendet. Der Angriff geht glatt daneben.",
+        "through": "{name} ist geblendet. Der Angriff geht trotzdem los.",
+        "rollTitle": "Blindwurf",
+        "accept": "Ergebnis annehmen",
+        "gone": "Auf diesen Wurf wartet kein Angriff mehr. Würfle den Angriff neu."
+      },
+      "strike": {
+        "checkNeeded": "{effect}: <strong>{name}</strong> muss eine {check} ablegen",
+        "roll": "{check} würfeln",
+        "resist": "{effect} widerstehen",
+        "resistFor": "{name}: {effect} widerstehen",
+        "rollRemaining": "Restliche Proben würfeln",
+        "resolveRest": "Rest ohne Wurf auflösen",
+        "weapon": "Waffe",
+        "immune": "<strong>{name}</strong> ist immun gegen {effect}",
+        "outcome": "<strong>{name}</strong>: {conditions}",
+        "resisted": "<strong>{name}</strong> widersteht: {effect}",
+        "flee": "<strong>{name}</strong> muss mit der nächsten vollen Aktion fliehen - so weit vom Schmerz weg wie möglich oder in die nächste volle Deckung",
+        "spanRound": "1 Aktionszug",
+        "spanRounds": "{count} Aktionszüge",
+        "spanMinutes": "{count} Min.",
+        "armor": {
+          "energy": "Energierüstung",
+          "kinetic": "Kinetische Rüstung"
+        },
+        "attackSuperiors": "Überragende Erfolge des Angriffs",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "Niederschlag",
+          "rule": "Wundmodifikatoren gelten. Misserfolg: Liegend."
+        },
+        "unconscious": {
+          "name": "Bewusstlosigkeit",
+          "rule": "Zwei oder mehr Wunden auf einmal werfen dich zu Boden. Wundmodifikatoren gelten. Misserfolg: bewusstlos, bis geweckt oder geheilt."
+        },
+        "shock": {
+          "name": "Schock",
+          "rule": "Energierüstung zählt als Bonus; Größe im Dialog als Modifikator eintragen (sehr klein -30, klein -10, groß +10, sehr groß +30). Misserfolg: Liegend, Handlungsunfähig für 1 Aktionszug (+2 pro überragendem Misserfolg) und Betäubt für 3 Minuten. Erfolg: Betäubt für 3 Aktionszüge."
+        },
+        "stun": {
+          "name": "Betäubung",
+          "rule": "Kinetische Rüstung zählt als Bonus; Größe im Dialog als Modifikator eintragen (klein -30, groß +30). Misserfolg: Betäubt für 1 Aktionszug, +1 pro überragendem Misserfolg. Kritischer Misserfolg: Handlungsunfähig für 1 Aktionszug und Betäubt für 1 Minute."
+        },
+        "blinding": {
+          "name": "Blendung",
+          "rule": "Misserfolg: Geblendet für 1 Aktionszug, +1 pro überragendem Misserfolg. Kritischer Misserfolg: blind, bis repariert oder im Heiltank geheilt."
+        },
+        "entangling": {
+          "name": "Fesselung",
+          "rule": "Jeder überragende Erfolg des Angriffs: -10 auf diese Probe und auf SOM-Proben, um sich zu befreien. Misserfolg: Gepackt."
+        },
+        "pain": {
+          "name": "Schmerz",
+          "rule": "-20 bis zum Ende des nächsten Zugs in jedem Fall (Pain Tolerance I: +30 auf die Probe und -10). Misserfolg: mit der nächsten vollen Aktion fliehen."
+        },
+        "confused": {
+          "name": "Verwirrung",
+          "rule": "-30 auf die Probe. Erfolg: handelt normal. Misserfolg: der W100 entscheidet - 00-24 murmelt nur Unverständliches, 25-49 handelt zufällig nach Wahl der SL, 50-74 flieht in eine zufällige Richtung, 75-99 greift ein zufälliges Ziel in der Nähe an, auch Verbündete, mit dem, was gerade in der Hand ist. Verteidigung mit Fray wie gewohnt."
+        }
+      },
+      "confusion": {
+        "headline": "Verwirrt: <strong>{name}</strong>",
+        "mutter": "{name} murmelt nur Unverständliches und tut sonst nichts.",
+        "random": "{name} handelt zufällig - die SL entscheidet, wie.",
+        "flee": "{name} flieht in eine zufällige Richtung.",
+        "attack": "{name} greift mit dem, was gerade in der Hand ist, ein zufälliges Ziel in der Nähe an - auch Verbündete.",
+        "rollTitle": "Verwirrungswurf",
+        "clear": "<strong>{name}</strong> durchschaut die Verwirrung und handelt normal"
       },
       "defence": {
         "headline": "Verteidigung gegen {weapon}",
-        "doseLabel": "{name}, je eine Dosis",
         "dodge": "Ausweichen",
         "parry": "Parieren",
-        "rollAll": "Restliche auf einmal würfeln",
+        "rollAll": "Rest ausweichen",
         "outcome": {
           "hit": "Getroffen",
           "half": "Teilweise ausgewichen: halbe Dosis",
-          "none": "Abgewehrt"
-        }
+          "none": "Abgewehrt",
+          "will": {
+            "hit": "Betroffen",
+            "half": "Betroffen",
+            "none": "Widerstanden"
+          },
+          "cover": "In Deckung gegangen",
+          "remainCover": "In Deckung geblieben",
+          "spared": "nicht erreicht",
+          "inCover": "in Deckung"
+        },
+        "severalTargets": "Mehrere Ziele",
+        "resist": "Widerstehen ({aptitude})",
+        "yield": "Nicht widerstehen",
+        "lockedOut": "Kritisch: Das Async ist aus diesem Geist ausgesperrt, bis es sich erholt.",
+        "touchLabel": "{name} durch Berührung",
+        "cover": "In Deckung gegangen",
+        "remainCover": "Bleibt in Deckung",
+        "blastDistance": "{distance} m vom Zentrum",
+        "blastEdge": "am Rand",
+        "inCover": "Kein Schaden",
+        "spareRest": "Rest ohne Wurf auflösen",
+        "soak": "Schaden einstecken",
+        "soakRest": "Rest einstecken",
+        "headlineCover": "Verteidigung gegen {weapon} hinter einem Hindernis",
+        "payloadLabel": "Ladung",
+        "doseInfo": "Dosis"
+      },
+      "failGone": "Dieser Fehlschlag steht nicht mehr zur Verfügung.",
+      "poolSpent": {
+        "swapped": "{name} hat einen Punkt {pool} eingesetzt, um die Würfel zu tauschen",
+        "upgraded": "{name} hat einen Punkt {pool} eingesetzt, um das Ergebnis zu verbessern",
+        "mitigated": "{name} hat einen Punkt {pool} eingesetzt, um den Fehlschlag abzumildern"
+      },
+      "damage": {
+        "appliedPhysical": "{name} erleidet {taken} Schaden und {wounds} Wunden",
+        "appliedMental": "{name} erleidet {taken} Stress und {wounds} Traumata",
+        "attackHit": "{name}: {share} - {armor} Rüstung ({armorType}) = {damage}, {woundsTaken}",
+        "attackHalf": "{name} (halb): {share} - {armor} Rüstung ({armorType}) = {damage}, {woundsTaken}",
+        "attackMissed": "{name} wurde nicht getroffen",
+        "attackParried": "{name} hat pariert",
+        "attackTookDamage": "{name} wurde getroffen und hat Schaden erlitten",
+        "attackSoaked": "{name} wurde getroffen, aber die Rüstung hat den ganzen Schaden geschluckt",
+        "amountDamage": "{value} Schaden",
+        "amountWounds": "{value} Wunden",
+        "amountStress": "{value} Stress",
+        "amountTraumas": "{value} Traumata",
+        "blastFalloff": "{name} ({distance} m, -{falloff} SW)"
+      },
+      "psiTouch": {
+        "headline": "Psi-Berührungsangriff ({sleight})",
+        "touched": "{target} wurde berührt",
+        "avoided": "{target} ist der Berührung ausgewichen",
+        "missed": "Die Berührung hat {target} verfehlt",
+        "useTouch": "{sleight} durch Berührung einsetzen (+20)",
+        "usePointBlank": "{sleight} auf Kernschussdistanz einsetzen (+10)",
+        "used": "Das Sleight wurde eingesetzt."
       }
     },
     "rule": {
@@ -2103,6 +2541,7 @@
       "sectionThreats": "Nichtspielercharaktere & Bedrohungen",
       "endNow": "Beenden",
       "remaining": "Verbleibend",
+      "endsThisRound": "Endet diese Runde",
       "owner": "Charakter",
       "toggleFormat": "Zwischen Stunden und Beats wechseln",
       "hoursTooltip": "etwa {hours} Std",
@@ -2127,7 +2566,9 @@
         "day3": "+3 Tage",
         "day7": "+7 Tage",
         "beats": "{beats} Beats"
-      }
+      },
+      "sectionEnvironment": "Umgebung",
+      "locateCloud": "Auf der Karte zeigen"
     },
     "migration": {
       "armorBoundNotice": "<p><b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände dieses Charakters wurden automatisch an <b>{body}</b> gebunden, da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Nutze den Zuweisen-Button neben einem Rüstungsgegenstand (im Morph-Tab), um ihn jederzeit einem anderen Körper zuzuweisen.</p>",
@@ -2142,7 +2583,8 @@
         "backup": "WICHTIG: Bis hierher wurden deine Daten weder aktualisiert noch verändert. Falls du deine Welt noch nicht gesichert hast, schließe diesen Dialog ohne Migration und lege eine Sicherung an, damit bei der Migration nichts verloren geht.",
         "reachOut": "Melde dich gern, Agent!",
         "migrate": "Jetzt migrieren!",
-        "close": "Ohne Migration schließen"
+        "close": "Ohne Migration schließen",
+        "unreadableRanges": "Diese Waffenreichweiten ließen sich nicht als Meter lesen und blieben unverändert. Bitte trag sie im Waffenbogen als Zahl ein:<br>{list}"
       }
     },
     "systemMessage": {
@@ -2174,12 +2616,142 @@
       }
     },
     "targeting": {
+      "needsGM": "Einige Funktionen sind gesperrt, solange keine SL verbunden ist, weil sie sonst zu Fehlern im System und zum Verlust von Items wie Munition oder Granaten führen können. Sie werden wieder aktiv, sobald eine SL anwesend ist.",
+      "tacnetVision": "Tacnet",
       "cancelHint": "ESC oder Rechtsklick ohne Ziele bricht ab.",
       "confirmHint": "Rechtsklick zum Bestätigen",
       "remaining": "Noch {count} Ziele",
       "limitReached": "Die Höchstzahl von {max} Zielen ist erreicht. Klicke ein markiertes Ziel erneut an, um die Markierung zu entfernen.",
       "selectTarget": "Ziel auswählen",
-      "targetChosen": "Ziel gewählt"
+      "targetChosen": "Ziel gewählt",
+      "tooFar": "Weitere Ziele müssen höchstens {within} m von einem markierten entfernt sein.",
+      "marked": "{count} Ziele markiert",
+      "tooFew": "Wähle mindestens {min} Ziele.",
+      "unsuitable": "{name} kann damit nicht anvisiert werden: {kind}.",
+      "kind": {
+        "biomorph": "Biomorph",
+        "synthmorph": "Synthmorph",
+        "infomorph": "Infomorph",
+        "bot": "Bot",
+        "vehicle": "Fahrzeug",
+        "animal": "Tier",
+        "cyberbrain": "Cyberbrain"
+      },
+      "band": {
+        "pointBlank": "Kernschuss",
+        "close": "Nah",
+        "range": "Reichweite",
+        "beyond": "Jenseits der Reichweite"
+      },
+      "outOfTouch": "{name} ist außerhalb der Reichweite einer Berührung (2 m).",
+      "areaName": "Fläche",
+      "outsideArea": "Dieser Token liegt außerhalb der Fläche.",
+      "tooMany": "Auf diese Reichweite trifft dieser Angriff höchstens {max} Ziele.",
+      "ownBlast": "{name} steht in der eigenen Explosion.",
+      "armedElsewhere": "Dieser Sprengsatz liegt in einer anderen Szene - zeige zuerst diese Szene an.",
+      "lockedOut": "Der Geist von {name} ist dir verschlossen, bis du dich erholst.",
+      "notOnSelf": "Diesen Sleight kannst du nicht auf dich selbst wirken."
+    },
+    "conditions": {
+      "blinded": {
+        "name": "Geblendet",
+        "description": "Du kannst nicht sehen, nimmst aber über andere Sinne, Entoptics und gemeshte Sensoren weiter wahr. −30 auf körperliche Handlungen, Fray eingeschlossen; ein Angriff auf ein Ziel, das du nicht wahrnimmst, kann glatt danebengehen."
+      },
+      "confused": {
+        "name": "Verwirrt",
+        "description": "Jede Runde eine COG-Probe mit −30. Bei einem Fehlschlag murmelst du, handelst zufällig, fliehst oder greifst jemanden in der Nähe an."
+      },
+      "dazed": {
+        "name": "Benommen",
+        "description": "Geistig betäubt und orientierungslos: keine Handlungen außer einer Grundbewegung und der Verteidigung gegen Angriffe."
+      },
+      "deafened": {
+        "name": "Taub",
+        "description": "Du kannst nicht hören. −3 auf Initiative und −30 auf Perceive-Proben."
+      },
+      "grappled": {
+        "name": "Gepackt",
+        "description": "Körperlich festgehalten: Bewegungsrate 0 und keine körperlichen Handlungen außer dem Losreißen. Fray mit −30 gegen Angriffe von außerhalb."
+      },
+      "immobilized": {
+        "name": "Bewegungsunfähig",
+        "description": "Keine körperlichen Handlungen, Fray eingeschlossen, bis du dich erholst. Geistige und Mesh-Handlungen bleiben möglich."
+      },
+      "impaired10": {
+        "name": "Beeinträchtigt (−10)",
+        "description": "Deine Fähigkeiten sind eingeschränkt: −10 auf alle Handlungen."
+      },
+      "impaired20": {
+        "name": "Beeinträchtigt (−20)",
+        "description": "Deine Fähigkeiten sind eingeschränkt: −20 auf alle Handlungen."
+      },
+      "impaired30": {
+        "name": "Beeinträchtigt (−30)",
+        "description": "Deine Fähigkeiten sind eingeschränkt: −30 auf alle Handlungen."
+      },
+      "incapacitated": {
+        "name": "Handlungsunfähig",
+        "description": "Keinerlei Handlungen, auch keine geistigen und kein Fray. Du kannst dich nicht gegen Angriffe verteidigen."
+      },
+      "prone": {
+        "name": "Liegend",
+        "description": "Am Boden oder in der Mikrogravitation am Trudeln. Aufstehen ist eine schnelle Aktion. Stehende Gegner im Nahkampf erhalten +20, Schützen ab Range −10."
+      },
+      "stunned": {
+        "name": "Betäubt",
+        "description": "Dir bleibt die Luft weg: −30 auf körperliche und −10 auf geistige Handlungen."
+      },
+      "unconscious": {
+        "name": "Bewusstlos",
+        "description": "Ohne Bewusstsein und hilflos. Ein Stimulans oder eine INT-Probe mit −30, wenn dich jemand kräftig weckt, bringt dich zurück."
+      },
+      "dead": {
+        "name": "Tot",
+        "description": "Dieser Charakter ist tot."
+      },
+      "invisible": {
+        "name": "Unsichtbar",
+        "description": "Dieser Charakter ist nicht zu sehen."
+      },
+      "noteText": "{name}: {note}",
+      "notApplied": "{name} (Nicht aktiv)",
+      "notes": {
+        "blinded": "Vor jedem Angriff ein Perceive-Wurf; misslingt er, verfehlt der Angriff glatt zu 50 %",
+        "deafened": "−3 Initiative und −30 Perceive",
+        "grappled": "Fray −30 gegen Angriffe von außerhalb",
+        "prone": "Gegner im Nahkampf +20, Schützen ab Range −10"
+      },
+      "blocked": "{condition}: Es sind keine Würfe möglich.",
+      "blockedPhysical": "{condition}: Es sind keine körperlichen Handlungen möglich.",
+      "blockedDefenceOnly": "{condition}: Nur die Verteidigung gegen Angriffe ist möglich."
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Angriffskarte",
+            "hint": "Die Chatnachricht des Sperrfeuers, zu dem diese Fläche gehört."
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Angriffskarte",
+            "hint": "Die Chatnachricht des Sprengsatzes, zu dem dieser Sensor gehört."
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "Angriffskarte",
+            "hint": "Die Chatnachricht des Gases, zu dem diese Wolke gehört."
+          }
+        }
+      }
     }
   }
 }

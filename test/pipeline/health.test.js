@@ -1,4 +1,4 @@
-import { healthBarChange } from "../../module/rolls/damage.js";
+import { healthBarChange } from "../../module/rolls/health.js";
 import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -50,6 +50,51 @@ describe("taking damage from the sheet", () => {
 
     expect(actor.system.health.physical.value).toEqual(8 + actor.system.physical.wt);
     expect(actor.system.physical.wounds).toEqual(2);
+  });
+});
+
+describe("initiative under wounds and trauma", () => {
+  /**
+   * The initiative stat of a character with the given harm and modifiers.
+   * @param {Object} harm - Wounds and trauma
+   * @param {Object} [mods] - Values for system.mods
+   * @returns {Object} The prepared initiative data
+   */
+  function initiative({ wounds = 0, trauma = 0 }, mods = {}) {
+    return makeActor({
+      system: {
+        activeMorph: "morph1",
+        physical: { wounds },
+        mental: { trauma },
+        mods
+      },
+      items: [{ _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30 } }]
+    }).system.initiative;
+  }
+
+  test("each wound and each trauma costs one point", () => {
+    const unhurt = initiative({}).value;
+
+    expect(initiative({ wounds: 2 }).value).toEqual(unhurt - 2);
+    expect(initiative({ trauma: 1 }).value).toEqual(unhurt - 1);
+    expect(initiative({ wounds: 2, trauma: 1 }).value).toEqual(unhurt - 3);
+  });
+
+  test("ignored wounds and trauma cost nothing, and spare ignoring gives nothing back", () => {
+    const unhurt = initiative({}).value;
+
+    expect(initiative({ wounds: 2 }, { woundMod: -1 }).value).toEqual(unhurt - 1);
+    expect(initiative({ trauma: 1 }, { traumaMod: -3 }).value).toEqual(unhurt);
+  });
+
+  test("a pain trait doubles the modifier to actions, not the point of initiative", () => {
+    expect(initiative({ wounds: 2 }, { woundMultiplier: 2 }).value).toEqual(initiative({ wounds: 2 }).value);
+  });
+
+  test("the stat shown stays readable below zero", () => {
+    const unhurt = initiative({}).value;
+
+    expect(initiative({ wounds: unhurt + 2 }).display).toEqual("1d6 - 2");
   });
 });
 
@@ -144,5 +189,41 @@ describe("the token's health bar", () => {
 
     expect(actor.system.health.physical.value).toEqual(5);
     expect(actor.system.physical.wounds).toEqual(1);
+  });
+});
+
+describe("the bars on the sheet", () => {
+  /**
+   * A sheet's health elements, each with a style to read the bar widths from.
+   * @returns {Object} querySelector and the elements by id
+   */
+  function sheetHtml() {
+    const elements = {};
+    return {
+      elements,
+      querySelector: selector => {
+        const id = selector.replace("#", "");
+        elements[id] ??= { style: {}, value: "", addEventListener: () => {} };
+        return elements[id];
+      }
+    };
+  }
+
+  test("a sheet drawn again while the bars move picks the animation up instead of starting it over", async () => {
+    const actor = hurt();
+    await actor.update({ "system.health.physical.value": 1, "system.physical.oldHealthBarValue": 60, "system.physical.oldDeathBarValue": 0, "system.health.barModifier": "physicalDown" });
+    const first = sheetHtml();
+    const second = sheetHtml();
+
+    const animation = healthBarChange(actor, first);
+    await new Promise(resolve => setTimeout(resolve, 120));
+    const reached = parseFloat(first.elements.physicalHealthBar.style.width);
+    const redraw = healthBarChange(actor, second);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(reached).toBeLessThan(60);
+    expect(parseFloat(second.elements.physicalHealthBar.style.width)).toBeLessThanOrEqual(reached);
+    await Promise.all([animation, redraw]);
+    expect(parseFloat(second.elements.physicalHealthBar.style.width)).toBe(actor.system.physical.relativePhysicalDamage);
   });
 });

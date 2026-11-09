@@ -16,7 +16,8 @@
     "psiType": "gamma",
     "strainFamily": "psi",
     "actionType": "complex",
-    "duration": "instant"
+    "duration": "instant",
+    "landingRule": "recharge"
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

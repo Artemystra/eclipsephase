@@ -152,12 +152,26 @@ export async function result (data) {
     await calcEffects (actorWhole, actorModel, Number(resultData[0].result), stressResult)
 }
 
-async function calcEffects(actorWhole, actorModel, integrationResult, stressResult) {
+export async function calcEffects(actorWhole, actorModel, integrationResult, stressResult) {
     //Message for the ChatMessage.create() function
     let message = {}
 
+    const failed = result => result <= 2 || result === 6 || result === 8;
+    if (!failed(integrationResult) && (stressResult === null || !failed(stressResult))){
+        message = {
+            "type": "defaultDamage",
+            "copy": "ep2e.morph.sleeving.announce.result.cleanCopy"
+        }
+        let html = await foundry.applications.handlebars.renderTemplate(Dice.WEAPON_DAMAGE_OUTPUT, message);
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
+            content: html
+        })
+        return;
+    }
+
     //Checks if the final integration test result is a failure
-    if (integrationResult <= 2 || integrationResult === 6 || integrationResult === 8){
+    if (failed(integrationResult)){
 
         const { label: effectMultiplier, days } = integrationPenalty(integrationResult);
 
@@ -185,7 +199,7 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
     }
     
     //Checks if the final stress test result is a failure (no stress test happened, e.g. jamming, when stressResult is null)
-    if (stressResult !== null && (stressResult <= 2 || stressResult === 6 || stressResult === 8)){const listOptions = [{"id" : "minorStress", "label" : "ep2e.dialog.selectStress.minorLabel", "description" : "ep2e.dialog.selectStress.minorDescription"}, {"id" : "majorStress", "label" : "ep2e.dialog.selectStress.majorLabel", "description" : "ep2e.dialog.selectStress.majorDescription"}]
+    if (stressResult !== null && failed(stressResult)){const listOptions = [{"id" : "minorStress", "label" : "ep2e.dialog.selectStress.minorLabel", "description" : "ep2e.dialog.selectStress.minorDescription"}, {"id" : "majorStress", "label" : "ep2e.dialog.selectStress.majorLabel", "description" : "ep2e.dialog.selectStress.majorDescription"}]
         const dialog = await listSelection(listOptions, "standardSelectionList", 300, "ep2e.dialog.selectStress.dialogTitle", "", "ep2e.dialog.selectStress.copy");
         if (dialog.cancelled) return;
         let stressUpdate = actorModel.health.mental.value;

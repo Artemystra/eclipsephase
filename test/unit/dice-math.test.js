@@ -1,4 +1,4 @@
-import { rollCalc, TASK_RESULT, TaskRoll, TaskRollModifier } from "../../module/rolls/dice.js";
+import { rollCalc, TASK_RESULT, TaskRoll, TaskRollModifier, initiativeRollClass, combatantClass } from "../../module/rolls/dice.js";
 
 describe("rollCalc", () => {
   describe("at or below the target number", () => {
@@ -90,5 +90,69 @@ describe("TaskRollModifier", () => {
     expect(modifier.text).toEqual("ep2e.some.key");
     expect(modifier.value).toEqual(-10);
     expect(modifier.comment).toEqual("note");
+  });
+});
+
+describe("an initiative roll", () => {
+  // Stands in for Foundry's Roll: a d6 showing 1 plus the flat part of the formula.
+  class FoundryRoll {
+    constructor(formula, data) {
+      this.formula = formula;
+      this.data = data;
+      this._evaluated = false;
+    }
+    async evaluate() {
+      // As Foundry parses "1d6 + -2": the die, a plus and a negative number.
+      const flat = Number(this.formula.split("+").pop().trim());
+      this.dice = [{ faces: 6, results: [{ result: 1 }] }];
+      this.terms = [this.dice[0], { operator: "+" }, { number: flat }];
+      this.total = 1 + flat;
+      this._evaluated = true;
+      return this;
+    }
+    async render() {
+      return "foundry card";
+    }
+  }
+
+  beforeEach(() => {
+    foundry.dice = { Roll: FoundryRoll };
+    foundry.documents.Combatant = class {};
+  });
+
+  test("its card says what is rolled and shows the result and the dice tray with the flat part", async () => {
+    const InitiativeRoll = initiativeRollClass();
+    const html = await new InitiativeRoll("1d6 + -2").render();
+    expect(html).toContain("ep2e.roll.announce.initiative");
+    expect(html).toContain("ep2e.roll.announce.total");
+    expect(html).toContain("<strong>-1</strong>");
+    expect(html).toContain("dicetray");
+    expect(html).toContain('<strong class="eyes">1</strong>');
+    expect(html).toMatch(/ep-dice-sign ep-dice-minus">-<\/span><strong class="eyes">2</);
+    expect(html).not.toContain("foundry card");
+  });
+
+  test("a total of 0 still shows", async () => {
+    const InitiativeRoll = initiativeRollClass();
+    expect(await new InitiativeRoll("1d6 + -1").render()).toContain("<strong>0</strong>");
+  });
+
+  test("a private roll keeps Foundry's hidden card", async () => {
+    const InitiativeRoll = initiativeRollClass();
+    expect(await new InitiativeRoll("1d6 + 7").render({ isPrivate: true })).toEqual("foundry card");
+  });
+
+  test("a combatant rolls it with its actor's data", () => {
+    const InitiativeRoll = initiativeRollClass();
+    const Combatant = combatantClass(InitiativeRoll);
+    const combatant = Object.assign(new Combatant(), {
+      actor: { getRollData: () => ({ initiative: { value: 7 } }) },
+      _getInitiativeFormula: () => "1d6 + @initiative.value"
+    });
+    const roll = combatant.getInitiativeRoll();
+    expect(roll).toBeInstanceOf(InitiativeRoll);
+    expect(roll.formula).toEqual("1d6 + @initiative.value");
+    expect(roll.data).toEqual({ initiative: { value: 7 } });
+    expect(combatant.getInitiativeRoll("1d6").formula).toEqual("1d6");
   });
 });

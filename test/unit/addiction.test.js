@@ -201,7 +201,7 @@ describe("the WIL Check", () => {
       game.socket.emit = realEmit;
     }
 
-    expect(emitted).toContainEqual({ action: "markAddictionRolled", messageId: card.id });
+    expect(emitted).toContainEqual({ action: "updateCard", messageId: card.id, key: "addictionCheck", mutation: "merge", payload: { rolled: true }, extra: {} });
   });
 
   test("a pool spend that turns the check into a pass takes the addiction back", async () => {

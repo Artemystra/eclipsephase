@@ -1,7 +1,7 @@
 import { takeDose, settleOverTime, damageTicksDue, combinedDamage, tickBreakdowns, registerOverTimeHooks, endRunOutDoses } from "../../module/common/doses.js";
 import { drugHealingAddition } from "../../module/rolls/modifiers.js";
 import { globalModifiers } from "../../module/rolls/modifiers.js";
-import { flatBonus } from "../../module/rolls/dice.js";
+import { flatBonus, rollFactor } from "../../module/rolls/dice.js";
 import { JSDOM } from "jsdom";
 import { makeActor, makeUnlinkedToken, resetWorld, seedRolls } from "../setup/factories.js";
 
@@ -130,9 +130,8 @@ describe("damage every tick", () => {
 
   test("each tick goes against the Wound Threshold on its own, not as one sum", async () => {
     const actor = exposed({ damage: { d10: 2, d6: 0, bonus: 10 }, ticks: 3 }, { value: 1, units: "hours" });
+    await actor.items.get("morph1").update({ "system.dur": 100 });
     const dose = await dosed(actor);
-    const dealt = [];
-    actor.modifyTokenAttribute = async (attribute, value) => dealt.push([attribute, value]);
     const RealRoll = global.Roll;
     global.Roll = class extends RealRoll {
       async evaluate() {
@@ -148,7 +147,9 @@ describe("damage every tick", () => {
       global.Roll = RealRoll;
     }
 
-    expect(dealt).toEqual([["health.physical", 13], ["health.physical", 17], ["health.physical", 21]]);
+    expect(actor.system.health.physical.value).toBe(51);
+    expect(actor.system.physical.wounds).toBe(1);
+    expect(global.__ep.createdMessages.filter(message => message.flavor?.includes("ep2e.roll.announce.combat.damage")).length).toBe(0);
   });
 
   test("a tick is dealt once, however often the dose is settled", async () => {
@@ -247,7 +248,7 @@ describe("a modifier that grows", () => {
     const conditions = actor.effects.filter(effect => effect.getFlag("eclipsephase", "incapacitatedBy") === dose.id);
     expect(notYet).toBe(0);
     expect(conditions).toHaveLength(1);
-    expect(conditions[0].statuses).toContain("paralysis");
+    expect(conditions[0].statuses).toContain("incapacitated");
     expect(conditions[0].showIcon).toBe(CONST.ACTIVE_EFFECT_SHOW_ICON.ALWAYS);
   });
 });
@@ -257,6 +258,10 @@ describe("the flat part of a damage roll", () => {
     expect(flatBonus({ terms: [{ number: 2, faces: 10 }, { operator: "+" }, { number: 10 }] })).toBe("+10");
     expect(flatBonus({ terms: [{ number: 1, faces: 6 }, { operator: "-" }, { number: 2 }] })).toBe("-2");
     expect(flatBonus({ terms: [{ number: 1, faces: 100 }] })).toBe("");
+    const critical = { terms: [{ number: 2 }, { operator: "*" }, { roll: { terms: [{ number: 2, faces: 10 }, { operator: "+" }, { number: 3 }] } }] };
+    expect(flatBonus(critical)).toBe("+3");
+    expect(rollFactor(critical)).toBe(2);
+    expect(rollFactor({ terms: [{ number: 1, faces: 100 }] })).toBe(1);
   });
 });
 

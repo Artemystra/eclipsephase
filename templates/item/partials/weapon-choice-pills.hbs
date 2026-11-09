@@ -1,0 +1,40 @@
+{{!-- A weapon's or munition's traits or accessories as a combobox with pills, powered by multiSelectPills():
+  a choice is switched on and off at <path>.<key>.value. Params: choices, path, placeholderKey --}}
+<div class="multiselect-widget ep-choice-pills" data-path="{{path}}" data-toggles="true">
+    {{#each choices as |choice key|}}
+        {{#if choice.value}}
+            <span class="multiselect-pill">
+                <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{choice.name}}" data-rolledfrom="info">{{localize choice.name}} <i class="fa-regular fa-circle-info"></i></a>
+                {{#if (eq key "reach")}}
+                    <select name="{{../path}}.reach.skillMod">
+                        {{selectOptions @root.config.trippleSkillModifiers selected=choice.skillMod localize=true}}
+                    </select>
+                {{else if (eq key "multiShot")}}
+                    <input onFocus="this.select()" class="ep-pill-number" type="number" name="{{../path}}.multiShot.number" value="{{choice.number}}" placeholder="0"/>
+                {{else if (eq key "dvOnMiss")}}
+                    <span class="ep-field-dice ep-pill-dice">
+                        <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                        <input onFocus="this.select()" class="ep-pill-number" type="number" name="{{../path}}.dvOnMiss.dv.d10" value="{{choice.dv.d10}}" placeholder="0"/>
+                        <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                        <input onFocus="this.select()" class="ep-pill-number" type="number" name="{{../path}}.dvOnMiss.dv.d6" value="{{choice.dv.d6}}" placeholder="0"/>
+                        <i class="fas fa-plus awesomeIcon"></i>
+                        <input onFocus="this.select()" class="ep-pill-number" type="number" name="{{../path}}.dvOnMiss.dv.bonus" value="{{choice.dv.bonus}}" placeholder="0"/>
+                    </span>
+                {{else if (eq key "indirectOrBonus")}}
+                    +<input onFocus="this.select()" class="ep-pill-number" type="number" name="{{../path}}.indirectOrBonus.skillMod" value="{{choice.skillMod}}" placeholder="0"/>
+                {{else if (eq key "knockdown")}}
+                    <input onFocus="this.select()" class="ep-pill-number" type="text" name="{{../path}}.knockdown.radius" value="{{choice.radius}}" placeholder="0m"/>
+                {{/if}}
+                <a class="multiselect-pill-remove" data-key="{{key}}">&times;</a>
+            </span>
+        {{/if}}
+    {{/each}}
+    <input type="text" class="multiselect-input" placeholder="{{localize placeholderKey}}"/>
+    <div class="multiselect-dropdown noShow">
+        {{#each choices as |choice key|}}
+            {{#unless choice.value}}
+                <a class="multiselect-option" data-value="{{localize choice.name}}" data-key="{{key}}">{{localize choice.name}}</a>
+            {{/unless}}
+        {{/each}}
+    </div>
+</div>

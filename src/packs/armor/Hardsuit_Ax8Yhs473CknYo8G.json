@@ -3,7 +3,59 @@
   "type": "armor",
   "flags": {},
   "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "sjSei6rAc9YdzUWk",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Sealed",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "icons/svg/aura.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.airSealed",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          },
+          {
+            "key": "system.additionalSystems.skinSealed",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 0,
+      "folder": null,
+      "_key": "!items.effects!Ax8Yhs473CknYo8G.sjSei6rAc9YdzUWk"
+    }
+  ],
   "_id": "Ax8Yhs473CknYo8G",
   "_stats": {
     "coreVersion": "13.346",

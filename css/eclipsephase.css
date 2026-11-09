@@ -55,6 +55,8 @@
   --augmentedTurquoise: #19d3c5;
   --augmentedMagenta: #ff2bd6;
   --augmentedYellow: #f5ec1b;
+  --jammingYellow: #f2c200;
+  --jammingBlack: #0d0d0d;
   --color-bg-option: #1f1f1f;
   --color-shadow-primary: #36aee9!important;
   --color-border-highlight: #36aee9!important;
@@ -788,6 +790,9 @@ span.neutral {
   text-align: center;
   margin: 0;
   padding: 0 28px;
+  /* A long name wraps instead of running under the delete icon. */
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .chat-message .message-header .message-metadata {
@@ -842,6 +847,48 @@ dialog.dialog::backdrop {
 /* Keep the primary/confirm button first in the DOM (so Enter submits it), but show it on the right */
 .ep2e-primary-right .form-footer {
   flex-direction: row-reverse;
+}
+
+/* Every dialog's primary action sits on the right in the accent colour; the others are secondary. */
+.ep2e-primary-right .form-footer button:first-child {
+  background-color: var(--accentBackground);
+}
+
+.ep2e-primary-right .form-footer button:not(:first-child) {
+  background-color: var(--mainBackground);
+}
+
+/* A narrow dialog with three actions: the two secondaries side by side, the primary below on its own row. */
+.ep2e-primary-below .form-footer {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ep2e-primary-below .form-footer button:first-child {
+  order: 3;
+  flex: 1 0 100%;
+}
+
+.ep2e-primary-below .form-footer button:nth-child(2) {
+  order: 2;
+}
+
+.ep2e-primary-below .form-footer button:nth-child(3) {
+  order: 1;
+}
+
+/* The combat tracker draws its initiative die as the button's background, which the system's own button rule paints over. It is drawn as a mask in the icon blue instead. The core's icon path in --initiative-icon is relative and would resolve against this stylesheet, so the die is named from here - three levels up is Foundry's root. */
+.combat-sidebar .combat-tracker .token-initiative button {
+  background: var(--iconBlue);
+  border: none;
+  filter: none;
+  -webkit-mask: url("../../../icons/svg/d20.svg") no-repeat center / contain;
+  mask: url("../../../icons/svg/d20.svg") no-repeat center / contain;
+}
+
+.combat-sidebar .combat-tracker .token-initiative button:hover {
+  background: var(--highlight);
+  box-shadow: none;
 }
 
 #sidebar {
@@ -1156,15 +1203,22 @@ form button,
 .dialog .dialog-buttons button{
   color: var(--mainText);
   background: var(--highlightBackground);
+  border: 1px solid var(--iconGrey);
 }
 
 button.ui-control[aria-pressed=true] {
   border-color: var(--highlight);
 }
 
-body.game .app button:hover, 
-body.game .app button:focus {
-  box-shadow: var(--highlight);
+/* Every button glows in the highlight colour on hover and takes a highlight border when focused. */
+body.game button:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+body.game button:focus,
+body.game button:focus-visible {
+  border: 2px solid var(--highlight);
+  outline: none;
 }
 
 .eclipsephase button.sheetButton {
@@ -1621,6 +1675,30 @@ optgroup .Default .Roll .Mode,
 /* Remove the 1rem padding FoundryVTT V13 injects into .window-content */
 .application.eclipsephase.sheet .window-content {
   padding: 0 !important;
+}
+
+/* The dark theme blurs .window-content, which makes Firefox place fixed dropdowns and tooltips
+   relative to it and clip them at its edge. Sheets draw that blur on a layer behind the content. */
+.application.eclipsephase.sheet .window-content {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.theme-dark .application.eclipsephase.sheet::before,
+.themed.theme-dark .application.eclipsephase.sheet::before,
+.application.eclipsephase.sheet.themed.theme-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+body.game:is(.performance-low, .noblur) .application.eclipsephase.sheet::before {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /* custom title bar, replaces native window-header */
@@ -2226,13 +2304,13 @@ h3.subheaderBlank {
   margin-bottom: 10px;
 }
 
-/* Same footprint as .statusSideCar above it (single line, detail on hover), for every actor type. */
+/* The Armor box: built like Current Modifiers above it, detail on hover, for every actor type. */
 .armorSideCar {
   min-height: 50px;
-  max-height: 50px;
   padding: 10px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rangedSideCar {
@@ -2288,6 +2366,16 @@ h3.subheaderBlank {
 
 .flexrow.subheader.colorV2{
   border-bottom: solid var(--complementary1) 3px;
+}
+
+.flexrow.subheader.colorPsi{
+  border-bottom: solid var(--mentalHealth) 3px;
+}
+
+/* Jamming in the roll dialog: a line striped like barrier tape. */
+.flexrow.subheader.colorJamming{
+  border-bottom: 3px solid transparent;
+  border-image: repeating-linear-gradient(135deg, var(--jammingYellow) 0 10px, var(--jammingBlack) 10px 20px) 1;
 }
 
 /* Drug options in the roll dialog, underlined in the negative colour the dose cards use. */
@@ -2480,6 +2568,14 @@ h3.subheaderBlank {
 .icon-hidden{
   opacity: 0%;
   border: none;
+}
+
+.eclipsephase .ep-roll-blocked {
+  color: var(--negative);
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  cursor: help;
 }
 
 .noShow {
@@ -3266,24 +3362,27 @@ button.epTextlink:hover{
   opacity: 1;
 }
 
-.psiDamageFields .wantToKnowMore .tooltipText {
-  position: fixed;
-  top: auto;
-  left: auto;
-  transform: translateY(-40px);
+/* Munition sheets: tooltips on one line so they clear the field they explain, and fields that do not apply stay in place, greyed out. */
+/* An attack dialog's modifier that suppressive fire ignores. */
+.ep-field-suppressed {
+  opacity: 0.4;
 }
 
-.psiDamageFields .grid-3col .wantToKnowMore {
-  flex-wrap: nowrap;
+.ep-locked-select {
+  pointer-events: none;
 }
 
-.psiDamageFields .grid-3col .awesomeIcon {
-  flex: 0 0 auto;
+.munition-fields input:disabled,
+.munition-fields select:disabled,
+.munition-fields button:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
-.psiDamageFields .grid-3col select {
-  flex: 1 1 0;
-  min-width: 0;
+.munition-fields .munition-payload-select {
+  max-width: 150px;
+  margin: 0;
+  font-size: 12px;
 }
 
 .chiPushed {
@@ -4042,17 +4141,70 @@ li:has(.ep-system-notice) .message-header {
   margin-top: 5px;
 }
 
+.chatControls .ep-chat-primary {
+  background-color: var(--accentBackground);
+}
+
 /* The flat part of a damage roll, set beside its dice. */
-.eclipsephase.dicetray .diecontainerSmall.bonus{
+.eclipsephase.dicetray .ep-dice-bracket{
+  align-self: center;
+  margin: 0 2px;
+  color: var(--mainText);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.eclipsephase.dicetray .diecontainerSmall.bonus,
+.eclipsephase.dicetray .ep-dice-factor{
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   align-self: center;
-  min-width: 0;
+  min-width: 48px;
   min-height: 40px;
-  padding: 0 10px;
-  background-color: var(--pitchBorder);
-  border-radius: 6px;
+  padding: 0;
+  background: none;
+}
+
+.eclipsephase.dicetray .ep-dice-sign{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pitchBorder);
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.eclipsephase.dicetray .ep-dice-factor .ep-dice-sign{
+  font-size: 0;
+}
+
+.eclipsephase.dicetray .ep-dice-factor .ep-dice-sign::before{
+  content: "+";
+  font-size: 80px;
+  transform: rotate(45deg);
+}
+
+/* A minus glyph sits low, so it is drawn as a bar centred behind the value. */
+.eclipsephase.dicetray .ep-dice-sign.ep-dice-minus{
+  font-size: 0;
+}
+
+.eclipsephase.dicetray .ep-dice-sign.ep-dice-minus::before{
+  content: "";
+  width: 44px;
+  height: 12px;
+  background: var(--pitchBorder);
+}
+
+.eclipsephase.dicetray .diecontainerSmall.bonus .eyes,
+.eclipsephase.dicetray .ep-dice-factor .eyes{
+  position: relative;
+  color: var(--mainText);
 }
 
 /* The die images carry transparent margins of their own (d10 about 6px, d6 about 10px at this
@@ -4143,6 +4295,17 @@ li:has(.ep-system-notice) .message-header {
   padding: 4px 8px;
 }
 
+/* Chat card buttons keep Foundry's height as their least and grow when the label wraps; buttons
+   side by side stretch to the tallest of them. */
+.chat-message .message-content button {
+  height: auto;
+  min-height: var(--button-size, 2em);
+  line-height: normal;
+  white-space: normal;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
 /* The GM's addiction controls on a dose card: the WIL Check button and the dose history beside it. */
 .chatControls.dose-addiction {
   align-items: center;
@@ -4161,6 +4324,35 @@ li:has(.ep-system-notice) .message-header {
 
 /* Picking a token on the canvas from a chat card: a crosshair until the click. A feature may set
    its own cursor class instead, as an offered dose does with its syringe. */
+/* Notes a roll card shows once something happened on it: a pool point spent, the targets picked. */
+.ep-pool-spent,
+.ep-attack-targets,
+.ep-damage-applied {
+  min-width: 100%;
+  margin: 0 0 20px 0;
+  padding: 0 5px;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: var(--inactive);
+  text-align: center;
+}
+
+/* The targets line keeps clear of the roll result above it. */
+.ep-attack-targets {
+  margin-top: 10px;
+}
+
+/* What got through and the wounds stand out in a damage reckoning. */
+.ep-damage-value {
+  color: var(--mainText);
+}
+
+/* The damage lines keep clear of the roll result above them. */
+.ep-damage-lines {
+  min-width: 100%;
+  margin-top: 10px;
+}
+
 /* The text that follows the picking cursor: what is left to pick below it, how to confirm above it. */
 .ep-targeting-counter {
   position: fixed;
@@ -4171,7 +4363,7 @@ li:has(.ep-system-notice) .message-header {
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  color: #00f5e4;
+  color: var(--mainText);
   font-size: 13px;
   font-weight: bold;
   text-shadow: 0 0 3px black, 0 0 6px black;
@@ -4182,10 +4374,142 @@ li:has(.ep-system-notice) .message-header {
   margin-top: 56px;
 }
 
+/* The distance a measured attack shows under the count, in white so it reads apart from it. */
+.ep-targeting-counter .ep-targeting-range {
+  color: #ffffff;
+  font-weight: normal;
+}
+
 .ep-defence-card .ep-defence-name,
 .ep-defence-card .ep-defence-outcome {
   margin: 0;
   text-align: center;
+}
+
+/* A cloud in the time panel's environment section: its colour before its name. */
+.ep-time-panel .ep-time-cloud-swatch {
+  flex: 0 0 10px;
+  height: 10px;
+  margin: 0 6px 0 2px;
+  border-radius: 2px;
+  border: 1px solid var(--pitchBorder);
+}
+
+/* A sheet tooltip shown centred above the mouse pointer, outside the sheet's clipping. */
+.wantToKnowMore .tooltipText.ep-tooltip-follow,
+.wantToKnowMoreFixed .tooltipText.ep-tooltip-follow,
+.wantToKnowMore.tooltip-opens-left .tooltipText.ep-tooltip-follow {
+  position: fixed;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+/* Dodging in the open or from behind cover, side by side. */
+.ep-defence-card .ep-defence-pair {
+  display: flex;
+  gap: 10px;
+}
+
+.ep-defence-card .ep-defence-pair button {
+  flex: 1;
+}
+
+/* The substance a munition carries, wherever the munition is listed or looked at. */
+.ep-payload-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  margin: 3px 0 5px 10px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  background-color: var(--pitchBorder);
+  font-size: 12px;
+}
+
+/* A short text over the canvas, centred above the pointer, such as whose an armed explosive is. */
+.ep-map-tip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  z-index: 1000;
+  padding: 3px 8px;
+  border: 2px solid var(--highlightBackground);
+  border-radius: 6px;
+  background-color: var(--focusBackground);
+  color: var(--mainText);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Locating an armed explosive on another scene: there is nowhere to move the view to, but hovering still names the place. */
+.ep-armed-row .ep-armed-elsewhere {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* What an attack brings besides the hit, above its targets: a payload, a dose, a touch. */
+.ep-defence-card .ep-effect-box {
+  display: block;
+  margin: 15px 0 0;
+  padding: 10px 0;
+  background-color: var(--pitchBorder);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* A damage value's "+" stands in for a die beside the d10 and d6 icons, so it is as wide as they are. */
+img.icon-xsmall ~ i.fa-plus.awesomeIcon {
+  flex: 0 0 16px;
+  width: 16px;
+  max-width: 16px;
+  text-align: center;
+}
+
+/* A defence card: each target a block of its own - name, choices, note 5 px apart - 10 px from the
+   headline and from the next block; the choices for the rest 5 px apart, 10 px below the last
+   block, padded beneath. */
+.ep-defence-card .ep-defence-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.ep-defence-card .ep-defence-entry > * {
+  margin: 0;
+}
+
+.ep-defence-card .ep-defence-entry .ep-defence-name {
+  font-weight: bold;
+}
+
+.ep-defence-card .ep-defence-entry .chatControls {
+  padding: 0 10px;
+}
+
+.ep-defence-card .chatControls.ep-defence-controls {
+  margin-top: 10px;
+  padding: 0 10px 10px;
+}
+
+.ep-defence-card .chatControls.ep-defence-controls .ep-chat-primary {
+  margin-top: 0;
+}
+
+/* A table card's dice, set off from what they decided. */
+.ep-defence-card .ep-table-roll-dice {
+  margin-top: 10px;
+}
+
+/* Where a target stands in a blast, below its choices. */
+.ep-defence-card .ep-defence-note {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
 }
 
 /* The migration notice: a release's own text between the fixed parts, its bullets scrolling inside the dialog. */
@@ -4257,4 +4581,481 @@ li:has(.ep-system-notice) .message-header {
   background-color: currentColor;
   -webkit-mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
   mask: url("../resources/icons/social/ko-fi.svg") no-repeat center / contain;
+}
+
+/* Item sheet raster: a fixed number of columns per window width, fields may span them. */
+.ep-sheet-grid {
+  display: grid;
+  gap: 8px 12px;
+  padding: 8px 10px;
+  background-color: var(--pitchBorder);
+}
+
+.ep-sheet-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ep-sheet-grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ep-span-2 {
+  grid-column: span 2;
+}
+
+.ep-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  text-align: center;
+}
+
+.eclipsephase .ep-field > .resource-label {
+  align-self: center;
+  text-align: center;
+}
+
+.ep-field select,
+.ep-field input {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  text-align-last: center;
+}
+
+.eclipsephase .ep-field select,
+.eclipsephase .ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]) {
+  background: var(--focusBackground);
+}
+
+.eclipsephase .ep-field select:hover,
+.eclipsephase .ep-field select:focus,
+.eclipsephase .ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):hover,
+.eclipsephase .ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):focus {
+  background: var(--highlightBackground);
+}
+
+.eclipsephase .ep-choice-pills,
+.eclipsephase .ep-choice-pills:focus-within,
+.eclipsephase .ep-choice-pills .multiselect-pill {
+  background: var(--pitchBorder);
+}
+
+.eclipsephase .ep-choice-pills input[type="text"].multiselect-input {
+  background: var(--focusBackground);
+}
+
+.eclipsephase .ep-choice-pills input[type="text"].multiselect-input:hover,
+.eclipsephase .ep-choice-pills input[type="text"].multiselect-input:focus {
+  background: var(--highlightBackground);
+}
+
+.ep-field-bound {
+  color: var(--inactive);
+  text-transform: capitalize;
+}
+
+.ep-field-dice,
+.ep-field-unit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.ep-field-dice input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ep-field-dice img,
+.ep-field-dice i,
+.ep-field-unit span {
+  flex: none;
+}
+
+.ep-choice-pills {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 0;
+}
+
+.ep-choice-pills .multiselect-pill select {
+  width: auto;
+  max-width: 130px;
+  height: 20px;
+}
+
+.ep-choice-pills .ep-pill-number {
+  width: 40px;
+  height: 20px;
+}
+
+/* Fixed so the list is not cut off at the window's edge; multiSelectPills() places it. */
+.ep-choice-pills .multiselect-dropdown {
+  position: fixed;
+  top: auto;
+  left: auto;
+  margin: 0;
+}
+
+.ep-mode-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ep-mode-tab-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ep-mode-add {
+  flex: 0 0 45px;
+  cursor: pointer;
+}
+
+.ep-sheet-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: var(--pitchBorder);
+}
+
+.ep-strip-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  text-align: center;
+}
+
+.ep-strip-cell input:not([type="checkbox"]) {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.eclipsephase .ep-strip-cell input:not([type="checkbox"]) {
+  background: var(--focusBackground);
+}
+
+.eclipsephase .ep-strip-cell input:not([type="checkbox"]):hover,
+.eclipsephase .ep-strip-cell input:not([type="checkbox"]):focus {
+  background: var(--highlightBackground);
+}
+
+.ep-rep-head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+}
+
+.ep-strip-checks {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+
+.ep-field input[type="checkbox"],
+.ep-field input[type="radio"] {
+  width: 13px;
+  align-self: center;
+}
+
+.ep-field select,
+.ep-field button,
+.ep-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]) {
+  box-sizing: border-box;
+  height: 30px;
+  margin: 0;
+}
+
+.ep-field > input[type="checkbox"] {
+  margin: 8px auto;
+}
+
+.munition-fields .ep-cloud-custom-unused {
+  display: none;
+}
+
+.ep-field-options input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 13px;
+  height: 13px;
+  margin: 0 5px 0 0;
+  border: var(--focusBackground) 1px solid;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.ep-field-options input[type="radio"]::before,
+.ep-field-options input[type="radio"]::after {
+  display: none;
+  content: none;
+}
+
+.ep-field-options input[type="radio"]:checked {
+  background-color: var(--highlight);
+}
+
+.ep-field-options label {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+}
+
+.ep-strip-checks-stacked {
+  flex-direction: column;
+  align-items: center;
+}
+
+.ep-strip-checks input[type="checkbox"] {
+  flex: 0 0 13px;
+  width: 13px;
+}
+
+.eclipsephase .ep-field > .resource-label img {
+  display: block;
+  margin: 0 auto;
+}
+
+.ep-tab-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.eclipsephase nav.itemnav .item {
+  min-width: 0;
+}
+
+.item-sheet-body:has(> .tab[data-tab="description"].active) > .ep-vehicle-aptitudes,
+.item-sheet-body:has(> .tab[data-tab="additions"].active) > .ep-vehicle-aptitudes,
+.item-sheet-body:has(> .tab[data-tab="effects"].active) > .ep-vehicle-aptitudes {
+  display: none;
+}
+
+.ep-field-unit input[type="color"] {
+  flex: none;
+}
+
+.ep-field-unit select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ep-field-unit input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ep-field-unit input.ep-field-short {
+  flex: 0 0 45px;
+}
+
+.ep-field-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+}
+
+.ep-field .munition-payload-select {
+  width: 100%;
+}
+
+.eclipsephase .ep-grid-heading {
+  text-align: center;
+}
+
+.ep-subheader-button {
+  flex: 0 0 auto;
+  width: fit-content;
+  max-height: 30px;
+}
+
+.ep-induced-changes {
+  margin: 0;
+  padding: 8px 10px 8px 28px;
+  background-color: var(--pitchBorder);
+}
+
+.ep-pill-dice {
+  display: inline-flex;
+}
+
+.ep-field-unit .ep-cloud-custom {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+
+/* Carousel Combat Tracker (combat-dock): its combatant name, an h2, takes the system's h2. */
+#combat-dock,
+.combat-dock-tooltip {
+  --font-h2: "Cousine", monospace;
+  --font-h2-size: 1rem;
+}
+
+body #combat-dock h2,
+body .combat-dock-tooltip .combat-dock-tooltip-wrapper h2 {
+  border-bottom: 1px solid var(--accentBackground);
+}
+
+/* Foundry sizes the token HUD's status palette for eight rows; it holds only the system's conditions. */
+#token-hud .status-effects {
+  height: auto;
+}
+
+/* The value boxes at the top of the side car, Current Modifiers and Armor: a small caption, labelled
+   values side by side, and on the right a narrow column for an icon beside the values' row. */
+.ep-modifier-box {
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.eclipsephase .ep-sidecar-caption {
+  margin: 0;
+}
+.ep-sidecar-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 15px;
+  align-items: center;
+}
+.ep-sidecar-main .ep-modifier-notes {
+  grid-column: 1;
+}
+/* Each label takes what its value leaves and trails off when it runs out of room; a value has room
+   for three digits and a sign, never more. */
+.ep-sidecar-values {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.ep-sidecar-pair {
+  display: flex;
+  align-items: baseline;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 4px;
+}
+.ep-sidecar-pair .ep-sidecar-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ep-sidecar-pair .ep-sidecar-value {
+  flex: 0 0 4.5ch;
+  max-width: 4.5ch;
+  font-size: 16px;
+  text-align: right;
+  white-space: nowrap;
+}
+/* Armor rarely reaches three digits: its values start at two and grow when they must. */
+.armorSideCar .ep-sidecar-pair .ep-sidecar-value {
+  flex: 0 0 auto;
+  min-width: 2.5ch;
+  max-width: none;
+}
+.ep-sidecar-pair .ep-modifier-negative {
+  color: var(--negative);
+}
+.ep-sidecar-divider {
+  flex: 0 0 auto;
+}
+.ep-sidecar-aside {
+  width: 16px;
+  text-align: center;
+}
+.ep-modifier-info {
+  color: var(--iconGrey);
+}
+/* The Current Modifiers box keeps its note icons in the values' column, under the sums. */
+/* The note icons spread over the row, dim until the actor is under the condition. */
+.ep-modifier-notes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.ep-modifier-note-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: var(--focusBackground);
+  /* The image itself is set on the element: a URL in the stylesheet would resolve against it. */
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.ep-modifier-note-active .ep-modifier-note-icon {
+  background-color: var(--mainText);
+}
+/* The sheet places the note above the pointer; it wraps at a fixed width and grows in height. */
+.ep-modifier-notes .ep-modifier-note .tooltipText {
+  width: max-content;
+  max-width: 260px;
+  height: auto;
+  white-space: normal;
+  line-height: 1.3;
+  text-transform: none;
+  text-align: left;
+}
+
+/* The breakdown dialog: source, then one column each for physical and mental actions. The columns
+   touch, so the lines under the heads and above the totals run through; the values keep their
+   distance by padding. */
+.ep-modifier-breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, 64px);
+  column-gap: 0;
+  row-gap: 4px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+.ep-modifier-breakdown-grid > .alignRight {
+  padding-left: 8px;
+}
+.ep-modifier-breakdown-grid .ep-modifier-breakdown-head {
+  font-weight: bold;
+  border-bottom: 1px solid var(--accentBackground);
+}
+.ep-modifier-breakdown-grid .ep-modifier-breakdown-comment {
+  font-size: 11px;
+  color: var(--iconGrey);
+  white-space: pre-line;
+}
+.ep-modifier-breakdown-grid .ep-modifier-breakdown-total {
+  border-top: 2px solid var(--iconGrey);
+  padding-top: 2px;
+}
+.ep-modifier-breakdown-empty {
+  font-size: 12px;
+}
+
+/* The side car's section titles, smaller than they were, so less space goes to empty room. */
+.ep-sidecar-title {
+  margin-bottom: 8px;
+}
+.ep-sidecar-title .resource-value {
+  font-size: 16px;
 }

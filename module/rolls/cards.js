@@ -1,0 +1,400 @@
+import { RollCheck, isHit, TASK_RESULT_TEXT } from "./dice.js";
+import { getTaskResultText, listFailOptions } from "../api/registry.js";
+import { postCard, ownersAndGMs, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
+import { registerCard, updateCard, storable } from "../common/chat-cards.js";
+import { outcomeLabel } from "./attacks.js";
+
+// The cards a roll leaves in the chat and redraws as it goes on: the task card, check cards, and
+// the state a damage card starts from.
+
+// The card a task roll leaves in the chat. It keeps what it shows in its taskCard flag, so a pool
+// spend and a target pick can redraw this one card instead of posting another: the pool controls
+// give way to a note saying who spent what, and the result - on a swap the die as well - shows the
+// new values. An attack also keeps its targets and how each one's defence went, and offers its
+// damage once every defence is in.
+
+export const TASK_RESULT_TEMPLATE = "systems/eclipsephase/templates/chat/task-result.html";
+
+registerCard("taskCard", {
+  render: state => foundry.applications.handlebars.renderTemplate(TASK_RESULT_TEMPLATE, taskCardView(state)),
+  mutations: {
+    poolSpent,
+    failed: (state, { resultClass, resultText, note }) => {
+      const rollContext = { ...(state.data.rollContext ?? {}), failureNote: note };
+      const alternatives = { ...(state.data.alternatives ?? {}), options: { swap: false, upgrade: false, mitigate: false } };
+      return { ...state, targets: [], data: { ...state.data, resultClass, resultText, rollContext, alternatives } };
+    },
+    targets: (state, { names, uuids = [] }) => ({ ...state, targets: uuids.map((uuid, index) => ({ uuid, name: names[index] ?? "", outcome: null })) }),
+    defence: (state, { uuid, outcome, kind = "dodge" }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, outcome, kind } : target) }),
+    damageOffered: state => ({ ...state, damageOffered: true }),
+    updateTarget: (state, { uuid, ...change }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, ...change } : target) }),
+    addTarget: (state, { uuid, name, hidden = false }) => ({ ...state, targets: [...(state.targets ?? []), { uuid, name: name ?? "", outcome: null, hidden }] }),
+    blastTargets: (state, { targets, scatter = null }) => ({ ...state, blastLaid: true, scatter: scatter ?? state.scatter ?? null, targets: targets.map(target => ({ ...target, outcome: null })) }),
+    armed: (state, { armed, scatter = null }) => ({ ...state, armed, scatter }),
+    defused: state => ({ ...state, defused: true }),
+    accepted: state => ({ ...state, accepted: true, data: { ...state.data, alternatives: { ...(state.data.alternatives ?? {}), options: { swap: false, upgrade: false, mitigate: false } } } }),
+    targetDamageOffered: (state, { uuid }) => ({ ...state, targets: (state.targets ?? []).map(target => target.uuid === uuid ? { ...target, damageOffered: true } : target) })
+  }
+});
+
+/**
+ * The state a task card starts with: what it showed when it was rolled, nothing spent, no targets.
+ * @param {Object} message - The data the card was drawn from
+ * @returns {Object} The taskCard flag
+ */
+export function taskCardState(message) {
+  const { chatMessage, sound, ...data } = message;
+  return { data: storable(data), spent: null, targets: [] };
+}
+
+/**
+ * The state a damage card starts with: what it showed when it was rolled, and no lines yet on what
+ * the damage did.
+ * @param {Object} message - The data the card was drawn from
+ * @returns {Object} The damageCard flag
+ */
+export function damageCardState(message) {
+  const { chatMessage, sound, ...data } = message;
+  return { data: storable(data), lines: [] };
+}
+
+/**
+ * The data a task card is drawn from: what it was rolled with, plus the note on a spent pool point
+ * and the targets an attack was applied to - a blast's are named on the cards that follow instead.
+ * @param {Object} state - The taskCard flag
+ * @returns {Object} The template data
+ */
+export function taskCardView(state) {
+  const view = { ...state.data };
+  if (state.spent) view.poolSpent = game.i18n.format(`ep2e.chat.poolSpent.${state.spent.usageType}`, { name: state.spent.spender, pool: game.i18n.localize(state.spent.poolName) });
+  const shown = state.blastLaid ? [] : (state.targets ?? []).filter(target => !target.hidden);
+  if (shown.length) view.targetNames = game.i18n.format("ep2e.chat.attack.targets", { names: shown.map(targetWithOutcome(state)).join(", ") });
+  view.defended = (state.targets ?? []).some(target => target.outcome) || !!state.scatter;
+  view.blastLaid = state.blastLaid === true;
+  view.accepted = state.accepted === true;
+  view.lying = !!state.armed && !view.blastLaid && !state.defused;
+  if (view.lying) view.armedNote = armedNote(state.armed);
+  if (state.defused) view.armedNote = game.i18n.localize("ep2e.chat.attack.defusedNote");
+  if (state.scatter) view.scatterNote = game.i18n.format(state.scatter.blocked ? "ep2e.chat.attack.scatteredWall" : "ep2e.chat.attack.scattered", { side: scatterSide(state.scatter.degrees), distance: state.scatter.distance });
+  return view;
+}
+
+/**
+ * What an attack card says of a blast lying armed: when it goes off.
+ * @param {Object} armed - trigger; round and actorName for a timer in a combat; sensor for a
+ *   proximity trigger
+ * @returns {String} The note
+ */
+export function armedNote(armed) {
+  if (armed.trigger === "timer" && Number.isFinite(armed.round)) return game.i18n.format("ep2e.chat.attack.armedTimerRound", { name: armed.actorName, round: armed.round });
+  if (armed.trigger === "timer") return game.i18n.localize("ep2e.chat.attack.armedTimerClock");
+  if (armed.trigger === "proximity") return game.i18n.format("ep2e.chat.attack.armedProximity", { reach: armed.sensor });
+  return game.i18n.localize("ep2e.chat.attack.armedSignal");
+}
+
+/**
+ * Which way a blast scattered, seen along the line of the throw: straight on, straight back, or so
+ * many degrees to the right or the left.
+ * @param {Number} degrees - Degrees clockwise from straight on
+ * @returns {String} The words
+ */
+export function scatterSide(degrees) {
+  const turn = ((Number(degrees) || 0) % 360 + 360) % 360;
+  if (turn === 0) return game.i18n.localize("ep2e.chat.attack.scatterAhead");
+  if (turn === 180) return game.i18n.localize("ep2e.chat.attack.scatterBack");
+  const off = Math.round((turn < 180 ? turn : 360 - turn) * 10) / 10;
+  return game.i18n.format(turn < 180 ? "ep2e.chat.attack.scatterRight" : "ep2e.chat.attack.scatterLeft", { degrees: off });
+}
+
+/**
+ * How a target is named on the attack card: with the outcome of its defence once it is in.
+ * @param {Object} state - The taskCard flag
+ * @returns {Function} target => its name, and "(outcome)" once defended
+ */
+function targetWithOutcome(state) {
+  const defence = state.data?.rollContext?.targetedAttack?.defence;
+  return target => (target.outcome ? `${target.name} (${outcomeLabel(target.outcome, defence)})` : target.name);
+}
+
+/**
+ * Whether an attack's damage is due: every target has defended, at least one was struck, and no
+ * damage card was posted yet.
+ * @param {Object} state - The taskCard flag
+ * @returns {Boolean} True when the damage card is due
+ */
+export function damageReady(state) {
+  const targets = state.targets ?? [];
+  if (state.damageOffered || !targets.length || targets.some(target => !target.outcome)) return false;
+  return targets.some(target => target.outcome !== "none");
+}
+
+/**
+ * A pool point spent on the roll: the result becomes the new one, and a swap turns the die too.
+ * @param {Object} state - The taskCard flag
+ * @param {Object} spent - usageType ("swapped", "upgraded" or "mitigated"), poolName, spender, and
+ *   the new value, result class and result text
+ * @returns {Object} The new state
+ */
+function poolSpent(state, spent) {
+  const data = { ...state.data, resultClass: spent.resultClass, resultText: spent.resultText };
+  if (spent.usageType === "swapped" && Number.isFinite(spent.newValue)) {
+    data.rollResult = spent.newValue;
+    data.total = spent.newValue;
+    const hundreds = { ...(data.diceBreakdown?.hundreds ?? {}) };
+    const first = Object.keys(hundreds)[0];
+    if (first !== undefined) hundreds[first] = { ...hundreds[first], result: spent.newValue };
+    data.diceBreakdown = { ...(data.diceBreakdown ?? {}), hundreds };
+  }
+  return { ...state, data, spent };
+}
+
+/**
+ * The result a roll card's buttons go by: the one a pool point turned it into, or the rolled one.
+ * @param {Object} context - The roll context
+ * @returns {Number} The result
+ */
+export function spentOrOriginalResult(context) {
+  return context.alternatives?.spent && Number.isFinite(context.alternatives.result) ? context.alternatives.result : context.alternatives?.originalResult;
+}
+
+/**
+ * The defence cards an attack card has sent out.
+ * @param {ChatMessage} message - The attack card
+ * @returns {ChatMessage[]} The defence cards
+ */
+function defenceCardsOf(message) {
+  return Array.from(game.messages ?? []).filter(card => card.getFlag?.("eclipsephase", "attackDefence")?.attack?.messageId === message.id);
+}
+
+/**
+ * Whether an attack has already done something a failure could not take back: a defence is in, an
+ * effect landed without one, or its own flow runs on the map.
+ * @param {Object} state - The taskCard flag
+ * @param {Object} [attack] - The attack, as the roll flag has it now
+ * @param {ChatMessage[]} cards - Its defence cards
+ * @returns {Boolean} True when it stays as it is
+ */
+function attackSettled(state, attack, cards) {
+  if (attack?.blast || attack?.suppressive || state.blastLaid || state.damageOffered) return true;
+  if ((state.targets ?? []).some(target => target.outcome)) return true;
+  if (cards.some(card => card.getFlag("eclipsephase", "attackDefence").entries.some(entry => entry.outcome))) return true;
+  if (!attack?.delivered) return false;
+  return attack.willing === true || (attack.defence === "will" && (state.targets ?? []).some(target => target.uuid === attack.actorUuid));
+}
+
+/**
+ * The failures the GM can still put on a task card: none once one was put on it or its result was
+ * accepted, none once an attack can no longer be taken back, and none that would not make the result worse.
+ * @param {ChatMessage} message - The card
+ * @returns {Object[]} The entries on offer
+ */
+export function cardFailures(message) {
+  const state = message?.getFlag?.("eclipsephase", "taskCard");
+  const roll = message?.getFlag?.("eclipsephase", "roll");
+  if (!state || !roll?.actorUuid) return [];
+  if (state.accepted || state.data?.rollContext?.failureNote || attackSettled(state, roll.targetedAttack, defenceCardsOf(message))) return [];
+  const actor = fromUuidSync(roll.actorUuid);
+  if (!actor) return [];
+  const current = spentOrOriginalResult(roll);
+  const passed = state.data?.resultClass === "success";
+  return listFailOptions(actor, { skillKey: state.data?.skillKey, message }).filter(option => passed || (current <= 2 && option.result < current));
+}
+
+/**
+ * Puts a failure on a task card, as a pool point turns a result: the card shows it, its pool
+ * controls go, an attack's open defence cards are withdrawn, and what follows from the result settles.
+ * @param {ChatMessage} message - The card
+ * @param {String} id - The failure's id
+ * @returns {Promise<Boolean>} True when it was put on
+ */
+export async function failCard(message, id) {
+  const option = cardFailures(message).find(entry => entry.id === id);
+  if (!option) {
+    ui.notifications.warn(game.i18n.localize("ep2e.chat.failGone"));
+    return false;
+  }
+  const text = (getTaskResultText() ?? TASK_RESULT_TEXT)[option.result];
+  const withdrawn = defenceCardsOf(message);
+  const undelivered = withdrawn.length ? { "flags.eclipsephase.roll.targetedAttack.delivered": false, "flags.eclipsephase.roll.targetedAttack.targetNames": [] } : {};
+  await updateCard(message, "taskCard", "failed", { resultClass: text.class, resultText: text.text, note: option.note }, {
+    extra: { "flags.eclipsephase.roll.alternatives.spent": true, "flags.eclipsephase.roll.alternatives.result": option.result, ...undelivered }
+  });
+  await Promise.all(withdrawn.map(card => card.delete()));
+  await option.spend();
+  const roll = message.getFlag("eclipsephase", "roll");
+  const actor = fromUuidSync(roll.actorUuid);
+  Hooks.callAll("eclipsephase.poolResult", { context: { ...roll, messageId: message.id }, actor, rolledFrom: roll.rolledFrom, newResult: option.result, blind: message.blind, recipientList: message.whisper });
+  return true;
+}
+
+/**
+ * Draws the GM's failure buttons at the end of a task card. A card with none on offer stays as it is.
+ * @param {ChatMessage} message - The rendered message
+ * @param {HTMLElement} html - Its markup
+ * @returns {void}
+ */
+export function drawFailButtons(message, html) {
+  if (!game.user.isGM) return;
+  const failures = cardFailures(message);
+  if (!failures.length) return;
+  const slot = document.createElement("div");
+  slot.className = "chatControls ep-chat-stack";
+  for (const failure of failures) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "chatButton failCard ep-chat-secondary";
+    button.dataset.failId = failure.id;
+    button.textContent = failure.label;
+    slot.append(button);
+  }
+  (html.querySelector(".message-content") ?? html).append(slot);
+}
+
+// A check asked for on a chat card: the card carries a button, the owner rolls from it - spending
+// pool if they like - and once the roll lands the outcome is settled, then settled again should a
+// pool spend turn it around. Drugs' checks on taking, toxin filters and addiction all run this way;
+// each brings only what the check is for and what its outcome does. Modelled on pools.js, where a
+// chat button likewise carries the roll on.
+
+/**
+ * Draws a check card: its button while the check waits, a note once it is rolled.
+ * @param {Object} state - The card's state: card, button, actorUuid, rolled
+ * @returns {Promise<String>} The card's HTML
+ */
+function renderCheckCard(state) {
+  const data = state.rolled
+    ? { ...state.card, footnote: game.i18n.localize("ep2e.chat.dose.checkRolled") }
+    : { ...state.card, button: state.button, actorUuid: state.actorUuid };
+  return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, data);
+}
+
+/**
+ * Registers a kind of check card, so it can be redrawn once rolled - on this client and on the GM's.
+ * @param {String} key - The flag the card keeps its request under
+ * @returns {void}
+ */
+export function registerCheckCard(key) {
+  registerCard(key, { render: renderCheckCard });
+}
+
+/**
+ * Posts a check card for the owners of an actor and every GM.
+ * @param {Actor} actor - Who makes the check
+ * @param {String} key - The flag the card keeps its request under
+ * @param {Object} options - card ({icon, color, headline, rows}), button ({action, label}) and
+ *   payload, what the check needs once rolled
+ * @returns {Promise<ChatMessage>} The card
+ */
+export function postCheckCard(actor, key, { card, button, payload = {} }) {
+  registerCheckCard(key);
+  return postCard(actor, { ...card, button, actorUuid: actor.uuid },
+    { eclipsephase: { [key]: { actorUuid: actor.uuid, card, button, rolled: false, ...payload } } }, ownersAndGMs(actor));
+}
+
+/**
+ * Turns a check card into a record once it is rolled: the button gives way to a note.
+ * @param {ChatMessage} message - The card
+ * @param {String} key - The flag the card keeps its request under
+ * @returns {Promise<Boolean>} What updateCard reported
+ */
+export function markCardRolled(message, key) {
+  return updateCard(message, key, "merge", { rolled: true });
+}
+
+/**
+ * Rolls a check card's check on the clicking client, which owns the actor, once: the card keeps a
+ * note instead of its button, and the roll carries what the check is for, so its outcome can be
+ * applied once it lands - and again if a pool spend turns it.
+ * @param {String} messageId - The card
+ * @param {String} key - The flag the card keeps its request under, and the roll its check
+ * @param {Function} prepare - prepare(request, actor) returning { aptitude, check, flags } - the
+ *   aptitude to roll, what the roll carries and any further flags for it - or null to roll nothing
+ * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
+ * @param {Object} [entry] - entryId: one of the checks a card lists under checks, marked rolled by
+ *   the card's checkRolled change; flag: what the roll carries the check under, if not key
+ * @returns {Promise<*>} Whatever the roll returned, or null when nothing was rolled
+ */
+export async function requestCardCheck(messageId, key, prepare, systemOptions = {}, { entryId = null, flag = key } = {}) {
+  const message = game.messages.get(messageId);
+  const state = message?.getFlag?.("eclipsephase", key);
+  const request = entryId ? state?.checks?.find(entry => entry.id === entryId) : state;
+  if (!request) return null;
+  if (request.rolled) {
+    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.checkRolled"));
+    return null;
+  }
+  const actor = await fromUuid(request.actorUuid);
+  if (!actor?.isOwner) return null;
+  const roll = await prepare(request, actor);
+  if (!roll) return null;
+  if (entryId) await updateCard(message, key, "checkRolled", { id: entryId });
+  else await markCardRolled(message, key);
+  return rollAptitudeCheck(actor, roll.aptitude, { [flag]: roll.check, ...(roll.flags ?? {}) }, systemOptions);
+}
+
+/**
+ * Rolls an aptitude check through the roll pipeline, carrying what it is for on the roll.
+ * @param {Actor} actor - Who rolls
+ * @param {String} aptitude - The aptitude key, e.g. "wil"
+ * @param {Object} contextFlags - What the roll carries to postRoll and to a later pool spend
+ * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
+ * @returns {Promise<*>} Whatever the roll returned
+ */
+export function rollAptitudeCheck(actor, aptitude, contextFlags, systemOptions = {}) {
+  const dataset = {
+    type: "skill",
+    name: game.i18n.localize(actor.system.aptitudes?.[aptitude]?.name ?? aptitude.toUpperCase()),
+    key: `system.aptitudes.${aptitude}.value`,
+    apttype: aptitude,
+    rollvalue: actor.system.aptitudes?.[aptitude]?.roll ?? 0,
+    contextFlags
+  };
+  return RollCheck(dataset, actor.system, actor, systemOptions, null, "skill");
+}
+
+/**
+ * Settles a check's outcome from the roll pipeline: once when the roll lands, and again when a
+ * pool spend changes its result.
+ * @param {String} key - The roll flag the check travels under
+ * @param {Function} settle - settle(payload, passed, { byPool, message, context, result, value });
+ *   message is the roll's chat card, result its result tier and value its die as it now stands
+ * @returns {void}
+ */
+export function settleOnRoll(key, settle) {
+  Hooks.on("eclipsephase.postRoll", async context => {
+    const payload = context?.flags?.[key];
+    if (!payload) return;
+    const result = context.outputData?.alternatives?.originalResult;
+    await settle(payload, isHit(result), { byPool: false, message: context.message, context, result, value: rolledValue(context.message, context.outputData?.rollResult) });
+  });
+  Hooks.on("eclipsephase.poolResult", async ({ context, newResult }) => {
+    const payload = context?.[key];
+    if (!payload) return;
+    const message = game.messages.get(context.messageId);
+    await settle(payload, isHit(newResult), { byPool: true, message, context, result: newResult, value: rolledValue(message, null) });
+  });
+}
+
+/**
+ * A roll card's die as it now stands - swapped, when a pool point swapped it.
+ * @param {ChatMessage} message - The roll card
+ * @param {Number|null} fallback - The die to use when the card keeps no state
+ * @returns {Number|null} The die
+ */
+function rolledValue(message, fallback) {
+  const value = Number(message?.getFlag?.("eclipsephase", "taskCard")?.data?.rollResult);
+  return Number.isFinite(value) ? value : fallback;
+}
+
+/**
+ * Adds a check's own modifiers to its roll.
+ * @param {String} key - The roll flag the check travels under
+ * @param {Function} modifiersOf - modifiersOf(payload) returning modifiers for RollCheck
+ * @returns {void}
+ */
+export function modifiersOnRoll(key, modifiersOf) {
+  Hooks.on("eclipsephase.preRoll", context => {
+    const payload = context?.flags?.[key];
+    if (payload) context.modifiers.push(...(modifiersOf(payload) ?? []).filter(Boolean));
+  });
+}

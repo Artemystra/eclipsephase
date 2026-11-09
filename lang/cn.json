@@ -11,10 +11,6 @@
       "survival": "Survival",
       "grenadesOnly": "Grenades Only"
     },
-    "effectPanel": {
-      "name": "Enable Effect Panel",
-      "hint": "Enable the Effect Panel on Actors (for GMs)"
-    },
     "timeFormat": {
       "name": "时间格式",
       "hint": "时间面板如何显示一天中的时间。小时使用 24 小时制，Beats 使用斯沃琪网络时间，一天为 1000 beats。",
@@ -24,6 +20,10 @@
     "timePanelPlayers": {
       "name": "向玩家显示时间面板",
       "hint": "允许玩家打开时间面板并查看当前的天数与时间。他们看到的面板相同，但没有任何操作按钮。"
+    },
+    "visionEffects": {
+      "name": "视野修正",
+      "hint": "以专属的画面效果显示特殊视野，例如与他人共享的视野。关闭后将不带滤镜显示，例如当这些效果让你的眼睛不适时。你能看到的内容保持不变。"
     },
     "editAll": {
       "name": "No edit restrictions",
@@ -60,6 +60,13 @@
     "superBrew": {
       "name": "Laph's Special Brew",
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
+    },
+    "showTraps": {
+      "name": "显示陷阱",
+      "hint": "玩家是否可以看到队友或对手留在地图上的已武装爆炸物——定时、遥控、近炸地雷。其持有者和主持人始终可见。",
+      "none": "无",
+      "all": "全部",
+      "players": "仅玩家的陷阱"
     }
   },
   "TYPES": {
@@ -88,6 +95,9 @@
       "ammo": "Ammo",
       "id": "ID",
       "morph": "Morph"
+    },
+    "RegionBehavior": {
+      "suppressive": "压制射击"
     }
   },
   "ep2e": {
@@ -135,9 +145,8 @@
         "doseNeedsBiomorph": "这种药物只对生物躯体有效。",
         "doseNeedsCyberbrain": "这种药物只能在信息形体或赛博脑上运行。",
         "noDosesLeft": "{name} 没有剩余剂量。",
-        "doseCheckRolled": "这次检定已经掷过了。",
+        "checkRolled": "这次检定已经掷过了。",
         "doseNoScene": "请先打开一个场景，再在其中选择目标。",
-        "doseNeedsGM": "必须有 GM 在线才能交付这一剂。",
         "doseNoSelection": "请先选中一个令牌。",
         "doseNeedsClaimant": "请为自己指定角色，或以 GM 身份选中一个令牌，来服用这一剂。",
         "doseAlreadyUsed": "这一剂已经被使用。",
@@ -145,7 +154,8 @@
         "ammoPackNotTaken": "{name} 是弹药包：请将其装入武器，而不是服用。",
         "noPlacedToken": "该角色当前没有已放置的指令牌。",
         "attackDelivered": "此攻击已应用于其目标。",
-        "attackNoPayload": "武器不知道装填的是哪种药物。请先重新装填。"
+        "attackNoPayload": "武器不知道装填的是哪种药物。请先重新装填。",
+        "needsGM": "需要GM在线才能转移效果。"
       },
       "button": {
         "edit": "编辑",
@@ -688,6 +698,7 @@
           },
           "result": {
             "stressCopy": "Changing my body stresses me out.",
+            "cleanCopy": "你顺利地进入了新身体。",
             "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions.",
             "effectIntegrationIssues": {
               "title": "Integration Issues",
@@ -885,6 +896,96 @@
           "playWithPrey": "玩弄猎物",
           "protectTribe": "保护部落"
         }
+      },
+      "lockOut": {
+        "name": "被拒之门外：{target}",
+        "description": "{target}以关键成功进行了防御：此异能者在下次恢复之前不能再以其心智为目标。"
+      },
+      "sleightEffect": {
+        "against": "{sleight}（{target}）"
+      },
+      "option": {
+        "socialTests": "对目标的社交技能检定",
+        "basiliskHacks": "抵抗蛇怪骇入",
+        "lostSense": "依赖{sense}",
+        "visualCoordination": "凝视时的视觉协调"
+      },
+      "sustain": {
+        "name": "维持：{sleight}（{targets}）",
+        "description": "你在维持{sleight}：持续期间其他所有技能检定-10。由你结束，或异能者离目标超过近距离+10米时结束。",
+        "outOfReach": "{target}距{async} {distance}米，超出可维持{sleight}的{reach}米。",
+        "end": "结束维持",
+        "endCopy": "结束维持此异能？它对目标的效果随之结束。",
+        "summary": "维持异能",
+        "endTip": "维持中 - 结束维持",
+        "pickCopy": "你正在多个目标上维持此异能。勾选你想停止维持的目标。",
+        "nameSelf": "维持中：{sleight}"
+      },
+      "healing": {
+        "card": "{name}恢复了{amount}点{kind}（{sleight}）。",
+        "stress": "压力",
+        "damage": "伤害",
+        "rollTitle": "已恢复"
+      },
+      "choice": {
+        "recharge": "{sleight}：{target} 可将下一个复杂动作用作短暂恢复，无需通常时间。不提供额外恢复。",
+        "errorGM": "{sleight} 作用于 {target}：由你选择的一次技能检定失败。请在效果结束前使用检定卡片上的按钮。",
+        "blockSkill": "{sleight} 命中 {target}。请选择要封锁的技能。",
+        "blockSkillButton": "选择技能",
+        "boostSkill": "{sleight} 已作用于 {target}。选择要提升的身体技能。",
+        "boostSkillButton": "选择技能",
+        "boostCopy": "该异能提升哪项身体技能？",
+        "failSkill": "{sleight} 以卓越成功命中 {target}。请选择失误的方式。",
+        "failSkillButton": "选择",
+        "alterDuration": "{sleight} 命中 {target}。请选择一种生效中的药物或毒素。",
+        "alterDurationButton": "选择物质",
+        "noSubstance": "{target} 没有生效中的药物或毒素。",
+        "alterHeader": "改变物质",
+        "alterCopy": "你要改变哪种药物或毒素?",
+        "shorter": "持续时间减半",
+        "longer": "延长持续时间",
+        "errorHeader": "诱发失误",
+        "superiorFailure": "卓越失败",
+        "errorCopy": "错误如何发生?",
+        "failSkillOption": "使技能失败",
+        "alterQuestion": "你想如何操控该效果?",
+        "forcedFailure": "因诱发错误而失败。",
+        "skillHeader": "选择技能",
+        "skillCopy": "此异能影响哪项技能？",
+        "shortened": "{target} 身上的 {effect} 持续时间现为通常的一半。",
+        "lengthened": "{target} 身上的 {effect} 持续时间现为通常的 1.5 倍。",
+        "superiorChosen": "{sleight} 作用于 {target}：GM 选择的一次技能检定将成为卓越失败，使用检定卡片上的按钮。",
+        "errorKind": {
+          "auto": "失败",
+          "superior": "卓越失败"
+        },
+        "skillChosen": "{sleight} 作用于 {target}：{skill}。",
+        "effectName": "{sleight}：{skill}",
+        "blocked": "{sleight} 封锁了 {skill}：无法使用，也不能以默认值进行。",
+        "loseSense": "{sleight}命中了{target}。选择被剥夺的感官。",
+        "loseSenseButton": "选择感官",
+        "senseHeader": "选择一种感官",
+        "senseCopy": "目标失去哪种感官？",
+        "senseChosen": "{sleight}作用于{target}：失去{sense}。"
+      },
+      "sleightLabel": "异能",
+      "contactLost": "<strong>{sleight}</strong>：与{target}的目光接触中断",
+      "sense": {
+        "sight": "视觉",
+        "hearing": "听觉",
+        "touch": "触觉",
+        "smell": "嗅觉",
+        "taste": "味觉",
+        "hunger": "饥饿感",
+        "balance": "平衡",
+        "direction": "方向感",
+        "proprioception": "本体感觉",
+        "facialRecognition": "面部识别",
+        "radar": "雷达",
+        "lidar": "激光雷达",
+        "tRay": "T射线",
+        "electricalSense": "电感",
+        "radiationSense": "辐射感"
       }
     },
     "gmInfo": {
@@ -914,6 +1015,11 @@
         "gearModifiers": "装备妨碍",
         "noModifiersSubHeader": "没有可展示的调整值",
         "noModifiersCopy": "在你探索世界的过程中，每当你承受了任何负面调整值时，你都能在这里找到。再给一点时间，我们很快就能看到每一个了……",
+        "body": "身体",
+        "mind": "心智",
+        "showBreakdown": "修正值来源",
+        "sourceColumn": "来源",
+        "totalRow": "合计",
         "statuses": {
           "wounded": "损伤",
           "woundsIgnored": "忽视的损伤",
@@ -930,9 +1036,13 @@
       "armor": {
         "headline": "护甲",
         "noArmorSubheadline": "没有装备护甲d",
+        "energy": "能量",
+        "kinetic": "动能",
+        "mental": "精神",
         "concealWarning": "护甲值高于11时无法隐藏——可以把它想象成至少一层又厚又显眼的衣物。",
         "encumberanceWarning": "当你的累计护甲值超过身体的耐久值时，你将无法移动。",
-        "armorSourceHint": "如需更改护甲值，请将护甲添加到你当前的Morph，或添加到你正在Jamming的远程躯体上。"
+        "armorSourceHint": "如需更改护甲值，请将护甲添加到你当前的Morph，或添加到你正在Jamming的远程躯体上。",
+        "mentalHint": "精神护甲仅对异能攻击生效，来自异能 Psi Armor"
       },
       "ranged": {
         "headline": "远程战斗",
@@ -949,9 +1059,31 @@
       "consumables": {
         "headline": "消耗品",
         "noConsumablesSubheadline": "没有消耗品"
+      },
+      "armed": {
+        "headline": "已武装的爆炸物",
+        "place": "{trigger} · {scene}"
       }
     },
     "item": {
+"morph": {
+"poolsHeadline": "资源池"},
+      "inducedChanges": {
+        "headline": "诱发变化",
+        "allActions": "所有行动",
+        "physicalActions": "所有物理行动",
+        "mentalActions": "所有精神行动",
+        "durability": "耐久",
+        "lucidity": "清醒",
+        "initiative": "先攻",
+        "energyArmor": "能量护甲",
+        "kineticArmor": "动能护甲",
+        "mentalArmor": "精神护甲",
+        "rest": "休息恢复",
+        "ignoreWounds": "忽略 {count} 处创伤",
+        "ignoreTrauma": "忽略 {count} 次精神创伤",
+        "psiArmor": "获得精神护甲"
+      },
       "general": {
         "tabs": {
           "detailsTab": "物品细节",
@@ -982,6 +1114,9 @@
         }
       },
       "traits": {
+        "traitShort": "正",
+        "flawShort": "负",
+        "typeLabel": "类型",
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1001,6 +1136,7 @@
       "aspect": {
         "pushedBadge": "已推送",
         "table": {
+          "targetHeadline": "目标",
           "type": {
             "label": "灵能类型",
             "gamma": "伽马",
@@ -1029,12 +1165,60 @@
           "damage": {
             "label": "伤害",
             "physical": "物理",
-            "mental": "精神"
+            "mental": "精神",
+            "mode": {
+              "damage": "造成伤害",
+              "heal": "治疗",
+              "none": "无伤害"
+            },
+            "targetLabel": "目标"
+          },
+          "targetRule": {
+            "label": "可选目标",
+            "any": "任何人",
+            "self": "仅自身",
+            "others": "仅他人"
+          },
+          "affects": {
+            "label": "作用于",
+            "target": "目标",
+            "async": "异能者",
+            "both": "双方"
+          },
+          "repeatPerSuperior": {
+            "label": "效果倍增",
+            "tip": "每个优秀成功再施加一次效果"
+          },
+          "landingRule": {
+            "label": "特殊效果",
+            "tip": "命中成功时添加特殊效果",
+            "select": "- 选择 -",
+            "boostSkill": "提升一项身体技能",
+            "blockSkill": "封锁技能",
+            "failSkill": "诱发失误",
+            "recharge": "快速恢复",
+            "alterDuration": "改变物质持续时间",
+            "shockEffect": "电击效果",
+            "painEffect": "痛苦效果",
+            "loseSense": "剥夺一种感官",
+            "eyeContact": "目标被攻击或移动时结束"
+          },
+          "condition": {
+            "label": "状态",
+            "tip": "异能持续期间在目标身上留下的状态",
+            "impaired": "受损（每次生效 -10）"
           }
         }
       },
       "weapon": {
         "table": {
+          "modeName": "模式名称",
+          "section": {
+            "general": "常规",
+            "attack": "攻击",
+            "traits": "特性",
+            "accessories": "配件"
+          },
           "range": "远程",
           "maxAmmo": "弹药上限",
           "damageValue": "DV",
@@ -1049,7 +1233,9 @@
             "label": "护甲",
             "none": "无",
             "kinetic": "动能",
-            "energy": "能量"
+            "energy": "能量",
+            "mental": "精神",
+            "asWeapon": "同武器"
           },
           "firingMode": {
             "label": "射击模式",
@@ -1124,6 +1310,45 @@
             "silencer": "Silencer",
             "smartlink": "Smartlink",
             "smartMagazine": "Smart Magazine"
+          },
+          "area": {
+            "none": "无范围",
+            "uniform": "均匀",
+            "centered": "中心",
+            "radius": "半径",
+            "reduction": "每米伤害值递减"
+          },
+          "size": {
+            "label": "尺寸",
+            "baseline": "微型导弹",
+            "standard": "迷你导弹",
+            "missile": "标准导弹",
+            "select": "选择"
+          },
+          "trigger": {
+            "label": "引信",
+            "impact": "触发",
+            "airburst": "空爆",
+            "timer": "定时",
+            "signal": "信号（遥控）",
+            "proximity": "近炸"
+          },
+          "payload": {
+            "enabled": "载荷",
+            "select": "选择载荷",
+            "sources": {
+              "drugs": "药物与毒素"
+            },
+            "vector": "载荷途径",
+            "choose": "选择",
+            "smoke": "烟雾"
+          },
+          "cloud": "形成云团",
+          "cloudColor": {
+            "smoke": "烟雾",
+            "toxin": "毒素",
+            "drug": "药物",
+            "custom": "自定义"
           }
         }
       },
@@ -1191,6 +1416,7 @@
           }
         },
         "mechanics": {
+          "grantHeadline": "授予",
           "tab": "机制",
           "none": "无",
           "checkHeadline": "服用时检定",
@@ -1208,8 +1434,8 @@
           },
           "overTimeHeadline": "持续效果",
           "damage": "每跳伤害",
-          "interval": "每",
-          "ticks": "跳数",
+          "interval": "每跳间隔",
+          "ticks": "最大跳数",
           "ticksTip": "留空：剂量持续期间一直生效",
           "intervals": {
             "turn": "行动回合",
@@ -1222,7 +1448,6 @@
           "healing": "治疗对话框",
           "healingTip": "剂量生效期间，治疗对话框默认选中此附加项",
           "harm": "伤害",
-          "grantsHeadline": "临时特质",
           "grantPack": "合集",
           "grantFolder": "文件夹",
           "grantItem": "物品",
@@ -1234,7 +1459,9 @@
           "grantDescriptionHint": "写在物品自身描述的上方。",
           "grantTitlePlaceholder": "附加标题（可选）",
           "grantDescriptionPlaceholder": "附加描述（可选）",
-          "grantTitleHint": "显示在物品名称后的括号中。"
+          "grantTitleHint": "显示在物品名称后的括号中。",
+          "wearOffHeadline": "消退效果",
+          "addictionHeadline": "成瘾"
         }
       },
       "additionalSkill": {
@@ -1257,8 +1484,12 @@
         }
       },
       "vehicle": {
+        "tabs": {
+          "skills": "技能"
+        },
         "autoBot": "Add AI",
         "table": {
+          "skillName": "技能",
           "initiative": "先攻",
           "threatValue": "TV",
           "durability": "DUR",
@@ -1401,12 +1632,14 @@
           "damageRoll": "伤害检定k",
           "swap": "颠倒结果",
           "raise": "提升结果",
-          "check": "Dice roll"
+          "check": "Dice roll",
+          "named": "{name}检定"
         },
         "button": {
           "roll": "投骰",
           "cancel": "取消",
-          "useSelection": "使用该选项"
+          "useSelection": "使用该选项",
+          "rollWithoutTargets": "无目标投掷"
         },
         "reputationMode": {
           "headline": "类型",
@@ -1433,11 +1666,13 @@
             "fireMode": {
               "label": "射击模式",
               "single": "单发射击",
-              "burst": "窄点射（+1d10）",
-              "fullAuto": "窄全自动（+2d10）",
-              "wBurst": "宽点射（+10命中）",
-              "wFullAuto": "宽全自动（+30命中）",
-              "suppressive": "压制（使用20发弹药）"
+              "burst": "点射：+1d10 伤害",
+              "fullAuto": "全自动：+2d10 伤害",
+              "wBurst": "点射：+10 命中",
+              "wFullAuto": "全自动：+30 命中",
+              "suppressive": "压制射击（20发）",
+              "burstTargets": "点射：两个目标",
+              "fullAutoTargets": "全自动：三个目标"
             },
             "aim": {
               "label": "瞄准",
@@ -1461,7 +1696,9 @@
               "major": "上级（-30）",
               "blind": "目盲（-30+）",
               "indirect": "间接 (-20)"
-            }
+            },
+            "pickTargets": "选择目标",
+            "vacuum": "真空中"
           },
           "defender": {
             "isProne": "俯卧（射程内-10）",
@@ -1545,7 +1782,31 @@
           "exoticMorphology": "Exotic Morphology"
         },
         "augmentations": "增强",
-        "dodgeCoverLabel": "在掩体后闪避"
+        "dodgeCoverLabel": "在掩体后闪避",
+        "fullDefenseLabel": "全力防御（+30）",
+        "psi": {
+          "touch": "接触（+20）",
+          "willing": "自愿目标（不抵抗）"
+        },
+        "throw": {
+          "headline": "投掷",
+          "radius": "爆炸半径",
+          "reduction": "伤害值递减",
+          "note": "爆炸范围内的所有人都必须防御。调低爆炸需要一个快速动作。",
+          "place": "放置爆炸",
+          "noneLeft": "{name}：没有可投掷的了。",
+          "blastHeadline": "爆炸",
+          "timer": "爆炸时间",
+          "unit": {
+            "rounds": "轮",
+            "seconds": "秒",
+            "minutes": "分钟"
+          },
+          "proximity": "感应范围",
+          "payload": "载荷",
+          "noPayload": "未装载载荷"
+        },
+        "sleightOptions": "异能"
       },
       "successType": {
         "success": "Success",
@@ -1589,6 +1850,7 @@
         "baseValue": "基础值",
         "rollTarget": "目标值",
         "total": "Result",
+        "initiative": "进行先攻检定",
         "damageDone": "Damage Done",
         "infectionRaise": "感染加深至",
         "jamming": {
@@ -1611,7 +1873,10 @@
           "noBioBrain": "灵能只能通过生物大脑运作。电子脑会阻断它，而信息体根本没有神经系统。",
           "blockedByDrug": "一种药物正在封锁你的灵能。",
           "substrateBlockedTooltip": "灵能需要生物大脑",
-          "substrateMismatch": "生物大脑处于合成体内"
+          "substrateMismatch": "生物大脑处于合成体内",
+          "touch": "接触",
+          "cyberbrain": "目标装有电子脑",
+          "range": "灵能距离：{band}（{distance} 米）"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"
@@ -1703,6 +1968,7 @@
             "agressiveCharge": "侵袭冲锋",
             "agressiveChargeAddition": "（+1d10 DV且回避-10）",
             "multipleTargets": "多目标",
+            "proneTarget": "目标倒地（优势位置）",
             "touchOnly": "Touch Only Attack"
           },
           "ranged": {
@@ -1740,8 +2006,11 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip",
-            "fray": "Fray Ranged"
-          }
+            "fray": "Fray Ranged",
+            "measured": "{band}（{distance} 米）",
+            "proneAtRange": "防御者在远处卧倒"
+          },
+          "fullDefense": "全力防御"
         }
       },
       "psi": {
@@ -1821,6 +2090,16 @@
         "fewerHeadline": "目标少于剂量",
         "fewerCopy": "该武器会散布 {max} 剂。确定只选择 {count} 个目标吗？",
         "fewerConfirm": "确认"
+      },
+      "selectPayload": {
+        "header": "选择载荷",
+        "copy": "这种弹药携带哪种物质？",
+        "none": "载荷合集中没有可以这种方式投放的物质。"
+      },
+      "selectMunition": {
+        "header": "准备弹药",
+        "copy": "这种弹药携带哪种物质？",
+        "noPayload": "无载荷"
       }
     },
     "chat": {
@@ -1886,7 +2165,8 @@
         "addictionRaisedEgo": "我的自我对 <strong>{name}</strong> 的成瘾升至 {level} 级",
         "addictionRaisedBody": "我的身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
         "addictionRaisedBoth": "我的自我和身体对 <strong>{name}</strong> 的成瘾升至 {level} 级",
-        "unaffected": "{drug} 无法作用于 {name} 的身体。"
+        "unaffected": "{drug} 无法作用于 {name} 的身体。",
+        "sealedOff": "{name} 已密封，{drug} 无法通过{vector}影响其身体。"
       },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
@@ -1905,19 +2185,177 @@
         "applyDose": "对所选目标施用剂量",
         "applyTargets": "应用到所选目标",
         "targets": "目标：{names}",
-        "hitByPool": "资源池的投入使 {weapon} 的攻击变为命中。"
+        "chooseTarget": "选择目标",
+        "rollDamage": "投掷伤害",
+        "damageWithoutTarget": "无目标伤害",
+        "damageReady": "{weapon} 造成的伤害",
+        "suppressiveArea": "压制射击（{name}）",
+        "suppressiveNote": "压制射击已展开：在锥形范围内移动者必须防御。",
+        "blastArea": "爆炸（{name}）",
+        "blastNote": "爆炸已在地图上标出。",
+        "scatter": "散布",
+        "scattered": "散布：{side}，{distance} 米。",
+        "scatteredWall": "散布：{side}，{distance} 米——在墙前停下。",
+        "scatterAhead": "正前方",
+        "scatterBack": "正后方",
+        "scatterRight": "向右 {degrees}°",
+        "scatterLeft": "向左 {degrees}°",
+        "armedTimerRound": "已武装：在第 {round} 轮 {name} 的回合结束时爆炸。",
+        "armedTimerClock": "已武装：定时器按世界时钟运行。",
+        "armedSignal": "已武装：由持有者发出信号时爆炸。",
+        "armedProximity": "已武装：有人进入 {reach} 米内时爆炸——3 个行动回合后生效。",
+        "detonate": "引爆",
+        "defuse": "拆除",
+        "defusedNote": "已拆除，不会再爆炸。",
+        "countdownTurns": "{count} 回合",
+        "countdownSeconds": "{count} 秒",
+        "countdownMinutes": "{count} 分钟",
+        "armedBy": "{name} · 遥控",
+        "armedLive": "{name} · 感应器已激活",
+        "armedArming": "{name} · 感应器将在 {time} 后激活",
+        "armedTimer": "{name} · 将在 {time} 后爆炸",
+        "armedYours": "{name}（你）",
+        "gasArea": "毒气（{name}）",
+        "smokeArea": "烟雾（{name}）",
+        "gasNote": "毒气云持续 3 个行动回合：身处其中、进入其中或在其中开始回合的人都会吸入剂量。",
+        "smokeNote": "烟雾持续 3 分钟，遮蔽其中或其后的事物（-20）。"
+      },
+      "blindAttack": {
+        "headline": "盲目攻击：{weapon}",
+        "missed": "{name}目盲。攻击直接落空。",
+        "through": "{name}目盲。攻击照常进行。",
+        "rollTitle": "盲目掷骰",
+        "accept": "接受结果",
+        "gone": "已没有攻击在等待此检定。请重新进行攻击。"
+      },
+      "strike": {
+        "checkNeeded": "{effect}：<strong>{name}</strong> 必须进行 {check}",
+        "roll": "掷 {check}",
+        "resist": "抵抗{effect}",
+        "resistFor": "{name}：抵抗{effect}",
+        "rollRemaining": "掷剩余检定",
+        "resolveRest": "其余不掷骰直接结算",
+        "weapon": "武器",
+        "immune": "<strong>{name}</strong> 免疫{effect}",
+        "outcome": "<strong>{name}</strong>：{conditions}",
+        "resisted": "<strong>{name}</strong> 抵抗了{effect}",
+        "flee": "<strong>{name}</strong> 必须在下一个完整行动中逃离——尽可能远离痛源，或躲到最近的完全掩体",
+        "spanRound": "1 个行动回合",
+        "spanRounds": "{count} 个行动回合",
+        "spanMinutes": "{count} 分钟",
+        "armor": {
+          "energy": "能量护甲",
+          "kinetic": "动能护甲"
+        },
+        "attackSuperiors": "攻击的卓越成功",
+        "painTolerance": "Pain Tolerance I",
+        "knockdown": {
+          "name": "击倒",
+          "rule": "适用伤口修正。失败：倒地。"
+        },
+        "unconscious": {
+          "name": "昏迷",
+          "rule": "一次受到两处或以上伤口会将你击倒。适用伤口修正。失败：昏迷，直到被唤醒或治愈。"
+        },
+        "shock": {
+          "name": "电击",
+          "rule": "能量护甲作为加值；在对话框中填入体型修正（极小 -30，小 -10，大 +10，极大 +30）。失败：倒地，失能 1 个行动回合（每个卓越失败 +2），并眩晕 3 分钟。成功：眩晕 3 个行动回合。"
+        },
+        "stun": {
+          "name": "眩晕",
+          "rule": "动能护甲作为加值；在对话框中填入体型修正（小 -30，大 +30）。失败：眩晕 1 个行动回合，每个卓越失败 +1。大失败：失能 1 个行动回合并眩晕 1 分钟。"
+        },
+        "blinding": {
+          "name": "致盲",
+          "rule": "失败：目盲 1 个行动回合，每个卓越失败 +1。大失败：目盲，直到修复或在治疗槽中治愈。"
+        },
+        "entangling": {
+          "name": "缠绕",
+          "rule": "攻击的每个卓越成功：此检定及挣脱的 SOM 检定 -10。失败：被擒抱。"
+        },
+        "pain": {
+          "name": "痛苦",
+          "rule": "无论如何直到下一回合结束时 -20（Pain Tolerance I：检定 +30，且仅 -10）。失败：在下一个完整行动中逃离。"
+        },
+        "confused": {
+          "name": "困惑",
+          "rule": "检定 -30。成功：正常行动。失败：由 d100 决定——00-24 只会语无伦次地喃喃自语，25-49 由 GM 决定随机行动，50-74 向随机方向逃跑，75-99 用手中的武器或物品攻击附近一个随机目标（甚至盟友）。照常用 Fray 防御。"
+        }
+      },
+      "confusion": {
+        "headline": "困惑：<strong>{name}</strong>",
+        "mutter": "{name}只是语无伦次地喃喃自语，什么也不做。",
+        "random": "{name}随机行动——由 GM 决定如何行动。",
+        "flee": "{name}向随机方向逃跑。",
+        "attack": "{name}用手中的东西攻击附近一个随机目标——甚至是盟友。",
+        "rollTitle": "困惑掷骰",
+        "clear": "<strong>{name}</strong>看穿了困惑，正常行动"
       },
       "defence": {
         "headline": "防御 {weapon}",
-        "doseLabel": "{name}，每人一剂",
         "dodge": "闪避",
         "parry": "格挡",
-        "rollAll": "一次性投掷其余",
+        "rollAll": "其余闪避",
         "outcome": {
           "hit": "命中",
           "half": "部分闪避：半剂",
-          "none": "避开"
-        }
+          "none": "避开",
+          "will": {
+            "hit": "受影响",
+            "half": "受影响",
+            "none": "已抵抗"
+          },
+          "cover": "已进入掩体",
+          "remainCover": "留在了掩体中",
+          "spared": "未被波及",
+          "inCover": "在掩体中"
+        },
+        "severalTargets": "多个目标",
+        "resist": "抵抗({aptitude})",
+        "yield": "不抵抗",
+        "lockedOut": "大成功：异能者在恢复前无法再进入此心智。",
+        "touchLabel": "{name}（接触）",
+        "cover": "已进入掩体",
+        "remainCover": "留在掩体中",
+        "blastDistance": "距中心 {distance} 米",
+        "blastEdge": "在边缘",
+        "inCover": "无伤害",
+        "spareRest": "其余无需掷骰直接结算",
+        "soak": "硬抗伤害",
+        "soakRest": "其余硬抗",
+        "headlineCover": "在障碍物后防御{weapon}",
+        "payloadLabel": "载荷",
+        "doseInfo": "剂量"
+      },
+      "failGone": "此失败已不可用。",
+      "poolSpent": {
+        "swapped": "{name} 消耗了一点{pool}来交换骰子",
+        "upgraded": "{name} 消耗了一点{pool}来提升结果",
+        "mitigated": "{name} 消耗了一点{pool}来减轻失败"
+      },
+      "damage": {
+        "appliedPhysical": "{name} 受到 {taken} 点伤害和 {wounds} 处创伤",
+        "appliedMental": "{name} 受到 {taken} 点压力和 {wounds} 次心理创伤",
+        "attackHit": "{name}：{share} - {armor} 护甲（{armorType}）= {damage}，{woundsTaken}",
+        "attackHalf": "{name}（减半）：{share} - {armor} 护甲（{armorType}）= {damage}，{woundsTaken}",
+        "attackMissed": "{name} 未被击中",
+        "attackParried": "{name} 格挡了攻击",
+        "attackTookDamage": "{name} 被击中并受到伤害",
+        "attackSoaked": "{name} 被击中，但护甲吸收了全部伤害",
+        "amountDamage": "{value} 伤害",
+        "amountWounds": "{value} 创伤",
+        "amountStress": "{value} 压力",
+        "amountTraumas": "{value} 心理创伤",
+        "blastFalloff": "{name}（{distance} 米，-{falloff} DV）"
+      },
+      "psiTouch": {
+        "headline": "灵能接触攻击（{sleight}）",
+        "touched": "{target}已被接触",
+        "avoided": "{target}躲开了接触",
+        "missed": "接触未能命中{target}",
+        "useTouch": "以接触施展{sleight}（+20）",
+        "usePointBlank": "在抵近距离施展{sleight}（+10）",
+        "used": "灵能技已施展。"
       }
     },
     "rule": {
@@ -2068,6 +2506,7 @@
       "sectionThreats": "非玩家角色与威胁",
       "endNow": "结束",
       "remaining": "剩余",
+      "endsThisRound": "本回合结束",
       "owner": "角色",
       "toggleFormat": "在小时与 Beats 之间切换",
       "hoursTooltip": "约 {hours} 小时",
@@ -2092,7 +2531,9 @@
         "day3": "+3 天",
         "day7": "+7 天",
         "beats": "{beats} Beats"
-      }
+      },
+      "sectionEnvironment": "环境",
+      "locateCloud": "在地图上显示"
     },
     "migration": {
       "armorBoundNotice": "<p><b>护甲更新：</b>这个角色的 {count} 件护甲已自动绑定到 <b>{body}</b>，因为护甲现在归属于特定身体，而不再只是放在物品栏中。可以随时点击护甲旁边的重新分配按钮（在义体页签中）将其转移到其他身体。</p>",
@@ -2112,7 +2553,8 @@
         "backup": "重要：目前你的数据尚未更新或更改。如果你还没有保存世界，请先不迁移并关闭此对话框，创建备份，以免迁移时丢失数据。",
         "reachOut": "别忘了联系我们，特工！",
         "migrate": "立即迁移！",
-        "close": "不迁移并关闭"
+        "close": "不迁移并关闭",
+        "unreadableRanges": "以下武器射程无法识别为米数，已保持原样。请在武器表中以数字填写：<br>{list}"
       }
     },
     "systemMessage": {
@@ -2145,12 +2587,142 @@
       }
     },
     "targeting": {
+      "needsGM": "没有 GM 在线时部分功能会被锁定，否则可能导致系统错误并丢失弹药、手榴弹等物品。GM 上线后将自动恢复。",
+      "tacnetVision": "战术网络",
       "cancelHint": "按 ESC 或在未选目标时右键取消。",
       "confirmHint": "右键确认",
       "remaining": "还剩 {count} 个目标",
       "limitReached": "已达到最多 {max} 个目标。再次点击已标记的目标可取消标记。",
       "selectTarget": "选择目标",
-      "targetChosen": "已选目标"
+      "targetChosen": "已选目标",
+      "tooFar": "其他目标必须距已标记目标 {within} 米以内。",
+      "marked": "已标记 {count} 个目标",
+      "tooFew": "请至少选择 {min} 个目标。",
+      "unsuitable": "{name} 无法被此选为目标：{kind}。",
+      "kind": {
+        "biomorph": "生物义体",
+        "synthmorph": "合成义体",
+        "infomorph": "信息义体",
+        "bot": "机器人",
+        "vehicle": "载具",
+        "animal": "动物",
+        "cyberbrain": "电子脑"
+      },
+      "band": {
+        "pointBlank": "抵近",
+        "close": "近距",
+        "range": "射程内",
+        "beyond": "超出射程"
+      },
+      "outOfTouch": "{name}超出接触范围（2 米）。",
+      "areaName": "范围",
+      "outsideArea": "该标记在范围之外。",
+      "tooMany": "在此距离上，此攻击最多命中 {max} 个目标。",
+      "ownBlast": "{name} 身处自己的爆炸之中。",
+      "armedElsewhere": "该爆炸物位于另一个场景——请先查看该场景。",
+      "lockedOut": "在你下次恢复之前，{name}的心智对你关闭。",
+      "notOnSelf": "此异能不能对自己使用。"
+    },
+    "conditions": {
+      "blinded": {
+        "name": "失明",
+        "description": "你无法视物，但仍能通过其他感官、内视界面和联网传感器感知。物理行动 −30（含 Fray）；攻击你无法感知的目标可能直接落空。"
+      },
+      "confused": {
+        "name": "困惑",
+        "description": "每回合进行一次 −30 的 COG 检定。失败时你会喃喃自语、随机行动、逃跑或攻击附近的人。"
+      },
+      "dazed": {
+        "name": "恍惚",
+        "description": "精神上眩晕、失去方向：除基础移动和防御攻击外不能行动。"
+      },
+      "deafened": {
+        "name": "耳聋",
+        "description": "你无法听见。先攻 −3，Perceive 检定 −30。"
+      },
+      "grappled": {
+        "name": "被擒抱",
+        "description": "被物理束缚：移动速率为 0，除挣脱外不能进行物理行动。对来自擒抱之外的攻击，Fray −30。"
+      },
+      "immobilized": {
+        "name": "无法移动",
+        "description": "在恢复之前不能进行任何物理行动（含 Fray）。仍可进行精神和网络行动。"
+      },
+      "impaired10": {
+        "name": "受损（−10）",
+        "description": "你的能力受到妨碍：所有行动 −10。"
+      },
+      "impaired20": {
+        "name": "受损（−20）",
+        "description": "你的能力受到妨碍：所有行动 −20。"
+      },
+      "impaired30": {
+        "name": "受损（−30）",
+        "description": "你的能力受到妨碍：所有行动 −30。"
+      },
+      "incapacitated": {
+        "name": "失能",
+        "description": "不能进行任何行动，包括精神行动和 Fray。你无法防御攻击。"
+      },
+      "prone": {
+        "name": "倒地",
+        "description": "倒在地上，或在微重力中旋转。起身是一个快速动作。近战中站立的对手 +20，从 Range 或更远处射击 −10。"
+      },
+      "stunned": {
+        "name": "气窒",
+        "description": "你被打得喘不过气：物理行动 −30，精神行动 −10。"
+      },
+      "unconscious": {
+        "name": "昏迷",
+        "description": "失去意识、毫无防备。兴奋剂，或在被用力摇醒时进行 −30 的 INT 检定，可以让你醒来。"
+      },
+      "dead": {
+        "name": "死亡",
+        "description": "此角色已死亡。"
+      },
+      "invisible": {
+        "name": "隐形",
+        "description": "此角色无法被看见。"
+      },
+      "noteText": "{name}：{note}",
+      "notApplied": "{name}（未生效）",
+      "notes": {
+        "blinded": "每次攻击前进行一次感知检定；失败时攻击有 50% 几率直接落空",
+        "deafened": "先攻 −3，Perceive −30",
+        "grappled": "对擒抱之外的攻击 Fray −30",
+        "prone": "近战对手 +20，从 Range 或更远处射击 −10"
+      },
+      "blocked": "{condition}：无法进行任何检定。",
+      "blockedPhysical": "{condition}：无法进行任何物理行动。",
+      "blockedDefenceOnly": "{condition}：只能防御攻击。"
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "suppressive": {
+        "FIELDS": {
+          "messageId": {
+            "label": "攻击卡",
+            "hint": "此区域对应的压制射击聊天消息。"
+          }
+        }
+      },
+      "proximity": {
+        "FIELDS": {
+          "messageId": {
+            "label": "攻击卡",
+            "hint": "此感应器所属爆炸物的聊天消息。"
+          }
+        }
+      },
+      "cloud": {
+        "FIELDS": {
+          "messageId": {
+            "label": "攻击卡",
+            "hint": "此云团所属毒气的聊天消息。"
+          }
+        }
+      }
     }
   }
 }

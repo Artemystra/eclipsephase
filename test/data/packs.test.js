@@ -47,6 +47,78 @@ describe("compendium sources", () => {
     expect(offenders.map(o => `${o.pack}/${o.file}: ${o.data.type}`)).toEqual([]);
   });
 
+  test("every weapon mode names the armour its damage meets, and a beam weapon's meets energy armour", () => {
+    const kinds = new Set(["energy", "kinetic", "none"]);
+    const weapons = documents.filter(({ data }) => data.type === "rangedWeapon" || data.type === "ccWeapon");
+    expect(weapons.length).toBeGreaterThan(0);
+    const offenders = weapons.filter(({ data }) => ["mode1", "mode2"].some(mode => !kinds.has(data.system[mode]?.armorused))
+      || (data.system.ammoType === "beam" && data.system.mode1.armorused !== "energy"));
+    expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);
+  });
+
+  test("every ranged weapon mode carries its range in metres and a structured area", () => {
+    const offenders = documents.filter(({ data }) => data.type === "rangedWeapon").flatMap(({ pack, file, data }) => ["mode1", "mode2"]
+      .filter(mode => !(data.system[mode].range === null || (typeof data.system[mode].range === "number" && data.system[mode].range > 0))
+        || !["none", "uniform", "centered"].includes(data.system[mode].area?.kind))
+      .map(mode => `${pack}/${file} ${mode}`));
+    expect(offenders).toEqual([]);
+  });
+
+  test("every munition carries a structured area and a payload, a seeker asks for its size and a grenade has none, and one that carries a payload says how it arrives", () => {
+    const offenders = documents.filter(({ data }) => data.type === "ammo" || data.type === "grenade").filter(({ data }) => {
+      const system = data.system;
+      return !["none", "uniform", "centered"].includes(system.area?.kind)
+        || (system.area.kind === "uniform" && !(system.area.radius > 0))
+        || (system.area.kind === "centered" && !(system.area.reduction > 0))
+        || (data.type === "grenade" ? "size" in system : !["select", "baseline", "standard", "missile"].includes(system.size))
+        || (data.type === "ammo" && system.type === "seeker" && system.size !== "select")
+        || typeof system.payload?.enabled !== "boolean"
+        || (system.payload.enabled && !["oral", "injection", "inhalation", "dermal"].includes(system.payload.vector))
+        || "delivery" in system.payload;
+    });
+    expect(offenders.map(({ pack, file }) => `${pack}/${file}`)).toEqual([]);
+  });
+
+  test("every grenade and seeker names the armour its damage meets (Core p.213), under the key the schema reads", () => {
+    const munitions = documents.filter(({ data }) => data.type === "grenade" || (data.type === "ammo" && data.system.type === "seeker"));
+    const offenders = munitions.filter(({ data }) => !["energy", "kinetic", "none"].includes(data.system.armorused) || "armorUsed" in data.system);
+    expect(offenders.map(({ pack, file }) => `${pack}/${file}`)).toEqual([]);
+    expect(Object.fromEntries(munitions.filter(({ data }) => ["Plasmaburst", "HEAP", "Stun"].includes(data.name)).map(({ data }) => [`${data.type}:${data.name}`, data.system.armorused]))).toEqual({
+      "ammo:Plasmaburst": "energy", "ammo:HEAP": "kinetic", "ammo:Stun": "kinetic",
+      "grenade:Plasmaburst": "energy", "grenade:Stun": "kinetic"
+    });
+  });
+
+  test("every munition says whether it forms a cloud, and the gas and smoke munitions do (Core p.212)", () => {
+    const munitions = documents.filter(({ data }) => data.type === "grenade" || data.type === "ammo");
+
+    expect(munitions.filter(({ data }) => typeof data.system.cloud !== "boolean").map(({ file }) => file)).toEqual([]);
+    expect(munitions.filter(({ data }) => data.system.cloud).map(({ data }) => `${data.type}:${data.name}`).sort()).toEqual(["ammo:Gas/Smoke", "grenade:Gas/Smoke"]);
+  });
+
+  test("breathers seal the airways, vacsuits, combat armour and the hardsuit the airways and the skin, and nothing else seals", () => {
+    const seals = data => (data.effects ?? []).flatMap(effect => (effect.system?.changes ?? effect.changes ?? []).map(change => change.key)).filter(key => /additionalSystems\.(air|skin)Sealed$/.test(key)).map(key => key.split(".").at(-1)).sort().join("+");
+    const sealed = Object.fromEntries(documents.filter(({ pack, data }) => pack !== "samplecharacters" && pack !== "diemens-homebrew-items" && seals(data)).map(({ data }) => [`${data.type}:${data.name}`, seals(data)]));
+
+    expect(sealed).toEqual({
+      "gear:Breather": "airSealed",
+      "armor:Vacsuit (Light)": "airSealed+skinSealed", "armor:Vacsuit (Standard)": "airSealed+skinSealed",
+      "armor:Light Combat Armor": "airSealed+skinSealed", "armor:Combat Armor": "airSealed+skinSealed", "armor:Heavy Combat Armor": "airSealed+skinSealed",
+      "armor:Hardsuit": "airSealed+skinSealed",
+      "ware:Light Combat Armor": "airSealed+skinSealed", "ware:Heavy Combat Armor": "airSealed+skinSealed"
+    });
+  });
+
+  test("seekers say they are fired from a launcher, grenades do not, and HEAP comes only as a seeker (Core p.212)", () => {
+    const notice = "Information: This is Ammunition. It is meant to be fired via a launcher and not to be thrown.";
+    const seekers = documents.filter(({ data }) => data.type === "ammo" && data.system.type === "seeker");
+    const grenades = documents.filter(({ data }) => data.type === "grenade");
+
+    expect(seekers.length).toBeGreaterThan(0);
+    expect(seekers.filter(({ data }) => !data.system.description.startsWith(`<p><b>${notice}</b></p>`)).map(({ file }) => file)).toEqual([]);
+    expect(grenades.filter(({ data }) => data.system.description.includes(notice) || data.name === "HEAP").map(({ file }) => file)).toEqual([]);
+  });
+
   test("every document carries a name and an id", () => {
     const offenders = documents.filter(({ data }) => !data.name || !data._id);
     expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);

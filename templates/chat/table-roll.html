@@ -1,0 +1,13 @@
+{{!-- A roll on a table of the rules: what it decides in bold, the roll below - a blinded attacker's
+     straight 50% to miss, or what a confused character does. --}}
+<div class="alignCenter ep-defence-card">
+  {{> systems/eclipsephase/templates/chat/partials/card-header.html icon=icon iconImg=iconImg html=headline open=true}}
+
+  <div class="ep-defence-entry">
+    <p class="ep-defence-outcome"><b>{{outcome}}</b></p>
+  </div>
+
+  <div class="ep-table-roll-dice">
+    {{> systems/eclipsephase/templates/chat/partials/roll-results.html rollType="rollOutput" rollTitle=rollTitle diceBreakdown=diceBreakdown total=total}}
+  </div>
+</div>

@@ -5,6 +5,11 @@ eclipsephase.traitTypes = {
     flaw: "ep2e.item.traits.flawLabel"
 }
 
+eclipsephase.traitTypesShort = {
+    trait: "ep2e.item.traits.traitShort",
+    flaw: "ep2e.item.traits.flawShort"
+}
+
 eclipsephase.firingModes = {
     ss: "ep2e.item.weapon.table.firingMode.ss",
     sa: "ep2e.item.weapon.table.firingMode.sa",
@@ -159,6 +164,30 @@ eclipsephase.duration = {
     sustained: "ep2e.item.aspect.table.duration.sustained"
 }
 
+eclipsephase.sleightTargetRules = {
+    any: "ep2e.item.aspect.table.targetRule.any",
+    self: "ep2e.item.aspect.table.targetRule.self",
+    others: "ep2e.item.aspect.table.targetRule.others"
+}
+
+eclipsephase.sleightAffects = {
+    target: "ep2e.item.aspect.table.affects.target",
+    async: "ep2e.item.aspect.table.affects.async",
+    both: "ep2e.item.aspect.table.affects.both"
+}
+
+eclipsephase.sleightArmor = {
+    mental: "ep2e.item.weapon.table.armorUsed.mental",
+    energy: "ep2e.item.weapon.table.armorUsed.energy",
+    kinetic: "ep2e.item.weapon.table.armorUsed.kinetic"
+}
+
+eclipsephase.sleightDamageModes = {
+    none: "ep2e.item.aspect.table.damage.mode.none",
+    damage: "ep2e.item.aspect.table.damage.mode.damage",
+    heal: "ep2e.item.aspect.table.damage.mode.heal"
+}
+
 eclipsephase.damageTargets = {
     physical: "ep2e.item.aspect.table.damage.physical",
     mental: "ep2e.item.aspect.table.damage.mental"
@@ -266,10 +295,51 @@ eclipsephase.drugCategories = {
     toxin: "ep2e.item.drug.table.category.toxin"
 }
 
+eclipsephase.armorUsed = {
+    energy: "ep2e.item.weapon.table.armorUsed.energy",
+    kinetic: "ep2e.item.weapon.table.armorUsed.kinetic",
+    none: "ep2e.item.weapon.table.armorUsed.none"
+}
+
 eclipsephase.grenadeArmorVector = {
     none: "ep2e.item.weapon.table.armorUsed.none",
     kinetic: "ep2e.item.weapon.table.armorUsed.kinetic",
     energy: "ep2e.item.weapon.table.armorUsed.energy"
+}
+
+eclipsephase.areaKinds = {
+    none: "ep2e.item.weapon.table.area.none",
+    uniform: "ep2e.item.weapon.table.area.uniform",
+    centered: "ep2e.item.weapon.table.area.centered"
+}
+
+eclipsephase.munitionSizes = {
+    select: "ep2e.item.weapon.table.size.select",
+    baseline: "ep2e.item.weapon.table.size.baseline",
+    standard: "ep2e.item.weapon.table.size.standard",
+    missile: "ep2e.item.weapon.table.size.missile"
+}
+
+eclipsephase.grenadeTriggers = {
+    impact: "ep2e.item.weapon.table.trigger.impact",
+    airburst: "ep2e.item.weapon.table.trigger.airburst",
+    timer: "ep2e.item.weapon.table.trigger.timer",
+    signal: "ep2e.item.weapon.table.trigger.signal",
+    proximity: "ep2e.item.weapon.table.trigger.proximity"
+}
+
+eclipsephase.cloudColors = {
+    smoke: "ep2e.item.weapon.table.cloudColor.smoke",
+    toxin: "ep2e.item.weapon.table.cloudColor.toxin",
+    drug: "ep2e.item.weapon.table.cloudColor.drug",
+    custom: "ep2e.item.weapon.table.cloudColor.custom"
+}
+
+eclipsephase.payloadVectors = {
+    oral: "ep2e.item.drug.table.applicationVectors.oralLabel",
+    injection: "ep2e.item.drug.table.applicationVectors.injectionLabel",
+    inhalation: "ep2e.item.drug.table.applicationVectors.inhalationLabel",
+    dermal: "ep2e.item.drug.table.applicationVectors.dermalLabel"
 }
 
 eclipsephase.rangedAmmoType = {

@@ -1,8 +1,9 @@
 import EPactorSheet from "../../module/actor/EPactorSheet.js";
 import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
-  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete
+  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode
 } from "../../module/common/morp-functions.js";
+import { calcEffects } from "../../module/rolls/resleeving.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -50,6 +51,28 @@ function sleeveClick(itemId) {
 beforeEach(() => resetWorld());
 
 describe("resleeving", () => {
+  test("a resleeve with both tests passed says so in the chat and leaves nothing behind", async () => {
+    const actor = makeActor();
+    await calcEffects(actor, actor.system, 3, 4);
+
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.sleeving.announce.result.cleanCopy");
+    expect(Array.from(actor.effects)).toHaveLength(0);
+  });
+
+  test("a passed integration test without a stress test counts as clean too", async () => {
+    const actor = makeActor();
+    await calcEffects(actor, actor.system, 5, null);
+
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.sleeving.announce.result.cleanCopy");
+  });
+
+  test("a failed integration test brings no clean message", async () => {
+    const actor = makeActor();
+    await calcEffects(actor, actor.system, 1, 4);
+
+    expect(createdMessages.some(message => String(message.content).includes("cleanCopy"))).toBe(false);
+  });
+
   test("a confirmed resleeve moves the ego into the new morph and refills every pool", async () => {
     const actor = twoBodies({ system: { pools: { insight: { value: 0 }, vigor: { value: 0 }, moxie: { value: 0 } } } });
     const sheet = { tabGroups: {} };
@@ -256,5 +279,60 @@ describe("armour on a body about to be deleted", () => {
 
     seedDialogs(true);
     expect(await resolveArmorOnBodyDelete(actor, "activeMorph", "Body")).toEqual({ proceed: true });
+  });
+});
+
+describe("sight shared through a tacnet", () => {
+  const actor = (tacnet, hasPlayerOwner = true, observed = false) => ({
+    hasPlayerOwner,
+    system: { additionalSystems: { tacnet } },
+    testUserPermission: () => observed
+  });
+  const token = (a, controlled = false) => ({ actor: a, controlled });
+  const player = { isGM: false };
+
+  test("the effect's value names the channel, and true means the actor's side", () => {
+    expect(tacnetChannel(actor(true))).toEqual("player");
+    expect(tacnetChannel(actor("true", false))).toEqual("nonPlayer");
+    expect(tacnetChannel(actor("alpha"))).toEqual("alpha");
+    expect(tacnetChannel(actor(undefined))).toBeNull();
+    expect(tacnetChannel(actor(false))).toBeNull();
+    expect(tacnetChannel(null)).toBeNull();
+  });
+
+  test("a player sees through a token on the channel of the one they control, and only then", () => {
+    const mate = token(actor(true));
+    const own = token(actor(true), true);
+    const foe = token(actor(true, false));
+    const outsider = token(actor(undefined));
+    const tokens = [mate, own, foe, outsider];
+
+    expect(seesThroughTacnet(mate, tokens, player)).toBe(true);
+    expect(seesThroughTacnet(foe, tokens, player)).toBe(false);
+    expect(seesThroughTacnet(outsider, tokens, player)).toBe(false);
+    expect(seesThroughTacnet(own, tokens, player)).toBe(false);
+  });
+
+  test("without a controlled token a player looks through those they observe, and a viewer outside the net sees nothing", () => {
+    const mate = token(actor(true));
+    const mine = token(actor(true, true, true));
+    expect(seesThroughTacnet(mate, [mate, mine], player)).toBe(true);
+
+    const notOnIt = token(actor(undefined, true, true));
+    expect(seesThroughTacnet(mate, [mate, notOnIt], player)).toBe(false);
+  });
+
+  test("the GM looks through controlled tokens only", () => {
+    const gm = { isGM: true };
+    const guard = token(actor(true, false));
+    const other = token(actor(true, false));
+    expect(seesThroughTacnet(guard, [guard, other], gm)).toBe(false);
+    other.controlled = true;
+    expect(seesThroughTacnet(guard, [guard, other], gm)).toBe(true);
+  });
+
+  test("a user who turned sight effects off sees shared sight without them", () => {
+    expect(sharedSightMode(true)).toEqual("tacnet");
+    expect(sharedSightMode(false)).toEqual("tacnetPlain");
   });
 });

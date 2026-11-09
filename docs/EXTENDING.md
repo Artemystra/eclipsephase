@@ -38,9 +38,9 @@ listed here is considered stable for a module to depend on.
 ```js
 api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, usePoolFromChat,
             // prepareRecipients, gmList, inheritChatVisibility, damageValueCalc,
-            // applySuccessTierBonus
+            // applySuccessTierBonus, rollScope
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
-            // sleevedNervousSystem, CYBERBRAIN_MARKER, transferItemBetweenActors,
+            // sleevedNervousSystem, CYBERBRAIN_MARKER, targetKinds, transferItemBetweenActors,
             // mergeOrCreateItem, requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
             // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
@@ -48,32 +48,75 @@ api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowContr
             // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
             // tokenAt, pickTokensOnCanvas, drawTargetMarker, selectedTokenActor,
             // pickActorFromList
-api.chat    // readRollContext(element)
+api.chat    // readRollContext(element), registerCard, renderCard, updateCard
 api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
               // postNotice(actor, key, data)
 api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, doseEffectData,
               // chemicalPayload, chooseDrugForm, needsVectorChoice, drugVector, isAmmoPack,
               // runningDoses, drugBlockingPsi, drugPsiPenalties
 api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence,
-              // defenceOutcome, chemicalDoses
+              // defenceOutcome, chemicalDoses, followUpVisibility, yieldDefence,
+              // unsuitableTarget, detonateArmed, defuseArmed
 ```
 
 `api.drugs` is described in "Drugs and doses" below.
 
-`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, marker })` lets the user pick targets on
-the canvas - for a chat card that asks for them afterwards. A click marks a token, another click
-on it unmarks it, a right-click confirms; Escape, or a right-click with nothing marked, cancels.
-It resolves to the marked tokens in the order they were marked, or `null`.
+`api.ui.pickTokensOnCanvas({ icon, color, markColor, multi, max, within, refuse, marker, measure, aimFrom })` lets
+the user pick targets on the canvas. A click marks a token, another click on it unmarks it, a
+right-click confirms; Escape, or a right-click with nothing marked, cancels. Open sheets are
+minimised while the user picks and come back afterwards. It resolves to the marked tokens in the
+order they were marked, or `null`.
 
-- `icon` is a Font Awesome class, e.g. `"fa-syringe"`, drawn as the cursor and as the marks.
-  Without it both are a crosshair. The system's own colours are a turquoise cursor and red marks
-  with a white border; `color` and `markColor` (CSS hex values) change them.
+- `icon` is a Font Awesome class, e.g. `"fa-syringe"`, or one of the system's own shapes,
+  `"ep-slash"` (melee) or `"ep-lightning"` (psi), drawn as the cursor and as the marks.
+  Without it both are a crosshair. The system's own colours are a blue cursor and red marks,
+  both with a white border; `color` and `markColor` (CSS hex values) change them.
 - `multi: true` picks up to `max` targets: the text under the cursor counts down, and a click past
-  `max` is refused with a notice. Without it one target is picked: the text says whether it is
-  chosen, and a click on another token moves the mark over to it.
+  `max` is refused with a notice. `max: Infinity` takes any number, and the text counts what is
+  marked. Without `multi` one target is picked: the text says whether it is chosen, and a click on
+  another token moves the mark over to it.
+- `within` (in scene units, edge to edge) refuses a further token farther than that from every
+  token already marked, with a notice - a burst at targets within a meter of each other is
+  `within: 1`.
+- `refuse(token)` returns a notice for a token that may not be picked, or nothing; the notice is
+  shown and the token stays unmarked.
 - `marker(token, point, { icon, color })` draws the mark and returns what removes it. The default,
   `drawTargetMarker`, draws the cursor's shape in `markColor` with a white border where the token
   was clicked.
+- `aimFrom` (2.9) draws an animated line from that token to the cursor without measuring: a blade's
+  arc with `"ep-slash"`, a wavering mass with `"ep-lightning"`, otherwise a laser.
+- `measure: { from, describe(distance, token) }` (2.8.5) draws that line from the token `from` and
+  shows under the count what `describe` returns for the distance, in scene units edge to
+  edge - to the token under the cursor (passed as `token`), else to the cursor itself. The system's
+  ranged attacks and psi-gamma sleights measure this way from the attacker's token
+  (`api.ui.attackerToken(actor)`).
+
+Areas (2.8.5) - a blast's circle, a cone - are Foundry Regions, so they stay in the scene for
+everyone to see:
+
+- `api.ui.placeArea({ kind, radius, angle, width, from, color, name })` lets the user place one at the
+  cursor with the core's Region placement. A `"circle"` follows the cursor and snaps to the grid
+  unless Shift is held; a `"cone"` keeps its tip on the token `from` and turns towards the cursor -
+  given a `width`, its length follows the cursor too and its angle keeps the far end that wide.
+  `radius` is in scene units. It resolves to `{ kind, origin, radius, angle, rotation, polygon }`,
+  or `null` when cancelled; nothing is created yet.
+- `api.ui.areaPolygon(origin, { radius, angle, rotation })` is the part of a circle or cone walls do
+  not cut off, seen from its centre or tip; `api.ui.tokensInArea(polygon, tokens)` the tokens whose
+  centre or an inset corner lies in it.
+- `api.ui.createShadowedArea(area, { name, flags, behaviors, spent, exclude })` leaves an area whole
+  in the scene, one colour at every spot: the part walls do not cover in red, the part behind walls
+  in yellow, so the GM can still rule that a thin wall or a window lets it through - or, with
+  `spent`, all of it in grey. On a square or hex grid the parts are whole cells, by their centres
+  (`api.ui.areaSquares` lists them, `api.ui.squareShapes` joins squares into rectangles), and each
+  part's flag names its `cells`; `exclude` leaves cells (`"i,j"`) out. Every part
+  carries the behaviors; their area flag's `part` is `"open"`, `"shadow"` or `"spent"`.
+- `api.ui.createAreaRegion(area, { color, name, flags })` leaves the wall-cut area in the scene as a
+  Region whose `flags.eclipsephase.area` holds `kind`, `origin`, `radius` and your `flags`;
+  `api.ui.clearAreas(match, scene)` removes the areas `match(areaFlag)` accepts. Users who may not
+  create or delete Regions have the active GM do it.
+- `api.ui.scatterPoint(origin, angle, distance, collide, backoff)` is where something flying from
+  `origin` (radians, pixels) comes down: the full distance, or `backoff` pixels short of the first
+  wall `collide(from, to)` reports - by default `api.ui.wallBetween`, the first movement-blocking wall.
 
 `selectedTokenActor()` is the actor of the user's selected token, and
 `pickActorFromList(actors, header, copy)` asks for one actor from a list the user can filter by
@@ -81,6 +124,9 @@ typing.
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
 what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/`postRoll` below.
+A dataset may carry `visibility: { whisper, blind }`, which then decides who sees the roll card
+instead of the dialog's roll mode - the system's defence rolls are seen as their attack was this
+way.
 `api.chat.readRollContext(element)` takes any element inside a chat card (typically the button a
 listener fired on) and returns the roll context described in "Chat message context" below,
 falling back to the card's legacy `data-*` attributes for cards created before this existed.
@@ -132,9 +178,9 @@ from a listener.
 | `eclipsephase.preRollDialog` | In `RollCheck()`, right after the roll is defined, before the options dialog opens | `rollContext` (mutable; set `rollContext.cancelReason` to a loc key before returning `false`) | Cancel a roll before its dialog opens |
 | `eclipsephase.preRoll` | In `RollCheck()`, right before the roll is performed | `rollContext` with `dataset`, `actor`, `actorModel`, `rolledFrom`, `rollType`, `options`, `task`, `pool`, `modifiers` (array to push into), `itemData`, `flags`, `weapon` (what `weaponPreparation` returned for a weapon attack, or `null`) | Add a `TaskRollModifier` (or `{text, value, comment}`) to `modifiers`, or contribute data via `itemData`/`flags` |
 | `eclipsephase.postRoll` | In `RollCheck()`, after the chat card was created | `rollContext` with `outputData`, `message` (the created `ChatMessage`, or `null`), `blind`, `rollMode` | React to a completed roll |
-| `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a chat card was applied | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
+| `eclipsephase.poolResult` | In `usePoolFromChat()`, after a pool spend from a roll card was applied and the card redrawn | `{ context, actor, rolledFrom, newResult, blind, recipientList }` | React to a pool-rescue outcome (e.g. complete a purchase) |
 | `eclipsephase.prepareActorMods` | In `EPactor.prepareData()`, right after `mods`/`currentStatus` are reset | `(actorWhole, actorModel)` | Contribute to `actorModel.mods` before derived values are computed |
-| `eclipsephase.prepareActorStatus` | In `EPactor.prepareData()`, before the status-sidebar modifiers are summed | `(actorWhole, actorModel)` | Push `{label, modifier, flag}` onto `actorModel.currentStatus.specialModifiers` |
+| `eclipsephase.prepareActorStatus` | In `EPactor.prepareData()`, before the status-sidebar modifiers are summed | `(actorWhole, actorModel)` | Push `{label, modifier, flag}` onto `actorModel.currentStatus.specialModifiers`; it counts on physical and mental actions alike |
 | `eclipsephase.prepareActorDerived` | In `EPactor.prepareData()`, as its last statement | `(actorWhole, actorModel)` | Override fully-derived fields |
 | `eclipsephase.prepareItemData` | In `EPitem.prepareData()`, as its last statement | `(item, itemModel)` | Override fully-derived item fields |
 | `eclipsephase.effectSuppression` | In `effects.js`, while deciding whether an ActiveEffect is suppressed | `(item, actor, result)` - set `result.suppressed` | Add a suppression rule for a module's own item types |
@@ -147,6 +193,12 @@ from a listener.
 Only `character`, `npc` and `goon` actors run through this pipeline (`EPactor.MANAGED_TYPES`);
 an actor type your module contributes via a module sub-type (see below) is left untouched by
 `EPactor.prepareData()`.
+
+An effect changes every test through `system.mods.globalMod`, every physical action through
+`system.mods.physicalMod` and every mental action through `system.mods.mentalMod` (2.9). A test by
+Reflexes or Somatics and every attack is physical, every other test mental (Core p.34);
+`api.rolls.rollScope(dataset, rolledFrom)` tells which, `"body"`, `"mind"` or `null` for a vehicle's own
+skill. The status side car shows the sums on a physical and on a mental action.
 
 ## Registries
 
@@ -161,6 +213,27 @@ Hooks.once("eclipsephase.ready", ({ api }) => {
 
 A rejected registration (missing field, duplicate id) is logged with `console.error` and returns
 `false` - it never throws, so one broken module cannot stop the system from loading.
+
+### `registerFailOption(check)`
+
+Offers the GM a failure at the end of a task card. `check(actor, { skillKey, message })` returns
+entries of `id`, `label`, `result` (the result tier), `note` (the card's footnote) and `spend` (runs
+when the button is used). Each entry is a button, seen by the GM only, and a card without entries is
+unchanged. Using one rewrites the card as a pool point does and fires `eclipsephase.poolResult`. No
+button appears once an attack reached its targets or when it would not worsen the result.
+`listFailOptions(actor, context)` asks all sources. Induce Error is the system's own source.
+
+### `registerRollBlock(check)`
+
+Makes tests unusable: `check(actor, key, context)` gets the actor, the lower-case roll key and the
+roll's context and returns the reason as text, or `null`. The context says where the roll comes from:
+`defence` is true when it answers an attack, `check` when a card asked for it, such as a drug's check;
+the sheet's dice pass neither. A refused test shows the text as a toast, and the sheet shows a warning
+triangle with the text as its tooltip in place of the test's die. `scope` is `"body"` for a physical
+action and `"mind"` for a mental one, as `api.rolls.rollScope` reads the roll. `rollBlockReason(actor, key,
+context)` asks all checks. Block Skill and the conditions are the system's own checks: Incapacitated
+and Unconscious refuse every test, Dazed every test but a defence and Fray, Immobilized every
+physical action, Fray included, and none of them refuses a check a card asked for.
 
 ### `registerRollSource(id, definition)`
 
@@ -178,7 +251,7 @@ api.registry.registerRollSource("myRoll", {
 });
 ```
 
-The core system registers `rangedWeapon` and `ccWeapon` this way.
+The core system registers `rangedWeapon`, `ccWeapon` and `grenade` (Athletics, 2.8.5) this way.
 
 ### `registerPoolOption(definition)`
 
@@ -305,8 +378,50 @@ Four things are worth knowing before you build one:
   return a constant if it is simpler.
 - **`tierTraits` carries the pack**, so the trait can live in your module's own compendium.
 
+`targeting` says who the family's sleights work on (2.8.5). `refuses(actor, kinds)` names the kind
+refused, or null; `modifiers(actor, kinds)` lists `{ text, value }` for the test; `doublesRange(actor)`
+doubles the range categories against that target. `kinds` are what `api.actors.targetKinds` lists.
+`resist` is the `{ aptitude, pool }` a target resists with (default `wil`, `Moxie`) and
+`durationAptitude` what a sleight's span and a chi push count in (default `wil`). `labels` holds the
+keys of the family's own wording: `spendRez` and `infection`. The family's `label` also names its
+skill on the sheet and its cards.
+`api.ui.postCard(actor, card, flags, whisper)` posts a notice card.
+Left out, a family reaches anyone, with no modifiers and no doubling. A damaging sleight's
+`system.damage.armorUsed` is `"mental"` (default), `"energy"` or `"kinetic"`.
+
 `getStrainFamily(id)`, `listStrainFamilies()` and `hasStrainFamily(id)` are on `api.registry` too,
 for reading the registry back.
+
+### `registerPayloadSource(packId, definition)` (2.8.5)
+
+Offers a compendium's substances as payloads for ammunition and grenades - the "Select payload"
+button of a munition sheet lists every drug from every registered source that comes in the
+payload's vector - `system.payload.vector`, one of oral, injection, inhalation and dermal; while it
+is unset, any form fits, and electronic drugs never do. Munitions written before 2.8.5 named a
+delivery instead (inside, contact, cloud), read as injection, dermal and inhalation.
+
+```js
+api.registry.registerPayloadSource("my-module.nanoswarms", {
+  label: "my-module.payload.sources.swarms",   // a localization key
+  filter: item => item.system.drugType === "nano"   // optional: which entries count
+});
+```
+
+The system registers `eclipsephase.drugs-and-toxins`. `listPayloadSources()` returns the registered
+sources as `{ packId, label, filter }`.
+
+A munition that arrives on a sheet with something still open - a seeker whose size reads `select`,
+or a payload switched on without a substance - asks for both in one dialog. A module that takes
+items in by its own drop handler (a shop, say) calls the same step before creating the item, the
+way it calls `api.drugs.chooseDrugForm` for drugs:
+
+```js
+if (!(await api.actors.chooseMunition(itemData))) return;   // cancelled: create nothing
+const label = api.actors.munitionLabel(item.type, item.system);   // "Minimissile · Grin", for a list row
+const { size, payload } = api.actors.needsMunitionChoice(item.type, item.system);   // still open?
+```
+
+`api.actors.mergeOrCreateItem` stacks munitions only with the same size and payload.
 
 ## Drugs and doses
 
@@ -471,7 +586,7 @@ drugs.drugPsiPenalties(actor);            // [{ name, modifier }]
 `takeDose`, `offerDose` and `forceDose` behave exactly like the sheet's controls: they refuse an
 ammunition pack, an empty pack or a body the drug cannot act on with a notification, spend the
 dose and post the cards. An offered dose is only spent once someone claims it, a forced one once
-the attacker has picked the target after the hit.
+the attacker has picked the target.
 
 A pack holds one form. A sheet that lets someone acquire a drug - an actor sheet, a shop - calls
 `chooseDrugForm(itemData)` on the incoming data before creating it: it asks for the form and
@@ -481,17 +596,183 @@ or creates it.
 
 ## Targeted attacks
 
-Some attacks pick their targets after the hit: the attack card shows a button instead of damage,
-the attacker marks the targets on the canvas with `api.ui.pickTokensOnCanvas`, and each target's
-owner - its player owners, or the GM for a target no player owns - gets one card to defend from.
-The card has a button per target; against a ranged attack it also rolls the rest at once, without
-a dialog. A ranged defence is Fray, halved; against an area attack the dialog adds "Dodge behind
-cover". A melee defence is Fray in full or a parry with Melee.
+An attack lands on targets. Every attack dialog that rolls a weapon, a psi-gamma sleight, or an
+attack a caller set up itself has "Choose target(s)" as its primary button: the dialog steps
+aside, the attacker marks the targets on the canvas, and confirming them rolls the attack. "Roll
+without targets" is the narrative path: the attack card then offers no target button, only a
+damaging attack's damage roll (2.8.5). Ranged attacks and sleights measure the distance from the
+attacker's token while picking: the farthest target's range category (Core p.207, psi p.276) is
+applied to the roll, and the dialog keeps the distances in `measuredRanges`. On a
+hit - straight away, or once a pool point turns a miss into one - each target's owner (its player
+owners, or the GM for a target no player owns) gets one card to defend from. The attack card names
+its targets and, once each has defended, the outcome.
 
-`api.attacks.defenceOutcome(attack, passed, behindCover)` decides what reaches the target: a
-failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"` through, or
-`"none"` behind cover; any other successful defence is `"none"`. A pool spend on the defence
-settles it again.
+How many targets an attack takes comes from the dialog: one for a single shot or a melee attack, two
+or three for a burst or full auto at several targets (at least two, within a meter of each other),
+by range for a cone, any number for suppressive fire, and as many as "Number of targets" names for
+melee, where each target is attacked on its own. A sleight takes one, two with the Additional
+Target push.
+
+A cone weapon picks up to three targets, each within a meter of one already picked; once the
+distance is measured, its range category decides how many it may strike - one at point-blank or
+close, two at range, three beyond (Core p.218) - and more are refused with a notice. Suppressive
+fire (2.8.5) places a cone from the shooter's token whose length the shooter chooses and which is
+20 meters across at its end (Core p.207), left whole in the scene with its part behind walls in
+yellow - or in grey when the roll missed, which strikes nobody, until a pool point turns it into a
+hit; its length counts as the distance, and it rolls at once
+with no modifier but range and wounds. The cone stays in the scene as a Region with the system's
+`suppressive` behavior: whoever moves in it - never the shooter, once per burst, and only when the
+roll hit - joins the attack card's targets and defends from a card of their own; so does whoever
+stands in it when their turn begins; a token's centre decides which part it stands in. Someone in
+the yellow part may "Remain in Cover" instead of dodging, and for someone no player owns only the
+GMs see the cards - the attack card does not name them; in the red part,
+only someone already there when their turn begins may have "Moved into Cover" (`takeCover`: no
+roll, no damage). Stepping from yellow into red while the yellow card is open replaces it with the
+red one. Each one struck gets a damage card of their own, as from a single shot. While suppressive
+fire is chosen, the attack dialog greys out the modifiers it ignores. The cone is removed when the shooter's next
+turn begins, or when the combat ends. The attack record carries `suppressive: true`.
+
+A grenade (2.8.5) is thrown from the sheet with Athletics (roll source `grenade`) as far as the
+thrower's SOM in meters (Core p.209); the throw takes it off its stack. Its dialog is the ranged
+one with the trigger, and for a grenade with a blast the radius (uniform) or the DV lost per meter
+(centred, up to 20) to dial it back (Core p.212). "Place blast" places the blast's circle at the
+cursor - a centred blast reaches as far as its highest damage lasts - and the throw's distance from
+the thrower's token counts as the range. Once the roll hits, the blast goes off there: its area is
+left in the scene in red and yellow as suppressive fire's is, and everyone with a token in it - the
+thrower too, with a warning - joins the attack card's targets and defends with halved Fray. A
+successful dodge clears someone within 2 meters of the blast's edge (`BLAST_EDGE`, a house rule over the book's one meter) or behind a wall from its
+centre, and lets half through to anyone else (Core p.218); a centred blast loses its DV per meter on
+the way to each target, by whole meters. Someone behind a wall or with a hidden token whom no player owns is the GMs' alone
+on every card. A token counts by the squares it stands on, as the blast is drawn, or on a scene
+without squares by its centre. A blast that catches nobody, or that everyone it caught gets away
+from, goes again, as does one that struck someone once its damage is rolled. A blast without
+damage, such as smoke, stays until the thrower's next turn begins or the combat ends. While a blast
+is placed, a line from the thrower's or shooter's token to the cursor shows the distance and its
+range category. A seeker missile loaded in a launcher is fired the same way, with Guns
+and the launcher's range; its size adds to its damage and to how far a centred blast reaches.
+
+A munition's payload (2.8.5) comes along with its attack as `dose: { uuid, name, vector, when }`:
+one that deals damage - a capsule round, at half damage - gives it to each target the damage gets
+through the armour of (`when: "dealt"`), one that deals none - a splash round or grenade, marked
+`noDamage: true` - to each target it strikes (`when: "struck"`). A dose takes hold whole or not at
+all: a `"hit"` or a `"half"` (dodged inside a blast) gives it, a `"none"` (got away) does not; this
+holds for forced doses too. A sprayer's cone is no area: its dodge hits or misses. A munition marked `system.cloud` with its payload switched on - gas and smoke; smoke is such a
+munition with nothing loaded - leaves a cloud
+where it bursts instead of striking (`blast.cloud: { kind: "gas", uuid, name, color }` or `{ kind: "smoke", color }`).
+Its colour comes from `system.cloudColor: { kind, custom }` - `"smoke"`, `"toxin"`, `"drug"` or
+`"custom"` with a colour of its own (`api` callers can resolve it with `cloudColor()` in
+`module/common/weapon-functions.js`); loading a toxin or a drug into a cloud-forming munition sets
+the kind to match unless it is custom. The cloud
+spreads as far as walls let it, as a Region whose area flag carries `cloud`, `color` and, on a grid,
+its `cells`; the Region shows only on the Region layer, and everyone sees its outline drawn in its
+colour - the outer edges of its cells, or its wall-cut shape without a grid. The GM's time panel
+lists the clouds on the viewed scene under "Environment", with their time left, a control to find
+each on the map and one to let it disperse at once. A cloud lies 3 action turns
+(gas) or 3 minutes (smoke), in combat rounds or on the world clock. Gas gives its inhaled dose,
+without a defence, to everyone in it, to whoever comes in (the system's `cloud` Region behavior) and
+to whoever begins their turn in it, once per cloud. Both lie under an AmbientLight with the
+"Swirling Fog" animation, tinted in the cloud's colour unless it is plain smoke, which is drawn with
+"Invert Absorption" and no luminosity; smoke also sets an attack dialog's sight to major impairment (-20) when it lies
+between the attacker and a target or on either (`picking.applySight(form, tokens)`). The dose is
+given through the attack effect `"payload"`, whose `resolve(attack, target, outcome)` the system
+registers; defensive ware applies as for any dose. What the target wears can keep a dose out by its
+vector (2.8.5): an item effect setting `system.additionalSystems.airSealed` keeps out what is
+breathed in (a breather), `skinSealed` what touches the skin (with `airSealed`: vacsuits, combat
+armour, the hardsuit), while the item is active; the target gets a card saying so instead of the
+dose. `sealedAgainst(actor, vector)` in `module/common/morp-functions.js` answers it; injected and swallowed
+doses are never kept out this way. A gas cloud notes whom it was kept out from apart from whom it
+dosed (the Region flag's `sealed` and `dosed`); once that seal comes off, `unsealedInClouds(actor)`
+in `module/rolls/attacks.js` (run on actor, item and effect changes) lets the cloud test them again,
+at once when they are still standing in it. The attack dialog names the payload loaded.
+
+A grenade or seeker set to go off later - a timer (rounds, seconds or minutes, at least one action
+turn of three seconds), a signal, or a proximity trigger reaching up to 3 meters - lies armed where
+it comes down (2.8.5): a mark on its square (a Region with `visibility: OBSERVER` and its own
+ownership) that its thrower's owners and the GMs see, and other players as the world setting "Show
+Traps" allows - all traps, those of player characters only (the default), or none. A proximity
+trigger adds its sensor in the target colour, pale until it is live three action turns later; the
+system's `proximity` Region behavior sets it off when a token moves within a live sensor. An icon
+above the mark - a clock with the turns or time left, a remote, a sensor - tells on hover whose it is
+("(You)" for a player's own) and how long until it goes off or is live. A timer is set in rounds during a combat and goes off at the end of its thrower's
+turn; outside combat it is set in seconds or minutes and runs on the world clock, onto which ending
+the combat moves it. The attack card and the sheet's sidecar list "Armed Explosives" offer to
+detonate or defuse it (`api.attacks.detonateArmed(message)`, `api.attacks.defuseArmed(message)`); the
+sidecar also opens its sheet and moves the view to it, with the open sheets minimised. The blast appears only when it goes off, and
+its attack card then leaves naming whom it caught to the cards that follow. The attack record carries `armed: { point, sceneId, trigger,
+sensor, timer, combatId, round, at }` while it lies, and `defused: true` once taken away.
+
+A blast that missed - or one set to go off later, even on a hit (Core p.212) - offers "Scatter" on
+its card instead (Core p.218): a d100 turns it 3.6 degrees a point clockwise from the line of the
+throw (00 straight on beyond the aim, 25 to its right, 50 back towards the thrower, 75 to its left),
+a d10 is how many meters it goes, doubled for each superior failure, and it comes down short of the
+first wall in its way. It goes off there with its plain damage, the area it was aimed at left in
+grey, and pool points can no longer change the roll. A pool point that turns the miss into a hit
+first sets it off where it was aimed. The attack record carries `blast: { kind, radius, reduction,
+origin, from, trigger, harmless }` - `from` being where it was thrown or fired from - and, once
+scattered, `scatter: { direction, degrees, distance, blocked }`; `api.ui.blastTargets(area, tokens)` lists whom a blast catches, each with
+`distance`, `nearEdge`, `shadow` and `secret`. `api.attacks.postDefenceCards(attack, targets,
+{ gmOnly, details })` keeps `details.get(uuid)` on that target's entry; with `gmOnly` a player's call
+has the active GM post the cards and returns none. A grenade without a blast
+is thrown at one target like a shot.
+
+### Defending
+
+The defence follows from the attack: against a ranged attack Fray, halved, with "Dodge behind
+cover" against an area attack - someone behind a wall from a blast's centre may instead stay "In
+Cover" without a roll; against a melee attack Fray in full or a parry with Melee; against a
+sleight a WIL Check (Moxie pool), on half WIL against a pushed Power. A ranged card also rolls the
+rest at once, without a dialog. Every defence dialog offers "Full defense" (+30). A target may
+choose not to resist a sleight: `api.attacks.yieldDefence(message, targetUuid)` - the card's "Don't
+resist" button - lets the attack land without a roll; against a weapon, a target alone on its card
+may "Soak Damage" the same way. A card with several targets offers, below their own choices,
+"Resolve Rest Without Roll" (the GM's ruling that they are not reached), "Soak Rest" and, last,
+"Dodge Rest". An attack set up with `willing: true` skips
+the defence cards altogether and lands on every target at once.
+
+A target that can roll none of its defences - every one refused by a roll block, such as
+Incapacitated, Unconscious, or Immobilized against a weapon (2.9) - carries the refusal as
+`helpless` on its card entry, which the card shows; the active GM then lets the attack land on it as
+if it had not resisted, through `yieldDefence`. A Blinded attacker first rolls Perceive from its
+usual dialog, the roll flagged `blindPerceive: { id }`; while a pool point could still change it, the
+attack waits for the card's "Accept Result" (`api.attacks.acceptBlindPerceive(message)`). When it
+fails, a d100 on a card of its own decides: on 00-49 the attack misses outright (Core p.218) - a
+shot is still spent, but no attack is rolled.
+
+A weapon or grenade with Shock, Stun, Knockdown, Blinding, Pain or Entangling carries them as
+`checks` on its attack (2.9); a touch-only attack, or a weapon without damage dice, that has such a
+trait is an attack on its target too, and its damage card says it deals none. Once the damage is
+applied, the damage card lists the checks its struck targets make (`checks` on the card's
+`damageCard` state: `{ id, actorUuid, name, check, weaponName, superiors, npc, rolled }`), each a
+button for the target's owners; for an area the GM may roll the NPCs' rest or resolve it without a
+roll. A wound asks for the SOM Check against falling prone on a card of its own whenever wounds go
+up - by damage, the sheet or typed in - unless the update passes `{ eclipsephase: { woundCheck: false
+} }`; two at once knock prone and ask against passing out. A knockdown weapon's check covers the
+wound's. The check's roll carries `strikeCheck: { actorUuid, check, id, weaponName, superiors }`,
+counts as a check no condition blocks, and its result puts the conditions on, again when a pool point
+turns it. Pain Tolerance and Anti-Glare are read from `system.additionalSystems.painTolerance` (1 or
+2) and `antiGlare`, which their items' effects set. A Confused character is asked at the start of
+each of their turns in a combat for a COG Check at -30, the same kind of check card (`check:
+"confused"`); a failure has a d100 decide what they do (Core p.226), posted as the check was seen.
+
+`api.attacks.defenceOutcome(attack, { passed, result, value, behindCover })` decides what reaches
+the target: a failed defence is a `"hit"`; a successful dodge against an area attack lets `"half"`
+through, or `"none"` behind cover. Otherwise it is an opposed test against `attack.roll`
+(`{ value, result }`, the attack's die and result as its card shows them when the defence lands -
+a pool point spent on the attack before that counts): when both succeed, a critical success beats
+one that is not, and between equals the higher die wins, a tie going to the defender. The attack
+card keeps its pool controls until the first target has defended. A defender who wins against a
+sleight with a critical success is noted as having locked the async out (2.8.5): the async gets an
+ActiveEffect flagged `psiLockOut: { targetUuid, attackId }`, listed among the running effects of the
+time panel, where the GM may end it. Target pickers for sleights refuse that mind before and after
+the roll, a pool point that turns the defence lifts the lock again, and the async's recharge
+(`eclipsephase.postRest`) ends all of them. `lockedOutOf(actor, target)` in `module/rolls/psi.js`
+answers whether one holds.
+
+Defence cards, defence rolls and the damage card are seen as the attack card was:
+`api.attacks.followUpVisibility(attackCard, targets)` is public for a public attack, and otherwise
+whispers to those who saw the attack card, the GMs and the targets' owners.
+
+### Registering an effect
 
 What the hit brings is registered:
 
@@ -500,25 +781,162 @@ game.eclipsephase.api.attacks.registerAttackEffect("my-module.net", {
   detect(rollContext) {            // at preRoll: does this roll carry the effect?
     if (!rollContext.weapon?.weapon?.getFlag("my-module", "net")) return null;
     return { targets: 1, area: false, labelKey: "my-module.applyNet", effectLabel: "", payload: {},
-      cursor: { icon: "fa-spider-web" } };   // optional: icon, color, markColor; the crosshair otherwise
+      effectInfo: { label: "Net", text: "Sticky net", uuid: "" },   // optional: the card's box, "label: text", an info icon opening uuid read-only
+      cursor: { icon: "fa-spider-web" },       // optional: icon, color, markColor; the crosshair otherwise
+      within: null,                             // optional: picker distance for several targets
+      unsuitable: ["infomorph"],                // optional: target kinds it cannot strike
+      willing: false };                         // optional: land without defence cards
   },
   ready(attack) { return true; },              // optional, before picking: false refuses
   async beforeDelivery(attack) { return true; }, // optional, after picking: false refuses
-  async resolve(attack, target, outcome, { byPool, defenceId }) {}
+  async resolve(attack, target, outcome, { byPool, defenceId, kind }) {}
 });
 ```
 
 The attack travels in `flags.eclipsephase.roll.targetedAttack` on the attack card:
-`{ id, effect, actorUuid, weaponName, defence, area, targets, payload, labelKey, effectLabel,
-delivered, targetNames, cursor }`. A caller can set it up itself through `dataset.contextFlags.targetedAttack`,
-as `forceDose` does. `resolve` runs on the defender's client; with `byPool` it should undo what
-the earlier outcome did first.
+`{ id, effect, actorUuid, weaponName, defence, area, targets, within, unsuitable, willing, payload,
+labelKey, effectLabel, effectInfo, cursor, preTargets, delivered, targetNames, roll, messageId }`.
+`effectInfo` takes the place of `effectLabel` in the defence card's box when given: "label: text",
+with an info icon that opens the item at `uuid` in a sheet nobody can edit (`api.ui` has no call for
+it; a card button of your own can use the same class `ep-effect-info` with `data-uuid`). A
+munition's payload shows as "Payload: <substance>", a forced dose as "Dose: <drug>". `targets: 0`
+stands for any number. `defence` is `"ranged"`, `"melee"` or `"will"`. `preTargets` lists the actor
+uuids picked in the dialog. A caller can set an attack up itself through
+`dataset.contextFlags.targetedAttack`, as `forceDose` does; its dialog picks targets the same way.
+`resolve` runs where the defence settles; `outcome` is `"hit"`, `"half"` or `"none"`, `kind` how the
+target defended (`"dodge"`, `"parry"`, `"will"`, `"yield"` or `"willing"`), and with `byPool` it
+should undo what the earlier outcome did first.
 
-The system registers one effect, `"dose"`. A weapon with the "Ammunition: Chems" trait
-(`specialAmmoDrugs`) carries it: one dose per target, as many targets as its Multi Shot number
-(`api.attacks.chemicalDoses(weaponTraits)`), as an area attack. The weapon keeps a copy of the
-drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it once the pack is
-used up.
+### Unsuitable targets
+
+`api.actors.targetKinds(actor)` names what an actor counts as when picked: `"biomorph"`,
+`"synthmorph"` or `"infomorph"` by its morph, `"bot"`, `"vehicle"` or `"animal"` while it jams one,
+and `"cyberbrain"` as well when its body runs one. An attack's `unsuitable` lists the kinds it
+cannot strike; the picker refuses those with a notice, before the roll and after it alike.
+`api.attacks.unsuitableTarget(actor, unsuitable)` returns that notice, or `null`. A psi-gamma
+sleight cannot strike a synthmorph, an infomorph, a bot or a vehicle, and takes -30 against a
+cyberbrain picked before the roll (once the roll has landed, the modifier can no longer apply).
+
+### Landing rules (2.8.5)
+
+`system.landingRule` on a gamma or epsilon sleight adds a special effect on landing, chosen on the
+sheet behind a checkbox (`"none"` when off, `"select"` while ticked with nothing chosen; neither does
+anything). The system registers four:
+`blockSkill` (the async chooses a skill on a card; its tests are refused while the effect runs),
+`failSkill` (the GM gets a button on the actor's task cards while the effect runs, each use spends
+the oldest effect; on a superior success the async instead chooses a skill whose next test fails, or
+makes the button a superior failure), `recharge` (a note that the next complex
+action may be a short recharge) and `alterDuration` (the async halves or adds half to a running
+dose's duration). A roll can be forced from `eclipsephase.preRoll` by setting
+`rollContext.forcedResult` to a result tier: the dice no longer decide and no pool can turn it.
+`rollContext.flags.failureNote` adds a footnote to the roll's card.
+
+The built-in rule `boostSkill` asks the async for a physical skill and adds 10 to it while the effect runs, times its potency.
+
+Four more come with 2.9: `shockEffect` (instant: prone, incapacitated for 1 action turn plus 2 per
+superior success, stunned for 3 minutes - Short Circuit), `painEffect` (instant: -20 until the end
+of the next turn, -10 with Pain Tolerance I, none with II, and a card that the target flees - Pain),
+`loseSense` (the async chooses a sense on a card: sight makes the effect Blinded, hearing Deafened,
+any other adds a -30 roll option "Relies on ..." - Block Sense) and `eyeContact` (the effect on the
+target carries `breaksContact`: once another attack meets the target or its token moves, the async
+stops sustaining it - Basilisk Stare; `breakContact(actor)` in `module/rolls/psi.js`). A rule with
+`bindsChoice` keeps a choice on its effect as `bindsSkill` does, without being about a skill.
+
+A module adds its own with `registerLandingRule(id, { label, onLand, instant, bindsSkill, onReland, choose })`,
+and it appears in the sheet's list (`listLandingRules()` returns them all). `onLand({ attack, target, async, landing, result })` runs on landing.
+`instant` leaves no timed effect, `bindsSkill` gives the effect a skill to be chosen, and
+`onReland(context)` runs after a pool point improved the result on a sleight that landed already.
+`api.attacks.sleightPotency(landing, result)` reports its `count` and `factor`.
+`choose({ message, target, request })` answers the `sleightChoice` button of a card carrying the flag
+`flags.eclipsephase.sleightChoice` with `rule` and `targetUuid`.
+
+### What a sleight leaves (2.8.5)
+
+A gamma or epsilon sleight's own effects are a blueprint, as a drug's are: they never apply on the
+item (`isEffectBlueprint` in `module/effects.js`). When the sleight lasts - action turns, minutes,
+hours or sustained - and lands on a target (a lost or yielded defence, a willing target, or the
+async itself), the system copies them into one ActiveEffect on the side the sleight works on, named
+after the sleight and carrying its description, flagged `effectKey: "sleight"` and
+`sleight: { key, name, sleightName, targetUuid, sustained, attackId, defenceId, rollOptions }`. It
+is listed in the time panel and runs for the async's WIL / 5 in the sleight's unit (at least 1,
+doubled by Increased Duration); a sustained sleight has no end. A sleight without effects still
+leaves this timer. The same sleight landing again replaces it, and a pool point that turns the
+defence takes it back. The sleight's fields:
+
+| Field | Meaning |
+|---|---|
+| `targetRule` | `"any"` (default), `"self"` (no target is picked; it goes to the async) or `"others"` (the async's own token is refused) |
+| `affects` | `"target"` (default), `"async"` (the effect goes to the async, named after the target - Empathic Scan) or `"both"` |
+| `repeatPerSuperior` | Each superior success applies the effect once more |
+| `rollOptions` | Conditional modifiers as a drug authors them; the roll dialog offers them under "Sleights" while the effect runs (`sleightRollOptions` in `module/rolls/modifiers.js`) |
+| `condition` | A condition of Core p.226 the effect on the target carries as its status, with the condition's icon and modifiers (2.9); `"impaired"` goes a level deeper, -10 a level, per time the sleight applies (`SLEIGHT_CONDITIONS`) |
+
+Added changes and option values scale: a number is multiplied, a dice formula such as `"1d6"` is
+rolled once at the count (`scaledFormula`), all times four on a critical success (damage only doubles) and
+doubled by the Increased Effect push. `setSleightEffect({ actorUuid, data, defenceId })` in `module/rolls/psi.js`
+puts such an effect on an actor or takes one defence's off, through the active GM where the user
+may not. Picking one's own token is using the sleight on oneself: no defence card and no range
+modifier (Core p.277). `gammaPushes(actor, manualPush)` lists the pushes a roll runs with: the one
+chosen plus the free push of an Infection 66+ async, so the free Additional Target, Power,
+Penetration, Duration and Effect pushes now count as well.
+
+A pool point the async spends on the psi test counts at landing - the result is read off the attack
+card then - and renews what already landed (`relandAfterSpend` on `eclipsephase.poolResult`).
+
+**Sustaining.** A sustained sleight's effect has no end, and the async gets a record of it, flagged
+`effectKey: "sustain"` and `sustain: { attackId, itemId, sleightName, pushRange, targets: [{ uuid,
+name, warned }] }`, named "Sustaining: <sleight> (<targets>)" and listed in the time panel. Every
+record costs -10 on the async's other skill tests, in one line "Sustains Psi" broken down per
+sleight ("Mindlink x 3") on the roll card and in the sheet's modifier overview (`sustainSummary(actor)`,
+`sustainModifiers(context)` pushed at `eclipsephase.preRoll`); casting it again on the same target
+moves that target to the new record; aptitude checks (a dataset key under `system.aptitudes.`), rep tests and
+testing the sustained sleight itself are spared. The two sides stay together: deleting the record
+removes the effects it left, and removing a target's effect takes that target off the record, the
+record going with the last (`followSustainEnd` on `deleteActiveEffect`; a renewal deletes with the
+option `sleightCascade: false`, which skips this). The Psi tab marks a sustained sleight with a stop button that ends it
+(`endSustaining(actor, { attackId | itemId })`); sustained on more than one target, it asks which
+(`sustainedTargets(actor, itemId)`, `pickSustainedTargets`, `endSustainingOn(actor, picks)`). The time
+panel lets the GM end any running effect and a player end the records of their own character. When a token moves, the active GM measures
+async and targets on the viewed scene against Close + 10 m (`sustainReach(target, pushRange)`:
+20 m, 30 m against an async or with Increased Range) and posts one card per parting with an
+"End Sustaining" button, whispered to the async's owners and the GMs and flagged
+`sustainWarning: { actorUuid, attackId }`; the card is deleted once they are back in reach, and a new
+one comes when they part again. Nothing ends by itself.
+
+**Healing.** `damage.mode` is `"damage"`, `"heal"` or `"none"`; empty, it reads as damage when a
+damage value is set (`sleightDamageMode`). A sleight whose mode is `"heal"` heals instead of attacking: `damage.target`
+names what (`"mental"` stress, `"physical"` damage), its dice and bonus count once more per superior
+success where it repeats, times four on a critical and doubled by the Increased Effect push
+(`healingFormula`). It heals at once where it lands, leaves no effect and no record, and posts a
+roll card seen as the psi test was, with the roll to unfold; `applyHealing(actor, amount, { target })` in `module/rolls/damage.js` takes the points off
+without touching wounds or traumas.
+
+### The system's effects
+
+- `"damage"` - a weapon that deals damage, and a psi-gamma sleight that does. Once every target has
+  defended and one was struck, a damage card follows the last defence with "Roll damage": one roll
+  counts for every target struck. The active GM puts it on each target, less the armour it meets:
+  `payload.armorUsed` is `"energy"` or `"kinetic"` (a weapon mode's armour type, or the loaded
+  ammunition's when it names one), `"mental"` against psi (Psi Armor: WIL / 3, plus effects on
+  `system.mods.mentalArmorMod`) or `"none"`. `payload.armorPiercing` halves the armour (armour
+  piercing, a Penetration push), half damage reaches a target who partly dodged an area attack,
+  and `payload.damageTarget` puts it on the body or, as stress, the mind. The card shows each
+  target's owners and the GMs the reckoning, everyone else only whether damage got through.
+- `"sleight"` - a psi-gamma or psi-epsilon sleight without damage of its own. The targets resist
+  with WIL; a sleight that lasts leaves its effect where it works, see below.
+- `"dose"` - a weapon with the "Ammunition: Chems" trait (`specialAmmoDrugs`) delivers one dose per
+  target, as an area attack, to as many targets as its cone reaches at the range chosen
+  (`api.attacks.chemicalDoses(weaponTraits)` tells whether a weapon fires chemicals). The weapon
+  keeps a copy of the drug it was loaded with in `system.ammoSelected.dose`, so a hit still knows it
+  once the pack is used up. `forceDose` sets up a melee attack carrying a dose.
+- `"touch"` (2.8.5) - a psi-gamma sleight with Touch ticked at a target who is not willing starts
+  with a touch-only melee attack (+20, no damage; Core p.276); its melee dialog opens with the target
+  already chosen and Touch Attack ticked. Once the target has defended - at once, when the touch
+  misses - a card under `flags.eclipsephase.psiTouch` offers the sleight once, with the dialog
+  choices made before: at touch range (+20) after a landed touch, at point-blank (+10) after a
+  missed or avoided one. The card is seen as the sleight's own roll would be (public, private or
+  blind), not as the melee test. A touch, in melee or for a sleight, refuses targets farther than
+  point-blank while picking (`refuseFor(form)` on what `attackPicking` returns).
 
 ## Chat message context
 
@@ -533,7 +951,7 @@ card's `[data-message-id]`). The returned object:
   actorUuid, userId, rolledFrom, rollType,
   pool: { skillPoolValue, flexPoolValue, updatePoolPath, updateFlexPath, poolType },
   alternatives: { usageType, result, value, originalResult, resultClass, resultText },
-  options: { push, attackMode, biomorphTarget, touchOnly, rollMode },
+  options: { push, attackMode, biomorphTarget, touchOnly, range, vacuum, rollMode },
   item: { weaponId, weaponMode, sleightId, damageTarget },
   messageId
 }
@@ -557,6 +975,40 @@ Hooks.on("eclipsephase.preRoll", context => {
   context.flags.myModule = { orderId: "abc", discountSteps: 2 };
 });
 ```
+
+### One card per roll
+
+A task roll's card keeps what it shows in `flags.eclipsephase.taskCard`. A pool spend no longer
+posts a card of its own: it redraws the roll card, whose pool controls give way to a note on who
+spent which pool, and whose result - on a swap, the die as well - shows the new values. What the
+new result unlocks (a damage button, say) appears on that same card, and the buttons
+go by the new result: `flags.eclipsephase.roll.alternatives.spent` is set, and `alternatives.result`
+is the result they use. A card can take one pool spend. Cards from before keep the old separate
+pool card.
+
+### Cards that change
+
+A card that changes after it was posted keeps its state in its flags under one key and is drawn
+again from it. Register the kind of card once, at load, on every client - the active GM redraws
+cards for users who may not edit them:
+
+```js
+const { chat } = game.eclipsephase.api;
+chat.registerCard("myModule-vote", {
+  render: state => renderTemplate("modules/my-module/vote.html", state),
+  mutations: { vote: (state, { name }) => ({ ...state, votes: [...state.votes, name] }) }
+});
+
+const state = { votes: [] };
+await ChatMessage.create({ content: await chat.renderCard("myModule-vote", state), flags: { eclipsephase: { "myModule-vote": state } } });
+
+await chat.updateCard(message, "myModule-vote", "vote", { name: "Ana" });   // or "merge" with fields
+```
+
+`updateCard(message, key, mutation, payload, { extra })` runs the change on the card's current
+state, redraws it and writes content and state in one update, together with any `extra` update
+fields. Changes to one card run one after another, so changes arriving together are all kept. A
+user who may not edit the card sends the change to the active GM.
 
 ## Module sub-types for your own document types
 

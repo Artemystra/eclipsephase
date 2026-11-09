@@ -1,8 +1,10 @@
 import { eclipsephase } from "../config.js"
-import { takeDamage } from "../rolls/damage.js"
-import { endAllChiPushes } from "../rolls/psi.js"
-import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
-import { globalModifiers } from "../rolls/modifiers.js";
+import { applyDamage } from "../rolls/damage.js"
+import { endAllChiPushes, sustainSummary, actorStrainFamily } from "../rolls/psi.js"
+import { getStrainFamily } from "../rolls/strain-families.js"
+import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/morp-functions.js"
+import { globalModifiers, modifierSummary, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
+import { removeReplacedConditions, conditionNotes } from "../common/conditions.js";
 
 const gammaAutoPushInFlight = new Set();
 
@@ -52,6 +54,20 @@ export default class EPactor extends Actor {
    */
   async onUpdateEffectDurations(effects, event, context) {
     Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
+  }
+
+  /**
+   * Toggles a status effect, and lets a condition set this way replace the others of its group, so
+   * only one Impaired level is ever on.
+   * @param {String} statusId - The status id
+   * @param {Object} [options] - Foundry's options: active, overlay
+   * @returns {Promise<ActiveEffect|Boolean|undefined>} What Foundry's toggle returned
+   */
+  async toggleStatusEffect(statusId, options = {}) {
+    const result = await super.toggleStatusEffect(statusId, options);
+    // Foundry returns the new effect when it set one, a Boolean otherwise.
+    if (result && typeof result === "object") await removeReplacedConditions(this, statusId);
+    return result;
   }
 
   /**
@@ -172,6 +188,7 @@ export default class EPactor extends Actor {
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
+    this._calculateMentalArmor(actorModel);
     // Mirrors jammedHealthValues: when jamming, movement comes from the jammed body, not the sleeved
     // morph. Exposed on the actor (not just the item) so canvas/token code can read it directly
     // without re-resolving which body/movement slot is active itself.
@@ -245,6 +262,8 @@ export default class EPactor extends Actor {
     }
 
     // Moxie skills
+    const familyLabel = getStrainFamily(actorStrainFamily(actorWhole)).label;
+    if (familyLabel && actorModel.skillsMox.psi) actorModel.skillsMox.psi.name = familyLabel;
     for (let [key, skill] of Object.entries(actorModel.skillsMox)) {
       skill.mod = eval(skill.mod) + (skill.chiMod ? (eval(skill.chiMod)*chiMultiplier) : 0);
       this._calculateSkillValue(key,skill,actorModel,this.type);
@@ -313,10 +332,6 @@ export default class EPactor extends Actor {
   // ceiling instead for those two; everything else keeps native behavior.
   async modifyTokenAttribute(attribute, value, isDelta = false, isBar = true) {
     const ceilingByAttribute = { "health.physical": "physical.dr", "health.mental": "mental.ir" };
-    const DAMAGE_CONFIG = {
-      "health.physical": { barTarget: "physical", thresholdPath: "physical.wt", modifierPath: "physical.wounds" },
-      "health.mental": { barTarget: "mental", thresholdPath: "mental.tt", modifierPath: "mental.trauma" }
-    };
     const ceilingPath = ceilingByAttribute[attribute];
     if (!isBar || !ceilingPath) return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
 
@@ -330,16 +345,11 @@ export default class EPactor extends Actor {
 
     // Taking damage (not healing - healDamage() is a whole dialog-driven mechanic meant to be
     // triggered deliberately from the sheet, not implied by a smaller HUD value) runs the same
-    // wound/trauma-threshold math and chat announcement takeDamage() posts from the sheet's damage
+    // wound/trauma-threshold math and chat announcement applyDamage() posts from the sheet's damage
     // button, instead of silently just moving the raw value.
     if (clampedUpdate > current) {
-      const config = DAMAGE_CONFIG[attribute];
-      const currentModifier = foundry.utils.getProperty(this.system, config.modifierPath) ?? 0;
-      const threshold = foundry.utils.getProperty(this.system, config.thresholdPath) || 1;
-      return takeDamage(
-        { value: clampedUpdate - current }, current, 1, 0, currentModifier, threshold,
-        `system.${attribute}.value`, `system.${config.modifierPath}`, this, config.barTarget, ceiling
-      );
+      await applyDamage(this, clampedUpdate - current, { target: attribute === "health.mental" ? "mental" : "physical", announce: true });
+      return this;
     }
 
     const updates = { [`system.${attribute}.value`]: clampedUpdate };
@@ -362,8 +372,12 @@ export default class EPactor extends Actor {
   }
 
   _calculateInitiative(actorModel, chiMultiplier) {
-    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value + actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0) + eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0)
-    actorModel.initiative.display = "1d6 + " + (actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0))
+    const felt = (count, ignored, chiIgnored) => Math.max(0, (Number(count) || 0) + (Number(ignored) || 0) + (chiIgnored ? eval(chiIgnored) * chiMultiplier : 0));
+    const penalty = felt(actorModel.physical.wounds, actorModel.mods.woundMod, actorModel.mods.woundChiMod)
+      + felt(actorModel.mental.trauma, actorModel.mods.traumaMod, actorModel.mods.traumaChiMod);
+    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value + actorModel.aptitudes.int.value) / 5) - penalty + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0) + eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0)
+    const shown = actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0);
+    actorModel.initiative.display = shown < 0 ? `1d6 - ${-shown}` : `1d6 + ${shown}`;
   }
 
   _calculatePhysicalHealth(actorModel, morphValues, chiMultiplier){
@@ -782,6 +796,9 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.specialModifiers.push({ label, modifier, comment, flag: "globalMod" });
     }
 
+    const sustained = sustainSummary(actorWhole);
+    if (sustained) actorModel.currentStatus.specialModifiers.push({ ...sustained, flag: "sustain" });
+
     Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);
 
     if(actorModel.currentStatus.generalModifier || actorModel.currentStatus.generalModifier || actorModel.currentStatus.armorModifier || actorModel.currentStatus.encumberanceModifier || actorModel.currentStatus.specialModifiers.length >= 1){
@@ -794,6 +811,30 @@ export default class EPactor extends Actor {
     }
 
     actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum + actorModel.currentStatus.specialModifierSum;
+
+    const counts = {
+      wounds: actorModel.physical.wounds,
+      trauma: actorModel.mental.trauma,
+      layers: actorModel.currentStatus.armorLayerSum,
+      layerMalus: armorEncumberance,
+      somMalus: armorSomCumberance
+    };
+    const physical = globalModifiers(actorWhole, { key: PHYSICAL_MOD_KEY });
+    const mental = globalModifiers(actorWhole, { key: MENTAL_MOD_KEY });
+    Object.assign(actorModel.currentStatus, modifierSummary(actorModel.currentStatus, counts, physical, mental));
+    actorModel.currentStatus.conditionNotes = conditionNotes(actorWhole);
+  }
+
+  /**
+   * Mental armour, which only psi meets (Core p.276): WIL / 3 from the Psi Armor sleight, which
+   * marks itself through system.mods.psiArmor, plus whatever effects add through mentalArmorMod.
+   * @param {Object} actorModel - The actor's system data
+   * @returns {void}
+   */
+  _calculateMentalArmor(actorModel) {
+    const psiArmor = actorModel.mods?.psiArmor === true || actorModel.mods?.psiArmor === "true" ? Math.floor((Number(actorModel.aptitudes?.wil?.value) || 0) / 3) : 0;
+    actorModel.mental ??= {};
+    actorModel.mental.armorTotal = psiArmor + (Number(actorModel.mods?.mentalArmorMod) || 0);
   }
 
   _calculateArmor(actorModel, actorWhole, jammedVehicleData) {
