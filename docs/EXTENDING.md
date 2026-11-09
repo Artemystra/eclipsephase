@@ -195,7 +195,7 @@ an actor type your module contributes via a module sub-type (see below) is left 
 `EPactor.prepareData()`.
 
 An effect changes every test through `system.mods.globalMod`, every physical action through
-`system.mods.physicalMod` and every mental action through `system.mods.mentalMod` (2.9.5). A test by
+`system.mods.physicalMod` and every mental action through `system.mods.mentalMod` (2.9). A test by
 Reflexes or Somatics and every attack is physical, every other test mental (Core p.34);
 `api.rolls.rollScope(dataset, rolledFrom)` tells which, `"body"`, `"mind"` or `null` for a vehicle's own
 skill. The status side car shows the sums on a physical and on a mental action.
@@ -730,7 +730,7 @@ may "Soak Damage" the same way. A card with several targets offers, below their 
 the defence cards altogether and lands on every target at once.
 
 A target that can roll none of its defences - every one refused by a roll block, such as
-Incapacitated, Unconscious, or Immobilized against a weapon (2.9.5) - carries the refusal as
+Incapacitated, Unconscious, or Immobilized against a weapon (2.9) - carries the refusal as
 `helpless` on its card entry, which the card shows; the active GM then lets the attack land on it as
 if it had not resisted, through `yieldDefence`. A Blinded attacker first rolls Perceive from its
 usual dialog, the roll flagged `blindPerceive: { id }`; while a pool point could still change it, the
@@ -739,7 +739,7 @@ fails, a d100 on a card of its own decides: on 00-49 the attack misses outright 
 shot is still spent, but no attack is rolled.
 
 A weapon or grenade with Shock, Stun, Knockdown, Blinding, Pain or Entangling carries them as
-`checks` on its attack (2.9.5); a touch-only attack, or a weapon without damage dice, that has such a
+`checks` on its attack (2.9); a touch-only attack, or a weapon without damage dice, that has such a
 trait is an attack on its target too, and its damage card says it deals none. Once the damage is
 applied, the damage card lists the checks its struck targets make (`checks` on the card's
 `damageCard` state: `{ id, actorUuid, name, check, weaponName, superiors, npc, rolled }`), each a
@@ -833,7 +833,7 @@ dose's duration). A roll can be forced from `eclipsephase.preRoll` by setting
 
 The built-in rule `boostSkill` asks the async for a physical skill and adds 10 to it while the effect runs, times its potency.
 
-Four more come with 2.9.5: `shockEffect` (instant: prone, incapacitated for 1 action turn plus 2 per
+Four more come with 2.9: `shockEffect` (instant: prone, incapacitated for 1 action turn plus 2 per
 superior success, stunned for 3 minutes - Short Circuit), `painEffect` (instant: -20 until the end
 of the next turn, -10 with Pain Tolerance I, none with II, and a card that the target flees - Pain),
 `loseSense` (the async chooses a sense on a card: sight makes the effect Blinded, hearing Deafened,
@@ -869,7 +869,7 @@ defence takes it back. The sleight's fields:
 | `affects` | `"target"` (default), `"async"` (the effect goes to the async, named after the target - Empathic Scan) or `"both"` |
 | `repeatPerSuperior` | Each superior success applies the effect once more |
 | `rollOptions` | Conditional modifiers as a drug authors them; the roll dialog offers them under "Sleights" while the effect runs (`sleightRollOptions` in `module/rolls/modifiers.js`) |
-| `condition` | A condition of Core p.226 the effect on the target carries as its status, with the condition's icon and modifiers (2.9.5); `"impaired"` goes a level deeper, -10 a level, per time the sleight applies (`SLEIGHT_CONDITIONS`) |
+| `condition` | A condition of Core p.226 the effect on the target carries as its status, with the condition's icon and modifiers (2.9); `"impaired"` goes a level deeper, -10 a level, per time the sleight applies (`SLEIGHT_CONDITIONS`) |
 
 Added changes and option values scale: a number is multiplied, a dice formula such as `"1d6"` is
 rolled once at the count (`scaledFormula`), all times four on a critical success (damage only doubles) and

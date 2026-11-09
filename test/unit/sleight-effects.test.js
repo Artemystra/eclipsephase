@@ -7,7 +7,7 @@ import { registerLandingRule, listLandingRules, registerFailOption } from "../..
 import { cardFailures } from "../../module/rolls/cards.js";
 import { refuseForFamily, defenceDataset } from "../../module/rolls/attacks.js";
 import { isEffectBlueprint } from "../../module/effects.js";
-import { _ep285_sleightUpdate, _ep295_replacedBlueprints } from "../../module/common/migration.js";
+import { _ep285_sleightUpdate, _ep29_replacedBlueprints } from "../../module/common/migration.js";
 import { markDefenceRolled } from "../../module/rolls/attacks.js";
 import { RollCheck } from "../../module/rolls/dice.js";
 import { resetStrainFamilies, registerCoreStrainFamilies, registerStrainFamily, getStrainFamily } from "../../module/rolls/strain-families.js";
@@ -798,13 +798,13 @@ describe("the conditions a sleight leaves (Core p.226)", () => {
     expect(createdMessages.some(message => message.content?.includes("ep2e.psi.choice.loseSense"))).toBe(true);
   });
 
-  test("the 2.9.5 migration gives a sleight its namesake's condition and takes Spam's old -10 blueprint off", () => {
+  test("the 2.9 migration gives a sleight its namesake's condition and takes Spam's old -10 blueprint off", () => {
     const catalogue = new Map([["Spam", { system: { condition: "impaired", repeatPerSuperior: true }, effects: [] }], ["Basilisk Stare", { system: { condition: "incapacitated", landingRule: "eyeContact" }, effects: [] }]]);
     const spam = { type: "aspect", name: "Spam", system: { condition: "none" }, effects: [{ id: "old", changes: [{ key: "system.mods.globalMod", value: "-10" }] }, { id: "own", changes: [{ key: "system.mods.globalMod", value: "-10" }, { key: "system.mods.iniMod", value: "1" }] }] };
     const stare = { type: "aspect", name: "Basilisk Stare", system: { condition: "none", landingRule: "none" }, effects: [] };
 
-    expect(_ep295_replacedBlueprints(spam, catalogue)).toEqual(["old"]);
-    expect(_ep295_replacedBlueprints(stare, catalogue)).toEqual([]);
+    expect(_ep29_replacedBlueprints(spam, catalogue)).toEqual(["old"]);
+    expect(_ep29_replacedBlueprints(stare, catalogue)).toEqual([]);
     expect(_ep285_sleightUpdate(stare, catalogue).update).toEqual({ "system.condition": "incapacitated", "system.landingRule": "eyeContact" });
   });
 });

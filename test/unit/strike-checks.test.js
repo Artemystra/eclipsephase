@@ -4,7 +4,7 @@ import { weaponPreparation } from "../../module/common/weapon-functions.js";
 import { strikeTraits, traitSubSetConstructor } from "../../module/common/weapon-functions.js";
 import { rollBlockContext } from "../../module/common/conditions.js";
 import { TASK_RESULT, rollCalc, superiorResults, RollCheck } from "../../module/rolls/dice.js";
-import { _ep295_markerEffects } from "../../module/common/migration.js";
+import { _ep29_markerEffects } from "../../module/common/migration.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -451,18 +451,18 @@ describe("a confused character's turn", () => {
   });
 });
 
-describe("the 2.9.5 migration", () => {
+describe("the 2.9 migration", () => {
   test("Pain Tolerance and Anti-Glare get the effect saying what they protect against, once; other items nothing", () => {
     const item = (name, type, effects = []) => ({ name, type, img: "x.svg", effects });
-    const [one] = _ep295_markerEffects(item("Pain Tolerance I", "traits"));
-    const [two] = _ep295_markerEffects(item("Pain Tolerance II", "traits"));
-    const [glare] = _ep295_markerEffects(item("Anti-Glare", "ware"));
+    const [one] = _ep29_markerEffects(item("Pain Tolerance I", "traits"));
+    const [two] = _ep29_markerEffects(item("Pain Tolerance II", "traits"));
+    const [glare] = _ep29_markerEffects(item("Anti-Glare", "ware"));
 
     expect(one.system.changes[0]).toMatchObject({ key: "system.additionalSystems.painTolerance", value: 1 });
     expect(two.system.changes[0]).toMatchObject({ key: "system.additionalSystems.painTolerance", value: 2 });
     expect(glare.system.changes[0]).toMatchObject({ key: "system.additionalSystems.antiGlare", value: true });
-    expect(_ep295_markerEffects(item("Pain Tolerance I", "traits", [{ system: { changes: [{ key: "system.additionalSystems.painTolerance" }] } }]))).toEqual([]);
-    expect(_ep295_markerEffects(item("Anti-Glare", "gear"))).toEqual([]);
-    expect(_ep295_markerEffects(item("Pain Tolerance III", "traits"))).toEqual([]);
+    expect(_ep29_markerEffects(item("Pain Tolerance I", "traits", [{ system: { changes: [{ key: "system.additionalSystems.painTolerance" }] } }]))).toEqual([]);
+    expect(_ep29_markerEffects(item("Anti-Glare", "gear"))).toEqual([]);
+    expect(_ep29_markerEffects(item("Pain Tolerance III", "traits"))).toEqual([]);
   });
 });

@@ -43,24 +43,17 @@ export const MIGRATION_NOTES = {
       "Items named like a compendium entry pick up what they are missing from it. Your own values stay untouched.",
       "Breathers and sealed suits learn to keep **gas and contact substances** out.",
       "Psi sleights on your sheets get their **effects and target rules** from the compendium, unless they already have effects of their own.",
-      "Beside all that, every item sheet got a new look, and there's a full range of melee updates and GM quality of life hacks in the quiver, so to speak."
-    ],
-    comments: [
-      "Using the Ki module? Update it to 1.1 together with the system. Ki sleights already on your sheets keep their old data: drop them on the sheet again from the compendium to get the new effects."
-    ]
-  },
-  "2.9.5": {
-    title: "Down, but not out...",
-    intro: "Getting hit used to be a matter of numbers. Now it is a matter of how you land. The rulebook's conditions have arrived on your tokens, and they mean it - so mind your footing, agent, and keep your eyes open while you still can.",
-    bullets: [
       "The token HUD carries the rulebook's **conditions**, and they do what they say: Incapacitated, Unconscious, Dazed and Immobilized stop the actions they rule out, the others put their modifiers on your rolls.",
       "Your side car shows what every **physical and mental** action costs you right now - one click shows where it comes from.",
       "Blinded fighters **perceive** before they strike, a target on the floor is easier to hit up close, and whoever cannot defend simply gets hit.",
       "Weapons with **Shock, Stun, Knockdown, Blinding, Pain and Entangling** ask their targets for the check, and a wound can knock you **prone** - or out cold.",
       "**Pain Tolerance** and **Anti-Glare** on your sheets learn here what they protect you from.",
-      "Sleights that stun, blind, impair or freeze put their **conditions** on the target - Basilisk Stare, Short Circuit, Pain, Spam, Block Sense and their kin. The ones on your sheets learn it here."
+      "Sleights that stun, blind, impair or freeze put their **conditions** on the target - Basilisk Stare, Short Circuit, Pain, Spam, Block Sense and their kin. The ones on your sheets learn it here.",
+      "Beside all that, every item sheet got a new look, and there's a full range of melee updates and GM quality of life hacks in the quiver, so to speak."
     ],
-    comments: []
+    comments: [
+      "Using the Ki module? Update it to 1.1 together with the system. Ki sleights already on your sheets keep their old data: drop them on the sheet again from the compendium to get the new effects."
+    ]
   }
 };
 
@@ -3311,9 +3304,13 @@ export function _ep29_tacnetEffects(item) {
   return [{ name: "TacNet", img: "icons/svg/aura.svg", type: "base", transfer: true, disabled: false, system: { changes: [{ key: TACNET_KEY, value: true, priority: null, type: "override" }] } }];
 }
 
+// The stamp of the conditions' migration: a world stamped 2.9 before the conditions came along picks
+// them up once, without a dialog of its own.
+export const CONDITIONS_MIGRATION = "2.9.0.1";
+
 // The items that tell the system what they protect against, found by their book name, and the effect
 // each of them gets.
-const _EP295_MARKERS = [
+const _EP29_MARKERS = [
   { type: "traits", name: "pain tolerance i", effect: "Pain Tolerance I", key: "system.additionalSystems.painTolerance", value: 1 },
   { type: "traits", name: "pain tolerance ii", effect: "Pain Tolerance II", key: "system.additionalSystems.painTolerance", value: 2 },
   { type: "ware", name: "anti-glare", effect: "Anti-Glare", key: "system.additionalSystems.antiGlare", value: true }
@@ -3325,8 +3322,8 @@ const _EP295_MARKERS = [
  * @param {Item} item - The item
  * @returns {Object[]} The effect's data to create, empty when it has it or is none of them
  */
-export function _ep295_markerEffects(item) {
-  const marker = _EP295_MARKERS.find(entry => entry.type === item.type && entry.name === item.name?.trim().toLowerCase());
+export function _ep29_markerEffects(item) {
+  const marker = _EP29_MARKERS.find(entry => entry.type === item.type && entry.name === item.name?.trim().toLowerCase());
   if (!marker) return [];
   if (Array.from(item.effects ?? []).some(effect => Array.from(effect.system?.changes ?? effect.changes ?? []).some(change => change.key === marker.key))) return [];
   return [{ name: marker.effect, img: item.img, type: "base", transfer: true, disabled: false, system: { changes: [{ key: marker.key, value: marker.value, priority: null, type: "override" }] } }];
@@ -3339,7 +3336,7 @@ export function _ep295_markerEffects(item) {
  * @param {Map<String, Object>} catalogue - What _ep285_sleightCatalogue read
  * @returns {String[]} The ids of the effects to remove
  */
-export function _ep295_replacedBlueprints(item, catalogue) {
+export function _ep29_replacedBlueprints(item, catalogue) {
   if (item.type !== "aspect" || catalogue.get(item.name)?.system?.condition !== "impaired") return [];
   return Array.from(item.effects ?? []).filter(effect => {
     const changes = Array.from(effect.system?.changes ?? effect.changes ?? []);
@@ -3351,22 +3348,23 @@ export function _ep295_replacedBlueprints(item, catalogue) {
  * Gives every Pain Tolerance trait and Anti-Glare ware the effect it is missing, and every sleight
  * the condition or special effect its compendium namesake now leaves on its target - in place of
  * the plain modifier it carried before.
+ * @param {Object} [options] - silent: without a progress bar, for a world catching up
  * @returns {Promise<void>}
  */
-export async function migrationPre295() {
+export async function migrationPre29Conditions({ silent = false } = {}) {
   const sleights = await _ep285_sleightCatalogue();
   await forEachItem(async item => {
     if (item.type === "aspect") {
-      const stale = _ep295_replacedBlueprints(item, sleights);
+      const stale = _ep29_replacedBlueprints(item, sleights);
       if (stale.length) await item.deleteEmbeddedDocuments("ActiveEffect", stale);
       const result = _ep285_sleightUpdate(item, sleights);
       if (result?.update) await item.update(result.update);
       return;
     }
-    const effects = _ep295_markerEffects(item);
+    const effects = _ep29_markerEffects(item);
     if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
-  }, { label: "Migration 2.9.5", filter: item => ["traits", "ware", "aspect"].includes(item.type), includeCompendiums: true });
-  await game.settings.set("eclipsephase", "migrationVersion", "2.9.5");
+  }, { label: "Migration 2.9", filter: item => ["traits", "ware", "aspect"].includes(item.type), includeCompendiums: true, silent });
+  await game.settings.set("eclipsephase", "migrationVersion", CONDITIONS_MIGRATION);
 }
 
 /**
