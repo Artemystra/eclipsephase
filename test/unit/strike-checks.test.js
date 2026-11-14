@@ -314,6 +314,18 @@ describe("rolling and settling a hit's check", () => {
     expect(conditionsOn(ana)).toEqual([{ status: "stunned", duration: 3 }]);
   });
 
+  test("a pool point rewrites the check's outcome card instead of posting a second one", async () => {
+    const ana = target();
+    const check = { actorUuid: ana.uuid, check: "knockdown", id: "k1" };
+    await settleStrikeCheck(check, rollCalc(80, 10), 80);
+    const told = createdMessages.length;
+    await settleStrikeCheck(check, rollCalc(5, 10), 5, null, { byPool: true });
+
+    expect(createdMessages.length).toBe(told);
+    expect(createdMessages.at(-1).content).toContain("ep2e.chat.strike.resisted");
+    expect(conditionsOn(ana)).toEqual([]);
+  });
+
   test("armour adds to shock and stun, the attack's superior successes count against entangling, Pain Tolerance I helps against pain", () => {
     const ana = target("bio", { painTolerance: 1 });
     const values = check => strikeModifiers({ actorUuid: ana.uuid, superiors: 2, check }).map(entry => entry.value);

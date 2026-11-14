@@ -1,4 +1,4 @@
-import { attackArmorUsed, defaultArmorUsed, parseRangeText, parseRangeArea, parseAreaText, munitionArea, weaponDataRepairs, needsMunitionChoice, sameMunition, munitionLabel, chooseMunition, rangeBand, beyondRangeDamage, rangeRefusal, weaponRange } from "../../module/common/weapon-functions.js";
+import { weaponListConstructor, selectWeaponMode, attackArmorUsed, defaultArmorUsed, parseRangeText, parseRangeArea, parseAreaText, munitionArea, weaponDataRepairs, needsMunitionChoice, sameMunition, munitionLabel, chooseMunition, rangeBand, beyondRangeDamage, rangeRefusal, weaponRange } from "../../module/common/weapon-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { registerPayloadSource, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, makeItem, registerSystemPacks, resetWorld } from "../setup/factories.js";
@@ -235,5 +235,31 @@ describe("the range a weapon is fired at (Core p.207)", () => {
     const weapon = { system: { mode1: { range: 30 }, mode2: { range: "150m" } } };
 
     expect([weaponRange({ weapon, weaponMode: "1" }), weaponRange({ weapon, weaponMode: "2" }), weaponRange(null)]).toEqual([30, 150, null]);
+  });
+});
+
+describe("choosing the weapon to attack with", () => {
+  /**
+   * The content of the next list dialog, which is then cancelled.
+   * @param {Function} open - Opens the dialog
+   * @returns {Promise<String>} Its HTML
+   */
+  async function dialogContent(open) {
+    const wait = jest.spyOn(foundry.applications.api.DialogV2, "wait").mockResolvedValue({ cancelled: true });
+    await open();
+    const content = wait.mock.calls.at(-1)?.[0]?.content ?? "";
+    wait.mockRestore();
+    return content;
+  }
+  const checked = html => [...html.matchAll(/<input[^>]*name="ItemSelect"[^>]*>/g)].map(([tag]) => tag).filter(tag => tag.includes(" checked")).map(tag => tag.match(/value="([^"]*)"/)[1]);
+
+  test("the first prepared weapon comes preselected, and of a weapon with two modes the first", async () => {
+    const weapon = id => ({ _id: id, name: id, type: "rangedWeapon", system: { active: true, ammoMin: 5, ammoMax: 10 } });
+    const shooter = makeActor({ type: "character", items: [weapon("pistol"), weapon("rifle")] });
+    shooter.rangedWeapon = [...shooter.items];
+    const twoModes = makeItem({ type: "rangedWeapon", system: { additionalMode: true } });
+
+    expect(checked(await dialogContent(() => weaponListConstructor(shooter, "guns")))).toEqual(["pistol"]);
+    expect(checked(await dialogContent(() => selectWeaponMode(twoModes, { mode1: { automatedEffects: {} }, mode2: { automatedEffects: {} } })))).toEqual(["1"]);
   });
 });
