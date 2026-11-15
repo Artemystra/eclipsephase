@@ -900,7 +900,9 @@ export async function weaponListConstructor(actor, skillKey){
   }
 
   if (weaponslist.length > 2){
-    checkWeapon = await listSelection(weaponslist, "weaponList", 536)
+    // The first prepared weapon comes preselected.
+    const selected = weaponslist.find(entry => entry.dv !== undefined)?.id;
+    checkWeapon = await listSelection(weaponslist, "weaponList", 536, undefined, undefined, undefined, undefined, { selected })
     weaponID = checkWeapon.selection ? checkWeapon.selection : weaponID = "0";
   }
   else {
@@ -967,7 +969,7 @@ export async function weaponListConstructor(actor, skillKey){
 
     let weaponModes = [{"id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
     if(!selectedWeaponMode)
-      selectedWeaponMode = await listSelection(weaponModes, "weaponList" , 536, "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
+      selectedWeaponMode = await listSelection(weaponModes, "weaponList" , 536, "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline", undefined, undefined, undefined, { selected: 1 });
   
     if(selectedWeaponMode.cancelled){
       let cancel = selectedWeaponMode.cancelled

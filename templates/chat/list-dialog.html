@@ -43,7 +43,7 @@
                 <h3 class="subheader dialog" style="width: 100%;">{{localize heading}}</h3>
                 {{else if id}}
                 <div>
-                    <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                    <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}"{{#if (eq id @root.selected)}} checked{{/if}}>
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}

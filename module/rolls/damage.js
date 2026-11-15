@@ -1,5 +1,5 @@
 import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelayedTrigger, timerSpan, munitionDose, cloudColor, PROXIMITY_REACH, coneDamage, beyondRangeDamage, ATTACK_MODES, ANY_TARGETS, chemicalDoses, attackArmorUsed, attackTargetCount, isConeWeapon, strikeTraits } from "../common/weapon-functions.js";
-import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, postCard } from "../common/general-sheet-functions.js";
+import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, postCard, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit, superiorResults } from "./dice.js";
 import { targetKinds } from "../common/morp-functions.js";
 import { inflictCondition, conditionEntry, activeConditions, isUnder } from "../common/conditions.js";
@@ -719,6 +719,8 @@ export function registerWeaponAttackSocket() {
 // turns the result puts on what the new one brings instead.
 
 export const STRIKE_CHECK_KEY = "strikeCheck";
+// The flag on a check's outcome card, naming the check it tells of.
+const STRIKE_OUTCOME_KEY = "strikeOutcome";
 
 // The aptitude each check is rolled on, its card's icon - a Foundry image where it has one - the
 // armour that adds to it and a modifier of its own.
@@ -964,7 +966,7 @@ export function spanText(span) {
 /**
  * Settles a hit's check: what an earlier result of it put on goes, what this one brings is put on,
  * and a card says what that is, seen as the check's roll was. A pool point spent on the check
- * settles it again. A confused character's check settles once: on the roll, or - while a pool point
+ * settles it again and rewrites that card. A confused character's check settles once: on the roll, or - while a pool point
  * could still turn it - once its result is accepted; a failure has the table decide what they do.
  * @param {Object} check - The strikeCheck the roll carried
  * @param {Number} result - The result tier as it now stands
@@ -994,7 +996,10 @@ export async function settleStrikeCheck(check, result, value, roll = null, { byP
     : outcome.conditions.length
       ? game.i18n.format("ep2e.chat.strike.outcome", { name: actor.name, conditions: conditionNames(outcome.conditions) })
       : game.i18n.format("ep2e.chat.strike.resisted", { name: actor.name, effect: game.i18n.localize(`ep2e.chat.strike.${check.check}.name`) });
-  await postCard(actor, { icon: STRIKE_CHECKS[check.check].icon, iconImg: STRIKE_CHECKS[check.check].img, headline }, {}, whisper);
+  const card = { icon: STRIKE_CHECKS[check.check].icon, iconImg: STRIKE_CHECKS[check.check].img, headline };
+  const told = game.messages?.find?.(message => message.getFlag?.("eclipsephase", STRIKE_OUTCOME_KEY) === check.id);
+  if (told?.isOwner) await told.update({ content: await foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, card) });
+  else await postCard(actor, card, { eclipsephase: { [STRIKE_OUTCOME_KEY]: check.id } }, whisper);
   return outcome;
 }
 
