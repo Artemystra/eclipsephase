@@ -4,7 +4,7 @@
   "background": "systems/eclipsephase/resources/img/bannerEclipsePhase.webp",
   "title": "Eclipse Phase 2e",
   "description": "Laph's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "2.9",
+  "version": "3.0",
   "compatibility": {
     "verified": "14",
     "minimum": "14"
@@ -234,7 +234,7 @@
   "primaryTokenAttribute": "health.physical",
   "secondaryTokenAttribute": "health.mental",
   "url": "https://github.com/Artemystra/eclipsephase",
-  "manifest": "https://github.com/Artemystra/eclipsephase/releases/latest/download/system.json",
-  "download": "https://github.com/Artemystra/eclipsephase/releases/download/v2.9/eclipsephase.zip",
+  "manifest": "https://github.com/Artemystra/eclipsephase/raw/v3.0/system.json",
+  "download": "https://github.com/Artemystra/eclipsephase/archive/v3.0/eclipsephase-v3.0.zip",
   "license": "LICENSE.txt"
 }
