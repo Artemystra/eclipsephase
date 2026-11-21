@@ -1,0 +1,24 @@
+{{!-- What a failed Stress Test costs, chosen before the roll: shared below the checks of a resleeve. --}}
+<div class="contentBoxMargin">
+    <div class="flexrow subheader">
+        <h3 class="subheader dialog">{{localize "ep2e.dialog.selectStress.dialogTitle"}}</h3>
+    </div>
+    <p class="footnote" style="padding: 5px 0 0 0;">{{localize "ep2e.dialog.selectStress.copy"}}</p>
+    <div style="display: flex; flex-wrap: wrap; padding: 10px 0; gap: 10px;">
+        {{#each options as |option|}}
+        <div class="flexrow flex-group-left" style="width: 100%; align-items: flex-start;">
+            <div style="max-width: 40px;">
+                <input class="dialog radio" type="radio" name="stressSeverity" value="{{option.id}}" id="stress-{{option.id}}"{{#if @first}} checked{{/if}}>
+            </div>
+            <div style="width: 100%; display: flex; flex-wrap: wrap; padding-top: 2px;">
+                <div style="width: 100%;">
+                    <label for="stress-{{option.id}}" style="min-width: 100%; margin-right: 10px;">{{localize option.label}}</label>
+                </div>
+                <div style="width: 100%; margin-top: 5px;">
+                    <label for="stress-{{option.id}}" style="font-size: 10px;"><i>{{localize option.description}}</i></label>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>

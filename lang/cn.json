@@ -685,7 +685,8 @@
         "title": {
           "resleevingIntegration": "Resleeving: Integration Test",
           "resleevingStress": "Resleeving: Stress Test",
-          "jammingIntegration": "Jamming: Integration Test"
+          "jammingIntegration": "Jamming: Integration Test",
+          "dialog": "{task}：{name}"
         },
         "result": {
           "taskResleeve": "Resleeve",
@@ -693,6 +694,7 @@
           "taskStress": "Stress Test"
         },
         "announce": {
+          "rolled": "检定已掷骰。",
           "title": {
             "sleeved": "Resleeved",
             "jammed": "Jammed"

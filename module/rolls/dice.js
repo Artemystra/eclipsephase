@@ -684,6 +684,10 @@ function getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom) {
     return Number(ownValue) - Number(liveValue);
 }
 
+// A dialog holding several checks, and how wide each of its columns is.
+const SIDE_BY_SIDE_DIALOG_TEMPLATE = "systems/eclipsephase/templates/chat/side-by-side-dialog.html";
+const SIDE_BY_SIDE_COLUMN_WIDTH = 300;
+
 /**
  * Performs a roll against any given skill or aptitude. Prints it's result
  * into the chat for further usage.
@@ -697,10 +701,88 @@ function getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom) {
  */
 
 export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
-    let proceed
-    let options = {}
-    let specName = dataset.specname || "";
-    let roll = await defineRoll(dataset, actorWhole, rolledFrom)
+    const prepared = await prepareRollCheck(dataset, actorModel, actorWhole, weaponSelected, rolledFrom)
+    if (!prepared) return
+    const values = systemOptions?.skipDialog
+        ? { cancelled: false, ...systemOptions.presetOptions }
+        : await showOptionsDialog(prepared.roll, prepared.roll.type, prepared.specName, prepared.pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset, prepared.rollContext)
+    if (values.cancelled) return
+    return finishRollCheck(prepared, values, systemOptions)
+}
+
+/**
+ * Several checks asked for in one dialog, side by side: each column is the roll dialog that check
+ * opens alone, without its own roll mode; below them is what they share - one roll mode and any
+ * further fields the caller adds. Then each check is rolled with its column's values and the shared
+ * roll mode, one after the other.
+ * @param {Object[]} checks - Per check: dataset, actorModel, actorWhole, rolledFrom, and optionally
+ *   weaponSelected and heading (the column's title)
+ * @param {Object} [options] - title of the dialog; shared: content (HTML) and read(root) for further
+ *   shared fields, noBlind to offer no blind roll; systemOptions as RollCheck takes them
+ * @returns {Promise<Object|null>} results (each check's RollCheck result, in order), rollMode and
+ *   shared (what read returned), or null when cancelled or a check is refused
+ */
+export async function rollChecksSideBySide(checks, { title = "", shared = {}, systemOptions = {} } = {}) {
+    const prepared = [];
+    for (const check of checks) {
+        const entry = await prepareRollCheck(check.dataset, check.actorModel, check.actorWhole, check.weaponSelected ?? null, check.rolledFrom);
+        if (!entry) return null;
+        prepared.push(entry);
+    }
+    const columns = [];
+    for (const [index, entry] of prepared.entries()) {
+        const traits = entry.weaponSelected ? entry.weaponSelected.weaponTraits : null;
+        const content = await renderOptionsContent(entry.roll, entry.roll.type, entry.specName, entry.pool, entry.actorWhole, traits, entry.rolledFrom, entry.dataset, entry.rollContext, { noRollMode: true });
+        // A dialog template is a form of its own. As a column it must not stay one: Enter would send
+        // it the browser's way, reloading the page with its fields in the address.
+        columns.push({ heading: checks[index].heading ?? "", content: content.replace(/<\/?form\b[^>]*>/gi, "") });
+    }
+    const content = await foundry.applications.handlebars.renderTemplate(SIDE_BY_SIDE_DIALOG_TEMPLATE, { columns, shared: shared.content ?? "", noBlind: shared.noBlind === true });
+    const read = form => {
+        const parts = Array.from(form.querySelectorAll(".ep-dialog-column"));
+        const sharedRoot = form.querySelector(".ep-dialog-shared");
+        return {
+            values: prepared.map((entry, index) => readDialogValues(parts[index], entry.roll.names)),
+            rollMode: readDialogValues(sharedRoot, ["rollMode"]).rollMode,
+            shared: shared.read ? shared.read(sharedRoot) : {}
+        };
+    };
+    const answer = await foundry.applications.api.DialogV2.wait({
+        window: { title },
+        classes: ["ep2e-primary-right", "ep-dialog-side-by-side"],
+        content,
+        buttons: [
+            { action: "roll", label: game.i18n.localize("ep2e.roll.dialog.button.roll"), default: true, callback: (event, button) => read(button.form) },
+            { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
+        ],
+        modal: true,
+        rejectClose: false,
+        render: (event, dialog) => {
+            for (const part of dialog.element?.querySelectorAll(".ep-dialog-column") ?? []) wireOptionsDialog(part, dialog, false);
+        },
+        position: { width: columns.length * SIDE_BY_SIDE_COLUMN_WIDTH }
+    });
+    if (!answer || answer.cancelled) return null;
+    const results = [];
+    for (const [index, entry] of prepared.entries()) {
+        results.push(await finishRollCheck(entry, { cancelled: false, ...answer.values[index], rollMode: answer.rollMode }, systemOptions));
+    }
+    return { results, rollMode: answer.rollMode, shared: answer.shared ?? {} };
+}
+
+/**
+ * Everything a check needs before its dialog: what is rolled, whether anything refuses it, and the
+ * pools it may draw on. Nothing is rolled or spent yet.
+ * @param {Object} dataset - What is rolled, as a sheet button gives it
+ * @param {Object} actorModel - The actor's system data
+ * @param {Actor} actorWhole - The actor
+ * @param {Object|null} weaponSelected - The weapon, when one is used
+ * @param {String} rolledFrom - Where the roll comes from
+ * @returns {Promise<Object|null>} The prepared check, or null when it is refused
+ */
+async function prepareRollCheck(dataset, actorModel, actorWhole, weaponSelected, rolledFrom) {
+    const specName = dataset.specname || "";
+    const roll = await defineRoll(dataset, actorWhole, rolledFrom)
 
     // Brain/nervous-system rules, plus Psi's jamming block
     if (roll.type === "psi" && dataset.itemid) {
@@ -731,15 +813,23 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         return
     }
 
-    let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
+    const pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
     rollContext.pool = pool
     const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    let values = systemOptions?.skipDialog
-        ? { cancelled: false, ...systemOptions.presetOptions }
-        : await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset, rollContext)
+    return { dataset, actorModel, actorWhole, weaponSelected, rolledFrom, roll, rollContext, pool, specName, isJammingRoll }
+}
 
-    if(values.cancelled)
-        return
+/**
+ * Rolls a prepared check with the values its dialog was answered with, and posts its card.
+ * @param {Object} prepared - What prepareRollCheck returned
+ * @param {Object} values - The dialog's values
+ * @param {Object} [systemOptions] - As RollCheck takes them
+ * @returns {Promise<Object|undefined>} What posting the card returned, as RollCheck does
+ */
+async function finishRollCheck(prepared, values, systemOptions) {
+    const { dataset, actorModel, actorWhole, weaponSelected, rolledFrom, roll, rollContext, pool, isJammingRoll } = prepared
+    let proceed
+    let options = {}
 
     if (roll.type === "psi" && await psi.startTouch(rollContext, values))
         return
@@ -909,6 +999,58 @@ function rollVisibility(options, dataset) {
  * @returns {Promise<Object>} - The values of the form when submitted
  */
 async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset, rollContext) {
+const content = await renderOptionsContent(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset, rollContext);
+const extractFormValues = form => readDialogValues(form, rollData.names);
+
+const cancelButton = new Localizer("ep2e.roll.dialog.button.cancel");
+const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
+const picking = attackPicking(rollContext);
+const cancel = { action: "cancel", label: cancelButton.title, callback: () => ({ cancelled: true }) };
+const buttons = picking
+    ? [
+        { action: "pickTargets", label: game.i18n.localize("ep2e.roll.dialog.ranged.attacker.pickTargets"), default: true, callback: (event, button) => extractFormValues(button.form) },
+        { action: "roll", label: game.i18n.localize("ep2e.roll.dialog.button.rollWithoutTargets"), callback: (event, button) => ({ ...extractFormValues(button.form), preTargets: false }) },
+        cancel
+    ]
+    : [
+        { action: "roll", label: rollButton.title, default: true, callback: (event, button) => extractFormValues(button.form) },
+        cancel
+    ];
+
+const narrow = (rollData.templateSize?.width ?? 0) < 400
+const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: rollData.title },
+    classes: picking && narrow ? ["ep2e-primary-right", "ep2e-primary-below"] : ["ep2e-primary-right"],
+    content,
+    buttons,
+    modal: true,
+    rejectClose: false,
+    render: (event, dialog) => {
+        if (dialog.element) wireOptionsDialog(dialog.element, dialog, picking);
+    },
+    ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
+    ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
+});
+
+return result ?? { cancelled: true };
+}
+
+/**
+ * A roll dialog's content: the template of what is rolled with its pools, modifiers and the options
+ * of doses, ware and sleights, whose fields are added to the names the dialog is read by.
+ * @param {Object} rollData - What defineRoll returned
+ * @param {String} rollType - The roll's key
+ * @param {String} specName - The specialization's name, if any
+ * @param {Object} pool - The pools the roll may draw on
+ * @param {Actor} actorWhole - The actor
+ * @param {Object|null} traits - The weapon's traits, if any
+ * @param {String} rolledFrom - Where the roll comes from
+ * @param {Object} dataset - What is rolled
+ * @param {Object} rollContext - The roll context
+ * @param {Object} [extra] - Further template data, e.g. noRollMode to leave the roll mode out
+ * @returns {Promise<String>} The HTML
+ */
+async function renderOptionsContent(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset, rollContext, extra = {}) {
 let specialEffects;
 const actorType = actorWhole.type;
 
@@ -941,85 +1083,56 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     wareOptions,
     sleightOptions,
     rollContext,
-    sightBlind: isUnder(actorWhole, "blinded")
+    sightBlind: isUnder(actorWhole, "blinded"),
+    ...extra
 });
+return content;
+}
 
-function extractFormValues(form) {
+/**
+ * Reads a roll dialog's fields by their names, from the whole form or from one part of it - a
+ * column of a dialog holding several checks.
+ * @param {HTMLElement} root - The form, or the part to read
+ * @param {String[]} names - The field names
+ * @returns {Object} name to value: a checkbox's state, a radio group's choice, any other field's value; null for a missing field
+ */
+export function readDialogValues(root, names) {
     const values = {};
-
-    for (const name of rollData.names) {
-    const field = form?.elements?.[name];
-
-    if (field === undefined || field === null) {
-        values[name] = null;
-        continue;
+    for (const name of names) {
+        const fields = Array.from(root?.querySelectorAll?.(`[name="${name}"]`) ?? []);
+        if (!fields.length) values[name] = null;
+        else if (fields[0].type === "radio") values[name] = fields.find(field => field.checked)?.value ?? "";
+        else if (fields[0].type === "checkbox") values[name] = fields[0].checked;
+        else values[name] = fields[0].value;
     }
-
-    if (field instanceof RadioNodeList) {
-        values[name] = field.value ?? null;
-        continue;
-    }
-
-    if (field.type === "checkbox") {
-        values[name] = field.checked;
-        continue;
-    }
-
-    values[name] = field.value;
-    }
-
     return values;
 }
 
-const cancelButton = new Localizer("ep2e.roll.dialog.button.cancel");
-const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
-const picking = attackPicking(rollContext);
-const cancel = { action: "cancel", label: cancelButton.title, callback: () => ({ cancelled: true }) };
-const buttons = picking
-    ? [
-        { action: "pickTargets", label: game.i18n.localize("ep2e.roll.dialog.ranged.attacker.pickTargets"), default: true, callback: (event, button) => extractFormValues(button.form) },
-        { action: "roll", label: game.i18n.localize("ep2e.roll.dialog.button.rollWithoutTargets"), callback: (event, button) => ({ ...extractFormValues(button.form), preTargets: false }) },
-        cancel
-    ]
-    : [
-        { action: "roll", label: rollButton.title, default: true, callback: (event, button) => extractFormValues(button.form) },
-        cancel
-    ];
+/**
+ * Wires a roll dialog's fields that act on each other: the jamming pool switch, the targets picked
+ * before the roll, suppressive fire and a throw's trigger.
+ * @param {HTMLElement} root - The dialog, or one column of it
+ * @param {Object} dialog - The dialog
+ * @param {Boolean} picking - Whether the attack picks its targets
+ * @returns {void}
+ */
+function wireOptionsDialog(root, dialog, picking) {
+    // Jamming: switch the pool dropdown between the remote body's live pools and the own body's stashed pools
+    const jamTargetSelect = root.querySelector('select[name="jammingRollTarget"]');
+    const remotePoolContainer = root.querySelector("#jamming-pool-remote");
+    const ownPoolContainer = root.querySelector("#jamming-pool-own");
 
-const narrow = (rollData.templateSize?.width ?? 0) < 400
-const result = await foundry.applications.api.DialogV2.wait({
-    window: { title: rollData.title },
-    classes: picking && narrow ? ["ep2e-primary-right", "ep2e-primary-below"] : ["ep2e-primary-right"],
-    content,
-    buttons,
-    modal: true,
-    rejectClose: false,
-    render: (event, dialog) => {
-        const root = dialog.element;
-        if (!root) return;
+    if (jamTargetSelect && remotePoolContainer && ownPoolContainer) {
+        jamTargetSelect.addEventListener("change", e => {
+            const ownSelected = e.currentTarget.value === "own";
+            remotePoolContainer.style.display = ownSelected ? "none" : "";
+            ownPoolContainer.style.display = ownSelected ? "" : "none";
+        });
+    }
 
-        // Jamming: switch the pool dropdown between the remote body's live pools and the own body's stashed pools
-        const jamTargetSelect = root.querySelector('select[name="jammingRollTarget"]');
-        const remotePoolContainer = root.querySelector("#jamming-pool-remote");
-        const ownPoolContainer = root.querySelector("#jamming-pool-own");
-
-        if (jamTargetSelect && remotePoolContainer && ownPoolContainer) {
-            jamTargetSelect.addEventListener("change", e => {
-                const ownSelected = e.currentTarget.value === "own";
-                remotePoolContainer.style.display = ownSelected ? "none" : "";
-                ownPoolContainer.style.display = ownSelected ? "" : "none";
-            });
-        }
-
-        wirePreRollTargets(root, dialog, picking);
-        wireSuppressiveFields(root);
-        wireTriggerFields(root);
-    },
-    ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
-    ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
-});
-
-return result ?? { cancelled: true };
+    wirePreRollTargets(root, dialog, picking);
+    wireSuppressiveFields(root);
+    wireTriggerFields(root);
 }
 
 /**

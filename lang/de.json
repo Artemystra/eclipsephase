@@ -693,7 +693,8 @@
         "title": {
           "resleevingIntegration": "Resleeving: Integrationstest",
           "resleevingStress": "Resleeving: Stress Test",
-          "jammingIntegration": "Jamming: Integrationstest"
+          "jammingIntegration": "Jamming: Integrationstest",
+          "dialog": "{task}: {name}"
         },
         "result": {
           "taskResleeve": "Resleeve",
@@ -701,6 +702,7 @@
           "taskStress": "Stress Test"
         },
         "announce": {
+          "rolled": "Die Proben sind gewürfelt.",
           "title": {
             "sleeved": "Resleeved",
             "jammed": "Jammed"

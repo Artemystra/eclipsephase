@@ -1,0 +1,16 @@
+{{!-- Several checks in one dialog: each column the roll dialog that check opens alone, and below
+     them what they share - further fields of the caller and one roll mode. --}}
+<div class="ep-dialog-columns" style="grid-template-columns: repeat({{columns.length}}, minmax(0, 1fr));">
+    {{#each columns as |column|}}
+    <div class="ep-dialog-column">
+        {{#if column.heading}}
+        <h3 class="ep-dialog-column-heading">{{column.heading}}</h3>
+        {{/if}}
+        {{{column.content}}}
+    </div>
+    {{/each}}
+</div>
+<div class="ep-dialog-shared">
+    {{{shared}}}
+    {{> systems/eclipsephase/templates/chat/partials/roll-mode.html noBlind=noBlind }}
+</div>

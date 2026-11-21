@@ -701,9 +701,11 @@
         "title": {
           "resleevingIntegration": "Resleeving: Integration Test",
           "resleevingStress": "Resleeving: Stress Test",
-          "jammingIntegration": "Jamming: Integration Test"
+          "jammingIntegration": "Jamming: Integration Test",
+          "dialog": "{task}: {name}"
         },
         "announce": {
+          "rolled": "The tests are rolled.",
           "title": {
             "sleeved": "Resleeved",
             "jammed": "Jammed"

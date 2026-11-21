@@ -1,5 +1,6 @@
 import * as Dice from "../rolls/dice.js"
-import { tempEffectCreation, listSelection, tempEffectDeletion } from "../common/general-sheet-functions.js"
+import { tempEffectCreation, listSelection, tempEffectDeletion, prepareRecipients, inheritChatVisibility } from "../common/general-sheet-functions.js"
+import { registerSocketActions, runOrRelay } from "../common/socket.js"
 
 /**
  * Function to automatically test for SOM and WIL when a body is changed by a player.
@@ -20,59 +21,101 @@ export function integrationPenalty(integrationResult) {
   return { label: INTEGRATION_PREFIX + "threeDay", days: 3 };
 }
 
+// The two ways a failed Stress Test can hurt, chosen before the roll.
+const STRESS_OPTIONS = [
+    { id: "minorStress", label: "ep2e.dialog.selectStress.minorLabel", description: "ep2e.dialog.selectStress.minorDescription" },
+    { id: "majorStress", label: "ep2e.dialog.selectStress.majorLabel", description: "ep2e.dialog.selectStress.majorDescription" }
+];
+const STRESS_CHOICE_TEMPLATE = "systems/eclipsephase/templates/chat/resleeve-stress.html";
+const SLEEVE_RESULT = "systems/eclipsephase/templates/chat/sleeving-result.html";
+
+/**
+ * Asks for the tests a body change calls for in one dialog - the Integration Test (SOM) and the
+ * Stress Test (WIL) side by side, what a failed Stress Test costs and who sees it - rolls them and
+ * posts their result card, from which pools can still be spent before the results are accepted.
+ * @param {Object} data - The click, its currentTarget's dataset naming the actor and the type:
+ *   "resleeve" (both tests), "integration" or "stress"
+ * @returns {Promise<ChatMessage|null>} The result card, or null when cancelled
+ */
 export async function sleevingTest (data) {
     const btndata = data.currentTarget.dataset
     const actorWhole = game.actors.get(btndata.actorid)
     const actorModel = actorWhole.system
-    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions")}
-    let integrationTest
-    let stressTest
-    let dataset = {}
-    let chatData = {"taskType" : "ep2e.morph.sleeving.result.taskResleeve"}
-    const SLEEVE_RESULT = 'systems/eclipsephase/templates/chat/sleeving-result.html';
-    if (btndata.type === "resleeve" || btndata.type === "integration"){
-        dataset = {
-            "name" : "ep2e.morph.sleeving.title.resleevingIntegration",
+    const withIntegration = btndata.type === "resleeve" || btndata.type === "integration"
+    const withStress = btndata.type === "resleeve" || btndata.type === "stress"
+    const taskType = btndata.type === "integration" ? "ep2e.morph.sleeving.result.taskIntegration" : btndata.type === "stress" ? "ep2e.morph.sleeving.result.taskStress" : "ep2e.morph.sleeving.result.taskResleeve"
+    const check = (titleKey, aptitude, rolledFrom) => ({
+        heading: game.i18n.localize(titleKey),
+        rolledFrom,
+        actorModel,
+        actorWhole,
+        dataset: {
+            "name" : titleKey,
             "rolltype" : "skill",
-            "aptvalue" : actorModel.aptitudes.som.value,
-            "apttype" : "som",
-            "rollvalue" : actorModel.aptitudes.som.roll,
-            "dialogTitle" : game.i18n.localize('ep2e.morph.sleeving.title.resleevingIntegration'),
+            "aptvalue" : actorModel.aptitudes[aptitude].value,
+            "apttype" : aptitude,
+            "rollvalue" : actorModel.aptitudes[aptitude].roll,
+            "dialogTitle" : game.i18n.localize(titleKey),
             "preventPrintToChat" : true
         }
+    })
+    const checks = [
+        ...(withIntegration ? [check("ep2e.morph.sleeving.title.resleevingIntegration", "som", "integration")] : []),
+        ...(withStress ? [check("ep2e.morph.sleeving.title.resleevingStress", "wil", "stressTest")] : [])
+    ]
+    const shared = withStress
+        ? { content: await foundry.applications.handlebars.renderTemplate(STRESS_CHOICE_TEMPLATE, { options: STRESS_OPTIONS }), read: root => Dice.readDialogValues(root, ["stressSeverity"]) }
+        : {}
+    const title = game.i18n.format("ep2e.morph.sleeving.title.dialog", { task: game.i18n.localize(taskType), name: actorWhole.name })
+    const rolled = await Dice.rollChecksSideBySide(checks, { title, shared })
+    if (!rolled || rolled.results.some(result => !result)) return null
 
-        if (btndata.type !== "resleeve") chatData.taskType = "ep2e.morph.sleeving.result.taskIntegration"
-
-        integrationTest = await Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, false, "integration")
-        if (!integrationTest) return;
+    const chatData = {
+        taskType,
+        integrationTest: withIntegration ? rolled.results[0] : undefined,
+        stressTest: withStress ? rolled.results.at(-1) : undefined,
+        stressSeverity: rolled.shared.stressSeverity || "",
+        rollMode: { private: "gmroll", blind: "blindroll" }[rolled.rollMode] ?? "publicroll"
     }
-
-    if (btndata.type === "resleeve" || btndata.type === "stress"){
-
-        dataset = {
-            "name" : "ep2e.morph.sleeving.title.resleevingStress",
-            "rolltype" : "skill",
-            "aptvalue" : actorModel.aptitudes.wil.value,
-            "apttype" : "wil",
-            "rollvalue" : actorModel.aptitudes.wil.roll,
-            "dialogTitle" : game.i18n.localize('ep2e.morph.sleeving.title.resleevingStress'),
-            "preventPrintToChat" : true
-        }
-
-        if (btndata.type !== "resleeve") chatData.taskType = "ep2e.morph.sleeving.result.taskStress"
-
-        stressTest = await Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, false, "stressTest")
-        if (!stressTest) return;
-    }
-    
-    chatData.stressTest = stressTest;
-    chatData.integrationTest = integrationTest;
-    let html = await foundry.applications.handlebars.renderTemplate(SLEEVE_RESULT, chatData)
-
-    ChatMessage.create({
+    const html = await foundry.applications.handlebars.renderTemplate(SLEEVE_RESULT, chatData)
+    const recipientList = prepareRecipients(rolled.rollMode)
+    const announcement = game.messages.get(data.currentTarget.closest?.(".chat-message")?.dataset?.messageId)
+    if (announcement) await runOrRelay(announcement, "markSleevingRolled", () => markSleevingRolled(announcement))
+    return ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
         flavor: html,
-        sound: chatData.integrationTest?.sound
+        sound: chatData.integrationTest?.sound,
+        ...(recipientList.length ? { whisper: recipientList } : {}),
+        blind: rolled.rollMode === "blind"
+    })
+}
+
+/**
+ * Takes the roll buttons off a body change's announcement once its tests are rolled, and says so.
+ * @param {ChatMessage} message - The announcement
+ * @returns {Promise<ChatMessage|null>} The card, or null when it had no buttons left
+ */
+export async function markSleevingRolled(message) {
+    const doc = new DOMParser().parseFromString(String(message?.content ?? ""), "text/html")
+    const buttons = doc.querySelector(".privateChatButton")
+    if (!buttons) return null
+    const note = doc.createElement("p")
+    note.className = "footnote"
+    note.textContent = game.i18n.localize("ep2e.morph.sleeving.announce.rolled")
+    buttons.replaceWith(note)
+    return message.update({ content: doc.body.innerHTML })
+}
+
+/**
+ * Lets the active GM take the buttons off an announcement this client may not change.
+ * @returns {void}
+ */
+export function registerSleevingSocket() {
+    registerSocketActions({
+        markSleevingRolled: async ({ messageId }) => {
+            const message = game.messages.get(messageId)
+            if (message) await markSleevingRolled(message)
+        }
     })
 }
 
@@ -80,6 +123,10 @@ export async function result (data) {
     const dataset = data.currentTarget.dataset;
     const actorWhole = game.actors.get(dataset.actorid);
     const actorModel = actorWhole.system;
+    // What follows is seen as the result card was.
+    const messageId = data.currentTarget.closest?.(".chat-message")?.dataset?.messageId ?? null;
+    const { blind, recipientList } = inheritChatVisibility(messageId, null);
+    const visibility = { ...(recipientList?.length ? { whisper: recipientList } : {}), blind: !!blind };
     const SLEEVE_NEW_RESULT = 'systems/eclipsephase/templates/chat/sleeving-result.html';
     let resultData = [{
         "result":dataset.oldintegrationtestresult, 
@@ -145,14 +192,27 @@ export async function result (data) {
         
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
-            flavor: html
+            flavor: html,
+            ...visibility
         })
     }
     const stressResult = (resultData[1].result === undefined || resultData[1].result === "") ? null : Number(resultData[1].result)
-    await calcEffects (actorWhole, actorModel, Number(resultData[0].result), stressResult)
+    await calcEffects (actorWhole, actorModel, Number(resultData[0].result), stressResult, { stressSeverity: dataset.stressseverity ?? "", ...visibility })
 }
 
-export async function calcEffects(actorWhole, actorModel, integrationResult, stressResult) {
+/**
+ * What the accepted results of a body change do: a failed Integration Test hampers the character for
+ * a day or more, a failed Stress Test costs stress - minor or major, as chosen before the roll, or
+ * asked for here on a card from before that choice existed. Its cards are seen as given.
+ * @param {Actor} actorWhole - The actor
+ * @param {Object} actorModel - Its system data
+ * @param {Number} integrationResult - The Integration Test's result tier
+ * @param {Number|null} stressResult - The Stress Test's, null when none was rolled
+ * @param {Object} [options] - stressSeverity ("minorStress" or "majorStress"), whisper and blind
+ * @returns {Promise<void>} Resolves once done
+ */
+export async function calcEffects(actorWhole, actorModel, integrationResult, stressResult, { stressSeverity = "", whisper = null, blind = false } = {}) {
+    const visibility = { ...(whisper?.length ? { whisper } : {}), blind: !!blind }
     //Message for the ChatMessage.create() function
     let message = {}
 
@@ -165,7 +225,8 @@ export async function calcEffects(actorWhole, actorModel, integrationResult, str
         let html = await foundry.applications.handlebars.renderTemplate(Dice.WEAPON_DAMAGE_OUTPUT, message);
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
-            content: html
+            content: html,
+            ...visibility
         })
         return;
     }
@@ -194,13 +255,14 @@ export async function calcEffects(actorWhole, actorModel, integrationResult, str
         let html = await foundry.applications.handlebars.renderTemplate(Dice.WEAPON_DAMAGE_OUTPUT, message);
         ChatMessage.create({    
             speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
-            content: html
+            content: html,
+            ...visibility
         })
     }
     
     //Checks if the final stress test result is a failure (no stress test happened, e.g. jamming, when stressResult is null)
     if (stressResult !== null && failed(stressResult)){const listOptions = [{"id" : "minorStress", "label" : "ep2e.dialog.selectStress.minorLabel", "description" : "ep2e.dialog.selectStress.minorDescription"}, {"id" : "majorStress", "label" : "ep2e.dialog.selectStress.majorLabel", "description" : "ep2e.dialog.selectStress.majorDescription"}]
-        const dialog = await listSelection(listOptions, "standardSelectionList", 300, "ep2e.dialog.selectStress.dialogTitle", "", "ep2e.dialog.selectStress.copy");
+        const dialog = stressSeverity ? { selection: stressSeverity } : await listSelection(listOptions, "standardSelectionList", 300, "ep2e.dialog.selectStress.dialogTitle", "", "ep2e.dialog.selectStress.copy");
         if (dialog.cancelled) return;
         let stressUpdate = actorModel.health.mental.value;
         let traumaUpdate = actorModel.mental.trauma;
@@ -220,7 +282,7 @@ export async function calcEffects(actorWhole, actorModel, integrationResult, str
 
         message.rollType = "rollOutput"
 
-        await Dice.rollToChat(null, message, Dice.WEAPON_DAMAGE_OUTPUT, mentalDamage, actorWhole.name, null, false, "rollOutput")
+        await Dice.rollToChat(null, message, Dice.WEAPON_DAMAGE_OUTPUT, mentalDamage, actorWhole.name, whisper ?? null, !!blind, "rollOutput")
 
         stressUpdate += mentalDamage.total;
 

@@ -348,5 +348,7 @@
     </div>
 </div>
 {{/if}}
+{{#unless noRollMode}}
 {{> systems/eclipsephase/templates/chat/partials/roll-mode.html }}
+{{/unless}}
 {{{epSlot "rollDialog.sections" this}}}

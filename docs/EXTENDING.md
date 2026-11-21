@@ -36,7 +36,7 @@ same function is reachable both through `api` and through its original module pa
 listed here is considered stable for a module to depend on.
 
 ```js
-api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, usePoolFromChat,
+api.rolls   // RollCheck, rollChecksSideBySide, rollToChat, TaskRoll, TaskRollModifier, rollCalc, usePoolFromChat,
             // prepareRecipients, gmList, inheritChatVisibility, damageValueCalc,
             // applySuccessTierBonus, rollScope
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
@@ -145,6 +145,15 @@ what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/
 A dataset may carry `visibility: { whisper, blind }`, which then decides who sees the roll card
 instead of the dialog's roll mode - the system's defence rolls are seen as their attack was this
 way.
+`api.rolls.rollChecksSideBySide(checks, { title, shared, systemOptions })` (3.0) asks for several
+checks in one dialog: each check - `{ dataset, actorModel, actorWhole, rolledFrom, weaponSelected,
+heading }`, as `RollCheck` takes them - gets a column that is the roll dialog it would open alone,
+without its own roll mode. Below the columns sit one roll mode for all of them and whatever the caller
+adds as `shared: { content, read(root) }` (HTML, and a function reading its fields); `shared.noBlind`
+leaves blind out. Each check is then rolled with its column's values and the shared roll mode, one
+after the other. It resolves to `{ results, rollMode, shared }` - `results` holding what `RollCheck`
+would return for each check, `shared` what `read` returned - or to `null` when cancelled or refused.
+The system's resleeving asks its Integration and Stress Tests this way.
 `api.chat.readRollContext(element)` takes any element inside a chat card (typically the button a
 listener fired on) and returns the roll context described in "Chat message context" below,
 falling back to the card's legacy `data-*` attributes for cards created before this existed.

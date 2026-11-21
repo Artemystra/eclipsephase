@@ -13,6 +13,7 @@ import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import { electActingTab, registerTabMarks, whenTabElected } from "./common/socket.js";
+import { registerSleevingSocket } from "./rolls/resleeving.js";
 import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
@@ -867,6 +868,7 @@ Hooks.once("ready", () => {
   registerDoseSocket();
   registerConditionSocket();
   registerCardSocket();
+  registerSleevingSocket();
   registerWeaponAttackSocket();
   registerAreaSocket();
 });

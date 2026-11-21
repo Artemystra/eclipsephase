@@ -3,8 +3,10 @@ import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
   stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode
 } from "../../module/common/morp-functions.js";
-import { calcEffects } from "../../module/rolls/resleeving.js";
-import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
+import { calcEffects, sleevingTest } from "../../module/rolls/resleeving.js";
+import { readDialogValues } from "../../module/rolls/dice.js";
+import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
+import { JSDOM } from "jsdom";
 
 const { createdMessages } = global.__ep;
 
@@ -49,6 +51,101 @@ function sleeveClick(itemId) {
 }
 
 beforeEach(() => resetWorld());
+
+describe("resleeving in one dialog", () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  /**
+   * Runs a body change's tests, answering their one dialog with the given values.
+   * @param {Actor} actor - The actor
+   * @param {String} type - "resleeve", "integration" or "stress"
+   * @param {Object} answer - What the dialog returns: values per column, rollMode, shared
+   * @param {Number[]} dice - The d100 results, in order
+   * @returns {Promise<Object>} The dialog's options and the result card
+   */
+  async function resleeve(actor, type, answer, dice) {
+    const wait = jest.spyOn(foundry.applications.api.DialogV2, "wait").mockResolvedValue(answer);
+    seedRolls(dice);
+    const card = await sleevingTest({ currentTarget: { dataset: { actorid: actor.id, type } } });
+    return { dialogs: wait.mock.calls.map(([options]) => options), card };
+  }
+
+  test("asks for both tests side by side, with one roll mode and what a failed Stress Test costs, then rolls each with its own values", async () => {
+    const actor = makeActor({ type: "character", name: "Ana", system: { aptitudes: { som: { value: 15 }, wil: { value: 15 } } } });
+    const { dialogs, card } = await resleeve(actor, "resleeve", { values: [{ globalMod: "", usePool: "" }, { globalMod: "-10", usePool: "" }], rollMode: "private", shared: { stressSeverity: "majorStress" } }, [20, 30]);
+
+    expect(dialogs).toHaveLength(1);
+    expect(dialogs[0].content.match(/class="ep-dialog-column"/g)).toHaveLength(2);
+    expect(dialogs[0].content.match(/name="rollMode"/g)).toHaveLength(1);
+    expect(dialogs[0].content).toContain('name="stressSeverity"');
+    expect(dialogs[0].content).not.toMatch(/<form\b/);
+    expect(card.whisper).toContain(game.user._id);
+    expect(card.flavor).toContain('data-stressseverity="majorStress"');
+    expect(card.flavor).toContain("-10");
+  });
+
+  test("once its tests are rolled, the announcement of the body change loses its roll buttons and says so", async () => {
+    const { window } = new JSDOM("");
+    global.DOMParser = window.DOMParser;
+    const actor = makeActor({ type: "character", name: "Ana", system: { aptitudes: { som: { value: 15 }, wil: { value: 15 } } } });
+    const announcement = await ChatMessage.create({ content: `<p>Sleeved</p><div class="item privateChatButton horizontal"><button class="chatButton resleeve">Roll</button></div>` });
+    const row = window.document.createElement("li");
+    row.className = "chat-message";
+    row.dataset.messageId = announcement.id;
+    const button = window.document.createElement("button");
+    Object.assign(button.dataset, { actorid: actor.id, type: "resleeve" });
+    row.append(button);
+    jest.spyOn(foundry.applications.api.DialogV2, "wait").mockResolvedValue({ values: [{ globalMod: "" }, { globalMod: "" }], rollMode: "public", shared: { stressSeverity: "minorStress" } });
+    seedRolls([20, 30]);
+
+    try {
+      await sleevingTest({ currentTarget: button });
+    } finally {
+      delete global.DOMParser;
+    }
+
+    expect(announcement.content).not.toContain("resleeve");
+    expect(announcement.content).toContain("ep2e.morph.sleeving.announce.rolled");
+  });
+
+  test("a single test shows one column and no stress choice", async () => {
+    const actor = makeActor({ type: "character", name: "Ana", system: { aptitudes: { som: { value: 15 } } } });
+    const { dialogs, card } = await resleeve(actor, "integration", { values: [{ globalMod: "", usePool: "" }], rollMode: "public", shared: {} }, [20]);
+
+    expect(dialogs[0].content.match(/class="ep-dialog-column"/g)).toHaveLength(1);
+    expect(dialogs[0].content).not.toContain('name="stressSeverity"');
+    expect(card.whisper ?? []).toEqual([]);
+  });
+
+  test("cancelling the dialog rolls nothing", async () => {
+    const actor = makeActor({ type: "character", name: "Ana" });
+    const before = createdMessages.length;
+    const { card } = await resleeve(actor, "resleeve", { cancelled: true }, []);
+
+    expect(card).toBeNull();
+    expect(createdMessages).toHaveLength(before);
+  });
+
+  test("a failed Stress Test costs the stress chosen before the roll, without asking again, seen as the result card was", async () => {
+    const actor = makeActor({ type: "character", system: { aptitudes: { wil: { value: 15 } } } });
+    const wait = jest.spyOn(foundry.applications.api.DialogV2, "wait");
+    seedRolls([4]);
+
+    await calcEffects(actor, actor.system, 4, 1, { stressSeverity: "minorStress", whisper: ["gm1"], blind: false });
+
+    expect(wait).not.toHaveBeenCalled();
+    expect(actor.system.health.mental.value).toEqual(4);
+    expect(createdMessages.at(-1).whisper).toEqual(["gm1"]);
+  });
+
+  test("a roll dialog's column is read by its own fields: text, checkbox and radio", () => {
+    const { document } = new JSDOM("").window;
+    const column = document.createElement("div");
+    column.innerHTML = `<input name="globalMod" value="-20"><input type="checkbox" name="useSpec" checked><input type="radio" name="mode" value="a"><input type="radio" name="mode" value="b" checked>`;
+
+    expect(readDialogValues(column, ["globalMod", "useSpec", "mode", "missing"])).toEqual({ globalMod: "-20", useSpec: true, mode: "b", missing: null });
+  });
+});
 
 describe("resleeving", () => {
   test("a resleeve with both tests passed says so in the chat and leaves nothing behind", async () => {

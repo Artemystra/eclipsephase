@@ -1,4 +1,4 @@
-import { RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc } from "../rolls/dice.js";
+import { RollCheck, rollChecksSideBySide, rollToChat, TaskRoll, TaskRollModifier, rollCalc } from "../rolls/dice.js";
 import { usePoolFromChat } from "../rolls/pools.js";
 import { isActiveGM, isActingTab, madeHere, relayToActiveGM, registerSocketActions, runOrRelay } from "../common/socket.js";
 import { applySuccessTierBonus } from "../rolls/damage.js";
@@ -72,6 +72,7 @@ import { registerCard, renderCard, updateCard } from "../common/chat-cards.js";
  */
 export const rolls = {
   RollCheck,
+  rollChecksSideBySide,
   rollToChat,
   TaskRoll,
   TaskRollModifier,

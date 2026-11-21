@@ -3558,6 +3558,26 @@ button.epTextlink:hover{
   box-shadow: 0 0 5px 2px var(--highlight);
 }
 
+/* A dialog holding several checks: each column framed like a dialog of its own, side by side. */
+.ep-dialog-columns {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ep-dialog-column {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--highlightBackground);
+  background-color: var(--pitchBorder);
+}
+
+.ep-dialog-column-heading {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  text-align: center;
+}
+
 /* A character's pools row: four pools and the recharges in five equal columns. */
 .flexrow.ep-pool-row-five {
   display: grid;
