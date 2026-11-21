@@ -1,4 +1,4 @@
-import { chiPushMinutes, pushChiSleight, endExpiredChiPushes } from "../../module/rolls/psi.js";
+import { chiPushMinutes, pushChiSleight, endExpiredChiPushes, confirmChiPush } from "../../module/rolls/psi.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
 import { registerPoolRule } from "../../module/rolls/pools.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
@@ -156,3 +156,16 @@ describe("a push running out", () => {
     expect(actor.items.get("chi1").system.pushed).toBe(true);
   });
 });
+
+describe("the card announcing a chi push", () => {
+  test("is seen as the push's roll mode says: blind hides it from the async", async () => {
+    const actor = asyncWithChiSleight(25);
+    jest.spyOn(game.socket, "emit").mockImplementation(() => {});
+
+    await confirmChiPush(actor, "chi1", "blind");
+    const card = global.__ep.createdMessages.find(message => JSON.stringify(message).includes("ep2e.roll.announce.psi.chiPushActive"));
+
+    expect(card.blind).toBe(true);
+  });
+});
+

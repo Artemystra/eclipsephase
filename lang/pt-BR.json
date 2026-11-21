@@ -504,7 +504,7 @@
         "restInfo": {
           "headline": "Recarga",
           "subheadline1": "Geral",
-          "copy1": "Você precisa usar uma ação 'recarga' para recuperar as paradas. Escolha o tipo de recarga que você deseja usar clicando na caixa de seleção ao lado. Você tem 1 recarga longo e 2 recargas curtos por ciclo de 24 horas de tempo de jogo.",
+          "copy1": "Você precisa usar uma ação 'recarga' para recuperar as paradas. Use o botão de recarga para escolher o tipo de recarga que deseja usar; a bateria mostra quais ainda restam. Você tem 1 recarga longa e 2 curtas a cada ciclo de 24 horas de jogo.",
           "subheadline2": "Recarga Curta",
           "copy2": "Um recarga curto leva cerca de 10 minutos para o transumano comum e exige que ele não faça nada além de descansar, conversar e repousar. Isso exige biomods. Toscos levam até 1 hora.<p/><label class='resource-value'>Um recarga curto recupera 1d6 pontos de parada</label>",
           "subheadline3": "Recarga Longa",
@@ -512,7 +512,16 @@
         },
         "button": {
           "resetRest": "Redefinir Recargas",
-          "distribute": "Distribuir"
+          "distribute": "Distribuir",
+          "recharge": "Recarregar"
+        },
+        "dialog": {
+          "title": "Recarregar: {name}",
+          "headline": "Tipo de recarga",
+          "detail": "{time}, restam {count}"
+        },
+        "warnings": {
+          "noneLeft": "Não restam recargas neste ciclo."
         }
       },
       "insightSkills": {

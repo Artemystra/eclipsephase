@@ -11,6 +11,7 @@ import { applyTargetedAttack } from "../../rolls/attacks.js";
 import { registerChatCardBatch } from "./chat-cards.js";
 import { registerHealthBatch } from "./health.js";
 import { registerAreasBatch } from "./areas.js";
+import { registerRelayBatches } from "./relay.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
@@ -70,6 +71,7 @@ Hooks.on("quenchReady", quench => {
   registerChatCardBatch(quench);
   registerHealthBatch(quench);
   registerAreasBatch(quench);
+  registerRelayBatches(quench);
 
   quench.registerBatch("eclipsephase.core.actors", context => {
     const { describe, it, assert } = context;

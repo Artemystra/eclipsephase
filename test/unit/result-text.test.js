@@ -1,4 +1,4 @@
-import { TaskRoll, TASK_RESULT_TEXT, HOMEBREW_TASK_RESULT_TEXT } from "../../module/rolls/dice.js";
+import { TaskRoll, TASK_RESULT_TEXT, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT, rollCalc } from "../../module/rolls/dice.js";
 import { outcomeAlternatives } from "../../module/rolls/pools.js";
 import { registerTaskResultText, resetRegistry } from "../../module/api/registry.js";
 import { resetWorld } from "../setup/factories.js";
@@ -56,5 +56,28 @@ describe("outcomeAlternatives' result text", () => {
     registerTaskResultText(HOMEBREW_TASK_RESULT_TEXT);
     const result = await outcomeAlternatives(outputData(), pool(), {});
     expect(HOMEBREW_TASK_RESULT_TEXT[result.result].text).toEqual(result.resultText);
+  });
+});
+
+describe("mitigating a failure with a pool point", () => {
+  beforeEach(() => { resetRegistry(); resetWorld(); });
+
+  const pool = () => ({ skillPoolValue: 3, flexPoolValue: 0 });
+
+  test("stores the result one tier better than rolled, the one its text names", async () => {
+    const rolled = rollCalc(60, 5);
+    const result = await outcomeAlternatives({ rollResult: 60, targetNumber: 5, resultClass: "fail" }, pool(), {});
+
+    expect(result.options.mitigate).toBe(true);
+    expect(result.result).toBe(rolled + 1);
+    expect(result.resultText).toEqual(TASK_RESULT_TEXT[result.result].text);
+  });
+
+  test("stores a critical failure it softens as the worst ordinary failure", async () => {
+    const result = await outcomeAlternatives({ rollResult: 77, targetNumber: 50, resultClass: "fail" }, pool(), {});
+
+    expect(result.options.mitigate).toBe(true);
+    expect(result.result).toBe(TASK_RESULT.FAILURE_TWO);
+    expect(result.resultText).toEqual(TASK_RESULT_TEXT[TASK_RESULT.FAILURE_TWO].text);
   });
 });

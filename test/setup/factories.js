@@ -79,6 +79,7 @@ function makeActor(data = {}) {
     type,
     system,
     flags: data.flags ?? {},
+    ownership: data.ownership ?? {},
     items: resolvedItems,
     effects: data.effects ?? []
   });

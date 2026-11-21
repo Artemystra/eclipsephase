@@ -239,6 +239,33 @@ function buildModel() {
   return model;
 }
 
+const OWNER_LEVEL = 3;
+
+/**
+ * Whether the current user may change a document of an actor, or a world document: a GM always,
+ * anyone else with OWNER. A document that names no ownership at all counts as owned, so tests that
+ * never set ownership keep acting as the owner.
+ * @param {Object} doc - The actor, or a parentless document
+ * @returns {Boolean} True when the user owns it
+ */
+function userOwns(doc) {
+  const levels = doc?.ownership ?? {};
+  if (global.game.user.isGM || !Object.keys(levels).length) return true;
+  return (levels[global.game.user.id] ?? levels.default ?? 0) >= OWNER_LEVEL;
+}
+
+/**
+ * Refuses a change the way Foundry's server does when the user lacks the right to it.
+ * @param {Object} doc - The document to change
+ * @param {String} action - create, update or delete
+ * @param {String} [documentName] - The document type named in the error
+ * @returns {void}
+ */
+function refuseUnlessOwner(doc, action, documentName = doc.documentName) {
+  if (doc.isOwner) return;
+  throw new Error(`User ${global.game.user.name} lacks permission to ${action} ${documentName}`);
+}
+
 /**
  * An array-flavoured Map, standing in for Foundry's EmbeddedCollection.
  */
@@ -309,18 +336,26 @@ class MockDocument {
     return getProperty(this.flags, `${scope}.${key}`);
   }
 
+  // An embedded document belongs to its actor's owners.
+  get isOwner() {
+    return userOwns(this.actor ?? this);
+  }
+
   async setFlag(scope, key, value) {
+    refuseUnlessOwner(this, "update");
     setProperty(this.flags, `${scope}.${key}`, value);
     setProperty(this._source, `flags.${scope}.${key}`, value);
     return this;
   }
 
   async unsetFlag(scope, key) {
+    refuseUnlessOwner(this, "update");
     setProperty(this.flags, `${scope}.${key}`, undefined);
     return this;
   }
 
   async update(changes = {}, options = {}) {
+    refuseUnlessOwner(this, "update");
     global.Hooks.callAll(`preUpdate${this.documentName}`, this, changes, options, global.game.user.id);
     for (const [key, value] of Object.entries(changes)) {
       if (value instanceof ForcedDeletion) {
@@ -343,6 +378,7 @@ class MockDocument {
   // hook read pool totals that already reflect the new effect.
   async createEmbeddedDocuments(documentName, dataArray = []) {
     if (documentName !== "ActiveEffect") return [];
+    refuseUnlessOwner(this, "create", documentName);
     const created = dataArray.map(data => new MockActiveEffect(data, { parent: this }));
     for (const effect of created) global.Hooks.callAll("preCreateActiveEffect", effect, {}, {}, global.game.user.id);
     this.effects.push(...created);
@@ -355,6 +391,7 @@ class MockDocument {
 
   async deleteEmbeddedDocuments(documentName, ids = [], options = {}) {
     if (documentName !== "ActiveEffect") return [];
+    refuseUnlessOwner(this, "delete", documentName);
     const removed = this.effects.filter(effect => ids.includes(effect.id));
     for (const effect of removed) global.Hooks.callAll("preDeleteActiveEffect", effect, options, global.game.user.id);
     this.effects = this.effects.filter(effect => !ids.includes(effect.id));
@@ -414,6 +451,15 @@ class MockActiveEffect {
     return this.system.changes;
   }
 
+  get documentName() {
+    return "ActiveEffect";
+  }
+
+  get isOwner() {
+    const parent = this.parent;
+    return userOwns(parent?.actor ?? parent);
+  }
+
   // Foundry's own helper, which fills every field of the start stamp rather than just the time.
   static getEffectStart() {
     return { time: global.game.time.worldTime, combat: null, combatant: null, initiative: null, round: null, turn: null };
@@ -435,6 +481,7 @@ class MockActiveEffect {
   // Foundry lets an effect be updated in place; dotted keys reach into nested fields the way
   // "duration.expired" does when a dose's clock is restarted.
   async update(changes = {}) {
+    refuseUnlessOwner(this, "update");
     global.Hooks.callAll("preUpdateActiveEffect", this, changes, {}, global.game.user.id);
     for (const [key, value] of Object.entries(changes)) setProperty(this, key, deepClone(value));
     const owner = this.parent?.actor ?? this.parent;
@@ -534,15 +581,12 @@ class MockActor extends MockDocument {
     return this.isToken ? this.parent : null;
   }
 
-  get isOwner() {
-    return true;
-  }
-
   // Items are embedded documents too, and the system creates, updates and deletes them at runtime
   // for stacking, reloading and using up a consumable. Anything else still goes to MockDocument,
   // which models the ActiveEffect collection.
   async createEmbeddedDocuments(documentName, dataArray = []) {
     if (documentName !== "Item") return super.createEmbeddedDocuments(documentName, dataArray);
+    refuseUnlessOwner(this, "create", "Item");
 
     const created = [];
     for (const data of dataArray) {
@@ -567,6 +611,7 @@ class MockActor extends MockDocument {
 
   async updateEmbeddedDocuments(documentName, updates = []) {
     if (documentName !== "Item") return super.updateEmbeddedDocuments?.(documentName, updates) ?? [];
+    refuseUnlessOwner(this, "update", "Item");
 
     const updated = [];
     for (const { _id, ...changes } of updates) {
@@ -581,6 +626,7 @@ class MockActor extends MockDocument {
 
   async deleteEmbeddedDocuments(documentName, ids = [], options = {}) {
     if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids, options);
+    refuseUnlessOwner(this, "delete", "Item");
 
     const removed = ids.map(id => this.items.get(id)).filter(Boolean);
     for (const item of removed) global.Hooks.callAll("preDeleteItem", item, {}, global.game.user.id);
@@ -727,6 +773,7 @@ class MockChatMessage {
   }
 
   async delete() {
+    refuseUnlessOwner(this, "delete", "ChatMessage");
     global.game.messages.delete(this.id);
     const index = createdMessages.indexOf(this);
     if (index >= 0) createdMessages.splice(index, 1);
@@ -735,6 +782,7 @@ class MockChatMessage {
 
   // Foundry lets the author or a GM change a message; dotted keys reach into flags.
   async update(changes = {}) {
+    refuseUnlessOwner(this, "update", "ChatMessage");
     for (const [key, value] of Object.entries(changes)) setProperty(this, key, deepClone(value));
     global.Hooks.callAll("updateChatMessage", this, changes, {}, global.game.user.id);
     return this;
@@ -1121,6 +1169,9 @@ Object.defineProperty(global.game.eclipsephase, "api", {
     apiOverride = value;
   }
 });
+
+// Foundry's ActiveEffect system model, which the system's own effect model extends.
+global.foundry.data.ActiveEffectTypeDataModel = class ActiveEffectTypeDataModel extends global.foundry.abstract.TypeDataModel {};
 
 global.fromUuid = async uuid => uuidRegistry.get(uuid) ?? null;
 global.fromUuidSync = uuid => uuidRegistry.get(uuid) ?? null;

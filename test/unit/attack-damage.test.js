@@ -1,5 +1,5 @@
-import { registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR, attackEffect } from "../../module/rolls/attacks.js";
-import { registerChemicalAttacks, registerDoseHooks } from "../../module/common/doses.js";
+import { clearBlast, registerTargetedAttackHooks, applyTargetedAttack, rollDefence, attackFor, exposureModifiers, strikeUnderSuppression, layDownSuppression, takeCover, suppressOnTurn, inOpenPart, reviveSuppression, endSuppression, blastNote, blastPosition, spareRemaining, soakRemaining, renderDefenceCard, scatterBlast, scatterOffset, detonateArmed, defuseArmed, tickArmed, armedExplosives, armedAfterCombat, trapOwnership, armedIcon, armedCountdown, gasReaches, unsealedInClouds, smokeBetween, cloudsOnScene, endCloud, attackPicking as pickingFor, PROXIMITY_BEHAVIOR, CLOUD_BEHAVIOR, SUPPRESSIVE_BEHAVIOR, attackEffect } from "../../module/rolls/attacks.js";
+import { registerChemicalAttacks, registerDoseHooks, registerDoseSocket } from "../../module/common/doses.js";
 import { JSDOM } from "jsdom";
 import { registerWeaponAttacks, registerWeaponAttackSocket, detectWeaponAttack, detectThrow, damageAgainst, armorAgainst, rollAttackDamage, attackDamageLine, applyAttackDamage } from "../../module/rolls/damage.js";
 import { scatterSide } from "../../module/rolls/cards.js";
@@ -2150,6 +2150,39 @@ describe("clouds of gas and smoke (Core p.212)", () => {
     expect([regions.length, lights.length]).toEqual([0, 0]);
   });
 
+  test("a cloud whose time is up disperses, and a finished blast clears, while the GM looks at another scene", async () => {
+    cloudScene([]);
+    await release();
+    await until(() => lights.length);
+    const scene = canvas.scene;
+    await scene.createEmbeddedDocuments("Region", [{ name: "Blast", shapes: [], flags: { eclipsephase: { area: { attackId: "blast1", blast: true } } } }]);
+    for (const region of regions) region.parent = scene;
+    const realScenes = game.scenes;
+    game.scenes = new global.__ep.MockCollection([[scene.id, scene], ["other", { id: "other", regions: [], lights: [] }]]);
+    canvas.scene = game.scenes.get("other");
+    try {
+      expect(await clearBlast({ id: "blast1", blast: {} })).toBe(1);
+      game.time.worldTime = 180;
+      await tickArmed();
+      expect([regions.length, lights.length]).toEqual([0, 0]);
+    } finally {
+      game.scenes = realScenes;
+    }
+  });
+
+  test("a proximity sensor of a combat on another scene comes live once that combat's round is reached", async () => {
+    cloudScene([]);
+    await canvas.scene.createEmbeddedDocuments("Region", [{ name: "Sensor", shapes: [], flags: { eclipsephase: { area: { attackId: "mine1", armed: true, part: "sensor", combatId: "c1", round: 2, live: false } } } }]);
+    const realCombats = game.combats;
+    game.combats = new global.__ep.MockCollection([["c1", { id: "c1", started: true, round: 2 }]]);
+    try {
+      await tickArmed();
+      expect(regions[0].flags.eclipsephase.area.live).toBe(true);
+    } finally {
+      game.combats = realCombats;
+    }
+  });
+
   test("a munition whose payload is switched off forms no cloud", async () => {
     cloudScene([]);
     const card = await release(null, undefined, false);
@@ -2195,6 +2228,28 @@ describe("clouds of gas and smoke (Core p.212)", () => {
     expect(activeDoseFor(masked, "Aggro")).toBeNull();
     expect(regions[0].flags.eclipsephase.area).toMatchObject({ dosed: [], sealed: [masked.uuid] });
     expect(await gasReaches(regions[0], masked)).toBe(false);
+  });
+
+  test("a player's gas leaves the dose of someone they may not change to the active GM", async () => {
+    const drug = inhaled();
+    const npc = armoured("Npc");
+    npc.ownership = { default: 0 };
+    cloudScene([{ actor: npc, bounds: { x: 500, y: 500, width: 100, height: 100 } }]);
+    game.user.isGM = false;
+    const emit = jest.spyOn(game.socket, "emit");
+    const listeners = [];
+    jest.spyOn(game.socket, "on").mockImplementation((name, listener) => listeners.push(listener));
+    registerDoseSocket();
+
+    await release(drug);
+    await until(() => emit.mock.calls.some(([, payload]) => payload?.action === "doseFromPayload"));
+    expect(activeDoseFor(npc, "Aggro")).toBeNull();
+
+    const [, payload] = emit.mock.calls.find(([, sent]) => sent?.action === "doseFromPayload");
+    game.user.isGM = true;
+    game.users.activeGM = { id: game.user.id };
+    for (const listener of listeners) await listener(JSON.parse(JSON.stringify(payload)));
+    expect(activeDoseFor(npc, "Aggro")).toBeTruthy();
   });
 
   test("whom a mask kept out is tested again once it comes off: at once while still in the cloud, otherwise on coming back", async () => {

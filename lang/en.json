@@ -181,8 +181,7 @@
         "moveArmor": "Move Armor",
         "deleteArmorWithBody": "Delete Armor",
         "equipArmor": "Equip",
-        "changeID": "Activate ID",
-        "thankYouLaph": "Thank You, Laph!"
+        "changeID": "Activate ID"
       },
       "dialogHeadline": {
         "warning": "Warning",
@@ -211,10 +210,7 @@
         "jamAdditionalInfo": "<i><p style='font-size: 11px;'>You will receive a -10 modifier to all actions while jamming. An Integration Test will be rolled automatically.</p></i>",
         "needPuppetSockToJam": "Add Puppet Sock to Jam",
         "unjamCopyGeneral": "<b>Warning:</b>You are about to disengage from this remote body and return to your own morph.",
-        "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>",
-        "itemDeprecatedHeadline": "Sorry, Agent. I can't let you do this...",
-        "itemDeprecatedCopy": "<p><b>Morphflaws, Morphtraits, Flaws and Traits are no longer supported. Please create the new 'traits & flaws'-item instead!</b></p>",
-        "itemDeprecatedInfo": "<i><p style='font-size: 11px;'><b>Information:</b>You will be delighted to learn, that the 'traits & flaws'-item can be set to be any type of trait or flaw you might need. Keeping you from adding these legacy traits might not save the world, but it will save yours once these items get deleted for good in a later version of this system.</p></i>"
+        "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>"
       }
     },
     "actorDirectory": {
@@ -522,7 +518,7 @@
         "restInfo": {
           "headline": "Recharging",
           "subheadline1": "General",
-          "copy1": "You need to use a 'recharge' action in order to recover pools. Choose the type of recharge you want to use by clicking the checkbox next to it. You have 1 long and 2 short recharges during the cycle of 24 in-game hours.",
+          "copy1": "You need to use a 'recharge' action in order to recover pools. Use the recharge button to choose the type of recharge you want to use; the battery shows which are still left. You have 1 long and 2 short recharges during the cycle of 24 in-game hours.",
           "subheadline2": "Short Recharge",
           "copy2": "A short recharge takes the common transhuman being approximately 10 minutes and requires them to do nothing else than recharge, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short recharge recovers 1d6 pool points</label>",
           "subheadline3": "Long Recharge",
@@ -530,7 +526,16 @@
         },
         "button": {
           "resetRest": "Reset Recharges",
-          "distribute": "Distribute"
+          "distribute": "Distribute",
+          "recharge": "Recharge"
+        },
+        "dialog": {
+          "title": "Recharge: {name}",
+          "headline": "Type of Recharge",
+          "detail": "{time}, {count} left"
+        },
+        "warnings": {
+          "noneLeft": "No recharges are left for this cycle."
         }
       },
       "insightSkills": {

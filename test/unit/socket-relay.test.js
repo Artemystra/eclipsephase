@@ -84,3 +84,75 @@ describe("asking the active GM", () => {
     expect(emitted).toEqual([[SYSTEM_SOCKET, { action: "mark", messageId: "theirs" }]]);
   });
 });
+
+describe("one acting tab per user", () => {
+  /**
+   * A fresh copy of the socket module, with the browser's Web Locks replaced: another tab holds the
+   * lock until release() hands it to the tab waiting here.
+   * @param {Boolean} free - Whether no other tab holds the lock
+   * @returns {Object} the module and release()
+   */
+  function tabWith(free) {
+    const waiting = [];
+    global.navigator = { locks: { request: (name, options, grant) => {
+      if (typeof options === "function") { waiting.push(options); return new Promise(() => {}); }
+      return grant(free ? { name } : null);
+    } } };
+    let socket;
+    jest.isolateModules(() => { socket = require("../../module/common/socket.js"); });
+    return { socket, release: () => waiting.splice(0).forEach(grant => grant({})) };
+  }
+
+  afterEach(() => { delete global.navigator; game.users.activeGM = { id: "connected-gm" }; });
+
+  test("a GM's second tab acts on nothing until the first closes, then takes over", async () => {
+    game.users.activeGM = { id: game.user.id };
+    const { socket, release } = tabWith(false);
+    await socket.electActingTab();
+
+    expect([socket.isActingTab(), socket.isActiveGM()]).toEqual([false, false]);
+    release();
+    expect([socket.isActingTab(), socket.isActiveGM()]).toEqual([true, true]);
+  });
+
+  test("the first tab acts at once", async () => {
+    game.users.activeGM = { id: game.user.id };
+    const { socket } = tabWith(true);
+    await socket.electActingTab();
+
+    expect(socket.isActiveGM()).toBe(true);
+  });
+
+  test("a change is this tab's when it carries this tab's mark; one without a mark is the acting tab's", async () => {
+    const { socket } = tabWith(false);
+    await socket.electActingTab();
+    const handlers = {};
+    const realOn = Hooks.on;
+    Hooks.on = (name, fn) => { handlers[name] = fn; };
+    socket.registerTabMarks();
+    Hooks.on = realOn;
+    const own = {};
+    handlers.preUpdateActor({}, {}, own);
+
+    expect(socket.madeHere(game.user.id, own)).toBe(true);
+    expect(socket.madeHere(game.user.id, { [socket.TAB_OPTION]: "another-tab" })).toBe(false);
+    expect(socket.madeHere(game.user.id, {})).toBe(false);
+    expect(socket.madeHere("someone-else", own)).toBe(false);
+  });
+
+  test("no module asks Foundry directly whether this is the active GM, so every such check knows about tabs", () => {
+    const fs = require("fs");
+    const path = require("path");
+    const root = path.join(global.__ep.SYSTEM_ROOT, "module");
+    const files = [];
+    const walk = dir => fs.readdirSync(dir, { withFileTypes: true }).forEach(entry => {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) { if (entry.name !== "tests") walk(full); }
+      else if (entry.name.endsWith(".js") && entry.name !== "socket.js") files.push(full);
+    });
+    walk(root);
+    const direct = files.filter(file => /game\.user\.isActiveGM|activeGM\??\.isSelf/.test(fs.readFileSync(file, "utf8")));
+
+    expect(direct.map(file => path.relative(root, file))).toEqual([]);
+  });
+});

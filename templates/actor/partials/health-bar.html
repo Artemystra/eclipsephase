@@ -359,9 +359,10 @@
         </div>
         {{/if}}
     </div>
-    {{!-- Pools row: display-only for characters (editing stays in skills tab), editable for NPCs --}}
+    {{!-- Pools row: display-only for characters (editing stays in skills tab), editable for NPCs.
+         A character shows its four pools and the recharges in five equal columns. --}}
     {{#if (ne actor.type "goon")}}
-    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0;">
+    <div class="flexrow flex-group-center listBackground{{#if (eq actor.type "character")}} ep-pool-row-five{{/if}}" style="background-color: var(--pitchBorder); margin: 0;">
         {{!-- Insight --}}
         <div class="pool-entry-wrapper" style="position: relative;">
             {{#if (eq isGM false)}}
@@ -577,18 +578,22 @@
         </div>
         {{!-- Rest (character actors only) --}}
         {{#if (eq actor.type "character")}}
-        <div class="pool-entry-wrapper" style="position: relative; flex: 2; padding-right: 5px;">
+        <div class="pool-entry-wrapper" style="position: relative;">
             {{#if actor.system.additionalSystems.isJamming}}
             <div style="display: flex; align-items: center; gap: 5px; min-height: 24px;">
                 <i class="fa-solid fa-satellite-dish awesomeIcon" style="color: var(--inactive);"></i>
                 <span class="resource-label" style="font-size: 11px; color: var(--inactive);">{{localize "ep2e.healthbar.rest.jammedLabel"}}</span>
             </div>
             {{else}}
-            <div style="display: flex; align-items: center; justify-content: space-between; min-height: 24px; min-width: 100%;">
-                <div style="display: flex; align-items: center; gap: 5px;">
-                    <span class="resource-label tooltip wantToKnowMore" style="font-size: 11px; cursor: default;">
-                        <span class="tooltipTextB">{{localize "ep2e.healthbar.rest.label"}}</span>
-                        <i class="fa-solid fa-battery-full awesomeIcon"></i>
+            <div class="ep-recharge-row">
+                    {{!-- What is left of the recharges, full from the left (rechargeSegments). Display only;
+                         hovering it opens what recharging does. --}}
+                    <span class="resource-label tooltip ep-recharge-info" style="font-size: 11px; cursor: default;">
+                        <div class="ep-recharge-battery">
+                            {{#each rechargeSegments as |segment|}}
+                            <span class="ep-recharge-segment{{#if segment.used}} ep-recharge-used{{/if}}" style="flex: {{segment.flex}};"></span>
+                            {{/each}}
+                        </div>
                         <div role="tooltip">
                             <div class="tooltipTopBorder"><div class="tooltipTop"></div></div>
                             <div class="restInfo">
@@ -610,53 +615,18 @@
                             <div class="tooltipBottomBorder"><div class="tooltipBottom"></div></div>
                         </div>
                     </span>
+                    {{#if editable}}
                     <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
-                        <span class="tooltipTextB" style="font-size: 11px;">1. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
-                        {{#if actor.system.rest.short1}}
-                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1" disabled {{checked actor.system.rest.short1}}>
-                        {{else}}
-                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1" {{checked actor.system.rest.short1}}>
-                        {{/if}}
-                    </span>
-                    <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
-                        <span class="tooltipTextB" style="font-size: 11px;">2. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
-                        {{#if actor.system.rest.short2}}
-                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
-                        {{else}}
-                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
-                        {{/if}}
-                    </span>
-                    {{#if actor.system.additionalSystems.extraRest}}
-                    <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
-                        <span class="tooltipTextB" style="font-size: 11px;">3. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
-                        {{#if actor.system.rest.shortExtra}}
-                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" disabled {{checked actor.system.rest.shortExtra}}>
-                        {{else}}
-                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" {{checked actor.system.rest.shortExtra}}>
-                        {{/if}}
+                        <span class="tooltipTextB" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.button.recharge"}}</span>
+                        <button type="button" class="rechargeButton rest-reset-btn"><i class="fa-solid fa-battery-bolt"></i></button>
                     </span>
                     {{/if}}
-                    <span style="color: var(--mainText); font-size: 11px;">|</span>
+                    {{#if (or isGM (eq actor.system.editAll true))}}
                     <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
-                        <span class="tooltipTextB" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.restInfo.subheadline3"}}</span>
-                        {{#if actor.system.rest.long}}
-                        <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" disabled {{checked actor.system.rest.long}}>
-                        {{else}}
-                        <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" {{checked actor.system.rest.long}}>
-                        {{/if}}
+                        <span class="tooltipTextB" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</span>
+                        <button type="button" class="restReset rest-reset-btn"><i class="fa-solid fa-arrows-rotate"></i></button>
                     </span>
-                </div>
-                {{#if isGM}}
-                <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
-                    <span class="tooltipTextB" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</span>
-                    <button type="button" class="restReset rest-reset-btn"><i class="fa-solid fa-arrows-rotate"></i></button>
-                </span>
-                {{else if (eq actor.system.editAll true)}}
-                <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
-                    <span class="tooltipTextB" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</span>
-                    <button type="button" class="restReset rest-reset-btn"><i class="fa-solid fa-arrows-rotate"></i></button>
-                </span>
-                {{/if}}
+                    {{/if}}
             </div>
             {{/if}}
         </div>

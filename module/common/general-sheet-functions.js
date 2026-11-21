@@ -207,6 +207,37 @@ export function followingTooltips(root, area) {
   }
 }
 
+let droplistListener = false;
+
+// Set on a droplist's parent while it is open, which hides the pool's flyout.
+const DROPLIST_OPEN = "ep-droplist-open";
+
+/**
+ * Closes every open pool droplist.
+ * @returns {void}
+ */
+function closeAllDroplists() {
+  document.querySelectorAll(".poolDroplist").forEach(container => {
+    container.style.display = "none";
+  });
+  document.querySelectorAll(`.${DROPLIST_OPEN}`).forEach(parent => parent.classList.remove(DROPLIST_OPEN));
+}
+
+/**
+ * Closes the pool droplists on a click on one of their entries or anywhere outside them and their
+ * buttons. Listens once for the whole page, however often sheets and cards render.
+ * @returns {void}
+ */
+export function listenForDroplistClicks() {
+  if (droplistListener) return;
+  droplistListener = true;
+  document.addEventListener("click", event => {
+    const target = event.target;
+    const onEntry = target?.closest?.(".droplistElement") || target?.matches?.(".droplistBackground");
+    if (onEntry || !target?.closest?.(".dropdown, .poolDroplist")) closeAllDroplists();
+  });
+}
+
 /**
  * Animation handlers for character sheets
  * @param {Object} html 
@@ -255,52 +286,25 @@ export function registerCommonHandlers(html, callerobj) {
   });
 
   // Custom Droplists (for pools)
-  const dropdownBtns = html.querySelectorAll(".dropdown");
-  const closeBtns = html.querySelectorAll(".closeButton");
+  listenForDroplistClicks();
 
-  // Close the dropdown menu if the user clicks outside of it
-    
-  //This part needs further investigation as it triggers AFTER the button is clicked, leading to directly closing the just opened dropdown.
-  /*document.addEventListener("click", function(event) {
-    console.log("My event target matches .dropdown: ",event.target.matches(".dropdown"))
-    console.log("this is because my event target is: ",event.target)
-    if (!event.target.matches(".dropdown")) {
-      console.log("Now I trigger closeAll")
-      closeAllDropdowns();
-    }
-  });*/
-
-  document.addEventListener("click", function(event) {
-    if (event.target.matches(".droplistBackground") || event.target.matches(".droplistElement")) {
-      closeAllDropdowns();
-    }
+  html.querySelectorAll(".closeButton").forEach(element => {
+    element.addEventListener("click", () => closeAllDroplists());
   });
 
-  closeBtns.forEach(element => {
-    element.addEventListener("click", ev => {
-      closeAllDropdowns();
-    });
-  });
-
-  dropdownBtns.forEach(btn => {
+  html.querySelectorAll(".dropdown").forEach(btn => {
     btn.addEventListener("click", function() {
       const dropdownContainer = this.nextElementSibling;
       if (!dropdownContainer) return;
 
       const open = dropdownContainer.style.display === "grid";
-      closeAllDropdowns();
+      closeAllDroplists();
       if (!open) {
         dropdownContainer.style.display = "grid";
+        dropdownContainer.parentElement?.classList.add(DROPLIST_OPEN);
       }
     });
   });
-
-  function closeAllDropdowns() {
-    const dropdownContainers = document.querySelectorAll(".poolDroplist");
-    dropdownContainers.forEach(container => {
-      container.style.display = "none";
-    });
-  }
 
   // .item-image is reused both as a real thumbnail wrapper and, elsewhere, as a bare styling
   // class on non-image elements (ammo/damage boxes) or the <img> itself (toggle icons) - only

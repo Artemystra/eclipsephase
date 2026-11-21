@@ -1,0 +1,26 @@
+{{!-- Which recharge to take, and who sees it: laid out like the roll and selection dialogs. --}}
+<form>
+    <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.skills.restingMenu.dialog.headline"}}</h3>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; padding: 10px 0; gap: 10px;">
+            {{#each options as |option|}}
+            <div class="flexrow flex-group-left" style="width: 100%; align-items: flex-start;">
+                <div style="max-width: 40px;">
+                    <input class="dialog radio" type="radio" name="restType" value="{{option.type}}" id="recharge-{{option.type}}"{{#if option.checked}} checked{{/if}}{{#unless option.available}} disabled{{/unless}}>
+                </div>
+                <div style="width: 100%; display: flex; flex-wrap: wrap; padding-top: 2px;">
+                    <div style="width: 100%;">
+                        <label for="recharge-{{option.type}}" class="{{#unless option.available}}epInactive{{/unless}}" style="min-width: 100%; margin-right: 10px;">{{option.label}}</label>
+                    </div>
+                    <div style="width: 100%; margin-top: 5px;">
+                        <label for="recharge-{{option.type}}" style="font-size: 10px;"><i>{{option.detail}}</i></label>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{> systems/eclipsephase/templates/chat/partials/roll-mode.html noBlind=true }}
+</form>

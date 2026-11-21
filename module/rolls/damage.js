@@ -2,7 +2,7 @@ import { weaponPreparation, grenadePreparation, blastReach, formulaMax, isDelaye
 import { damageValueCalc, inheritChatVisibility, readRollContext, escapeText, isChecked, postCard, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, TASK_RESULT, rollToChat, isHit, superiorResults } from "./dice.js";
 import { targetKinds } from "../common/morp-functions.js";
-import { inflictCondition, conditionEntry, activeConditions, isUnder } from "../common/conditions.js";
+import { inflictCondition, inflictConditions, conditionEntry, activeConditions, isUnder } from "../common/conditions.js";
 import { postCheckCard, requestCardCheck, settleOnRoll, modifiersOnRoll, registerCheckCard } from "./cards.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS, detectSleightAttack } from "./psi.js";
 import { damageFormula } from "./damage-formula.js";
@@ -10,7 +10,7 @@ import { registerAttackEffect, attackEffect, followUpVisibility, outcomeLabel, g
 import { MELEE_CURSOR } from "../common/targeting.js";
 import { spentOrOriginalResult, damageReady } from "./cards.js";
 import { registerCard, renderCard, updateCard, storable, inOrder } from "../common/chat-cards.js";
-import { registerSocketActions, relayToActiveGM, runOrRelay } from "../common/socket.js";
+import { registerSocketActions, relayToActiveGM, runOrRelay, isActiveGM, madeHere } from "../common/socket.js";
 export { applySuccessTierBonus } from "./damage-formula.js";
 
 // Damage: what a weapon or sleight rolls, how it reaches an actor as damage or stress, and an
@@ -990,7 +990,7 @@ export async function settleStrikeCheck(check, result, value, roll = null, { byP
   const earlier = Array.from(actor.effects ?? []).filter(effect => effect.getFlag?.("eclipsephase", STRIKE_CHECK_KEY) === check.id);
   if (earlier.length) await actor.deleteEmbeddedDocuments("ActiveEffect", earlier.map(effect => effect.id));
   const outcome = strikeOutcome(check.check, result, value);
-  for (const { id, span } of outcome.conditions) await inflictCondition(actor, id, { span, flags: { [STRIKE_CHECK_KEY]: check.id } });
+  await inflictConditions(actor, outcome.conditions.map(({ id, span }) => ({ id, options: { span, flags: { [STRIKE_CHECK_KEY]: check.id } } })));
   const headline = outcome.flee
     ? game.i18n.format("ep2e.chat.strike.flee", { name: actor.name })
     : outcome.conditions.length
@@ -1052,7 +1052,7 @@ export async function rollConfusion(actor, { whisper = [], blind = false } = {})
  */
 export function confusionOnTurn(combat) {
   const actor = combat?.combatant?.actor;
-  if (!game.user.isActiveGM || !actor || !isUnder(actor, "confused")) return null;
+  if (!isActiveGM() || !actor || !isUnder(actor, "confused")) return null;
   return postStrikeCheck(actor, "confused");
 }
 
@@ -1108,6 +1108,6 @@ export async function woundCheck(actor, options, userId) {
   const before = WOUNDS_BEFORE.get(actor.uuid);
   WOUNDS_BEFORE.delete(actor.uuid);
   const gained = (Number(actor.system?.physical?.wounds) || 0) - before;
-  if (userId !== game.user.id || options?.eclipsephase?.woundCheck === false || gained < 1) return null;
+  if (!madeHere(userId, options) || options?.eclipsephase?.woundCheck === false || gained < 1) return null;
   return strikeChecks(actor, { wounds: gained });
 }

@@ -1,7 +1,7 @@
 import * as SHEET from "./general-sheet-functions.js"
 import * as MORPHFUNCTION from "./morp-functions.js"
 import { SYSTEM_SOCKET } from "./socket.js";
-export { SYSTEM_SOCKET, isActiveGM, registerSocketActions, relayToActiveGM, runOrRelay } from "./socket.js";
+export { SYSTEM_SOCKET, isActiveGM, isActingTab, madeHere, registerSocketActions, relayToActiveGM, runOrRelay } from "./socket.js";
 
 /**
  * Sorts an object list alphabetically
@@ -15,6 +15,35 @@ export function sortObjectByValue(obj) {
       a.localeCompare(b, game.i18n.lang)
     )
   );
+}
+
+// The packs whose index feeds the Enhancement and Frame dropdowns of morphs and vehicles, and the
+// fields of each entry those lists read.
+export const BODY_LIST_PACKS = ["eclipsephase.ware", "eclipsephase.traits", "eclipsephase.armor"];
+export const BODY_LIST_FIELDS = ["type", "system.morph", "system.traitType", "system.isFrame"];
+// Frames are listed by size, not alphabetically.
+const FRAME_ORDER = { "No Frame": 0, "Light Frame Armor": 1, "Medium Frame Armor": 2, "Heavy Frame Armor": 3 };
+
+/**
+ * The Enhancement and Frame dropdowns of morph and vehicle sheets, read from the compendium index:
+ * ware, the traits and flaws a body can carry (not ego-only ones), and the three Frame armors. An
+ * entry the index cannot tell the type of is left out.
+ * @param {Object[]} entries - Index entries with uuid, name, type and the fields of BODY_LIST_FIELDS
+ * @returns {Object} ware, flaw, trait and frame, each uuid to name
+ */
+export function bodyCompendiumList(entries) {
+  const list = { ware: { none: "--Select--" }, flaw: { none: "--Select--" }, trait: { none: "--Select--" }, frame: { none: "No Frame" } };
+  for (const entry of entries) {
+    if (entry?.type === "traits" && entry.system?.morph === true) list[entry.system.traitType === "trait" ? "trait" : "flaw"][entry.uuid] = entry.name;
+    else if (entry?.type === "ware") list.ware[entry.uuid] = entry.name;
+    else if (entry?.type === "armor" && entry.system?.isFrame === true) list.frame[entry.uuid] = entry.name;
+  }
+  return {
+    ware: sortObjectByValue(list.ware),
+    flaw: sortObjectByValue(list.flaw),
+    trait: sortObjectByValue(list.trait),
+    frame: Object.fromEntries(Object.entries(list.frame).sort(([, a], [, b]) => (FRAME_ORDER[a] ?? 99) - (FRAME_ORDER[b] ?? 99)))
+  };
 }
 
 /**

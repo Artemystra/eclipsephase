@@ -4,10 +4,7 @@ import { deleteRunOutTempEffects } from "./common/general-sheet-functions.js";
 import { endRunOutDoses } from "./common/doses.js";
 import { durationRunOut, TEMP_EFFECT_FLAGS } from "./common/time.js";
 import { owningActor } from "./rolls/pools.js";
-
-const EP2eActiveEffectBaseDataModel =
-  foundry.data?.ActiveEffectTypeDataModel ??
-  foundry.abstract.TypeDataModel;
+import { isActiveGM, madeHere } from "./common/socket.js";
 
 /**
  * Whether an item's own effects are a blueprint rather than effects that ever apply by themselves.
@@ -24,14 +21,7 @@ export function isEffectBlueprint(item) {
 }
 
 //Effect-Supression on Morph Switch
-export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
-  static defineSchema() {
-    if (foundry.data?.ActiveEffectTypeDataModel) {
-      return super.defineSchema();
-    }
-    return {};
-  }
-
+export class EP2eActiveEffectData extends foundry.data.ActiveEffectTypeDataModel {
   /**
    * Whether this effect should be left out of the actor's data. An effect whose duration has run
    * out is suppressed whatever else is true of it - that is how a timed effect stops applying,
@@ -135,7 +125,7 @@ export async function sweepTokenCopies(actor, effect) {
  */
 export function registerExpiryCleanup() {
   Hooks.on("updateActiveEffect", (effect, changes, options, userId) => {
-    if (userId !== game.user.id) return;
+    if (!madeHere(userId, options)) return;
     const expired = changes?.["duration.expired"] ?? foundry.utils.getProperty(changes ?? {}, "duration.expired");
     if (expired !== true) return;
     cleanUpExpired(effect);
@@ -170,7 +160,7 @@ export function overdueByClock(effects) {
  * @returns {Promise<void>} Resolves once they are marked
  */
 export async function expireOverdue() {
-  if (!game.users?.activeGM?.isSelf) return;
+  if (!isActiveGM()) return;
   for (const effect of overdueByClock(trackedEffects())) {
     if (!stillExists(effect)) continue;
     try {

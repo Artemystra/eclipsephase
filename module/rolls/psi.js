@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat, RollCheck, isHit, isCriticalSuccess, superiorResults } from "./dice.js";
 import * as pools from "./pools.js";
 import { gmList, prepareRecipients, inheritChatVisibility, readRollContext, isChecked, timedEffectData, postCard, searchableListSelection, selectFromSearchableList, CARD_TEMPLATE } from "../common/general-sheet-functions.js";
-import { registerSocketActions, relayToActiveGM } from "../common/socket.js";
+import { registerSocketActions, relayToActiveGM, isActiveGM, madeHere } from "../common/socket.js";
 import { effectRuleKey } from "../common/general-helper-functions.js";
 import { getStrainFamily, listStrainFamilies } from "./strain-families.js";
 import { registerRollBlock, registerFailOption, registerLandingRule, getLandingRule } from "../api/registry.js";
@@ -12,7 +12,7 @@ import { registerAttackEffect, chosenTargets, attackRoll, followUpVisibility, de
 import { registerCard, renderCard, updateCard, storable } from "../common/chat-cards.js";
 import { measuredDistances, tokenGap } from "../common/targeting.js";
 import { noteDefence, applyHealing, sufferPain, shockConditions, conditionNames } from "./damage.js";
-import { conditionEntry, conditionStatusEffects, inflictCondition } from "../common/conditions.js";
+import { conditionEntry, conditionStatusEffects, inflictConditions } from "../common/conditions.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
 
@@ -147,7 +147,6 @@ export async function pushChiSleight(actorWhole, itemId){
     const sourceEffect = item.effects.find(e => e.changes?.length);
     if (sourceEffect) {
         const changes = sourceEffect.changes;
-        const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
         const newEffectData = {
             name: `${item.name} (${game.i18n.localize("ep2e.item.aspect.pushedBadge")})`,
             icon: sourceEffect.icon,
@@ -163,9 +162,9 @@ export async function pushChiSleight(actorWhole, itemId){
             start: ActiveEffect.getEffectStart(),
             // A duration would otherwise put an icon on the token, which this system does not want.
             showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER,
-            flags: { eclipsephase: { chiPushBoost: true } }
+            flags: { eclipsephase: { chiPushBoost: true } },
+            system: { changes }
         };
-        if (isV14Plus) newEffectData.system = { changes };
         await item.createEmbeddedDocuments("ActiveEffect", [newEffectData]);
     }
 
@@ -223,7 +222,7 @@ export async function infectionUpdate(actorWhole, options){
  * involved - chi sleights are already-active/passive per RAW, unlike gamma's activation roll.
  * @param {Actor} actorWhole
  * @param {string} itemId
- * @param {string} rollMode - "private" (GM-only, default) or "public"
+ * @param {string} rollMode - "public", "private" (the default) or "blind"
  */
 export async function confirmChiPush(actorWhole, itemId, rollMode){
     if (!chiPushAllowed(actorWhole)) return;
@@ -238,7 +237,7 @@ export async function confirmChiPush(actorWhole, itemId, rollMode){
     await pushChiSleight(actorWhole, itemId);
     const minutes = chiPushMinutes(actorWhole);
     const chiPushMessage = game.i18n.format("ep2e.roll.announce.psi.chiPushActive", { minutes });
-    await rollToChat(null, { message: chiPushMessage }, CHI_PUSH_OUTPUT, null, actingPerson, recipientList, false);
+    await rollToChat(null, { message: chiPushMessage }, CHI_PUSH_OUTPUT, null, actingPerson, recipientList, rollMode === "blind");
 
     const systemOptions = {};
     await rollPsiEffect(actorWhole, psiOwner, false, systemOptions, itemId, rollMode);
@@ -1383,7 +1382,7 @@ export async function pickSustainedTargets(sleightName, entries) {
  * @returns {Promise<void>} Resolves once the other side followed
  */
 export async function followSustainEnd(effect, options, userId) {
-    if (userId !== game.user.id || options?.[CASCADE_OPTION] === false) return;
+    if (!madeHere(userId, options) || options?.[CASCADE_OPTION] === false) return;
     const record = effect.getFlag?.("eclipsephase", SUSTAIN_FLAG);
     if (record) {
         const asyncUuid = effect.parent?.uuid;
@@ -1436,7 +1435,7 @@ let reachCheck = Promise.resolve(0);
  * @returns {Promise<Number>} How many warnings were posted
  */
 async function measureSustainReach(scene) {
-    if (!game.users?.activeGM?.isSelf || !scene) return 0;
+    if (!isActiveGM() || !scene) return 0;
     let warned = 0;
     const tokens = Array.from(scene.tokens ?? []);
     for (const token of tokens) {
@@ -1582,7 +1581,7 @@ export function registerSleightAttacks() {
     Hooks.on("updateToken", (token, changes) => {
         if (!("x" in (changes ?? {}) || "y" in (changes ?? {}))) return;
         checkSustainReach(token.parent);
-        if (game.user.isActiveGM && token.actor) breakContact(token.actor);
+        if (isActiveGM() && token.actor) breakContact(token.actor);
     });
     registerRollBlock(blockedSkillReason);
     registerFailOption(inducedErrorFailures);
@@ -1825,10 +1824,13 @@ export function registerPsiTouch() {
         const target = attack.preTargets?.[0] ? await fromUuid(attack.preTargets[0]) : null;
         if (!isHit(context.outputData?.alternatives?.originalResult)) await setTouchCard(attack, context.message, { outcome: "missed", target });
     });
+    // A pool point that turns a missed touch into a hit takes back its card; a card the defence
+    // settled stays, since the defence decided the touch.
     Hooks.on("eclipsephase.poolResult", async ({ context, newResult }) => {
         const attack = context?.targetedAttack;
         if (attack?.effect !== "touch" || !isHit(newResult)) return;
-        await touchCardFor(attack)?.delete();
+        const card = touchCardFor(attack);
+        if (card?.getFlag("eclipsephase", "psiTouch")?.outcome === "missed" && card.isOwner) await card.delete();
     });
 }
 
@@ -1842,7 +1844,7 @@ export function registerPsiTouch() {
  */
 export async function landShock({ attack, target, landing, result }) {
     const conditions = shockConditions(superiorResults(result, attack?.roll?.value));
-    for (const { id, span } of conditions) await inflictCondition(target, id, { span, flags: { sleightShock: attack?.id ?? null } });
+    await inflictConditions(target, conditions.map(({ id, span }) => ({ id, options: { span, flags: { sleightShock: attack?.id ?? null } } })));
     await postLandingOutcome(attack, target, landing, game.i18n.format("ep2e.chat.strike.outcome", { name: target.name, conditions: conditionNames(conditions) }));
     return conditions;
 }

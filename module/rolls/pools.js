@@ -1,8 +1,9 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT_TEXT } from "./dice.js";
+import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT, TASK_RESULT_TEXT } from "./dice.js";
 import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { getTaskResultText } from "../api/registry.js";
 import { updateCard } from "../common/chat-cards.js";
+import { madeHere } from "../common/socket.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
@@ -145,13 +146,19 @@ export async function outcomeAlternatives(outputData, pool, systemOptions){
         if((obj.result > obj.originalResult) && obj.pools.available)
             obj.options["swap"] = true
         
+        // Mitigating keeps the rolled die and lifts the result one tier; a critical failure becomes
+        // the worst ordinary one. The result stored is the one the card shows.
         else if(((obj.originalResult + 1) < 3)  && obj.pools.available){
             obj.options["mitigate"] = true
-            obj["resultText"] = resultText[(obj.originalResult+1)].text
+            obj.result = obj.originalResult + 1
+            obj.resultClass = resultText[obj.result].class
+            obj["resultText"] = resultText[obj.result].text
         }
 
         else if(outputData.rollResult % 11 === 0 && obj.pools.available){
-            obj["resultText"] = resultText[0].text
+            obj.result = TASK_RESULT.FAILURE_TWO
+            obj.resultClass = resultText[obj.result].class
+            obj["resultText"] = resultText[obj.result].text
             obj.options["mitigate"] = true
         }
 
@@ -280,7 +287,7 @@ export function registerPoolRule() {
       Hooks.on(`${operation}${documentName}`, (document, ...rest) => {
         const changes = operation === "update" ? rest[0] : {};
         const userId = rest[rest.length - 1];
-        if (userId === game.user.id) settlePools(owningActor(document), changes);
+        if (madeHere(userId, rest[rest.length - 2])) settlePools(owningActor(document), changes);
       });
     }
   }

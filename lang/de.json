@@ -511,7 +511,7 @@
         "restInfo": {
           "headline": "Aufladen",
           "subheadline1": "Allgemein",
-          "copy1": "Du musst eine 'Aufladung'-Aktion nutzen, um Pools wieder aufzufüllen. Um den Typ der Aufladung zu wählen, klicke auf die zugehörige Checkbox. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Aufladung zur Verfügung.",
+          "copy1": "Du musst eine 'Aufladung'-Aktion nutzen, um Pools wieder aufzufüllen. Wähle die Art der Aufladung über den Aufladen-Button; die Batterie zeigt, welche noch übrig sind. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Aufladung zur Verfügung.",
           "subheadline2": "Kurze Aufladung",
           "copy2": "Ein durchschnittlicher Transhumaner braucht etwa 10 Minuten für eine kurze Aufladung in der er nichts anderes tun kann als sprechen oder sich hinzulegen, um herunterzukommen. Dies benötigt Biomods, während Flats etwa eine Stunde aufladen müssen.<p/><label class='resource-value'>Eine kurze Aufladung stellt 1W6 Poolpunkte wieder her</label>",
           "subheadline3": "Lange Aufladung",
@@ -519,7 +519,16 @@
         },
         "button": {
           "resetRest": "Aufladungen zurücksetzen",
-          "distribute": "Verteilen"
+          "distribute": "Verteilen",
+          "recharge": "Aufladen"
+        },
+        "dialog": {
+          "title": "Aufladen: {name}",
+          "headline": "Art der Aufladung",
+          "detail": "{time}, noch {count}"
+        },
+        "warnings": {
+          "noneLeft": "In diesem Zyklus sind keine Aufladungen mehr übrig."
         }
       },
       "insightSkills": {

@@ -20,6 +20,18 @@ let existing = new Set();
 const NO_CHECK = { aptitude: "", modifier: 0, failure: "", duration: { value: null, units: "" }, stress: { d10: 0, d6: 0, bonus: 0 }, successPsiPenalty: 0 };
 
 /**
+ * How long an effect runs, in seconds. Foundry keeps a span in action turns as seconds while no
+ * combat runs, so a test compares spans this way.
+ * @param {Object} duration - The effect's duration
+ * @returns {Number} The seconds
+ */
+function spanSeconds(duration) {
+  const turn = Number(CONFIG.time?.roundTime) || 3;
+  const per = { rounds: turn, seconds: 1, minutes: 60 };
+  return (Number(duration?.value) || 0) * (per[duration?.units] ?? 0);
+}
+
+/**
  * A drug a test character carries, at hand, one pack.
  * @param {String} name - Its name
  * @param {Object} [system] - Drug fields to override
@@ -226,7 +238,40 @@ export function registerChatCardBatch(quench) {
 
           const stunned = actor.effects.find(effect => effect.getFlag("eclipsephase", STRIKE_CHECK_KEY));
           assert.deepEqual(shocked(), ["stunned"], "the pass");
-          assert.deepInclude(stunned.duration, { value: 3, units: "rounds" });
+          assert.strictEqual(spanSeconds(stunned.duration), 3 * CONFIG.time.roundTime, "3 action turns");
+          return game.messages.get(roll.id);
+        }));
+      });
+
+      it("a failed Shock check a pool point mitigates keeps the die, lifts the result one tier and shortens Incapacitated by 2 action turns", async function () {
+        this.timeout(20000);
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Mitigated", system: { aptitudes: { som: { value: 3 } }, pools: { vigor: { value: 2 } } } }, async actor => {
+          await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
+          await postStrikeCheck(actor, "shock");
+          const card = newestWith(STRIKE_CHECK_KEY);
+          const turns = () => {
+            const effect = actor.effects.find(entry => entry.getFlag("eclipsephase", STRIKE_CHECK_KEY) && entry.statuses.has("incapacitated"));
+            return effect ? spanSeconds(effect.duration) / CONFIG.time.roundTime : null;
+          };
+
+          seedDice([uniformForFace(32, 100)]);
+          await requestStrikeCheck(card.id, null, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } });
+          restoreDice();
+          await waitUntil(() => turns() === 5, 5000);
+          const roll = newestWith("taskCard");
+          assert.isTrue(roll.getFlag("eclipsephase", "taskCard").data.alternatives.options.mitigate, "the card offers to mitigate");
+
+          const row = document.createElement("li");
+          row.dataset.messageId = roll.id;
+          const button = document.createElement("button");
+          button.dataset.usepool = "pool";
+          row.append(button);
+          await usePoolFromChat({ currentTarget: button });
+          await waitUntil(() => turns() === 3, 5000);
+
+          const after = game.messages.get(roll.id).getFlag("eclipsephase", "taskCard");
+          assert.strictEqual(after.data.rollResult, 32, "the die stays");
+          assert.strictEqual(after.spent.usageType, "mitigated");
           return game.messages.get(roll.id);
         }));
       });

@@ -202,7 +202,6 @@ export default class EPactor extends Actor {
 
     if (this.type === "character"){
       this._calculateHomebrewEncumberance(actorModel);
-      this._poolUpdate(actorModel);
     }
 
     // The SideCar's Current Status box renders for every actor type, so its sums have to
@@ -669,53 +668,6 @@ export default class EPactor extends Actor {
     }
     if(consumableCount>0){
       actorModel.additionalSystems.consumableEquipped = true;
-    }
-  }
-
-  _poolUpdate(actorModel) {
-    actorModel.pools.update.possible = true;
-    let insightUpdate = actorModel.pools.update.insight;
-    let vigorUpdate = actorModel.pools.update.vigor;
-    let moxieUpdate = actorModel.pools.update.moxie;
-    let flexUpdate = actorModel.pools.update.flex;
-    const curInsight = actorModel.pools.insight.value;
-    const curVigor = actorModel.pools.vigor.value;
-    const curMoxie = actorModel.pools.moxie.value;
-    const curFlex = actorModel.pools.flex.value;
-    const maxInsight = actorModel.pools.insight.totalInsight;
-    const maxVigor = actorModel.pools.vigor.totalVigor;
-    const maxMoxie = actorModel.pools.moxie.totalMoxie;
-    const maxFlex = actorModel.pools.flex.totalFlex;
-    const restValue = actorModel.rest.restValue;
-    const updateTotal = insightUpdate + vigorUpdate + moxieUpdate + flexUpdate;
-    restValue ? actorModel.rest.restValueUpdate = restValue - updateTotal : 0;
-    const restValueUpdate = actorModel.rest.restValueUpdate;
-
-    if (insightUpdate + curInsight > maxInsight){
-      insightUpdate = maxInsight - curInsight;
-      return this.update({"system.pools.update.insight" : insightUpdate});
-    }
-    if (vigorUpdate + curVigor > maxVigor){
-      vigorUpdate = maxVigor - curVigor;
-      return this.update({"system.pools.update.vigor" : vigorUpdate});
-    }
-    if (moxieUpdate + curMoxie > maxMoxie){
-      moxieUpdate = maxMoxie - curMoxie;
-      return this.update({"system.pools.update.moxie" : moxieUpdate});
-    }
-    if (flexUpdate + curFlex > maxFlex){
-      flexUpdate = maxFlex - curFlex;
-      return this.update({"system.pools.update.flex" : flexUpdate});
-    }
-
-    if (restValueUpdate === 0){
-      actorModel.pools.update.possible = 0;
-    }
-    if (restValueUpdate < 0){
-      actorModel.pools.update.possible = 2;
-    }
-    if (restValueUpdate > 0){
-      actorModel.pools.update.possible = 1;
     }
   }
 

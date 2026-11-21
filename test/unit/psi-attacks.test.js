@@ -382,6 +382,40 @@ describe("a sleight used by touch on someone unwilling (Core p.276)", () => {
     expect(modifiers).not.toContainEqual(expect.objectContaining({ text: "ep2e.roll.announce.psi.touch" }));
   });
 
+  test("a pool point on a touch the defence settled leaves its card, even one this client may not change", async () => {
+    const actor = async();
+    const target = mind("Ana");
+    seedDialogs({ ...PUBLIC, touchOnly: true });
+    const attack = await cast(actor, "sense1", 5, { psiTouch: true, preTargets: target.uuid });
+    await until(() => defenceCards().length);
+    seedRolls([99]);
+    await rollDefence(defenceCards().at(-1), target.uuid, "dodge", { skipDialog: true, presetOptions: { ...PUBLIC } });
+    await until(() => touchCard()?.getFlag("eclipsephase", "psiTouch").outcome === "touched");
+    const card = touchCard();
+    card.author = "gm-user";
+    game.user.isGM = false;
+
+    Hooks.callAll("eclipsephase.poolResult", { context: attack.getFlag("eclipsephase", "roll"), newResult: 3 });
+    await new Promise(resolve => setTimeout(resolve, 20));
+    game.user.isGM = true;
+
+    expect(game.messages.get(card.id)).toBe(card);
+  });
+
+  test("a pool point that turns a missed touch into a hit takes back the card of the miss", async () => {
+    const actor = async();
+    const target = mind("Ana");
+    seedDialogs({ ...PUBLIC, touchOnly: true });
+    const attack = await cast(actor, "sense1", 95, { psiTouch: true, preTargets: target.uuid });
+    await until(() => touchCard());
+    const card = touchCard();
+
+    Hooks.callAll("eclipsephase.poolResult", { context: attack.getFlag("eclipsephase", "roll"), newResult: 3 });
+    await until(() => !game.messages.get(card.id));
+
+    expect(game.messages.get(card.id)).toBeUndefined();
+  });
+
   test("a target who avoids the touch leaves the sleight at point-blank", async () => {
     const actor = async();
     const target = makeActor({ type: "character", name: "Ana", system: { activeMorph: "morph1", aptitudes: { ref: { value: 25 }, wil: { value: 15 } } }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } }] });

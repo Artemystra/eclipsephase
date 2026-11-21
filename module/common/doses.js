@@ -1,7 +1,7 @@
 import { drugVector, doseOnset, dosesRemaining, isAmmoPack, consumeDose, parseAddictionMod } from "./drugs.js";
 import { durationRunOut, isTimedSpan, SECONDS_PER } from "./time.js";
 import { diceFormula, actorAudience, postCard, CARD_TEMPLATE, selectedTokenActor, pickActorFromList, timedEffectData, deleteRunOutEffects, cloneCompendiumItem, findCompendiumItem } from "./general-sheet-functions.js";
-import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay } from "./general-helper-functions.js";
+import { SYSTEM_SOCKET, registerSocketActions, relayToActiveGM, runOrRelay, isActiveGM, madeHere } from "./general-helper-functions.js";
 import { RollCheck, rollToChat, WEAPON_DAMAGE_OUTPUT, TaskRollModifier, signed, DEFAULT_ROLL } from "../rolls/dice.js";
 import { settleOnRoll, postCheckCard, requestCardCheck, modifiersOnRoll, registerCheckCard } from "../rolls/cards.js";
 import { GLOBAL_MOD_KEY } from "../rolls/modifiers.js";
@@ -259,7 +259,7 @@ export async function requestWearOffRoll(messageId) {
  */
 export function registerDoseHooks() {
   Hooks.on("deleteActiveEffect", (effect, options, userId) => {
-    if (userId !== game.user.id) return;
+    if (!madeHere(userId, options)) return;
     if (effect.getFlag?.("eclipsephase", "dose") === undefined) return;
     if (!(effect.parent instanceof Actor)) return;
     postWearOffCard(effect.parent, effect);
@@ -654,6 +654,7 @@ async function undoAttackDose(actor, defenceId) {
  * @returns {Promise<Object|null>} What letting the dose in reported, or null when none went in
  */
 export async function doseFromAttack(attack, target, outcome, { byPool = false, defenceId = null, vector = null } = {}) {
+  if (!target.isOwner) return relayDose("doseFromAttack", { payload: attack.payload }, target, outcome, { byPool, defenceId, vector });
   if (byPool) await undoAttackDose(target, defenceId);
   const payload = attack.payload;
   if (outcome === "none" || !payload?.data) return null;
@@ -685,11 +686,27 @@ export async function doseFromAttack(attack, target, outcome, { byPool = false, 
  * @returns {Promise<*>} What letting the dose in reported, or null when none was given
  */
 export async function doseFromPayload(attack, target, outcome, { byPool = false, defenceId = null } = {}) {
+  if (!target.isOwner) return relayDose("doseFromPayload", { dose: attack?.dose }, target, outcome, { byPool, defenceId });
   if (byPool) await undoAttackDose(target, defenceId);
   if (outcome === "none" || !attack?.dose?.uuid) return null;
   const substance = await fromUuid(attack.dose.uuid);
   if (substance?.type !== "drug") return null;
   return doseFromAttack({ payload: chemicalPayload(substance) }, target, outcome, { defenceId, vector: attack.dose.vector ?? null });
+}
+
+/**
+ * Asks the active GM to give a dose to a target this client may not change, such as an NPC caught
+ * in a cloud a player released.
+ * @param {String} action - doseFromAttack or doseFromPayload
+ * @param {Object} attack - The part of the attack the dose needs
+ * @param {Actor} target - The target
+ * @param {String} outcome - "hit", "half" or "none"
+ * @param {Object} options - byPool, defenceId and vector, as for doseFromAttack
+ * @returns {null} Nothing is reported on this client
+ */
+function relayDose(action, attack, target, outcome, options) {
+  relayToActiveGM(action, { attack, targetUuid: target.uuid, outcome, options });
+  return null;
 }
 
 /**
@@ -743,7 +760,19 @@ export function registerDoseSocket() {
       if (result.reasonKey) game.socket.emit(SYSTEM_SOCKET, { action: "claimDoseRefused", userId: payload.userId, reasonKey: result.reasonKey });
     },
     rollWearOff: payload => rollWearOffStress(card(payload)),
-    rollDoseHarm: payload => rollDoseHarm(card(payload))
+    doseFromAttack: async payload => {
+      const target = await fromUuid(payload.targetUuid);
+      if (target) await doseFromAttack(payload.attack, target, payload.outcome, payload.options);
+    },
+    doseFromPayload: async payload => {
+      const target = await fromUuid(payload.targetUuid);
+      if (target) await doseFromPayload(payload.attack, target, payload.outcome, payload.options);
+    },
+    rollDoseHarm: payload => rollDoseHarm(card(payload)),
+    markDoseHarmRolled: async payload => {
+      const message = card(payload);
+      if (message) await markDoseHarmRolled(message);
+    }
   });
   registerSocketActions({
     claimDoseRefused: payload => {
@@ -1039,6 +1068,15 @@ export async function rollDoseHarm(message) {
 }
 
 /**
+ * Marks a check card's harm as dealt, so it is never rolled.
+ * @param {ChatMessage} message - The check's roll card
+ * @returns {Promise<ChatMessage>} The card
+ */
+function markDoseHarmRolled(message) {
+  return message.update({ "flags.eclipsephase.doseHarm.rolled": true });
+}
+
+/**
  * Answers a click on a check card's harm button: rolled at once where the card may be changed,
  * otherwise sent to the active GM.
  * @param {String} messageId - The check's roll card
@@ -1062,12 +1100,14 @@ export function registerUseCheckHooks() {
     check.filterBonus && { text: game.i18n.localize(WARE.toxinFilters), value: FILTER_CHECK_BONUS }
   ]);
   settleOnRoll("doseCheck", async (check, passed, { byPool, message, context }) => {
+    // A pool spend can come from the actor's owner on a card someone else rolled: the card is
+    // then changed by the active GM.
     if (byPool) {
       if (passed) {
         await settleUseCheck(check, true);
-        await message?.update?.({ "flags.eclipsephase.doseHarm.rolled": true });
+        if (message) await runOrRelay(message, "markDoseHarmRolled", () => markDoseHarmRolled(message));
       }
-      else if (check.harm) await rollDoseHarm(message);
+      else if (check.harm && message) await requestDoseHarm(message.id);
       return;
     }
     await settleUseCheck(check, passed);
@@ -1670,17 +1710,17 @@ function dosesOverTime() {
  */
 export function registerOverTimeHooks() {
   Hooks.on("createActiveEffect", effect => {
-    if (!game.users.activeGM?.isSelf || effect.getFlag?.("eclipsephase", "dose") === undefined) return;
+    if (!isActiveGM() || effect.getFlag?.("eclipsephase", "dose") === undefined) return;
     const actor = effect.parent;
     if (actor) settleInTurn(actor, effect);
   });
   Hooks.on("updateActiveEffect", (effect, changes) => {
-    if (!game.users.activeGM?.isSelf || changes?.start === undefined || effect.getFlag?.("eclipsephase", "dose") === undefined) return;
+    if (!isActiveGM() || changes?.start === undefined || effect.getFlag?.("eclipsephase", "dose") === undefined) return;
     const actor = effect.parent;
     if (actor) settleInTurn(actor, effect);
   });
   Hooks.on("updateWorldTime", () => {
-    if (!game.users.activeGM?.isSelf) return;
+    if (!isActiveGM()) return;
     for (const { actor, effect } of dosesOverTime()) settleInTurn(actor, effect);
   });
 }
@@ -1914,7 +1954,7 @@ export async function grantTemporaryItems(actor, effect, random = Math.random) {
  */
 export function registerGrantHooks() {
   Hooks.on("createActiveEffect", effect => {
-    if (!game.users.activeGM?.isSelf) return;
+    if (!isActiveGM()) return;
     const dose = effect.getFlag?.("eclipsephase", "dose");
     const actor = effect.parent;
     if (dose?.grants?.length && actor instanceof Actor) grantTemporaryItems(actor, effect);

@@ -503,7 +503,7 @@
         "restInfo": {
           "headline": "充能",
           "subheadline1": "常规",
-          "copy1": "你需要使用一个“充能”动作来充能能力池。选择你要使用的充能类型并点击其后的勾选框。游戏内的每个24小时，你都拥有1次长充能和2次短充能。",
+          "copy1": "你需要使用一个“充能”动作来充能能力池。点击充能按钮选择要使用的充能类型；电池显示剩余的充能。游戏内的每个24小时，你都拥有1次长充能和2次短充能。",
           "subheadline2": "短充能",
           "copy2": "短充能会花费普通超人类大概10分钟时间，且在这段时间内他只能进行充能、说话、和其他轻度活动。这需要基础生物模块。自然人需要花费1个小时。.<p/><label class='resource-value'>一次短充能可以恢复1d6点能力点</label>",
           "subheadline3": "长充能",
@@ -511,7 +511,16 @@
         },
         "button": {
           "resetRest": "重置充能",
-          "distribute": "分配"
+          "distribute": "分配",
+          "recharge": "充能"
+        },
+        "dialog": {
+          "title": "充能：{name}",
+          "headline": "充能类型",
+          "detail": "{time}，剩余 {count} 次"
+        },
+        "warnings": {
+          "noneLeft": "本周期已没有剩余的充能。"
         }
       },
       "insightSkills": {

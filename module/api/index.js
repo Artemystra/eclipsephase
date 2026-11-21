@@ -1,5 +1,6 @@
 import { RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc } from "../rolls/dice.js";
 import { usePoolFromChat } from "../rolls/pools.js";
+import { isActiveGM, isActingTab, madeHere, relayToActiveGM, registerSocketActions, runOrRelay } from "../common/socket.js";
 import { applySuccessTierBonus } from "../rolls/damage.js";
 import {
   prepareRecipients,
@@ -239,7 +240,21 @@ export const attacks = {
 };
 
 /**
+ * Which client acts: the active GM's one acting tab for what only one client may do, the tab a
+ * change came from, and asking the active GM for what a client may not do itself.
+ * @since 3.0
+ */
+export const socket = {
+  isActiveGM,
+  isActingTab,
+  madeHere,
+  relayToActiveGM,
+  registerSocketActions,
+  runOrRelay
+};
+
+/**
  * The full game.eclipsephase.api surface, grouped by area.
  * @since 2.5
  */
-export const api = { rolls, actors, ui, chat, migration, registry, drugs, attacks };
+export const api = { rolls, actors, ui, chat, migration, registry, drugs, attacks, socket };

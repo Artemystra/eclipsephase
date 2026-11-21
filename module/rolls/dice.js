@@ -661,8 +661,8 @@ export function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
 function getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom) {
     let ownClone;
     try {
-        // keepId: false is deliberate - EPactor.prepareData() has ungated update() calls (e.g.
-        // _poolUpdate) that a same-_id clone would fire straight through to the live actor. Nothing
+        // keepId: false is deliberate - EPactor.prepareData() can write to the actor (the resleeving
+        // refill) and a same-_id clone would fire that straight through to the live actor. Nothing
         // in the suppression/skill-calc chain reads the actor's own id, only its embedded items'
         // (unaffected by keepId), so a fresh id just makes any such write target nothing.
         ownClone = actorWhole.clone({

@@ -3528,6 +3528,11 @@ button.epTextlink:hover{
   top: 1.5em;
 }
 
+/* A pool's flyout stays hidden while its droplist is open. */
+.ep-droplist-open .tooltip:hover div[role=tooltip] {
+  display: none;
+}
+
 /* Morph tab: constrain nav and content panels so they scroll within the available window height
    (795px wrappercenter − 50px tab-nav − ~116px health-bar ≈ 629px contentcenter) */
 .contentcenter .tab[data-tab="morph"] .scrolly {
@@ -3551,6 +3556,89 @@ button.epTextlink:hover{
 
 .rest-reset-btn:hover {
   box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+/* A character's pools row: four pools and the recharges in five equal columns. */
+.flexrow.ep-pool-row-five {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.ep-pool-row-five > .pool-entry-wrapper {
+  min-width: 0;
+}
+
+/* The recharges column: info icon, battery and buttons in one row, 5px apart. */
+.ep-recharge-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 24px;
+  min-width: 100%;
+}
+
+.ep-recharge-row > .wantToKnowMore {
+  flex: 0 0 auto;
+}
+
+/* Square, whatever size Foundry gives buttons by default. */
+.ep-recharge-row .rest-reset-btn {
+  flex: 0 0 22px;
+  width: 22px;
+  min-width: 22px;
+  max-width: 22px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0;
+}
+
+/* The recharges left, as a battery: a segment lit while its recharge is still to be had, grey once used. */
+/* The battery is what opens the recharge flyout when hovered. */
+.ep-recharge-row .ep-recharge-info {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1 1 65px;
+  min-width: 24px;
+  margin-right: 5px;
+  padding-left: 0;
+}
+
+/* Fixed, so the sheet's edge does not cut it off; placeRechargeFlyout puts it right below the battery. */
+.pool-entry-wrapper .ep-recharge-info.tooltip:hover div[role=tooltip] {
+  position: fixed;
+  right: auto;
+  z-index: 200;
+}
+
+.ep-recharge-battery {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+  height: 14px;
+  padding: 2px;
+  border: 1px solid var(--highlightBackground);
+  position: relative;
+}
+
+.ep-recharge-battery::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 3px;
+  width: 3px;
+  height: 6px;
+  background: var(--highlightBackground);
+}
+
+.ep-recharge-segment {
+  background: var(--highlight);
+}
+
+.ep-recharge-segment.ep-recharge-used {
+  background: var(--inactive);
+  opacity: 0.4;
 }
 
 .poolDroplistBelow {

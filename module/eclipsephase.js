@@ -12,6 +12,7 @@ import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
+import { electActingTab, registerTabMarks, whenTabElected } from "./common/socket.js";
 import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } from "./rolls/psi.js"
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
@@ -29,7 +30,7 @@ import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
 import { registerAreaSocket } from "./common/targeting.js";
-import { registerConditions } from "./common/conditions.js";
+import { registerConditions, registerConditionSocket } from "./common/conditions.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -186,6 +187,9 @@ async function registerSystemSettings() {
 }
 
 Hooks.once('init', async function() {
+  // Of a user's tabs in this browser, one acts; this tab's own changes carry its mark.
+  electActingTab();
+  registerTabMarks();
 
   game.eclipsephase = {
     EPactor,
@@ -297,6 +301,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/global-partials/armor-row-list.hbs",
     "systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
+    "systems/eclipsephase/templates/chat/partials/roll-mode.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
     "systems/eclipsephase/templates/chat/partials/card-header.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
@@ -390,60 +395,18 @@ function registerCoreRollSources() {
 }
 
 /**
- * Helper to build itemlists of all traits/flaws/wares available via compendiums for various items 
- * they might be needed for (just morphs for now)
+ * Builds the Enhancement and Frame dropdowns of morph and vehicle sheets from the compendium index,
+ * without loading a single item.
  **/
 Hooks.once("ready", async () => {
-  const compendiumList = {};
-  compendiumList.ware = {"none":"--Select--"};
-  compendiumList.flaw = {"none":"--Select--"};
-  compendiumList.trait = {"none":"--Select--"};
-  compendiumList.frame = {"none":"No Frame"};
-  const traitsPack = game.packs.get("eclipsephase.traits");
-  const traitsIndex = await traitsPack.getIndex();
-  const warePack = game.packs.get("eclipsephase.ware");
-  const wareIndex = await warePack.getIndex();
-  const armorPack = game.packs.get("eclipsephase.armor");
-  const armorIndex = await armorPack.getIndex();
-  const joinedIndex = [...wareIndex, ...traitsIndex, ...armorIndex]
-
-  for(const entry of joinedIndex){
-    const fullItem = await fromUuid(entry.uuid);
-    switch (fullItem.type) {
-      case "traits":
-        // These lists only feed body-bound Enhancement slots (Morphs/Vehicles) - an ego-only
-        // trait/flaw (morph: false) can't attach to a body, so it doesn't belong here.
-        if (fullItem.system.morph !== true) break;
-        fullItem.system.traitType === "trait" ? compendiumList.trait[fullItem.uuid] = fullItem.name : compendiumList.flaw[fullItem.uuid] = fullItem.name;
-        break;
-      case "ware":
-        compendiumList.ware[fullItem.uuid] = fullItem.name;
-        break;
-      case "armor":
-        // Only the three Frame items (Light/Medium/Heavy) feed the Synthmorph Frame dropdown -
-        // regular Armor items in this same pack aren't relevant here.
-        if (fullItem.system.isFrame === true) compendiumList.frame[fullItem.uuid] = fullItem.name;
-        break;
-      default: break
-    }
-  }
-  compendiumList.ware = helperFunction.sortObjectByValue(compendiumList.ware)
-  compendiumList.flaw = helperFunction.sortObjectByValue(compendiumList.flaw)
-  compendiumList.trait = helperFunction.sortObjectByValue(compendiumList.trait)
-  // Frame is ordered by size (Select, Light, Medium, Heavy) rather than alphabetically - alpha
-  // order would put Heavy before Light before Medium, which reads oddly for a size progression.
-  const frameOrder = { "No Frame": 0, "Light Frame Armor": 1, "Medium Frame Armor": 2, "Heavy Frame Armor": 3 };
-  compendiumList.frame = Object.fromEntries(
-    Object.entries(compendiumList.frame).sort(([, a], [, b]) => (frameOrder[a] ?? 99) - (frameOrder[b] ?? 99))
-  );
-
-  CONFIG.compendiumList = compendiumList;
+  const indexes = await Promise.all(helperFunction.BODY_LIST_PACKS.map(id => game.packs.get(id)?.getIndex({ fields: helperFunction.BODY_LIST_FIELDS }) ?? []));
+  CONFIG.compendiumList = helperFunction.bodyCompendiumList(indexes.flatMap(index => Array.from(index)));
 })
 
 Hooks.once("ready", async function() {
-  //Prevents players from migrating unintentionally 
-  //(or better "at all")
-  if (!game.user.isGM) return;
+  // Only the active GM migrates: never a player, and never a second GM or a second tab at the same time.
+  await whenTabElected();
+  if (!helperFunction.isActiveGM()) return;
   //Migration script if actorSheets are changing
   const gameVersion = game.settings.get("eclipsephase", "migrationVersion");
   const currentVersion = game.system.version
@@ -902,6 +865,7 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
   registerPsiEffectSocket();
   registerDoseSocket();
+  registerConditionSocket();
   registerCardSocket();
   registerWeaponAttackSocket();
   registerAreaSocket();
@@ -910,7 +874,7 @@ Hooks.once("ready", () => {
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll
 // or by editing the field, so neither the dialog nor the pool write happens on every client at once.
 Hooks.on("updateActor", async (actor, changed, options, userId) => {
-  if (userId !== game.user.id) return;
+  if (!helperFunction.madeHere(userId, options)) return;
   if (foundry.utils.getProperty(changed, "system.psiStrain.infection") === undefined) return;
   await actor.applyChiBoostCrossing?.();
   await actor.requestGammaAutoPushOnCrossing?.();
@@ -1110,8 +1074,9 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
 });
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
+// Only the creating client adds it; the others may not change the new actor.
 Hooks.on("createActor", async (actor, options, userId) => {
-  if (!EPactor.MANAGED_TYPES.includes(actor.type)) return;
+  if (!helperFunction.madeHere(userId, options) || !EPactor.MANAGED_TYPES.includes(actor.type)) return;
   if (actor.system.activeMorph || actor.system.activeID) {
     await actor.setFlag("eclipsephase", "defaultIdAdded", true);
     await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
@@ -1179,25 +1144,10 @@ Hooks.on("getActorContextOptions", (directory, menuItems) => {
 });
 
 Hooks.on("createItem", async (item, options, userId) => {
-  if (item.type === "morph" && !item.parent){
+  if (helperFunction.madeHere(userId, options) && item.type === "morph" && !item.parent){
     await item.update ({"img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"})
   }
 });
-
-Hooks.on("preCreateItem", (item, data, options, userId) => {
-  if(item.type === "morphTrait" || item.type === "morphFlaw" || item.type === "trait" || item.type === "flaw"){
-    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
-    const popUpHeadline = game.i18n.localize("ep2e.actorSheet.popUp.itemDeprecatedHeadline");
-    const popUpCopy = game.i18n.localize("ep2e.actorSheet.popUp.itemDeprecatedCopy");
-    const popUpInfo = game.i18n.localize("ep2e.actorSheet.popUp.itemDeprecatedInfo");
-    const popUpTarget = null
-    const popUpPrimary = game.i18n.localize("ep2e.actorSheet.button.thankYouLaph");
-    const singleButton = true
-    sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton);
-    return false;
-  }
-});
-
 
 //Active Effects Suppression
 Hooks.once('init', () => {

@@ -30,10 +30,12 @@ function findMigrationReadyHook() {
  * migration dialogs it renders and what copy each was given.
  * @param {String} from - The world's stored migrationVersion
  * @param {Object} [answer] - What every dialog answers; by default the offer to migrate is accepted
+ * @param {Object} [options] - activeGM: false to run it on a GM who is not the active one
  * @returns {Promise<Object[]>} One entry per dialog, with its copy key and any extra block
  */
-async function runLadderFrom(from, answer = { start: true }) {
+async function runLadderFrom(from, answer = { start: true }, { activeGM = true } = {}) {
   global.__ep.setSetting("eclipsephase", "migrationVersion", from);
+  game.users.activeGM = { id: activeGM ? game.user.id : "other-gm" };
 
   const rendered = [];
   const realRender = foundry.applications.handlebars.renderTemplate;
@@ -56,6 +58,15 @@ async function runLadderFrom(from, answer = { start: true }) {
 
 beforeAll(async () => {
   await import("../../module/eclipsephase.js");
+});
+
+describe("who migrates", () => {
+  test("a GM who is not the active GM leaves the world as it is", async () => {
+    const rendered = await runLadderFrom("2.5", { start: true }, { activeGM: false });
+
+    expect(rendered).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.5");
+  });
 });
 
 describe("the migration ladder's closing dialog", () => {

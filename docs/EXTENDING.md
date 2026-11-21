@@ -57,7 +57,25 @@ api.drugs     // takeDose, offerDose, forceDose, activeDoseFor, doseSubstrate, d
 api.attacks   // registerAttackEffect, applyTargetedAttack, postDefenceCards, rollDefence,
               // defenceOutcome, chemicalDoses, followUpVisibility, yieldDefence,
               // unsuitableTarget, detonateArmed, defuseArmed
+api.socket    // isActiveGM, isActingTab, madeHere, relayToActiveGM, registerSocketActions,
+              // runOrRelay
 ```
+
+`api.socket` (3.0) decides which client acts. A second tab in the same browser shares its user's
+login but is a client of its own, so it gets every hook and every socket message a second time. Of a
+user's tabs in one browser, one acts - picked with the browser's Web Locks, which need https or
+localhost; without them every tab acts, as before 3.0.
+
+- `isActiveGM()` is true on the active GM's acting tab only: use it, not `game.user.isActiveGM` or
+  `game.users.activeGM.isSelf`, for what exactly one client in the world may do.
+- `isActingTab()` is true on the one tab of its user that acts.
+- `madeHere(userId, options)` is true on the tab that made a change, for a document hook that
+  follows up on the user's own changes: `Hooks.on("updateActor", (actor, changes, options, userId) => { if (!api.socket.madeHere(userId, options)) return; ... })`.
+  The system marks every change to an actor, item, effect or chat message with the tab that made
+  it (`options.eclipsephaseTab`); a change without a mark counts as the acting tab's.
+- `registerSocketActions(handlers, { gmOnly })` listens on the system's socket; by default only
+  `isActiveGM()` answers. `relayToActiveGM(action, payload)` asks it, and
+  `runOrRelay(message, action, run)` changes a chat card where this client may and asks otherwise.
 
 `api.drugs` is described in "Drugs and doses" below.
 
@@ -846,6 +864,9 @@ A module adds its own with `registerLandingRule(id, { label, onLand, instant, bi
 and it appears in the sheet's list (`listLandingRules()` returns them all). `onLand({ attack, target, async, landing, result })` runs on landing.
 `instant` leaves no timed effect, `bindsSkill` gives the effect a skill to be chosen, and
 `onReland(context)` runs after a pool point improved the result on a sleight that landed already.
+Both may run on a client that does not own the target - a willing target's landing runs on the
+async's - so they change the target through helpers that ask the active GM when this client may not,
+such as `inflictCondition(actor, id, options)` in `module/common/conditions.js`.
 `api.attacks.sleightPotency(landing, result)` reports its `count` and `factor`.
 `choose({ message, target, request })` answers the `sleightChoice` button of a card carrying the flag
 `flags.eclipsephase.sleightChoice` with `rule` and `targetUuid`.

@@ -1,6 +1,6 @@
 import { registerPoolRule, settlePools, owningActor } from "../../module/rolls/pools.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
-import { makeActor, resetWorld } from "../setup/factories.js";
+import { makeActor, makeActorFromFixture, resetWorld } from "../setup/factories.js";
 
 const VIGOR_UP = [{ key: "system.pools.vigor.mod", value: "+1", type: "add" }];
 
@@ -234,5 +234,20 @@ describe("what the rule leaves to the change itself", () => {
   test("an effect belonging to no actor at all", async () => {
     expect(owningActor(new ActiveEffect(temporary(VIGOR_UP)))).toBeNull();
     await expect(settlePools(null)).resolves.toBeUndefined();
+  });
+});
+
+describe("preparing someone else's character", () => {
+  // A preparation that follows another without a reset still sees the totals of the one before.
+  test("a pool above its total is left to its owner: preparing it writes nothing", () => {
+    const actor = makeActorFromFixture("character-basic");
+    actor.ownership = { default: 0 };
+    actor._source.system.pools.vigor = { ...actor._source.system.pools.vigor, value: 5, totalVigor: 1 };
+    game.user.isGM = false;
+    const update = jest.spyOn(actor, "update");
+
+    actor.prepareData();
+
+    expect(update).not.toHaveBeenCalled();
   });
 });

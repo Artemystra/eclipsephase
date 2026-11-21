@@ -278,6 +278,22 @@ describe("a check whose failure harms the body", () => {
     expect(card.getFlag("eclipsephase", "doseHarm")).toEqual({ rolled: true });
     expect(actor.system.health.physical.value).toEqual(0);
   });
+
+  test("a pool spend on a card someone else rolled leaves closing it to the active GM", async () => {
+    const actor = carrying("Caustic", CAUSTIC);
+    await takeDose(actor, actor.items.get("drug1"));
+    const card = await rollCard(actor);
+    card.author = "gm-user";
+    const emit = jest.spyOn(game.socket, "emit").mockImplementation(() => {});
+    game.user.isGM = false;
+
+    Hooks.callAll("eclipsephase.poolResult", { context: { ...card.getFlag("eclipsephase", "roll"), messageId: card.id }, newResult: TASK_RESULT.SUCCESS });
+    await until(() => emit.mock.calls.some(([, payload]) => payload?.action === "markDoseHarmRolled"));
+    game.user.isGM = true;
+    emit.mockRestore();
+
+    expect(card.getFlag("eclipsephase", "doseHarm")).toBeUndefined();
+  });
 });
 
 describe("BTX2", () => {

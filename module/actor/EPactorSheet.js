@@ -12,7 +12,7 @@ import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
-import { restingListeners } from "../rolls/resting.js";
+import { restingListeners, rechargeSegments } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily, sustainedSleights, endSustaining, sustainedTargets, pickSustainedTargets, endSustainingOn } from "../rolls/psi.js";
 import { getStrainFamily } from "../rolls/strain-families.js";
 import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
@@ -311,6 +311,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     else {
       context.tabGroups = { limited: this.tabGroups.limited };
     }
+
+    if (actor.type === "character") context.rechargeSegments = rechargeSegments(actor);
 
     Hooks.callAll("eclipsephase.prepareActorSheetContext", this, context);
 

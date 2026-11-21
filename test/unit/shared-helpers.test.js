@@ -1,6 +1,8 @@
+import { bodyCompendiumList } from "../../module/common/general-helper-functions.js";
 import { isHit, signed, TASK_RESULT } from "../../module/rolls/dice.js";
 import { isTimedSpan, SECONDS_PER } from "../../module/common/time.js";
-import { ownersAndGMs, actorAudience, findCompendiumItem, cloneCompendiumItem, escapeText } from "../../module/common/general-sheet-functions.js";
+import { ownersAndGMs, actorAudience, findCompendiumItem, cloneCompendiumItem, escapeText, registerCommonHandlers } from "../../module/common/general-sheet-functions.js";
+import { JSDOM } from "jsdom";
 import { boundToActiveBody } from "../../module/common/morp-functions.js";
 import { makeActor, resetWorld, registerSystemPacks } from "../setup/factories.js";
 
@@ -74,5 +76,60 @@ describe("the shared body rule", () => {
     expect(boundToActiveBody(actor, ware("morph1", true))).toBe(true);
     expect(boundToActiveBody(actor, ware(null))).toBe(true);
     expect(boundToActiveBody(makeActor({ type: "npc" }), ware("anything"))).toBe(true);
+  });
+});
+
+describe("the Enhancement and Frame dropdowns of bodies", () => {
+  test("come from the compendium index: ware, the traits and flaws a body carries, and the frames by size", () => {
+    const list = bodyCompendiumList([
+      { uuid: "w2", name: "Zoom", type: "ware" },
+      { uuid: "w1", name: "Armor Skin", type: "ware" },
+      { uuid: "t1", name: "Striking Looks", type: "traits", system: { morph: true, traitType: "trait" } },
+      { uuid: "f1", name: "Frail", type: "traits", system: { morph: true, traitType: "flaw" } },
+      { uuid: "e1", name: "Ego Only", type: "traits", system: { morph: false, traitType: "trait" } },
+      { uuid: "h", name: "Heavy Frame Armor", type: "armor", system: { isFrame: true } },
+      { uuid: "l", name: "Light Frame Armor", type: "armor", system: { isFrame: true } },
+      { uuid: "v", name: "Vest", type: "armor", system: { isFrame: false } }
+    ]);
+
+    expect(Object.values(list.ware)).toEqual(["--Select--", "Armor Skin", "Zoom"]);
+    expect(list.trait).toEqual({ none: "--Select--", t1: "Striking Looks" });
+    expect(list.flaw).toEqual({ none: "--Select--", f1: "Frail" });
+    expect(Object.values(list.frame)).toEqual(["No Frame", "Light Frame Armor", "Heavy Frame Armor"]);
+  });
+
+  test("leave out an entry the index cannot tell the type of, instead of failing", () => {
+    const list = bodyCompendiumList([null, { uuid: "x", name: "Broken" }, { uuid: "w1", name: "Zoom", type: "ware" }]);
+
+    expect(list.ware).toEqual({ none: "--Select--", w1: "Zoom" });
+  });
+});
+
+describe("the pool droplists", () => {
+  let realDocument;
+  beforeEach(() => {
+    realDocument = global.document;
+    global.document = new JSDOM("").window.document;
+  });
+  afterEach(() => { global.document = realDocument; });
+
+  test("open from their button with the pool's flyout hidden, close on a click outside, and listen on the page only once however often sheets render", () => {
+    const listen = jest.spyOn(document, "addEventListener");
+    const sheet = document.createElement("div");
+    sheet.innerHTML = `<div class="dropdown"><i class="icon"></i></div><div class="poolDroplist" style="display: none;"><div class="droplistBackground"><label class="droplistElement">Take Initiative</label></div></div><p class="elsewhere">Text</p>`;
+    document.body.append(sheet);
+    const list = sheet.querySelector(".poolDroplist");
+    const click = element => element.dispatchEvent(new document.defaultView.MouseEvent("click", { bubbles: true }));
+
+    registerCommonHandlers(document.createElement("div"), {});
+    registerCommonHandlers(sheet, {});
+    click(sheet.querySelector(".icon"));
+    const openedByIcon = list.style.display;
+    const flyoutHidden = sheet.classList.contains("ep-droplist-open");
+    click(sheet.querySelector(".elsewhere"));
+
+    expect(listen.mock.calls.filter(([type]) => type === "click")).toHaveLength(1);
+    expect([openedByIcon, flyoutHidden]).toEqual(["grid", true]);
+    expect([list.style.display, sheet.classList.contains("ep-droplist-open")]).toEqual(["none", false]);
   });
 });

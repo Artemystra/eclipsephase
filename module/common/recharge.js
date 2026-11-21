@@ -1,4 +1,5 @@
 import { elapsedTime } from "./time.js";
+import { isActiveGM } from "./socket.js";
 
 const MANAGED_TYPES = ["character", "npc", "goon"];
 
@@ -69,7 +70,7 @@ export function rechargeResetUpdate(actor, today) {
  * @returns {Promise<void>} Resolves once every due actor has been updated
  */
 export async function resetRechargesForNewDay() {
-  if (!game.users.activeGM?.isSelf) return;
+  if (!isActiveGM()) return;
   if (!game.settings.get("eclipsephase", "rechargeAutoReset")) return;
 
   const today = elapsedTime(game.time.worldTime).day;

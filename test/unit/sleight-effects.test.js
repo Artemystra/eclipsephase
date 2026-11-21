@@ -12,6 +12,7 @@ import { markDefenceRolled } from "../../module/rolls/attacks.js";
 import { RollCheck } from "../../module/rolls/dice.js";
 import { resetStrainFamilies, registerCoreStrainFamilies, registerStrainFamily, getStrainFamily } from "../../module/rolls/strain-families.js";
 import { isRunningEffect } from "../../module/common/time.js";
+import { registerConditionSocket } from "../../module/common/conditions.js";
 import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
@@ -762,6 +763,28 @@ describe("the conditions a sleight leaves (Core p.226)", () => {
     expect(span("incapacitated")).toMatchObject({ value: 3, units: "rounds" });
     expect(span("stunned")).toMatchObject({ value: 3, units: "minutes" });
     expect(createdMessages.some(message => message.content?.includes("ep2e.chat.strike.outcome"))).toBe(true);
+  });
+
+  test("Short Circuit on a willing target the async's player may not change puts the conditions on through the active GM", async () => {
+    const npc = makeActor({ type: "npc", name: "Npc", ownership: { default: 2 }, system: { aptitudes: { wil: { value: 15 } } } });
+    const caster = async();
+    const emit = jest.spyOn(game.socket, "emit").mockImplementation(() => {});
+    const listeners = [];
+    jest.spyOn(game.socket, "on").mockImplementation((name, listener) => listeners.push(listener));
+    registerConditionSocket();
+    game.user.isGM = false;
+
+    const card = await cast(caster, "circuit1", 50, { willing: true });
+    await applyTargetedAttack(card, { pick: async () => [{ actor: npc }], confirm: async () => true });
+    await until(() => emit.mock.calls.some(([, sent]) => sent?.action === "inflictConditions"));
+    const requests = emit.mock.calls.filter(([, sent]) => sent?.action === "inflictConditions");
+    expect(requests.map(([, sent]) => sent.conditions.map(entry => entry.id))).toEqual([["prone", "incapacitated", "stunned"]]);
+    expect(statusesOn(npc)).toEqual([]);
+
+    game.user.isGM = true;
+    game.users.activeGM = { id: game.user.id };
+    for (const listener of listeners) await listener(JSON.parse(JSON.stringify(requests[0][1])));
+    expect(statusesOn(npc)).toEqual(["incapacitated", "prone", "stunned"]);
   });
 
   test("Pain impairs its target for a turn and makes it flee, without a further check; Pain Tolerance II shrugs it off", async () => {

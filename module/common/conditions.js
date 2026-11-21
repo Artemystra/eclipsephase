@@ -1,6 +1,7 @@
 import { registerRollBlock } from "../api/registry.js";
 import { rollScope, GLOBAL_MOD_KEY, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
 import { timedEffectData } from "./general-sheet-functions.js";
+import { registerSocketActions, relayToActiveGM } from "./socket.js";
 
 // The conditions of Core p.226 as the token HUD's status effects, plus Dead and Invisible, which
 // Foundry itself acts on. A condition set from the HUD is a temporary effect: it shows in the Time
@@ -232,15 +233,47 @@ export function conditionEffectData(id, { span = null, flags = {} } = {}) {
 }
 
 /**
- * Puts a condition on an actor, in place of the others of its group.
+ * Puts a condition on an actor, in place of the others of its group. On an actor this client may
+ * not change, the active GM puts it on.
  * @param {Actor} actor - The actor
  * @param {String} id - The condition id
  * @param {Object} [options] - span and flags, as conditionEffectData takes them
- * @returns {Promise<ActiveEffect[]>} The effect created
+ * @returns {Promise<ActiveEffect[]>} The effect created, none when the GM was asked
  */
 export async function inflictCondition(actor, id, options = {}) {
+  if (!actor.isOwner) return inflictConditions(actor, [{ id, options }]);
   await removeReplacedConditions(actor, id);
   return actor.createEmbeddedDocuments("ActiveEffect", [conditionEffectData(id, options)]);
+}
+
+/**
+ * Puts several conditions on an actor, one after the other. On an actor this client may not change,
+ * the active GM puts them all on, in the same order, from one request.
+ * @param {Actor} actor - The actor
+ * @param {Object[]} conditions - id and options per condition, as inflictCondition takes them
+ * @returns {Promise<ActiveEffect[]>} The effects created, none when the GM was asked
+ */
+export async function inflictConditions(actor, conditions) {
+  if (!actor.isOwner) {
+    relayToActiveGM("inflictConditions", { actorUuid: actor.uuid, conditions });
+    return [];
+  }
+  const created = [];
+  for (const { id, options } of conditions) created.push(...await inflictCondition(actor, id, options));
+  return created;
+}
+
+/**
+ * Lets the active GM put on conditions for a client that may not change the actor.
+ * @returns {void}
+ */
+export function registerConditionSocket() {
+  registerSocketActions({
+    inflictConditions: async ({ actorUuid, conditions }) => {
+      const actor = await fromUuid(actorUuid);
+      if (actor) await inflictConditions(actor, conditions ?? []);
+    }
+  });
 }
 
 /**

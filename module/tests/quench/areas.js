@@ -463,6 +463,42 @@ export function registerAreasBatch(quench) {
           if (mine.length) await ChatMessage.deleteDocuments(mine);
         }
       });
+
+      it("a proximity sensor of a combat comes live when the combat reaches its round, while the GM looks at another scene", async function () {
+        this.timeout(40000);
+        let combat = null;
+        let other = null;
+        let sensorId = null;
+        await withTempActor({ type: "npc", name: "Quench Fighter" }, async fighter => {
+          const [token] = await scene.createEmbeddedDocuments("Token", [{ actorId: fighter.id, actorLink: true, name: fighter.name, x: 200, y: 200 }]);
+          try {
+            combat = await Combat.create({ scene: scene.id });
+            await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: scene.id, actorId: fighter.id }]);
+            await combat.startCombat();
+            const [sensor] = await scene.createEmbeddedDocuments("Region", [{
+              name: "Quench Sensor",
+              shapes: [{ type: "rectangle", x: 2000, y: 2000, width: 300, height: 300 }],
+              flags: { eclipsephase: { [AREA_FLAG]: { attackId: "quench-sensor", armed: true, part: "sensor", combatId: combat.id, round: combat.round + 1, live: false } } }
+            }]);
+            sensorId = sensor.id;
+            other = await Scene.create({ ...SCENE, name: "Quench Elsewhere" });
+            await other.view();
+            await waitUntil(() => canvas.ready && canvas.scene?.id === other.id, 15000);
+
+            await combat.nextRound();
+            await waitUntil(() => scene.regions.get(sensorId)?.getFlag("eclipsephase", AREA_FLAG)?.live === true, 10000);
+
+            assert.isTrue(scene.regions.get(sensorId).getFlag("eclipsephase", AREA_FLAG).live);
+          } finally {
+            if (combat) await combat.delete();
+            await scene.view();
+            await waitUntil(() => canvas.ready && canvas.scene?.id === scene.id, 15000);
+            if (other) await other.delete();
+            if (sensorId && scene.regions.get(sensorId)) await scene.deleteEmbeddedDocuments("Region", [sensorId]);
+            if (scene.tokens.get(token.id)) await token.delete();
+          }
+        });
+      });
     });
   }, { displayName: "Eclipse Phase: Areas" });
 }

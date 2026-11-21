@@ -99,6 +99,14 @@ Object {
     "rollToChat": [Function],
     "usePoolFromChat": [Function],
   },
+  "socket": Object {
+    "isActingTab": [Function],
+    "isActiveGM": [Function],
+    "madeHere": [Function],
+    "registerSocketActions": [Function],
+    "relayToActiveGM": [Function],
+    "runOrRelay": [Function],
+  },
   "ui": Object {
     "addDragSupport": [Function],
     "addMinimizeSupport": [Function],

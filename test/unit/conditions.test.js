@@ -3,7 +3,7 @@ import path from "path";
 import {
   CONDITIONS, conditionStatusEffects, activeConditions, replacedConditions, removeReplacedConditions,
   conditionBlockReason, rollBlockContext, registerConditions, conditionNotes, conditionSkillModifiers,
-  targetsUnder
+  targetsUnder, inflictCondition, registerConditionSocket
 } from "../../module/common/conditions.js";
 import { rollBlockReason, resetRegistry } from "../../module/api/registry.js";
 import { RollCheck } from "../../module/rolls/dice.js";
@@ -223,5 +223,28 @@ describe("conditions in an attack", () => {
     expect(targetsUnder({ preTargets: `${ana.uuid},${bo.uuid}` }, "prone")).toBe(true);
     expect(targetsUnder({ preTargets: `${ana.uuid},${cy.uuid}` }, "prone")).toBe(false);
     expect(targetsUnder({ preTargets: false }, "prone")).toBe(false);
+  });
+});
+
+describe("a condition on someone this client may not change", () => {
+  afterEach(() => { game.user.isGM = true; jest.restoreAllMocks(); });
+
+  test("is put on by the active GM, not by this client", async () => {
+    resetWorld();
+    const npc = makeActor({ type: "npc", name: "Npc", ownership: { default: 0 } });
+    const emit = jest.spyOn(game.socket, "emit").mockImplementation(() => {});
+    const listeners = [];
+    jest.spyOn(game.socket, "on").mockImplementation((name, listener) => listeners.push(listener));
+    registerConditionSocket();
+    game.user.isGM = false;
+
+    expect(await inflictCondition(npc, "stunned", { span: { value: 1, units: "rounds" } })).toEqual([]);
+    expect(npc.effects).toHaveLength(0);
+
+    const [, payload] = emit.mock.calls.find(([, sent]) => sent?.action === "inflictConditions");
+    game.user.isGM = true;
+    game.users.activeGM = { id: game.user.id };
+    for (const listener of listeners) await listener(JSON.parse(JSON.stringify(payload)));
+    expect(npc.effects.map(effect => effect.statuses)).toEqual([["stunned"]]);
   });
 });

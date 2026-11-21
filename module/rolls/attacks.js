@@ -6,7 +6,7 @@ import { getStrainFamily } from "./strain-families.js";
 import { gammaSleight, gammaPushes, sleightModifiers, sleightTargeting, sustainModifiers, psiRangeBand, pushesRange, refuseLockedOut, setLockOut, breakContact, PSI_CURSOR } from "./psi.js";
 import { pickTokensOnCanvas, attackerToken, NO_GM_ATTACK, OUTER_ZONE_COLOR, tokenGap, pointGap, areaPolygon, createShadowedArea, createPrivateArea, wholeShapes, spotShapes, clearAreas, shapeContains, unitsToPixels, scatterPoint, areaSquares, MELEE_CURSOR, TARGET_COLOR, AREA_FLAG, iconImage, sheetsAside, cellCentre, spotTop, hasCells, createCloudArea, clearCloudLights, cloudOutline } from "../common/targeting.js";
 import { registerCard, renderCard, updateCard, inOrder } from "../common/chat-cards.js";
-import { relayToActiveGM } from "../common/socket.js";
+import { relayToActiveGM, isActiveGM } from "../common/socket.js";
 import { rollBlockReason } from "../api/registry.js";
 import { rollBlockContext, isUnder } from "../common/conditions.js";
 import { ANY_TARGETS, ATTACK_MODES, minimumTargets, attackTargetCount, weaponRange, rangeBand, rangeRefusal, isConeWeapon, blastReach, PROXIMITY_ARMING, CONE_MAX_TARGETS, SUPPRESSIVE_WIDTH, CLOUD_COLORS } from "../common/weapon-functions.js";
@@ -560,7 +560,7 @@ export function helplessReason(actor, attack) {
  */
 export async function yieldHelpless(message) {
   const state = message?.getFlag?.("eclipsephase", "attackDefence");
-  if (!state || !game.users?.activeGM?.isSelf) return;
+  if (!state || !isActiveGM()) return;
   for (const entry of state.entries.filter(candidate => candidate.helpless && !candidate.outcome)) await yieldDefence(message, entry.uuid);
 }
 
@@ -1066,7 +1066,7 @@ export async function suppressOnTurn(token, scene) {
  * @returns {Promise<Number>} How many Regions were removed
  */
 export function endSuppression(combat) {
-  if (!game.user.isActiveGM) return Promise.resolve(0);
+  if (!isActiveGM()) return Promise.resolve(0);
   return clearAreas(flag => flag.suppressive === true || flag.blast === true, combat?.scene ?? canvas?.scene);
 }
 
@@ -1096,7 +1096,7 @@ export function registerSuppressiveFire() {
      * @returns {Promise<void>} Resolves once noted
      */
     static async onMove(event) {
-      if (!game.user.isActiveGM) return;
+      if (!isActiveGM()) return;
       const card = game.messages.get(this.messageId);
       const token = event.data?.token;
       const position = event.data?.movement?.destination ?? token;
@@ -1114,7 +1114,7 @@ export function registerSuppressiveFire() {
   Hooks.on("deleteCombat", combat => endSuppression(combat));
   Hooks.on("combatTurnChange", async combat => {
     const actor = combat?.combatant?.actor;
-    if (!game.user.isActiveGM || !actor) return;
+    if (!isActiveGM() || !actor) return;
     const scene = combat.scene ?? canvas?.scene;
     await clearAreas(flag => (flag.suppressive === true || flag.blast === true) && flag.actorUuid === actor.uuid, scene);
     await suppressOnTurn(combat.combatant.token, scene);
@@ -1197,6 +1197,32 @@ export const BLAST_EDGE = 2;
 const BLAST_LINGER = 3000;
 
 /**
+ * The Regions of every scene, or of one - so what lies on a scene is found whichever scene is in
+ * view. A world without scenes, as in tests, offers the viewed one.
+ * @param {Scene} [scene] - The scene to look in, all by default
+ * @returns {Object[]} The Regions
+ */
+function sceneRegions(scene = null) {
+  const scenes = scene ? [scene] : game.scenes?.size ? Array.from(game.scenes) : [globalThis.canvas?.scene].filter(Boolean);
+  return scenes.flatMap(entry => Array.from(entry.regions ?? []));
+}
+
+/**
+ * Removes the areas that match from whichever scenes they lie on.
+ * @param {Function} match - match(areaFlag) for the areas to remove
+ * @returns {Promise<Number>} How many were removed here
+ */
+async function clearAreasEverywhere(match) {
+  const scenes = new Set(sceneRegions().filter(region => {
+    const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
+    return flag && match(flag);
+  }).map(region => region.parent ?? globalThis.canvas?.scene).filter(Boolean));
+  let removed = 0;
+  for (const scene of scenes) removed += await clearAreas(match, scene);
+  return removed;
+}
+
+/**
  * Clears a blast's area once it has done its work. A blast that leaves something behind, such as
  * smoke or a gas cloud, stays.
  * @param {Object} attack - The attack, with id and blast
@@ -1206,7 +1232,7 @@ const BLAST_LINGER = 3000;
 export async function clearBlast(attack, delay = 0) {
   if (!attack?.blast || attack.blast.lingers) return 0;
   if (delay) await new Promise(resolve => setTimeout(resolve, delay));
-  return clearAreas(flag => flag.attackId === attack.id && flag.blast === true);
+  return clearAreasEverywhere(flag => flag.attackId === attack.id && flag.blast === true);
 }
 
 /**
@@ -1367,7 +1393,7 @@ function breatheIn(cloud, actor) {
  */
 export async function gasReaches(region, actor) {
   const flag = region?.getFlag?.("eclipsephase", AREA_FLAG);
-  if (!game.user.isActiveGM || flag?.cloud !== "gas" || !actor || [...(flag.dosed ?? []), ...(flag.sealed ?? [])].includes(actor.uuid)) return false;
+  if (!isActiveGM() || flag?.cloud !== "gas" || !actor || [...(flag.dosed ?? []), ...(flag.sealed ?? [])].includes(actor.uuid)) return false;
   const list = sealedAgainst(actor, "inhalation") ? "sealed" : "dosed";
   await region.update({ [`flags.eclipsephase.${AREA_FLAG}.${list}`]: [...(flag[list] ?? []), actor.uuid] });
   const attack = game.messages.get(flag.messageId)?.getFlag?.("eclipsephase", "roll")?.targetedAttack;
@@ -1384,10 +1410,9 @@ export async function gasReaches(region, actor) {
  * @returns {Promise<Number>} How many clouds took them off their list
  */
 export async function unsealedInClouds(actor) {
-  if (!game.user.isActiveGM || !actor || sealedAgainst(actor, "inhalation")) return 0;
-  const scenes = game.scenes?.size ? Array.from(game.scenes) : [canvas.scene].filter(Boolean);
+  if (!isActiveGM() || !actor || sealedAgainst(actor, "inhalation")) return 0;
   let reopened = 0;
-  for (const region of scenes.flatMap(scene => Array.from(scene.regions ?? []))) {
+  for (const region of sceneRegions()) {
     const flag = region.getFlag?.("eclipsephase", AREA_FLAG);
     if (flag?.cloud !== "gas" || !(flag.sealed ?? []).includes(actor.uuid)) continue;
     await region.update({ [`flags.eclipsephase.${AREA_FLAG}.sealed`]: flag.sealed.filter(uuid => uuid !== actor.uuid) });
@@ -1520,7 +1545,7 @@ export function trapOwnership(actor) {
  * @returns {Promise<void>} Resolves once updated
  */
 export async function applyTrapVisibility() {
-  if (!game.user.isActiveGM) return;
+  if (!isActiveGM()) return;
   for (const scene of Array.from(game.scenes ?? [])) {
     const updates = Array.from(scene.regions ?? []).filter(region => region.getFlag?.("eclipsephase", AREA_FLAG)?.armed)
       .map(region => ({ _id: region.id, ownership: trapOwnership(fromUuidSync(region.getFlag("eclipsephase", AREA_FLAG).actorUuid)) }));
@@ -1809,29 +1834,33 @@ export function drawCloudOutlines() {
 }
 
 /**
- * The armed explosives on the viewed scene of one part, each with its Region and area flag.
+ * The armed explosives of one part on every scene, each with its Region and area flag.
  * @param {String} part - "marker" or "sensor"
  * @returns {Object[]} region and flag of each
  */
 function armedOnScene(part) {
-  return Array.from(canvas.scene?.regions ?? []).map(region => ({ region, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.armed && flag.part === part);
+  return sceneRegions().map(region => ({ region, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.armed && flag.part === part);
 }
 
 /**
  * Sets off the timers that are due, brings the proximity sensors that are ready live and lets the
- * clouds whose time is up disperse, on the viewed scene: in a combat once its round comes - at the
- * end of the thrower's turn in that round - and outside combat on the world clock. Done on the
+ * clouds whose time is up disperse, on every scene: in a combat once its round comes - at the end
+ * of the thrower's turn in that round - and outside combat on the world clock. A blast needs its
+ * scene in view to go off, so a timer due elsewhere goes off once its scene is viewed. Done on the
  * active GM's client.
  * @param {Object} [moment] - combat, and prior ({ round, combatantId }), the turn that just ended
  * @returns {Promise<void>} Resolves once done
  */
 export async function tickArmed({ combat = null, prior = null } = {}) {
-  if (!game.user.isActiveGM) return;
+  if (!isActiveGM()) return;
   const now = Number(game.time?.worldTime) || 0;
   const reached = flag => {
     if (flag.combatId) {
+      if (flag.part === "sensor") {
+        const fight = combat?.id === flag.combatId ? combat : game.combats?.get?.(flag.combatId);
+        return !!fight?.started && fight.round >= flag.round;
+      }
       if (!combat || combat.id !== flag.combatId) return false;
-      if (flag.part === "sensor") return combat.round >= flag.round;
       const ended = combat.combatants?.get?.(prior?.combatantId)?.actor?.uuid;
       const throwerFights = Array.from(combat.combatants ?? []).some(combatant => combatant.actor?.uuid === flag.actorUuid);
       return (prior?.round > flag.round) || (prior?.round === flag.round && ended === flag.actorUuid) || (!throwerFights && combat.round > flag.round);
@@ -1841,15 +1870,16 @@ export async function tickArmed({ combat = null, prior = null } = {}) {
   for (const { region, flag } of armedOnScene("sensor")) {
     if (!flag.live && reached(flag)) await region.update({ color: TARGET_COLOR, [`flags.eclipsephase.${AREA_FLAG}.live`]: true });
   }
-  for (const { flag } of armedOnScene("marker")) {
+  for (const { region, flag } of armedOnScene("marker")) {
     if (flag.trigger !== "timer" || !reached(flag)) continue;
+    if ((region.parent ?? canvas.scene)?.id !== canvas.scene?.id) continue;
     const message = game.messages.get(flag.messageId);
     if (message) await detonateArmed(message);
   }
-  const gone = Array.from(canvas.scene?.regions ?? []).map(region => region.getFlag?.("eclipsephase", AREA_FLAG)).filter(flag => flag?.cloud && reached({ ...flag, part: "marker" }));
-  for (const flag of gone) {
-    await clearAreas(other => other.attackId === flag.attackId && !!other.cloud);
-    await clearCloudLights(other => other.attackId === flag.attackId);
+  const gone = sceneRegions().map(region => ({ scene: region.parent ?? canvas.scene, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.cloud && reached({ ...flag, part: "marker" }));
+  for (const { scene, flag } of gone) {
+    await clearAreas(other => other.attackId === flag.attackId && !!other.cloud, scene);
+    await clearCloudLights(other => other.attackId === flag.attackId, scene);
   }
 }
 
@@ -1903,10 +1933,10 @@ export async function panToCloud(attackId) {
  * @returns {Promise<void>} Resolves once moved
  */
 export async function armedAfterCombat(combat) {
-  if (!game.user.isActiveGM) return;
+  if (!isActiveGM()) return;
   const now = Number(game.time?.worldTime) || 0;
   const turn = Number(CONFIG.time?.roundTime) || 3;
-  const clouds = Array.from(canvas.scene?.regions ?? []).map(region => ({ region, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.cloud);
+  const clouds = sceneRegions().map(region => ({ region, flag: region.getFlag?.("eclipsephase", AREA_FLAG) })).filter(({ flag }) => flag?.cloud);
   for (const { region, flag } of clouds) {
     if (flag.combatId !== combat?.id) continue;
     const left = Math.max(0, flag.round - combat.round + 1);
@@ -1950,7 +1980,7 @@ export function registerArmedBlasts() {
      * @returns {Promise<void>} Resolves once done
      */
     static async onMove(event) {
-      if (!game.user.isActiveGM || !this.region?.getFlag?.("eclipsephase", AREA_FLAG)?.live) return;
+      if (!isActiveGM() || !this.region?.getFlag?.("eclipsephase", AREA_FLAG)?.live) return;
       const card = game.messages.get(this.messageId);
       if (card) await detonateArmed(card);
     }
@@ -1980,7 +2010,7 @@ export function registerArmedBlasts() {
      * @returns {Promise<void>} Resolves once done
      */
     static async onMove(event) {
-      if (!game.user.isActiveGM) return;
+      if (!isActiveGM()) return;
       const actor = event.data?.token?.actor;
       if (actor) await gasReaches(this.region, actor);
     }
@@ -1994,8 +2024,8 @@ export function registerArmedBlasts() {
   CONFIG.RegionBehavior.typeIcons[CLOUD_BEHAVIOR] = "fa-solid fa-smog";
   Hooks.on("combatTurnChange", async combat => {
     const token = combat?.combatant?.token;
-    if (!game.user.isActiveGM || !token?.actor) return;
-    for (const region of Array.from(canvas.scene?.regions ?? [])) {
+    if (!isActiveGM() || !token?.actor) return;
+    for (const region of sceneRegions(token.parent ?? combat.scene ?? null)) {
       if (region.getFlag?.("eclipsephase", AREA_FLAG)?.cloud === "gas" && region.tokens?.has?.(token)) await gasReaches(region, token.actor);
     }
   });
@@ -2008,7 +2038,7 @@ export function registerArmedBlasts() {
   const sealMayChange = document => {
     let actor = document;
     while (actor && actor.documentName !== "Actor") actor = actor.parent;
-    if (!game.user.isActiveGM || !actor) return;
+    if (!isActiveGM() || !actor) return;
     resealed.add(actor);
     checkSeals();
   };
