@@ -238,27 +238,34 @@ export function getBodyBindingInfo(actor) {
 // Resolves which body a body-bound item (Ware/Traits/Armor) should attach to on `actor`: refuses if
 // there are none, silently picks the only one if there's exactly one, otherwise prompts via
 // selectBody(). Used both at drop-time and for cross-actor transfers, so the two stay consistent.
-export async function resolveBodyForItem(actor, noBodyMessageKey) {
+// With allowStash a character's Stash is offered first and preselected, and taken at once when the
+// character has no body.
+export async function resolveBodyForItem(actor, noBodyMessageKey, { allowStash = false } = {}) {
     const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+    const offerStash = allowStash && actor.type === "character";
 
     if (bodies.length === 0) {
+        if (offerStash) return { boundTo: STASH, chosenBody: null };
         await sheetFunction.systemMessage("error", noBodyMessageKey);
         return { cancelled: true };
     }
 
     let chosenBody;
-    if (actor.type === "character" && bodies.length > 1) {
+    if (actor.type === "character" && (bodies.length > 1 || offerStash)) {
+        const groups = buildBodyGroups();
+        if (offerStash) groups.unshift({ label: game.i18n.localize("ep2e.inventory.stash.label"), options: [{ id: STASH, name: game.i18n.localize("ep2e.inventory.stash.option") }] });
         // Default to the sleeved Morph even while jamming (never the jammed body) - it's the more
         // likely target, saving a click for the common case of equipping your own real body.
         const bodyChoice = await sheetFunction.selectBody(
-            buildBodyGroups(),
+            groups,
             "ep2e.dialog.selectBody.header",
             "",
-            "ep2e.dialog.selectBody.copy",
-            actor.system?.activeMorph
+            offerStash ? "ep2e.dialog.selectBody.copyStash" : "ep2e.dialog.selectBody.copy",
+            offerStash ? STASH : actor.system?.activeMorph
         );
 
         if (bodyChoice.cancelled) return { cancelled: true };
+        if (offerStash && bodyChoice.selection === STASH) return { boundTo: STASH, chosenBody: null };
         chosenBody = bodies.find(b => b.id === bodyChoice.selection);
         if (!chosenBody) return { cancelled: true };
     } else {
@@ -268,90 +275,133 @@ export async function resolveBodyForItem(actor, noBodyMessageKey) {
     return { chosenBody, boundTo: boundToFor(chosenBody) };
 }
 
-// Rebinds an Armor item to a different body - unlike Ware/Traits (drop-time-only by design),
-// Armor gets an explicit rebind action since it's always bound and can't just be dropped again.
-export async function rebindArmor(actor, itemId) {
-    const item = actor.items.get(itemId);
-    if (!item) return;
-
-    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
-    const currentBoundTo = item.system.boundTo;
-    const otherBodies = bodies.filter(b => boundToFor(b) !== currentBoundTo);
-
-    if (otherBodies.length === 0) {
-        await sheetFunction.systemMessage("error", "ep2e.systemMessage.itemAttachment.noOtherBodyArmor");
-        return;
-    }
-
-    // Same sleeved-Morph-as-default reasoning as resolveBodyForItem - a no-op here if the armor
-    // is currently bound to the sleeved Morph itself, since that's excluded from the options.
-    const bodyChoice = await sheetFunction.selectBody(
-        buildBodyGroups(currentBoundTo),
-        "ep2e.dialog.selectBody.header",
-        "",
-        "ep2e.dialog.selectBody.copy",
-        actor.system?.activeMorph
-    );
-    if (bodyChoice.cancelled) return;
-
-    const chosenBody = otherBodies.find(b => b.id === bodyChoice.selection);
-    if (!chosenBody) return;
-
-    await item.update({ "system.boundTo": boundToFor(chosenBody) });
-    await sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemRebound", { name: item.name, body: chosenBody.name });
-}
-
-// Sets an Armor item aside in the (character-only) Stash instead of keeping it bound to a body -
-// skipConfirm mirrors the item-delete SHIFT-click convention (no confirmation dialog on shift-click).
-export async function stashArmor(actor, itemId, skipConfirm) {
-    if (actor.type !== "character") return;
-
-    const item = actor.items.get(itemId);
-    if (!item) return;
-
-    if (!skipConfirm) {
-        const popUp = await sheetFunction.confirmation(
-            game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
-            `${game.i18n.localize("ep2e.actorSheet.button.stashArmor")} ${item.name}`,
-            game.i18n.format("ep2e.actorSheet.popUp.stashArmorCopy", { name: item.name }),
-            "",
-            "",
-            "ep2e.actorSheet.button.stashArmor"
-        );
-        if (!popUp.confirm) return;
-    }
-
-    await item.update({ "system.boundTo": "stash" });
-}
-
-// Equips an Armor item out of the (character-only) Stash onto a body - reuses resolveBodyForItem's
-// silent-single-body/picker-at-2+/error-at-zero resolution, since the Equip click itself is
-// already the deliberate act (unlike rebindArmor, which always shows a picker since "switch to
-// which other body?" is inherently ambiguous there).
-export async function equipArmorFromStash(actor, itemId) {
-    if (actor.type !== "character") return;
-
-    const item = actor.items.get(itemId);
-    if (!item) return;
-
-    const resolved = await resolveBodyForItem(actor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
-    if (resolved.cancelled) return;
-
-    await item.update({ "system.boundTo": resolved.boundTo });
-
-    const message = {
-        type: "equipArmor",
-        copy: game.i18n.format("ep2e.roll.announce.armor.equipped", { morph: resolved.chosenBody.name, armor: item.name }),
-        armorName: item.name,
-        armorEnergy: item.system.energy,
-        armorKinetic: item.system.kinetic
-    };
-    const renderedHtml = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
-
-    ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor }),
-        content: renderedHtml
+/**
+ * How much of a carried item to move. A stack asks how many packs, a single item only for a
+ * confirmation - or not at all where the move was already picked; skip moves all of it at once.
+ * @param {Item} item - The item
+ * @param {String} actionKey - The button label of the move
+ * @param {String|null} copyKey - The question for a single item, formatted with its name; null to
+ *   move a single item without asking
+ * @param {Boolean} skip - Whether to move all of it without asking
+ * @returns {Promise<Object>} confirm, and quantity when part of a stack is to move
+ */
+async function moveAmount(item, actionKey, copyKey, skip) {
+  if (skip) return { confirm: true };
+  const held = Math.floor(Number(item.system?.quantity) || 0);
+  if (held > 1) {
+    const answer = await sheetFunction.askStackCount(item.name, held, {
+      actionKey,
+      copyKey: "ep2e.actorSheet.popUp.moveStackCopy",
+      labelKey: "ep2e.actorSheet.popUp.moveStackLabel",
+      start: held
     });
+    return answer.confirm ? { confirm: true, quantity: answer.count } : { confirm: false };
+  }
+  if (!copyKey) return { confirm: true };
+  const popUp = await sheetFunction.confirmation(
+    game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
+    `${game.i18n.localize(actionKey)} ${item.name}`,
+    game.i18n.format(copyKey, { name: item.name }),
+    "",
+    "",
+    actionKey
+  );
+  return { confirm: popUp.confirm === true };
+}
+
+/**
+ * Moves a carried item from its body to another of the character's bodies, after a pick of which.
+ * @param {Actor} actor - The character
+ * @param {String} itemId - The item
+ * @returns {Promise<void>}
+ */
+export async function rebindItem(actor, itemId) {
+  const item = actor.items.get(itemId);
+  if (!item) return;
+
+  const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+  const currentBoundTo = item.system.boundTo;
+  const otherBodies = bodies.filter(b => boundToFor(b) !== currentBoundTo);
+
+  if (otherBodies.length === 0) {
+    await sheetFunction.systemMessage("error", "ep2e.systemMessage.itemAttachment.noOtherBody");
+    return;
+  }
+
+  // The sleeved morph is offered first, unless the item is on it already.
+  const bodyChoice = await sheetFunction.selectBody(
+    buildBodyGroups(currentBoundTo),
+    "ep2e.dialog.selectBody.header",
+    "",
+    "ep2e.dialog.selectBody.copy",
+    actor.system?.activeMorph
+  );
+  if (bodyChoice.cancelled) return;
+
+  const chosenBody = otherBodies.find(b => b.id === bodyChoice.selection);
+  if (!chosenBody) return;
+
+  const amount = await moveAmount(item, "ep2e.actorSheet.button.rebindItem", null, false);
+  if (!amount.confirm) return;
+  if (actor.type === "character") await moveItem(actor, itemId, boundToFor(chosenBody), { quantity: amount.quantity });
+  else await item.update({ "system.boundTo": boundToFor(chosenBody) });
+  await sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemRebound", { name: item.name, body: chosenBody.name });
+}
+
+/**
+ * Puts a character's carried item, or part of its stack, into the Stash. A shift-click puts all of
+ * it there without asking, like a shift-click on delete.
+ * @param {Actor} actor - The character
+ * @param {String} itemId - The item
+ * @param {Boolean} skipConfirm - Whether to skip the question
+ * @returns {Promise<void>}
+ */
+export async function stashItem(actor, itemId, skipConfirm) {
+  if (actor.type !== "character") return;
+
+  const item = actor.items.get(itemId);
+  if (!item || !isCarried(item)) return;
+
+  const amount = await moveAmount(item, "ep2e.actorSheet.button.stashItem", "ep2e.actorSheet.popUp.stashItemCopy", skipConfirm);
+  if (!amount.confirm) return;
+  await moveItem(actor, itemId, STASH, { quantity: amount.quantity });
+}
+
+/**
+ * Takes a carried item, or part of its stack, out of the Stash onto a body: the only body at once,
+ * a pick of one when there are several. Armour put on is announced in the chat.
+ * @param {Actor} actor - The character
+ * @param {String} itemId - The item
+ * @returns {Promise<void>}
+ */
+export async function equipItemFromStash(actor, itemId) {
+  if (actor.type !== "character") return;
+
+  const item = actor.items.get(itemId);
+  if (!item || !isCarried(item) || stashOnly(item)) return;
+
+  const resolved = await resolveBodyForItem(actor, "ep2e.systemMessage.itemAttachment.noBody");
+  if (resolved.cancelled) return;
+
+  // Equipping is the deliberate act already: only a stack asks how many packs.
+  const amount = await moveAmount(item, "ep2e.actorSheet.button.equipItem", null, false);
+  if (!amount.confirm) return;
+  await moveItem(actor, itemId, resolved.boundTo, { quantity: amount.quantity });
+
+  if (item.type !== "armor") return;
+  const message = {
+    type: "equipArmor",
+    copy: game.i18n.format("ep2e.roll.announce.armor.equipped", { morph: resolved.chosenBody.name, armor: item.name }),
+    armorName: item.name,
+    armorEnergy: item.system.energy,
+    armorKinetic: item.system.kinetic
+  };
+  const renderedHtml = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: renderedHtml
+  });
 }
 
 // Armor is always bound to some body (no floating/unbound state) - deleting a body that has Armor
@@ -784,4 +834,163 @@ export function registerBodyTokens() {
       if (src) await syncSceneTokens(game.scenes.get(sceneId), actorId, src);
     }
   });
+}
+
+// Where a character's carried items are: on one of its bodies, or in the Stash, which has no place
+// of its own and may be far away. NPCs and goons carry everything they own on their one body.
+export const STASH = "stash";
+export const CARRIED_TYPES = ["armor", "rangedWeapon", "ccWeapon", "gear", "drug", "ammo", "grenade"];
+
+/**
+ * Whether an item only ever lies in the Stash: programs and digital gear.
+ * @param {Object} item - The item, or its data
+ * @returns {Boolean} True for programs and digital gear
+ */
+export function stashOnly(item) {
+  return item?.type === "program" || item?.system?.slotType === "digital";
+}
+
+/**
+ * Whether an item is one a character carries on a body or keeps in the Stash.
+ * @param {Object} item - The item, or its data
+ * @returns {Boolean} True for armour, weapons, gear and consumables
+ */
+export function isCarried(item) {
+  return CARRIED_TYPES.includes(item?.type);
+}
+
+/**
+ * The ids of the bodies among a list of items.
+ * @param {Iterable<Object>} items - Items, or their data
+ * @returns {Set<String>} The ids of the morphs and vehicles
+ */
+function bodyIdsAmong(items) {
+  const ids = new Set();
+  for (const item of items) if (item.type === "morph" || item.type === "vehicle") ids.add(item.id ?? item._id);
+  return ids;
+}
+
+/**
+ * Where a character's carried item lies: the id of the body it is on, or the Stash. An item whose
+ * body is gone, or that was never placed, lies in the Stash.
+ * @param {Actor} actor - The actor carrying it
+ * @param {Object} item - The item, or its data
+ * @returns {String|null} A body id or STASH; null for an NPC or goon, or an item that is not carried
+ */
+export function locationOf(actor, item) {
+  if (actor?.type !== "character" || !(isCarried(item) || stashOnly(item))) return null;
+  if (stashOnly(item)) return STASH;
+  const boundTo = item.system?.boundTo;
+  if (!boundTo || boundTo === STASH) return STASH;
+  // The sleeved morph is a body even where its item went missing.
+  if (boundTo === actor.system?.activeMorph) return boundTo;
+  const body = actor.items.get(boundTo);
+  return body && (body.type === "morph" || body.type === "vehicle") ? boundTo : STASH;
+}
+
+/**
+ * The bodies a character can use items on: the sleeved morph and the body it jams.
+ * @param {Actor} actor - The character
+ * @returns {String[]} Their ids
+ */
+export function usableBodies(actor) {
+  return [actor?.system?.activeMorph, actor?.system?.activeJam].filter(Boolean);
+}
+
+/**
+ * Whether a character can use a carried item: only on the sleeved morph or the jammed body. NPCs and
+ * goons can use everything they own.
+ * @param {Actor} actor - The actor
+ * @param {Object} item - The item
+ * @returns {Boolean} True when it can be used
+ */
+export function isUsable(actor, item) {
+  if (actor?.type !== "character" || !isCarried(item)) return true;
+  return usableBodies(actor).includes(locationOf(actor, item));
+}
+
+/**
+ * A character's carried items in one place.
+ * @param {Actor} actor - The character
+ * @param {String} location - A body id or STASH
+ * @returns {Item[]} The items lying there
+ */
+export function itemsOn(actor, location) {
+  return actor.items.filter(item => locationOf(actor, item) === location);
+}
+
+/**
+ * Where a character's carried item belongs when it has not been placed with the inventory yet, or
+ * its body is gone: what was at hand goes onto the sleeved morph, everything else into the Stash.
+ * @param {Object} item - The item, or its data
+ * @param {Set<String>} bodyIds - The ids of the character's bodies
+ * @param {String} [activeMorph] - The sleeved morph's id
+ * @returns {String|undefined} The new boundTo, or undefined to leave it as it is
+ */
+export function carriedItemHome(item, bodyIds, activeMorph) {
+  if (!isCarried(item)) return undefined;
+  const boundTo = item.system?.boundTo;
+  if (boundTo === STASH) return undefined;
+  if (boundTo) return bodyIds.has(boundTo) ? undefined : STASH;
+  if (item.type === "armor" || stashOnly(item)) return STASH;
+  // The stored toggle, not the at-hand state prepareData now derives from the place; data without
+  // one has the template's default, at hand.
+  const atHand = (item._source?.system ?? item.system)?.active !== false;
+  return atHand && activeMorph && bodyIds.has(activeMorph) ? activeMorph : STASH;
+}
+
+/**
+ * The changes that give a character's carried items their place, for the inventory migration and
+ * for characters brought in from elsewhere.
+ * @param {Object[]} items - The character's items, or their data
+ * @param {String} [activeMorph] - The sleeved morph's id
+ * @returns {Object[]} One {_id, "system.boundTo"} per item that moves
+ */
+export function carriedItemPlacements(items, activeMorph) {
+  const list = Array.from(items ?? []);
+  const bodyIds = bodyIdsAmong(list);
+  if (activeMorph) bodyIds.add(activeMorph);
+  const updates = [];
+  for (const item of list) {
+    const home = carriedItemHome(item, bodyIds, activeMorph);
+    if (home !== undefined) updates.push({ _id: item.id ?? item._id, "system.boundTo": home });
+  }
+  return updates;
+}
+
+/**
+ * Moves a character's carried item, or part of its stack, to a body or into the Stash. A stack of
+ * the same item already there takes it in. Of a drug, the open pack goes first.
+ * @param {Actor} actor - The character
+ * @param {String} itemId - The item
+ * @param {String} destination - A body id or STASH
+ * @param {Object} [options] - quantity: how many of the stack move, all of it by default
+ * @returns {Promise<Item|null>} The item as it lies at the destination
+ */
+export async function moveItem(actor, itemId, destination, { quantity } = {}) {
+  const item = actor.items.get(itemId);
+  if (!item || !isCarried(item)) return null;
+  const held = Number(item.system.quantity);
+  const stacked = foundry.utils.hasProperty(item.system, "quantity") && Number.isFinite(held) && held > 0;
+  const count = stacked ? Math.min(held, Math.max(1, Math.floor(Number(quantity ?? held)) || 1)) : null;
+
+  const moved = item.toObject();
+  delete moved._id;
+  moved.system.boundTo = destination;
+
+  if (!stacked || count >= held) {
+    const twin = actor.items.find(other => other.id !== item.id && sheetFunction.sameStack(actor, other, moved));
+    if (!twin) {
+      await item.update({ "system.boundTo": destination });
+      return item;
+    }
+    await actor.deleteEmbeddedDocuments("Item", [item.id]);
+    return sheetFunction.mergeOrCreateItem(actor, moved);
+  }
+
+  moved.system.quantity = count;
+  const rest = { "system.quantity": held - count };
+  if (item.type === "drug") rest["system.usagesUsed"] = 0;
+  await item.update(rest);
+  return sheetFunction.mergeOrCreateItem(actor, moved);
 }

@@ -9,7 +9,7 @@ import { pickTokensOnCanvas, targetLabel, iconGlyph, iconImage, pointGap, tokenG
 import { ownerVision } from "../../module/rolls/chat.js";
 import { cardFailures, failCard } from "../../module/rolls/cards.js";
 import { registerFailOption, resetRegistry } from "../../module/api/registry.js";
-import { makeActor, resetWorld, seedRolls, loadPackItem } from "../setup/factories.js";
+import { makeActor, resetWorld, seedRolls, loadPackItem, carrying } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 const SKIP_DIALOG = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } };
@@ -407,7 +407,7 @@ describe("forcing a drug on someone in melee", () => {
       system: { activeMorph: "morph1", skillsVig: { melee: { value: 40 } } },
       items: [
         { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" }, ...drug } }
+        { _id: "kick1", name: "Kick", type: "drug", system: { boundTo: "morph1", drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" }, ...drug } }
       ]
     });
   }
@@ -425,15 +425,12 @@ describe("forcing a drug on someone in melee", () => {
   }
 
   test("the drugs offered in the weapon selection are those at hand with a dose left that are not ammunition", () => {
-    const actor = makeActor({
-      type: "character",
-      items: [
-        { _id: "d1", name: "Kick", type: "drug", system: { active: true, usagesUsed: 0, usagesMax: 5, quantity: 1 } },
-        { _id: "d2", name: "Stowed", type: "drug", system: { active: false, usagesUsed: 0, usagesMax: 5, quantity: 1 } },
-        { _id: "d3", name: "Spent", type: "drug", system: { active: true, usagesUsed: 5, usagesMax: 5, quantity: 1 } },
-        { _id: "d4", name: "Ammo", type: "drug", system: { active: true, isAmmo: true, inhalation: true, usagesUsed: 0, usagesMax: 5, quantity: 1 } }
-      ]
-    });
+    const actor = carrying([
+      { _id: "d1", name: "Kick", type: "drug", system: { active: true, usagesUsed: 0, usagesMax: 5, quantity: 1 } },
+      { _id: "d2", name: "Stowed", type: "drug", system: { active: false, usagesUsed: 0, usagesMax: 5, quantity: 1 } },
+      { _id: "d3", name: "Spent", type: "drug", system: { active: true, usagesUsed: 5, usagesMax: 5, quantity: 1 } },
+      { _id: "d4", name: "Ammo", type: "drug", system: { active: true, isAmmo: true, inhalation: true, usagesUsed: 0, usagesMax: 5, quantity: 1 } }
+    ]);
 
     expect(forceableDrugs(actor).map(item => item.name)).toEqual(["Kick"]);
   });

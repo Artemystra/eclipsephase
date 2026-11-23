@@ -4830,6 +4830,139 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   cursor: pointer;
 }
 
+/* A body's Peripherals and Internals: a heading that opens and closes the section. */
+.ep-section-toggle {
+  cursor: pointer;
+}
+
+.ep-section-toggle .ep-section-chevron {
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+}
+
+/* The smaller headings inside a section, in the style of the dialogs' headings. */
+.flexrow.subheader.ep-subsection {
+  min-height: 24px;
+  margin-top: 6px;
+  border-bottom-width: 2px;
+}
+
+.ep-subsection h3.subheader.dialog {
+  min-height: 24px;
+  padding: 0.2em 0.5em;
+  font-size: 12px;
+}
+
+/* What leads a character's carried-item row: its image and, on a body, Move. Fixed widths, so the
+   name starts at the same place on every row. */
+.ep-carried-lead {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 4px;
+  margin-right: 10px;
+}
+
+.ep-carried-lead > :first-child {
+  flex: 0 0 25px;
+  width: 25px;
+}
+
+.ep-carried-lead .item-rebind {
+  flex: 0 0 30px;
+  width: 30px;
+}
+
+/* A weapon mode when opened: the titles in one row and the values below, each pair centred in its
+   column - five columns for a ranged weapon, two for a melee one, the mode named only where there
+   are two. */
+.ep-weapon-stats {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  column-gap: 10px;
+  row-gap: 2px;
+  padding: 4px 0;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--focusBackground);
+}
+
+.ep-weapon-stats-ranged {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.ep-weapon-stats-melee {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* A weapon with a single mode has no mode to name: one column less. */
+.ep-weapon-stats-ranged.ep-weapon-stats-single {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ep-weapon-stats-melee.ep-weapon-stats-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ep-weapon-stats-second {
+  margin-top: 10px;
+}
+
+/* Below a weapon mode: its traits and the weapon's accessories one below the other, left aligned and
+   without the values' background. The titles share a column, so pills that wrap start again after
+   the title, never under it. */
+.ep-weapon-extras {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  width: 100%;
+  box-sizing: border-box;
+  column-gap: 6px;
+  row-gap: 4px;
+  padding: 4px 0;
+  justify-items: start;
+  align-items: center;
+  text-align: left;
+}
+
+.ep-weapon-extras .ep-weapon-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.ep-weapon-stats .ep-weapon-ammo {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* An item's name in its row: it takes the room the row has, ends in an ellipsis where it must, and
+   only then shows whole when the name itself is hovered. */
+.ep-name-tip {
+  min-width: 0;
+}
+
+.ep-name-tip > .truncate {
+  display: block;
+  width: auto;
+}
+
+.ep-name-tip.ep-name-fits .tooltipText {
+  display: none;
+}
+
+/* A control that is there but does nothing yet. */
+.ep-control-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 .ep-field {
   display: flex;
   flex-direction: column;

@@ -1,10 +1,21 @@
 <div id="weaponsPane" class="tab gear scrolly main-tab-pc {{#if tabs.primary.weapons.active}}active{{/if}}" data-group="primary" data-tab="weapons">
     {{#if actor.system.additionalSystems.hasGear}}
+        {{!-- The Stash: what the character keeps somewhere without carrying it on a body. --}}
+        {{#unless actor.stash.count}}
+        <div class="contentBox" style="max-width: 33%; min-width: 33%; margin: auto; margin-top: 150px">
+            <div class="flexrow">
+                <h3 class="subheaderBlank">{{localize "ep2e.inventory.stash.emptyHeadline"}}</h3>
+            </div>
+            <div class="listBackgroundPitch alignCenter" style="border-top: solid var(--accentBackground) 5px;">
+                <i style="font-size: 12px; margin-bottom: 10px;">{{{localize "ep2e.inventory.stash.emptyCopy"}}}</i>
+            </div>
+        </div>
+        {{/unless}}
 
         {{#if actor.stash.armor.length}}
         <div class="contentBox">
             <div class="flexrow subheader">
-                <h3 class="subheader">{{localize "ep2e.inventory.stashedArmorLabel"}}</h3>
+                <h3 class="subheader">{{localize "ep2e.inventory.armorLabel"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
@@ -14,67 +25,49 @@
         </div>
         {{/if}}
 
-        {{#if actor.rangedWeapon}}
+        {{#if actor.stash.weapons.length}}
         <div class="contentBox">
             <div class="flexrow subheader">
-                <h3 class="subheader">{{localize "ep2e.inventory.rangedLabel"}}</h3>
-                <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
+                <h3 class="subheader">{{localize "ep2e.inventory.weaponsLabel"}}</h3>
+                <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
-            
             <div class="itemBackground">
-                {{#each actor.rangedWeapon as |item id|}}
-
-                    {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=item id=id type="ranged" sheetType="PC"}}   
-                
+                {{#each actor.stash.weapons as |item id|}}
+                    {{#if (eq item.system.displayCategory "ranged")}}
+                        {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=item id=id type="ranged" sheetType="PC" place="stash"}}
+                    {{else}}
+                        {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=item id=id sheetType="PC" place="stash"}}
+                    {{/if}}
                 {{/each}}
             </div>
-
         </div>
         {{/if}}
-        {{#if actor.ccweapon}}
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">{{localize "ep2e.inventory.ccLabel"}}</h3>
-                <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
-                </div>
-            </div>
-            
-            <div class="itemBackground">
-                {{#each actor.ccweapon as |item id|}}
-
-                    {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=item id=id sheetType="PC"}}   
-                
-                {{/each}}
-            </div>
-
-        </div>   
-        {{/if}}
-        {{#if actor.consumable}}
+        {{#if actor.stash.consumables.length}}
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.inventory.consumablesLabel"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
-
-            {{> systems/eclipsephase/templates/actor/partials/item-partials/gear.html  item=actor.consumable}}    
-
+            <div class="itemBackground">
+                {{> systems/eclipsephase/templates/global-partials/carried-row-list.hbs item=actor.stash.consumables place="stash"}}
+            </div>
         </div>
         {{/if}}
-        {{#if actor.gear}}
+        {{#if actor.stash.gear.length}}
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.inventory.gearLabel"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
-
-            {{> systems/eclipsephase/templates/actor/partials/item-partials/gear.html  item=actor.gear}}    
-
+            <div class="itemBackground">
+                {{> systems/eclipsephase/templates/global-partials/carried-row-list.hbs item=actor.stash.gear place="stash"}}
+            </div>
         </div>
         {{/if}}
-        {{#if actor.program}}
+        {{#if actor.stash.programs.length}}
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.inventory.programs.label"}}</h3>
@@ -82,8 +75,8 @@
                 </div>
             </div>
             <div class="itemBackground" style="position: relative; z-index: 2;">
-                <div class="grid grid-2col">
-                    {{#each actor.program as |item id|}}
+                <div>
+                    {{#each actor.stash.programs as |item id|}}
                     <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>

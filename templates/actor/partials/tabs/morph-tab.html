@@ -186,22 +186,6 @@
                                     {{#if body.morphdetails.0.system.flex}}{{body.morphdetails.0.system.flex}}{{else}}0{{/if}}
                                 </div>
                             </div>
-                            <div class="contentBox">
-                                <div class="flexrow subheader">
-                                    <h3 class="subheader">{{localize "ep2e.morph.armorLabel"}}</h3>
-                                    <div class="alignRight flexGrowThreeQuarter">
-                                    </div>
-                                </div>
-                                {{#if body.armorCount}}
-                                    <div class="itemBackground" style="padding: 10px 0.5em;">
-                                        {{> systems/eclipsephase/templates/global-partials/armor-row-list.hbs item=body.morpharmor}}
-                                    </div>
-                                {{else}}
-                                    <div class="itemBackground minSize">
-                                        {{localize "ep2e.morph.noMorphArmor"}}
-                                    </div>
-                                {{/if}}
-                            </div>
                             {{#if body.hasMovement}}
                             <div class="contentBox">
                                 <div class="flexrow subheader">
@@ -238,56 +222,7 @@
                                 </div>
                             </div>
                             {{/if}}
-                            <div class="contentBox">
-                                <div class="flexrow subheader">
-                                    <h3 class="subheader">{{localize "ep2e.morph.traitsLabel"}}</h3>
-                                    <div class="alignRight flexGrowThreeQuarter">
-                                    </div>
-                                </div>
-                                {{#if body.traitsCount}}
-                                    <div class="itemBackground" style="padding: 0 0.5em;">
-                                        <div class="grid grid-2col">
-                                            {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphtraits}}
-                                        </div>
-                                    </div>
-                                    {{#if body.flawsCount}}
-                                        <div class="itemBackground" style="padding: 0 0.5em;">
-                                            <div class="grid grid-2col">
-                                                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphflaws}}
-                                            </div>
-                                        </div>
-                                    {{/if}}
-                                {{else if body.flawsCount}}
-                                    <div class="itemBackground" style="padding: 0 0.5em;">
-                                        <div class="grid grid-2col">
-                                            {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphflaws}}
-                                        </div>
-                                    </div>
-                                {{else}}
-                                    <div class="itemBackground minSize">
-                                        {{localize "ep2e.morph.noMorphTraits"}}
-                                    </div>
-                                {{/if}}  
-
-                            </div>
-                            <div class="contentBox">
-                                    <div class="flexrow subheader">
-                                        <h3 class="subheader">{{localize "ep2e.morph.wareLabel"}}</h3>
-                                        <div class="alignRight flexGrowThreeQuarter">
-                                        </div>
-                                    </div>
-                                    {{#if body.gearCount}}
-                                        <div class="itemBackground" style="padding: 0 0.5em;">
-                                            <div class="grid grid-2col">
-                                                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphgear}}
-                                            </div>
-                                        </div>
-                                    {{else}}
-                                        <div class="itemBackground minSize">
-                                            {{localize "ep2e.morph.noMorphWare"}}
-                                        </div>
-                                    {{/if}}
-                            </div>
+                            {{> systems/eclipsephase/templates/actor/partials/body-inventory.html body=body bodyKey=key}}
                         </div>
                     </div>
             {{/if}}
@@ -395,23 +330,6 @@
                             </div>
                         </div>
                         {{/if}}
-                        <!-- Armor -->
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">{{localize "ep2e.peripherals.armorLabel"}}</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                </div>
-                            </div>
-                            {{#if vehicle.armorCount}}
-                                <div class="itemBackground" style="padding: 10px 0.5em;">
-                                    {{> systems/eclipsephase/templates/global-partials/armor-row-list.hbs item=vehicle.morpharmor}}
-                                </div>
-                            {{else}}
-                                <div class="itemBackground minSize">
-                                    {{localize "ep2e.peripherals.noArmor"}}
-                                </div>
-                            {{/if}}
-                        </div>
                         <!-- Movement -->
                         {{#if vehicle.hasMovement}}
                         <div class="contentBox">
@@ -479,57 +397,8 @@
                                 </div>
                             {{/if}}
                         </div>
-                        <!-- Traits & Flaws -->
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">{{localize "ep2e.peripherals.traitsLabel"}}</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                </div>
-                            </div>
-                            {{#if vehicle.traitsCount}}
-                                <div class="itemBackground" style="padding: 0 0.5em;">
-                                    <div class="grid grid-2col">
-                                        {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=vehicle.morphtraits}}
-                                    </div>
-                                </div>
-                                {{#if vehicle.flawsCount}}
-                                    <div class="itemBackground" style="padding: 0 0.5em;">
-                                        <div class="grid grid-2col">
-                                            {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=vehicle.morphflaws}}
-                                        </div>
-                                    </div>
-                                {{/if}}
-                            {{else if vehicle.flawsCount}}
-                                <div class="itemBackground" style="padding: 0 0.5em;">
-                                    <div class="grid grid-2col">
-                                        {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=vehicle.morphflaws}}
-                                    </div>
-                                </div>
-                            {{else}}
-                                <div class="itemBackground minSize">
-                                    {{localize "ep2e.peripherals.noTraits"}}
-                                </div>
-                            {{/if}}
-                        </div>
-                        <!-- Ware -->
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">{{localize "ep2e.peripherals.wareLabel"}}</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                </div>
-                            </div>
-                            {{#if vehicle.gearCount}}
-                                <div class="itemBackground" style="padding: 0 0.5em;">
-                                    <div class="grid grid-2col">
-                                        {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=vehicle.morphgear}}
-                                    </div>
-                                </div>
-                            {{else}}
-                                <div class="itemBackground minSize">
-                                    {{localize "ep2e.peripherals.noWare"}}
-                                </div>
-                            {{/if}}
-                        </div>
+                        <!-- Peripherals & Internals -->
+                        {{> systems/eclipsephase/templates/actor/partials/body-inventory.html body=vehicle bodyKey=vehicle.bodyKey}}
                     </div>
                 </div>
             {{/each}}

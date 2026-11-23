@@ -7,6 +7,7 @@ const EPactor = require(path.join(SYSTEM_ROOT, "module", "actor", "EPactor.js"))
 const EPitem = require(path.join(SYSTEM_ROOT, "module", "item", "EPitem.js")).default;
 const { eclipsephase } = require(path.join(SYSTEM_ROOT, "module", "config.js"));
 const { registerRegistryHelpers } = require(path.join(SYSTEM_ROOT, "module", "api", "registry.js"));
+const { carriedItemPlacements } = require(path.join(SYSTEM_ROOT, "module", "common", "morp-functions.js"));
 
 global.CONFIG.Actor.documentClass = EPactor;
 global.CONFIG.Item.documentClass = EPitem;
@@ -98,7 +99,16 @@ function makeActor(data = {}) {
  */
 function makeActorFromFixture(name) {
   const full = path.join(SYSTEM_ROOT, "test", "fixtures", `${name}.json`);
-  return makeActor(JSON.parse(fs.readFileSync(full, "utf8")));
+  const data = JSON.parse(fs.readFileSync(full, "utf8"));
+  // Fixtures are characters saved before the inventory on bodies; a world holding them has been
+  // through its migration, which places their carried items.
+  if ((data.type ?? "character") === "character") {
+    data.items = [...(data.packItems ?? []).map(loadPackItem), ...(data.items ?? [])];
+    delete data.packItems;
+    const homes = new Map(carriedItemPlacements(data.items ?? [], data.system?.activeMorph).map(update => [update._id, update["system.boundTo"]]));
+    data.items = (data.items ?? []).map(item => homes.has(item._id) ? { ...item, system: { ...item.system, boundTo: homes.get(item._id) } } : item);
+  }
+  return makeActor(data);
 }
 
 /**
@@ -177,8 +187,34 @@ function registerSystemPacks() {
   }
 }
 
+// The kinds of item a character carries on a body or keeps in the Stash.
+const CARRIED = ["armor", "rangedWeapon", "ccWeapon", "gear", "drug", "ammo", "grenade"];
+
+/**
+ * A character sleeved in a morph, its carried items placed as the inventory places them: what is at
+ * hand (active, the template's default) on the morph, the rest in the Stash. Items given a place
+ * keep it.
+ * @param {Object[]} [items] - The items it carries
+ * @param {Object} [data] - Further actor data, as makeActor takes it
+ * @returns {EPactor} The prepared character
+ */
+function carrying(items = [], data = {}) {
+  const placed = items.map(item => {
+    if (!CARRIED.includes(item.type) || item.system?.boundTo) return item;
+    const atHand = item.system?.active !== false;
+    return { ...item, system: { ...item.system, boundTo: atHand && item.system?.slotType !== "digital" ? "body" : "stash" } };
+  });
+  return makeActor({
+    type: "character",
+    ...data,
+    system: { activeMorph: "body", ...data.system },
+    items: [{ _id: "body", name: "Body", type: "morph", system: { type: "bio" } }, ...placed]
+  });
+}
+
 module.exports = {
   makeActor,
+  carrying,
   makeItem,
   makeUnlinkedToken,
   registerSystemPacks,

@@ -18,7 +18,7 @@ import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } fr
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
-import { PLAIN_TACNET_VISION, TACNET_VISION, registerBodyTokens } from "./common/morp-functions.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -301,6 +301,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/global-partials/item-row-list.hbs",
     "systems/eclipsephase/templates/global-partials/armor-row-list.hbs",
     "systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs",
+    "systems/eclipsephase/templates/global-partials/carried-row-list.hbs",
+    "systems/eclipsephase/templates/global-partials/carried-controls.hbs",
+    "systems/eclipsephase/templates/actor/partials/body-inventory.html",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-mode.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
@@ -435,6 +438,7 @@ Hooks.once("ready", async function() {
   let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
   const before29 = gameVersion !== "newInstall" && foundry.utils.isNewerVersion("2.9", gameVersion);
   const beforeConditions = gameVersion !== "newInstall" && foundry.utils.isNewerVersion(update.CONDITIONS_MIGRATION, gameVersion);
+  const beforeInventory = gameVersion !== "newInstall" && foundry.utils.isNewerVersion(update.INVENTORY_MIGRATION, gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -747,6 +751,9 @@ Hooks.once("ready", async function() {
   }
   // A world already on 2.9 when the conditions came along picks them up quietly.
   else if (beforeConditions) await update.migrationPre29Conditions({ silent: true });
+  // Characters' items find their place with the inventory on bodies - unless an earlier step was
+  // put off, which must not be stamped past.
+  if (beforeInventory && (!before29 || startMigration)) await update.migrationPre30Inventory();
 
     if(endMigration){
       await migrationEnd(endMigration)
@@ -1073,7 +1080,28 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
   // null, not omission: system.json's secondaryTokenAttribute would otherwise give every type a bar2.
   update["prototypeToken.bar2.attribute"] = data.type === "character" ? "health.mental" : null;
   update["prototypeToken.actorLink"] = data.type !== "goon";
+  // A character brought in from a compendium or a file gets its carried items placed like the
+  // inventory migration places them.
+  if (data.type === "character" && Array.isArray(data.items)) {
+    const homes = new Map(carriedItemPlacements(data.items, data.system?.activeMorph)
+      .filter(placement => placement._id)
+      .map(placement => [placement._id, placement["system.boundTo"]]));
+    if (homes.size) {
+      update.items = data.items.map(item => homes.has(item._id)
+        ? foundry.utils.mergeObject(foundry.utils.deepClone(item), { system: { boundTo: homes.get(item._id) } })
+        : item);
+    }
+  }
   actor.updateSource(update);
+});
+
+// A carried item a character gets lies where it was put, or in the Stash: a place that is not one of
+// the character's bodies - none at all, or a body of whoever had it before - becomes the Stash.
+Hooks.on("preCreateItem", (item, data) => {
+  const actor = item.parent;
+  if (actor?.type !== "character" || !isCarried(item)) return;
+  const home = locationOf(actor, item);
+  if (item.system?.boundTo !== home) item.updateSource({ "system.boundTo": home });
 });
 
 //Gives every character a flat-morph from start using the compendiumpack as a source

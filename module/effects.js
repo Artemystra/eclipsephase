@@ -1,4 +1,4 @@
-import { strainSubstrate, boundToActiveBody } from "./common/morp-functions.js";
+import { strainSubstrate, boundToActiveBody, isCarried, locationOf } from "./common/morp-functions.js";
 import { endExpiredChiPushes } from "./rolls/psi.js";
 import { deleteRunOutTempEffects } from "./common/general-sheet-functions.js";
 import { endRunOutDoses } from "./common/doses.js";
@@ -60,6 +60,11 @@ export class EP2eActiveEffectData extends foundry.data.ActiveEffectTypeDataModel
     // keeps it in sync with whether the body it's boundTo is the currently active/jammed one,
     // so this check alone already covers body-relevance without a separate case here.
     if (t === "gear" || t === "weapon" || t === "armor" || t === "rangedWeapon" || t === "ccWeapon" || t === "ammo" || t === "grenade") {
+      // A character's item helps only the body it lies on, and only while that body acts: the
+      // jammed one while jamming, the sleeved morph otherwise.
+      if (actor.type === "character" && isCarried(item)) {
+        return locationOf(actor, item) !== (actor.system?.activeJam || actor.system?.activeMorph);
+      }
       // Change this path to whatever you actually store: active, equipped, carried, worn, etc.
       const isActive = !!item.system?.active; // or item.system.equipped / item.system.worn / etc.
 

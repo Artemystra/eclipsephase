@@ -1,0 +1,72 @@
+{{!-- What a character's body carries and what is built into it. Each section is closed until opened, and stays as left until the page reloads. --}}
+<div class="contentBox">
+    <div class="flexrow subheader ep-section-toggle" data-body-key="{{bodyKey}}" data-section="peripherals">
+        <h3 class="subheader">{{localize "ep2e.inventory.peripherals"}} ({{body.peripheralCount}})</h3>
+        <div class="flexrow alignRight flexGrowThreeQuarter ep-section-chevron">
+            <i class="fas {{#if body.peripheralsOpen}}fa-minus{{else}}fa-plus{{/if}} icon-xsmall awesomeIcon"></i>
+        </div>
+    </div>
+    <div class="ep-section-body{{#unless body.peripheralsOpen}} noShow{{/unless}}" data-display="block">
+        {{#if body.peripheralCount}}
+            {{#if body.peripherals.armor.length}}
+            <div class="flexrow subheader ep-subsection"><h3 class="subheader dialog">{{localize "ep2e.inventory.armorLabel"}}</h3></div>
+            <div class="itemBackground" style="padding: 10px 0.5em;">
+                {{> systems/eclipsephase/templates/global-partials/armor-row-list.hbs item=body.peripherals.armor}}
+            </div>
+            {{/if}}
+            {{#if body.peripherals.weapons.length}}
+            <div class="flexrow subheader ep-subsection"><h3 class="subheader dialog">{{localize "ep2e.inventory.weaponsLabel"}}</h3></div>
+            <div class="itemBackground">
+                {{#each body.peripherals.weapons as |weapon id|}}
+                    {{#if (eq weapon.system.displayCategory "ranged")}}
+                        {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=weapon id=id type="ranged" sheetType="PC" place="body"}}
+                    {{else}}
+                        {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=weapon id=id sheetType="PC" place="body"}}
+                    {{/if}}
+                {{/each}}
+            </div>
+            {{/if}}
+            {{#if body.peripherals.consumables.length}}
+            <div class="flexrow subheader ep-subsection"><h3 class="subheader dialog">{{localize "ep2e.inventory.consumablesLabel"}}</h3></div>
+            <div class="itemBackground">
+                {{> systems/eclipsephase/templates/global-partials/carried-row-list.hbs item=body.peripherals.consumables place="body"}}
+            </div>
+            {{/if}}
+            {{#if body.peripherals.gear.length}}
+            <div class="flexrow subheader ep-subsection"><h3 class="subheader dialog">{{localize "ep2e.inventory.gearLabel"}}</h3></div>
+            <div class="itemBackground">
+                {{> systems/eclipsephase/templates/global-partials/carried-row-list.hbs item=body.peripherals.gear place="body"}}
+            </div>
+            {{/if}}
+        {{else}}
+            <div class="itemBackground minSize">{{localize "ep2e.inventory.nothingCarried"}}</div>
+        {{/if}}
+    </div>
+</div>
+<div class="contentBox">
+    <div class="flexrow subheader ep-section-toggle" data-body-key="{{bodyKey}}" data-section="internals">
+        <h3 class="subheader">{{localize "ep2e.inventory.internals"}} ({{body.internalCount}})</h3>
+        <div class="flexrow alignRight flexGrowThreeQuarter ep-section-chevron">
+            <i class="fas {{#if body.internalsOpen}}fa-minus{{else}}fa-plus{{/if}} icon-xsmall awesomeIcon"></i>
+        </div>
+    </div>
+    <div class="ep-section-body{{#unless body.internalsOpen}} noShow{{/unless}}" data-display="block">
+        {{#if body.internalCount}}
+            {{#if (or body.traitsCount body.flawsCount)}}
+            <div class="flexrow subheader ep-subsection"><h3 class="subheader dialog">{{localize "ep2e.inventory.traitsLabel"}}</h3></div>
+            <div class="itemBackground" style="padding: 0 0.5em;">
+                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphtraits}}
+                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphflaws}}
+            </div>
+            {{/if}}
+            {{#if body.gearCount}}
+            <div class="flexrow subheader ep-subsection"><h3 class="subheader dialog">{{localize "ep2e.inventory.wareLabel"}}</h3></div>
+            <div class="itemBackground" style="padding: 0 0.5em;">
+                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphgear wareStash=true}}
+            </div>
+            {{/if}}
+        {{else}}
+            <div class="itemBackground minSize">{{localize "ep2e.inventory.nothingBuiltIn"}}</div>
+        {{/if}}
+    </div>
+</div>

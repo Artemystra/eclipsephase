@@ -341,6 +341,14 @@ class MockDocument {
     return userOwns(this.actor ?? this);
   }
 
+  // Foundry's check of what a given user may do with the document.
+  testUserPermission(user, permission) {
+    const levels = (this.actor ?? this).ownership ?? {};
+    if (user?.isGM || !Object.keys(levels).length) return true;
+    const needed = { NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: OWNER_LEVEL }[permission] ?? permission;
+    return (levels[user?.id] ?? levels.default ?? 0) >= needed;
+  }
+
   async setFlag(scope, key, value) {
     refuseUnlessOwner(this, "update");
     setProperty(this.flags, `${scope}.${key}`, value);

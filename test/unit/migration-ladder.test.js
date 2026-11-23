@@ -2,7 +2,9 @@ import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } fr
 
 // The version of the last migration step: what a world is stamped with once it has climbed the whole
 // ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
-const LATEST_MIGRATION = "2.9.0.1";
+const LATEST_MIGRATION = "2.9.0.2";
+// The step before the inventory one.
+const CONDITIONS = "2.9.0.1";
 // What every world below 2.9 sees, whatever its data: the 2.9 notice and its closing dialog.
 const ONLY_THE_NOTICE = ["notice:2.9", "ep2e.migration.done"];
 
@@ -468,6 +470,85 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
 
     expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
     expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+});
+
+describe("the 3.0 inventory on bodies", () => {
+  afterEach(() => game.actors.clear());
+
+  /**
+   * A character from before the inventory: a sleeved morph, a spare one, and carried items that were
+   * at hand, put away, or bound to a body that no longer exists.
+   * @param {String} [type] - The actor type
+   * @returns {Actor} The actor
+   */
+  function carrying(type = "character") {
+    return makeActor({ type, system: { activeMorph: "morph1" }, items: [
+      { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+      { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio" } },
+      { _id: "gun", name: "Pistol", type: "rangedWeapon", system: { active: true } },
+      { _id: "spare", name: "Spare Pistol", type: "rangedWeapon", system: { active: false } },
+      { _id: "pill", name: "Pill", type: "drug", system: { active: true, slotType: "consumable" } },
+      { _id: "chip", name: "Chip", type: "gear", system: { active: true, slotType: "digital" } },
+      { _id: "vest", name: "Vest", type: "armor", system: { boundTo: "morph2" } },
+      { _id: "coat", name: "Coat", type: "armor", system: { boundTo: "gone" } },
+      { _id: "kit", name: "Kit", type: "gear", system: { active: true, boundTo: "gone" } }
+    ] });
+  }
+
+  test("what was at hand goes onto the sleeved morph, the rest into the Stash; a body that is gone leaves its items in the Stash", async () => {
+    const actor = carrying();
+
+    await runLadderFrom(CONDITIONS);
+
+    const home = id => actor.items.get(id).system.boundTo;
+    expect(["gun", "spare", "pill", "chip", "vest", "coat", "kit"].map(home)).toEqual(["morph1", "stash", "morph1", "stash", "morph2", "stash", "stash"]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+
+  test("an NPC keeps its items as they are", async () => {
+    const actor = carrying("npc");
+
+    await runLadderFrom(CONDITIONS);
+
+    expect(actor.items.get("gun").system.boundTo).toBeNull();
+  });
+
+  test("a world that puts its 2.9 migration off is not placed either", async () => {
+    const actor = carrying();
+
+    await runLadderFrom("2.8", { start: false });
+
+    expect(actor.items.get("gun").system.boundTo).toBeNull();
+  });
+
+  test("a carried item a character gets lies on the body it names, or else in the Stash", async () => {
+    const actor = carrying();
+    const npc = carrying("npc");
+
+    const [plain, foreign, placed] = await actor.createEmbeddedDocuments("Item", [
+      { name: "New", type: "rangedWeapon", system: {} },
+      { name: "Handed over", type: "rangedWeapon", system: { boundTo: "someoneElsesMorph" } },
+      { name: "Picked", type: "rangedWeapon", system: { boundTo: "morph2" } }
+    ]);
+    const [npcGun] = await npc.createEmbeddedDocuments("Item", [{ name: "New", type: "rangedWeapon", system: {} }]);
+
+    expect([plain, foreign, placed].map(item => item.system.boundTo)).toEqual(["stash", "stash", "morph2"]);
+    expect(npcGun.system.boundTo).toBeNull();
+  });
+
+  test("a character brought in from a compendium has its items placed the same way", () => {
+    const placed = [];
+    const data = { type: "character", system: { activeMorph: "morph1" }, items: [
+      { _id: "morph1", type: "morph", system: {} },
+      { _id: "gun", type: "rangedWeapon", system: { active: true, boundTo: null } },
+      { _id: "spare", type: "ccWeapon", system: { active: false, boundTo: null } }
+    ] };
+    const preCreate = global.__ep.hookHandlers.get("preCreateActor").find(fn => fn.toString().includes("carriedItemPlacements"));
+
+    preCreate({ updateSource: update => placed.push(update) }, data, {}, game.user.id);
+
+    expect(placed[0].items.map(item => item.system.boundTo)).toEqual([undefined, "morph1", "stash"]);
   });
 });
 

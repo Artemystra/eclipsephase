@@ -1,4 +1,4 @@
-import { makeActor, makeActorFromFixture, resetWorld, seedDialogs } from "../setup/factories.js";
+import { makeActor, makeActorFromFixture, resetWorld, seedDialogs, carrying } from "../setup/factories.js";
 import { mergeOrCreateItem, emptiesStack, stackDeletion, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
 import { DOSES_PER_PACK, VECTORS, dosesRemaining, selectDrugVector, chooseDrugForm, consumeDose } from "../../module/common/drugs.js";
 
@@ -86,42 +86,27 @@ describe("mergeOrCreateItem", () => {
 
 describe("how much room a consumable takes at hand", () => {
   test("how many doses a pack holds never adds to what is carried", () => {
-    const small = makeActor({
-      settings: { superBrew: true },
-      items: [pack({ system: { quantity: 1, usagesMax: 1 } })]
-    });
-    const large = makeActor({
-      settings: { superBrew: true },
-      items: [pack({ system: { quantity: 1, usagesMax: 20 } })]
-    });
+    const small = carrying([pack({ system: { quantity: 1, usagesMax: 1 } })], { settings: { superBrew: true } });
+    const large = carrying([pack({ system: { quantity: 1, usagesMax: 20 } })], { settings: { superBrew: true } });
 
     expect(large.system.currentStatus.consumableModifier)
       .toEqual(small.system.currentStatus.consumableModifier);
   });
 
   test("three packs at hand are still within what a character can carry freely", () => {
-    const actor = makeActor({
-      settings: { superBrew: true },
-      items: [pack({ system: { quantity: 3 } })]
-    });
+    const actor = carrying([pack({ system: { quantity: 3 } })], { settings: { superBrew: true } });
 
     expect(actor.system.currentStatus.consumableModifier).toEqual(0);
   });
 
   test("a fourth pack starts costing, since each pack is its own object at hand", () => {
-    const actor = makeActor({
-      settings: { superBrew: true },
-      items: [pack({ system: { quantity: 4 } })]
-    });
+    const actor = carrying([pack({ system: { quantity: 4 } })], { settings: { superBrew: true } });
 
     expect(actor.system.currentStatus.consumableModifier).toEqual(10);
   });
 
   test("fourteen packs cost accordingly", () => {
-    const actor = makeActor({
-      settings: { superBrew: true },
-      items: [pack({ system: { quantity: 14 } })]
-    });
+    const actor = carrying([pack({ system: { quantity: 14 } })], { settings: { superBrew: true } });
 
     expect(actor.system.currentStatus.consumableModifier).toEqual(40);
   });
@@ -133,10 +118,7 @@ describe("how much room a consumable takes at hand", () => {
   });
 
   test("a drug that is not at hand is not carried at all", () => {
-    const actor = makeActor({
-      settings: { superBrew: true },
-      items: [pack({ system: { active: false, quantity: 6 } })]
-    });
+    const actor = carrying([pack({ system: { active: false, quantity: 6 } })], { settings: { superBrew: true } });
 
     expect(actor.system.currentStatus.consumableModifier).toEqual(0);
   });

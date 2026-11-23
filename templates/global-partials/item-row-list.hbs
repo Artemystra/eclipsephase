@@ -1,6 +1,5 @@
 {{#each item as |item id|}}
-    <div class="item flexrow offHand flex-group-center wantToKnowMore item-row-list-entry" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-        <label class="tooltipText" style="min-width: 190px; left: -5px">{{item.name}}</label>
+    <div class="item flexrow offHand flex-group-center item-row-list-entry" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
         {{#if ../selectable}}
         {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
         <input type="checkbox" id="purchase-select-{{item._id}}" class="item-purchase-select" data-item-id="{{item._id}}" {{checked (lookup ../selected item._id)}}/>
@@ -18,7 +17,7 @@
         {{else}}
         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" alt="{{item.name}}" width="24" height="24"/></div>
         {{/if}}
-        <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+        <span class="wantToKnowMoreFixed ep-name-tip" style="flex: 3.5;"><label class="truncate alignLeft"><strong>{{item.name}}</strong></label><span class="tooltipText">{{item.name}}</span></span>
         {{#if item.system.slotName}}
         <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
         {{/if}}
@@ -33,6 +32,13 @@
         <label class="flex-group-center alignCenter" style="background: none; margin-left: 10px;">{{item.system.quantity}}</label>
         {{/if}}
         {{/unless}}
+        {{/if}}
+        {{#if ../wareStash}}
+        {{!-- Ware comes out of a body only by surgery, which is still to come: the button is there, but does nothing yet. --}}
+        <span class="item-control input-small wantToKnowMore tooltip-opens-left ep-control-disabled">
+            <i class="fa-solid fa-box-archive awesomeIcon"></i>
+            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.stashWareLater'}}</span>
+        </span>
         {{/if}}
         <div class="flexrow item-controls flex-group-right" style="max-width: 50px; min-width: 50px;">
             {{#unless ../readOnly}}

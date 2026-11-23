@@ -1,7 +1,7 @@
 import EPactorSheet from "../../module/actor/EPactorSheet.js";
 import { reloadWeapon } from "../../module/common/weapon-functions.js";
 import { registerChemicalAttacks } from "../../module/common/doses.js";
-import { makeActor, resetWorld, seedDialogs, setSetting, loadPackItem } from "../setup/factories.js";
+import { makeActor, carrying, resetWorld, seedDialogs, setSetting, loadPackItem } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 
@@ -51,7 +51,7 @@ beforeEach(() => {
 
 describe("reloading a weapon", () => {
   test("it fills the magazine from the only fitting pack and says so", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1")] });
+    const actor = carrying([pistol(), rounds("ammo1")]);
 
     await pressReload(actor);
 
@@ -62,8 +62,16 @@ describe("reloading a weapon", () => {
     expect(createdMessages[0].content).toContain("ep2e.roll.announce.combat.ranged.reloadedWeapon");
   });
 
+  test("a character's pack that is not at hand is not loaded", async () => {
+    const actor = carrying([pistol(), { ...rounds("ammo1"), system: { ...rounds("ammo1").system, active: false } }]);
+
+    await pressReload(actor);
+
+    expect(actor.items.get("gun1").system.ammoMin).toEqual(2);
+  });
+
   test("under the default rules the pack is not used up", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1", 3)] });
+    const actor = carrying([pistol(), rounds("ammo1", 3)]);
 
     await pressReload(actor);
 
@@ -71,7 +79,7 @@ describe("reloading a weapon", () => {
   });
 
   test("with several fitting packs the player picks one, and that one is loaded", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1"), rounds("ammo2")] });
+    const actor = carrying([pistol(), rounds("ammo1"), rounds("ammo2")]);
     seedDialogs({ selection: "ammo2" });
 
     await pressReload(actor);
@@ -80,7 +88,7 @@ describe("reloading a weapon", () => {
   });
 
   test("cancelling the pick leaves the weapon as it was", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1"), rounds("ammo2")] });
+    const actor = carrying([pistol(), rounds("ammo1"), rounds("ammo2")]);
     seedDialogs({ cancelled: true });
 
     await pressReload(actor);
@@ -90,7 +98,7 @@ describe("reloading a weapon", () => {
   });
 
   test("a full weapon with the same rounds loaded is left alone, and only the player is told", async () => {
-    const actor = makeActor({ type: "character", items: [pistol({ ammoMin: 10, ammoSelected: { id: "ammo1" } }), rounds("ammo1")] });
+    const actor = carrying([pistol({ ammoMin: 10, ammoSelected: { id: "ammo1" } }), rounds("ammo1")]);
     setSetting("eclipsephase", "ammoRules", "survival");
 
     await pressReload(actor);
@@ -101,7 +109,7 @@ describe("reloading a weapon", () => {
   });
 
   test("without fitting ammunition nothing is loaded, and only the player is told", async () => {
-    const actor = makeActor({ type: "character", items: [pistol()] });
+    const actor = carrying([pistol()]);
 
     await pressReload(actor);
 
@@ -123,7 +131,7 @@ describe("reloading a weapon", () => {
 describe("the armour loaded ammunition meets", () => {
   test("reloading takes over the armour the ammunition names", async () => {
     const plasma = { ...rounds("ammo1"), system: { ...rounds("ammo1").system, armorused: "energy" } };
-    const actor = makeActor({ type: "character", items: [pistol(), plasma] });
+    const actor = carrying([pistol(), plasma]);
 
     await pressReload(actor);
 
@@ -131,7 +139,7 @@ describe("the armour loaded ammunition meets", () => {
   });
 
   test("ammunition that names none leaves the weapon's own", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1")] });
+    const actor = carrying([pistol(), rounds("ammo1")]);
 
     await pressReload(actor);
 
@@ -143,7 +151,7 @@ describe("the survival ammunition rule", () => {
   beforeEach(() => setSetting("eclipsephase", "ammoRules", "survival"));
 
   test("a character's reload takes one pack off the stack", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1", 3)] });
+    const actor = carrying([pistol(), rounds("ammo1", 3)]);
 
     await pressReload(actor);
 
@@ -151,7 +159,7 @@ describe("the survival ammunition rule", () => {
   });
 
   test("the last pack is taken off the sheet", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1", 1)] });
+    const actor = carrying([pistol(), rounds("ammo1", 1)]);
 
     await pressReload(actor);
 
@@ -177,13 +185,10 @@ describe("loading a sprayer with a drug", () => {
   function sprayerWith(drug) {
     const sprayer = { ...loadPackItem("weapons/Sprayer_VtPETs2TTFaeEec7.json"), _id: "gun1" };
     sprayer.system = { ...sprayer.system, active: true, ammoMin: 0, ammoSelected: { id: "" } };
-    return makeActor({
-      type: "character",
-      items: [sprayer, {
+    return carrying([sprayer, {
         _id: "drug1", name: "Grin", type: "drug",
         system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 2, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" }, ...drug }
-      }]
-    });
+      }]);
   }
 
   test("an ammunition pack fills the sprayer, with no damage of its own", async () => {
@@ -256,7 +261,7 @@ describe("the grenades-only ammunition rule", () => {
   beforeEach(() => setSetting("eclipsephase", "ammoRules", "grenadesOnly"));
 
   test("ordinary rounds are not counted", async () => {
-    const actor = makeActor({ type: "character", items: [pistol(), rounds("ammo1", 3)] });
+    const actor = carrying([pistol(), rounds("ammo1", 3)]);
 
     await pressReload(actor);
 
@@ -266,13 +271,10 @@ describe("the grenades-only ammunition rule", () => {
   test("a drug pack loaded into a sprayer is used up", async () => {
     const sprayer = { ...loadPackItem("weapons/Sprayer_VtPETs2TTFaeEec7.json"), _id: "gun1" };
     sprayer.system = { ...sprayer.system, active: true, ammoMin: 0, ammoSelected: { id: "" } };
-    const actor = makeActor({
-      type: "character",
-      items: [sprayer, {
+    const actor = carrying([sprayer, {
         _id: "drug1", name: "Grin", type: "drug",
         system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 2, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" } }
-      }]
-    });
+      }]);
 
     await pressReload(actor);
 

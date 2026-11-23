@@ -1,6 +1,6 @@
 import * as SHEET from "./general-sheet-functions.js"
 import * as MORPHFUNCTION from "./morp-functions.js"
-import { SYSTEM_SOCKET } from "./socket.js";
+import { SYSTEM_SOCKET, isActiveGM } from "./socket.js";
 export { SYSTEM_SOCKET, isActiveGM, isActingTab, madeHere, registerSocketActions, relayToActiveGM, runOrRelay } from "./socket.js";
 
 /**
@@ -240,7 +240,8 @@ export function registerItemTransferSocket() {
   if (transferSocketRegistered) return;
   transferSocketRegistered = true;
   game.socket.on(SOCKET_NAME, async payload => {
-    if (!game.user.isGM) return;
+    // Only the active GM's acting tab carries a transfer out, so a second GM tab does not repeat it.
+    if (!isActiveGM()) return;
     if (!payload) return;
 
     // Shop actors are usually GM-owned - a buying player can't write the loyalty flag directly,
@@ -257,9 +258,6 @@ export function registerItemTransferSocket() {
       quantity,
       userId
     } = payload;
-
-    const primaryGM = game.users.activeGM;
-    if (primaryGM && primaryGM.id !== game.user.id) return;
 
     // Resolved via uuid, not game.actors.get() - an actor placed as an (unlinked) scene token has
     // its own item collection separate from the world-actor entry that a bare id would resolve to,

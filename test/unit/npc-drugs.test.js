@@ -38,7 +38,7 @@ describe("drugs on an NPC or Goon", () => {
     expect(carrying(type).system.additionalSystems.consumableEquipped).toBe(true);
   });
 
-  test("a character still needs the drug switched on to have it at hand", () => {
+  test("a character's drug in the Stash is not at hand", () => {
     expect(carrying("character").system.additionalSystems.consumableEquipped).toBe(false);
   });
 
@@ -50,7 +50,7 @@ describe("drugs on an NPC or Goon", () => {
     expect(actor.consumable.map(item => item.name)).toEqual(["Grin"]);
   });
 
-  test("a character's list still leaves out a drug that is switched off", async () => {
+  test("a character's list leaves out a drug in the Stash", async () => {
     const actor = await sorted(carrying("character"));
 
     expect(actor.consumableActive).toEqual([]);
@@ -60,7 +60,7 @@ describe("drugs on an NPC or Goon", () => {
 describe("the sheet templates", () => {
   test.each(["npc", "goon", "character"])("a %s's sidebar offers the take control for a drug at hand", async type => {
     const actor = carrying(type);
-    if (type === "character") await actor.items.get("grin1").update({ "system.active": true });
+    if (type === "character") await actor.items.get("grin1").update({ "system.boundTo": "morph1" });
     await sorted(actor);
 
     const html = await foundry.applications.handlebars.renderTemplate(
@@ -93,7 +93,7 @@ describe("ammunition packs on the sheet", () => {
       system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "gas1", name: "CR Gas", type: "drug", system: { active: type === "character", slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 1 } }
+        { _id: "gas1", name: "CR Gas", type: "drug", system: { active: type === "character", boundTo: type === "character" ? "morph1" : null, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 1 } }
       ]
     }));
   }
@@ -116,7 +116,7 @@ describe("ammunition packs on the sheet", () => {
 
   test("a drug meant to be taken is never chemical ammunition", async () => {
     const actor = await sorted(carrying("character"));
-    await actor.items.get("grin1").update({ "system.active": true });
+    await actor.items.get("grin1").update({ "system.boundTo": "morph1" });
     await sorted(actor);
 
     expect(actor.ammo.chemical).toEqual([]);

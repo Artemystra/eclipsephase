@@ -1,7 +1,7 @@
 import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
 import { defaultArmorUsed, weaponDataRepairs } from "./weapon-functions.js";
-import { TACNET_KEY } from "./morp-functions.js";
+import { TACNET_KEY, carriedItemPlacements } from "./morp-functions.js";
 
 // The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
 // only its own English text - a title, an introduction, the bullets of what changed and footnote
@@ -3365,6 +3365,30 @@ export async function migrationPre29Conditions({ silent = false } = {}) {
     if (effects.length) await item.createEmbeddedDocuments("ActiveEffect", effects);
   }, { label: "Migration 2.9", filter: item => ["traits", "ware", "aspect"].includes(item.type), includeCompendiums: true, silent });
   await game.settings.set("eclipsephase", "migrationVersion", CONDITIONS_MIGRATION);
+}
+
+// The last migration step: a world stamped with it has its characters' items placed with the inventory.
+export const INVENTORY_MIGRATION = "2.9.0.2";
+
+/**
+ * Places every character's carried items with the inventory on bodies: what was at hand goes onto
+ * the sleeved morph, everything else into the Stash, and an item whose body is gone into the Stash.
+ * Items that already have a place keep it, so it can run again. Covers the unlinked tokens of
+ * characters too.
+ * @returns {Promise<void>}
+ */
+export async function migrationPre30Inventory() {
+  const actors = game.actors.filter(actor => actor.type === "character");
+  for (const scene of game.scenes?.contents ?? []) {
+    for (const token of scene.tokens?.contents ?? scene.tokens ?? []) {
+      if (!token.actorLink && token.actor?.type === "character") actors.push(token.actor);
+    }
+  }
+  await runOverDocuments(actors, async actor => {
+    const updates = carriedItemPlacements(actor.items, actor.system?.activeMorph);
+    if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  }, "Migration 3.0", true);
+  await game.settings.set("eclipsephase", "migrationVersion", INVENTORY_MIGRATION);
 }
 
 /**

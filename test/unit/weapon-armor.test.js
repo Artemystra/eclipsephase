@@ -1,7 +1,7 @@
 import { weaponListConstructor, selectWeaponMode, attackArmorUsed, defaultArmorUsed, parseRangeText, parseRangeArea, parseAreaText, munitionArea, weaponDataRepairs, needsMunitionChoice, sameMunition, munitionLabel, chooseMunition, rangeBand, beyondRangeDamage, rangeRefusal, weaponRange } from "../../module/common/weapon-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { registerPayloadSource, resetRegistry } from "../../module/api/registry.js";
-import { makeActor, makeItem, registerSystemPacks, resetWorld } from "../setup/factories.js";
+import { makeActor, makeItem, registerSystemPacks, resetWorld, carrying } from "../setup/factories.js";
 
 beforeEach(() => resetWorld());
 
@@ -255,7 +255,7 @@ describe("choosing the weapon to attack with", () => {
 
   test("the first prepared weapon comes preselected, and of a weapon with two modes the first", async () => {
     const weapon = id => ({ _id: id, name: id, type: "rangedWeapon", system: { active: true, ammoMin: 5, ammoMax: 10 } });
-    const shooter = makeActor({ type: "character", items: [weapon("pistol"), weapon("rifle")] });
+    const shooter = carrying([weapon("pistol"), weapon("rifle")]);
     shooter.rangedWeapon = [...shooter.items];
     const twoModes = makeItem({ type: "rangedWeapon", system: { additionalMode: true } });
 

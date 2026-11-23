@@ -153,16 +153,16 @@ describe("things that can be taken off", () => {
     expect(vigor(actor)).toEqual({ value: worn.value - 1, total: worn.total - 1 });
   });
 
-  test("gear toggled at hand hands its point over, and toggled away takes it back", async () => {
+  test("gear taken out of the Stash onto the body hands its point over, and put back takes it again", async () => {
     const actor = character({
-      items: [{ _id: "rig1", name: "Rig", type: "gear", system: { active: false }, effects: [{ name: "Rig", changes: VIGOR_UP }] }]
+      items: [{ _id: "rig1", name: "Rig", type: "gear", system: { boundTo: "stash" }, effects: [{ name: "Rig", changes: VIGOR_UP }] }]
     });
     const off = vigor(actor);
 
-    await actor.items.get("rig1").update({ "system.active": true });
+    await actor.items.get("rig1").update({ "system.boundTo": "morph1" });
     expect(vigor(actor)).toEqual({ value: off.value + 1, total: off.total + 1 });
 
-    await actor.items.get("rig1").update({ "system.active": false });
+    await actor.items.get("rig1").update({ "system.boundTo": "stash" });
     expect(vigor(actor)).toEqual(off);
   });
 

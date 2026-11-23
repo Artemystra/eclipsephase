@@ -7,6 +7,7 @@ Object {
   "addictionType": "physical",
   "additionalSystems": Object {},
   "blocksPsi": false,
+  "boundTo": null,
   "category": "drug",
   "cost": "minor",
   "dermal": true,

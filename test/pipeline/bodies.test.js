@@ -1,12 +1,13 @@
-import EPactorSheet from "../../module/actor/EPactorSheet.js";
+import EPactorSheet, { isSectionOpen, setSectionOpen, toggleBodySection } from "../../module/actor/EPactorSheet.js";
 import {
-  resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
-  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
-  registerBodyTokens
+  resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
+  stashItem, equipItemFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
+  registerBodyTokens, locationOf, itemsOn, isUsable, moveItem
 } from "../../module/common/morp-functions.js";
+import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { calcEffects, sleevingTest } from "../../module/rolls/resleeving.js";
 import { readDialogValues } from "../../module/rolls/dice.js";
-import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
+import { makeActor, makeItem, resetWorld, seedDialogs, seedRolls, setSetting } from "../setup/factories.js";
 import { JSDOM } from "jsdom";
 
 const { createdMessages } = global.__ep;
@@ -284,7 +285,7 @@ describe("moving armour", () => {
     const actor = twoBodies();
     seedDialogs({ selection: "morph2" });
 
-    await rebindArmor(actor, "vest1");
+    await rebindItem(actor, "vest1");
 
     expect(actor.items.get("vest1").system.boundTo).toEqual("morph2");
   });
@@ -295,7 +296,7 @@ describe("moving armour", () => {
       { _id: "vest1", name: "Vest", type: "armor", system: { boundTo: "morph1" } }
     ] });
 
-    await rebindArmor(actor, "vest1");
+    await rebindItem(actor, "vest1");
 
     expect(actor.items.get("vest1").system.boundTo).toEqual("morph1");
   });
@@ -304,17 +305,17 @@ describe("moving armour", () => {
     const actor = twoBodies();
 
     seedDialogs(false);
-    await stashArmor(actor, "vest1", false);
+    await stashItem(actor, "vest1", false);
     expect(actor.items.get("vest1").system.boundTo).toEqual("morph1");
 
-    await stashArmor(actor, "vest1", true);
+    await stashItem(actor, "vest1", true);
     expect(actor.items.get("vest1").system.boundTo).toEqual("stash");
   });
 
   test("an NPC has no stash", async () => {
     const actor = makeActor({ type: "npc", items: [{ _id: "vest1", name: "Vest", type: "armor", system: { boundTo: "activeMorph" } }] });
 
-    await stashArmor(actor, "vest1", true);
+    await stashItem(actor, "vest1", true);
 
     expect(actor.items.get("vest1").system.boundTo).toEqual("activeMorph");
   });
@@ -323,7 +324,7 @@ describe("moving armour", () => {
     const actor = twoBodies({ items: [{ _id: "vest2", name: "Coat", type: "armor", system: { boundTo: "stash" } }] });
     seedDialogs({ selection: "morph2" });
 
-    await equipArmorFromStash(actor, "vest2");
+    await equipItemFromStash(actor, "vest2");
 
     expect(actor.items.get("vest2").system.boundTo).toEqual("morph2");
     expect(createdMessages).toHaveLength(1);
@@ -590,5 +591,426 @@ describe("the token follows the body it is sleeved in", () => {
     for (const listen of listeners) await listen({ action: "syncBodyToken", sceneId: "scene1", actorId: actor.id, src: "tokens/forged.webp" });
 
     expect(scene.updates).toEqual([{ _id: "t1", "texture.src": "tokens/fury.webp" }]);
+  });
+});
+
+describe("carried weapons weigh on the body that carries them (homebrew encumbrance)", () => {
+  /**
+   * A character with three two-handed weapons at hand, sleeved in a morph and owning a drone.
+   * @param {Object} [system] - Extra actor system fields
+   * @returns {Actor} The actor
+   */
+  function loaded(system = {}) {
+    setSetting("eclipsephase", "superBrew", true);
+    const rifle = id => ({ _id: id, name: `Rifle ${id}`, type: "rangedWeapon", system: { boundTo: "morph1", slotType: "twoHanded" } });
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", ...system },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "drone1", name: "Drone", type: "vehicle", system: {} },
+        rifle("r1"), rifle("r2"), rifle("r3")
+      ]
+    });
+  }
+
+  test("weapons at hand encumber the sleeved body", () => {
+    expect(loaded().system.physical.totalWeaponMalus).toBe(20);
+  });
+
+  test("while jamming they stay with the real body: the drone carries nothing, the own-body rolls keep the malus", () => {
+    const actor = loaded({ activeJam: "drone1" });
+
+    expect(actor.system.physical.totalWeaponMalus).toBe(0);
+    expect(actor.system.additionalSystems.jamming.ownBodyWeaponMalus).toBe(20);
+  });
+});
+
+describe("how the sheet sorts a character's items", () => {
+  test("by kind, and each into the Stash or onto the body it lies on; ware and traits by their body", async () => {
+    const actor = await sorted(makeActor({
+      type: "character",
+      system: { activeMorph: "morph1" },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "morph1" } },
+        { _id: "knife", name: "Knife", type: "ccWeapon", system: { boundTo: "stash" } },
+        { _id: "kit", name: "Kit", type: "gear", system: { slotType: "accessory", boundTo: "morph1" } },
+        { _id: "pill", name: "Pill", type: "drug", system: { slotType: "consumable", boundTo: "stash" } },
+        { _id: "rounds", name: "Rounds", type: "ammo", system: { boundTo: "morph1", type: "kinetic" } },
+        { _id: "app", name: "App", type: "program", system: {} },
+        { _id: "vest", name: "Vest", type: "armor", system: { boundTo: "morph1" } },
+        { _id: "coat", name: "Coat", type: "armor", system: { boundTo: "stash" } },
+        { _id: "eyes", name: "Eyes", type: "ware", system: { boundTo: "morph1" } }
+      ]
+    }));
+    const ids = list => list.map(item => item.id);
+
+    expect(ids(actor.rangedWeapon)).toEqual(["gun"]);
+    expect(ids(actor.ccweapon)).toEqual(["knife"]);
+    expect(ids(actor.gear)).toEqual(["kit"]);
+    expect(ids(actor.consumable)).toEqual(["pill", "rounds"]);
+    expect(ids(actor.ammo.kinetic)).toEqual(["rounds"]);
+    expect(ids(actor.program)).toEqual(["app"]);
+    const body = actor.bodies.morph1;
+    expect([ids(body.peripherals.armor), ids(body.peripherals.weapons), ids(body.peripherals.consumables), ids(body.peripherals.gear)])
+      .toEqual([["vest"], ["gun"], ["rounds"], ["kit"]]);
+    expect([ids(actor.stash.armor), ids(actor.stash.weapons), ids(actor.stash.consumables), ids(actor.stash.gear), ids(actor.stash.programs)])
+      .toEqual([["coat"], ["knife"], ["pill"], [], ["app"]]);
+    expect([body.peripheralCount, body.internalCount, actor.stash.count]).toEqual([4, 1, 4]);
+    expect(ids(body.morphgear)).toEqual(["eyes"]);
+  });
+});
+
+describe("where a character's carried items lie", () => {
+  /**
+   * A character sleeved in one morph, jamming a drone, with a spare morph and carried items in
+   * every place.
+   * @param {Object[]} [items] - Further items
+   * @returns {Actor} The actor
+   */
+  function owner(items = []) {
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", activeJam: "drone1" },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio" } },
+        { _id: "drone1", name: "Drone", type: "vehicle", system: {} },
+        { _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "morph1" } },
+        { _id: "turret", name: "Turret", type: "rangedWeapon", system: { boundTo: "drone1" } },
+        { _id: "spare", name: "Spare", type: "rangedWeapon", system: { boundTo: "morph2" } },
+        { _id: "kept", name: "Kept", type: "rangedWeapon", system: { boundTo: "stash" } },
+        { _id: "lost", name: "Lost", type: "rangedWeapon", system: { boundTo: "gone" } },
+        { _id: "app", name: "App", type: "program", system: {} },
+        ...items
+      ]
+    });
+  }
+
+  test("on the body it is bound to, or in the Stash when it has no body or a program", () => {
+    const actor = owner();
+    const where = id => locationOf(actor, actor.items.get(id));
+
+    expect(["gun", "turret", "spare", "kept", "lost", "app"].map(where)).toEqual(["morph1", "drone1", "morph2", "stash", "stash", "stash"]);
+    expect(itemsOn(actor, "stash").map(item => item.id)).toEqual(["kept", "lost", "app"]);
+  });
+
+  test("usable only on the sleeved morph and the jammed body; an NPC uses all it has", () => {
+    const actor = owner();
+    const npc = makeActor({ type: "npc", items: [{ _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "stash" } }] });
+    const usable = id => isUsable(actor, actor.items.get(id));
+
+    expect(["gun", "turret", "spare", "kept"].map(usable)).toEqual([true, true, false, false]);
+    expect(isUsable(npc, npc.items.get("gun"))).toBe(true);
+  });
+
+  test("moving a whole item puts it on the other body", async () => {
+    const actor = owner();
+
+    await moveItem(actor, "gun", "stash");
+
+    expect(actor.items.get("gun").system.boundTo).toBe("stash");
+  });
+
+  test("part of a stack moves on its own, and joins a stack already there", async () => {
+    const actor = owner([
+      { _id: "rounds", name: "Rounds", type: "ammo", system: { boundTo: "stash", quantity: 5, type: "kinetic" } },
+      { _id: "carried", name: "Rounds", type: "ammo", system: { boundTo: "morph1", quantity: 1, type: "kinetic" } }
+    ]);
+
+    await moveItem(actor, "rounds", "morph1", { quantity: 2 });
+
+    expect(actor.items.get("rounds").system.quantity).toBe(3);
+    expect(actor.items.get("carried").system.quantity).toBe(3);
+  });
+
+  test("of a drug the open pack moves first", async () => {
+    const actor = owner([{ _id: "pills", name: "Pills", type: "drug", system: { boundTo: "stash", quantity: 2, usagesMax: 5, usagesUsed: 3, slotType: "consumable" } }]);
+
+    const moved = await moveItem(actor, "pills", "morph1", { quantity: 1 });
+
+    expect([moved.system.quantity, moved.system.usagesUsed]).toEqual([1, 3]);
+    expect([actor.items.get("pills").system.quantity, actor.items.get("pills").system.usagesUsed]).toEqual([1, 0]);
+  });
+
+  test("two open packs of a drug put together make up whole packs where their doses do", async () => {
+    const actor = owner([
+      { _id: "kept", name: "Pills", type: "drug", system: { boundTo: "morph1", quantity: 1, usagesMax: 5, usagesUsed: 3, slotType: "consumable" } },
+      { _id: "more", name: "Pills", type: "drug", system: { boundTo: "stash", quantity: 2, usagesMax: 5, usagesUsed: 4, slotType: "consumable" } }
+    ]);
+
+    await moveItem(actor, "more", "morph1");
+
+    expect(actor.items.get("more")).toBeUndefined();
+    expect([actor.items.get("kept").system.quantity, actor.items.get("kept").system.usagesUsed]).toEqual([2, 2]);
+  });
+
+  test("a stack in the Stash and one on a body stay two rows", async () => {
+    const actor = owner([{ _id: "carried", name: "Rounds", type: "ammo", system: { boundTo: "morph1", quantity: 1, type: "kinetic" } }]);
+
+    await mergeOrCreateItem(actor, { name: "Rounds", type: "ammo", system: { boundTo: "stash", quantity: 4, type: "kinetic" } });
+
+    expect(actor.items.filter(item => item.name === "Rounds").map(item => item.system.quantity)).toEqual([1, 4]);
+  });
+});
+
+describe("what a character can use, and what helps which body", () => {
+  /**
+   * A character sleeved in a morph with a spare morph and a drone, carrying a rifle and goggles that
+   * add to its Vigor.
+   * @param {Object} [system] - Extra actor system fields
+   * @param {Object} [where] - Where the rifle, the goggles and the vest lie
+   * @returns {Actor} The actor
+   */
+  function kitted(system = {}, where = {}) {
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", ...system },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio" } },
+        { _id: "drone1", name: "Drone", type: "vehicle", system: {} },
+        { _id: "rifle", name: "Rifle", type: "rangedWeapon", system: { boundTo: where.rifle ?? "morph1" } },
+        { _id: "vest", name: "Vest", type: "armor", system: { boundTo: where.vest ?? "morph1" } },
+        { _id: "goggles", name: "Goggles", type: "gear", system: { slotType: "accessory", boundTo: where.goggles ?? "morph1" },
+          effects: [{ name: "Goggles", changes: [{ key: "system.pools.vigor.mod", type: "add", value: "1" }] }] }
+      ]
+    });
+  }
+
+  test("at hand is what lies on the sleeved morph or the jammed body, never in the Stash or on a spare body", () => {
+    const active = actor => ["rifle", "vest"].map(id => actor.items.get(id).system.active);
+
+    expect(active(kitted())).toEqual([true, true]);
+    expect(active(kitted({}, { rifle: "morph2", vest: "stash" }))).toEqual([false, false]);
+    expect(active(kitted({ activeJam: "drone1" }, { rifle: "drone1" }))).toEqual([true, false]);
+  });
+
+  test("an item's effect helps the body it lies on only while that body acts", () => {
+    const suppressed = actor => Array.from(actor.items.get("goggles").effects)[0].isSuppressed;
+
+    expect(suppressed(kitted())).toBe(false);
+    expect(suppressed(kitted({}, { goggles: "stash" }))).toBe(true);
+    expect(suppressed(kitted({ activeJam: "drone1" }))).toBe(true);
+    expect(suppressed(kitted({ activeJam: "drone1" }, { goggles: "drone1" }))).toBe(false);
+  });
+
+  test("putting part of a stack into the Stash asks how many packs, and moves that many", async () => {
+    const actor = kitted();
+    await actor.createEmbeddedDocuments("Item", [{ _id: "flares", name: "Flare", type: "gear", system: { slotType: "consumable", quantity: 3, boundTo: "morph1" } }]);
+    seedDialogs(2);
+
+    await stashItem(actor, "flares", false);
+
+    expect(actor.items.filter(item => item.name === "Flare").map(item => [item.system.boundTo, item.system.quantity]))
+      .toEqual([["morph1", 1], ["stash", 2]]);
+  });
+
+  test("a shift-click puts the whole stack into the Stash without asking", async () => {
+    const actor = kitted();
+    await actor.createEmbeddedDocuments("Item", [{ _id: "flares", name: "Flare", type: "gear", system: { slotType: "consumable", quantity: 3, boundTo: "morph1" } }]);
+
+    await stashItem(actor, "flares", true);
+
+    expect([actor.items.get("flares").system.boundTo, actor.items.get("flares").system.quantity]).toEqual(["stash", 3]);
+  });
+
+  test("equipping from the Stash puts the item on the body picked; only armour is announced", async () => {
+    const actor = kitted({}, { rifle: "stash" });
+    seedDialogs({ selection: "morph2" });
+
+    await equipItemFromStash(actor, "rifle");
+
+    expect(actor.items.get("rifle").system.boundTo).toBe("morph2");
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("moving to another body asks for no confirmation once the body is picked", async () => {
+    const actor = kitted();
+    seedDialogs({ selection: "drone1" });
+
+    await rebindItem(actor, "rifle");
+
+    expect(actor.items.get("rifle").system.boundTo).toBe("drone1");
+  });
+});
+
+describe("dropping a fresh item onto a character", () => {
+  /**
+   * Drops an item from outside any actor onto the actor's sheet.
+   * @param {Actor} actor - The actor
+   * @param {Object} data - The item's data
+   * @returns {Promise<Item|null>} The item created
+   */
+  function drop(actor, data) {
+    return EPactorSheet.prototype._onDropItem.call({ actor }, {}, makeItem(data));
+  }
+
+  test("offers the Stash first; the item lies where it is put", async () => {
+    const actor = twoBodies();
+
+    seedDialogs({ selection: "stash" });
+    const stashed = await drop(actor, { name: "Rifle", type: "rangedWeapon" });
+    seedDialogs({ selection: "morph2" });
+    const carried = await drop(actor, { name: "Knife", type: "ccWeapon" });
+
+    expect([stashed.system.boundTo, carried.system.boundTo]).toEqual(["stash", "morph2"]);
+  });
+
+  test("backing out of the choice drops nothing", async () => {
+    const actor = twoBodies();
+    seedDialogs({ cancelled: true });
+
+    expect(await drop(actor, { name: "Rifle", type: "rangedWeapon" })).toBeNull();
+    expect(actor.items.find(item => item.name === "Rifle")).toBeUndefined();
+  });
+
+  test("a character without a body puts it into the Stash without asking", async () => {
+    const actor = makeActor({ type: "character", items: [] });
+
+    const item = await drop(actor, { name: "Rifle", type: "rangedWeapon" });
+
+    expect(item.system.boundTo).toBe("stash");
+  });
+});
+
+describe("the body panels and the Stash tab", () => {
+  const render = (template, context) => foundry.applications.handlebars.renderTemplate(`systems/eclipsephase/templates/${template}`, context);
+
+  test("a body shows Peripherals and Internals with their counts, closed, one subsection per kind", async () => {
+    const actor = await sorted(makeActor({
+      type: "character",
+      system: { activeMorph: "morph1" },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "morph1" } },
+        { _id: "kit", name: "Kit", type: "gear", system: { slotType: "accessory", boundTo: "morph1" } },
+        { _id: "eyes", name: "Eyes", type: "ware", system: { boundTo: "morph1" } }
+      ]
+    }));
+
+    const html = await render("actor/partials/body-inventory.html", { body: actor.bodies.morph1, bodyKey: "morph1", actor });
+
+    expect(html).toContain("ep2e.inventory.peripherals (2)");
+    expect(html).toContain("ep2e.inventory.internals (1)");
+    expect(html.match(/ep-section-body noShow/g)).toHaveLength(2);
+    expect(html).toContain("ep2e.inventory.weaponsLabel");
+    expect(html).toContain("ep2e.inventory.gearLabel");
+    expect(html).not.toContain("ep2e.inventory.consumablesLabel");
+    expect(html.match(/item-stash/g)).toHaveLength(2);
+    expect(html.match(/item-rebind/g)).toHaveLength(2);
+    expect(html).toContain("ep-control-disabled");
+    expect(html.match(/<span class="wantToKnowMoreFixed ep-name-tip"/g)).toHaveLength(3);
+  });
+
+  test("the Stash tab lists what is put aside, each with Equip but the programs", async () => {
+    const actor = await sorted(makeActor({
+      type: "character",
+      system: { activeMorph: "morph1" },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "stash" } },
+        { _id: "app", name: "App", type: "program", system: {} }
+      ]
+    }));
+
+    const html = await render("actor/partials/tabs/gear-tab.html", { actor, tabs: { primary: { weapons: { active: true } } } });
+
+    expect(html).toContain("ep2e.inventory.weaponsLabel");
+    expect(html).toContain("ep2e.inventory.programs.label");
+    expect(html.match(/item-equip/g)).toHaveLength(1);
+    expect(html).not.toContain("data-path=\"system.active\"");
+  });
+
+  test("a click on a closed section opens it and it stays open once the slide is done; a second click closes it", async () => {
+    jest.useFakeTimers();
+    const dom = new JSDOM(`<div><div class="ep-section-toggle" data-body-key="morph1" data-section="internals"><span class="ep-section-chevron"><i class="fa-plus"></i></span></div><div class="ep-section-body noShow" data-display="block"></div></div>`);
+    const keep = { window: global.window, document: global.document, getComputedStyle: global.getComputedStyle, requestAnimationFrame: global.requestAnimationFrame };
+    Object.assign(global, { window: dom.window, document: dom.window.document, getComputedStyle: el => (el.classList.contains("noShow") && !el.style.display ? { display: "none" } : { display: el.style.display || "block" }), requestAnimationFrame: fn => fn() });
+    const actor = makeActor({ type: "character" });
+    const toggle = dom.window.document.querySelector(".ep-section-toggle");
+    const content = dom.window.document.querySelector(".ep-section-body");
+    try {
+      toggleBodySection(actor, toggle);
+      jest.advanceTimersByTime(300);
+      expect([content.classList.contains("noShow"), getComputedStyle(content).display]).toEqual([false, "block"]);
+
+      toggleBodySection(actor, toggle);
+      jest.advanceTimersByTime(300);
+      expect(getComputedStyle(content).display).toBe("none");
+      expect(isSectionOpen(actor, "morph1", "internals")).toBe(false);
+    } finally {
+      Object.assign(global, keep);
+      jest.useRealTimers();
+    }
+  });
+
+  test("an opened weapon shows its mode as titles over values: four columns for ranged, one for melee, the mode named only on two-mode weapons, NPC rows alike", async () => {
+    const weapon = (type, extra = {}) => makeItem({ name: type, type, system: { slotType: "oneHanded", ...extra } });
+    const row = (item, sheetType) => render("actor/partials/item-partials/weapons.html", { item, sheetType, type: item.type === "rangedWeapon" ? "ranged" : undefined, place: "body" });
+    const titles = html => html.match(/<div class="ep-weapon-stats[^"]*">([\s\S]*?)<\/div>/)[1].match(/resource-label/g).length;
+
+    const ranged = await row(weapon("rangedWeapon"), "PC");
+    const melee = await row(weapon("ccWeapon"), "PC");
+    const twoModes = await row(weapon("ccWeapon", { additionalMode: true }), "PC");
+    const npc = await row(weapon("rangedWeapon"), undefined);
+
+    const rangedTwo = await row(weapon("rangedWeapon", { additionalMode: true }), "PC");
+
+    expect([ranged.includes("ep-weapon-stats-single"), titles(ranged)]).toEqual([true, 4]);
+    expect([melee.includes("ep-weapon-stats-single"), titles(melee)]).toEqual([true, 1]);
+    expect([rangedTwo.includes("ep-weapon-stats-single"), titles(rangedTwo)]).toEqual([false, 5]);
+    expect(titles(twoModes)).toBe(2);
+    expect(twoModes.match(/class="ep-weapon-stats /g)).toHaveLength(2);
+    expect([npc.includes("ep-weapon-stats-ranged"), titles(npc)]).toEqual([true, 4]);
+    expect(npc).toContain("ep-name-tip");
+  });
+
+  test("an opened weapon's accessories and traits stand one below the other, each after its title, a dash where there are none", async () => {
+    const item = makeItem({ name: "Stunner", type: "rangedWeapon", system: { mode1: { traits: { shock: { value: true, name: "Shock" } } } } });
+    item.system.additionalSystems.mode1Traits = 1;
+    item.system.additionalSystems.accessories = 0;
+    const plain = makeItem({ name: "Knife", type: "ccWeapon" });
+
+    const html = await render("actor/partials/item-partials/weapons.html", { item, sheetType: "PC", type: "ranged", place: "body" });
+    const none = await render("actor/partials/item-partials/weapons.html", { item: plain, sheetType: "PC", place: "body" });
+    const extras = html.match(/<div class="ep-weapon-extras">([\s\S]*)/)[1];
+
+    expect(extras.indexOf("section.accessories")).toBeLessThan(extras.indexOf("section.traits"));
+    expect(extras.indexOf("section.traits")).toBeLessThan(extras.indexOf(">Shock<"));
+    expect(extras).toContain(">Shock<");
+    expect(extras).toMatch(/\{\{else\}\}|>\s*-\s*</);
+    expect(none).not.toContain("ep-weapon-extras");
+  });
+
+  test("an item name's tooltip shows only where the name is cut off", () => {
+    const dom = new JSDOM(`<span class="ep-name-tip"><label class="truncate">Tactical Multipurpose Grenade</label><span class="tooltipText"></span></span><span class="ep-name-tip"><label class="truncate">Klar</label></span>`);
+    const keep = global.document;
+    global.document = dom.window.document;
+    try {
+      jest.isolateModules(() => require("../../module/common/general-sheet-functions.js").listenForNameTips());
+      const [long, short] = dom.window.document.querySelectorAll(".ep-name-tip");
+      const [longName, shortName] = dom.window.document.querySelectorAll(".truncate");
+      Object.defineProperties(longName, { scrollWidth: { value: 240 }, clientWidth: { value: 180 } });
+      Object.defineProperties(shortName, { scrollWidth: { value: 40 }, clientWidth: { value: 180 } });
+
+      for (const name of [longName, shortName]) name.dispatchEvent(new dom.window.MouseEvent("mouseover", { bubbles: true }));
+
+      expect([long.classList.contains("ep-name-fits"), short.classList.contains("ep-name-fits")]).toEqual([false, true]);
+    } finally {
+      global.document = keep;
+    }
+  });
+
+  test("a section opened on a page stays open there, and a fresh page starts with all closed", () => {
+    const actor = makeActor({ type: "character" });
+    setSectionOpen(actor, "morph1", "peripherals", true);
+
+    expect(isSectionOpen(actor, "morph1", "peripherals")).toBe(true);
+    expect(isSectionOpen(actor, "morph1", "internals")).toBe(false);
+    let fresh;
+    jest.isolateModules(() => { fresh = require("../../module/actor/EPactorSheet.js"); });
+    expect(fresh.isSectionOpen(actor, "morph1", "peripherals")).toBe(false);
   });
 });

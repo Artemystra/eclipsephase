@@ -1,6 +1,6 @@
 {{#each item as |item id|}}
     <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-        <div style="display: flex; flex-wrap: nowrap; align-items: center; flex: 0 0 auto; gap: 4px;">
+        <div class="ep-carried-lead">
             <div style="max-width: 25px!important;">
                 <div class="noShow toggle" style="padding-left: 4px;">
                     <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
@@ -11,10 +11,10 @@
             </div>
             <a class="item-control item-rebind input-small wantToKnowMore" data-item-id="{{item._id}}">
                 <i class="fa-solid fa-right-left awesomeIcon"></i>
-                <span class="tooltipText">{{localize 'ep2e.actorSheet.button.rebindArmor'}}</span>
+                <span class="tooltipText">{{localize 'ep2e.actorSheet.button.rebindItem'}}</span>
             </a>
         </div>
-        <label class="truncate alignLeft" style="flex: 1.5; font-weight: bold;">{{item.name}}</label>
+        <span class="wantToKnowMoreFixed ep-name-tip" style="flex: 1.5; font-weight: bold;"><label class="truncate alignLeft">{{item.name}}</label><span class="tooltipText">{{item.name}}</span></span>
         <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
         <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
         <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
@@ -23,7 +23,7 @@
         {{#if (eq @root.actor.type "character")}}
         <a class="item-control item-stash input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
             <i class="fa-solid fa-box-archive awesomeIcon"></i>
-            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.stashArmor'}}</span>
+            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.stashItem'}}</span>
         </a>
         {{/if}}
         <div class="flex-group-right slideShow input-xs">

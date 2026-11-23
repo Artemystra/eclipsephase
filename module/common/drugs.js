@@ -229,6 +229,25 @@ export function afterDose(system) {
 }
 
 /**
+ * Two stacks of one drug put together. Each stack has one open pack; what the two open packs still
+ * hold is pooled, so as many packs as the doses fill stay whole and the rest is the one open pack.
+ * @param {Object} held - The system data of the stack that stays
+ * @param {Object} added - The system data of the stack put onto it
+ * @returns {Object} The joined stack's quantity and usagesUsed
+ */
+export function combinedPacks(held, added) {
+  const max = packSize(held);
+  const whole = value => Math.max(0, Math.floor(Number(value) || 0));
+  let quantity = whole(held?.quantity) + whole(added?.quantity ?? 1);
+  let usagesUsed = Math.min(max, whole(held?.usagesUsed)) + Math.min(max, whole(added?.usagesUsed));
+  while (usagesUsed >= max && quantity > 0) {
+    usagesUsed -= max;
+    quantity -= 1;
+  }
+  return { quantity, usagesUsed: quantity > 0 ? usagesUsed : 0 };
+}
+
+/**
  * How many doses one pack of a drug holds, falling back to what a purchase buys.
  * @param {Object} system - The drug's system data
  * @returns {Number} The pack size, at least one

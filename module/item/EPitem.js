@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js"
 import { normaliseDrugSystem } from "../common/drugs.js"
 import { defaultArmorUsed, weaponDataRepairs } from "../common/weapon-functions.js";
+import { isCarried, isUsable, locationOf } from "../common/morp-functions.js";
 
 // Default Morph Points -> cost-tier thresholds. RAW MP range is 0-12. A feature may override
 // the resulting tier through the prepareItemData hook.
@@ -65,20 +66,14 @@ export default class EPitem extends Item {
           itemModel.homebrew = false;
         }
 
-        // Armor is always body-bound and always "worn" once bound - active reflects whether the
-        // body it's boundTo is the one currently sleeved/jammed, recomputed every prepare cycle
-        // instead of being a manually-toggled flag like Gear/Weapons still use. Armor with no
-        // boundTo yet (not migrated to the new body-bound design) is left untouched.
-        if (item.type === "armor" && itemModel.boundTo) {
-          const actor = item.parent;
-          if (actor instanceof Actor) {
-            if (actor.type !== "character") {
-              itemModel.active = true;
-            } else {
-              const activeBody = actor.system?.activeJam || actor.system?.activeMorph;
-              itemModel.active = itemModel.boundTo === activeBody;
-            }
-          }
+        // Whether a carried item is at hand follows where it lies, never a stored toggle. Armour is
+        // worn by the body that acts - the jammed one while jamming; everything else is at hand on
+        // the sleeved morph and on the jammed body. NPCs and goons have everything at hand.
+        const owner = item.parent;
+        if (owner instanceof Actor && isCarried(item)) {
+          if (owner.type !== "character") itemModel.active = true;
+          else if (item.type === "armor") itemModel.active = locationOf(owner, item) === (owner.system?.activeJam || owner.system?.activeMorph);
+          else itemModel.active = isUsable(owner, item);
         }
 
         if (item.type === "rangedWeapon" || item.type === "ccWeapon") {

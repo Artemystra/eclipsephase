@@ -1,6 +1,6 @@
 {{#each item as |item id|}}
     <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-        <div style="display: flex; flex-wrap: nowrap; align-items: center; flex: 0 0 auto; gap: 4px; margin-right: 10px;">
+        <div class="ep-carried-lead">
             <div style="max-width: 25px!important;">
                 <div class="noShow toggle" style="padding-left: 4px;">
                     <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
@@ -10,7 +10,7 @@
                 <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             </div>
         </div>
-        <label class="truncate alignLeft" style="flex: 1.5; font-weight: bold;">{{item.name}}</label>
+        <span class="wantToKnowMoreFixed ep-name-tip" style="flex: 1.5; font-weight: bold;"><label class="truncate alignLeft">{{item.name}}</label><span class="tooltipText">{{item.name}}</span></span>
         <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
         <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
         <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
@@ -18,7 +18,7 @@
         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
         <a class="item-control item-equip input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
             <i class="fa-regular fa-circle-up awesomeIcon" style="color: var(--iconBlue);"></i>
-            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.equipArmor'}}</span>
+            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.equipItem'}}</span>
         </a>
         <div class="flex-group-right slideShow input-xs">
             <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>

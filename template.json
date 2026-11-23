@@ -627,6 +627,7 @@
         "base",
         "buyable"
       ],
+      "boundTo": null,
       "quantity": 1,
       "displayCategory": "gear"
     },
@@ -635,6 +636,7 @@
         "base",
         "buyable"
       ],
+      "boundTo": null,
       "displayCategory": "ranged",
       "ammoSelected": {
         "_id": "-",
@@ -950,6 +952,7 @@
         "base",
         "buyable"
       ],
+      "boundTo": null,
       "areaeffect": null,
       "area": { "kind": "none", "radius": null, "reduction": null },
       "trigger": "impact",
@@ -1002,6 +1005,7 @@
         "base",
         "buyable"
       ],
+      "boundTo": null,
       "type": null,
       "areaeffect": null,
       "area": { "kind": "none", "radius": null, "reduction": null },
@@ -1089,6 +1093,7 @@
         "base",
         "buyable"
       ],
+      "boundTo": null,
       "displayCategory": "ccweapon",
       "additionalMode": false,
       "accessories": {
@@ -1215,6 +1220,7 @@
         "base",
         "buyable"
       ],
+      "boundTo": null,
       "category": "drug",
       "isAmmo": false,
       "dermal": false,

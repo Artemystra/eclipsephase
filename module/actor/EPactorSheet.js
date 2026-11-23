@@ -11,6 +11,7 @@ import { takeDose, offerDose, forceDose } from "../common/doses.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
+import { slideToggleVisibility } from "../common/general-helper-functions.js";
 import itemRoll from "../item/EPitem.js";
 import { restingListeners, rechargeSegments } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily, sustainedSleights, endSustaining, sustainedTargets, pickSustainedTargets, endSustainingOn } from "../rolls/psi.js";
@@ -42,6 +43,70 @@ export function strainTabLabel(strainFamily) {
   if (strainFamily.tabLabel) return strainFamily.tabLabel;
   if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
   return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);
+}
+
+/**
+ * An empty bucket for one of an actor's bodies: its details, what it carries and what is built in.
+ * @param {String} bodyType - "morph" or "vehicle"
+ * @returns {Object} The bucket
+ */
+function newBodyBucket(bodyType) {
+  return {
+    bodyType, morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [],
+    traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0,
+    peripherals: { armor: [], weapons: [], consumables: [], gear: [] }, peripheralCount: 0, internalCount: 0
+  };
+}
+
+// The Peripherals and Internals sections opened on this page. Kept here only, so a reload or a new
+// login starts with all of them closed again.
+const OPEN_SECTIONS = new Set();
+
+/**
+ * Whether a body's section is open on this page.
+ * @param {Actor} actor - The actor
+ * @param {String} bodyKey - The body's key in the sheet's buckets
+ * @param {String} section - "peripherals" or "internals"
+ * @returns {Boolean} True once opened, until closed or the page reloads
+ */
+export function isSectionOpen(actor, bodyKey, section) {
+  return OPEN_SECTIONS.has(`${actor.uuid}|${bodyKey}|${section}`);
+}
+
+/**
+ * Opens or closes a body's section on this page.
+ * @param {Actor} actor - The actor
+ * @param {String} bodyKey - The body's key in the sheet's buckets
+ * @param {String} section - "peripherals" or "internals"
+ * @param {Boolean} open - Whether it is open now
+ * @returns {void}
+ */
+export function setSectionOpen(actor, bodyKey, section, open) {
+  const key = `${actor.uuid}|${bodyKey}|${section}`;
+  if (open) OPEN_SECTIONS.add(key);
+  else OPEN_SECTIONS.delete(key);
+}
+
+/**
+ * Opens or closes the section under a body's section heading, and remembers it on this page.
+ * @param {Actor} actor - The actor
+ * @param {HTMLElement} toggle - The heading clicked, naming the body and the section
+ * @returns {void}
+ */
+export function toggleBodySection(actor, toggle) {
+  const { bodyKey, section } = toggle.dataset;
+  const open = !isSectionOpen(actor, bodyKey, section);
+  setSectionOpen(actor, bodyKey, section, open);
+  const content = toggle.nextElementSibling;
+  // The slide reads the hidden state first; the class then follows, since the slide drops its own
+  // display once it has opened the section.
+  if (content) {
+    slideToggleVisibility(content, 200);
+    content.classList.toggle("noShow", !open);
+  }
+  const icon = toggle.querySelector(".ep-section-chevron i");
+  icon?.classList.toggle("fa-plus", !open);
+  icon?.classList.toggle("fa-minus", open);
 }
 
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -452,9 +517,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const rangedweapon = [];
       const ccweapon = [];
       const armor = [];
-      // PC-only "set this aside for now" bucket - Armor with boundTo === "stash" instead of a
-      // real body id. Starts as Armor-only; extend with more keys if other item types gain it later.
-      const stash = { armor: [] };
+      // A character's Stash, by the sections of the Stash tab.
+      const stash = { armor: [], weapons: [], consumables: [], gear: [], programs: [] };
       const aspect = {
           none: [],
           chi: [],
@@ -510,7 +574,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           migrationBridge += 1;
           if (actor.type === "character") morphID = item.id
           if (actor.type !== "character") morphID = "activeMorph"
-          bodies[morphID] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
+          bodies[morphID] = newBodyBucket("morph")
         }
         // Vehicles are bodies too (same bucket shape/key scheme), but get their own tab/card via
         // actor.remoteVehicles below, not the Morphs loop - bodyType lets morph-tab.html tell them apart.
@@ -520,13 +584,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           let vehicleID
           if (actor.type === "character") vehicleID = item.id
           if (actor.type !== "character") vehicleID = "activeVehicle"
-          bodies[vehicleID] = { bodyType: "vehicle", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
+          bodies[vehicleID] = newBodyBucket("vehicle")
         }
 
 
       }
       if (migrationBridge === 0){
-        bodies["migrationBody"] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
+        bodies["migrationBody"] = newBodyBucket("morph")
       }
       actor.bodies = bodies;
       // Iterate through items, allocating to containers
@@ -721,10 +785,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
                   break;
               }
             armor.push(item);
-            if (itemModel.boundTo === "stash") {
-              stash.armor.push(item);
-            }
-            else if (itemModel.boundTo && bodies[itemModel.boundTo]) {
+            // A character's armour is placed with the rest of what it carries, below.
+            if (actor.type !== "character" && itemModel.boundTo && bodies[itemModel.boundTo]) {
               bodies[itemModel.boundTo].morpharmor.push(item);
               bodies[itemModel.boundTo].armorCount += 1;
             }
@@ -904,6 +966,31 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
 
 
+      // A character's carried items go to the body they lie on, or into the Stash.
+      if (actor.type === "character") {
+        const place = (item, section) => {
+          const where = MORPHFUNCTION.locationOf(actor, item);
+          const bucket = where !== MORPHFUNCTION.STASH ? bodies[where] : null;
+          if (!bucket) {
+            stash[section].push(item);
+            return;
+          }
+          bucket.peripherals[section].push(item);
+          bucket.peripheralCount += 1;
+        };
+        for (const item of armor) place(item, "armor");
+        for (const item of [...rangedweapon, ...ccweapon]) place(item, "weapons");
+        for (const item of consumable) place(item, "consumables");
+        for (const item of gear) place(item, "gear");
+        stash.programs.push(...program);
+        stash.count = stash.armor.length + stash.weapons.length + stash.consumables.length + stash.gear.length + stash.programs.length;
+        for (const [key, bucket] of Object.entries(bodies)) {
+          bucket.internalCount = bucket.traitsCount + bucket.flawsCount + bucket.gearCount;
+          bucket.peripheralsOpen = isSectionOpen(actor, key, "peripherals");
+          bucket.internalsOpen = isSectionOpen(actor, key, "internals");
+        }
+      }
+
       // Assign and return
       actor.trait = trait;
       actor.flaw = flaw;
@@ -926,7 +1013,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.vehicle = vehicle;
       actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].map(v => {
         const bodyKey = actor.type === "character" ? v.id : "activeVehicle";
-        const bucket = bodies[bodyKey] ?? { traitsCount: 0, morphtraits: [], flawsCount: 0, morphflaws: [], gearCount: 0, morphgear: [], armorCount: 0, morpharmor: [] };
+        const bucket = bodies[bodyKey] ?? newBodyBucket("vehicle");
         v.traitsCount = bucket.traitsCount;
         v.morphtraits = bucket.morphtraits;
         v.flawsCount = bucket.flawsCount;
@@ -935,6 +1022,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         v.morphgear = bucket.morphgear;
         v.armorCount = bucket.armorCount;
         v.morpharmor = bucket.morpharmor;
+        v.peripherals = bucket.peripherals;
+        v.peripheralCount = bucket.peripheralCount;
+        v.internalCount = bucket.internalCount;
+        v.peripheralsOpen = bucket.peripheralsOpen;
+        v.internalsOpen = bucket.internalsOpen;
+        v.bodyKey = bodyKey;
         v.hasMovement = hasAnyMovement(v);
         return v;
       });
@@ -1158,7 +1251,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     // (see the per-item rebind action), but it still needs a body to land on in the first place.
     const isArmor = itemData.type === "armor";
     const canBeEgo = isTrait && itemModel.ego === true;
-    const canBeMorph = isWare || isArmor || (isTrait && itemModel.morph === true);
+    // A character's armour goes the way of everything else it carries, below.
+    const canBeMorph = isWare || (isArmor && actor.type !== "character") || (isTrait && itemModel.morph === true);
 
     // Vehicles are valid boundTo targets too, grouped as "Remote Bodies" alongside "Morphs".
     const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(actor);
@@ -1247,6 +1341,14 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: resolved.chosenBody.name } };
     } else if (canBeEgo) {
       pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
+    }
+
+    // A character's carried item goes into the Stash or onto a body - the Stash is offered first.
+    if (actor.type === "character" && MORPHFUNCTION.isCarried(itemData) && !MORPHFUNCTION.stashOnly(itemData)) {
+      const resolved = await MORPHFUNCTION.resolveBodyForItem(actor, "ep2e.systemMessage.itemAttachment.noBody", { allowStash: true });
+      if (resolved.cancelled) return null;
+      itemModel.boundTo = resolved.boundTo;
+      if (resolved.chosenBody) pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: resolved.chosenBody.name } };
     }
 
     if (itemData.type === "rangedWeapon") {
@@ -1692,21 +1794,26 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
+    // A body's Peripherals and Internals open and close; the page remembers it until it reloads.
+    html.querySelectorAll(".ep-section-toggle").forEach(element => {
+      element.addEventListener("click", ev => toggleBodySection(actor, ev.currentTarget));
+    });
+
     html.querySelectorAll(".item-rebind").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.rebindArmor(actor, ev.currentTarget.dataset.itemId);
+        MORPHFUNCTION.rebindItem(actor, ev.currentTarget.dataset.itemId);
       });
     });
 
     html.querySelectorAll(".item-stash").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.stashArmor(actor, ev.currentTarget.dataset.itemId, ev.shiftKey);
+        MORPHFUNCTION.stashItem(actor, ev.currentTarget.dataset.itemId, ev.shiftKey);
       });
     });
 
     html.querySelectorAll(".item-equip").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.equipArmorFromStash(actor, ev.currentTarget.dataset.itemId);
+        MORPHFUNCTION.equipItemFromStash(actor, ev.currentTarget.dataset.itemId);
       });
     });
 

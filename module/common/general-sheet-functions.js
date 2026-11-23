@@ -1,5 +1,6 @@
 import { durationRunOut, isTimedSpan } from "./time.js";
-import { sameDrugForm } from "./drugs.js";
+import { sameDrugForm, combinedPacks } from "./drugs.js";
+import * as MORPH from "./morp-functions.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
@@ -238,6 +239,23 @@ export function listenForDroplistClicks() {
   });
 }
 
+let nameTipListener = false;
+
+/**
+ * Lets an item name's tooltip show only where the name is cut off: as the pointer comes onto the
+ * name, it is marked as fitting when it shows whole. Listens once for the whole page.
+ * @returns {void}
+ */
+export function listenForNameTips() {
+  if (nameTipListener) return;
+  nameTipListener = true;
+  document.addEventListener("mouseover", event => {
+    const tip = event.target?.closest?.(".ep-name-tip");
+    const name = tip?.querySelector(".truncate");
+    if (name) tip.classList.toggle("ep-name-fits", name.scrollWidth <= name.clientWidth);
+  });
+}
+
 /**
  * Animation handlers for character sheets
  * @param {Object} html 
@@ -287,6 +305,7 @@ export function registerCommonHandlers(html, callerobj) {
 
   // Custom Droplists (for pools)
   listenForDroplistClicks();
+  listenForNameTips();
 
   html.querySelectorAll(".closeButton").forEach(element => {
     element.addEventListener("click", () => closeAllDroplists());
@@ -350,13 +369,32 @@ export function emptiesStack(item, field, value){
  */
 export async function stackDeletion(itemName, stackSize){
   if (game.eclipsephase?.testing?.autoConfirm) return { confirm: true, count: 1 };
+  return askStackCount(itemName, stackSize, {
+    actionKey: "ep2e.actorSheet.button.delete",
+    copyKey: "ep2e.actorSheet.popUp.deleteStackCopy",
+    infoKey: "ep2e.actorSheet.popUp.deleteAdditionalInfo",
+    labelKey: "ep2e.actorSheet.popUp.deleteStackLabel",
+    start: 1
+  });
+}
 
+/**
+ * Asks how many of a stack something happens to.
+ * @param {String} itemName - The item's name, shown in the headline
+ * @param {Number} stackSize - How many the stack holds, which caps the answer
+ * @param {Object} options - actionKey for the headline and button, copyKey, infoKey, labelKey for
+ *   the field, and start: the number the field starts with
+ * @returns {Promise<Object>} confirm, plus the count clamped to the stack
+ */
+export async function askStackCount(itemName, stackSize, { actionKey, copyKey, infoKey = "", labelKey, start = 1 } = {}){
   const template = "systems/eclipsephase/templates/chat/pop-up.html";
   const content = await foundry.applications.handlebars.renderTemplate(template, {
     dialogType: "deleteStack",
-    popUpHeadline: `${game.i18n.localize("ep2e.actorSheet.button.delete")} ${itemName ?? ""}`,
-    popUpCopy: "ep2e.actorSheet.popUp.deleteStackCopy",
-    popUpInfo: "ep2e.actorSheet.popUp.deleteAdditionalInfo",
+    popUpHeadline: `${game.i18n.localize(actionKey)} ${itemName ?? ""}`,
+    popUpCopy: copyKey,
+    popUpInfo: infoKey,
+    countLabel: labelKey,
+    countStart: start,
     stackSize
   });
 
@@ -367,7 +405,7 @@ export async function stackDeletion(itemName, stackSize){
     buttons: [
       {
         action: "confirm",
-        label: game.i18n.localize("ep2e.actorSheet.button.delete"),
+        label: game.i18n.localize(actionKey),
         default: true,
         callback: (event, button) => Number(button.form.count.value)
       },
@@ -1755,23 +1793,39 @@ export function addMinimizeSupport(sheet, handle) {
 export const STACKABLE_TYPES = ["drug", "ammo", "grenade"];
 
 /**
+ * Whether an existing item and incoming item data are the same stack: one kind of item and, on a
+ * character, lying in the same place - a stack in the Stash and one on a body stay apart.
+ * @param {Actor} actor - The actor holding the existing item
+ * @param {Item} existing - The item already there
+ * @param {Object} itemData - The incoming item's data
+ * @returns {Boolean} True when the incoming item joins the existing stack
+ */
+export function sameStack(actor, existing, itemData) {
+  return existing.type === itemData.type &&
+    existing.name === itemData.name &&
+    (existing.type !== "drug" || sameDrugForm(existing.system, itemData.system)) &&
+    ((existing.type !== "ammo" && existing.type !== "grenade") || WEAPON.sameMunition(existing.system, itemData.system)) &&
+    MORPH.locationOf(actor, existing) === MORPH.locationOf(actor, itemData);
+}
+
+/**
  * Adds an incoming item to the actor's existing stack of the same type and name, or creates it
  * when there is none to join. Shared by the actor-to-actor transfer and the drop of a fresh item
- * from a compendium, so the two paths cannot disagree about what stacks. Drugs additionally have
- * to match on the form they were bought in - an injected and an oral pack are not one stack.
+ * from a compendium, so the two paths cannot disagree about what stacks. Stacks are told apart by sameStack;
+ * two drug stacks pool what their open packs still hold.
  * @param {Actor} actor - The actor receiving the item
  * @param {Object} itemData - The incoming item's source data
  * @returns {Promise<Item>} The stack that grew, or the item that was created
  */
 export async function mergeOrCreateItem(actor, itemData) {
-  const existing = actor.items.find(i =>
-    i.type === itemData.type &&
-    i.name === itemData.name &&
-    (i.type !== "drug" || sameDrugForm(i.system, itemData.system)) &&
-    ((i.type !== "ammo" && i.type !== "grenade") || WEAPON.sameMunition(i.system, itemData.system))
-  );
+  const existing = actor.items.find(i => sameStack(actor, i, itemData));
 
   if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
+    if (existing.type === "drug") {
+      const joined = combinedPacks(existing.system, itemData.system);
+      await existing.update({ "system.quantity": joined.quantity, "system.usagesUsed": joined.usagesUsed });
+      return existing;
+    }
     const currentQty = Number(existing.system.quantity ?? 0);
     const incomingQty = Number(itemData.system?.quantity ?? 1) || 1;
     await existing.update({ "system.quantity": currentQty + incomingQty });
