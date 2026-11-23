@@ -367,7 +367,8 @@ class MockDocument {
       setProperty(this, key, value);
     }
     (this.actor ?? this).prepareData?.();
-    global.Hooks.callAll(`update${this.documentName}`, this, changes, options, global.game.user.id);
+    // Foundry hands the update hook the change expanded, whichever way it was written.
+    global.Hooks.callAll(`update${this.documentName}`, this, expandObject(changes), options, global.game.user.id);
     await new Promise(resolve => setTimeout(resolve, 0));
     return this;
   }

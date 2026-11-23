@@ -1100,7 +1100,7 @@
     },
     "item": {
 "morph": {
-"poolsHeadline": "Pools"},
+"poolsHeadline": "Pools", "morphImage": "Morph Image", "morphImageInfo": "The picture of this morph on the character sheet's morph tab and in lists such as the compendium. It does not change the token.", "tokenImage": "Token Image", "tokenImageInfo": "The image the character's token shows while sleeved in this morph: sleeving in changes the prototype token and the character's tokens on the active scene. Without one, the token shows the character's own image."},
       "inducedChanges": {
         "headline": "Induced Changes",
         "allActions": "to all actions",

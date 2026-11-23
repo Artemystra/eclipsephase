@@ -4799,6 +4799,37 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   grid-column: span 2;
 }
 
+/* An image path field with a small preview of the image in front, an empty square when none. */
+.ep-image-field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ep-image-field .ep-image-thumb {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  margin: 0;
+  object-fit: cover;
+  border: 1px solid var(--highlightBackground);
+  cursor: pointer;
+}
+
+.ep-image-field file-picker {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* An info icon behind a field's label. */
+.eclipsephase .ep-info-icon {
+  margin-left: 6px;
+  font-weight: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+
 .ep-field {
   display: flex;
   flex-direction: column;

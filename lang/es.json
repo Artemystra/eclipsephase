@@ -1079,7 +1079,7 @@
     },
     "item": {
 "morph": {
-"poolsHeadline": "Reservas"},
+"poolsHeadline": "Reservas", "morphImage": "Imagen del morfo", "morphImageInfo": "La imagen de este morfo en la pestaña de morfo de la hoja de personaje y en listas como el compendio. No cambia el token.", "tokenImage": "Imagen del token", "tokenImageInfo": "La imagen que muestra el token del personaje mientras está enfundado en este morfo: al enfundarse cambian el token prototipo y los tokens del personaje en la escena activa. Sin imagen, el token muestra la imagen propia del personaje."},
       "inducedChanges": {
         "headline": "Cambios inducidos",
         "allActions": "a todas las acciones",

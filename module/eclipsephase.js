@@ -18,7 +18,7 @@ import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } fr
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
-import { PLAIN_TACNET_VISION, TACNET_VISION } from "./common/morp-functions.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION, registerBodyTokens } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -869,6 +869,7 @@ Hooks.once("ready", () => {
   registerConditionSocket();
   registerCardSocket();
   registerSleevingSocket();
+  registerBodyTokens();
   registerWeaponAttackSocket();
   registerAreaSocket();
 });

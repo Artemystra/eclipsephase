@@ -30,6 +30,21 @@
     </select>
 </label>
 {{/if}}
+{{!-- The morph's own picture and the one its body gives the token, each with its preview. --}}
+<div class="ep-field ep-span-2">
+    <span class="resource-label">{{localize "ep2e.item.morph.morphImage"}}<a class="moreInfoDialog ep-info-icon" data-title="ep2e.item.morph.morphImage" data-description="ep2e.item.morph.morphImageInfo" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></span>
+    <div class="ep-image-field">
+        {{#if item.img}}<img class="ep-image-thumb" src="{{item.img}}" data-action="editImage" data-field="img"/>{{else}}<span class="ep-image-thumb" data-action="editImage" data-field="img"></span>{{/if}}
+        <file-picker name="img" type="image" value="{{item.img}}"></file-picker>
+    </div>
+</div>
+<div class="ep-field ep-span-2">
+    <span class="resource-label">{{localize "ep2e.item.morph.tokenImage"}}<a class="moreInfoDialog ep-info-icon" data-title="ep2e.item.morph.tokenImage" data-description="ep2e.item.morph.tokenImageInfo" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></span>
+    <div class="ep-image-field">
+        {{#if item.system.customToken}}<img class="ep-image-thumb" src="{{item.system.customToken}}" data-action="editImage" data-field="system.customToken"/>{{else}}<span class="ep-image-thumb" data-action="editImage" data-field="system.customToken"></span>{{/if}}
+        <file-picker name="system.customToken" type="image" value="{{item.system.customToken}}"></file-picker>
+    </div>
+</div>
 </div>
 <div class="flexrow subheader">
     <h3 class="subheader dialog">{{localize "ep2e.item.morph.poolsHeadline"}}</h3>

@@ -1,6 +1,7 @@
 import * as sheetFunction from "./general-sheet-functions.js"
 import * as resleeving from "../rolls/resleeving.js"
 import { getStrainFamily } from "../rolls/strain-families.js";
+import { madeHere, registerSocketActions, relayToActiveGM } from "./socket.js";
 
 export async function resleeveMorph(actor, currentTarget, sheet){
     // Can't resleeve while jamming - your ego is off piloting a remote body. Also backs up the
@@ -704,4 +705,83 @@ export function targetKinds(actor) {
  */
 export function strainSubstrate(actor, strainFamily){
   return getStrainFamily(strainFamily).substrate(actor);
+}
+
+// Actor types whose token follows the body they are sleeved in.
+const BODY_TOKEN_TYPES = ["character", "npc", "goon"];
+
+/**
+ * The prototype token image an actor should show in its sleeved morph, and the flag that remembers
+ * its own image: a morph's custom token image while it is sleeved, the actor's base image otherwise.
+ * An image the system did not set is the base, so a token image picked by hand is kept.
+ * @param {Actor} actor - The actor
+ * @returns {Object|null} The update for the actor, or null when nothing changes
+ */
+export function bodyTokenUpdate(actor) {
+  if (!BODY_TOKEN_TYPES.includes(actor?.type)) return null;
+  const state = actor.getFlag?.("eclipsephase", "bodyToken") ?? {};
+  const src = actor.prototypeToken?.texture?.src ?? "";
+  const custom = actor.items?.get(actor.system?.activeMorph)?.system?.customToken || null;
+  if (!custom && !state.shown) return null;
+  const base = state.shown && src === state.shown ? state.base : src;
+  const next = custom || base;
+  if (next === src && state.base === base && (state.shown ?? null) === custom) return null;
+  return { "prototypeToken.texture.src": next, "flags.eclipsephase.bodyToken": { base, shown: custom } };
+}
+
+/**
+ * Swaps an actor's token image to the morph it is sleeved in: its prototype and its linked tokens
+ * on the active scene. Tokens this user may not change are left to the active GM.
+ * @param {Actor} actor - The actor
+ * @returns {Promise<void>}
+ */
+export async function applyBodyToken(actor) {
+  const update = bodyTokenUpdate(actor);
+  if (!update) return;
+  await actor.update(update);
+  if (actor.type === "goon") return;
+  await syncSceneTokens(game.scenes?.active, actor.id, update["prototypeToken.texture.src"]);
+}
+
+/**
+ * Gives an actor's linked tokens on a scene the image its prototype shows.
+ * @param {Scene} scene - The scene
+ * @param {String} actorId - The actor
+ * @param {String} src - The image
+ * @returns {Promise<void>}
+ */
+async function syncSceneTokens(scene, actorId, src) {
+  const tokens = (scene?.tokens ?? []).filter(token => token.actorLink && token.actorId === actorId && token.texture?.src !== src);
+  if (!tokens.length) return;
+  if (game.user.isGM || tokens.every(token => token.canUserModify?.(game.user, "update"))) {
+    await scene.updateEmbeddedDocuments("Token", tokens.map(token => ({ _id: token.id, "texture.src": src })));
+    return;
+  }
+  relayToActiveGM("syncBodyToken", { sceneId: scene.id, actorId });
+}
+
+/**
+ * Lets a body change swap the token image: when an actor is sleeved in another morph, and when the
+ * sleeved morph gets another token image. Runs on the client that made the change.
+ * @returns {void}
+ */
+export function registerBodyTokens() {
+  Hooks.on("updateActor", async (actor, changed, options, userId) => {
+    if (!madeHere(userId, options)) return;
+    if (!foundry.utils.hasProperty(changed, "system.activeMorph")) return;
+    await applyBodyToken(actor);
+  });
+  Hooks.on("updateItem", async (item, changed, options, userId) => {
+    if (!madeHere(userId, options)) return;
+    if (item.type !== "morph" || !foundry.utils.hasProperty(changed, "system.customToken")) return;
+    if (item.parent?.system?.activeMorph !== item.id) return;
+    await applyBodyToken(item.parent);
+  });
+  registerSocketActions({
+    // The GM takes the image from the actor's prototype, not from the request.
+    syncBodyToken: async ({ sceneId, actorId }) => {
+      const src = game.actors.get(actorId)?.prototypeToken?.texture?.src;
+      if (src) await syncSceneTokens(game.scenes.get(sceneId), actorId, src);
+    }
+  });
 }

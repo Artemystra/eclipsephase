@@ -1078,7 +1078,7 @@
     },
     "item": {
 "morph": {
-"poolsHeadline": "资源池"},
+"poolsHeadline": "资源池", "morphImage": "义体图像", "morphImageInfo": "此义体在角色卡义体标签页及合集等列表中显示的图片。它不会改变 Token。", "tokenImage": "Token 图像", "tokenImageInfo": "角色套入此义体期间其 Token 显示的图像：套入时会更改原型 Token 以及当前激活场景中该角色的 Token。若未设置，Token 显示角色自己的图像。"},
       "inducedChanges": {
         "headline": "诱发变化",
         "allActions": "所有行动",

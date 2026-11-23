@@ -46,6 +46,21 @@ describe("item sheets on the raster", () => {
     }
   });
 
+  test("a morph shows its two images as fields with previews, and not in the title bar", async () => {
+    const morph = await renderSheet(makeItem({ type: "morph", img: "morphs/fury.webp", system: { customToken: null } }));
+    const gear = await renderSheet(makeItem({ type: "gear", img: "gear/kit.webp" }));
+    const field = name => morph.querySelector(`file-picker[name="${name}"]`)?.closest(".ep-field");
+
+    expect(morph.querySelector(".ep-titlebar-item-logo")).toBeNull();
+    expect(gear.querySelector(".ep-titlebar-item-logo .item-img")).not.toBeNull();
+    expect(field("img").querySelector("img.ep-image-thumb").getAttribute("src")).toBe("morphs/fury.webp");
+    expect(field("system.customToken").querySelector("img")).toBeNull();
+    expect(field("system.customToken").querySelector("span.ep-image-thumb")).not.toBeNull();
+    for (const name of ["img", "system.customToken"]) {
+      expect(field(name).querySelector("a.moreInfoDialog").dataset.description).toMatch(/^ep2e\.item\.morph\.(morph|token)ImageInfo$/);
+    }
+  });
+
   test("a seeker and a grenade share area and payload, a plain round has no area", async () => {
     const grenade = await renderSheet(makeItem({ type: "grenade" }));
     const seeker = await renderSheet(makeItem({ type: "ammo", system: { type: "seeker" } }));

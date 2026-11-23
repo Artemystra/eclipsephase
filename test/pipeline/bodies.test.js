@@ -1,7 +1,8 @@
 import EPactorSheet from "../../module/actor/EPactorSheet.js";
 import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindArmor,
-  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode
+  stashArmor, equipArmorFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
+  registerBodyTokens
 } from "../../module/common/morp-functions.js";
 import { calcEffects, sleevingTest } from "../../module/rolls/resleeving.js";
 import { readDialogValues } from "../../module/rolls/dice.js";
@@ -431,5 +432,163 @@ describe("sight shared through a tacnet", () => {
   test("a user who turned sight effects off sees shared sight without them", () => {
     expect(sharedSightMode(true)).toEqual("tacnet");
     expect(sharedSightMode(false)).toEqual("tacnetPlain");
+  });
+});
+
+describe("the token follows the body it is sleeved in", () => {
+  let emitted;
+  let listeners;
+  let keepScenes;
+  let keepSocket;
+  beforeEach(() => {
+    emitted = [];
+    listeners = [];
+    keepScenes = game.scenes;
+    keepSocket = { ...game.socket };
+    game.socket.emit = (name, payload) => emitted.push([name, payload]);
+    game.socket.on = (name, fn) => listeners.push(fn);
+    registerBodyTokens();
+  });
+  afterEach(() => {
+    game.scenes = keepScenes;
+    Object.assign(game.socket, keepSocket);
+  });
+
+  /**
+   * Lets the hooks a change set off finish their own updates.
+   * @returns {Promise<void>}
+   */
+  const settle = async () => { for (let i = 0; i < 5; i++) await new Promise(resolve => setTimeout(resolve, 0)); };
+
+  /**
+   * An actor with a base token image, sleeved in a plain morph, with a reserve morph that has its
+   * own token image.
+   * @param {String} [type] - The actor type
+   * @returns {Actor} The actor
+   */
+  function sleeved(type = "character") {
+    const actor = makeActor({
+      type,
+      system: { activeMorph: "plain" },
+      items: [
+        { _id: "plain", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "fury", name: "Fury", type: "morph", system: { type: "bio", customToken: "tokens/fury.webp" } }
+      ]
+    });
+    actor.prototypeToken = { texture: { src: "tokens/me.webp" } };
+    return actor;
+  }
+
+  /**
+   * An active scene holding tokens, which records the token updates made on it.
+   * @param {Object[]} tokens - Token stand-ins: id, actorId, actorLink, src, and whether this user may change them
+   * @returns {Object} The scene
+   */
+  function activeScene(tokens) {
+    const scene = {
+      id: "scene1",
+      updates: [],
+      tokens: tokens.map(({ id, actorId, actorLink = true, src = "tokens/me.webp", mayChange = true }) => ({
+        id, actorId, actorLink, texture: { src }, canUserModify: () => mayChange
+      })),
+      async updateEmbeddedDocuments(name, updates) { this.updates.push(...updates); }
+    };
+    game.scenes = { active: scene, get: id => (id === scene.id ? scene : null) };
+    return scene;
+  }
+
+  test("sleeving into a morph with a token image swaps the prototype and the actor's linked tokens on the active scene", async () => {
+    const actor = sleeved();
+    const scene = activeScene([{ id: "t1", actorId: actor.id }, { id: "t2", actorId: actor.id, actorLink: false }, { id: "t3", actorId: "someoneElse" }]);
+
+    await actor.update({ "system.activeMorph": "fury" });
+    await settle();
+
+    expect(actor.prototypeToken.texture.src).toBe("tokens/fury.webp");
+    expect(scene.updates).toEqual([{ _id: "t1", "texture.src": "tokens/fury.webp" }]);
+  });
+
+  test("sleeving back into a morph without one brings the actor's own image back", async () => {
+    const actor = sleeved();
+    activeScene([]);
+    await actor.update({ "system.activeMorph": "fury" });
+    await settle();
+    expect(actor.prototypeToken.texture.src).toBe("tokens/fury.webp");
+
+    await actor.update({ "system.activeMorph": "plain" });
+    await settle();
+
+    expect(actor.prototypeToken.texture.src).toBe("tokens/me.webp");
+  });
+
+  test("an image picked by hand while the morph shows none becomes the actor's own image", async () => {
+    const actor = sleeved();
+    activeScene([]);
+    await actor.update({ "system.activeMorph": "fury" });
+    await settle();
+    await actor.update({ "system.activeMorph": "plain" });
+    await settle();
+    await actor.update({ "prototypeToken.texture.src": "tokens/new-me.webp" });
+
+    await actor.update({ "system.activeMorph": "fury" });
+    await settle();
+    expect(actor.prototypeToken.texture.src).toBe("tokens/fury.webp");
+    await actor.update({ "system.activeMorph": "plain" });
+    await settle();
+
+    expect(actor.prototypeToken.texture.src).toBe("tokens/new-me.webp");
+  });
+
+  test("jamming a body leaves the token as it is", async () => {
+    const actor = sleeved();
+    activeScene([]);
+
+    await actor.update({ "system.activeJam": "fury" });
+    await settle();
+
+    expect(actor.prototypeToken.texture.src).toBe("tokens/me.webp");
+  });
+
+  test("a token image given to the sleeved morph shows at once, one given to a reserve morph does not", async () => {
+    const actor = sleeved();
+    activeScene([]);
+
+    await actor.items.get("fury").update({ "system.customToken": "tokens/fury2.webp" });
+    await settle();
+    expect(actor.prototypeToken.texture.src).toBe("tokens/me.webp");
+
+    await actor.items.get("plain").update({ "system.customToken": "tokens/splicer.webp" });
+    await settle();
+    expect(actor.prototypeToken.texture.src).toBe("tokens/splicer.webp");
+  });
+
+  test("a goon's prototype changes, its tokens on the scene are its own copies and stay", async () => {
+    const actor = sleeved("goon");
+    const scene = activeScene([{ id: "t1", actorId: actor.id }]);
+
+    await actor.update({ "system.activeMorph": "fury" });
+    await settle();
+
+    expect(actor.prototypeToken.texture.src).toBe("tokens/fury.webp");
+    expect(scene.updates).toEqual([]);
+  });
+
+  test("tokens this user may not change are left to the active GM, who takes the image from the actor", async () => {
+    const actor = sleeved();
+    const scene = activeScene([{ id: "t1", actorId: actor.id, mayChange: false }]);
+    game.user.isGM = false;
+    game.users.activeGM = { id: "gm" };
+
+    await actor.update({ "system.activeMorph": "fury" });
+    await settle();
+
+    expect(scene.updates).toEqual([]);
+    expect(emitted).toEqual([["system.eclipsephase", { action: "syncBodyToken", sceneId: "scene1", actorId: actor.id }]]);
+
+    game.user.isGM = true;
+    game.users.activeGM = { id: game.user.id };
+    for (const listen of listeners) await listen({ action: "syncBodyToken", sceneId: "scene1", actorId: actor.id, src: "tokens/forged.webp" });
+
+    expect(scene.updates).toEqual([{ _id: "t1", "texture.src": "tokens/fury.webp" }]);
   });
 });

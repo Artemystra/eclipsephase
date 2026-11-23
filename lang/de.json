@@ -1091,7 +1091,7 @@
     },
     "item": {
 "morph": {
-"poolsHeadline": "Pools"},
+"poolsHeadline": "Pools", "morphImage": "Morph-Bild", "morphImageInfo": "Das Bild dieses Morphs im Morph-Tab des Charakterbogens und in Listen wie dem Kompendium. Es ändert das Token nicht.", "tokenImage": "Token-Bild", "tokenImageInfo": "Das Bild, das das Token des Charakters zeigt, solange der Charakter in diesem Morph steckt: Beim Sleeven wechseln der Prototyp-Token und die Tokens des Charakters auf der aktiven Szene. Ohne Bild zeigt das Token das eigene Bild des Charakters."},
       "inducedChanges": {
         "headline": "Ausgelöste Änderungen",
         "allActions": "auf alle Aktionen",
