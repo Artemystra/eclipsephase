@@ -26,7 +26,7 @@ function guarded(ware = {}, drug = {}) {
       ...implants,
       {
         _id: "drug1", name: "Twitch", type: "drug",
-        system: { active: true, drugType: "biochem", category: "toxin", inhalation: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 10, units: "minutes" }, ...drug },
+        system: { active: true, boundTo: "morph1", drugType: "biochem", category: "toxin", inhalation: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 10, units: "minutes" }, ...drug },
         effects: [{ name: "Twitch", changes: TWITCH }]
       }
     ]

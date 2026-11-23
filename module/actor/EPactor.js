@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js"
 import { applyDamage } from "../rolls/damage.js"
 import { endAllChiPushes, sustainSummary, actorStrainFamily } from "../rolls/psi.js"
 import { getStrainFamily } from "../rolls/strain-families.js"
-import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/morp-functions.js"
+import { chainHasWareMarker, CYBERBRAIN_MARKER, locationOf } from "../common/morp-functions.js"
 import { globalModifiers, modifierSummary, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
 import { removeReplacedConditions, conditionNotes } from "../common/conditions.js";
 
@@ -521,94 +521,23 @@ export default class EPactor extends Actor {
   _calculateHomebrewEncumberance(actorModel) {
    //HOMEBREW - Encumbrance through weapons & gear
    if(actorModel.homebrew === true && this.type === "character"){
-    //Weapon Variables
-    let weaponScore = 0;
-    let weaponScoreMod = actorModel.mods.weaponScoreMod ? eval(actorModel.mods.weaponScoreMod) : 0;
-    let bulkyWeaponCount = 0;
-    let weaponMalus = 0;
-    let weaponItems = this.items.filter(i => i.type === "rangedWeapon" || i.type === "ccWeapon");
-    //Gear Variables
-    let gearItems = this.items.filter(i => i.type === "gear");
-    let accessoryCount = 0;
-    let accessoryCountMod = actorModel.mods.accessoryCountMod ? eval(actorModel.mods.accessoryCountMod) : 0;
-    let accessoryMalus = 0;
-    let bulkyCount = 0;
-    let bulkyCountMod = actorModel.mods.bulkyCountMod ? eval(actorModel.mods.bulkyCountMod) : 0;
-    let bulkyMalus = 0;
-    //Consumable Encumberance
-    let consumableItems = this.items.filter(i => i.system.slotType === "consumable");
-    let consumableCount = 0;
-    let consumableCountMod = actorModel.mods.consumableCountMod ? eval(actorModel.mods.consumableCountMod) : 0;
-    let consumableMalus = 0;
-    //Weapon loop
-    for(let weaponCheck of weaponItems){
-        if(weaponCheck.system.active && weaponCheck.system.slotType === "sidearm"){
-          weaponScore++;
-        } 
-        else if(weaponCheck.system.active && weaponCheck.system.slotType === "oneHanded"){
-          weaponScore += 2;
-        }
-        else if(weaponCheck.system.active && weaponCheck.system.slotType === "twoHanded"){
-          weaponScore += 4;
-        }
-        else if(weaponCheck.system.active && weaponCheck.system.slotType === "bulky"){
-          bulkyWeaponCount++;
-        }
-    }
-    //Gear loop
-    for(let gearCheck of gearItems){
-      if(gearCheck.system.active && gearCheck.system.slotType === "accessory"){
-        for(let i=0; i<gearCheck.system.quantity; i++){
-          accessoryCount++;
-        }
-      }
-      else if(gearCheck.system.active && gearCheck.system.slotType === "bulky"){
-        for(let i=0; i<gearCheck.system.quantity; i++){
-          bulkyCount++;
-        }
-      }
-    }
-    //Consumable loop
-    for(let consumCheck of consumableItems){
-      if (consumCheck.system.active){
-        for(let i=0; i<consumCheck.system.quantity; i++){
-          consumableCount++;
-        }
-      }
-    }
-    //Modification Calculator
-    if(accessoryCount + accessoryCountMod > 4){
-      accessoryMalus = Math.ceil((accessoryCount + accessoryCountMod -4)/4)*10;
-    }
-    if(weaponScore + weaponScoreMod > 5){
-      weaponMalus = (Math.ceil((weaponScore + weaponScoreMod -5)/5)*10);
-    }
-    if(bulkyCount + bulkyWeaponCount + bulkyCountMod >= 1){
-      bulkyMalus = (bulkyCount + bulkyWeaponCount + bulkyCountMod)*20;
-    }
-    if(consumableCount + consumableCountMod > 3){
-      consumableMalus = Math.ceil((consumableCount + consumableCountMod -3)/3)*10;
-    }
+    // What a body carries weighs on that body only, and the Stash on none: rolls with the body that
+    // acts count its items; while jamming, rolls with the real body count the sleeved morph's.
+    const actingBody = actorModel.activeJam || actorModel.activeMorph;
+    const carriedOn = body => this.items.filter(item => body && locationOf(this, item) === body);
+    const acting = this._encumbranceOf(actorModel, carriedOn(actingBody));
 
-    // While jamming, the real body's carried weapons/gear stay behind and must not encumber the
-    // drone's own rolls; stash the values instead, for use by rolls made with the real body (-30).
+    actorModel.physical.totalWeaponMalus = acting.weaponMalus;
+    actorModel.physical.totalGearMalus = acting.bulkyMalus + acting.accessoryMalus + acting.consumableMalus;
+    actorModel.currentStatus.bulkyModifier = acting.bulkyMalus;
+    actorModel.currentStatus.gearModifier = acting.accessoryMalus;
+    actorModel.currentStatus.consumableModifier = acting.consumableMalus;
+
     if (actorModel.additionalSystems?.isJamming) {
+      const ownBody = this._encumbranceOf(actorModel, carriedOn(actorModel.activeMorph));
       actorModel.additionalSystems.jamming ??= {};
-      actorModel.additionalSystems.jamming.ownBodyWeaponMalus = weaponMalus;
-      actorModel.additionalSystems.jamming.ownBodyGearMalus = bulkyMalus + accessoryMalus + consumableMalus;
-
-      actorModel.physical.totalWeaponMalus = 0;
-      actorModel.physical.totalGearMalus = 0;
-      actorModel.currentStatus.bulkyModifier = 0;
-      actorModel.currentStatus.gearModifier = 0;
-      actorModel.currentStatus.consumableModifier = 0;
-    }
-    else {
-      actorModel.physical.totalWeaponMalus = weaponMalus;
-      actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus + consumableMalus;
-      actorModel.currentStatus.bulkyModifier = bulkyMalus;
-      actorModel.currentStatus.gearModifier = accessoryMalus;
-      actorModel.currentStatus.consumableModifier = consumableMalus;
+      actorModel.additionalSystems.jamming.ownBodyWeaponMalus = ownBody.weaponMalus;
+      actorModel.additionalSystems.jamming.ownBodyGearMalus = ownBody.bulkyMalus + ownBody.accessoryMalus + ownBody.consumableMalus;
     }
   }
   //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
@@ -616,6 +545,44 @@ export default class EPactor extends Actor {
     actorModel.physical.totalWeaponMalus = 0;
     actorModel.physical.totalGearMalus = 0;
   }
+  }
+
+  /**
+   * The homebrew encumbrance of a set of carried items: weapons by how they are carried, accessories,
+   * bulky things and consumables by how many there are, each beyond what is carried freely.
+   * @param {Object} actorModel - The actor's system data, for its encumbrance modifiers
+   * @param {Item[]} items - The items carried
+   * @returns {Object} weaponMalus, bulkyMalus, accessoryMalus and consumableMalus
+   */
+  _encumbranceOf(actorModel, items) {
+    const weaponScoreMod = actorModel.mods.weaponScoreMod ? eval(actorModel.mods.weaponScoreMod) : 0;
+    const accessoryCountMod = actorModel.mods.accessoryCountMod ? eval(actorModel.mods.accessoryCountMod) : 0;
+    const bulkyCountMod = actorModel.mods.bulkyCountMod ? eval(actorModel.mods.bulkyCountMod) : 0;
+    const consumableCountMod = actorModel.mods.consumableCountMod ? eval(actorModel.mods.consumableCountMod) : 0;
+    const count = item => Math.max(0, Math.floor(Number(item.system.quantity) || 0));
+    const weaponScores = { sidearm: 1, oneHanded: 2, twoHanded: 4 };
+
+    let weaponScore = 0;
+    let bulkyWeaponCount = 0;
+    let accessoryCount = 0;
+    let bulkyCount = 0;
+    let consumableCount = 0;
+    for (const item of items) {
+      if (item.type === "rangedWeapon" || item.type === "ccWeapon") {
+        if (item.system.slotType === "bulky") bulkyWeaponCount++;
+        else weaponScore += weaponScores[item.system.slotType] ?? 0;
+      }
+      else if (item.type === "gear" && item.system.slotType === "accessory") accessoryCount += count(item);
+      else if (item.type === "gear" && item.system.slotType === "bulky") bulkyCount += count(item);
+      if (item.system.slotType === "consumable") consumableCount += count(item);
+    }
+
+    return {
+      weaponMalus: weaponScore + weaponScoreMod > 5 ? Math.ceil((weaponScore + weaponScoreMod - 5) / 5) * 10 : 0,
+      accessoryMalus: accessoryCount + accessoryCountMod > 4 ? Math.ceil((accessoryCount + accessoryCountMod - 4) / 4) * 10 : 0,
+      bulkyMalus: bulkyCount + bulkyWeaponCount + bulkyCountMod >= 1 ? (bulkyCount + bulkyWeaponCount + bulkyCountMod) * 20 : 0,
+      consumableMalus: consumableCount + consumableCountMod > 3 ? Math.ceil((consumableCount + consumableCountMod - 3) / 3) * 10 : 0
+    };
   }
 
   _calculateSideCart(actorModel, items, jammedVehicleData) {

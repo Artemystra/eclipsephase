@@ -33,7 +33,7 @@ function exposedData(overTime, duration) {
       {
         _id: "tox1", name: "Necrosis", type: "drug",
         system: {
-          active: true, drugType: "nano", category: "toxin", quantity: 1, usagesUsed: 0, usagesMax: 5,
+          active: true, boundTo: "morph1", drugType: "nano", category: "toxin", quantity: 1, usagesUsed: 0, usagesMax: 5,
           duration, injection: true,
           overTime: { damage: NO_DAMAGE, interval: "turn", ticks: null, modifier: 0, incapacitates: false, ...overTime }
         }

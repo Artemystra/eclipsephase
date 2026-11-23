@@ -28,7 +28,7 @@ async function offerCard() {
     type: "character", name: "Giver", system: { activeMorph: "morph1" },
     items: [
       { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-      { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
+      { _id: "kick1", name: "Kick", type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
     ]
   });
   return (await offerDose(giver, giver.items.get("kick1"))).message;
@@ -243,7 +243,7 @@ describe("the giver's own card", () => {
       type: "character", name: "Giver", system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
       ]
     });
     const { message } = await offerDose(giver, giver.items.get("kick1"));

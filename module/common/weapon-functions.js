@@ -1,6 +1,7 @@
 import { itemReduction, listSelection, gmList, searchableListSelection, diceFormula } from "./general-sheet-functions.js";
 import { damageValueCalc } from "./general-sheet-functions.js";
 import { dosesRemaining, isAmmoPack, payloadCandidates } from "./drugs.js";
+import { locationOf, STASH } from "./morp-functions.js";
 
 const DRUG_CHOICE = "drug-";
 /**
@@ -1015,6 +1016,22 @@ function ammoTypeLabel(ammoType) {
 }
 
 //Reload Weapons
+/**
+ * The ammunition a weapon can be loaded with: packs of its type at hand - and on a character only
+ * packs on the same body as the weapon, never the Stash, which may be anywhere.
+ * @param {Actor} actor - The actor holding the weapon
+ * @param {Item} weapon - The weapon
+ * @param {String} ammoType - The kind of ammunition it takes
+ * @returns {Item[]} The packs it can be loaded from
+ */
+export function ammoForWeapon(actor, weapon, ammoType) {
+  const packs = actor.ammo?.[ammoType] ?? [];
+  if (actor.type !== "character") return packs;
+  const where = locationOf(actor, weapon);
+  if (where === STASH) return [];
+  return packs.filter(pack => locationOf(actor, pack) === where);
+}
+
 export async function reloadWeapon(html, actor) {
   html.querySelectorAll(".reload").forEach(element => {
     element.addEventListener("click", async event => {
@@ -1035,7 +1052,8 @@ export async function reloadWeapon(html, actor) {
       let difference = maxAmmo - currentAmmo;
       let weaponUpdate = [];
       let ammoList = [];
-      let numberOfPacks = actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0;
+      const packs = ammoForWeapon(actor, weapon, ammoType);
+      let numberOfPacks = packs.length;
       let ammoSelected = "";
       let calculated = null;
       let traits = null;
@@ -1056,7 +1074,7 @@ export async function reloadWeapon(html, actor) {
             ammoList.push(ammoEntry);
           }
 
-          for (let ammo of actor.ammo[ammoType]) {
+          for (let ammo of packs) {
             calculated = await damageValueCalc(ammo, ammo.system.dv, traits, "ammo");
             traits = ammoType != "chemical" ? ammo.system.traits : {};
             dv = ammoType != "chemical" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
@@ -1083,7 +1101,7 @@ export async function reloadWeapon(html, actor) {
         }
         //Just uses the only fitting ammo pack available
         else if (!selfReplenishing) {
-          ammoSelected = actor.ammo[ammoType][0];
+          ammoSelected = packs[0];
           let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
           dv = ammoType != "chemical" && !selfReplenishing ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
         }

@@ -1,5 +1,6 @@
+{{!-- A character's armour, one row each: laid out like the other carried items, its protection shown when opened. --}}
 {{#each item as |item id|}}
-    <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+    <div class="item flexrow flex-group-center offHand reveal ep-carried-row" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
         <div class="ep-carried-lead">
             <div style="max-width: 25px!important;">
                 <div class="noShow toggle" style="padding-left: 4px;">
@@ -10,32 +11,33 @@
                 <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             </div>
         </div>
-        <span class="wantToKnowMoreFixed ep-name-tip" style="flex: 1.5; font-weight: bold;"><label class="truncate alignLeft">{{item.name}}</label><span class="tooltipText">{{item.name}}</span></span>
-        <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
-        <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
-        <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
-        <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
-        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
-        <a class="item-control item-equip input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
-            <i class="fa-regular fa-circle-up awesomeIcon" style="color: var(--iconBlue);"></i>
-            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.equipItem'}}</span>
-        </a>
-        <div class="flex-group-right slideShow input-xs">
-            <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>
-            <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
+        <span class="wantToKnowMoreFixed ep-name-tip" style="flex: 1; font-weight: bold;"><label class="truncate alignLeft">{{item.name}}</label><span class="tooltipText">{{item.name}}</span></span>
+        <label class="flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
+        <div class="ep-row-icons">
+            <a class="item-control item-equip input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
+                <i class="fa-regular fa-circle-up awesomeIcon" style="color: var(--iconBlue);"></i>
+                <span class="tooltipText">{{localize 'ep2e.actorSheet.button.equipItem'}}</span>
+            </a>
+            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+            <a class="item-control item-edit resource-label editWithLabel" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+            <div class="slideShow">
+                <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>
+                <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
+            </div>
         </div>
-        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="min-width: 100%;">
+        <div class="item showMore descriptionContainer ep-item-details" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="min-width: 100%;">
+            {{!-- The armour's protection at a glance, as on a weapon: the titles in one row, the values below. --}}
+            <div class="ep-weapon-stats ep-armor-stats">
+                <span class="resource-label">{{localize "ep2e.inventory.npcInventory.armorEnergy"}}</span>
+                <span class="resource-label">{{localize "ep2e.inventory.npcInventory.armorKinetic"}}</span>
+                <strong>{{item.system.energy}}</strong>
+                <strong>{{item.system.kinetic}}</strong>
+            </div>
             {{#if item.system.description}}
             <div class="itemDescription" style="min-width: 100%;">
                 {{{item.system.description}}}
             </div>
             {{/if}}
-            {{#unless ../readOnly}}
-            <div class="flexrow flex-between item-controls" style="min-width: 100%;">
-                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle awesomeIcon"></i></a>
-                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit awesomeIcon"></i></a>
-            </div>
-            {{/unless}}
         </div>
     </div>
 {{/each}}

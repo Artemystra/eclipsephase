@@ -624,6 +624,22 @@ describe("carried weapons weigh on the body that carries them (homebrew encumbra
     expect(actor.system.physical.totalWeaponMalus).toBe(0);
     expect(actor.system.additionalSystems.jamming.ownBodyWeaponMalus).toBe(20);
   });
+
+  test("what the jammed drone carries weighs on the drone's rolls, the morph's load on the own body's", async () => {
+    const actor = loaded({ activeJam: "drone1" });
+    await actor.items.get("r1").update({ "system.boundTo": "drone1" });
+    await actor.items.get("r2").update({ "system.boundTo": "drone1" });
+
+    expect(actor.system.physical.totalWeaponMalus).toBe(10);
+    expect(actor.system.additionalSystems.jamming.ownBodyWeaponMalus).toBe(0);
+  });
+
+  test("what lies in the Stash weighs on no one", async () => {
+    const actor = loaded();
+    await actor.items.get("r3").update({ "system.boundTo": "stash" });
+
+    expect(actor.system.physical.totalWeaponMalus).toBe(10);
+  });
 });
 
 describe("how the sheet sorts a character's items", () => {
@@ -898,10 +914,12 @@ describe("the body panels and the Stash tab", () => {
     expect(html).toContain("ep2e.inventory.weaponsLabel");
     expect(html).toContain("ep2e.inventory.gearLabel");
     expect(html).not.toContain("ep2e.inventory.consumablesLabel");
-    expect(html.match(/item-stash/g)).toHaveLength(2);
+    expect(html.match(/item-stash /g)).toHaveLength(2);
     expect(html.match(/item-rebind/g)).toHaveLength(2);
     expect(html).toContain("ep-control-disabled");
     expect(html.match(/<span class="wantToKnowMoreFixed ep-name-tip"/g)).toHaveLength(3);
+    expect(html.match(/class="ep-row-icons"/g)).toHaveLength(3);
+    expect(html).not.toContain("item-controls");
   });
 
   test("the Stash tab lists what is put aside, each with Equip but the programs", async () => {
@@ -982,6 +1000,24 @@ describe("the body panels and the Stash tab", () => {
     expect(extras).toContain(">Shock<");
     expect(extras).toMatch(/\{\{else\}\}|>\s*-\s*</);
     expect(none).not.toContain("ep-weapon-extras");
+  });
+
+  test("an armour row looks like the others: its icons in the grid, energy and kinetic as titles over values when opened", async () => {
+    const actor = makeActor({ type: "character" });
+    const vest = makeItem({ name: "Vest", type: "armor", system: { energy: 6, kinetic: 12 } });
+
+    const worn = await render("global-partials/armor-row-list.hbs", { item: [vest], actor });
+    const stashed = await render("global-partials/armor-stash-row-list.hbs", { item: [vest], actor });
+    const stats = worn.match(/<div class="ep-weapon-stats ep-armor-stats">([\s\S]*?)<\/div>/)[1];
+
+    expect(stats.match(/resource-label/g)).toHaveLength(2);
+    expect(stats.indexOf("armorEnergy")).toBeLessThan(stats.indexOf("armorKinetic"));
+    expect([stats.includes(">6<"), stats.includes(">12<")]).toEqual([true, true]);
+    for (const html of [worn, stashed]) {
+      const icons = html.match(/<div class="ep-row-icons">([\s\S]*?)<div class="item showMore/)[1];
+      expect(["item-delete", "item-edit", "slideShow"].every(control => icons.includes(control))).toBe(true);
+    }
+    expect([worn.includes("item-stash "), worn.includes("item-rebind"), stashed.includes("item-equip"), stashed.includes("item-rebind")]).toEqual([true, true, true, false]);
   });
 
   test("an item name's tooltip shows only where the name is cut off", () => {

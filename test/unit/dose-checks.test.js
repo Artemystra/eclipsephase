@@ -21,7 +21,7 @@ function carrying(name, useCheck) {
     system: { activeMorph: "morph1", aptitudes: { som: { value: 15 }, wil: { value: 15 } } },
     items: [
       { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } },
-      { _id: "drug1", name, type: "drug", system: { active: true, drugType: "biochem", inhalation: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 1, units: "hours" }, useCheck: { ...BASE_CHECK, ...useCheck } } }
+      { _id: "drug1", name, type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", inhalation: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 1, units: "hours" }, useCheck: { ...BASE_CHECK, ...useCheck } } }
     ]
   });
 }

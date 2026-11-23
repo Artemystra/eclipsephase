@@ -4854,25 +4854,88 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
   font-size: 12px;
 }
 
-/* What leads a character's carried-item row: its image and, on a body, Move. Fixed widths, so the
-   name starts at the same place on every row. */
-.ep-carried-lead {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+/* The icons at either end of an item row sit in grids of equal cells - the image and Move before the
+   name, Put into Stash or Equip, delete, edit and open at the end - so every icon has the same size
+   and spacing and lines up from row to row. A row without one of them leaves its cell empty. */
+.ep-carried-lead,
+.ep-row-icons {
+  display: grid;
   flex: 0 0 auto;
-  gap: 4px;
+  column-gap: 6px;
+  align-items: center;
+  justify-items: center;
+}
+
+.ep-carried-lead {
+  grid-template-columns: repeat(2, 26px);
   margin-right: 10px;
 }
 
-.ep-carried-lead > :first-child {
-  flex: 0 0 25px;
-  width: 25px;
+/* The end grid also keeps the row's header line at the row's height, so it does not shrink once the
+   row opens and wraps its details below. */
+.ep-row-icons {
+  grid-template-columns: repeat(4, 26px);
+  min-height: 36px;
+  margin-left: 10px;
 }
 
-.ep-carried-lead .item-rebind {
-  flex: 0 0 30px;
-  width: 30px;
+.ep-carried-lead > *,
+.ep-row-icons > * {
+  margin: 0;
+  padding: 0;
+}
+
+.ep-carried-lead .input-small,
+.ep-row-icons .input-small {
+  min-width: 0 !important;
+  max-width: 26px !important;
+}
+
+.ep-carried-lead > :first-child {
+  grid-column: 1;
+}
+
+.ep-carried-lead > .item-rebind {
+  grid-column: 2;
+}
+
+.ep-row-icons > .item-stash,
+.ep-row-icons > .item-equip,
+.ep-row-icons > .item-stash-later {
+  grid-column: 1;
+}
+
+.ep-row-icons > .item-delete {
+  grid-column: 2;
+}
+
+.ep-row-icons > .item-edit {
+  grid-column: 3;
+}
+
+.ep-row-icons > .slideShow {
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.ep-row-icons > .slideShow i {
+  line-height: 1;
+}
+
+/* What an item row shows when opened: always a column that neither wraps nor shrinks, so it keeps
+   its layout while the slide opens or closes it and is only uncovered - the slide drops showFlex as
+   soon as it starts closing. */
+.ep-item-details {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.ep-item-details > * {
+  flex-shrink: 0;
 }
 
 /* A weapon mode when opened: the titles in one row and the values below, each pair centred in its
@@ -4906,6 +4969,11 @@ img.icon-xsmall ~ i.fa-plus.awesomeIcon {
 
 .ep-weapon-stats-melee.ep-weapon-stats-single {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* An armour's protection: energy and kinetic side by side. */
+.ep-weapon-stats.ep-armor-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .ep-weapon-stats-second {

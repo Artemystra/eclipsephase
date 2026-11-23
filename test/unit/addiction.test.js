@@ -18,7 +18,7 @@ function user(drug = {}, morphType = "bio") {
     system: { activeMorph: "morph1", aptitudes: { wil: { value: 15 } } },
     items: [
       { _id: "morph1", name: "Morph", type: "morph", system: { type: morphType } },
-      { _id: "drug1", name: "Juice", type: "drug", system: { active: true, drugType: "biochem", category: "drug", oral: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 1, units: "hours" }, addictionType: "mental", addictionMod: "-20", ...drug } }
+      { _id: "drug1", name: "Juice", type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", category: "drug", oral: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 1, units: "hours" }, addictionType: "mental", addictionMod: "-20", ...drug } }
     ]
   });
 }

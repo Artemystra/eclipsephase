@@ -128,6 +128,52 @@ describe("reloading a weapon", () => {
   });
 });
 
+describe("reloading from the weapon's own body", () => {
+  /**
+   * A character sleeved in a morph and jamming a drone, with a spare morph.
+   * @param {Object[]} items - The weapons and packs it carries
+   * @returns {Actor} The prepared actor
+   */
+  function owner(items) {
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", activeJam: "drone1" },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
+        { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio" } },
+        { _id: "drone1", name: "Drone", type: "vehicle", system: { chassisType: "robot" } },
+        ...items
+      ]
+    });
+  }
+  const on = (data, boundTo) => ({ ...data, system: { ...data.system, boundTo } });
+
+  test("a weapon loads only packs on its own body: never from another body or the Stash", async () => {
+    const actor = owner([on(pistol(), "morph1"), on(rounds("stashed"), "stash"), on(rounds("spare"), "morph2"), on(rounds("drones"), "drone1")]);
+
+    await pressReload(actor);
+
+    expect(actor.items.get("gun1").system.ammoMin).toEqual(2);
+    expect(createdMessages[0].content).toContain("ep2e.roll.announce.combat.ranged.noAmmoPresent");
+  });
+
+  test("a weapon on the jammed drone loads the drone's packs", async () => {
+    const actor = owner([on(pistol(), "drone1"), on(rounds("carried"), "morph1"), on(rounds("drones"), "drone1")]);
+
+    await pressReload(actor);
+
+    expect(actor.items.get("gun1").system.ammoSelected.id).toEqual("drones");
+  });
+
+  test("an NPC loads from whatever it has", async () => {
+    const actor = makeActor({ type: "npc", items: [pistol(), on(rounds("ammo1"), "stash")] });
+
+    await pressReload(actor);
+
+    expect(actor.items.get("gun1").system.ammoMin).toEqual(10);
+  });
+});
+
 describe("the armour loaded ammunition meets", () => {
   test("reloading takes over the armour the ammunition names", async () => {
     const plasma = { ...rounds("ammo1"), system: { ...rounds("ammo1").system, armorused: "energy" } };

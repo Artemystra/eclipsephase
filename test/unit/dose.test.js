@@ -24,7 +24,7 @@ function carrying(drug = {}, morphType = "bio") {
       {
         _id: "kick1", name: "Kick", type: "drug",
         system: {
-          active: true, drugType: "biochem", category: "combat",
+          active: true, boundTo: "morph1", drugType: "biochem", category: "combat",
           quantity: 1, usagesUsed: 0, usagesMax: 5,
           duration: { value: 8, units: "hours" }, injection: true,
           description: "Boosts your reflexes.",
@@ -252,7 +252,7 @@ describe("the effect data on its own", () => {
       system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "retcon1", name: "Retcon", type: "drug", system: { active: true, drugType: "nano", oral: true } }
+        { _id: "retcon1", name: "Retcon", type: "drug", system: { active: true, boundTo: "morph1", drugType: "nano", oral: true } }
       ]
     });
 
@@ -550,7 +550,7 @@ describe("the card a dose posts", () => {
       system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, duration: { value: 8, units: "hours" } } }
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", injection: true, duration: { value: 8, units: "hours" } } }
       ]
     });
     await takeDose(npc, npc.items.get("kick1"));
@@ -728,7 +728,7 @@ describe("giving a dose to someone else", () => {
       type: "npc", system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
-        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
       ]
     });
 

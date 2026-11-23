@@ -30,7 +30,7 @@ function carrying(grants) {
     system: { activeMorph: "morph1" },
     items: [
       { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio", dur: 30 } },
-      { _id: "drug1", name: "Fokus", type: "drug", system: { active: true, drugType: "biochem", oral: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 12, units: "hours" }, grants } }
+      { _id: "drug1", name: "Fokus", type: "drug", system: { active: true, boundTo: "morph1", drugType: "biochem", oral: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 12, units: "hours" }, grants } }
     ]
   });
 }
