@@ -28,63 +28,29 @@
       {{else if defended}}
       {{else}}
       <div class="item privateChatButton" data-ownerid={{actor.id}}>
-        {{#if alternatives.options.swap}}
+        {{#if alternatives.options.available}}
+        {{!-- Modify Result: the option the system suggests, and the other one where both apply. --}}
         <div class="slideShow">
           <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-            <strong>{{localize "ep2e.chat.buttonLabel.swapResult"}} <i class="fa-solid fa-rotate"></i></strong>
+            <strong>{{localize "ep2e.chat.buttonLabel.modifyResult"}} <i class="fa-solid fa-rotate"></i></strong>
           </div>
         </div>
-        <div class="showMore noShow" data-display="flex">
-          <div class="chatControls">
-            {{#if (ne actor.type "goon")}}
-              {{#if (gt pools.skillPoolValue 0)}}
-                <button type="button" class="chatButton usePool autoClose" data-action="usePool" data-usepool="pool">{{localize pools.useMessage}}</button>
-              {{else}}
-                <button type="button" class="chatButton" disabled>{{localize pools.useMessage}}</button>
-              {{/if}}
-              {{#if (gt pools.flexPoolValue 0)}}
-                <button type="button" class="chatButton usePool autoClose" data-action="usePool" data-usepool="flex">{{localize "ep2e.skills.pool.use.flex"}}</button>
-              {{else}}
-                <button type="button" class="chatButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
-              {{/if}}
+        <div class="showMore noShow ep-modify-result" data-display="flex" data-choice="suggested">
+          {{!-- The info icon explains the choice, or why a flip-flop comes alone; its invisible twin keeps the row centred. --}}
+          <div class="ep-modify-toggle">
+            {{#if alternatives.explain}}<i class="fa-regular fa-circle-info awesomeIcon ep-modify-spacer" aria-hidden="true"></i>{{/if}}
+            {{#if alternatives.alternative}}
+            <div class="ep-modify-segments">
+              <button type="button" class="ep-modify-option" data-for-choice="suggested">{{localize alternatives.label}}</button>
+              <button type="button" class="ep-modify-option" data-for-choice="alternative">{{localize alternatives.alternative.label}}</button>
+            </div>
             {{else}}
-                <button type="button" class="chatButton threatButton usePool autoClose" data-action="usePool" data-usepool="pool">{{localize pools.useMessage}}</button>
+            <p class="ep-modify-only">{{localize alternatives.label}}</p>
             {{/if}}
+            {{#with alternatives.explain}}
+            <i class="fa-regular fa-circle-info moreInfo awesomeIcon" data-rolledfrom="modifyInfo" data-dialogType="information" data-title="{{title}}" data-copy="{{copy}}" data-die="{{die}}" data-swap="{{swap}}" data-threshold="{{threshold}}" data-rolled="{{rolled}}" data-upgraded="{{upgraded}}" data-swapped="{{swapped}}" data-recommended="{{recommended}}"></i>
+            {{/with}}
           </div>
-        </div>
-
-        {{else if alternatives.options.upgrade}}
-        <div class="slideShow">
-          <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-            <strong>{{localize "ep2e.chat.buttonLabel.upgradeResult"}} <i class="fa-regular fa-circle-up"></i></strong>
-          </div>
-        </div>
-        <div class="showMore noShow" data-display="flex">
-          <div class="chatControls">
-            {{#if (ne actor.type "goon")}}
-              {{#if (gt pools.skillPoolValue 0)}}
-                <button type="button" class="chatButton usePool autoClose" data-action="usePool" data-usepool="pool">{{localize pools.useMessage}}</button>
-              {{else}}
-                <button type="button" class="chatButton" disabled>{{localize pools.useMessage}}</button>
-              {{/if}}
-              {{#if (gt pools.flexPoolValue 0)}}
-                <button type="button" class="chatButton usePool autoClose" data-action="usePool" data-usepool="flex">{{localize "ep2e.skills.pool.use.flex"}}</button>
-              {{else}}
-                <button type="button" class="chatButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
-              {{/if}}
-            {{else}}
-                <button type="button" class="chatButton threatButton usePool autoClose" data-action="usePool" data-usepool="pool">{{localize pools.useMessage}}</button>
-            {{/if}}
-          </div>
-        </div>
-
-        {{else if alternatives.options.mitigate}}
-        <div class="slideShow">
-          <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-            <strong>{{localize "ep2e.chat.buttonLabel.mitigateResult"}} <i class="fa-solid fa-bolt"></i></strong>
-          </div>
-        </div>
-        <div class="showMore noShow" data-display="flex">
           <div class="chatControls">
             {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}

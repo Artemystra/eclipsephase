@@ -28,27 +28,49 @@ export async function usePoolFromChat(data){
 
     if(updateResult){
         const card = game.messages.get(context.messageId)
-        const usageType = context.alternatives.usageType
-        const newResult = context.alternatives.result
+        // The option the card shows when the button is pressed: the suggested one, or the one
+        // offered instead once the player switched to it.
+        const switched = data.currentTarget.closest?.(".ep-modify-result")?.dataset?.choice === "alternative"
+        const chosen = switched && context.alternatives.alternative ? context.alternatives.alternative : context.alternatives
+        const usageType = chosen.usageType
+        const newResult = chosen.result
         const poolName = options === "flex" || !pool.poolType ? "ep2e.skills.flex.poolHeadline" : pool.poolType
-        const resultClass = usageType === "mitigated" ? "fail" : ((getTaskResultText() ?? TASK_RESULT_TEXT)[newResult]?.class ?? context.alternatives.resultClass)
+        const resultClass = usageType === "mitigated" ? "fail" : ((getTaskResultText() ?? TASK_RESULT_TEXT)[newResult]?.class ?? chosen.resultClass)
+        const stored = chosen === context.alternatives ? {} : {
+            "flags.eclipsephase.roll.alternatives.usageType": usageType,
+            "flags.eclipsephase.roll.alternatives.result": newResult,
+            "flags.eclipsephase.roll.alternatives.value": chosen.value,
+            "flags.eclipsephase.roll.alternatives.resultClass": chosen.resultClass,
+            "flags.eclipsephase.roll.alternatives.resultText": chosen.resultText
+        }
 
         if (card?.getFlag?.("eclipsephase", "taskCard")) {
             await updateCard(card, "taskCard", "poolSpent", {
-                usageType, poolName, spender: actor?.name ?? "", newValue: context.alternatives.value, newResult, resultClass, resultText: context.alternatives.resultText
-            }, { extra: { "flags.eclipsephase.roll.alternatives.spent": true } })
+                usageType, poolName, spender: actor?.name ?? "", newValue: chosen.value, newResult, resultClass, resultText: chosen.resultText
+            }, { extra: { "flags.eclipsephase.roll.alternatives.spent": true, ...stored } })
         }
         else {
             const html = await foundry.applications.handlebars.renderTemplate(POOL_USAGE_OUTPUT, {
-                resultText: context.alternatives.resultText, type: usageType, newResult: newResult ?? false,
-                newValue: context.alternatives.value ?? false, poolName: game.i18n.localize(poolName)
+                resultText: chosen.resultText, type: usageType, newResult: newResult ?? false,
+                newValue: chosen.value ?? false, poolName: game.i18n.localize(poolName)
             })
             ChatMessage.create({ speaker: ChatMessage.getSpeaker({actor: actor}), flavor: html, whisper: recipientList, blind: blind })
         }
 
-        Hooks.callAll("eclipsephase.poolResult", {context, actor, rolledFrom, newResult, blind, recipientList})
+        Hooks.callAll("eclipsephase.poolResult", {context: { ...context, alternatives: { ...context.alternatives, ...chosen } }, actor, rolledFrom, newResult, blind, recipientList})
     }
 
+}
+
+/**
+ * Picks an option on a roll card's Modify Result toggle: the one the system suggests or the other.
+ * Only the card on this screen changes; a pool button then spends the option picked.
+ * @param {HTMLElement} element - The toggle segment that was clicked, naming its choice
+ * @returns {void}
+ */
+export function switchModifyChoice(element) {
+    const box = element?.closest?.(".ep-modify-result")
+    if (box && element.dataset.forChoice) box.dataset.choice = element.dataset.forChoice
 }
 
 /** 
@@ -112,64 +134,148 @@ export async function update(options, pool, task, actorWhole){
 }
 
 /**
- * Analyses the outcome of the roll and determines whether swapping, upgrading or mitigating is the best course of action
- * @param {Object} outputData - The data from the roll
- * @param {Object} pool - The pool object bound to the roll
- * @returns - An object containing the outcome of the analysis
+ * How good a result is, to compare a roll with its flip-flopped die: criticals beyond the superior
+ * results of their side. Read at call time, as dice.js and this module import each other.
+ * @param {Number} result - The result tier
+ * @returns {Number} Its rank, -1 for a critical failure up to 6 for a critical success
  */
-export async function outcomeAlternatives(outputData, pool, systemOptions){
-    let resultText = getTaskResultText() ?? TASK_RESULT_TEXT;
-    let obj = {options: {swap: false, upgrade: false, mitigate: false}} 
-    obj.value = await swapDice(outputData.rollResult);
-    obj.result =  rollCalc(obj.value, outputData.targetNumber)
-    obj.originalResult = rollCalc(outputData.rollResult, outputData.targetNumber)
-    obj.resultClass = resultText[obj.result].class
-    obj.resultText = resultText[obj.result].text
-    obj.pools = pool
-    obj.pools.available = Boolean(obj.pools.skillPoolValue + obj.pools.flexPoolValue > 0) 
+function resultRank(result) {
+    return {
+        [TASK_RESULT.CRITICAL_FAILURE]: -1, [TASK_RESULT.AUTOFAIL]: -1,
+        [TASK_RESULT.FAILURE_TWO]: 0, [TASK_RESULT.FAILURE_ONE]: 1, [TASK_RESULT.FAILURE]: 2,
+        [TASK_RESULT.SUCCESS]: 3, [TASK_RESULT.SUCCESS_ONE]: 4, [TASK_RESULT.SUCCESS_TWO]: 5,
+        [TASK_RESULT.CRITICAL_SUCCESS]: 6, [TASK_RESULT.AUTOSUCCESS]: 6
+    }[result] ?? 0;
+}
 
-    if(outputData.resultClass === "success"){
-        if(obj.resultClass === "success" && (obj.result > obj.originalResult) && obj.pools.available)
-            obj.options["swap"] = true
-        
-        else if(((obj.originalResult + 1) < 6)  && obj.pools.available){
-            obj.options["upgrade"] = true
-            obj.result = obj.originalResult + 1
-            obj["resultText"] = resultText[(obj.originalResult+1)].text
-         }
-        
-        else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.value > outputData.rollResult) && obj.pools.available)
-            obj.options["swap"] = true
+// What each way of modifying a result is called on the card.
+const MODIFY_TEXT = {
+    swapped: { label: "ep2e.chat.modify.swap" },
+    upgraded: { label: "ep2e.chat.modify.upgrade" },
+    mitigated: { label: "ep2e.chat.modify.downgrade" }
+};
+
+/**
+ * The lowest die above this one that a success would need for the next better result, short of a
+ * critical: where a flip-flop would have to land to beat an upgrade.
+ * @param {Number} die - The die rolled
+ * @param {Number} target - The target number
+ * @returns {Number|null} That die, or null when no better success is in reach
+ */
+export function nextResultAt(die, target) {
+    const rank = resultRank(rollCalc(die, target));
+    for (let value = die + 1; value <= target && value < 99; value++) {
+        if (value % 11 === 0) continue;
+        if (resultRank(rollCalc(value, target)) > rank) return value;
     }
-    else if(outputData.resultClass === "fail"){
-        
-        if((obj.result > obj.originalResult) && obj.pools.available)
-            obj.options["swap"] = true
-        
-        // Mitigating keeps the rolled die and lifts the result one tier; a critical failure becomes
-        // the worst ordinary one. The result stored is the one the card shows.
-        else if(((obj.originalResult + 1) < 3)  && obj.pools.available){
-            obj.options["mitigate"] = true
-            obj.result = obj.originalResult + 1
-            obj.resultClass = resultText[obj.result].class
-            obj["resultText"] = resultText[obj.result].text
-        }
+    return null;
+}
 
-        else if(outputData.rollResult % 11 === 0 && obj.pools.available){
-            obj.result = TASK_RESULT.FAILURE_TWO
-            obj.resultClass = resultText[obj.result].class
-            obj["resultText"] = resultText[obj.result].text
-            obj.options["mitigate"] = true
-        }
-
-        /*else if(obj.originalResult === 0 && (obj.value > obj.rollResult) && obj.pools.available)
-            obj.options["swap"] = true*/
-
+/**
+ * Why a roll card offers what it offers, for its info dialog: the choice between an upgrade and a
+ * higher die, or why a flip-flop or an upgrade is offered alone. Null for a downgrade.
+ * @param {Object} suggested - The option the system suggests, in the shape outcomeAlternatives builds
+ * @param {Object|null} alternative - The other option, or null
+ * @param {Object} roll - die, swappedDie, original and swapped result tiers, the targetNumber and
+ *   whether flip-flops are allowed
+ * @param {Object} resultText - The result texts by tier
+ * @returns {Object|null} title and copy keys, the dice, the threshold and the result text keys
+ */
+function modifyExplanation(suggested, alternative, roll, resultText) {
+    const { die, swappedDie, original, swapped, targetNumber, flipFlops } = roll;
+    const base = {
+        title: "ep2e.chat.modify.infoTitleSwap", die, swap: swappedDie, threshold: null,
+        rolled: resultText[original].text, swapped: resultText[swapped].text, upgraded: "", recommended: suggested.label
+    };
+    if (alternative) return {
+        ...base, title: "ep2e.chat.modify.infoTitle", copy: "ep2e.chat.modify.explain.choice",
+        threshold: nextResultAt(die, targetNumber), upgraded: resultText[suggested.result].text
+    };
+    if (suggested.usageType === "upgraded") {
+        const upgradedBase = { ...base, title: "ep2e.chat.modify.infoTitleUpgrade", upgraded: resultText[suggested.result].text };
+        if (!flipFlops) return { ...upgradedBase, copy: "ep2e.chat.modify.explain.upgradeBadLuck" };
+        if (resultRank(swapped) < 3) return { ...upgradedBase, copy: "ep2e.chat.modify.explain.upgradeSwapFails" };
+        return { ...upgradedBase, copy: "ep2e.chat.modify.explain.upgradeSwapLower" };
     }
+    if (suggested.usageType !== "swapped") return null;
+    const rank = resultRank(original);
+    if (rank < 3) return { ...base, copy: "ep2e.chat.modify.explain.swapFailure" };
+    if (resultRank(swapped) > rank) return { ...base, copy: "ep2e.chat.modify.explain.swapLevel" };
+    return { ...base, copy: "ep2e.chat.modify.explain.swapHigher" };
+}
 
-    obj.options.available = obj.options.swap || obj.options.upgrade || obj.options.mitigate ? true : false
+/**
+ * The failure a critical failure becomes when a pool point downgrades it (Core p.34): the one its die
+ * gives by the 33/66 rule (Core p.31), as if it were no double.
+ * @param {Number} value - The die
+ * @returns {Number} The result tier
+ */
+export function downgradedFailure(value) {
+    if (value < 33) return TASK_RESULT.FAILURE_TWO;
+    if (value < 66) return TASK_RESULT.FAILURE_ONE;
+    return TASK_RESULT.FAILURE;
+}
 
-    return obj
+/**
+ * What a pool point can make of a roll afterwards (Core p.34): flip-flop the dice, upgrade a success
+ * by one superior result up to two, or downgrade a critical failure. The system picks the option it
+ * suggests - a flip-flop that improves the result, else an upgrade, else a downgrade, else a
+ * flip-flop to a higher die of the same result, which only counts against an opponent. An upgrade
+ * comes with that higher die as its alternative: the better result, or the higher roll. A flip-flop
+ * that improves the result always beats an upgrade, so it has none. Bad Luck rules out flip-flops.
+ * A critical success is never upgraded, a superior failure never improved.
+ * @param {Object} outputData - The roll's data: rollResult, targetNumber, resultClass
+ * @param {Object} pool - The pools the roll may draw on
+ * @param {Object} [systemOptions] - Unused, kept for callers
+ * @param {Actor} [actor] - Who rolled, for traits that limit pools
+ * @returns {Promise<Object>} options (swap, upgrade, mitigate, available), the suggested option's
+ *   usageType, result, value, resultClass, resultText and label, its alternative
+ *   in the same shape or null, explain for the info dialog or null, originalResult and pools
+ */
+export async function outcomeAlternatives(outputData, pool, systemOptions, actor = null){
+    const resultText = getTaskResultText() ?? TASK_RESULT_TEXT;
+    const die = Number(outputData.rollResult);
+    const swappedDie = await swapDice(outputData.rollResult);
+    const original = rollCalc(die, outputData.targetNumber);
+    const swapped = rollCalc(swappedDie, outputData.targetNumber);
+    pool.available = Boolean(pool.skillPoolValue + pool.flexPoolValue > 0);
+    const entry = (usageType, result, value) => ({
+        usageType, result, value,
+        resultClass: resultText[result].class,
+        resultText: resultText[result].text,
+        ...MODIFY_TEXT[usageType]
+    });
+
+    let suggested = null;
+    let alternative = null;
+    if (pool.available) {
+        const flipFlops = actor?.system?.additionalSystems?.noFlipFlop !== true;
+        const rank = resultRank(original);
+        const betterSwap = flipFlops && resultRank(swapped) > rank ? entry("swapped", swapped, swappedDie) : null;
+        const higherSwap = flipFlops && !betterSwap && rank >= 3 && rank <= 5 && resultRank(swapped) === rank && swappedDie > die ? entry("swapped", swapped, swappedDie) : null;
+        const upgrade = rank === 3 || rank === 4 ? entry("upgraded", original + 1, die) : null;
+        const downgrade = rank === -1 ? entry("mitigated", downgradedFailure(die), die) : null;
+        suggested = betterSwap ?? upgrade ?? downgrade ?? higherSwap;
+        alternative = suggested === upgrade ? higherSwap : null;
+    }
+    const explain = suggested ? modifyExplanation(suggested, alternative,
+        { die, swappedDie, original, swapped, targetNumber: Number(outputData.targetNumber),
+          flipFlops: actor?.system?.additionalSystems?.noFlipFlop !== true }, resultText) : null;
+
+    const shown = suggested ?? entry("swapped", swapped, swappedDie);
+    return {
+        options: {
+            swap: suggested?.usageType === "swapped",
+            upgrade: suggested?.usageType === "upgraded",
+            mitigate: suggested?.usageType === "mitigated",
+            available: !!suggested
+        },
+        ...shown,
+        alternative,
+        explain,
+        originalResult: original,
+        pools: pool
+    };
 }
 
 //SwipSwap Dice

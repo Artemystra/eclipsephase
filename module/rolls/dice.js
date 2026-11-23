@@ -938,7 +938,7 @@ async function finishRollCheck(prepared, values, systemOptions) {
 
         outputData.skillKey = roll.type
         if (roll.type === "psi") outputData.infectionLabel = getStrainFamily(psi.actorStrainFamily(actorWhole)).labels?.infection ?? null
-        outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
+        outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions, actorWhole)
         if(rollContext.forcedResult != null) outputData.alternatives.options = {swap: false, upgrade: false, mitigate: false}
         outputData.rollContext = buildRollContext(outputData, actorWhole, options, itemData)
         if(Object.keys(rollContext.flags).length) Object.assign(outputData.rollContext, rollContext.flags)

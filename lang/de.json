@@ -2149,6 +2149,23 @@
       }
     },
     "chat": {
+      "modify": {
+        "swap": "Würfel tauschen",
+        "upgrade": "Wurf aufwerten",
+        "downgrade": "Kritischen Fehlschlag abschwächen",
+        "infoTitle": "Aufwerten oder tauschen?",
+        "infoTitleSwap": "Warum Würfel tauschen?",
+        "infoTitleUpgrade": "Warum Wurf aufwerten?",
+        "explain": {
+          "choice": "<p>Dein Wurf von <strong>{die}</strong> ist ein Grenzfall: Du kannst ihn sowohl <strong>aufwerten</strong> als auch seine Würfel <strong>tauschen</strong>, wir empfehlen aber <strong>{recommended}</strong>. Das System empfiehlt immer das bessere Ergebnis. So entscheidet es:</p><p><strong>Würfel tauschen:</strong> Aus deiner {die} würde eine <strong>{swap}</strong>. Das erreicht nicht die <strong>{threshold}</strong>, ab der das nächstbessere Ergebnis beginnt.</p><p><strong>Wurf aufwerten:</strong> Aufgewertet bringt deine {die} ein besseres Ergebnis: <strong>{upgraded}</strong> statt <strong>{rolled}</strong>. Das ist die bessere Wahl, solange die Probe nicht vergleichend ist. Dann sicherst du sie vielleicht lieber mit dem höheren Wurf ab.</p>",
+          "swapLevel": "<p>Getauscht wird aus deinem Wurf von <strong>{die}</strong> eine <strong>{swap}</strong>: ein höherer Wurf <em>und</em> ein besseres Ergebnis, <strong>{swapped}</strong> statt <strong>{rolled}</strong>.</p><p>Eine Aufwertung käme höchstens auf dasselbe Ergebnis und ließe den niedrigeren Wurf stehen. Deshalb bietet das System nur <strong>{recommended}</strong> an.</p>",
+          "swapFailure": "<p>Dein Wurf von <strong>{die}</strong> ergibt <strong>{rolled}</strong>. Getauscht wird daraus eine <strong>{swap}</strong> und damit <strong>{swapped}</strong>.</p><p>Ein Poolpunkt kann nur einen Erfolg aufwerten. Tauschen ist hier der einzige Weg, den Wurf zu verbessern.</p>",
+          "swapHigher": "<p>Dein Wurf von <strong>{die}</strong> ergibt schon <strong>{rolled}</strong>, das beste Ergebnis, das eine Aufwertung erreichen kann. Deshalb bietet das System keine Aufwertung an.</p><p>Getauscht wird daraus eine <strong>{swap}</strong>: dasselbe Ergebnis mit einem höheren Wurf. Das sichert dich in einer vergleichenden Probe ab, denn dort gewinnt der höhere Wurf.</p>",
+          "upgradeSwapLower": "<p>Getauscht würde aus deinem Wurf von <strong>{die}</strong> eine <strong>{swap}</strong>: ein niedrigerer Wurf mit <strong>{swapped}</strong>. Das verbessert nichts. Deshalb bietet das System nur <strong>{recommended}</strong> an, das dir <strong>{upgraded}</strong> statt <strong>{rolled}</strong> bringt.</p>",
+          "upgradeSwapFails": "<p>Getauscht würde aus deinem Wurf von <strong>{die}</strong> eine <strong>{swap}</strong>. Die liegt über deinem Zielwert und ergibt <strong>{swapped}</strong>. Deshalb bietet das System nur <strong>{recommended}</strong> an, das dir <strong>{upgraded}</strong> statt <strong>{rolled}</strong> bringt.</p>",
+          "upgradeBadLuck": "<p>Bad Luck verbietet dir, die Würfel zu tauschen. Deshalb bietet das System nur <strong>{recommended}</strong> an, das dir <strong>{upgraded}</strong> statt <strong>{rolled}</strong> bringt.</p>"
+        }
+      },
       "dose": {
         "taken": "Ich habe eine Dosis <strong>{name}</strong> genommen",
         "renewed": "Ich habe noch eine Dosis <strong>{name}</strong> genommen, was die Wirkdauer neu startet",

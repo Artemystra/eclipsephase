@@ -2107,6 +2107,23 @@
       }
     },
     "chat": {
+      "modify": {
+        "swap": "Intercambiar dados",
+        "upgrade": "Mejorar tirada",
+        "downgrade": "Rebajar fallo crítico",
+        "infoTitle": "¿Mejorar o intercambiar?",
+        "infoTitleSwap": "¿Por qué intercambiar dados?",
+        "infoTitleUpgrade": "¿Por qué mejorar la tirada?",
+        "explain": {
+          "choice": "<p>Tu tirada de <strong>{die}</strong> es un caso límite: puedes tanto <strong>mejorarla</strong> como <strong>intercambiar</strong> sus dados, pero recomendamos <strong>{recommended}</strong>. El sistema siempre recomienda el mejor resultado. Así lo decide:</p><p><strong>Intercambiar dados:</strong> tu {die} se convertiría en <strong>{swap}</strong>, que no alcanza <strong>{threshold}</strong>, donde empieza el siguiente resultado mejor.</p><p><strong>Mejorar tirada:</strong> mejorar tu {die} te da un resultado mejor, <strong>{upgraded}</strong> en lugar de <strong>{rolled}</strong>. Es la mejor opción salvo que la prueba sea enfrentada: entonces quizá prefieras asegurarla con la tirada más alta.</p>",
+          "swapLevel": "<p>Al intercambiar, tu tirada de <strong>{die}</strong> se convierte en <strong>{swap}</strong>: una tirada más alta <em>y</em> un resultado mejor, <strong>{swapped}</strong> en lugar de <strong>{rolled}</strong>.</p><p>Una mejora como mucho alcanzaría el mismo resultado con la tirada más baja, así que el sistema solo ofrece <strong>{recommended}</strong>.</p>",
+          "swapFailure": "<p>Tu tirada de <strong>{die}</strong> da <strong>{rolled}</strong>. Al intercambiar, se convierte en <strong>{swap}</strong>, es decir <strong>{swapped}</strong>.</p><p>Un punto de reserva solo puede mejorar un éxito, así que intercambiar es la única forma de mejorar esta tirada.</p>",
+          "swapHigher": "<p>Tu tirada de <strong>{die}</strong> ya da <strong>{rolled}</strong>, el mejor resultado que puede alcanzar una mejora, así que el sistema no ofrece mejorarla.</p><p>Al intercambiar, se convierte en <strong>{swap}</strong>: el mismo resultado con una tirada más alta. Eso te asegura en una prueba enfrentada, donde gana la tirada más alta.</p>",
+          "upgradeSwapLower": "<p>Al intercambiar, tu tirada de <strong>{die}</strong> se convertiría en <strong>{swap}</strong>: una tirada más baja que da <strong>{swapped}</strong>. Eso no mejora nada, así que el sistema solo ofrece <strong>{recommended}</strong>, que te da <strong>{upgraded}</strong> en lugar de <strong>{rolled}</strong>.</p>",
+          "upgradeSwapFails": "<p>Al intercambiar, tu tirada de <strong>{die}</strong> se convertiría en <strong>{swap}</strong>, por encima de tu número objetivo: <strong>{swapped}</strong>. Así que el sistema solo ofrece <strong>{recommended}</strong>, que te da <strong>{upgraded}</strong> en lugar de <strong>{rolled}</strong>.</p>",
+          "upgradeBadLuck": "<p>Bad Luck te impide intercambiar los dados, así que el sistema solo ofrece <strong>{recommended}</strong>, que te da <strong>{upgraded}</strong> en lugar de <strong>{rolled}</strong>.</p>"
+        }
+      },
       "dose": {
         "taken": "He tomado una dosis de <strong>{name}</strong>",
         "renewed": "He tomado otra dosis de <strong>{name}</strong>, lo que reinicia su duracion",

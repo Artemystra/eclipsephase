@@ -2172,6 +2172,23 @@
       }
     },
     "chat": {
+      "modify": {
+        "swap": "Swap Dice",
+        "upgrade": "Upgrade Roll",
+        "downgrade": "Downgrade Critical Failure",
+        "infoTitle": "Upgrade or Swap?",
+        "infoTitleSwap": "Why Swap Dice?",
+        "infoTitleUpgrade": "Why Upgrade Roll?",
+        "explain": {
+          "choice": "<p>Your roll of <strong>{die}</strong> is a borderline case: you can both <strong>upgrade</strong> it and <strong>swap</strong> its dice, yet we recommend <strong>{recommended}</strong>. The system always recommends the better result. This is how it decides:</p><p><strong>Swap Dice:</strong> your {die} would become <strong>{swap}</strong>, which does not reach <strong>{threshold}</strong>, where the next better result starts.</p><p><strong>Upgrade Roll:</strong> upgrading your {die} gives you a better result, <strong>{upgraded}</strong> instead of <strong>{rolled}</strong>. That is the better choice unless the test is opposed: then you may want to secure it with the higher roll instead.</p>",
+          "swapLevel": "<p>Swapped, your roll of <strong>{die}</strong> becomes <strong>{swap}</strong>: a higher roll <em>and</em> a better result, <strong>{swapped}</strong> instead of <strong>{rolled}</strong>.</p><p>An upgrade could at most reach the same result while keeping the lower roll, so the system offers only <strong>{recommended}</strong>.</p>",
+          "swapFailure": "<p>Your roll of <strong>{die}</strong> gives you <strong>{rolled}</strong>. Swapped, it becomes <strong>{swap}</strong>, which gives you <strong>{swapped}</strong>.</p><p>A pool point can only upgrade a success, so swapping is the only way to improve this roll.</p>",
+          "swapHigher": "<p>Your roll of <strong>{die}</strong> already gives you <strong>{rolled}</strong>, the best result an upgrade can reach, so the system offers no upgrade.</p><p>Swapped, it becomes <strong>{swap}</strong>: the same result with a higher roll. That secures it in an opposed test, where the higher roll wins.</p>",
+          "upgradeSwapLower": "<p>Swapped, your roll of <strong>{die}</strong> would become <strong>{swap}</strong>: a lower roll that gives you <strong>{swapped}</strong>. That improves nothing, so the system offers only <strong>{recommended}</strong>, which gives you <strong>{upgraded}</strong> instead of <strong>{rolled}</strong>.</p>",
+          "upgradeSwapFails": "<p>Swapped, your roll of <strong>{die}</strong> would become <strong>{swap}</strong>, which is above your target number: <strong>{swapped}</strong>. So the system offers only <strong>{recommended}</strong>, which gives you <strong>{upgraded}</strong> instead of <strong>{rolled}</strong>.</p>",
+          "upgradeBadLuck": "<p>Bad Luck rules out swapping your dice, so the system offers only <strong>{recommended}</strong>, which gives you <strong>{upgraded}</strong> instead of <strong>{rolled}</strong>.</p>"
+        }
+      },
       "dose": {
         "taken": "I took a dose of <strong>{name}</strong>",
         "renewed": "I took another dose of <strong>{name}</strong>, which starts its clock over",

@@ -980,7 +980,7 @@ card's `[data-message-id]`). The returned object:
   version: 1,
   actorUuid, userId, rolledFrom, rollType,
   pool: { skillPoolValue, flexPoolValue, updatePoolPath, updateFlexPath, poolType },
-  alternatives: { usageType, result, value, originalResult, resultClass, resultText },
+  alternatives: { usageType, result, value, originalResult, resultClass, resultText, alternative },
   options: { push, attackMode, biomorphTarget, touchOnly, range, vacuum, rollMode },
   item: { weaponId, weaponMode, sleightId, damageTarget },
   messageId
@@ -1015,6 +1015,19 @@ new result unlocks (a damage button, say) appears on that same card, and the but
 go by the new result: `flags.eclipsephase.roll.alternatives.spent` is set, and `alternatives.result`
 is the result they use. A card can take one pool spend. Cards from before keep the old separate
 pool card.
+
+Its Modify Result (3.0) shows the option the system suggests - `alternatives.usageType`
+`"swapped"`, `"upgraded"` or `"mitigated"` (a critical failure downgraded to the failure its die
+gives by the 33/66 rule) - and, where a second one applies, offers it instead:
+`alternatives.alternative` holds it in the same shape, or `null`. A spend with the other option
+shown stores that one in `alternatives` (usageType, result, value, resultClass, resultText), and
+`eclipsephase.poolResult` hands it on in `context.alternatives`. An actor whose
+`system.additionalSystems.noFlipFlop` is true (Bad Luck) is never offered a flip-flop.
+The task card's `outputData.alternatives.explain` feeds its info icon: `title` and `copy` lang
+keys, the dice `die`, `swap` and `threshold` (where the next better result starts, or `null`) and
+the lang keys `rolled`, `upgraded` and `swapped` (result texts) and `recommended` (the suggested
+option's label); it is `null` only for a downgrade. `nextResultAt(die, target)` in `module/rolls/pools.js` gives that
+threshold.
 
 ### Cards that change
 

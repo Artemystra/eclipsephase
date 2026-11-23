@@ -2114,6 +2114,23 @@
       }
     },
     "chat": {
+      "modify": {
+        "swap": "交换骰位",
+        "upgrade": "提升结果",
+        "downgrade": "减轻关键失败",
+        "infoTitle": "提升还是交换？",
+        "infoTitleSwap": "为什么交换骰位？",
+        "infoTitleUpgrade": "为什么提升结果？",
+        "explain": {
+          "choice": "<p>你的掷骰 <strong>{die}</strong> 是一个临界情况：你既可以<strong>提升</strong>它，也可以<strong>交换</strong>骰位，但我们推荐<strong>{recommended}</strong>。系统总是推荐更好的结果。判断方式如下：</p><p><strong>交换骰位：</strong>你的 {die} 会变成 <strong>{swap}</strong>，达不到下一个更好结果起始的 <strong>{threshold}</strong>。</p><p><strong>提升结果：</strong>提升你的 {die} 会带来更好的结果：<strong>{upgraded}</strong> 而不是 <strong>{rolled}</strong>。除非这是对抗检定，这都是更好的选择；对抗检定时，你可能更想用更高的掷骰来确保胜出。</p>",
+          "swapLevel": "<p>交换后，你的掷骰 <strong>{die}</strong> 变成 <strong>{swap}</strong>：掷骰更高，<em>并且</em>结果更好——<strong>{swapped}</strong> 而不是 <strong>{rolled}</strong>。</p><p>提升最多只能达到相同的结果，却保留更低的掷骰，所以系统只提供<strong>{recommended}</strong>。</p>",
+          "swapFailure": "<p>你的掷骰 <strong>{die}</strong> 的结果是 <strong>{rolled}</strong>。交换后变成 <strong>{swap}</strong>，即 <strong>{swapped}</strong>。</p><p>池点数只能提升成功，所以交换是改善这次掷骰的唯一方法。</p>",
+          "swapHigher": "<p>你的掷骰 <strong>{die}</strong> 已经是 <strong>{rolled}</strong>，这是提升所能达到的最佳结果，所以系统不提供提升。</p><p>交换后变成 <strong>{swap}</strong>：结果相同，但掷骰更高。在对抗检定中这能保护你，因为掷骰更高者获胜。</p>",
+          "upgradeSwapLower": "<p>交换后，你的掷骰 <strong>{die}</strong> 会变成 <strong>{swap}</strong>：更低的掷骰，结果为 <strong>{swapped}</strong>。这没有任何改善，所以系统只提供<strong>{recommended}</strong>，让你得到 <strong>{upgraded}</strong> 而不是 <strong>{rolled}</strong>。</p>",
+          "upgradeSwapFails": "<p>交换后，你的掷骰 <strong>{die}</strong> 会变成 <strong>{swap}</strong>，超过了你的目标值：<strong>{swapped}</strong>。所以系统只提供<strong>{recommended}</strong>，让你得到 <strong>{upgraded}</strong> 而不是 <strong>{rolled}</strong>。</p>",
+          "upgradeBadLuck": "<p>Bad Luck 使你无法交换骰位，所以系统只提供<strong>{recommended}</strong>，让你得到 <strong>{upgraded}</strong> 而不是 <strong>{rolled}</strong>。</p>"
+        }
+      },
       "dose": {
         "taken": "我服用了一剂 <strong>{name}</strong>",
         "renewed": "我又服用了一剂 <strong>{name}</strong>，持续时间重新开始",

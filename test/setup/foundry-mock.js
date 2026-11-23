@@ -854,7 +854,12 @@ function getHandlebars() {
   const handlebars = require("handlebars");
   if (handlebarsReady) return handlebars;
   handlebars.registerHelper({
-    localize: value => (typeof value === "string" ? global.game.i18n.localize(value) : value),
+    // Like Foundry's: hash arguments make it a format call.
+    localize: (value, options) => {
+      if (typeof value !== "string") return value;
+      const hash = options?.hash ?? {};
+      return Object.keys(hash).length ? global.game.i18n.format(value, hash) : global.game.i18n.localize(value);
+    },
     eq: (a, b) => a === b,
     ne: (a, b) => a !== b,
     lt: (a, b) => a < b,

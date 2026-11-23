@@ -230,6 +230,12 @@ export async function addChatListeners(html) {
       return;
     }
 
+    const modifySwitch = event.target.closest(".ep-modify-option");
+    if (modifySwitch) {
+      poolFunctions.switchModifyChoice(modifySwitch);
+      return;
+    }
+
     const resleeve = event.target.closest("button.resleeve");
     if (resleeve) {
       resleeving.sleevingTest({ currentTarget: resleeve });

@@ -1,4 +1,4 @@
-import { RollCheck, breakdown } from "../../rolls/dice.js";
+import { RollCheck, breakdown, TASK_RESULT } from "../../rolls/dice.js";
 import { damageFormula } from "../../rolls/damage-formula.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import { takeDose, offerDose, claimDose, requestUseCheck, rollWearOffStress, demandWillpower, requestAddictionCheck } from "../../common/doses.js";
@@ -243,23 +243,19 @@ export function registerChatCardBatch(quench) {
         }));
       });
 
-      it("a failed Shock check a pool point mitigates keeps the die, lifts the result one tier and shortens Incapacitated by 2 action turns", async function () {
+      it("a critical failure a pool point downgrades keeps the die and becomes the failure the die gives by the 33/66 rule", async function () {
         this.timeout(20000);
-        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Mitigated", system: { aptitudes: { som: { value: 3 } }, pools: { vigor: { value: 2 } } } }, async actor => {
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Downgraded", system: { aptitudes: { som: { value: 3 } }, pools: { vigor: { value: 2 } } } }, async actor => {
           await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
           await postStrikeCheck(actor, "shock");
           const card = newestWith(STRIKE_CHECK_KEY);
-          const turns = () => {
-            const effect = actor.effects.find(entry => entry.getFlag("eclipsephase", STRIKE_CHECK_KEY) && entry.statuses.has("incapacitated"));
-            return effect ? spanSeconds(effect.duration) / CONFIG.time.roundTime : null;
-          };
 
-          seedDice([uniformForFace(32, 100)]);
+          seedDice([uniformForFace(44, 100)]);
           await requestStrikeCheck(card.id, null, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } });
           restoreDice();
-          await waitUntil(() => turns() === 5, 5000);
           const roll = newestWith("taskCard");
-          assert.isTrue(roll.getFlag("eclipsephase", "taskCard").data.alternatives.options.mitigate, "the card offers to mitigate");
+          await waitUntil(() => roll.getFlag("eclipsephase", "taskCard")?.data?.alternatives, 5000);
+          assert.isTrue(roll.getFlag("eclipsephase", "taskCard").data.alternatives.options.mitigate, "the card offers the downgrade");
 
           const row = document.createElement("li");
           row.dataset.messageId = roll.id;
@@ -267,12 +263,37 @@ export function registerChatCardBatch(quench) {
           button.dataset.usepool = "pool";
           row.append(button);
           await usePoolFromChat({ currentTarget: button });
-          await waitUntil(() => turns() === 3, 5000);
+          await waitUntil(() => game.messages.get(roll.id).getFlag("eclipsephase", "roll").alternatives.spent, 5000);
 
-          const after = game.messages.get(roll.id).getFlag("eclipsephase", "taskCard");
-          assert.strictEqual(after.data.rollResult, 32, "the die stays");
-          assert.strictEqual(after.spent.usageType, "mitigated");
-          return game.messages.get(roll.id);
+          const after = game.messages.get(roll.id);
+          assert.strictEqual(after.getFlag("eclipsephase", "taskCard").data.rollResult, 44, "the die stays");
+          assert.strictEqual(after.getFlag("eclipsephase", "roll").alternatives.result, TASK_RESULT.FAILURE_ONE, "one superior failure");
+          return after;
+        }));
+      });
+
+      it("a card's Modify Result toggle picks the other option, and the pool point then spends that one", async function () {
+        this.timeout(20000);
+        await keepingOnly(() => withTempActor({ type: "character", name: "Quench Modifier", system: { aptitudes: { ref: { value: 15 } }, skillsVig: { infiltrate: { value: 40 } }, pools: { vigor: { value: 2 } } } }, async actor => {
+          await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
+          seedDice([uniformForFace(13, 100)]);
+          await RollCheck({ name: "Infiltrate", key: "infiltrate", type: "skill", rollvalue: 55, pooltype: "Vigor" }, actor.system, actor, { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } }, null, "skill");
+          restoreDice();
+          const roll = newestWith("taskCard");
+          await waitUntil(() => document.querySelector(`[data-message-id="${roll.id}"] .ep-modify-option`), 5000);
+          const element = document.querySelector(`[data-message-id="${roll.id}"]`);
+          const box = element.querySelector(".ep-modify-result");
+          assert.strictEqual(box.dataset.choice, "suggested");
+
+          element.querySelector('.ep-modify-option[data-for-choice="alternative"]').click();
+          assert.strictEqual(box.dataset.choice, "alternative", "switched");
+          await usePoolFromChat({ currentTarget: box.querySelector('button[data-usepool="pool"]') });
+          await waitUntil(() => game.messages.get(roll.id).getFlag("eclipsephase", "roll").alternatives.spent, 5000);
+
+          const after = game.messages.get(roll.id);
+          assert.strictEqual(after.getFlag("eclipsephase", "roll").alternatives.usageType, "swapped");
+          assert.strictEqual(after.getFlag("eclipsephase", "taskCard").data.rollResult, 31, "the swapped die");
+          return after;
         }));
       });
 

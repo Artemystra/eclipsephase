@@ -2121,6 +2121,23 @@
       }
     },
     "chat": {
+      "modify": {
+        "swap": "Trocar dados",
+        "upgrade": "Melhorar rolagem",
+        "downgrade": "Atenuar falha crítica",
+        "infoTitle": "Melhorar ou trocar?",
+        "infoTitleSwap": "Por que trocar dados?",
+        "infoTitleUpgrade": "Por que melhorar a rolagem?",
+        "explain": {
+          "choice": "<p>Sua rolagem de <strong>{die}</strong> é um caso limite: você pode tanto <strong>melhorá-la</strong> quanto <strong>trocar</strong> seus dados, mas recomendamos <strong>{recommended}</strong>. O sistema sempre recomenda o melhor resultado. É assim que ele decide:</p><p><strong>Trocar dados:</strong> seu {die} viraria <strong>{swap}</strong>, que não alcança <strong>{threshold}</strong>, onde começa o próximo resultado melhor.</p><p><strong>Melhorar rolagem:</strong> melhorar seu {die} dá um resultado melhor, <strong>{upgraded}</strong> em vez de <strong>{rolled}</strong>. É a melhor escolha, a menos que o teste seja oposto: aí talvez você prefira garanti-lo com a rolagem mais alta.</p>",
+          "swapLevel": "<p>Trocando, sua rolagem de <strong>{die}</strong> vira <strong>{swap}</strong>: uma rolagem mais alta <em>e</em> um resultado melhor, <strong>{swapped}</strong> em vez de <strong>{rolled}</strong>.</p><p>Uma melhoria chegaria no máximo ao mesmo resultado com a rolagem mais baixa, por isso o sistema oferece só <strong>{recommended}</strong>.</p>",
+          "swapFailure": "<p>Sua rolagem de <strong>{die}</strong> dá <strong>{rolled}</strong>. Trocando, ela vira <strong>{swap}</strong>, ou seja <strong>{swapped}</strong>.</p><p>Um ponto de reserva só pode melhorar um sucesso, então trocar é a única forma de melhorar esta rolagem.</p>",
+          "swapHigher": "<p>Sua rolagem de <strong>{die}</strong> já dá <strong>{rolled}</strong>, o melhor resultado que uma melhoria alcança, por isso o sistema não oferece melhoria.</p><p>Trocando, ela vira <strong>{swap}</strong>: o mesmo resultado com uma rolagem mais alta. Isso te protege num teste oposto, onde vence a rolagem mais alta.</p>",
+          "upgradeSwapLower": "<p>Trocando, sua rolagem de <strong>{die}</strong> viraria <strong>{swap}</strong>: uma rolagem mais baixa que dá <strong>{swapped}</strong>. Isso não melhora nada, por isso o sistema oferece só <strong>{recommended}</strong>, que te dá <strong>{upgraded}</strong> em vez de <strong>{rolled}</strong>.</p>",
+          "upgradeSwapFails": "<p>Trocando, sua rolagem de <strong>{die}</strong> viraria <strong>{swap}</strong>, acima do seu número-alvo: <strong>{swapped}</strong>. Por isso o sistema oferece só <strong>{recommended}</strong>, que te dá <strong>{upgraded}</strong> em vez de <strong>{rolled}</strong>.</p>",
+          "upgradeBadLuck": "<p>Bad Luck impede você de trocar os dados, por isso o sistema oferece só <strong>{recommended}</strong>, que te dá <strong>{upgraded}</strong> em vez de <strong>{rolled}</strong>.</p>"
+        }
+      },
       "dose": {
         "taken": "Tomei uma dose de <strong>{name}</strong>",
         "renewed": "Tomei outra dose de <strong>{name}</strong>, o que reinicia sua duracao",

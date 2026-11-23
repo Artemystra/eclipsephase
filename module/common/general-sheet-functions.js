@@ -519,6 +519,13 @@ export const INFO_DIALOG_WIDTH = 325;
       }
     }
 
+    // The Modify Result explanation goes into its copy unescaped: only dice and lang keys pass.
+    if (dialogData.rolledfrom === "modifyInfo") {
+      const key = value => /^[\w.]+$/.test(value ?? "") ? value : "";
+      for (const name of ["title", "copy", "rolled", "upgraded", "swapped", "recommended"]) dialogData[name] = key(dialogData[name]);
+      for (const name of ["die", "swap", "threshold"]) dialogData[name] = parseInt(dialogData[name]) || "";
+    }
+
     await moreInformation(template, dialogData);
 
     async function moreInformation(template, dialogData) {
@@ -1463,7 +1470,14 @@ export function buildRollContext(outputData, actorWhole, options, itemData){
       value: Number.isFinite(alternatives.value) ? alternatives.value : null,
       originalResult: Number.isFinite(alternatives.originalResult) ? alternatives.originalResult : null,
       resultClass: alternatives.resultClass ?? "",
-      resultText: alternatives.resultText ?? ""
+      resultText: alternatives.resultText ?? "",
+      alternative: alternatives.alternative ? {
+        usageType: alternatives.alternative.usageType,
+        result: alternatives.alternative.result,
+        value: alternatives.alternative.value,
+        resultClass: alternatives.alternative.resultClass ?? "",
+        resultText: alternatives.alternative.resultText ?? ""
+      } : null
     },
     options: {
       push: options?.push || false,
@@ -1515,7 +1529,8 @@ export function legacyRollContext(dataset = {}){
       value: number(dataset.newvalue),
       originalResult: number(dataset.rollresult),
       resultClass: dataset.resultclass ?? "",
-      resultText: dataset.resulttext ?? ""
+      resultText: dataset.resulttext ?? "",
+      alternative: null
     },
     options: {
       push: !push || push === "false" ? false : push,

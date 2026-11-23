@@ -3578,6 +3578,94 @@ button.epTextlink:hover{
   text-align: center;
 }
 
+/* A roll card's Modify Result: a column with the option toggle, or the single option, above the pool
+   buttons. While the slide runs its height is smaller than the content: no wrap and no shrink, so
+   the content keeps its layout and is only uncovered, like a drawer. */
+.ep-modify-result {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+}
+
+.ep-modify-result > * {
+  flex-shrink: 0;
+}
+
+/* Inset like the pool buttons below, which leaves room for the hover glow. */
+.ep-modify-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+}
+
+/* An invisible twin of the info icon on the left, so the toggle sits centred. */
+.ep-modify-spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ep-modify-segments {
+  display: flex;
+  flex: 1 1 auto;
+  border: 1px solid var(--highlightBackground);
+}
+
+/* Same size in every state, so hovering or picking an option moves nothing. More specific than the
+   later chat button rule (.chat-message .message-content button), which would win a tie. */
+.ep-modify-result .ep-modify-segments button.ep-modify-option,
+.ep-modify-result .ep-modify-segments button.ep-modify-option:hover,
+.ep-modify-result .ep-modify-segments button.ep-modify-option:focus,
+.ep-modify-result .ep-modify-segments button.ep-modify-option:focus-visible,
+.ep-modify-result .ep-modify-segments button.ep-modify-option:active {
+  position: relative;
+  flex: 1 1 0;
+  box-sizing: border-box;
+  height: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  margin: 0;
+  padding: 0 8px;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  font-size: 13px;
+  line-height: 26px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ep-modify-result .ep-modify-segments button.ep-modify-option {
+  background: var(--pitchBorder);
+  color: var(--inactive);
+  box-shadow: none;
+}
+
+/* The usual button hover glow, drawn above the other option; ahead of Foundry's .app button rules. */
+.ep-modify-result .ep-modify-segments button.ep-modify-option:focus:not(:hover) {
+  box-shadow: none;
+}
+
+.ep-modify-result .ep-modify-segments button.ep-modify-option:hover {
+  z-index: 1;
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.ep-modify-result[data-choice="suggested"] .ep-modify-option[data-for-choice="suggested"],
+.ep-modify-result[data-choice="alternative"] .ep-modify-option[data-for-choice="alternative"] {
+  background: var(--iconBlue);
+  color: var(--mainText);
+}
+
+.ep-modify-only {
+  flex: 1 1 auto;
+  margin: 0;
+  text-align: center;
+}
+
 /* A character's pools row: four pools and the recharges in five equal columns. */
 .flexrow.ep-pool-row-five {
   display: grid;

@@ -109,7 +109,8 @@
       "airSealed": false,
       "skinSealed": false,
       "painTolerance": 0,
-      "antiGlare": false
+      "antiGlare": false,
+      "noFlipFlop": false
         },
         "initiative": {
           "value": null,
