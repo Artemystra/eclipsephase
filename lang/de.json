@@ -179,6 +179,7 @@
         "stashArmor": "Rüstung verstauen",
         "stashItem": "In den Stash legen",
         "equipItem": "Ausrüsten",
+        "giveItem": "Übergeben",
         "rebindItem": "Auf einen anderen Körper verschieben",
         "stashWareLater": "Ware verlässt einen Körper nur durch eine Operation - noch nicht möglich",
         "moveArmor": "Rüstung verschieben",
@@ -2650,6 +2651,7 @@
       "itemAttachment": {
         "itemAddedEgo": "{name} hinzugefügt.",
         "itemAddedToBody": "{name} zu {body} hinzugefügt.",
+        "itemReceived": "Du hast ein Item ({name}) von {actor} erhalten.",
         "noBodyTrait": "Kein Körper vorhanden. Trait kann nicht hinzugefügt werden.",
         "noBodyWare": "Kein Körper vorhanden. Ware kann nicht hinzugefügt werden.",
         "noBodyArmor": "Kein Körper vorhanden. Rüstung kann nicht hinzugefügt werden.",

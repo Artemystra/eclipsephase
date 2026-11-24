@@ -877,6 +877,7 @@ Hooks.once("ready", () => {
   registerCardSocket();
   registerSleevingSocket();
   registerBodyTokens();
+  sheetFunction.registerItemReceivedSocket();
   registerWeaponAttackSocket();
   registerAreaSocket();
 });

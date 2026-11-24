@@ -175,6 +175,7 @@
         "stashArmor": "收纳护甲",
         "stashItem": "放入储藏",
         "equipItem": "装备",
+        "giveItem": "交给",
         "rebindItem": "移到另一个身体",
         "stashWareLater": "植入物只能通过手术从身体中取出——目前尚不可用",
         "moveArmor": "转移护甲",
@@ -2621,6 +2622,7 @@
       "itemAttachment": {
         "itemAddedEgo": "已添加 {name}。",
         "itemAddedToBody": "已将 {name} 添加到 {body}。",
+        "itemReceived": "你从 {actor} 那里收到了一件物品（{name}）。",
         "noBodyTrait": "没有可用的身体，无法添加特征。",
         "noBodyWare": "没有可用的身体，无法添加插件。",
         "noBodyArmor": "没有可用的身体，无法添加护甲。",

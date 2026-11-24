@@ -176,6 +176,7 @@
         "stashArmor": "Guardar Armadura",
         "stashItem": "Guardar en el alijo",
         "equipItem": "Equipar",
+        "giveItem": "Entregar",
         "rebindItem": "Mover a otro cuerpo",
         "stashWareLater": "El implante solo sale de un cuerpo mediante cirugía - aún no es posible",
         "moveArmor": "Mover Armadura",
@@ -2614,6 +2615,7 @@
       "itemAttachment": {
         "itemAddedEgo": "Se ha añadido {name}.",
         "itemAddedToBody": "Se ha añadido {name} a {body}.",
+        "itemReceived": "Has recibido un objeto ({name}) de {actor}.",
         "noBodyTrait": "No hay ningún cuerpo presente. El Trait no puede añadirse.",
         "noBodyWare": "No hay ningún cuerpo presente. La Ware no puede añadirse.",
         "noBodyArmor": "No hay ningún cuerpo presente. La armadura no puede añadirse.",

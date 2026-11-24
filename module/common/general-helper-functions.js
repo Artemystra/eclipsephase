@@ -306,14 +306,10 @@ export function registerItemTransferSocket() {
     // (no dialog possible here - this runs unattended on the GM's client, not the requesting
     // player's) - if they have none, leave boundTo as-is rather than guessing.
     let boundToOverride;
-    if (item.type === "armor") {
-      if (targetActor.type === "character") {
-        boundToOverride = "stash";
-      } else {
-        const { bodies, boundToFor } = MORPHFUNCTION.getBodyBindingInfo(targetActor);
-        if (bodies.length > 0) {
-          boundToOverride = boundToFor(bodies[0]);
-        }
+    if (item.type === "armor" && targetActor.type !== "character") {
+      const { bodies, boundToFor } = MORPHFUNCTION.getBodyBindingInfo(targetActor);
+      if (bodies.length > 0) {
+        boundToOverride = boundToFor(bodies[0]);
       }
     }
 
@@ -323,7 +319,8 @@ export function registerItemTransferSocket() {
         targetActor,
         item,
         quantity,
-        boundToOverride
+        boundToOverride,
+        giverId: userId
       });
 
       // Morphs from an unmanaged source (a shop's stock) come with unfilled Enhancement slots -

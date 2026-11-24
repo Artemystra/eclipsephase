@@ -959,6 +959,23 @@ export function carriedItemPlacements(items, activeMorph) {
 }
 
 /**
+ * Where an item handed over to a character lands: what it carries on the sleeved morph, programs in
+ * the Stash. Only items from another character, an NPC or a goon - a shop's goods and the like land
+ * as before.
+ * @param {Actor} sourceActor - Who hands it over
+ * @param {Actor} targetActor - Who gets it
+ * @param {Object} item - The item, or its data
+ * @returns {String|undefined} The boundTo it gets, or undefined to leave it to the usual rules
+ */
+export function receivedItemHome(sourceActor, targetActor, item) {
+  const managed = CONFIG.Actor.documentClass?.MANAGED_TYPES ?? [];
+  if (targetActor?.type !== "character" || !managed.includes(sourceActor?.type)) return undefined;
+  if (stashOnly(item)) return STASH;
+  if (!isCarried(item)) return undefined;
+  return targetActor.system?.activeMorph || STASH;
+}
+
+/**
  * Moves a character's carried item, or part of its stack, to a body or into the Stash. A stack of
  * the same item already there takes it in. Of a drug, the open pack goes first.
  * @param {Actor} actor - The character

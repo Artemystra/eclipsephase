@@ -180,6 +180,7 @@
         "stashArmor": "Stash Armor",
         "stashItem": "Put into Stash",
         "equipItem": "Equip",
+        "giveItem": "Hand over",
         "rebindItem": "Move to another body",
         "stashWareLater": "Ware leaves a body only by surgery - not possible yet",
         "moveArmor": "Move Armor",
@@ -2698,6 +2699,7 @@
       "itemAttachment": {
         "itemAddedEgo": "{name} added.",
         "itemAddedToBody": "{name} added to {body}.",
+        "itemReceived": "You received an item ({name}) from {actor}.",
         "noBodyTrait": "No body present. Trait cannot be added.",
         "noBodyWare": "No body present. Ware cannot be added.",
         "noBodyArmor": "No body present. Armor cannot be added.",

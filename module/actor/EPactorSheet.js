@@ -1168,7 +1168,19 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     // Cross-actor transfer
     if (sourceActor && sourceActor.id !== targetActor.id) {
-      const quantity = 1;
+      // Of a stack, the giver says how many packs go - all of them unless told otherwise.
+      let quantity = 1;
+      const held = Math.floor(Number(item.system?.quantity) || 0);
+      if (held > 1) {
+        const answer = await SHEET.askStackCount(item.name, held, {
+          actionKey: "ep2e.actorSheet.button.giveItem",
+          copyKey: "ep2e.actorSheet.popUp.moveStackCopy",
+          labelKey: "ep2e.actorSheet.popUp.moveStackLabel",
+          start: held
+        });
+        if (!answer.confirm) return null;
+        quantity = answer.count;
+      }
 
       const canEditSource = sourceActor.isOwner;
       const canEditTarget = targetActor.isOwner;
@@ -1180,14 +1192,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         // prompting a body-picker - the receiving player never gets asked where to put someone
         // else's armor, they just get to see it arrived and equip it themselves when ready.
         let boundToOverride;
-        if (item.type === "armor") {
-          if (targetActor.type === "character") {
-            boundToOverride = "stash";
-          } else {
-            const resolved = await MORPHFUNCTION.resolveBodyForItem(targetActor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
-            if (resolved.cancelled) return null;
-            boundToOverride = resolved.boundTo;
-          }
+        if (item.type === "armor" && targetActor.type !== "character") {
+          const resolved = await MORPHFUNCTION.resolveBodyForItem(targetActor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
+          if (resolved.cancelled) return null;
+          boundToOverride = resolved.boundTo;
         }
         return SHEET.transferItemBetweenActors({
           sourceActor,

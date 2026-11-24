@@ -1841,9 +1841,13 @@ export async function transferItemBetweenActors({
   targetActor,
   item,
   quantity = 1,
-  boundToOverride
+  boundToOverride,
+  giverId = game.user?.id
 } = {}) {
   if (!sourceActor || !targetActor || !item) return null;
+  // A character handed something by another character, an NPC or a goon gets it where it carries it.
+  const received = MORPH.receivedItemHome(sourceActor, targetActor, item);
+  if (boundToOverride === undefined) boundToOverride = received;
 
   const sourceQty = Number(item.system.quantity ?? 1);
   const transferQty = Math.max(1, Number(quantity) || 1);
@@ -1866,10 +1870,40 @@ export async function transferItemBetweenActors({
   if (sourceQty <= transferQty) {
     await sourceActor.deleteEmbeddedDocuments("Item", [item.id]);
   } else {
-    await item.update({
-      "system.quantity": sourceQty - transferQty
-    });
+    // Of a drug the open pack went with the rest of what was handed over; the packs left are whole.
+    const rest = { "system.quantity": sourceQty - transferQty };
+    if (item.type === "drug") rest["system.usagesUsed"] = 0;
+    await item.update(rest);
   }
 
+  if (received !== undefined) announceItemReceived(targetActor, sourceActor, itemData.name, giverId);
   return createdOrUpdated;
+}
+
+/**
+ * Tells the players of a character, on their own screens, that it was handed an item. The one who
+ * handed it over is not told.
+ * @param {Actor} targetActor - Who got it
+ * @param {Actor} sourceActor - Who handed it over
+ * @param {String} name - The item's name
+ * @param {String} [giverId] - The user who handed it over
+ * @returns {void}
+ */
+export function announceItemReceived(targetActor, sourceActor, name, giverId = game.user?.id) {
+  const userIds = game.users.filter(user => !user.isGM && user.id !== giverId && targetActor.testUserPermission(user, "OWNER")).map(user => user.id);
+  if (!userIds.length) return;
+  game.socket.emit(HELPER.SYSTEM_SOCKET, { action: "itemReceived", userIds, name, from: sourceActor.name });
+}
+
+/**
+ * Shows the notice of an item received on the screens of the players it is meant for.
+ * @returns {void}
+ */
+export function registerItemReceivedSocket() {
+  HELPER.registerSocketActions({
+    itemReceived: async ({ userIds, name, from }) => {
+      if (!userIds?.includes(game.user.id) || !HELPER.isActingTab()) return;
+      await systemMessage("success", "ep2e.systemMessage.itemAttachment.itemReceived", { name, actor: from });
+    }
+  }, { gmOnly: false });
 }
