@@ -4,6 +4,7 @@
       "name": "Reset Recharges Daily",
       "hint": "When the world clock passes midnight, every character gets their short and long recharges back. Switch this off to clear them by hand instead."
     },
+    "equipAnnouncements": { "name": "Announce equipping", "hint": "Which kinds of item taken out of the Stash onto a body are announced in the chat." },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -185,6 +186,7 @@
         "stashWareLater": "Ware leaves a body only by surgery - not possible yet",
         "moveArmor": "Move Armor",
         "deleteArmorWithBody": "Delete Armor",
+        "deleteItemsWithBody": "Delete with body",
         "equipArmor": "Equip",
         "changeID": "Activate ID"
       },
@@ -1955,6 +1957,13 @@
           "cyberbrain": "Target with a cyberbrain",
           "range": "Psi range: {band} ({distance} m)"
         },
+        "weapon": { "equipped": "My {morph} now carries a weapon." },
+        "item": {
+          "gear": "I have equipped my {morph} with some gear.",
+          "drug": "I have equipped my {morph} with some drugs.",
+          "ammo": "I have equipped my {morph} with some ammunition.",
+          "grenade": "I have equipped my {morph} with some grenades."
+        },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."
         },
@@ -2133,6 +2142,7 @@
         "placeholder": "- Select Body -",
         "placeholderEgo": "- Select Ego -"
       },
+      "bodyItems": { "header": "What becomes of what it carries?", "copy": "You are about to delete {body}, which still carries items. Put them into your Stash, or delete them along with {body}." },
       "reassignArmor": {
         "header": "Reassign Armor",
         "copy": "You are about to delete {body}, which has Armor bound to it. Stash it for later, or delete it along with {body}."

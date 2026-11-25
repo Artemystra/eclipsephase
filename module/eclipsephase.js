@@ -18,7 +18,7 @@ import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } fr
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
-import { PLAIN_TACNET_VISION, TACNET_VISION, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION, ANNOUNCE_KINDS, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -98,6 +98,18 @@ async function registerSystemSettings() {
       "survival": "SETTINGS.ammoRules.survival",
       "grenadesOnly": "SETTINGS.ammoRules.grenadesOnly"
     },
+  });
+
+  // Which kinds of item taken out of the Stash onto a body are announced in the chat.
+  game.settings.register("eclipsephase", "equipAnnouncements", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.equipAnnouncements.name",
+    hint: "SETTINGS.equipAnnouncements.hint",
+    type: new foundry.data.fields.SetField(new foundry.data.fields.StringField({
+      choices: Object.fromEntries(ANNOUNCE_KINDS.map(kind => [kind, kind === "weapons" ? "ep2e.inventory.weaponsLabel" : `TYPES.Item.${kind}`]))
+    })),
+    default: ["armor", "weapons"]
   });
 
   game.settings.register("eclipsephase", "hideNPCs", {

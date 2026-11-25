@@ -169,6 +169,14 @@
   </div>
   {{/if}}
 
+  {{#if (eq type "equipItem")}}
+  <div style="margin-bottom: 30px;">
+    <p>{{{localize copy}}}</p>
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--pitchBorder);">
+      <span><b>{{itemName}}</b></span>
+    </div>
+  </div>
+  {{/if}}
   {{#if (eq type "equipArmor")}}
   <div style="margin-bottom: 30px;">
     <p>{{{localize copy}}}</p>

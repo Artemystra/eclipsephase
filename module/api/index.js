@@ -40,7 +40,12 @@ import {
   getBodyBindingInfo,
   resolveBodyForItem,
   applyStandardEnhancements,
-  applyFrame
+  applyFrame,
+  STASH,
+  locationOf,
+  isUsable,
+  itemsOn,
+  moveItem
 } from "../common/morp-functions.js";
 import {
   registerRollSource,
@@ -102,6 +107,11 @@ export const actors = {
   resolveBodyForItem,
   applyStandardEnhancements,
   applyFrame,
+  STASH,
+  locationOf,
+  isUsable,
+  itemsOn,
+  moveItem,
   transferItemBetweenActors,
   mergeOrCreateItem,
   chooseMunition,

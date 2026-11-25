@@ -221,7 +221,7 @@ export function getBodyBindingInfo(actor) {
         return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
     };
 
-    // excludeBoundTo lets a caller (e.g. rebindArmor) drop the currently-bound body from the list,
+    // excludeBoundTo lets a caller (e.g. rebindItem) drop the currently-bound body from the list,
     // since re-picking it would be a no-op - unused by drop-time binding, which has no "current" yet.
     const buildBodyGroups = (excludeBoundTo) => {
         const groups = [];
@@ -369,7 +369,7 @@ export async function stashItem(actor, itemId, skipConfirm) {
 
 /**
  * Takes a carried item, or part of its stack, out of the Stash onto a body: the only body at once,
- * a pick of one when there are several. Armour put on is announced in the chat.
+ * a pick of one when there are several. The kinds the world setting names are announced in the chat.
  * @param {Actor} actor - The character
  * @param {String} itemId - The item
  * @returns {Promise<void>}
@@ -388,13 +388,20 @@ export async function equipItemFromStash(actor, itemId) {
   if (!amount.confirm) return;
   await moveItem(actor, itemId, resolved.boundTo, { quantity: amount.quantity });
 
-  if (item.type !== "armor") return;
-  const message = {
+  // The world setting names the kinds of item whose equipping is announced.
+  const kind = announceKind(item.type);
+  if (!new Set(game.settings.get("eclipsephase", "equipAnnouncements") ?? []).has(kind)) return;
+  const morph = resolved.chosenBody.name;
+  const message = kind === "armor" ? {
     type: "equipArmor",
-    copy: game.i18n.format("ep2e.roll.announce.armor.equipped", { morph: resolved.chosenBody.name, armor: item.name }),
+    copy: game.i18n.format("ep2e.roll.announce.armor.equipped", { morph, armor: item.name }),
     armorName: item.name,
     armorEnergy: item.system.energy,
     armorKinetic: item.system.kinetic
+  } : {
+    type: "equipItem",
+    copy: game.i18n.format(kind === "weapons" ? "ep2e.roll.announce.weapon.equipped" : `ep2e.roll.announce.item.${kind}`, { morph }),
+    itemName: item.name
   };
   const renderedHtml = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
 
@@ -404,21 +411,21 @@ export async function equipItemFromStash(actor, itemId) {
   });
 }
 
-// Armor is always bound to some body (no floating/unbound state) - deleting a body that has Armor
-// bound to it needs an explicit choice: move it all to one other body, or confirm it goes with the
-// body. This IS the delete confirmation for that case (the caller skips the generic "delete this
-// item?" dialog entirely, rather than showing both back to back) - bodyName is folded into the
-// copy so the single dialog still makes clear the body itself is about to be deleted.
-// Returns {proceed: false} if the user backs out, leaving the body (and its armor) untouched.
-// Reads boundTo live off actor.items rather than the render-time actor.bodies cache, since a "move"
-// choice here re-binds the armor mid-flow and deleteBody's own cleanup runs right after with no
-// re-render in between - a cached bucket would still list the just-moved items as belonging here.
-export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
-    const armorItems = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
-    if (armorItems.length === 0) return { proceed: true };
+/**
+ * Asks what becomes of what a body carries before the body is deleted. A character puts it into the
+ * Stash or lets it go with the body; an NPC or goon only confirms that its armour goes too. This is
+ * the delete confirmation itself, so no second one follows.
+ * @param {Actor} actor - The actor
+ * @param {String} bucketKey - The body's key: its id on a character, activeMorph or activeVehicle otherwise
+ * @param {String} bodyName - The body's name
+ * @returns {Promise<Object>} proceed: whether the body may be deleted
+ */
+export async function resolveItemsOnBodyDelete(actor, bucketKey, bodyName) {
+    const carried = actor.type === "character"
+        ? actor.items.filter(i => isCarried(i) && locationOf(actor, i) === bucketKey)
+        : actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
+    if (carried.length === 0) return { proceed: true };
 
-    // NPCs/Goons have no Stash (character-only, see stashArmor) and no "move to another body"
-    // option anymore either - just a plain confirm that deleting the body deletes its armor too.
     if (actor.type !== "character") {
         const popUp = await sheetFunction.confirmation(
             game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
@@ -431,22 +438,20 @@ export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
         return { proceed: popUp.confirm === true };
     }
 
-    // Characters: no more "move to a specific other body" choice - Stash replaces it as the safe
-    // "figure it out later" alternative, so the only real choice is Delete or Stash.
     const result = await foundry.applications.api.DialogV2.wait({
-        window: { title: game.i18n.localize("ep2e.dialog.reassignArmor.header") },
+        window: { title: game.i18n.localize("ep2e.dialog.bodyItems.header") },
         classes: ["ep2e-primary-right"],
-        content: `<div style="padding: 10px 0;">${game.i18n.format("ep2e.dialog.reassignArmor.copy", { body: bodyName ?? "" })}</div>`,
+        content: `<div style="padding: 10px 0;">${game.i18n.format("ep2e.dialog.bodyItems.copy", { body: bodyName ?? "" })}</div>`,
         buttons: [
             {
                 action: "stash",
-                label: game.i18n.localize("ep2e.actorSheet.button.stashArmor"),
+                label: game.i18n.localize("ep2e.actorSheet.button.stashItem"),
                 default: true,
                 callback: () => ({ stash: true })
             },
             {
                 action: "deleteWithBody",
-                label: game.i18n.localize("ep2e.actorSheet.button.deleteArmorWithBody"),
+                label: game.i18n.localize("ep2e.actorSheet.button.deleteItemsWithBody"),
                 callback: () => ({ stash: false })
             },
             {
@@ -461,17 +466,18 @@ export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
     });
 
     if (!result || result.cancelled) return { proceed: false };
-
-    if (result.stash) {
-        await actor.updateEmbeddedDocuments("Item", armorItems.map(a => ({ _id: a.id, "system.boundTo": "stash" })));
-    }
-
+    if (result.stash) await actor.updateEmbeddedDocuments("Item", carried.map(i => ({ _id: i.id, "system.boundTo": STASH })));
     return { proceed: true };
 }
 
-// Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws, Armor).
-// Callers are expected to have already resolved any bound Armor first (see
-// resolveArmorOnBodyDelete) - this function just executes the deletion, no further confirmation.
+/**
+ * Deletes a body (Morph or Vehicle) and everything still bound to it: ware, traits and what it
+ * carries. Read from the actor's items as they are now, so what resolveItemsOnBodyDelete just put
+ * into the Stash stays. No further confirmation.
+ * @param {Actor} actor - The actor
+ * @param {String} bodyId - The body's item id
+ * @returns {Promise<void>}
+ */
 export async function deleteBody(actor, bodyId){
     let bucketKey = bodyId;
     if (actor.type !== "character") {
@@ -482,18 +488,7 @@ export async function deleteBody(actor, bodyId){
         bucketKey = bodyItem?.type === "vehicle" ? "activeVehicle" : "activeMorph";
     }
 
-    const deletionList = [];
-    const bodyCollection = actor.bodies[bucketKey];
-    const consolidatedItemList = [...bodyCollection.morphdetails, ...bodyCollection.morphtraits, ...bodyCollection.morphflaws, ...bodyCollection.morphgear];
-    for (let item of consolidatedItemList){
-        deletionList.push(item.id);
-    }
-    // Armor is resolved live off actor.items (not the render-time actor.bodies cache) - see
-    // resolveArmorOnBodyDelete's comment for why a cached bucket can't be trusted here.
-    const remainingBoundArmor = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
-    for (let item of remainingBoundArmor){
-        deletionList.push(item.id);
-    }
+    const deletionList = actor.items.filter(i => i.id === bodyId || i.system?.boundTo === bucketKey).map(i => i.id);
     await actor.deleteEmbeddedDocuments("Item", deletionList)
 }
 
@@ -840,6 +835,18 @@ export function registerBodyTokens() {
 // of its own and may be far away. NPCs and goons carry everything they own on their one body.
 export const STASH = "stash";
 export const CARRIED_TYPES = ["armor", "rangedWeapon", "ccWeapon", "gear", "drug", "ammo", "grenade"];
+
+/**
+ * The kind a carried item's equipping is announced under: both weapon types as one, every other type by itself.
+ * @param {String} type - The item type
+ * @returns {String} "weapons" for ranged and melee weapons, else the type
+ */
+export function announceKind(type) {
+  return type === "rangedWeapon" || type === "ccWeapon" ? "weapons" : type;
+}
+
+// The kinds the world setting offers, in the order of the carried types.
+export const ANNOUNCE_KINDS = [...new Set(CARRIED_TYPES.map(announceKind))];
 
 /**
  * Whether an item only ever lies in the Stash: programs and digital gear.

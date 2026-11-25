@@ -1046,6 +1046,10 @@ global.foundry = {
         constructor(options = {}) { this.options = options; }
         getInitialValue() { return this.options.initial ?? {}; }
       },
+      SetField: class SetField {
+        constructor(element, options = {}) { this.element = element; this.options = options; }
+        getInitialValue() { return this.options.initial ?? []; }
+      },
       ArrayField: class ArrayField {
         constructor(element, options = {}) { this.element = element; this.options = options; }
         getInitialValue() { return this.options.initial ?? []; }

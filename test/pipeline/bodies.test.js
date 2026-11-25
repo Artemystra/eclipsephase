@@ -1,7 +1,7 @@
 import EPactorSheet, { isSectionOpen, setSectionOpen, toggleBodySection } from "../../module/actor/EPactorSheet.js";
 import {
   resleeveMorph, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
-  stashItem, equipItemFromStash, resolveArmorOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
+  stashItem, equipItemFromStash, announceKind, ANNOUNCE_KINDS, resolveItemsOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
   registerBodyTokens, locationOf, itemsOn, isUsable, moveItem
 } from "../../module/common/morp-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
@@ -321,6 +321,7 @@ describe("moving armour", () => {
   });
 
   test("equipping from the stash binds the vest to the body picked and announces it", async () => {
+    setSetting("eclipsephase", "equipAnnouncements", ["armor"]);
     const actor = twoBodies({ items: [{ _id: "vest2", name: "Coat", type: "armor", system: { boundTo: "stash" } }] });
     seedDialogs({ selection: "morph2" });
 
@@ -331,18 +332,18 @@ describe("moving armour", () => {
   });
 });
 
-describe("armour on a body about to be deleted", () => {
+describe("what a body carries when it is about to be deleted", () => {
   test("a body with no armour bound may simply go", async () => {
     const actor = twoBodies();
 
-    expect(await resolveArmorOnBodyDelete(actor, "morph2", "Fury")).toEqual({ proceed: true });
+    expect(await resolveItemsOnBodyDelete(actor, "morph2", "Fury")).toEqual({ proceed: true });
   });
 
   test("a character can stash the armour first, and the delete then leaves it alone", async () => {
     const actor = await sorted(twoBodies());
     seedDialogs({ stash: true });
 
-    const outcome = await resolveArmorOnBodyDelete(actor, "morph1", "Splicer");
+    const outcome = await resolveItemsOnBodyDelete(actor, "morph1", "Splicer");
     await deleteBody(actor, "morph1");
 
     expect(outcome).toEqual({ proceed: true });
@@ -353,17 +354,40 @@ describe("armour on a body about to be deleted", () => {
     const actor = await sorted(twoBodies());
     seedDialogs({ stash: false });
 
-    expect(await resolveArmorOnBodyDelete(actor, "morph1", "Splicer")).toEqual({ proceed: true });
+    expect(await resolveItemsOnBodyDelete(actor, "morph1", "Splicer")).toEqual({ proceed: true });
     await deleteBody(actor, "morph1");
 
     expect(actor.items.get("vest1")).toBeUndefined();
+  });
+
+  test("everything the body carries goes into the Stash with its armour, and what is built in goes with the body", async () => {
+    const actor = twoBodies({ items: [
+      { _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "morph1" } },
+      { _id: "kit", name: "Kit", type: "gear", system: { slotType: "accessory", boundTo: "morph2" } }
+    ] });
+    seedDialogs({ stash: true });
+
+    expect(await resolveItemsOnBodyDelete(actor, "morph1", "Splicer")).toEqual({ proceed: true });
+    await deleteBody(actor, "morph1");
+
+    expect(["vest1", "gun"].map(id => actor.items.get(id).system.boundTo)).toEqual(["stash", "stash"]);
+    expect([actor.items.get("morph1"), actor.items.get("ware1")]).toEqual([undefined, undefined]);
+    expect(actor.items.get("kit").system.boundTo).toBe("morph2");
+  });
+
+  test("a body that carries only a weapon still asks", async () => {
+    const actor = twoBodies({ items: [{ _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "morph2" } }] });
+    seedDialogs({ cancelled: true });
+
+    expect(await resolveItemsOnBodyDelete(actor, "morph2", "Fury")).toEqual({ proceed: false });
+    expect(actor.items.get("gun").system.boundTo).toBe("morph2");
   });
 
   test("backing out keeps body and armour", async () => {
     const actor = twoBodies();
     seedDialogs({ cancelled: true });
 
-    expect(await resolveArmorOnBodyDelete(actor, "morph1", "Splicer")).toEqual({ proceed: false });
+    expect(await resolveItemsOnBodyDelete(actor, "morph1", "Splicer")).toEqual({ proceed: false });
     expect(actor.items.get("vest1").system.boundTo).toEqual("morph1");
   });
 
@@ -374,10 +398,10 @@ describe("armour on a body about to be deleted", () => {
     ] });
 
     seedDialogs(false);
-    expect(await resolveArmorOnBodyDelete(actor, "activeMorph", "Body")).toEqual({ proceed: false });
+    expect(await resolveItemsOnBodyDelete(actor, "activeMorph", "Body")).toEqual({ proceed: false });
 
     seedDialogs(true);
-    expect(await resolveArmorOnBodyDelete(actor, "activeMorph", "Body")).toEqual({ proceed: true });
+    expect(await resolveItemsOnBodyDelete(actor, "activeMorph", "Body")).toEqual({ proceed: true });
   });
 });
 
@@ -832,14 +856,33 @@ describe("what a character can use, and what helps which body", () => {
     expect([actor.items.get("flares").system.boundTo, actor.items.get("flares").system.quantity]).toEqual(["stash", 3]);
   });
 
-  test("equipping from the Stash puts the item on the body picked; only armour is announced", async () => {
-    const actor = kitted({}, { rifle: "stash" });
+  test("equipping from the Stash puts the item on the body picked, announced only where the setting names its kind", async () => {
+    setSetting("eclipsephase", "equipAnnouncements", ["armor"]);
+    const actor = kitted({}, { rifle: "stash", vest: "stash" });
+
     seedDialogs({ selection: "morph2" });
-
     await equipItemFromStash(actor, "rifle");
+    expect([actor.items.get("rifle").system.boundTo, createdMessages.length]).toEqual(["morph2", 0]);
 
-    expect(actor.items.get("rifle").system.boundTo).toBe("morph2");
-    expect(createdMessages).toHaveLength(0);
+    setSetting("eclipsephase", "equipAnnouncements", new Set(["weapons", "gear"]));
+    await actor.createEmbeddedDocuments("Item", [
+      { _id: "knife", name: "Knife", type: "ccWeapon", system: { boundTo: "stash" } },
+      { _id: "kit", name: "Kit", type: "gear", system: { boundTo: "stash" } }
+    ]);
+    await actor.items.get("rifle").update({ "system.boundTo": "stash" });
+    for (const id of ["rifle", "knife", "kit", "vest"]) {
+      seedDialogs({ selection: "morph1" });
+      await equipItemFromStash(actor, id);
+    }
+
+    expect(createdMessages.map(message => message.content.includes("ep2e.roll.announce.weapon.equipped"))).toEqual([true, true, false]);
+    expect(createdMessages[2].content).toContain("ep2e.roll.announce.item.gear");
+    expect(createdMessages[0].content).toContain("Rifle");
+  });
+
+  test("both weapon types are announced as one kind, every other carried type by itself", () => {
+    expect([announceKind("rangedWeapon"), announceKind("ccWeapon"), announceKind("gear"), announceKind("armor")]).toEqual(["weapons", "weapons", "gear", "armor"]);
+    expect(ANNOUNCE_KINDS).toEqual(["armor", "weapons", "gear", "drug", "ammo", "grenade"]);
   });
 
   test("moving to another body asks for no confirmation once the body is picked", async () => {

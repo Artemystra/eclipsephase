@@ -4,6 +4,7 @@
       "name": "Reiniciar recargas cada día",
       "hint": "Cuando el reloj del mundo pasa la medianoche, cada personaje recupera sus recargas cortas y largas. Desactívalo para reiniciarlas a mano."
     },
+    "equipAnnouncements": { "name": "Anunciar al equipar", "hint": "Qué tipos de objeto se anuncian en el chat al sacarlos del alijo y ponerlos en un cuerpo." },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -181,6 +182,7 @@
         "stashWareLater": "El implante solo sale de un cuerpo mediante cirugía - aún no es posible",
         "moveArmor": "Mover Armadura",
         "deleteArmorWithBody": "Eliminar Armadura",
+        "deleteItemsWithBody": "Borrar con el cuerpo",
         "equipArmor": "Equipar"
       },
       "dialogHeadline": {
@@ -1898,6 +1900,13 @@
           "cyberbrain": "Objetivo con cibercerebro",
           "range": "Alcance psi: {band} ({distance} m)"
         },
+        "weapon": { "equipped": "Mi {morph} ahora lleva un arma." },
+        "item": {
+          "gear": "He equipado a {morph} con equipo.",
+          "drug": "He equipado a {morph} con drogas.",
+          "ammo": "He equipado a {morph} con munición.",
+          "grenade": "He equipado a {morph} con granadas."
+        },
         "armor": {
           "equipped": "He equipado a {morph} con armadura."
         },
@@ -2068,6 +2077,7 @@
         "placeholder": "- Seleccionar Cuerpo -",
         "placeholderEgo": "- Seleccionar Ego -"
       },
+      "bodyItems": { "header": "¿Qué pasa con lo que lleva?", "copy": "Vas a borrar {body}, que todavía lleva objetos. Guárdalos en tu alijo o bórralos junto con {body}." },
       "reassignArmor": {
         "header": "Reasignar Armadura",
         "copy": "Estás a punto de eliminar {body}, que tiene Armadura asignada. Guárdala para más tarde, o elimínala junto con {body}."

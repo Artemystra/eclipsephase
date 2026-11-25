@@ -4,6 +4,7 @@
       "name": "每天重置充能",
       "hint": "当世界时钟越过午夜时，每个角色都会恢复其短充能与长充能。关闭此项则改为手动重置。"
     },
+    "equipAnnouncements": { "name": "宣告装备", "hint": "从储藏取出放到身体上时，哪些物品类型会在聊天中宣告。" },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -180,6 +181,7 @@
         "stashWareLater": "植入物只能通过手术从身体中取出——目前尚不可用",
         "moveArmor": "转移护甲",
         "deleteArmorWithBody": "删除护甲",
+        "deleteItemsWithBody": "随身体一起删除",
         "equipArmor": "装备"
       },
       "dialogHeadline": {
@@ -1905,6 +1907,13 @@
           "cyberbrain": "目标装有电子脑",
           "range": "灵能距离：{band}（{distance} 米）"
         },
+        "weapon": { "equipped": "我的{morph}现在携带着一把武器。" },
+        "item": {
+          "gear": "我已为{morph}配备了装备。",
+          "drug": "我已为{morph}配备了药物。",
+          "ammo": "我已为{morph}配备了弹药。",
+          "grenade": "我已为{morph}配备了手雷。"
+        },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"
         },
@@ -2075,6 +2084,7 @@
         "placeholder": "- 选择身体 -",
         "placeholderEgo": "- 选择意识 -"
       },
+      "bodyItems": { "header": "它携带的东西怎么办？", "copy": "你即将删除{body}，它仍携带着物品。把它们放入储藏，或与{body}一起删除。" },
       "reassignArmor": {
         "header": "重新分配护甲",
         "copy": "你即将删除{body}，这具身体上绑定了护甲。可以将其收纳以备日后使用，或将其与{body}一并删除。"

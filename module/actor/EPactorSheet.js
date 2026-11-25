@@ -1536,12 +1536,14 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             if (actor.type !== "character") {
               bucketKey = item.type === "vehicle" ? "activeVehicle" : "activeMorph";
             }
-            const hasArmor = actor.items.some(i => i.type === "armor" && i.system.boundTo === bucketKey);
+            const carries = actor.type === "character"
+              ? actor.items.some(i => MORPHFUNCTION.isCarried(i) && MORPHFUNCTION.locationOf(actor, i) === bucketKey)
+              : actor.items.some(i => i.type === "armor" && i.system.boundTo === bucketKey);
 
-            if (hasArmor) {
-              // Bound Armor gets one merged dialog (delete-confirmation + reassignment choice)
-              // instead of the generic confirm followed by a second, separate Armor dialog.
-              const resolution = await MORPHFUNCTION.resolveArmorOnBodyDelete(actor, bucketKey, itemName);
+            if (carries) {
+              // What the body carries gets one merged dialog (delete-confirmation + what becomes of
+              // it) instead of the generic confirm followed by a second one.
+              const resolution = await MORPHFUNCTION.resolveItemsOnBodyDelete(actor, bucketKey, itemName);
               if (!resolution.proceed) return;
               await MORPHFUNCTION.deleteBody(actor, itemId);
               return;

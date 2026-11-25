@@ -4,6 +4,7 @@
       "name": "Redefinir recargas diariamente",
       "hint": "Quando o relógio do mundo passa da meia-noite, cada personagem recupera suas recargas curtas e longas. Desative para redefini-las manualmente."
     },
+    "equipAnnouncements": { "name": "Anunciar ao equipar", "hint": "Quais tipos de item são anunciados no chat ao tirá-los do esconderijo e colocá-los num corpo." },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -181,6 +182,7 @@
         "stashWareLater": "O implante só sai de um corpo por cirurgia - ainda não é possível",
         "moveArmor": "Mover Armadura",
         "deleteArmorWithBody": "Excluir Armadura",
+        "deleteItemsWithBody": "Apagar com o corpo",
         "equipArmor": "Equipar"
       },
       "dialogHeadline": {
@@ -1912,6 +1914,13 @@
           "cyberbrain": "Alvo com cibercérebro",
           "range": "Alcance psi: {band} ({distance} m)"
         },
+        "weapon": { "equipped": "Meu {morph} agora carrega uma arma." },
+        "item": {
+          "gear": "Eu equipei {morph} com equipamento.",
+          "drug": "Eu equipei {morph} com drogas.",
+          "ammo": "Eu equipei {morph} com munição.",
+          "grenade": "Eu equipei {morph} com granadas."
+        },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."
         },
@@ -2082,6 +2091,7 @@
         "placeholder": "- Selecionar Corpo -",
         "placeholderEgo": "- Selecionar Ego -"
       },
+      "bodyItems": { "header": "O que acontece com o que ele carrega?", "copy": "Você vai apagar {body}, que ainda carrega itens. Guarde-os no seu esconderijo ou apague-os junto com {body}." },
       "reassignArmor": {
         "header": "Reatribuir Armadura",
         "copy": "Você está prestes a excluir {body}, que tem Armadura atribuída a ele. Guarde-a para mais tarde, ou exclua-a junto com {body}."

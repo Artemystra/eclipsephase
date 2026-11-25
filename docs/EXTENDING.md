@@ -42,7 +42,8 @@ api.rolls   // RollCheck, rollChecksSideBySide, rollToChat, TaskRoll, TaskRollMo
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
             // sleevedNervousSystem, CYBERBRAIN_MARKER, targetKinds, transferItemBetweenActors,
             // mergeOrCreateItem, requestGMItemTransfer, tempEffectCreation, tempEffectDeletion,
-            // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame
+            // getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame,
+            // STASH, locationOf, isUsable, itemsOn, moveItem
 api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowControls,
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
             // itemTypeFilterPills, slideToggleVisibility, selectFromSearchableList,
@@ -76,6 +77,35 @@ localhost; without them every tab acts, as before 3.0.
 - `registerSocketActions(handlers, { gmOnly })` listens on the system's socket; by default only
   `isActiveGM()` answers. `relayToActiveGM(action, payload)` asks it, and
   `runOrRelay(message, action, run)` changes a chat card where this client may and asks otherwise.
+
+Carried items (3.0): a player character carries its armour, weapons, gear, drugs, ammunition and
+grenades on one of its bodies or keeps them in the Stash, which has no place of its own. NPCs and goons
+carry everything on their one body.
+
+- `system.boundTo` of those items holds the body's item id or `api.actors.STASH` (`"stash"`).
+  `api.actors.locationOf(actor, item)` reads it: a body id or `STASH` for a character's carried
+  item - an item with no body, or whose body is gone, lies in the Stash; programs and digital gear
+  always do - and `null` for an NPC, a goon or an item that is not carried. A character's sleeved
+  morph counts as a body even where its item is missing.
+- A character can use an item only while it lies on the sleeved morph or the jammed body:
+  `api.actors.isUsable(actor, item)`, always true for NPCs and goons. `system.active` of a carried
+  item is derived from that in `prepareData` and read only - armour is worn by the body that acts,
+  the jammed one while jamming. Set the place, not `active`.
+- An item's ActiveEffects help only the body it lies on while that body acts.
+- `api.actors.itemsOn(actor, place)` lists a character's carried items in one place;
+  `api.actors.moveItem(actor, itemId, place, { quantity })` moves an item or part of its stack there,
+  joining a stack already there; of a drug the open pack moves first.
+- A carried item created on a character without a body of its own goes into the Stash.
+  `resolveBodyForItem(actor, key, { allowStash: true })` offers the Stash first and resolves
+  `{ boundTo: STASH, chosenBody: null }` when it is picked.
+- `transferItemBetweenActors({ sourceActor, targetActor, item, quantity, boundToOverride, giverId })`
+  puts an item a character gets from another character, an NPC or a goon onto its sleeved morph
+  (programs into the Stash) unless `boundToOverride` says otherwise, and has the character's non-GM
+  owners other than `giverId` told on their screens. From any other actor - a shop - it lands as
+  before, in the Stash, and nobody is told. `mergeOrCreateItem` joins a character's stacks only in the
+  same place.
+- The world setting `equipAnnouncements` lists the kinds of item whose taking out of the Stash is
+  announced in the chat: the carried types, with `weapons` for ranged and melee weapons together.
 
 `api.drugs` is described in "Drugs and doses" below.
 
