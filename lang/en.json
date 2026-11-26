@@ -758,7 +758,9 @@
       "jamming": {
         "headline": "Remote Bodies",
         "jammed": "Jammed",
-        "noSkillsWhileJammed": "Jammed — Use your own skills instead"
+        "noSkillsWhileJammed": "Jammed — Use your own skills instead",
+        "blocked": "No jamming under {condition}.",
+        "broken": "{body}: {condition}. The jam breaks off and the ego is back in {morph}."
       }
     },
     "inventory": {
@@ -2824,11 +2826,23 @@
       },
       "noteText": "{name}: {note}",
       "notApplied": "{name} (Not applied)",
+      "slotNames": { "unconsciousDead": "Unconscious/Dead", "impaired": "Impaired" },
       "notes": {
         "blinded": "a Perceive Test before every attack; when it fails, the attack misses on a straight 50%",
         "deafened": "−3 Initiative and −30 Perceive",
         "grappled": "Fray −30 against attacks from outside the grapple",
-        "prone": "opponents in melee +20, shooters at Range or farther −10"
+        "prone": "opponents in melee +20, shooters at Range or farther −10",
+        "unconscious": "out of the fight and helpless until woken, skipped in the turn order",
+        "dead": "dead or destroyed once damage reaches the Death Rating, out of the fight",
+        "unconsciousDead": "out of the fight: unconscious until woken, dead once damage reaches the Death Rating",
+        "incapacitated": "no actions at all, Fray included; comes by itself once damage reaches Durability",
+        "immobilized": "no physical actions, Fray included",
+        "impaired": "three levels, Impaired 1 to 3: −10, −20 or −30 to all actions",
+        "impaired10": "−10 to all actions",
+        "impaired20": "−20 to all actions",
+        "impaired30": "−30 to all actions",
+        "dazed": "no actions but a base move and defending",
+        "stunned": "−30 to physical and −10 to mental actions"
       },
       "blocked": "{condition}: no tests can be made.",
       "blockedPhysical": "{condition}: no physical actions are possible.",

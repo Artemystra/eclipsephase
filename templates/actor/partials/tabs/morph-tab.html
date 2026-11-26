@@ -34,7 +34,14 @@
                         <a data-action="tab" data-group="morph" data-tab="{{body.morphdetails.0.id}}" class="item {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}">
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div style="min-height: 20px; width: 100%; display: flex; gap: 4px;">
-                                {{#if body.morphdetails.0.hasPuppetSock}}
+                                {{#if @root.actor.jamBlock}}
+                                    <div class="wantToKnowMore jammButton" style="flex: 1; max-width: none;">
+                                        <button type="button" class="resource-label button sheetButton jammButton jammButtonDisabled" disabled style="width: 100%;">
+                                            {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                        </button>
+                                        <span class="tooltipText">{{@root.actor.jamBlock}}</span>
+                                    </div>
+                                {{else if body.morphdetails.0.hasPuppetSock}}
                                     <button type="button"
                                         class="resource-label button sheetButton jammButton"
                                         title="{{localize 'ep2e.actorSheet.button.jamVehicle'}}"
@@ -90,7 +97,14 @@
                             {{else}}
                                 <!-- Not jammed: Jam button (CSS shows only when tab active) -->
                                 <div style="min-height: 20px; width: 100%;">
-                                    {{#if vehicle.hasPuppetSock}}
+                                    {{#if @root.actor.jamBlock}}
+                                    <div class="wantToKnowMore jammButton" style="width: 100%; max-width: none;">
+                                        <button type="button" class="resource-label button sheetButton jammButton jammButtonDisabled" disabled style="width: 100%;">
+                                            {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                        </button>
+                                        <span class="tooltipText">{{@root.actor.jamBlock}}</span>
+                                    </div>
+                                {{else if vehicle.hasPuppetSock}}
                                         <button type="button"
                                             class="resource-label button sheetButton jammButton"
                                             title="{{localize 'ep2e.actorSheet.button.jamVehicle'}}"

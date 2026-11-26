@@ -1050,6 +1050,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         return v;
       });
       actor.actorType = "PC";
+      actor.jamBlock = MORPHFUNCTION.jamBlockReason(actor);
       actor.ammo = ammo;
       actor.morph = morph;
       actor.ids = id;

@@ -1,13 +1,13 @@
 import { registerRollBlock } from "../api/registry.js";
 import { rollScope, GLOBAL_MOD_KEY, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
 import { timedEffectData } from "./general-sheet-functions.js";
-import { registerSocketActions, relayToActiveGM } from "./socket.js";
+import { madeHere, registerSocketActions, relayToActiveGM } from "./socket.js";
 
 // The conditions of Core p.226 as the token HUD's status effects, plus Dead and Invisible, which
 // Foundry itself acts on. A condition set from the HUD is a temporary effect: it shows in the Time
 // Panel and ends on the clock once given a duration. Its modifiers are the effect's changes, so they
-// reach the rolls the way any effect's do; a modifier to one skill only is applied to its rolls. A
-// condition with a note does something only some tests feel, which the sheet shows beside the sums.
+// reach the rolls the way any effect's do; a modifier to one skill only is applied to its rolls. The
+// sheet's condition bar shows the main ones beside the sums, with what each does.
 
 const ICONS = "systems/eclipsephase/resources/icons/conditions";
 
@@ -16,20 +16,20 @@ export const CONDITION_KEY = "condition";
 const INITIATIVE_MOD_KEY = "system.mods.iniMod";
 
 export const CONDITIONS = [
-  { id: "blinded", img: "icons/svg/blind.svg", changes: { [PHYSICAL_MOD_KEY]: -30 }, note: true },
+  { id: "blinded", img: "icons/svg/blind.svg", changes: { [PHYSICAL_MOD_KEY]: -30 } },
   { id: "confused", img: "icons/svg/daze.svg" },
   { id: "dazed", img: "icons/svg/stoned.svg" },
-  { id: "deafened", img: "icons/svg/deaf.svg", changes: { [INITIATIVE_MOD_KEY]: -3 }, skills: { perceive: -30 }, note: true },
-  { id: "grappled", img: `${ICONS}/grappled.svg`, note: true },
+  { id: "deafened", img: "icons/svg/deaf.svg", changes: { [INITIATIVE_MOD_KEY]: -3 }, skills: { perceive: -30 } },
+  { id: "grappled", img: `${ICONS}/grappled.svg` },
   { id: "immobilized", img: "icons/svg/net.svg" },
   { id: "impaired10", img: `${ICONS}/impaired-10.svg`, group: "impaired", changes: { [GLOBAL_MOD_KEY]: -10 } },
   { id: "impaired20", img: `${ICONS}/impaired-20.svg`, group: "impaired", changes: { [GLOBAL_MOD_KEY]: -20 } },
   { id: "impaired30", img: `${ICONS}/impaired-30.svg`, group: "impaired", changes: { [GLOBAL_MOD_KEY]: -30 } },
   { id: "incapacitated", img: "icons/svg/paralysis.svg" },
-  { id: "prone", img: "icons/svg/falling.svg", note: true },
+  { id: "prone", img: "icons/svg/falling.svg" },
   { id: "stunned", img: "icons/svg/lightning.svg", changes: { [PHYSICAL_MOD_KEY]: -30, [MENTAL_MOD_KEY]: -10 } },
   { id: "unconscious", img: "icons/svg/unconscious.svg" },
-  { id: "dead", img: "icons/svg/skull.svg" },
+  { id: "dead", img: "icons/svg/skull.svg", replaces: ["unconscious"] },
   { id: "invisible", img: "icons/svg/invisible.svg" }
 ];
 
@@ -81,14 +81,16 @@ export function activeConditions(actor) {
 }
 
 /**
- * The other conditions of a condition's group, which it replaces - one Impaired level at a time.
+ * The conditions a condition replaces: the others of its group - one Impaired level at a time - and
+ * those it names, as Dead does Unconscious.
  * @param {String} id - The condition id
  * @returns {String[]} The ids it replaces
  */
 export function replacedConditions(id) {
-  const group = conditionEntry(id)?.group;
-  if (!group) return [];
-  return CONDITIONS.filter(entry => entry.group === group && entry.id !== id).map(entry => entry.id);
+  const entry = conditionEntry(id);
+  const group = entry?.group;
+  const others = group ? CONDITIONS.filter(other => other.group === group && other.id !== id).map(other => other.id) : [];
+  return [...others, ...(entry?.replaces ?? [])];
 }
 
 /**
@@ -135,29 +137,37 @@ export function rollBlockContext(dataset, rolledFrom) {
   return { defence: !!flags.attackDefence, check: !!(flags.doseCheck || flags.strikeCheck), scope: rollScope(dataset, rolledFrom) };
 }
 
+// The sheet's condition bar, in order. A slot of several shows the one the actor is under, the
+// first named first, and its idle image and text while under none.
+const CONDITION_BAR = [
+  { id: "blinded" }, { id: "deafened" }, { id: "grappled" }, { id: "prone" },
+  { id: "unconsciousDead", members: ["dead", "unconscious"], idle: "unconscious" },
+  { id: "incapacitated" }, { id: "immobilized" },
+  { id: "impaired", members: ["impaired30", "impaired20", "impaired10"], idle: "impaired10" },
+  { id: "dazed" }, { id: "stunned" }
+];
+
 /**
- * The conditions whose modifiers reach only some tests, for the sheet to show beside the sums: each
- * one's icon, whether the actor is under it, and what it does, e.g. "Deafened: -3 Initiative and -30
- * Perceive" - marked as not applied while the actor is not under it.
+ * The sheet's condition bar: per slot its icon, whether the actor is under it, and what it does, e.g.
+ * "Deafened: -3 Initiative and -30 Perceive" - marked as not applied while the actor is not under it.
  * @param {Actor} actor - The actor
- * @returns {Object[]} id, img, active and text per condition
+ * @returns {Object[]} id, img, active and text per slot
  */
 export function conditionNotes(actor) {
   const active = activeConditions(actor);
-  return CONDITIONS
-    .filter(entry => entry.note)
-    .map(({ id, img }) => {
-      const name = game.i18n.localize(`ep2e.conditions.${id}.name`);
-      return {
-        id,
-        img,
-        active: active.has(id),
-        text: game.i18n.format("ep2e.conditions.noteText", {
-          name: active.has(id) ? name : game.i18n.format("ep2e.conditions.notApplied", { name }),
-          note: game.i18n.localize(`ep2e.conditions.notes.${id}`)
-        })
-      };
-    });
+  return CONDITION_BAR.map(({ id, members = [id], idle = id }) => {
+    const on = members.find(member => active.has(member));
+    const name = game.i18n.localize(on || members.length === 1 ? `ep2e.conditions.${on ?? id}.name` : `ep2e.conditions.slotNames.${id}`);
+    return {
+      id,
+      img: conditionEntry(on ?? idle).img,
+      active: !!on,
+      text: game.i18n.format("ep2e.conditions.noteText", {
+        name: on ? name : game.i18n.format("ep2e.conditions.notApplied", { name }),
+        note: game.i18n.localize(`ep2e.conditions.notes.${on ?? id}`)
+      })
+    };
+  });
 }
 
 /**
@@ -279,6 +289,89 @@ export function registerConditionSocket() {
       const actor = await fromUuid(actorUuid);
       if (actor) await inflictConditions(actor, conditions ?? []);
     }
+  });
+}
+
+// The conditions of the body rather than the ego: they stay with a body the ego leaves and are back
+// when it returns, like its damage. Confused and Dazed are the ego's and go along.
+export const BODY_CONDITIONS = ["blinded", "deafened", "grappled", "immobilized", "incapacitated", "prone", "stunned",
+  "unconscious", "dead", "impaired10", "impaired20", "impaired30", "invisible"];
+
+// Marks the effects of a change of body, which the hooks reacting to new conditions leave alone.
+export const BODY_SWAP = "eclipsephaseBodySwap";
+
+/**
+ * Takes the body's conditions off the actor and keeps them on the body the ego leaves.
+ * @param {Actor} actor - The actor
+ * @param {Item} body - The morph or vehicle left
+ * @returns {Promise<void>} Resolves once they are kept
+ */
+export async function setAsideBodyConditions(actor, body) {
+  if (!body) return;
+  const effects = Array.from(actor.effects ?? []).filter(effect => effect.flags?.eclipsephase?.effectKey === CONDITION_KEY
+    && Array.from(effect.statuses ?? []).some(status => BODY_CONDITIONS.includes(status)));
+  if (!effects.length) return;
+  await body.setFlag("eclipsephase", "bodyConditions", effects.map(effect => {
+    const data = effect.toObject();
+    delete data._id;
+    return data;
+  }));
+  await actor.deleteEmbeddedDocuments("ActiveEffect", effects.map(effect => effect.id));
+}
+
+/**
+ * Puts the conditions a body kept back on the actor, as the ego enters it.
+ * @param {Actor} actor - The actor
+ * @param {Item} body - The morph or vehicle entered
+ * @returns {Promise<void>} Resolves once they are on
+ */
+export async function bringBackBodyConditions(actor, body) {
+  const kept = body?.getFlag("eclipsephase", "bodyConditions");
+  if (!kept) return;
+  await body.unsetFlag("eclipsephase", "bodyConditions");
+  if (kept.length) await actor.createEmbeddedDocuments("ActiveEffect", kept, { [BODY_SWAP]: true });
+}
+
+// Marks the conditions the damage itself put on.
+const FROM_DAMAGE = "fromDamage";
+
+/**
+ * Puts on the conditions the damage brings: Incapacitated once it reaches Durability, gone again
+ * once healed below unless it came from elsewhere, and Dead once it reaches the Death Rating, which
+ * only the GM takes off.
+ * @param {Actor} actor - The actor
+ * @returns {Promise<void>} Resolves once they are set
+ */
+export async function syncDamageConditions(actor) {
+  const durability = Number(actor?.system?.health?.physical?.max) || 0;
+  if (durability <= 0) return;
+  const damage = Number(actor.system.health.physical.value) || 0;
+  const deathRating = Number(actor.system.physical?.dr) || 0;
+  const conditions = activeConditions(actor);
+
+  if (damage >= durability) {
+    if (!conditions.has("incapacitated")) await inflictCondition(actor, "incapacitated", { flags: { [FROM_DAMAGE]: true } });
+  }
+  else {
+    const healed = Array.from(actor.effects ?? []).filter(effect =>
+      effect.flags?.eclipsephase?.[FROM_DAMAGE] && Array.from(effect.statuses ?? []).includes("incapacitated"));
+    if (healed.length) await actor.deleteEmbeddedDocuments("ActiveEffect", healed.map(effect => effect.id));
+  }
+
+  if (deathRating > 0 && damage >= deathRating && !conditions.has("dead")) {
+    await inflictCondition(actor, "dead", { flags: { [FROM_DAMAGE]: true } });
+  }
+}
+
+/**
+ * Lets the client that changed an actor's damage, or the body it acts in, set the conditions it brings.
+ * @returns {void}
+ */
+export function registerDamageConditions() {
+  Hooks.on("updateActor", (actor, changed, options, userId) => {
+    if (!madeHere(userId, options)) return;
+    const touched = ["system.health.physical.value", "system.activeMorph", "system.activeJam"].some(path => foundry.utils.hasProperty(changed, path));
+    if (touched) syncDamageConditions(actor);
   });
 }
 

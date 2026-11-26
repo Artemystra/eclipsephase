@@ -638,6 +638,10 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "jamming": {
+        "blocked": "Sem jamming no estado {condition}.",
+        "broken": "{body}: {condition}. O jamming é interrompido e o ego volta para {morph}."
+      },
       "currentMorph": {
         "headline": "Morfo Atual",
         "sleevedLabel": "Encapado",
@@ -2755,11 +2759,23 @@
       },
       "noteText": "{name}: {note}",
       "notApplied": "{name} (Não aplicado)",
+      "slotNames": { "unconsciousDead": "Inconsciente/Morto", "impaired": "Impaired" },
       "notes": {
         "blinded": "um teste de Perceber antes de cada ataque; se falhar, o ataque erra direto com 50%",
         "deafened": "−3 na Iniciativa e −30 em Perceive",
         "grappled": "Fray −30 contra ataques de fora do agarrão",
-        "prone": "oponentes em corpo a corpo +20, disparos de Range ou mais longe −10"
+        "prone": "oponentes em corpo a corpo +20, disparos de Range ou mais longe −10",
+        "unconscious": "fora do combate e indefeso até ser acordado; pulado na ordem de turnos",
+        "dead": "morto ou destruído quando o dano alcança o Death Rating; fora do combate",
+        "unconsciousDead": "fora do combate: inconsciente até ser acordado, morto quando o dano alcança o Death Rating",
+        "incapacitated": "nenhuma ação, Fray incluído; vem sozinho quando o dano alcança a Durability",
+        "immobilized": "nenhuma ação física, Fray incluído",
+        "impaired": "três níveis, Impaired 1 a 3: −10, −20 ou −30 em todas as ações",
+        "impaired10": "−10 em todas as ações",
+        "impaired20": "−20 em todas as ações",
+        "impaired30": "−30 em todas as ações",
+        "dazed": "nenhuma ação além de um movimento básico e defender-se",
+        "stunned": "−30 em ações físicas e −10 em ações mentais"
       },
       "blocked": "{condition}: nenhum teste pode ser feito.",
       "blockedPhysical": "{condition}: nenhuma ação física é possível.",

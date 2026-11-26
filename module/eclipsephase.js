@@ -18,7 +18,7 @@ import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } fr
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
-import { PLAIN_TACNET_VISION, TACNET_VISION, ANNOUNCE_KINDS, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION, ANNOUNCE_KINDS, registerJamBreaks, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -31,7 +31,7 @@ import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
 import { registerAreaSocket } from "./common/targeting.js";
-import { registerConditions, registerConditionSocket } from "./common/conditions.js";
+import { registerConditions, registerConditionSocket, registerDamageConditions } from "./common/conditions.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -241,6 +241,8 @@ Hooks.once('init', async function() {
   registerTargetedAttackHooks();
   registerDrugHooks();
   registerConditions();
+  registerDamageConditions();
+  registerJamBreaks();
   registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
   registerWeaponAttacks();
   registerSleightAttacks();

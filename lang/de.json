@@ -750,7 +750,9 @@
       "jamming": {
         "headline": "Ferngesteuerte Körper",
         "jammed": "Gejammt",
-        "noSkillsWhileJammed": "Gejammt — Nutze stattdessen deine eigenen Skills"
+        "noSkillsWhileJammed": "Gejammt — Nutze stattdessen deine eigenen Skills",
+        "blocked": "Kein Jammen im Zustand {condition}.",
+        "broken": "{body}: {condition}. Das Jammen bricht ab, und das Ego ist zurück in {morph}."
       }
     },
     "inventory": {
@@ -2776,11 +2778,23 @@
       },
       "noteText": "{name}: {note}",
       "notApplied": "{name} (Nicht aktiv)",
+      "slotNames": { "unconsciousDead": "Bewusstlos/Tot", "impaired": "Impaired" },
       "notes": {
         "blinded": "Vor jedem Angriff ein Perceive-Wurf; misslingt er, verfehlt der Angriff glatt zu 50 %",
         "deafened": "−3 Initiative und −30 Perceive",
         "grappled": "Fray −30 gegen Angriffe von außerhalb",
-        "prone": "Gegner im Nahkampf +20, Schützen ab Range −10"
+        "prone": "Gegner im Nahkampf +20, Schützen ab Range −10",
+        "unconscious": "kampfunfähig und hilflos, bis jemand dich weckt; wird in der Zugreihenfolge übersprungen",
+        "dead": "tot oder zerstört, sobald der Schaden das Death Rating erreicht; aus dem Kampf",
+        "unconsciousDead": "aus dem Kampf: bewusstlos, bis jemand dich weckt, tot, sobald der Schaden das Death Rating erreicht",
+        "incapacitated": "gar keine Aktionen, auch kein Fray; kommt von selbst, sobald der Schaden die Durability erreicht",
+        "immobilized": "keine körperlichen Aktionen, auch kein Fray",
+        "impaired": "drei Stufen, Impaired 1 bis 3: −10, −20 oder −30 auf alle Aktionen",
+        "impaired10": "−10 auf alle Aktionen",
+        "impaired20": "−20 auf alle Aktionen",
+        "impaired30": "−30 auf alle Aktionen",
+        "dazed": "keine Aktionen außer einer Grundbewegung und Verteidigung",
+        "stunned": "−30 auf körperliche und −10 auf geistige Aktionen"
       },
       "blocked": "{condition}: Es sind keine Würfe möglich.",
       "blockedPhysical": "{condition}: Es sind keine körperlichen Handlungen möglich.",

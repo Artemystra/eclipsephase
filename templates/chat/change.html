@@ -1,5 +1,9 @@
 
 <div class="alignCenter">
+    <!-- A jam ended because a body went down -->
+    {{#if (eq type "jamBroken")}}
+        <p>{{copy}}</p>
+    {{/if}}
     <!-- Sleeving -->
     {{#if (eq type "resleeve")}}
         <p>{{localize "ep2e.morph.sleeving.announce.title.sleeved"}}<span class="resource-value"></span></p>

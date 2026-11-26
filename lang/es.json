@@ -638,6 +638,10 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "jamming": {
+        "blocked": "No hay jamming en estado {condition}.",
+        "broken": "{body}: {condition}. El jamming se corta y el ego vuelve a {morph}."
+      },
       "currentMorph": {
         "headline": "Current Morph",
         "sleevedLabel": "Sleeved",
@@ -2740,11 +2744,23 @@
       },
       "noteText": "{name}: {note}",
       "notApplied": "{name} (No aplicado)",
+      "slotNames": { "unconsciousDead": "Inconsciente/Muerto", "impaired": "Impaired" },
       "notes": {
         "blinded": "una tirada de Percibir antes de cada ataque; si falla, el ataque falla sin más con un 50 %",
         "deafened": "−3 a la Iniciativa y −30 a Perceive",
         "grappled": "Fray −30 contra ataques desde fuera de la presa",
-        "prone": "oponentes en cuerpo a cuerpo +20, disparos desde Range o más lejos −10"
+        "prone": "oponentes en cuerpo a cuerpo +20, disparos desde Range o más lejos −10",
+        "unconscious": "fuera del combate e indefenso hasta que te despierten; se salta en el orden de turnos",
+        "dead": "muerto o destruido cuando el daño alcanza el Death Rating; fuera del combate",
+        "unconsciousDead": "fuera del combate: inconsciente hasta que te despierten, muerto cuando el daño alcanza el Death Rating",
+        "incapacitated": "ninguna acción, Fray incluido; llega sola cuando el daño alcanza la Durability",
+        "immobilized": "ninguna acción física, Fray incluido",
+        "impaired": "tres niveles, Impaired 1 a 3: −10, −20 o −30 a todas las acciones",
+        "impaired10": "−10 a todas las acciones",
+        "impaired20": "−20 a todas las acciones",
+        "impaired30": "−30 a todas las acciones",
+        "dazed": "ninguna acción salvo un movimiento básico y defenderse",
+        "stunned": "−30 a las acciones físicas y −10 a las mentales"
       },
       "blocked": "{condition}: no se puede hacer ninguna tirada.",
       "blockedPhysical": "{condition}: no es posible ninguna acción física.",

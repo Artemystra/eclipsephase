@@ -2,6 +2,11 @@ import * as sheetFunction from "./general-sheet-functions.js"
 import * as resleeving from "../rolls/resleeving.js"
 import { getStrainFamily } from "../rolls/strain-families.js";
 import { madeHere, registerSocketActions, relayToActiveGM } from "./socket.js";
+import { setAsideBodyConditions, bringBackBodyConditions, activeConditions, BODY_SWAP } from "./conditions.js";
+import { eclipsephase } from "../config.js";
+
+// A change of body brings wounds the body has had all along, not new ones: no checks for them.
+const BODY_CHANGE = { eclipsephase: { woundCheck: false } };
 
 export async function resleeveMorph(actor, currentTarget, sheet){
     // Can't resleeve while jamming - your ego is off piloting a remote body. Also backs up the
@@ -30,6 +35,8 @@ export async function resleeveMorph(actor, currentTarget, sheet){
 
         // Damage and wounds stay with the body left behind, the new one brings its own; stress and trauma go with the ego.
         const oldMorph = actor.items.get(actor.system.activeMorph);
+        await setAsideBodyConditions(actor, oldMorph);
+        await bringBackBodyConditions(actor, newMorph);
         if (oldMorph) await keepBodyDamage(oldMorph, actor.system.health.physical.value, actor.system.physical.wounds);
         const kept = storedBodyDamage(newMorph);
         await actor.update({
@@ -37,7 +44,7 @@ export async function resleeveMorph(actor, currentTarget, sheet){
             "system.pools.flex.value": egoFlex + newBodyFlexMax,
             "system.health.physical.value": kept.value,
             "system.physical.wounds": kept.wounds
-        });
+        }, BODY_CHANGE);
         if (newMorph.getFlag("eclipsephase", "bodyDamage")) await newMorph.unsetFlag("eclipsephase", "bodyDamage");
         await actor.update({ "flags.eclipsephase.resleeving": true });
         
@@ -127,7 +134,9 @@ export async function jamBody(actor, currentTarget, sheet) {
         const jammedBodyFlexMax = Number(body.system.flex) || 0;
         const jammedFlexValue = Math.max(0, egoFlex + jammedBodyFlexMax - egoFlexSpent);
 
-        // Put the real body's damage and pools aside while jamming; the jammed body brings the damage it kept.
+        // Put the real body's conditions, damage and pools aside while jamming; the jammed body brings what it kept.
+        await setAsideBodyConditions(actor, actor.items.get(actor.system.activeMorph));
+        await bringBackBodyConditions(actor, body);
         const kept = storedBodyDamage(body);
         await actor.update({
             "system.activeJam": itemID,
@@ -142,7 +151,7 @@ export async function jamBody(actor, currentTarget, sheet) {
             "system.health.physical.value": kept.value,
             "system.physical.wounds": kept.wounds,
             "system.pools.flex.value": jammedFlexValue
-        });
+        }, BODY_CHANGE);
         if (body.getFlag("eclipsephase", "bodyDamage")) await body.unsetFlag("eclipsephase", "bodyDamage");
         await actor.update({ "flags.eclipsephase.resleeving": true });
 
@@ -164,6 +173,10 @@ export async function jamBody(actor, currentTarget, sheet) {
 // Shared restore math for ending a jam - used both by unjamBody's own confirm dialog and by
 // jamBody's silent implicit-unjam when switching straight from one jammed body to another.
 async function restoreFromJam(actor) {
+    // The jammed body keeps its conditions, the real body has its own back.
+    await setAsideBodyConditions(actor, actor.items.get(actor.system.activeJam));
+    await bringBackBodyConditions(actor, actor.items.get(actor.system.activeMorph));
+
     const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
     if (!backup) {
         // No stashed state to restore (e.g. an already-consumed/orphaned backup) - just end the
@@ -198,7 +211,7 @@ async function restoreFromJam(actor) {
         "system.pools.moxie.value": backup?.moxie ?? 0,
         "system.pools.flex.value": restoredFlexValue,
         "flags.eclipsephase.jamHealthBackup": new foundry.data.operators.ForcedDeletion()
-    });
+    }, BODY_CHANGE);
 }
 
 /**
@@ -270,8 +283,14 @@ export async function setBodyDamage(actor, bodyId, change) {
     switch (bodyDamagePlace(actor, bodyId)) {
         case "live":
             return actor.update({ "system.health.physical.value": next.value, "system.physical.wounds": next.wounds });
-        case "backup":
-            return actor.update({ "flags.eclipsephase.jamHealthBackup.value": next.value, "flags.eclipsephase.jamHealthBackup.wounds": next.wounds });
+        case "backup": {
+            await actor.update({ "flags.eclipsephase.jamHealthBackup.value": next.value, "flags.eclipsephase.jamHealthBackup.wounds": next.wounds });
+            // The real body dies at its Death Rating, and the ego is pulled back into it.
+            const morph = actor.items.get(bodyId);
+            const deathRating = (Number(morph?.system?.dur) || 0) * (Number(eclipsephase.damageRatingMultiplier[bodyKind(morph)]) || 1.5);
+            if (deathRating > 0 && next.value >= deathRating) await breakJam(actor, "dead", morph);
+            return;
+        }
         default: {
             const body = actor.items.get(bodyId);
             if (body) return keepBodyDamage(body, next.value, next.wounds);
@@ -307,6 +326,57 @@ export async function unjamBody(actor, currentTarget, sheet) {
         sheet.tabGroups.morph = "sleeved";
         await restoreFromJam(actor);
     }
+}
+
+// The conditions under which a jam ends at once, the ego back in its own body.
+const JAM_BREAKERS = ["dead", "unconscious"];
+
+/**
+ * Ends a jam the moment the jammed body goes down, or the real body dies, and says so in the chat.
+ * @param {Actor} actor - The character
+ * @param {String} condition - "unconscious" or "dead"
+ * @param {Item} [downed] - The body that went down, the jammed one unless named
+ * @returns {Promise<void>} Resolves once the ego is back
+ */
+export async function breakJam(actor, condition, downed = null) {
+    const jammed = actor.items.get(actor.system.activeJam);
+    if (!jammed) return;
+    const body = downed ?? jammed;
+    await restoreFromJam(actor);
+    if (actor.sheet?.tabGroups) actor.sheet.tabGroups.morph = "sleeved";
+    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/change.html", {
+        type: "jamBroken",
+        copy: game.i18n.format("ep2e.morph.jamming.broken", {
+            body: body.name,
+            condition: game.i18n.localize(`ep2e.conditions.${condition}.name`),
+            morph: actor.items.get(actor.system.activeMorph)?.name ?? ""
+        })
+    });
+    ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content });
+}
+
+/**
+ * Lets the client that put a jammed body under Unconscious or Dead end the jam.
+ * @returns {void}
+ */
+export function registerJamBreaks() {
+    Hooks.on("createActiveEffect", (effect, options, userId) => {
+        const actor = effect.parent;
+        if (!actor?.system?.activeJam || options?.[BODY_SWAP] || !madeHere(userId, options)) return;
+        const condition = JAM_BREAKERS.find(id => Array.from(effect.statuses ?? []).includes(id));
+        if (condition) breakJam(actor, condition);
+    });
+}
+
+/**
+ * Why the ego cannot start a jam now: the body it acts in is incapacitated, unconscious or dead.
+ * @param {Actor} actor - The character
+ * @returns {String|null} The refusal for the jam button's tooltip, or null when it can jam
+ */
+export function jamBlockReason(actor) {
+    const conditions = activeConditions(actor);
+    const condition = ["dead", "unconscious", "incapacitated"].find(id => conditions.has(id));
+    return condition ? game.i18n.format("ep2e.morph.jamming.blocked", { condition: game.i18n.localize(`ep2e.conditions.${condition}.name`) }) : null;
 }
 
 // Shared helper for anything that needs an actor's candidate bodies (Morphs + Vehicles) and how

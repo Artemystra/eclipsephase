@@ -130,7 +130,7 @@ describe("the side car's current modifiers", () => {
       "systems/eclipsephase/templates/actor/partials/currentStatus/modifier-breakdown.hbs", actor.system.currentStatus);
 
     expect(box.match(/ep-sidecar-value">0</g)).toHaveLength(2);
-    expect(box.match(/ep-modifier-note"/g)).toHaveLength(4);
+    expect(box.match(/ep-modifier-note"/g)).toHaveLength(10);
     expect(box).not.toContain("ep-modifier-note-active");
     expect(breakdown).toContain("ep2e.sideCar.currentStatus.noModifiersSubHeader");
   });

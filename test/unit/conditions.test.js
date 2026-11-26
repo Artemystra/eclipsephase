@@ -3,10 +3,10 @@ import path from "path";
 import {
   CONDITIONS, conditionStatusEffects, activeConditions, replacedConditions, removeReplacedConditions,
   conditionBlockReason, rollBlockContext, registerConditions, conditionNotes, conditionSkillModifiers,
-  targetsUnder, inflictCondition, registerConditionSocket
+  targetsUnder, inflictCondition, registerConditionSocket, syncDamageConditions, registerDamageConditions
 } from "../../module/common/conditions.js";
 import { rollBlockReason, resetRegistry } from "../../module/api/registry.js";
-import { RollCheck } from "../../module/rolls/dice.js";
+import { RollCheck, combatantClass } from "../../module/rolls/dice.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
 
 const EN = JSON.parse(fs.readFileSync(path.join(global.__ep.SYSTEM_ROOT, "lang", "en.json"), "utf8"));
@@ -84,6 +84,7 @@ describe("the conditions an actor is under", () => {
     resetWorld();
     expect(replacedConditions("impaired20")).toEqual(["impaired10", "impaired30"]);
     expect(replacedConditions("prone")).toEqual([]);
+    expect(replacedConditions("dead")).toEqual(["unconscious"]);
 
     const actor = makeActor({ type: "character", name: "Ana", effects: [
       { _id: "low", name: "Impaired (-10)", statuses: ["impaired10"] },
@@ -130,6 +131,74 @@ describe("a condition put on again", () => {
     await removeReplacedConditions(actor, "prone", "new");
 
     expect(actor.effects.map(effect => effect.id)).toEqual(["new"]);
+  });
+});
+
+describe("conditions the damage brings", () => {
+  /**
+   * A character with Durability 30 and Death Rating 45, under the given damage.
+   * @param {Number} damage - Its damage
+   * @param {Object[]} [effects] - Effects it has
+   * @returns {Actor} The actor
+   */
+  function damaged(damage, effects = []) {
+    return makeActor({
+      type: "character", name: "Ana",
+      system: { activeMorph: "morph1", health: { physical: { value: damage } } },
+      items: [{ _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30 } }],
+      effects
+    });
+  }
+  const statusesOf = actor => actor.effects.flatMap(effect => Array.from(effect.statuses ?? []));
+
+  beforeEach(() => resetWorld());
+
+  test("reaching Durability incapacitates, healing below it lifts what the damage put on", async () => {
+    const actor = damaged(30);
+    await syncDamageConditions(actor);
+    expect(statusesOf(actor)).toEqual(["incapacitated"]);
+
+    await actor.update({ "system.health.physical.value": 29 });
+    await syncDamageConditions(actor);
+    expect(statusesOf(actor)).toEqual([]);
+  });
+
+  test("below Durability nothing comes, and an Incapacitated from elsewhere stays when healed", async () => {
+    const actor = damaged(29, [{ _id: "drug", name: "Incapacitated", statuses: ["incapacitated"], flags: { eclipsephase: { effectKey: "condition" } } }]);
+    await syncDamageConditions(actor);
+    expect(actor.effects.map(effect => effect.id)).toEqual(["drug"]);
+  });
+
+  test("reaching the Death Rating kills, Dead replaces Unconscious and stays when healed", async () => {
+    const actor = damaged(45, [{ _id: "out", name: "Unconscious", statuses: ["unconscious"], flags: { eclipsephase: { effectKey: "condition" } } }]);
+    await syncDamageConditions(actor);
+    expect(statusesOf(actor).sort()).toEqual(["dead", "incapacitated"]);
+
+    await actor.update({ "system.health.physical.value": 0 });
+    await syncDamageConditions(actor);
+    expect(statusesOf(actor)).toEqual(["dead"]);
+  });
+
+  test("set by the client that changed the damage", async () => {
+    registerDamageConditions();
+    const actor = damaged(0);
+    await actor.update({ "system.health.physical.value": 31 });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(statusesOf(actor)).toEqual(["incapacitated"]);
+  });
+
+  test("Unconscious takes a combatant out of the fight like Dead", () => {
+    const original = foundry.documents.Combatant;
+    foundry.documents.Combatant = class { get isDefeated() { return !!this.defeated; } };
+    try {
+      const Combatant = combatantClass(class {});
+      const out = Object.assign(new Combatant(), { actor: under("unconscious") });
+      const awake = Object.assign(new Combatant(), { actor: under("prone") });
+      expect([out.isDefeated, awake.isDefeated]).toEqual([true, false]);
+    } finally {
+      foundry.documents.Combatant = original;
+    }
   });
 });
 
@@ -223,14 +292,41 @@ describe("a refused test in the roll pipeline", () => {
 });
 
 describe("what a condition does beyond the sums", () => {
-  test("every condition that reaches only some tests has a note, lit while the actor is under it", () => {
+  test("the condition bar shows its ten slots, lit while the actor is under them", () => {
     const notes = conditionNotes(under("deafened", "stunned", "prone"));
-    expect(notes.map(note => [note.id, note.active])).toEqual([["blinded", false], ["deafened", true], ["grappled", false], ["prone", true]]);
+    expect(notes.map(note => [note.id, note.active])).toEqual([
+      ["blinded", false], ["deafened", true], ["grappled", false], ["prone", true], ["unconsciousDead", false],
+      ["incapacitated", false], ["immobilized", false], ["impaired", false], ["dazed", false], ["stunned", true]
+    ]);
     expect(notes[1].img).toBe("icons/svg/deaf.svg");
     expect(notes[1].text).toContain("ep2e.conditions.noteText");
     expect(notes[1].text).toContain("ep2e.conditions.notes.deafened");
     expect(notes[1].text).not.toContain("ep2e.conditions.notApplied");
     expect(notes[0].text).toContain("ep2e.conditions.notApplied");
+    for (const key of ["unconscious", "dead", "unconsciousDead", "incapacitated", "immobilized", "impaired", "impaired10", "impaired20", "impaired30", "dazed", "stunned"]) {
+      expect(EN.ep2e.conditions.notes[key]).toBeTruthy();
+    }
+  });
+
+  test("Unconscious and Dead share a slot: idle it shows Unconscious and names both, Dead shown over Unconscious", () => {
+    const idle = conditionNotes(under()).find(note => note.id === "unconsciousDead");
+    expect(idle.img).toBe("icons/svg/unconscious.svg");
+    expect(idle.text).toContain("ep2e.conditions.slotNames.unconsciousDead");
+    expect(idle.text).toContain("ep2e.conditions.notes.unconsciousDead");
+
+    const dead = conditionNotes(under("unconscious", "dead")).find(note => note.id === "unconsciousDead");
+    expect([dead.active, dead.img]).toEqual([true, "icons/svg/skull.svg"]);
+    expect(dead.text).toContain("ep2e.conditions.dead.name");
+  });
+
+  test("the Impaired slot shows level one while idle and the level the actor is under", () => {
+    const idle = conditionNotes(under()).find(note => note.id === "impaired");
+    expect(idle.img).toContain("impaired-10");
+    expect(idle.text).toContain("ep2e.conditions.notes.impaired");
+
+    const on = conditionNotes(under("impaired20")).find(note => note.id === "impaired");
+    expect([on.active, on.img]).toEqual([true, expect.stringContaining("impaired-20")]);
+    expect(on.text).toContain("ep2e.conditions.notes.impaired20");
   });
 
   test("Deafened costs Perceive alone", () => {

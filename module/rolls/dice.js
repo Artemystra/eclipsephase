@@ -1817,6 +1817,11 @@ export function initiativeRollClass() {
  */
 export function combatantClass(InitiativeRoll) {
     return class EPcombatant extends foundry.documents.Combatant {
+        // An unconscious combatant is out of the fight like a dead one: greyed in the tracker and skipped in the turn order.
+        get isDefeated() {
+            return super.isDefeated || !!this.actor?.statuses?.has("unconscious");
+        }
+
         getInitiativeRoll(formula) {
             return new InitiativeRoll(formula || this._getInitiativeFormula(), this.actor?.getRollData() || {})
         }

@@ -1,12 +1,14 @@
 import EPactorSheet, { isSectionOpen, setSectionOpen, toggleBodySection } from "../../module/actor/EPactorSheet.js";
 import {
-  resleeveMorph, jamBody, unjamBody, bodyDamage, bodyDamagePlace, setBodyDamage, bodyKind, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
+  resleeveMorph, jamBody, unjamBody, breakJam, registerJamBreaks, jamBlockReason, bodyDamage, bodyDamagePlace, setBodyDamage, bodyKind, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
   stashItem, equipItemFromStash, announceKind, ANNOUNCE_KINDS, resolveItemsOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
   registerBodyTokens, locationOf, itemsOn, isUsable, moveItem
 } from "../../module/common/morp-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { calcEffects, sleevingTest } from "../../module/rolls/resleeving.js";
 import { healBody } from "../../module/rolls/health.js";
+import { inflictCondition, registerDamageConditions } from "../../module/common/conditions.js";
+import { registerStrikeChecks } from "../../module/rolls/damage.js";
 import { readDialogValues } from "../../module/rolls/dice.js";
 import { makeActor, makeItem, resetWorld, seedDialogs, seedRolls, setSetting } from "../setup/factories.js";
 import { JSDOM } from "jsdom";
@@ -372,6 +374,110 @@ describe("jamming a body", () => {
     expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toBeUndefined();
   });
 
+  const statusesOf = actor => actor.effects.flatMap(effect => Array.from(effect.statuses ?? [])).sort();
+  const condition = (id, extra = {}) => ({ name: id, statuses: [id], flags: { eclipsephase: { effectKey: "condition" } }, ...extra });
+
+  test("the body's conditions stay with it while jamming, the ego's go along, and come back when the jam ends", async () => {
+    const actor = jammer();
+    await actor.createEmbeddedDocuments("ActiveEffect", [condition("prone"), condition("dazed")]);
+    await actor.items.get("drone1").setFlag("eclipsephase", "bodyConditions", [condition("stunned")]);
+
+    seedDialogs(true);
+    await jamBody(actor, click("drone1"), { tabGroups: {} });
+    expect(statusesOf(actor)).toEqual(["dazed", "stunned"]);
+    expect(actor.items.get("morph1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["prone"]]);
+
+    seedDialogs(true);
+    await unjamBody(actor, click("drone1"), { tabGroups: {} });
+    expect(statusesOf(actor)).toEqual(["dazed", "prone"]);
+    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["stunned"]]);
+    expect(actor.items.get("morph1").getFlag("eclipsephase", "bodyConditions")).toBeUndefined();
+  });
+
+  test("a sleight's or drug's effect stays with the ego when the body changes", async () => {
+    const actor = jammer();
+    await actor.createEmbeddedDocuments("ActiveEffect", [{ name: "Spasm", statuses: ["prone"], flags: { eclipsephase: { effectKey: "sleight" } } }]);
+
+    seedDialogs(true);
+    await jamBody(actor, click("drone1"), { tabGroups: {} });
+
+    expect(statusesOf(actor)).toEqual(["prone"]);
+  });
+
+  test("a jammed drone knocked out ends the jam at once and says so; it keeps its Unconscious", async () => {
+    registerJamBreaks();
+    const actor = jammer();
+    seedDialogs(true);
+    await jamBody(actor, click("drone1"), { tabGroups: {} });
+    await settle();
+    createdMessages.length = 0;
+
+    await inflictCondition(actor, "unconscious");
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(actor.system.activeJam).toBeFalsy();
+    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([12, 1]);
+    expect(statusesOf(actor)).toEqual([]);
+    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["unconscious"]]);
+    expect(createdMessages).toHaveLength(1);
+    expect(createdMessages[0].content).toContain("ep2e.morph.jamming.broken");
+  });
+
+  test("coming back to a body that kept an Unconscious ends no jam a second time", async () => {
+    registerJamBreaks();
+    const actor = jammer();
+    seedDialogs(true);
+    await jamBody(actor, click("drone1"), { tabGroups: {} });
+    await settle();
+    await actor.items.get("morph1").setFlag("eclipsephase", "bodyConditions", [condition("unconscious")]);
+    createdMessages.length = 0;
+
+    seedDialogs(true);
+    await unjamBody(actor, click("drone1"), { tabGroups: {} });
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(actor.system.activeJam).toBeFalsy();
+    expect(statusesOf(actor)).toEqual(["unconscious"]);
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("the real body reaching its Death Rating while jamming pulls the ego back, dead", async () => {
+    registerJamBreaks();
+    registerDamageConditions();
+    const actor = jammer();
+    seedDialogs(true);
+    await jamBody(actor, click("drone1"), { tabGroups: {} });
+    await settle();
+
+    await setBodyDamage(actor, "morph1", { value: 45 });
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    expect(actor.system.activeJam).toBeFalsy();
+    expect(actor.system.health.physical.value).toBe(45);
+    expect(statusesOf(actor)).toContain("dead");
+  });
+
+  test("wounds a body has had all along ask for no check when the ego comes back to it", async () => {
+    registerStrikeChecks();
+    const actor = jammer({ physical: { wounds: 2 } });
+    seedDialogs(true);
+    await jamBody(actor, click("drone1"), { tabGroups: {} });
+    await settle();
+    seedDialogs(true);
+    await unjamBody(actor, click("drone1"), { tabGroups: {} });
+    await settle();
+
+    expect(actor.system.physical.wounds).toBe(2);
+    expect(createdMessages.filter(message => String(message.content).includes("ep2e.chat.strike"))).toHaveLength(0);
+  });
+
+  test("an incapacitated, unconscious or dead ego cannot start a jam", () => {
+    const actor = jammer();
+    expect(jamBlockReason(actor)).toBeNull();
+    actor.statuses = new Set(["incapacitated"]);
+    expect(jamBlockReason(actor)).toContain("ep2e.morph.jamming.blocked");
+  });
+
   test("ending a jam with nothing put aside leaves damage and pools as they are", async () => {
     const actor = jammer({ activeJam: "drone1", health: { physical: { value: 5 } } });
     seedDialogs(true);
@@ -471,6 +577,34 @@ describe("a body's own damage", () => {
     expect(actor.bodies.morph1.damage).toEqual({ value: 10, wounds: 1, dur: actor.system.health.physical.max, kind: "bio" });
     expect(actor.bodies.morph2.damage).toEqual({ value: 3, wounds: 0, dur: 50, kind: "synth" });
     expect(actor.remoteVehicles[0].damage).toEqual({ value: 8, wounds: 1, dur: 40, kind: "synth" });
+  });
+
+  test("resleeving into a wounded body asks for no check", async () => {
+    registerStrikeChecks();
+    const actor = hurt();
+    await actor.items.get("morph2").setFlag("eclipsephase", "bodyDamage", { value: 3, wounds: 2 });
+    seedDialogs(true);
+
+    await resleeveMorph(actor, sleeveClick("morph2"), { tabGroups: {} });
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    expect(actor.system.physical.wounds).toBe(2);
+    expect(createdMessages.filter(message => String(message.content).includes("ep2e.chat.strike"))).toHaveLength(0);
+  });
+
+  test("resleeving leaves the body's conditions with it and brings the new body's own", async () => {
+    const actor = hurt();
+    await actor.createEmbeddedDocuments("ActiveEffect", [
+      { name: "Prone", statuses: ["prone"], flags: { eclipsephase: { effectKey: "condition" } } },
+      { name: "Confused", statuses: ["confused"], flags: { eclipsephase: { effectKey: "condition" } } }
+    ]);
+    await actor.items.get("morph2").setFlag("eclipsephase", "bodyConditions", [{ name: "Stunned", statuses: ["stunned"], flags: { eclipsephase: { effectKey: "condition" } } }]);
+    seedDialogs(true);
+
+    await resleeveMorph(actor, sleeveClick("morph2"), { tabGroups: {} });
+
+    expect(actor.effects.flatMap(effect => Array.from(effect.statuses)).sort()).toEqual(["confused", "stunned"]);
+    expect(actor.items.get("morph1").getFlag("eclipsephase", "bodyConditions")).toHaveLength(1);
   });
 
   test("resleeving leaves damage and wounds with the body left behind and brings the new body's own; stress goes with the ego", async () => {

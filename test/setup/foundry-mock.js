@@ -385,14 +385,14 @@ class MockDocument {
   // collection is modelled here, which is all the system creates and deletes at runtime.
   // Foundry re-prepares the owning actor before the lifecycle hooks fire, which is what lets a
   // hook read pool totals that already reflect the new effect.
-  async createEmbeddedDocuments(documentName, dataArray = []) {
+  async createEmbeddedDocuments(documentName, dataArray = [], options = {}) {
     if (documentName !== "ActiveEffect") return [];
     refuseUnlessOwner(this, "create", documentName);
     const created = dataArray.map(data => new MockActiveEffect(data, { parent: this }));
-    for (const effect of created) global.Hooks.callAll("preCreateActiveEffect", effect, {}, {}, global.game.user.id);
+    for (const effect of created) global.Hooks.callAll("preCreateActiveEffect", effect, {}, options, global.game.user.id);
     this.effects.push(...created);
     this.prepareData?.();
-    for (const effect of created) global.Hooks.callAll("createActiveEffect", effect, {}, global.game.user.id);
+    for (const effect of created) global.Hooks.callAll("createActiveEffect", effect, options, global.game.user.id);
     this.actor?.prepareData?.();
     await new Promise(resolve => setTimeout(resolve, 0));
     return created;
@@ -458,6 +458,15 @@ class MockActiveEffect {
 
   get changes() {
     return this.system.changes;
+  }
+
+  // Foundry's plain data copy of the effect, its statuses as an array.
+  toObject() {
+    return deepClone({
+      _id: this.id, name: this.name, disabled: this.disabled, transfer: this.transfer, statuses: Array.from(this.statuses ?? []),
+      duration: this.duration, start: this.start, showIcon: this.showIcon, description: this.description, origin: this.origin,
+      img: this.img, flags: this.flags, system: { changes: this.changes }
+    });
   }
 
   get documentName() {
@@ -593,8 +602,8 @@ class MockActor extends MockDocument {
   // Items are embedded documents too, and the system creates, updates and deletes them at runtime
   // for stacking, reloading and using up a consumable. Anything else still goes to MockDocument,
   // which models the ActiveEffect collection.
-  async createEmbeddedDocuments(documentName, dataArray = []) {
-    if (documentName !== "Item") return super.createEmbeddedDocuments(documentName, dataArray);
+  async createEmbeddedDocuments(documentName, dataArray = [], options = {}) {
+    if (documentName !== "Item") return super.createEmbeddedDocuments(documentName, dataArray, options);
     refuseUnlessOwner(this, "create", "Item");
 
     const created = [];

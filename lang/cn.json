@@ -637,6 +637,10 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "jamming": {
+        "blocked": "处于{condition}状态时无法遥控。",
+        "broken": "{body}：{condition}。遥控中断，自我回到{morph}。"
+      },
       "currentMorph": {
         "headline": "当前义体",
         "sleevedLabel": "已套入",
@@ -2747,11 +2751,23 @@
       },
       "noteText": "{name}：{note}",
       "notApplied": "{name}（未生效）",
+      "slotNames": { "unconsciousDead": "昏迷/死亡", "impaired": "Impaired" },
       "notes": {
         "blinded": "每次攻击前进行一次感知检定；失败时攻击有 50% 几率直接落空",
         "deafened": "先攻 −3，Perceive −30",
         "grappled": "对擒抱之外的攻击 Fray −30",
-        "prone": "近战对手 +20，从 Range 或更远处射击 −10"
+        "prone": "近战对手 +20，从 Range 或更远处射击 −10",
+        "unconscious": "退出战斗、无助，直到被唤醒；在回合顺序中被跳过",
+        "dead": "伤害达到 Death Rating 时死亡或被摧毁；退出战斗",
+        "unconsciousDead": "退出战斗：昏迷直到被唤醒，伤害达到 Death Rating 时死亡",
+        "incapacitated": "无法进行任何行动，包括 Fray；伤害达到 Durability 时自动出现",
+        "immobilized": "无法进行任何身体行动，包括 Fray",
+        "impaired": "三个等级，Impaired 1 至 3：所有行动 −10、−20 或 −30",
+        "impaired10": "所有行动 −10",
+        "impaired20": "所有行动 −20",
+        "impaired30": "所有行动 −30",
+        "dazed": "除基础移动和防御外不能行动",
+        "stunned": "身体行动 −30，精神行动 −10"
       },
       "blocked": "{condition}：无法进行任何检定。",
       "blockedPhysical": "{condition}：无法进行任何物理行动。",
