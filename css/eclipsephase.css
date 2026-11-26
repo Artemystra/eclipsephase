@@ -5487,3 +5487,44 @@ body .combat-dock-tooltip .combat-dock-tooltip-wrapper h2 {
 .ep-sidecar-title .resource-value {
   font-size: 16px;
 }
+
+/* A body's damage line on its panel: one line, never wrapped, with a square heal or repair button. */
+.ep-body-damage {
+  white-space: nowrap;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.ep-body-heal-wrap {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.ep-body-heal-wrap .tooltipTextB {
+  font-size: 11px;
+}
+
+.ep-body-heal-wrap .ep-body-heal {
+  flex: 0 0 26px;
+  max-width: 26px;
+  line-height: 1;
+  background: var(--pitchBorder);
+  border: 1px solid var(--highlightBackground);
+  color: var(--mainText);
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  min-height: 26px;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.ep-body-heal-wrap .ep-body-heal:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}

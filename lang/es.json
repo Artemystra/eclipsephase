@@ -654,6 +654,8 @@
           "label": "Chasis"
         },
         "durabilityLabel": "Durability",
+        "damageLabel": "Daño / Durabilidad (Heridas)",
+        "heal": { "bio": "Curar", "synth": "Reparar", "info": "Desfragmentar" },
         "morphPointsLabel": "Puntos de Morph",
         "morphPointsShortLabel": "MP",
         "movement": {
@@ -2078,6 +2080,7 @@
         "placeholderEgo": "- Seleccionar Ego -"
       },
       "bodyItems": { "header": "¿Qué pasa con lo que lleva?", "copy": "Vas a borrar {body}, que todavía lleva objetos. Guárdalos en tu alijo o bórralos junto con {body}." },
+      "healBody": { "copy": "{body} tiene {value} de daño y {wounds} heridas." },
       "reassignArmor": {
         "header": "Reasignar Armadura",
         "copy": "Estás a punto de eliminar {body}, que tiene Armadura asignada. Guárdala para más tarde, o elimínala junto con {body}."

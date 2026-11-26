@@ -139,10 +139,13 @@
                                 </div>
                                 <div style="flex: 0.7;">
                                     <div class="itemRowHeader">
-                                        <div class="itemGroup wantToKnowMore">
-                                            <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
-                                            <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
-                                            <label class="resource-value">{{body.morphdetails.0.system.dur}}</label>
+                                        <div class="itemGroup ep-body-damage" data-body-id="{{body.morphdetails.0.id}}">
+                                            <span class="wantToKnowMore"><i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i><label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.damageLabel"}}</label></span>
+                                            {{#if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="value" value="{{body.damage.value}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{body.damage.value}}</label>{{/if}}
+                                            <label class="resource-value">/ {{body.damage.dur}} (</label>
+                                            {{#if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="wounds" value="{{body.damage.wounds}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{body.damage.wounds}}</label>{{/if}}
+                                            <label class="resource-value">)</label>
+                                            {{#if @root.editable}}<span class="wantToKnowMore ep-body-heal-wrap"><span class="tooltipTextB">{{localize (concat "ep2e.morph.currentMorph.heal." body.damage.kind)}}</span><button type="button" class="ep-body-heal"><i class="fa-solid {{#if (eq body.damage.kind "bio")}}fa-heart-circle-plus{{else}}fa-wrench{{/if}}"></i></button></span>{{/if}}
                                         </div>
                                         <div class="itemGroup wantToKnowMore">
                                             <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
@@ -242,11 +245,14 @@
                                 </div>
                             </div>
                             <div style="flex: 0.7;">
-                                <div class="itemRowHeader" style="display: grid; grid-template-columns: repeat(3, 1fr); justify-items: start;">
-                                    <div class="itemGroup wantToKnowMore">
-                                        <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
-                                        <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
-                                        <label class="resource-value">{{vehicle.system.dur}}</label>
+                                <div class="itemRowHeader" style="display: grid; grid-template-columns: max-content 1fr max-content; column-gap: 20px; justify-items: start;">
+                                    <div class="itemGroup ep-body-damage" data-body-id="{{vehicle.id}}">
+                                        <span class="wantToKnowMore"><i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i><label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.damageLabel"}}</label></span>
+                                        {{#if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="value" value="{{vehicle.damage.value}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{vehicle.damage.value}}</label>{{/if}}
+                                        <label class="resource-value">/ {{vehicle.damage.dur}} (</label>
+                                        {{#if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="wounds" value="{{vehicle.damage.wounds}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{vehicle.damage.wounds}}</label>{{/if}}
+                                        <label class="resource-value">)</label>
+                                        {{#if @root.editable}}<span class="wantToKnowMore ep-body-heal-wrap"><span class="tooltipTextB">{{localize (concat "ep2e.morph.currentMorph.heal." vehicle.damage.kind)}}</span><button type="button" class="ep-body-heal"><i class="fa-solid {{#if (eq vehicle.damage.kind "bio")}}fa-heart-circle-plus{{else}}fa-wrench{{/if}}"></i></button></span>{{/if}}
                                     </div>
                                     <div class="itemGroup wantToKnowMore">
                                         {{#if (eq vehicle.system.chassisType "vehicle")}}

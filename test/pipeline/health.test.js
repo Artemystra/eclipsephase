@@ -32,7 +32,8 @@ async function healthControls(actor, inputs = {}) {
   const html = {
     querySelector: selector => {
       const id = selector.replace("#", "");
-      return { style: {}, value: inputs[id] ?? "", addEventListener: (_, fn) => { handlers[id] = fn; } };
+      // A click hands its event to the handler, as the browser does.
+      return { style: {}, value: inputs[id] ?? "", addEventListener: (_, fn) => { handlers[id] = () => fn({ type: "click", currentTarget: {} }); } };
     }
   };
   await healthBarChange(actor, html);

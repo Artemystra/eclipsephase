@@ -1,6 +1,7 @@
 import { DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.js";
 import { drugHealingAddition } from "./modifiers.js";
 import { takeDamage } from "./damage.js";
+import { bodyDamage, bodyDamagePlace, bodyKind, setBodyDamage } from "../common/morp-functions.js";
 
 // The health bars on the sheet and healing: the bars follow damage and stress as they change, and
 // the heal buttons run the healing dialog. Taking damage itself lives in damage.js.
@@ -94,28 +95,88 @@ export async function healthBarChange(actor, html) {
   );
 
   //Mental Heal Full
-  html.querySelector("#healMentalDamageFull")?.addEventListener("click",
-    healDamage.bind("mentalHeal", currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "full", "mental")
+  html.querySelector("#healMentalDamageFull")?.addEventListener("click", () =>
+    healDamage(currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "full", "mental")
   );
 
   //Physical Heal Full
-  html.querySelector("#healPhysicalDamageFull")?.addEventListener("click",
-    healDamage.bind("physicalHeal", currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "full", "physical")
+  html.querySelector("#healPhysicalDamageFull")?.addEventListener("click", () =>
+    healDamage(currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "full", "physical")
   );
 
   //Mental Heal Partial
-  html.querySelector("#healMentalDamagePartial")?.addEventListener("click",
-    healDamage.bind("mentalHeal", currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "partial", "mental")
+  html.querySelector("#healMentalDamagePartial")?.addEventListener("click", () =>
+    healDamage(currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "partial", "mental")
   );
 
   //Physical Heal Partial
-  html.querySelector("#healPhysicalDamagePartial")?.addEventListener("click",
-    healDamage.bind("physicalHeal", currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "partial", "physical")
+  html.querySelector("#healPhysicalDamagePartial")?.addEventListener("click", () =>
+    healDamage(currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "partial", "physical")
   );
 }
 
+/**
+ * Heals or repairs one of a character's bodies from its panel, fully or by rolling, the two ways the
+ * health bar offers. The body the ego acts in heals like the bar; any other heals where its damage is kept.
+ * @param {Actor} actor - The character
+ * @param {String} bodyId - The morph or vehicle
+ * @returns {Promise<*>}
+ */
+export async function healBody(actor, bodyId) {
+  const body = actor.items.get(bodyId);
+  if (!body) return;
+  const kind = bodyKind(body) || "bio";
+  const damage = bodyDamage(actor, bodyId);
+
+  const healType = await foundry.applications.api.DialogV2.wait({
+    window: { title: `${game.i18n.localize(`ep2e.morph.currentMorph.heal.${kind}`)}: ${body.name}` },
+    classes: ["ep2e-primary-right"],
+    content: `<div style="padding: 10px 0;">${game.i18n.format("ep2e.dialog.healBody.copy", { body: body.name, value: damage.value, wounds: damage.wounds })}</div>`,
+    buttons: [
+      { action: "full", label: game.i18n.localize(`ep2e.healthbar.tooltip.heal.bodyFull.${kind}`), default: true },
+      { action: "partial", label: game.i18n.localize(`ep2e.healthbar.tooltip.heal.bodyPartial.${kind}`) },
+      { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel") }
+    ],
+    position: { width: 340 },
+    modal: true,
+    rejectClose: false
+  });
+  if (healType !== "full" && healType !== "partial") return;
+
+  const physical = actor.system.physical;
+  if (bodyDamagePlace(actor, bodyId) === "live") {
+    return healDamage(damage.value, physical.relativePhysicalDamage, physical.relativeDeathDamage, damage.wounds, physical.wt,
+      "system.health.physical.value", "system.physical.wounds", actor, healType, "physical");
+  }
+  return healDamage(damage.value, 0, 0, damage.wounds, null, null, null, actor, healType, "physical", {
+    kind,
+    enhancements: bodyHealing(actor, bodyId),
+    write: ({ value, wounds }) => setBodyDamage(actor, bodyId, { value, wounds })
+  });
+}
+
+/**
+ * The healing ware built into a body, read from the items bound to it.
+ * @param {Actor} actor - The character
+ * @param {String} bodyId - The body
+ * @returns {Object} true per healing enhancement, as the actor's additionalSystems.healing has them
+ */
+function bodyHealing(actor, bodyId) {
+  const healing = {};
+  const prefix = "system.additionalSystems.healing.";
+  for (const item of actor.items.filter(i => i.system?.boundTo === bodyId)) {
+    for (const effect of item.effects ?? []) {
+      for (const change of effect.changes ?? []) {
+        if (change.key?.startsWith(prefix)) healing[change.key.slice(prefix.length)] = true;
+      }
+    }
+  }
+  return healing;
+}
+
 //Heal damage through character sheet
-async function healDamage(currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget) {
+// target: heals a body the ego is not in - its kind, its healing ware and where its damage is written.
+async function healDamage(currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget, target = null) {
   let newDamage = 0;
   let newModifier = currentModifier;
   let oldDamageBarTarget = "";
@@ -124,7 +185,7 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
   let woundCount = currentModifier;
   let healFormula;
   let message = {};
-  const activeMorphType = actor.system.physical.activeMorphType;
+  const activeMorphType = target?.kind ?? actor.system.physical.activeMorphType;
   message.totalDamage = currentDamage + currentModifier;
 
   //Dialog args
@@ -134,7 +195,7 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
   let enhancementsCount = 0;
   let hoursPassed = 0;
 
-  for (let enhancement in actor.system.additionalSystems.healing) {
+  for (let enhancement in (target ? target.enhancements : actor.system.additionalSystems.healing)) {
     enhancements[enhancement] = true;
     enhancementsCount++;
   }
@@ -173,7 +234,7 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
 
   if (message.totalDamage > 0) {
     if (healType === "partial") {
-      healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount, drugHealingAddition(actor));
+      healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount, target ? "" : drugHealingAddition(actor));
 
       if (healFormula.cancelled) {
         return;
@@ -343,6 +404,8 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
       whisper: ChatMessage.getWhisperRecipients("GM")
     });
   }
+
+  if (target) return target.write({ value: newDamage, wounds: newModifier });
 
   return actor.update({
     [damageTarget]: newDamage,

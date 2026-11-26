@@ -661,6 +661,8 @@
           "label": "Frame"
         },
         "durabilityLabel": "Ausdauer",
+        "damageLabel": "Schaden / Ausdauer (Wunden)",
+        "heal": { "bio": "Heilen", "synth": "Reparieren", "info": "Defragmentieren" },
         "morphPointsLabel": "Morph-Points",
         "morphPointsShortLabel": "MP",
         "movement": {
@@ -2120,6 +2122,7 @@
         "placeholderEgo": "- Ego Wählen -"
       },
       "bodyItems": { "header": "Was wird aus dem, was er trägt?", "copy": "Du bist dabei, {body} zu löschen, der noch Items trägt. Lege sie in deinen Stash oder lösche sie zusammen mit {body}." },
+      "healBody": { "copy": "{body} hat {value} Schaden und {wounds} Wunden." },
       "reassignArmor": {
         "header": "Rüstung Neu Zuweisen",
         "copy": "Du bist dabei, {body} zu löschen, dem Rüstung zugewiesen ist. Verstaue sie für später, oder lösche sie zusammen mit {body}."

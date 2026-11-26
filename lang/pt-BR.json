@@ -654,6 +654,8 @@
           "label": "Chassi"
         },
         "durabilityLabel": "Durabilidade",
+        "damageLabel": "Dano / Durabilidade (Ferimentos)",
+        "heal": { "bio": "Curar", "synth": "Reparar", "info": "Desfragmentar" },
         "morphPointsLabel": "Pontos de Morfo",
         "morphPointsShortLabel": "MP",
         "movement": {
@@ -2092,6 +2094,7 @@
         "placeholderEgo": "- Selecionar Ego -"
       },
       "bodyItems": { "header": "O que acontece com o que ele carrega?", "copy": "Você vai apagar {body}, que ainda carrega itens. Guarde-os no seu esconderijo ou apague-os junto com {body}." },
+      "healBody": { "copy": "{body} tem {value} de dano e {wounds} ferimentos." },
       "reassignArmor": {
         "header": "Reatribuir Armadura",
         "copy": "Você está prestes a excluir {body}, que tem Armadura atribuída a ele. Guarde-a para mais tarde, ou exclua-a junto com {body}."

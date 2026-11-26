@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js"
 import { applyDamage } from "../rolls/damage.js"
 import { endAllChiPushes, sustainSummary, actorStrainFamily } from "../rolls/psi.js"
 import { getStrainFamily } from "../rolls/strain-families.js"
-import { chainHasWareMarker, CYBERBRAIN_MARKER, locationOf } from "../common/morp-functions.js"
+import { chainHasWareMarker, CYBERBRAIN_MARKER, locationOf, bodyKind } from "../common/morp-functions.js"
 import { globalModifiers, modifierSummary, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
 import { removeReplacedConditions, conditionNotes } from "../common/conditions.js";
 
@@ -57,8 +57,8 @@ export default class EPactor extends Actor {
   }
 
   /**
-   * Toggles a status effect, and lets a condition set this way replace the others of its group, so
-   * only one Impaired level is ever on.
+   * Toggles a status effect, and lets a condition set this way replace the others of its group and an
+   * older one of its own, so each condition and only one Impaired level is ever on.
    * @param {String} statusId - The status id
    * @param {Object} [options] - Foundry's options: active, overlay
    * @returns {Promise<ActiveEffect|Boolean|undefined>} What Foundry's toggle returned
@@ -66,7 +66,7 @@ export default class EPactor extends Actor {
   async toggleStatusEffect(statusId, options = {}) {
     const result = await super.toggleStatusEffect(statusId, options);
     // Foundry returns the new effect when it set one, a Boolean otherwise.
-    if (result && typeof result === "object") await removeReplacedConditions(this, statusId);
+    if (result && typeof result === "object") await removeReplacedConditions(this, statusId, result.id);
     return result;
   }
 
@@ -181,9 +181,7 @@ export default class EPactor extends Actor {
     const jammedHealthValues = jammedVehicleData
       ? {
           dur: jammedVehicleData.system.dur,
-          type: jammedVehicleData.type === "morph"
-            ? jammedVehicleData.system.type
-            : (jammedVehicleData.system.chassisType === "animal" ? "bio" : "synth")
+          type: bodyKind(jammedVehicleData)
         }
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);

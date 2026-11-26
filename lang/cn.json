@@ -653,6 +653,8 @@
           "label": "机身框架"
         },
         "durabilityLabel": "耐久值",
+        "damageLabel": "伤害 / 耐久值（创伤）",
+        "heal": { "bio": "治疗", "synth": "修复", "info": "碎片整理" },
         "morphPointsLabel": "义体点数",
         "morphPointsShortLabel": "MP",
         "movement": {
@@ -2085,6 +2087,7 @@
         "placeholderEgo": "- 选择意识 -"
       },
       "bodyItems": { "header": "它携带的东西怎么办？", "copy": "你即将删除{body}，它仍携带着物品。把它们放入储藏，或与{body}一起删除。" },
+      "healBody": { "copy": "{body}有{value}点伤害和{wounds}处创伤。" },
       "reassignArmor": {
         "header": "重新分配护甲",
         "copy": "你即将删除{body}，这具身体上绑定了护甲。可以将其收纳以备日后使用，或将其与{body}一并删除。"

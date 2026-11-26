@@ -198,15 +198,21 @@ export function conditionSkillModifiers(actor, key) {
 }
 
 /**
- * Removes the conditions a newly set one replaces.
+ * Removes the conditions a newly set one replaces: the others of its group, and the same condition
+ * set before, so each is on only once. A sleight's or drug's own effect bringing it stays.
  * @param {Actor} actor - The actor
  * @param {String} id - The condition just set
+ * @param {String} [keepId] - The effect just created for it, when it is already on
  * @returns {Promise<void>} Resolves once they are gone
  */
-export async function removeReplacedConditions(actor, id) {
+export async function removeReplacedConditions(actor, id, keepId = null) {
   const replaced = replacedConditions(id);
-  if (!replaced.length) return;
-  const effects = Array.from(actor.effects ?? []).filter(effect => Array.from(effect.statuses ?? []).some(status => replaced.includes(status)));
+  const effects = Array.from(actor.effects ?? []).filter(effect => {
+    if (effect.id === keepId) return false;
+    const statuses = Array.from(effect.statuses ?? []);
+    if (statuses.some(status => replaced.includes(status))) return true;
+    return statuses.includes(id) && effect.flags?.eclipsephase?.effectKey === CONDITION_KEY;
+  });
   if (effects.length) await actor.deleteEmbeddedDocuments("ActiveEffect", effects.map(effect => effect.id));
 }
 
@@ -233,8 +239,8 @@ export function conditionEffectData(id, { span = null, flags = {} } = {}) {
 }
 
 /**
- * Puts a condition on an actor, in place of the others of its group. On an actor this client may
- * not change, the active GM puts it on.
+ * Puts a condition on an actor, in place of the others of its group and of the same condition set
+ * before. On an actor this client may not change, the active GM puts it on.
  * @param {Actor} actor - The actor
  * @param {String} id - The condition id
  * @param {Object} [options] - span and flags, as conditionEffectData takes them

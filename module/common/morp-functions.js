@@ -28,10 +28,17 @@ export async function resleeveMorph(actor, currentTarget, sheet){
         const egoFlex = Number(actor.system.ego.egoFlex) || 0;
         const newBodyFlexMax = Number(newMorph.system.flex) || 0;
 
+        // Damage and wounds stay with the body left behind, the new one brings its own; stress and trauma go with the ego.
+        const oldMorph = actor.items.get(actor.system.activeMorph);
+        if (oldMorph) await keepBodyDamage(oldMorph, actor.system.health.physical.value, actor.system.physical.wounds);
+        const kept = storedBodyDamage(newMorph);
         await actor.update({
             "system.activeMorph": itemID,
-            "system.pools.flex.value": egoFlex + newBodyFlexMax
+            "system.pools.flex.value": egoFlex + newBodyFlexMax,
+            "system.health.physical.value": kept.value,
+            "system.physical.wounds": kept.wounds
         });
+        if (newMorph.getFlag("eclipsephase", "bodyDamage")) await newMorph.unsetFlag("eclipsephase", "bodyDamage");
         await actor.update({ "flags.eclipsephase.resleeving": true });
         
         let message = {
@@ -120,7 +127,8 @@ export async function jamBody(actor, currentTarget, sheet) {
         const jammedBodyFlexMax = Number(body.system.flex) || 0;
         const jammedFlexValue = Math.max(0, egoFlex + jammedBodyFlexMax - egoFlexSpent);
 
-        // Stash the real body's damage and pools so they're untouched while jamming, then start the jammed body fresh
+        // Put the real body's damage and pools aside while jamming; the jammed body brings the damage it kept.
+        const kept = storedBodyDamage(body);
         await actor.update({
             "system.activeJam": itemID,
             "flags.eclipsephase.jamHealthBackup": {
@@ -131,10 +139,11 @@ export async function jamBody(actor, currentTarget, sheet) {
                 moxie: actor.system.pools.moxie.value,
                 bodyFlexValue: bodyFlexRemaining
             },
-            "system.health.physical.value": 0,
-            "system.physical.wounds": 0,
+            "system.health.physical.value": kept.value,
+            "system.physical.wounds": kept.wounds,
             "system.pools.flex.value": jammedFlexValue
         });
+        if (body.getFlag("eclipsephase", "bodyDamage")) await body.unsetFlag("eclipsephase", "bodyDamage");
         await actor.update({ "flags.eclipsephase.resleeving": true });
 
         let message = {
@@ -174,7 +183,11 @@ async function restoreFromJam(actor) {
     const restoredBodyFlexValue = Number(backup?.bodyFlexValue ?? 0);
     const restoredFlexValue = Math.max(0, egoFlex + restoredBodyFlexValue - egoFlexSpent);
 
-    // Restore the real body's damage and pools from before jamming; the drone's are not kept.
+    // The jammed body keeps the damage it took for the next jam.
+    const jammed = actor.items.get(actor.system.activeJam);
+    if (jammed) await keepBodyDamage(jammed, actor.system.health.physical.value, actor.system.physical.wounds);
+
+    // Restore the real body's damage and pools from before jamming.
     // Restored directly (not via the resleeving flag) so pools return to their exact prior values instead of refilling to full.
     await actor.update({
         "system.activeJam": null,
@@ -184,8 +197,96 @@ async function restoreFromJam(actor) {
         "system.pools.insight.value": backup?.insight ?? 0,
         "system.pools.moxie.value": backup?.moxie ?? 0,
         "system.pools.flex.value": restoredFlexValue,
-        "flags.eclipsephase.jamHealthBackup": foundry.data.operators.ForcedDeletion
+        "flags.eclipsephase.jamHealthBackup": new foundry.data.operators.ForcedDeletion()
     });
+}
+
+/**
+ * The damage a body kept from its last jam, while nobody acts in it.
+ * @param {Item} body - A morph or vehicle
+ * @returns {{value: Number, wounds: Number}} Its damage and wounds
+ */
+export function storedBodyDamage(body) {
+    const kept = body?.flags?.eclipsephase?.bodyDamage;
+    return { value: Number(kept?.value) || 0, wounds: Number(kept?.wounds) || 0 };
+}
+
+/**
+ * Stores a body's damage on it, or clears it when there is none.
+ * @param {Item} body - A morph or vehicle
+ * @param {Number} value - Its damage
+ * @param {Number} wounds - Its wounds
+ * @returns {Promise<*>}
+ */
+async function keepBodyDamage(body, value, wounds) {
+    value = Number(value) || 0;
+    wounds = Number(wounds) || 0;
+    if (value || wounds) return body.setFlag("eclipsephase", "bodyDamage", { value, wounds });
+    if (body.getFlag("eclipsephase", "bodyDamage")) return body.unsetFlag("eclipsephase", "bodyDamage");
+}
+
+/**
+ * Where a character's body has its damage now: in the actor's health while the ego acts in it, in the
+ * jam backup for the sleeved morph while jamming, on the body itself otherwise.
+ * @param {Actor} actor - The character
+ * @param {String} bodyId - The body
+ * @returns {String} "live", "backup" or "body"
+ */
+export function bodyDamagePlace(actor, bodyId) {
+    const { activeMorph, activeJam } = actor.system;
+    if (bodyId === (activeJam || activeMorph)) return "live";
+    if (activeJam && bodyId === activeMorph) return "backup";
+    return "body";
+}
+
+/**
+ * A body's damage and wounds, wherever they are kept.
+ * @param {Actor} actor - The character
+ * @param {String} bodyId - The body
+ * @returns {{value: Number, wounds: Number}} Its damage and wounds
+ */
+export function bodyDamage(actor, bodyId) {
+    switch (bodyDamagePlace(actor, bodyId)) {
+        case "live":
+            return { value: Number(actor.system.health.physical.value) || 0, wounds: Number(actor.system.physical.wounds) || 0 };
+        case "backup": {
+            const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
+            return { value: Number(backup?.value) || 0, wounds: Number(backup?.wounds) || 0 };
+        }
+        default:
+            return storedBodyDamage(actor.items.get(bodyId));
+    }
+}
+
+/**
+ * Sets a body's damage, its wounds or both, wherever they are kept.
+ * @param {Actor} actor - The character
+ * @param {String} bodyId - The body
+ * @param {Object} change - value and/or wounds
+ * @returns {Promise<*>}
+ */
+export async function setBodyDamage(actor, bodyId, change) {
+    const next = { ...bodyDamage(actor, bodyId), ...change };
+    switch (bodyDamagePlace(actor, bodyId)) {
+        case "live":
+            return actor.update({ "system.health.physical.value": next.value, "system.physical.wounds": next.wounds });
+        case "backup":
+            return actor.update({ "flags.eclipsephase.jamHealthBackup.value": next.value, "flags.eclipsephase.jamHealthBackup.wounds": next.wounds });
+        default: {
+            const body = actor.items.get(bodyId);
+            if (body) return keepBodyDamage(body, next.value, next.wounds);
+        }
+    }
+}
+
+/**
+ * What a body is made of, for health and healing: a morph's own type, an animal bio, any other vehicle synth.
+ * @param {Item} body - A morph or vehicle
+ * @returns {String} "bio", "synth" or "info" (a morph's type as given)
+ */
+export function bodyKind(body) {
+    if (body?.type === "morph") return body.system?.type;
+    return body?.system?.chassisType === "animal" ? "bio" : "synth";
 }
 
 export async function unjamBody(actor, currentTarget, sheet) {

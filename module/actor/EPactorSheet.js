@@ -2,7 +2,7 @@ import { armedExplosives, detonateArmed, defuseArmed, openArmedItem, panToArmed 
 import { eclipsephase } from "../config.js";
 import { registerCommonHandlers,tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
-import { healthBarChange } from "../rolls/health.js";
+import { healthBarChange, healBody } from "../rolls/health.js";
 import { weaponPreparation,reloadWeapon, chooseMunition } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
@@ -55,6 +55,21 @@ function newBodyBucket(bodyType) {
     bodyType, morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [],
     traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0,
     peripherals: { armor: [], weapons: [], consumables: [], gear: [] }, peripheralCount: 0, internalCount: 0
+  };
+}
+
+/**
+ * What a character's body panel shows of its health: damage, wounds, durability, and whether it heals or is repaired.
+ * @param {Actor} actor - The character
+ * @param {Item} body - A morph or vehicle
+ * @returns {Object} value, wounds, dur and kind ("bio", "synth" or "info")
+ */
+function bodyDamageView(actor, body) {
+  const live = MORPHFUNCTION.bodyDamagePlace(actor, body.id) === "live";
+  return {
+    ...MORPHFUNCTION.bodyDamage(actor, body.id),
+    dur: live ? actor.system.health.physical.max : (Number(body.system.dur) || 0),
+    kind: MORPHFUNCTION.bodyKind(body) || "bio"
   };
 }
 
@@ -608,6 +623,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           const category = bodies[morphID];
           category.morphdetails.push(item);
           category.hasMovement = hasAnyMovement(item);
+          category.damage = bodyDamageView(actor, item);
         }
         else if (item.type === "morph" && actor.type !== "character"){
           const category = bodies["activeMorph"];
@@ -618,6 +634,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           const category = bodies[item.id];
           category.morphdetails.push(item);
           category.hasMovement = hasAnyMovement(item);
+          category.damage = bodyDamageView(actor, item);
         }
         else if (item.type === "vehicle" && actor.type !== "character"){
           const category = bodies["activeVehicle"];
@@ -1028,6 +1045,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         v.peripheralsOpen = bucket.peripheralsOpen;
         v.internalsOpen = bucket.internalsOpen;
         v.bodyKey = bodyKey;
+        v.damage = bucket.damage;
         v.hasMovement = hasAnyMovement(v);
         return v;
       });
@@ -1802,6 +1820,19 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       element.addEventListener("click", ev => {
         MORPHFUNCTION.unjamBody(actor, ev.currentTarget, this);
       });
+    });
+
+    // A body's damage, set by the GM on its panel, and its heal or repair button.
+    html.querySelectorAll(".ep-body-damage-input").forEach(element => {
+      element.addEventListener("change", ev => {
+        ev.stopPropagation();
+        const input = ev.currentTarget;
+        const bodyId = input.closest(".ep-body-damage").dataset.bodyId;
+        MORPHFUNCTION.setBodyDamage(actor, bodyId, { [input.dataset.part]: Math.max(0, Number(input.value) || 0) });
+      });
+    });
+    html.querySelectorAll(".ep-body-heal").forEach(element => {
+      element.addEventListener("click", ev => healBody(actor, ev.currentTarget.closest(".ep-body-damage").dataset.bodyId));
     });
 
     // A body's Peripherals and Internals open and close; the page remembers it until it reloads.

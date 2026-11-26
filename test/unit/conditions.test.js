@@ -96,6 +96,43 @@ describe("the conditions an actor is under", () => {
   });
 });
 
+describe("a condition put on again", () => {
+  test("replaces the one already on: the actor stays Prone once, under the newest span", async () => {
+    resetWorld();
+    const actor = makeActor({ type: "character", name: "Ana" });
+    await inflictCondition(actor, "prone");
+    await inflictCondition(actor, "unconscious");
+    await inflictCondition(actor, "prone", { span: { value: 1, units: "rounds" } });
+    await inflictCondition(actor, "unconscious");
+
+    const under = id => actor.effects.filter(effect => Array.from(effect.statuses ?? []).includes(id));
+    expect(under("prone")).toHaveLength(1);
+    expect(under("prone")[0].duration.value).toBe(1);
+    expect(under("unconscious")).toHaveLength(1);
+  });
+
+  test("leaves a sleight's or a drug's own effect that brings the same condition", async () => {
+    resetWorld();
+    const actor = makeActor({ type: "character", name: "Ana", effects: [
+      { _id: "sleight", name: "Spasm", statuses: ["prone"], flags: { eclipsephase: { effectKey: "sleight" } } }
+    ] });
+    await inflictCondition(actor, "prone");
+
+    expect(actor.effects.map(effect => effect.id)).toContain("sleight");
+  });
+
+  test("set from the token HUD keeps the new effect and drops an older one of the same condition", async () => {
+    resetWorld();
+    const actor = makeActor({ type: "character", name: "Ana", effects: [
+      { _id: "old", name: "Prone", statuses: ["prone"], flags: { eclipsephase: { effectKey: "condition" } } },
+      { _id: "new", name: "Prone", statuses: ["prone"], flags: { eclipsephase: { effectKey: "condition" } } }
+    ] });
+    await removeReplacedConditions(actor, "prone", "new");
+
+    expect(actor.effects.map(effect => effect.id)).toEqual(["new"]);
+  });
+});
+
 describe("tests a condition refuses", () => {
   test("Incapacitated and Unconscious refuse every test, a defence and Fray included", () => {
     for (const id of ["incapacitated", "unconscious"]) {

@@ -669,6 +669,8 @@
           "label": "Frame"
         },
         "durabilityLabel": "Durability",
+        "damageLabel": "Damage / Durability (Wounds)",
+        "heal": { "bio": "Heal", "synth": "Repair", "info": "Defragment" },
         "morphPointsLabel": "Morph Points",
         "morphPointsShortLabel": "MP",
         "movement": {
@@ -2143,6 +2145,7 @@
         "placeholderEgo": "- Select Ego -"
       },
       "bodyItems": { "header": "What becomes of what it carries?", "copy": "You are about to delete {body}, which still carries items. Put them into your Stash, or delete them along with {body}." },
+      "healBody": { "copy": "{body} has {value} damage and {wounds} wounds." },
       "reassignArmor": {
         "header": "Reassign Armor",
         "copy": "You are about to delete {body}, which has Armor bound to it. Stash it for later, or delete it along with {body}."
