@@ -647,6 +647,18 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "drone": {
+        "deploy": "Aussetzen",
+        "deployed": "Im Einsatz",
+        "recall": "Einsammeln",
+        "writeOff": "Abschreiben",
+        "openSheet": "Drohnenbogen öffnen",
+        "outNote": "Im Einsatz — Nutze den Bogen der Drohne",
+        "destroyed": "Defekt. Erst reparieren.",
+        "disabled": "Außer Gefecht: Der Schaden hat die Durability erreicht.",
+        "folder": "Drohnen im Einsatz",
+        "announce": { "deployed": "Ich habe {drone} ausgesetzt.", "recalled": "Ich habe {drone} eingesammelt.", "writtenOff": "{drone} ist defekt und abgeschrieben." }
+      },
       "currentMorph": {
         "headline": "Aktueller Morph",
         "sleevedLabel": "Bewohnt",

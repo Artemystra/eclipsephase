@@ -640,6 +640,18 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "drone": {
+        "deploy": "Desplegar",
+        "deployed": "Desplegado",
+        "recall": "Recuperar",
+        "writeOff": "Dar de baja",
+        "openSheet": "Abrir hoja del dron",
+        "outNote": "Desplegado — Usa la hoja del propio dron",
+        "destroyed": "Averiado. Repáralo primero.",
+        "disabled": "Fuera de combate: el daño ha alcanzado su Durability.",
+        "folder": "Drones desplegados",
+        "announce": { "deployed": "He desplegado {drone}.", "recalled": "He recuperado {drone}.", "writtenOff": "{drone} está averiado y dado de baja." }
+      },
       "jamming": {
         "blocked": "No hay jamming en estado {condition}.",
         "broken": "{body}: {condition}. El jamming se corta y el ego vuelve a {morph}."

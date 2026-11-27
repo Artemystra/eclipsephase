@@ -18,6 +18,7 @@ import { endChiPush, confirmChiPush, actorStrainFamily, sustainedSleights, endSu
 import { getStrainFamily } from "../rolls/strain-families.js";
 import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
+import { deployedDrone, deployDrone, recallDrone, isDrone } from "../common/drones.js";
 import { getRezSpendOptions } from "../api/registry.js";
 
 const MODIFIER_BREAKDOWN = "systems/eclipsephase/templates/actor/partials/currentStatus/modifier-breakdown.hbs";
@@ -65,6 +66,17 @@ function newBodyBucket(bodyType) {
  * @returns {Object} value, wounds, dur and kind ("bio", "synth" or "info")
  */
 function bodyDamageView(actor, body) {
+  // A vehicle out as a drone shows the drone's own health, to be changed on the drone.
+  const drone = body.type === "vehicle" ? deployedDrone(body) : null;
+  if (drone) {
+    return {
+      value: Number(drone.system.health.physical.value) || 0,
+      wounds: Number(drone.system.physical.wounds) || 0,
+      dur: drone.system.health.physical.max,
+      kind: MORPHFUNCTION.bodyKind(body) || "bio",
+      locked: true
+    };
+  }
   const live = MORPHFUNCTION.bodyDamagePlace(actor, body.id) === "live";
   return {
     ...MORPHFUNCTION.bodyDamage(actor, body.id),
@@ -582,6 +594,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           morph6: []
       };
 
+      const jamBlock = MORPHFUNCTION.jamBlockReason(actor);
       let migrationBridge = 0;
       for (let item of actor.items){
         // An NPC's or goon's one body takes the "activeMorph" key, a vehicle it is included.
@@ -617,6 +630,19 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         item.img = item.img || DEFAULT_TOKEN;
         // Used by the Jam button (Morphs and Vehicles alike) to decide enabled-vs-disabled+tooltip.
         item.hasPuppetSock = (actorModel.additionalSystems.puppetSocked ?? []).includes(item.id);
+        if (item.type === "morph" || item.type === "vehicle") {
+          // A destroyed body can be neither jammed nor sent out; anyone down cannot start a jam.
+          item.destroyed = MORPHFUNCTION.bodyIsDestroyed(item);
+          item.jamBlock = item.destroyed ? game.i18n.localize("ep2e.morph.drone.destroyed") : jamBlock;
+          const drone = item.type === "vehicle" ? deployedDrone(item) : null;
+          item.deployed = !!drone;
+          item.droneDown = drone?.statuses?.has("dead") === true;
+          // A vehicle at home that is destroyed, or whose damage has reached its Durability, rolls nothing.
+          const durability = Number(item.system.dur) || 0;
+          const disabled = durability > 0 && MORPHFUNCTION.storedBodyDamage(item).value >= durability;
+          item.rollBlock = item.destroyed ? game.i18n.localize("ep2e.morph.drone.destroyed")
+            : disabled ? game.i18n.localize("ep2e.morph.drone.disabled") : null;
+        }
 
         //Adds morphs to their container AND creates a subcontainer to morphflaws/traits and ware
         if (item.type === "morph" && actor.type === "character"){
@@ -1056,7 +1082,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         return v;
       });
       actor.actorType = "PC";
-      actor.jamBlock = MORPHFUNCTION.jamBlockReason(actor);
+      // A drone's own sheet offers to bring it home, or to write it off once destroyed.
+      actor.isDrone = isDrone(actor);
+      actor.droneDown = actor.isDrone && actor.statuses?.has("dead") === true;
       actor.ammo = ammo;
       actor.morph = morph;
       actor.ids = id;
@@ -1828,6 +1856,20 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       element.addEventListener("click", ev => {
         MORPHFUNCTION.unjamBody(actor, ev.currentTarget, this);
       });
+    });
+
+    // A vehicle goes out as a drone and comes home again, from its panel or from the drone's own sheet.
+    html.querySelectorAll(".deployDroneButton").forEach(element => {
+      element.addEventListener("click", ev => deployDrone(actor, ev.currentTarget.dataset.itemId));
+    });
+    html.querySelectorAll(".recallDroneButton").forEach(element => {
+      element.addEventListener("click", ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        recallDrone(itemId ? deployedDrone(actor.items.get(itemId)) : actor);
+      });
+    });
+    html.querySelectorAll(".openDroneSheet").forEach(element => {
+      element.addEventListener("click", ev => deployedDrone(actor.items.get(ev.currentTarget.dataset.itemId))?.sheet?.render(true));
     });
 
     // A body's damage, set by the GM on its panel, and its heal or repair button.

@@ -232,7 +232,7 @@ export function storedBodyDamage(body) {
  * @param {Number} wounds - Its wounds
  * @returns {Promise<*>}
  */
-async function keepBodyDamage(body, value, wounds) {
+export async function keepBodyDamage(body, value, wounds) {
     value = Number(value) || 0;
     wounds = Number(wounds) || 0;
     if (value || wounds) return body.setFlag("eclipsephase", "bodyDamage", { value, wounds });
@@ -288,15 +288,56 @@ export async function setBodyDamage(actor, bodyId, change) {
             await actor.update({ "flags.eclipsephase.jamHealthBackup.value": next.value, "flags.eclipsephase.jamHealthBackup.wounds": next.wounds });
             // The real body dies at its Death Rating, and the ego is pulled back into it.
             const morph = actor.items.get(bodyId);
-            const deathRating = (Number(morph?.system?.dur) || 0) * (Number(eclipsephase.damageRatingMultiplier[bodyKind(morph)]) || 1.5);
+            const deathRating = bodyDeathRating(morph);
             if (deathRating > 0 && next.value >= deathRating) await breakJam(actor, "dead", morph);
             return;
         }
         default: {
             const body = actor.items.get(bodyId);
-            if (body) return keepBodyDamage(body, next.value, next.wounds);
+            if (!body) return;
+            await keepBodyDamage(body, next.value, next.wounds);
+            return liftHealedConditions(body, next.value);
         }
     }
+}
+
+/**
+ * A body's Death Rating as its item gives it, without what the actor's effects add.
+ * @param {Item} body - A morph or vehicle
+ * @returns {Number} Durability times the factor of what it is made of
+ */
+function bodyDeathRating(body) {
+    return (Number(body?.system?.dur) || 0) * (Number(eclipsephase.damageRatingMultiplier[bodyKind(body)]) || 1.5);
+}
+
+/**
+ * Whether a body nobody acts in is destroyed: it kept Dead.
+ * @param {Item} body - A morph or vehicle
+ * @returns {Boolean} True while Dead is among the conditions it kept
+ */
+export function bodyIsDestroyed(body) {
+    return (body?.flags?.eclipsephase?.bodyConditions ?? []).some(condition => (condition.statuses ?? []).includes("dead"));
+}
+
+/**
+ * Takes the conditions its damage no longer bears off a body nobody acts in, as nobody could take
+ * them off there by hand: Dead once repaired below the Death Rating, the Incapacitated the damage
+ * brought once below Durability.
+ * @param {Item} body - A morph or vehicle
+ * @param {Number} damage - Its damage now
+ * @returns {Promise<*>}
+ */
+async function liftHealedConditions(body, damage) {
+    const kept = body.getFlag("eclipsephase", "bodyConditions");
+    if (!kept?.length) return;
+    const stays = kept.filter(condition => {
+        const statuses = condition.statuses ?? [];
+        if (statuses.includes("dead")) return damage >= bodyDeathRating(body);
+        if (statuses.includes("incapacitated") && condition.flags?.eclipsephase?.fromDamage) return damage >= (Number(body.system.dur) || 0);
+        return true;
+    });
+    if (stays.length === kept.length) return;
+    return stays.length ? body.setFlag("eclipsephase", "bodyConditions", stays) : body.unsetFlag("eclipsephase", "bodyConditions");
 }
 
 /**
@@ -346,7 +387,7 @@ export async function breakJam(actor, condition, downed = null) {
     await restoreFromJam(actor);
     if (actor.sheet?.tabGroups) actor.sheet.tabGroups.morph = "sleeved";
     const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/change.html", {
-        type: "jamBroken",
+        type: "note",
         copy: game.i18n.format("ep2e.morph.jamming.broken", {
             body: body.name,
             condition: game.i18n.localize(`ep2e.conditions.${condition}.name`),
@@ -385,7 +426,8 @@ export function jamBlockReason(actor) {
 // delete-reassignment all share this instead of re-deriving it separately and drifting apart.
 export function getBodyBindingInfo(actor) {
     const morphItems = actor.items.filter(i => i.type === "morph");
-    const vehicleItems = actor.items.filter(i => i.type === "vehicle");
+    // A vehicle out as a drone takes nothing on until it is back.
+    const vehicleItems = actor.items.filter(i => i.type === "vehicle" && !i.flags?.eclipsephase?.deployed);
     const bodies = [...morphItems, ...vehicleItems];
 
     const boundToFor = (body) => {

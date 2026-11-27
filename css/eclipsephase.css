@@ -1244,6 +1244,7 @@ body.game button:focus-visible {
 .eclipsephase .changeIdentityButton,
 .eclipsephase .thinButton,
 .eclipsephase .jammButton,
+.eclipsephase .droneButton,
 .eclipsephase .unjammButton {
   opacity: 0;
   display: none;
@@ -1267,6 +1268,7 @@ body.game button:focus-visible {
 .eclipsephase .item.active .changeIdentityButton,
 .eclipsephase .item.active .thinButton,
 .eclipsephase .item.active .jammButton,
+.eclipsephase .item.active .droneButton,
 .eclipsephase .item.active .unjammButton {
   display: flex;
   opacity: 100;
@@ -1277,7 +1279,10 @@ body.game button:focus-visible {
    visibility/sizing rule above (same class), just styled to look inert with no hover glow. */
 .eclipsephase button.sheetButton.jammButtonDisabled,
 .eclipsephase button.sheetButton.jammButtonDisabled:hover,
-.eclipsephase button.sheetButton.jammButtonDisabled:focus {
+.eclipsephase button.sheetButton.jammButtonDisabled:focus,
+.eclipsephase button.sheetButton.droneButtonDisabled,
+.eclipsephase button.sheetButton.droneButtonDisabled:hover,
+.eclipsephase button.sheetButton.droneButtonDisabled:focus {
   color: var(--focusBackground);
   background: var(--highlightBackground);
   border-color: var(--highlightBackground);
@@ -1291,6 +1296,7 @@ body.game button:focus-visible {
 }
 
 .eclipsephase .jam-slot .jammed-state,
+.eclipsephase .jam-slot .droneButton,
 .eclipsephase .jam-slot .unjammButton {
   position: absolute;
   top: 0;
@@ -5527,4 +5533,20 @@ body .combat-dock-tooltip .combat-dock-tooltip-wrapper h2 {
 
 .ep-body-heal-wrap .ep-body-heal:hover {
   box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+/* A vehicle out as a drone: its panel says so and opens the drone's sheet. */
+.ep-drone-out {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  text-align: center;
+  color: var(--inactive);
+}
+
+.eclipsephase .ep-drone-out button.openDroneSheet {
+  width: auto;
+  padding: 0 5px;
 }

@@ -639,6 +639,18 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "drone": {
+        "deploy": "部署",
+        "deployed": "已部署",
+        "recall": "召回",
+        "writeOff": "报废",
+        "openSheet": "打开无人机角色表",
+        "outNote": "已部署 — 请使用无人机自己的角色表",
+        "destroyed": "已损坏，请先修复。",
+        "disabled": "无法行动：伤害已达到 Durability。",
+        "folder": "已部署的无人机",
+        "announce": { "deployed": "我部署了{drone}。", "recalled": "我召回了{drone}。", "writtenOff": "{drone}已损坏并报废。" }
+      },
       "jamming": {
         "blocked": "处于{condition}状态时无法遥控。",
         "broken": "{body}：{condition}。遥控中断，自我回到{morph}。"

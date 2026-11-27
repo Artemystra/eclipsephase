@@ -640,6 +640,18 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "drone": {
+        "deploy": "Implantar",
+        "deployed": "Implantado",
+        "recall": "Recolher",
+        "writeOff": "Dar baixa",
+        "openSheet": "Abrir ficha do drone",
+        "outNote": "Implantado — Use a ficha do próprio drone",
+        "destroyed": "Quebrado. Conserte-o primeiro.",
+        "disabled": "Fora de ação: o dano alcançou a Durability.",
+        "folder": "Drones implantados",
+        "announce": { "deployed": "Implantei {drone}.", "recalled": "Recolhi {drone}.", "writtenOff": "{drone} quebrou e teve baixa." }
+      },
       "jamming": {
         "blocked": "Sem jamming no estado {condition}.",
         "broken": "{body}: {condition}. O jamming é interrompido e o ego volta para {morph}."

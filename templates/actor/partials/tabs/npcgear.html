@@ -56,6 +56,11 @@
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
+                {{#if actor.isDrone}}
+                <div class="alignRight flexGrowThreeQuarter">
+                    <a class="recallDroneButton">{{#if actor.droneDown}}{{localize "ep2e.morph.drone.writeOff"}}{{else}}{{localize "ep2e.morph.drone.recall"}}{{/if}} <i class="fas fa-arrow-rotate-left awesomeIcon"></i></a>
+                </div>
+                {{/if}}
                 <div class="alignRight flexGrowThreeQuarter item" data-item-id="{{actor.bodies.activeMorph.morphdetails.0._id}}" data-item-name="{{actor.bodies.activeMorph.morphdetails.0.name}}">
                     <a class="item-edit">{{#if (eq actor.bodies.activeMorph.morphdetails.0.type "vehicle")}}{{localize "ep2e.actorSheet.button.editBody"}}{{else}}{{localize "ep2e.actorSheet.button.edit"}} {{localize "TYPES.Item.morph"}}{{/if}} <i class="far fa-edit awesomeIcon"></i></a>
                 </div>

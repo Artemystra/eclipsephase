@@ -655,6 +655,18 @@
       "skillMod": "Skill Mod"
     },
     "morph": {
+      "drone": {
+        "deploy": "Deploy",
+        "deployed": "Deployed",
+        "recall": "Recall",
+        "writeOff": "Write Off",
+        "openSheet": "Open Drone Sheet",
+        "outNote": "Deployed — Use the drone's own sheet",
+        "destroyed": "Broken. Repair it first.",
+        "disabled": "Out of action: its damage has reached its Durability.",
+        "folder": "Deployed Drones",
+        "announce": { "deployed": "I have deployed {drone}.", "recalled": "I have recalled {drone}.", "writtenOff": "{drone} is broken and written off." }
+      },
       "currentMorph": {
         "headline": "Current Morph",
         "sleevedLabel": "Sleeved",

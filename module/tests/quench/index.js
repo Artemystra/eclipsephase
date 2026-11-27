@@ -12,6 +12,7 @@ import { registerChatCardBatch } from "./chat-cards.js";
 import { registerHealthBatch } from "./health.js";
 import { registerAreasBatch } from "./areas.js";
 import { registerRelayBatches } from "./relay.js";
+import { registerDronesBatch } from "./drones.js";
 import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
@@ -72,6 +73,7 @@ Hooks.on("quenchReady", quench => {
   registerHealthBatch(quench);
   registerAreasBatch(quench);
   registerRelayBatches(quench);
+  registerDronesBatch(quench);
 
   quench.registerBatch("eclipsephase.core.actors", context => {
     const { describe, it, assert } = context;

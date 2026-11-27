@@ -32,6 +32,7 @@ import "./tests/quench/index.js";
 import { registerWeaponAttacks, registerWeaponAttackSocket } from "./rolls/damage.js";
 import { registerAreaSocket } from "./common/targeting.js";
 import { registerConditions, registerConditionSocket, registerDamageConditions } from "./common/conditions.js";
+import { registerDrones } from "./common/drones.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -888,6 +889,7 @@ Hooks.once("ready", () => {
   registerPsiEffectSocket();
   registerDoseSocket();
   registerConditionSocket();
+  registerDrones();
   registerCardSocket();
   registerSleevingSocket();
   registerBodyTokens();
