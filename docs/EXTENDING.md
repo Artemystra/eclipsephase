@@ -87,11 +87,10 @@ carry everything on their one body.
   item - an item with no body, or whose body is gone, lies in the Stash; programs and digital gear
   always do - and `null` for an NPC, a goon or an item that is not carried. A character's sleeved
   morph counts as a body even where its item is missing.
-- A character can use an item only while it lies on the sleeved morph or the jammed body:
+- A character can use an item only while it lies on the morph it is sleeved in:
   `api.actors.isUsable(actor, item)`, always true for NPCs and goons. `system.active` of a carried
-  item is derived from that in `prepareData` and read only - armour is worn by the body that acts,
-  the jammed one while jamming. Set the place, not `active`.
-- An item's ActiveEffects help only the body it lies on while that body acts.
+  item is derived from that in `prepareData` and read only. Set the place, not `active`.
+- An item's ActiveEffects help only the body it lies on, and only the one the ego is sleeved in.
 - `api.actors.itemsOn(actor, place)` lists a character's carried items in one place;
   `api.actors.moveItem(actor, itemId, place, { quantity })` moves an item or part of its stack there,
   joining a stack already there; of a drug the open pack moves first.
@@ -106,6 +105,29 @@ carry everything on their one body.
   same place.
 - The world setting `equipAnnouncements` lists the kinds of item whose taking out of the Stash is
   announced in the chat: the carried types, with `weapons` for ranged and melee weapons together.
+
+Bodies out as drones, and jamming (3.0):
+
+- A character's sheet is always its own body. `system.activeJam` and the flag `jamHealthBackup` are
+  no longer written or read: jamming never turns the character into the jammed body.
+- A vehicle sent out, or any body jammed, is an NPC of its own. It carries
+  `flags.eclipsephase.drone` with `owner` (the character's uuid), `vehicle` (the body item's id on
+  the character), `body` (its copy's id on the NPC), `items` (the original's id per copied item) and
+  `temporary` (out only for the length of a jam). The body item on the character carries
+  `flags.eclipsephase.deployed`, the NPC's id, until the drone is recalled.
+- While an ego jams a drone, the character carries `flags.eclipsephase.jammedDrone` (the NPC's id)
+  and the NPC `flags.eclipsephase.droneJam`. The NPC's prepared data then holds the ego's
+  aptitudes, skills and Ego Flex and feels the effects of its ego traits; none of it is stored on
+  the NPC. It rolls at -10 unless `system.additionalSystems.jamming.ignorePenalty` is set, the
+  character's own rolls are at -30 meanwhile. Ego Flex is one pool for both: `droneJam` holds what
+  is left of the drone's own Flex (`droneFlex`), of the character's own body's (`ownFlex`) and of
+  the ego's (`egoFlex`), and each sheet's Flex pool shows its body's share plus the ego's.
+- A body nobody acts in keeps its damage and its physical conditions on its item, in
+  `flags.eclipsephase.bodyDamage` (`value`, `wounds`) and `flags.eclipsephase.bodyConditions`
+  (effect data). They are back on the actor when the ego sleeves into it, or on the drone when it
+  goes out.
+- A strain family's `substrate` still returns `jamBlocked`; the core Psi family always answers
+  `false` now, as the ego's own brain stays on its sheet while it jams.
 
 `api.drugs` is described in "Drugs and doses" below.
 
@@ -396,7 +418,7 @@ api.registry.registerStrainFamily("myFamily", {
     const blocked = sleevedNervousSystem(actor) === "info";
     return {
       blocked,
-      jamBlocked: false,                   // true only when jamming is what blocks it
+      jamBlocked: false,                   // kept in the shape; nothing in the core sets it any more
       penalised: false,                    // true applies the -30 substrate mismatch
       reasonKey: "my-module.roll.blocked", // shown when a roll is refused
       tooltipKey: "my-module.roll.blockedShort"
@@ -867,7 +889,7 @@ should undo what the earlier outcome did first.
 ### Unsuitable targets
 
 `api.actors.targetKinds(actor)` names what an actor counts as when picked: `"biomorph"`,
-`"synthmorph"` or `"infomorph"` by its morph, `"bot"`, `"vehicle"` or `"animal"` while it jams one,
+`"synthmorph"` or `"infomorph"` by its morph, `"bot"`, `"vehicle"` or `"animal"` for an NPC that is one,
 and `"cyberbrain"` as well when its body runs one. An attack's `unsuitable` lists the kinds it
 cannot strike; the picker refuses those with a notice, before the roll and after it alike.
 `api.attacks.unsuitableTarget(actor, unsuitable)` returns that notice, or `null`. A psi-gamma

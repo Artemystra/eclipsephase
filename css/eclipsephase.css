@@ -1244,8 +1244,7 @@ body.game button:focus-visible {
 .eclipsephase .changeIdentityButton,
 .eclipsephase .thinButton,
 .eclipsephase .jammButton,
-.eclipsephase .droneButton,
-.eclipsephase .unjammButton {
+.eclipsephase .droneButton {
   opacity: 0;
   display: none;
   min-height: 20px! important;
@@ -1268,8 +1267,7 @@ body.game button:focus-visible {
 .eclipsephase .item.active .changeIdentityButton,
 .eclipsephase .item.active .thinButton,
 .eclipsephase .item.active .jammButton,
-.eclipsephase .item.active .droneButton,
-.eclipsephase .item.active .unjammButton {
+.eclipsephase .item.active .droneButton {
   display: flex;
   opacity: 100;
   transition: 300ms;
@@ -1296,14 +1294,29 @@ body.game button:focus-visible {
 }
 
 .eclipsephase .jam-slot .jammed-state,
-.eclipsephase .jam-slot .droneButton,
-.eclipsephase .jam-slot .unjammButton {
+.eclipsephase .jam-slot .droneButton {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   min-height: 20px;
   max-height: 20px;
+}
+
+/* A deployed drone's slot holds two buttons side by side. */
+.eclipsephase .jam-slot .droneButtons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  gap: 4px;
+}
+
+.eclipsephase .jam-slot .droneButtons .droneButton {
+  position: static;
+  flex: 1;
+  width: auto;
 }
 
 /* Higher specificity than .eclipsephase .subtabs .item .state so this actually wins */

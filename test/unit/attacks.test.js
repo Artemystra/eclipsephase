@@ -212,15 +212,15 @@ describe("what a defence card names", () => {
 });
 
 describe("targets an attack cannot strike", () => {
-  test("a target counts as the kind of body it acts through, and as a cyberbrain when it runs one", () => {
+  test("a target counts as the kind of body it is in, and as a cyberbrain when it runs one", () => {
     const brain = { _id: "brain1", name: "Cyberbrain", type: "ware", system: { boundTo: "morph1" }, effects: [{ name: "Cyberbrain", disabled: true, changes: [{ key: CYBERBRAIN_MARKER, value: "true", type: "override" }] }] };
     const pod = makeActor({ type: "character", name: "Pod", system: { activeMorph: "morph1" }, items: [{ _id: "morph1", name: "Pod", type: "morph", system: { type: "bio" } }, brain] });
-    const jammer = makeActor({ type: "character", name: "Jammer", system: { activeMorph: "morph1", activeJam: "bot1" }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } }, { _id: "bot1", name: "Drone", type: "vehicle", system: { chassisType: "robot" } }] });
+    const bot = makeActor({ type: "npc", name: "Bot", system: { activeMorph: "bot1" }, items: [{ _id: "bot1", name: "Drone", type: "vehicle", system: { chassisType: "robot" } }] });
 
     expect(targetKinds(target("Ana"))).toEqual(["biomorph"]);
     expect(targetKinds(target("Bo", "synth"))).toEqual(["synthmorph"]);
     expect(targetKinds(pod)).toEqual(["biomorph", "cyberbrain"]);
-    expect(targetKinds(jammer)).toEqual(["bot"]);
+    expect(targetKinds(bot)).toEqual(["bot"]);
   });
 
   test("an attack names the kinds it cannot strike, and a target of such a kind is refused with a notice", () => {

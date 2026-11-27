@@ -5,6 +5,7 @@ import { getStrainFamily } from "../rolls/strain-families.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER, locationOf, bodyKind } from "../common/morp-functions.js"
 import { globalModifiers, modifierSummary, PHYSICAL_MOD_KEY, MENTAL_MOD_KEY } from "../rolls/modifiers.js";
 import { removeReplacedConditions, conditionNotes } from "../common/conditions.js";
+import { jammingEgo, applyEgoOverlay, egoEffects } from "../common/drones.js";
 
 const gammaAutoPushInFlight = new Set();
 
@@ -57,6 +58,17 @@ export default class EPactor extends Actor {
   }
 
   /**
+   * The effects that apply to this actor. A deployed drone an ego jams also feels what belongs to
+   * that ego: its ego traits, its integration result and what changes how it jams.
+   * @returns {Generator<ActiveEffect>} The effects
+   */
+  *allApplicableEffects() {
+    yield* super.allApplicableEffects();
+    const ego = jammingEgo(this);
+    if (ego) yield* egoEffects(ego);
+  }
+
+  /**
    * Toggles a status effect, and lets a condition set this way replace the others of its group and an
    * older one of its own, so each condition and only one Impaired level is ever on.
    * @param {String} statusId - The status id
@@ -101,6 +113,9 @@ export default class EPactor extends Actor {
     const actorWhole = this;
     const actorModel = actorWhole.system;
     const actorPools = actorModel.pools
+    // A deployed drone an ego jams acts with that ego's aptitudes, skills and Ego Flex.
+    const jammer = jammingEgo(actorWhole);
+    if (jammer) applyEgoOverlay(actorModel, jammer);
     const activeMorph = actorModel.activeMorph;
     let morphData = null;
     if(activeMorph){
@@ -111,16 +126,6 @@ export default class EPactor extends Actor {
       ? { ...morphData.system, type: bodyKind(morphData) }
       : morphData?.system ?? EPactor.STANDARD_MORPH;
     const ownVehicle = morphData?.type === "vehicle" ? morphData : null;
-
-    // Jamming: resolve jammed vehicle and flag it for pools & dice
-    const activeJam = actorModel.activeJam;
-    let jammedVehicleData = null;
-    if (activeJam) {
-      jammedVehicleData = actorWhole.items.get(activeJam);
-      if (jammedVehicleData) {
-        actorModel.additionalSystems.isJamming = true;
-      }
-    }
 
     const flags = actorModel.flags;
     const items = this.items;
@@ -179,28 +184,18 @@ export default class EPactor extends Actor {
 
     actorModel.additionalSystems.hasCyberbrainChain = chainHasWareMarker(actorWhole, CYBERBRAIN_MARKER);
 
-    // When jamming, Durability/Armor come from the jammed body instead of the sleeved morph. A
-    // jammed Vehicle has no "type" of its own (drones/vehicles/robots count as synth, animals as
-    // bio); a jammed Morph keeps its own real type (bio/synth/info) instead.
-    const jammedHealthValues = jammedVehicleData
-      ? {
-          dur: jammedVehicleData.system.dur,
-          type: bodyKind(jammedVehicleData)
-        }
-      : null;
-    this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
-    this._calculateArmor(actorModel, actorWhole, jammedVehicleData, ownVehicle);
+    this._calculatePhysicalHealth(actorModel, morphValues, chiMultiplier);
+    this._calculateArmor(actorModel, actorWhole, ownVehicle);
     this._calculateMentalArmor(actorModel);
-    // Mirrors jammedHealthValues: when jamming, movement comes from the jammed body, not the sleeved
-    // morph. Exposed on the actor (not just the item) so canvas/token code can read it directly
-    // without re-resolving which body/movement slot is active itself.
-    this._calculateMovement(actorModel, jammedVehicleData?.system ?? morphValues);
+    // Exposed on the actor (not just the item) so canvas/token code can read it directly without
+    // re-resolving which movement slot is active itself.
+    this._calculateMovement(actorModel, morphValues);
     this._calculateInitiative(actorModel, chiMultiplier);
     this._calculateRez(actorModel)
 
     // The SideCar (armor/weapon summaries) renders for every actor type, so its
     // "is anything equipped" flags have to be derived for npc/goon too.
-    this._calculateSideCart(actorModel, items, jammedVehicleData ?? ownVehicle);
+    this._calculateSideCart(actorModel, items, ownVehicle);
 
     if (this.type === "character"){
       this._calculateHomebrewEncumberance(actorModel);
@@ -213,38 +208,7 @@ export default class EPactor extends Actor {
     // ever surfaces wounds, trauma (npc-only in practice) and armor maluses.
     this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     if (this.type === "npc" || this.type === "character"){
-      // When jamming, body-bound pools (including the body's own Flex, if any) come from the drone
-      // instead of the morph. Ego Flex is unaffected either way, since it's added separately below.
-      const poolSource = jammedVehicleData
-        ? {
-            vigor:   Number(jammedVehicleData.system.vigor)  || 0,
-            insight: Number(jammedVehicleData.system.insight) || 0,
-            moxie:   Number(jammedVehicleData.system.moxie)  || 0,
-            flex:    Number(jammedVehicleData.system.flex)   || 0
-          }
-        : morphValues;
-      this._calculatePools(actorModel, poolSource, chiMultiplier)
-      if (jammedVehicleData) {
-        // Pass the real body's stashed pools through as derived data so the roll dialog can offer them.
-        // Ego Flex is shared between both perspectives, so work out how much of it is still unspent from
-        // the drone's live combined value - same Body-Flex-first back-derivation as jamBody/unjamBody.
-        const backup = actorWhole.getFlag("eclipsephase", "jamHealthBackup");
-        const egoFlex = Number(actorModel.ego.egoFlex) || 0;
-        const droneTotalFlex = Number(actorModel.pools.flex.totalFlex) || 0;
-        const droneBodyFlexMax = droneTotalFlex - egoFlex;
-        const droneFlexSpent = droneTotalFlex - (Number(actorModel.pools.flex.value) || 0);
-        const egoFlexSpent = Math.max(0, droneFlexSpent - droneBodyFlexMax);
-        const egoFlexRemaining = Math.max(0, egoFlex - egoFlexSpent);
-        const bodyFlexRemaining = backup?.bodyFlexValue ?? 0;
-        actorModel.additionalSystems.jamming ??= {};
-        actorModel.additionalSystems.jamming.ownBodyPools = {
-          vigor: backup?.vigor ?? 0,
-          insight: backup?.insight ?? 0,
-          moxie: backup?.moxie ?? 0,
-          bodyFlexRemaining: bodyFlexRemaining,
-          flex: bodyFlexRemaining + egoFlexRemaining
-        };
-      }
+      this._calculatePools(actorModel, morphValues, chiMultiplier)
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._minimumInfection(actorModel);
     }
@@ -523,9 +487,8 @@ export default class EPactor extends Actor {
   _calculateHomebrewEncumberance(actorModel) {
    //HOMEBREW - Encumbrance through weapons & gear
    if(actorModel.homebrew === true && this.type === "character"){
-    // What a body carries weighs on that body only, and the Stash on none: rolls with the body that
-    // acts count its items; while jamming, rolls with the real body count the sleeved morph's.
-    const actingBody = actorModel.activeJam || actorModel.activeMorph;
+    // What a body carries weighs on that body only, and the Stash on none.
+    const actingBody = actorModel.activeMorph;
     const carriedOn = body => this.items.filter(item => body && locationOf(this, item) === body);
     const acting = this._encumbranceOf(actorModel, carriedOn(actingBody));
 
@@ -534,13 +497,6 @@ export default class EPactor extends Actor {
     actorModel.currentStatus.bulkyModifier = acting.bulkyMalus;
     actorModel.currentStatus.gearModifier = acting.accessoryMalus;
     actorModel.currentStatus.consumableModifier = acting.consumableMalus;
-
-    if (actorModel.additionalSystems?.isJamming) {
-      const ownBody = this._encumbranceOf(actorModel, carriedOn(actorModel.activeMorph));
-      actorModel.additionalSystems.jamming ??= {};
-      actorModel.additionalSystems.jamming.ownBodyWeaponMalus = ownBody.weaponMalus;
-      actorModel.additionalSystems.jamming.ownBodyGearMalus = ownBody.bulkyMalus + ownBody.accessoryMalus + ownBody.consumableMalus;
-    }
   }
   //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
   else {
@@ -587,7 +543,7 @@ export default class EPactor extends Actor {
     };
   }
 
-  // vehicleBody: the jammed vehicle, or the vehicle an NPC or goon is, whose own armour counts.
+  // vehicleBody: the vehicle an NPC or goon is, whose own armour counts.
   _calculateSideCart(actorModel, items, vehicleBody) {
     //Checks for certain item types to be equipped to dynamically change the side cart content
     let rangedCount = 0;
@@ -647,15 +603,6 @@ export default class EPactor extends Actor {
     let ignoreWounds = actorModel.mods.woundMod + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*chiMultiplier) : 0)
     let woundsCalc = wounds + ignoreWounds > 0 ? (wounds + ignoreWounds) * -10 * actorModel.mods.woundMultiplier : 0;
 
-    // While jamming, actorModel.physical.wounds reflects the fresh drone, not the real body. Work out
-    // what the wound modifier would be for the stashed real body, for rolls made with it (-30 own body).
-    if (actorModel.additionalSystems?.isJamming) {
-      const ownWounds = actorWhole.getFlag("eclipsephase", "jamHealthBackup")?.wounds ?? 0;
-      const ownWoundsCalc = ownWounds + ignoreWounds > 0 ? (ownWounds + ignoreWounds) * -10 * actorModel.mods.woundMultiplier : 0;
-      actorModel.additionalSystems.jamming ??= {};
-      actorModel.additionalSystems.jamming.ownBodyWoundMod = ownWoundsCalc;
-    }
-
     //Trauma + trauma mods are getting calculated
     let trauma = actorModel.mental.trauma;
     let ignoreTrauma = actorModel.mods.traumaMod + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*chiMultiplier) : 0)
@@ -714,6 +661,14 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
     }
 
+    // A jammed drone acts at -10 unless a Drone Rig takes that off; the ego's own body at -30 meanwhile.
+    if (actorModel.additionalSystems?.droneJam && !actorModel.additionalSystems.jamming?.ignorePenalty) {
+      actorModel.currentStatus.specialModifiers.push({ label: "ep2e.roll.announce.jamming.penalty", modifier: -10, flag: "jamming" });
+    }
+    if (actorWhole.flags?.eclipsephase?.jammedDrone) {
+      actorModel.currentStatus.specialModifiers.push({ label: "ep2e.roll.announce.jamming.ownBodyPenalty", modifier: -30, flag: "jamming" });
+    }
+
     for (const { label, modifier, comment } of globalModifiers(actorWhole)) {
       actorModel.currentStatus.specialModifiers.push({ label, modifier, comment, flag: "globalMod" });
     }
@@ -759,99 +714,7 @@ export default class EPactor extends Actor {
     actorModel.mental.armorTotal = psiArmor + (Number(actorModel.mods?.mentalArmorMod) || 0);
   }
 
-  _calculateArmor(actorModel, actorWhole, jammedVehicleData, ownVehicle = null) {
-    // While jamming, armor comes from the drone's own rating instead of the character's worn armor
-    if (jammedVehicleData) {
-      // Ware bound to the drone boosts armor the same way worn armor's mods do on a Morph (see the
-      // non-jammed branch below) - without this, drone-bound armor Ware (e.g. Bioweave) is ignored.
-      // Armor items boundTo the jammed body stack additively on top of its intrinsic rating, same
-      // as a Morph's intrinsic armor stacks with its worn Armor items.
-      let energyTotal = Number(jammedVehicleData.system.armor?.energy) || 0;
-      let kineticTotal = Number(jammedVehicleData.system.armor?.kinetic) || 0;
-      let mainArmorAmount = 0;
-
-      for (let armor of this.items.filter(i => i.type === "armor" && i.system.boundTo === jammedVehicleData.id)) {
-        // Same npc/goon "no equip toggle" bypass as the non-jammed branch below - otherwise a
-        // jamming npc/goon's drone-bound armor would silently stop counting while jammed.
-        if (actorWhole.type !== "character" || armor.system.active) {
-          energyTotal += Number(armor.system.energy) || 0;
-          kineticTotal += Number(armor.system.kinetic) || 0;
-          if (armor.system.slotType === "main") mainArmorAmount++;
-        }
-      }
-
-      actorModel.physical.energyArmorTotal = energyTotal + eval(actorModel.mods.energyMod);
-      actorModel.physical.kineticArmorTotal = kineticTotal + eval(actorModel.mods.kineticMod);
-      actorModel.physical.mainArmorTotal = mainArmorAmount;
-      actorModel.physical.additionalArmorTotal = 0;
-      actorModel.physical.mainArmorMalus = 0;
-      actorModel.physical.additionalArmorMalus = 0;
-      actorModel.physical.armorMalusTotal = 0;
-      actorModel.physical.armorSomMalus = 0;
-      actorModel.physical.armorDurAnnounce = "";
-
-      if (mainArmorAmount > 1) {
-        actorModel.physical.mainArmorMalus = (mainArmorAmount - 1) * 20;
-      }
-
-      const armorSomCheck = Math.max(actorModel.physical.energyArmorTotal, actorModel.physical.kineticArmorTotal);
-      const actorSom = actorModel.aptitudes.som.value;
-      if (actorWhole.type === "character" && armorSomCheck > actorSom && actorModel.homebrew){
-        actorModel.physical.armorSomMalus = 20;
-      }
-      else if (actorWhole.type === "character" && armorSomCheck > actorSom && mainArmorAmount > 1){
-        actorModel.physical.armorSomMalus = 20;
-      }
-
-      actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus + actorModel.physical.armorSomMalus;
-
-      if (actorModel.health.physical.max < armorSomCheck){
-        actorModel.physical.armorDurAnnounce = 1;
-      }
-      if (armorSomCheck > 11){
-        actorModel.physical.armorVisibilityAnnounce = 1;
-      }
-
-      // Also work out what the real body's own worn-armor encumbrance would be, for rolls
-      // made with the real body instead of the drone (see dice.js "jammingRollTarget: own").
-      // Can't use armor.system.active here - EPitem.js already makes that jam-aware, so bound
-      // armor on the real (unjammed) morph would incorrectly read as inactive right now.
-      const activeMorph = actorWhole.system?.activeMorph;
-      let ownEnergyTotal = 0;
-      let ownKineticTotal = 0;
-      let ownMainArmorAmount = 0;
-      for (let armor of this.items.filter(i => i.type === "armor")) {
-        const boundTo = armor.system.boundTo;
-        const countsForOwnBody = boundTo ? boundTo === activeMorph : armor.system.active;
-        if (countsForOwnBody) {
-          ownEnergyTotal += Number(armor.system.energy);
-          ownKineticTotal += Number(armor.system.kinetic);
-          if (armor.system.slotType === "main") ownMainArmorAmount++;
-        }
-      }
-      ownEnergyTotal += eval(actorModel.mods.energyMod);
-      ownKineticTotal += eval(actorModel.mods.kineticMod);
-
-      let ownMainArmorMalus = 0;
-      if (ownMainArmorAmount > 1) {
-        ownMainArmorMalus = (ownMainArmorAmount - 1) * 20;
-      }
-
-      const ownArmorSomCheck = ownEnergyTotal > ownKineticTotal ? ownEnergyTotal : ownKineticTotal;
-      let ownArmorSomMalus = 0;
-      if (actorWhole.type === "character" && ownArmorSomCheck > actorSom && actorModel.homebrew){
-        ownArmorSomMalus = 20;
-      }
-      else if (actorWhole.type === "character" && ownArmorSomCheck > actorSom && ownMainArmorAmount > 1){
-        ownArmorSomMalus = 20;
-      }
-
-      actorModel.additionalSystems.jamming ??= {};
-      actorModel.additionalSystems.jamming.ownBodyArmorMalus = (ownMainArmorMalus + ownArmorSomMalus) * -1;
-
-      return;
-    }
-
+  _calculateArmor(actorModel, actorWhole, ownVehicle = null) {
     // A vehicle an NPC or goon is brings its own armour, under what it wears.
     let energyTotal = Number(ownVehicle?.system?.armor?.energy) || 0;
     let kineticTotal = Number(ownVehicle?.system?.armor?.kinetic) || 0;

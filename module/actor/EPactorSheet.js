@@ -18,7 +18,7 @@ import { endChiPush, confirmChiPush, actorStrainFamily, sustainedSleights, endSu
 import { getStrainFamily } from "../rolls/strain-families.js";
 import { needsSkillSetup, pickSpecialSkills } from "../rolls/modifiers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
-import { deployedDrone, deployDrone, recallDrone, isDrone } from "../common/drones.js";
+import { deployedDrone, deployDrone, recallDrone, isDrone, jammedDrone, jammingEgo, jamDrone, unjamDrone, droneJamBlock, egoSkillRows, stripEgoOverlay } from "../common/drones.js";
 import { getRezSpendOptions } from "../api/registry.js";
 
 const MODIFIER_BREAKDOWN = "systems/eclipsephase/templates/actor/partials/currentStatus/modifier-breakdown.hbs";
@@ -66,8 +66,8 @@ function newBodyBucket(bodyType) {
  * @returns {Object} value, wounds, dur and kind ("bio", "synth" or "info")
  */
 function bodyDamageView(actor, body) {
-  // A vehicle out as a drone shows the drone's own health, to be changed on the drone.
-  const drone = body.type === "vehicle" ? deployedDrone(body) : null;
+  // A body out as a drone shows the drone's own health, to be changed on the drone.
+  const drone = deployedDrone(body);
   if (drone) {
     return {
       value: Number(drone.system.health.physical.value) || 0,
@@ -83,6 +83,23 @@ function bodyDamageView(actor, body) {
     dur: live ? actor.system.health.physical.max : (Number(body.system.dur) || 0),
     kind: MORPHFUNCTION.bodyKind(body) || "bio"
   };
+}
+
+/**
+ * Locks what a jammed drone's sheet shows of the ego jamming it: aptitudes, skills, Ego Flex and
+ * the ego's Field and Know skills. They are the ego's to change, on its own sheet - here nobody can.
+ * @param {HTMLElement} html - The drone's sheet
+ * @param {Actor} actor - The drone
+ * @returns {void}
+ */
+export function lockEgoFields(html, actor) {
+  const egoFields = '[name^="system.aptitudes."], [name^="system.skillsIns."], [name^="system.skillsMox."], [name^="system.skillsVig."], [name="system.ego.egoFlex"]';
+  for (const field of html.querySelectorAll(egoFields)) field.disabled = true;
+  for (const row of html.querySelectorAll("#skillsPane .item[data-item-id]")) {
+    if (actor.items.get(row.dataset.itemId)) continue;
+    for (const input of row.querySelectorAll("input")) input.disabled = true;
+    for (const control of row.querySelectorAll(".item-delete")) control.style.display = "none";
+  }
 }
 
 // The Peripherals and Internals sections opened on this page. Kept here only, so a reload or a new
@@ -429,6 +446,20 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   // (newElement.querySelector(state.focus)) always misses and submitOnChange silently
   // drops focus on every edit. Retry the same selector against the live DOM if core's
   // own restore found nothing.
+  /**
+   * What the sheet's form saves. A jammed drone shows the ego's aptitudes, skills and Ego Flex in
+   * its fields, which must never be saved over the drone's own.
+   * @param {Event} event - The submit event
+   * @param {HTMLFormElement} form - The form
+   * @param {FormDataExtended} formData - Its data
+   * @param {Object} [updateData] - Further data to save
+   * @returns {Object} The data to save
+   */
+  _prepareSubmitData(event, form, formData, updateData) {
+    const data = super._prepareSubmitData(event, form, formData, updateData);
+    return jammingEgo(this.document) ? stripEgoOverlay(data) : data;
+  }
+
   _syncPartState(partId, newElement, priorElement, state) {
     super._syncPartState(partId, newElement, priorElement, state);
     if (state.focus && !newElement.querySelector(state.focus)) {
@@ -634,9 +665,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           // A destroyed body can be neither jammed nor sent out; anyone down cannot start a jam.
           item.destroyed = MORPHFUNCTION.bodyIsDestroyed(item);
           item.jamBlock = item.destroyed ? game.i18n.localize("ep2e.morph.drone.destroyed") : jamBlock;
-          const drone = item.type === "vehicle" ? deployedDrone(item) : null;
+          const drone = deployedDrone(item);
           item.deployed = !!drone;
           item.droneDown = drone?.statuses?.has("dead") === true;
+          // A body out only for a jam counts as jammed from the moment it is out, so its tab never
+          // offers Jam and Recall while the jam is still being set up.
+          item.droneJammed = !!drone && (jammedDrone(actor)?.id === drone.id || drone.flags.eclipsephase.drone.temporary === true);
+          item.droneJamBlock = drone ? droneJamBlock(actor, item, jamBlock) : null;
           // A vehicle at home that is destroyed, or whose damage has reached its Durability, rolls nothing.
           const durability = Number(item.system.dur) || 0;
           const disabled = durability > 0 && MORPHFUNCTION.storedBodyDamage(item).value >= durability;
@@ -1057,8 +1092,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.armedExplosives = armedExplosives(actor);
       actor.gearActive = gear.filter(item => item.system.active);
       actor.consumableActive = actor.type === "character" ? consumable.filter(item => item.system.active) : consumable;
-      actor.knowSkill = know;
-      actor.specialSkill = special;
+      // A jammed drone lists the Field and Know skills of the ego jamming it, in place of its AI's.
+      const ego = jammingEgo(actor);
+      const egoRows = ego ? egoSkillRows(ego, actorModel.aptitudes) : null;
+      actor.knowSkill = egoRows?.know ?? know;
+      actor.specialSkill = egoRows?.special ?? special;
+      actor.jammedBy = ego?.name ?? null;
       actor.vehicle = vehicle;
       actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].filter(v => actor.type === "character" || v.id !== actorModel.activeMorph).map(v => {
         const bodyKey = actor.type === "character" ? v.id : "activeVehicle";
@@ -1085,6 +1124,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       // A drone's own sheet offers to bring it home, or to write it off once destroyed.
       actor.isDrone = isDrone(actor);
       actor.droneDown = actor.isDrone && actor.statuses?.has("dead") === true;
+      // Its own sheet offers the jam only when its owner could start it from the vehicle's tab.
+      const droneOwner = actor.isDrone ? fromUuidSync(actor.flags.eclipsephase.drone.owner) : null;
+      const ownVehicle = droneOwner?.items.get(actor.flags.eclipsephase.drone.vehicle);
+      const puppetSocked = (droneOwner?.system?.additionalSystems?.puppetSocked ?? []).includes(ownVehicle?.id);
+      actor.droneCanBeJammed = !!ownVehicle && !actor.jammedBy && puppetSocked && !MORPHFUNCTION.jamBlockReason(droneOwner)
+        && !["dead", "unconscious"].some(id => actor.statuses?.has(id));
       actor.ammo = ammo;
       actor.morph = morph;
       actor.ids = id;
@@ -1846,16 +1891,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
-    html.querySelectorAll(".jammButton").forEach(element => {
-      element.addEventListener("click", ev => {
-        MORPHFUNCTION.jamBody(actor, ev.currentTarget, this);
-      });
-    });
-
-    html.querySelectorAll(".unjammButton").forEach(element => {
-      element.addEventListener("click", ev => {
-        MORPHFUNCTION.unjamBody(actor, ev.currentTarget, this);
-      });
+    // Jamming a body at home sends it out for the length of the jam.
+    html.querySelectorAll("button.jammButton").forEach(element => {
+      element.addEventListener("click", ev => jamDrone(actor, ev.currentTarget.dataset.itemId));
     });
 
     // A vehicle goes out as a drone and comes home again, from its panel or from the drone's own sheet.
@@ -1867,6 +1905,21 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const itemId = ev.currentTarget.dataset.itemId;
         recallDrone(itemId ? deployedDrone(actor.items.get(itemId)) : actor);
       });
+    });
+    if (jammingEgo(actor)) lockEgoFields(html, actor);
+
+    // A deployed drone is jammed from its tab on the character or from its own sheet.
+    html.querySelectorAll(".jamDroneButton").forEach(element => {
+      element.addEventListener("click", ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        if (itemId) return jamDrone(actor, itemId);
+        const link = actor.flags.eclipsephase?.drone;
+        const owner = link ? fromUuidSync(link.owner) : null;
+        if (owner) jamDrone(owner, link.vehicle);
+      });
+    });
+    html.querySelectorAll(".unjamDroneButton").forEach(element => {
+      element.addEventListener("click", () => unjamDrone(jammingEgo(actor) ?? actor));
     });
     html.querySelectorAll(".openDroneSheet").forEach(element => {
       element.addEventListener("click", ev => deployedDrone(actor.items.get(ev.currentTarget.dataset.itemId))?.sheet?.render(true));

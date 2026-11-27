@@ -654,6 +654,7 @@
       },
       "jamming": {
         "blocked": "Sem jamming no estado {condition}.",
+        "busy": "Já está fazendo jamming em outro corpo.",
         "broken": "{body}: {condition}. O jamming é interrompido e o ego volta para {morph}."
       },
       "currentMorph": {

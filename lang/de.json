@@ -766,6 +766,7 @@
         "jammed": "Gejammt",
         "noSkillsWhileJammed": "Gejammt — Nutze stattdessen deine eigenen Skills",
         "blocked": "Kein Jammen im Zustand {condition}.",
+        "busy": "Jammt bereits einen anderen Körper.",
         "broken": "{body}: {condition}. Das Jammen bricht ab, und das Ego ist zurück in {morph}."
       }
     },

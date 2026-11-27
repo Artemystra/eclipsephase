@@ -579,7 +579,7 @@
         {{!-- Rest (character actors only) --}}
         {{#if (eq actor.type "character")}}
         <div class="pool-entry-wrapper" style="position: relative;">
-            {{#if actor.system.additionalSystems.isJamming}}
+            {{#if actor.flags.eclipsephase.jammedDrone}}
             <div style="display: flex; align-items: center; gap: 5px; min-height: 24px;">
                 <i class="fa-solid fa-satellite-dish awesomeIcon" style="color: var(--inactive);"></i>
                 <span class="resource-label" style="font-size: 11px; color: var(--inactive);">{{localize "ep2e.healthbar.rest.jammedLabel"}}</span>

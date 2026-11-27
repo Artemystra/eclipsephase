@@ -1,7 +1,8 @@
 import { wareAwaitingSetup } from "../rolls/modifiers.js";
 import { normaliseDrugSystem } from "./drugs.js";
 import { defaultArmorUsed, weaponDataRepairs } from "./weapon-functions.js";
-import { TACNET_KEY, carriedItemPlacements } from "./morp-functions.js";
+import { TACNET_KEY, carriedItemPlacements, keepBodyDamage } from "./morp-functions.js";
+import { setAsideBodyConditions, bringBackBodyConditions } from "./conditions.js";
 
 // The migration notice from 2.7 on: one dialog, its fixed parts translated, each release bringing
 // only its own English text - a title, an introduction, the bullets of what changed and footnote
@@ -3367,7 +3368,7 @@ export async function migrationPre29Conditions({ silent = false } = {}) {
   await game.settings.set("eclipsephase", "migrationVersion", CONDITIONS_MIGRATION);
 }
 
-// The last migration step: a world stamped with it has its characters' items placed with the inventory.
+// A world stamped with it has its characters' items placed with the inventory.
 export const INVENTORY_MIGRATION = "2.9.0.2";
 
 /**
@@ -3389,6 +3390,57 @@ export async function migrationPre30Inventory() {
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   }, "Migration 3.0", true);
   await game.settings.set("eclipsephase", "migrationVersion", INVENTORY_MIGRATION);
+}
+
+// The last migration step: a world stamped with it has nobody left jamming the retired way.
+export const JAM_MIGRATION = "2.9.0.3";
+
+/**
+ * Brings an actor that was jamming the retired way - its sheet turned into the jammed body - back
+ * into its own body: its damage, wounds and pools return from where they were put aside, the jammed
+ * body keeps what it took, and each body has its own conditions again.
+ * @param {Actor} actor - The actor
+ * @returns {Promise<void>}
+ */
+export async function endRetiredJam(actor) {
+  const backup = actor.flags?.eclipsephase?.jamHealthBackup;
+  const jammed = actor.items.get(actor.system?.activeJam);
+  const update = { "system.activeJam": null };
+  if (backup) {
+    if (jammed) {
+      await keepBodyDamage(jammed, actor.system.health.physical.value, actor.system.physical.wounds);
+      await setAsideBodyConditions(actor, jammed);
+      await bringBackBodyConditions(actor, actor.items.get(actor.system.activeMorph));
+    }
+    const egoFlex = Number(actor.system.ego?.egoFlex) || 0;
+    Object.assign(update, {
+      "system.health.physical.value": Number(backup.value) || 0,
+      "system.physical.wounds": Number(backup.wounds) || 0,
+      "system.pools.vigor.value": Number(backup.vigor) || 0,
+      "system.pools.insight.value": Number(backup.insight) || 0,
+      "system.pools.moxie.value": Number(backup.moxie) || 0,
+      "system.pools.flex.value": (Number(backup.bodyFlexValue) || 0) + egoFlex,
+      "flags.eclipsephase.jamHealthBackup": new foundry.data.operators.ForcedDeletion()
+    });
+  }
+  // The wounds are the body's own from before, not new ones to check for.
+  await actor.update(update, { eclipsephase: { woundCheck: false } });
+}
+
+/**
+ * Ends every jam of the retired kind, on world actors and the unlinked tokens' copies alike.
+ * @returns {Promise<void>}
+ */
+export async function migrationPre30Jam() {
+  const jamming = actor => !!(actor?.system?.activeJam || actor?.flags?.eclipsephase?.jamHealthBackup);
+  const actors = game.actors.filter(jamming);
+  for (const scene of game.scenes?.contents ?? []) {
+    for (const token of scene.tokens?.contents ?? scene.tokens ?? []) {
+      if (!token.actorLink && jamming(token.actor)) actors.push(token.actor);
+    }
+  }
+  await runOverDocuments(actors, endRetiredJam, "Migration 3.0", true);
+  await game.settings.set("eclipsephase", "migrationVersion", JAM_MIGRATION);
 }
 
 /**

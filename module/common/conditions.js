@@ -370,7 +370,7 @@ export async function syncDamageConditions(actor) {
 export function registerDamageConditions() {
   Hooks.on("updateActor", (actor, changed, options, userId) => {
     if (!madeHere(userId, options)) return;
-    const touched = ["system.health.physical.value", "system.activeMorph", "system.activeJam"].some(path => foundry.utils.hasProperty(changed, path));
+    const touched = ["system.health.physical.value", "system.activeMorph"].some(path => foundry.utils.hasProperty(changed, path));
     if (touched) syncDamageConditions(actor);
   });
 }

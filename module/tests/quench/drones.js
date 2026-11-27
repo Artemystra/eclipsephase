@@ -1,5 +1,6 @@
 import { withTempActor, waitUntil } from "./helpers.js";
-import { createDrone, bringDroneHome, deployedDrone } from "../../common/drones.js";
+import { createDrone, bringDroneHome, deployedDrone, jamDrone, unjamDrone, jammedDrone, jammingEgo } from "../../common/drones.js";
+import { autoConfirm } from "./helpers.js";
 
 // A drone sent out and brought home in a live world: Foundry itself makes the NPC from the data the
 // system hands it, with its embedded ids, its template defaults and its prepared values, and
@@ -52,6 +53,34 @@ export function registerDronesBatch(quench) {
           assert.deepEqual(actor.items.get(vehicle.id).getFlag("eclipsephase", "bodyDamage"), { value: 8, wounds: 1 }, "its damage came back");
           assert.strictEqual(actor.items.get(rounds.id).system.quantity, 1, "the spent rounds are spent on the character too");
           assert.strictEqual(actor.items.get(rounds.id).system.boundTo, vehicle.id, "and still lie on the vehicle");
+        });
+      });
+
+      it("a vehicle jammed from home goes out with the ego's skills laid over it and is collected when the jam ends", async function () {
+        this.timeout(30000);
+        await withTempActor({ type: "character", name: "Quench Jammer", system: { aptitudes: { ref: { value: 15 } }, skillsVig: { guns: { value: 45 } }, ego: { egoFlex: 1 } } }, async actor => {
+          await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"), 5000);
+          const [vehicle] = await actor.createEmbeddedDocuments("Item", [GUARDIAN]);
+          autoConfirm(true);
+          let drone = null;
+          try {
+            await jamDrone(actor, vehicle.id);
+            drone = jammedDrone(actor);
+            assert.ok(drone, "the character jams a drone");
+            assert.strictEqual(jammingEgo(drone)?.id, actor.id, "the drone knows its ego");
+            assert.strictEqual(drone.system.skillsVig.guns.derived, 60, "the drone rolls the ego's Guns");
+            assert.strictEqual(drone._source.system.skillsVig.guns.value, 40, "its own AI skill is untouched underneath");
+            assert.strictEqual(drone.system.health.physical.max, 25, "its body is still the vehicle's");
+
+            await unjamDrone(actor);
+            await waitUntil(() => !game.actors.get(drone.id), 8000);
+          } finally {
+            autoConfirm(false);
+            if (drone && game.actors.get(drone.id)) await bringDroneHome(drone);
+          }
+
+          assert.notOk(jammedDrone(actor), "the jam is over");
+          assert.notOk(actor.items.get(vehicle.id).getFlag("eclipsephase", "deployed"), "the vehicle is home again");
         });
       });
     });

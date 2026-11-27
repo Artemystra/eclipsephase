@@ -2,7 +2,7 @@ import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } fr
 
 // The version of the last migration step: what a world is stamped with once it has climbed the whole
 // ladder. A release that changes no data keeps it, so it can lag behind the system's own version.
-const LATEST_MIGRATION = "2.9.0.2";
+const LATEST_MIGRATION = "2.9.0.3";
 // The step before the inventory one.
 const CONDITIONS = "2.9.0.1";
 // What every world below 2.9 sees, whatever its data: the 2.9 notice and its closing dialog.
@@ -470,6 +470,63 @@ describe("the 2.8.5 ranges, areas and munitions", () => {
 
     expect(rendered.map(entry => entry.copy)).toEqual(ONLY_THE_NOTICE);
     expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+});
+
+describe("the 3.0 end of the retired way of jamming", () => {
+  afterEach(() => game.actors.clear());
+
+  // The step before this one.
+  const INVENTORY = "2.9.0.2";
+
+  /**
+   * A character caught jamming the retired way: its sheet shows the drone's damage, its own is put aside.
+   * @returns {Actor} The actor
+   */
+  function midJam() {
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", activeJam: "drone1", ego: { egoFlex: 1 }, health: { physical: { value: 6 } }, physical: { wounds: 1 }, pools: { vigor: { value: 0 } } },
+      flags: { eclipsephase: { jamHealthBackup: { value: 12, wounds: 2, vigor: 2, insight: 1, moxie: 1, bodyFlexValue: 1 } } },
+      effects: [{ _id: "down", name: "Prone", statuses: ["prone"], flags: { eclipsephase: { effectKey: "condition" } } }],
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30, flex: 1 } },
+        { _id: "drone1", name: "Guardian", type: "vehicle", system: { chassisType: "robot", dur: 25 } }
+      ]
+    });
+  }
+
+  test("brings the ego back into its own body: its damage and pools return, the drone keeps what it took and its conditions", async () => {
+    const actor = midJam();
+
+    await runLadderFrom(INVENTORY);
+
+    expect(actor.system.activeJam).toBeFalsy();
+    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([12, 2]);
+    expect([actor.system.pools.vigor.value, actor.system.pools.insight.value, actor.system.pools.moxie.value, actor.system.pools.flex.value]).toEqual([2, 1, 1, 2]);
+    expect(actor.getFlag("eclipsephase", "jamHealthBackup")).toBeUndefined();
+    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toEqual({ value: 6, wounds: 1 });
+    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["prone"]]);
+    expect(actor.effects).toHaveLength(0);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(LATEST_MIGRATION);
+  });
+
+  test("a jam reference left without anything put aside is simply cleared", async () => {
+    const actor = midJam();
+    delete actor.flags.eclipsephase.jamHealthBackup;
+
+    await runLadderFrom(INVENTORY);
+
+    expect(actor.system.activeJam).toBeFalsy();
+    expect(actor.system.health.physical.value).toBe(6);
+  });
+
+  test("runs once: a world already past it is left alone", async () => {
+    const actor = midJam();
+
+    await runLadderFrom(LATEST_MIGRATION);
+
+    expect(actor.system.activeJam).toBe("drone1");
   });
 });
 

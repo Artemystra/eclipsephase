@@ -58,6 +58,7 @@
                 <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
                 {{#if actor.isDrone}}
                 <div class="alignRight flexGrowThreeQuarter">
+                    {{#if actor.jammedBy}}<span class="resource-value">{{localize "ep2e.morph.jamming.jammed"}}: {{actor.jammedBy}}</span> <a class="unjamDroneButton">{{localize "ep2e.actorSheet.button.unjamVehicle"}} <i class="fa-solid fa-satellite-dish awesomeIcon"></i></a>{{else if actor.droneCanBeJammed}}<a class="jamDroneButton">{{localize "ep2e.actorSheet.button.jamVehicle"}} <i class="fa-solid fa-satellite-dish awesomeIcon"></i></a>{{/if}}
                     <a class="recallDroneButton">{{#if actor.droneDown}}{{localize "ep2e.morph.drone.writeOff"}}{{else}}{{localize "ep2e.morph.drone.recall"}}{{/if}} <i class="fas fa-arrow-rotate-left awesomeIcon"></i></a>
                 </div>
                 {{/if}}

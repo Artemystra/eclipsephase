@@ -18,7 +18,7 @@ import  { registerPsiEffectSocket, registerSleightAttacks, registerPsiTouch } fr
 import { HOMEBREW_TASK_RESULT_TEXT, initiativeRollClass, combatantClass } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken, { refreshSharedSight, registerTacnetVision, tacnetVisionShader } from "./canvas/EPtoken.js";
-import { PLAIN_TACNET_VISION, TACNET_VISION, ANNOUNCE_KINDS, registerJamBreaks, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
+import { PLAIN_TACNET_VISION, TACNET_VISION, ANNOUNCE_KINDS, carriedItemPlacements, isCarried, locationOf, registerBodyTokens } from "./common/morp-functions.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText, registerPayloadSource } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
@@ -243,7 +243,6 @@ Hooks.once('init', async function() {
   registerDrugHooks();
   registerConditions();
   registerDamageConditions();
-  registerJamBreaks();
   registerPayloadSource("eclipsephase.drugs-and-toxins", { label: "ep2e.item.weapon.table.payload.sources.drugs" });
   registerWeaponAttacks();
   registerSleightAttacks();
@@ -454,6 +453,7 @@ Hooks.once("ready", async function() {
   const before29 = gameVersion !== "newInstall" && foundry.utils.isNewerVersion("2.9", gameVersion);
   const beforeConditions = gameVersion !== "newInstall" && foundry.utils.isNewerVersion(update.CONDITIONS_MIGRATION, gameVersion);
   const beforeInventory = gameVersion !== "newInstall" && foundry.utils.isNewerVersion(update.INVENTORY_MIGRATION, gameVersion);
+  const beforeJam = gameVersion !== "newInstall" && foundry.utils.isNewerVersion(update.JAM_MIGRATION, gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -769,6 +769,8 @@ Hooks.once("ready", async function() {
   // Characters' items find their place with the inventory on bodies - unless an earlier step was
   // put off, which must not be stamped past.
   if (beforeInventory && (!before29 || startMigration)) await update.migrationPre30Inventory();
+  // Whoever was jamming the retired way is back in its own body.
+  if (beforeJam && (!before29 || startMigration)) await update.migrationPre30Jam();
 
     if(endMigration){
       await migrationEnd(endMigration)

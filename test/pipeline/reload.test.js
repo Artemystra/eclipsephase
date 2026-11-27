@@ -130,14 +130,14 @@ describe("reloading a weapon", () => {
 
 describe("reloading from the weapon's own body", () => {
   /**
-   * A character sleeved in a morph and jamming a drone, with a spare morph.
+   * A character sleeved in a morph, with a drone and a spare morph.
    * @param {Object[]} items - The weapons and packs it carries
    * @returns {Actor} The prepared actor
    */
   function owner(items) {
     return makeActor({
       type: "character",
-      system: { activeMorph: "morph1", activeJam: "drone1" },
+      system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
         { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio" } },
@@ -155,14 +155,6 @@ describe("reloading from the weapon's own body", () => {
 
     expect(actor.items.get("gun1").system.ammoMin).toEqual(2);
     expect(createdMessages[0].content).toContain("ep2e.roll.announce.combat.ranged.noAmmoPresent");
-  });
-
-  test("a weapon on the jammed drone loads the drone's packs", async () => {
-    const actor = owner([on(pistol(), "drone1"), on(rounds("carried"), "morph1"), on(rounds("drones"), "drone1")]);
-
-    await pressReload(actor);
-
-    expect(actor.items.get("gun1").system.ammoSelected.id).toEqual("drones");
   });
 
   test("an NPC loads from whatever it has", async () => {

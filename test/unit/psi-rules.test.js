@@ -6,11 +6,11 @@ import { resolvePhysicalDamageFormula } from "../../module/rolls/psi.js";
 const CYBERBRAIN = "flags.eclipsephase.grantsCyberbrain";
 
 /**
- * A character sleeved in one body, optionally carrying a Cyberbrain and optionally jamming.
+ * A character sleeved in one body, optionally carrying a Cyberbrain, optionally out jamming a drone.
  * @param {Object} options - nervousSystem is "bio", "synth" or "info"; cyberbrain and jamming are flags
  * @returns {Object} A stand-in actor carrying only what the substrate rules read
  */
-function sleeved({ nervousSystem = "bio", cyberbrain = false, jamming = false, jamSuppressed = false } = {}) {
+function sleeved({ nervousSystem = "bio", cyberbrain = false, jamming = false } = {}) {
   const morph = { id: "morph1", type: "morph", system: { type: nervousSystem } };
   const ware = {
     type: "ware",
@@ -20,8 +20,8 @@ function sleeved({ nervousSystem = "bio", cyberbrain = false, jamming = false, j
   const items = cyberbrain ? [morph, ware] : [morph];
   return {
     type: "character",
-    system: { activeMorph: "morph1", activeJam: jamming ? "morph1" : "" },
-    flags: jamSuppressed ? { eclipsephase: { psiJamSuppression: true } } : {},
+    system: { activeMorph: "morph1" },
+    flags: jamming ? { eclipsephase: { jammedDrone: "drone1" } } : {},
     items: {
       get: id => items.find(i => i.id === id) ?? null,
       some: fn => items.some(fn)
@@ -42,7 +42,8 @@ describe("which bodies each strain family works in", () => {
     ["psi", "bio", true, false, true, false],
     ["psi", "synth", true, false, true, false],
     ["psi", "info", false, false, true, false],
-    ["psi", "bio", false, true, true, false],
+    ["psi", "bio", false, true, false, false],
+    ["psi", "synth", false, true, false, true],
   ];
 
   test.each(cases)("%s in a %s body, cyberbrain %p, jamming %p", (family, nervousSystem, cyberbrain, jamming, blocked, penalised) => {
@@ -57,12 +58,9 @@ describe("which bodies each strain family works in", () => {
     expect(substrate.reasonKey).toEqual("ep2e.roll.announce.strainFamilyMissing");
   });
 
-  test("psi is blocked while jamming is suppressed through the flag as well", () => {
-    expect(strainSubstrate(sleeved({ jamSuppressed: true }), "psi").blocked).toBe(true);
-  });
-
-  test("jamming blocks psi wherever it is sleeved", () => {
-    expect(strainSubstrate(sleeved({ nervousSystem: "synth", jamming: true }), "psi").jamBlocked).toBe(true);
+  test("jamming a drone no longer blocks psi: the ego's own brain stays on its sheet", () => {
+    const substrate = strainSubstrate(sleeved({ jamming: true }), "psi");
+    expect([substrate.blocked, substrate.jamBlocked]).toEqual([false, false]);
   });
 });
 
@@ -71,13 +69,8 @@ describe("the key each family explains itself with", () => {
     expect(strainSubstrate(sleeved({ cyberbrain: true }), "psi").reasonKey).toEqual("ep2e.roll.announce.psi.noBioBrain");
   });
 
-  test("jamming has a reason of its own", () => {
-    expect(strainSubstrate(sleeved({ jamming: true }), "psi").reasonKey).toEqual("ep2e.roll.announce.jamming.noPsi");
-  });
-
   test("the sheet tooltip is a separate, shorter key", () => {
     expect(strainSubstrate(sleeved({ cyberbrain: true }), "psi").tooltipKey).toEqual("ep2e.roll.announce.psi.substrateBlockedTooltip");
-    expect(strainSubstrate(sleeved({ jamming: true }), "psi").tooltipKey).toEqual("ep2e.roll.announce.jamming.noPsiTooltip");
   });
 
   test("the mismatch penalty reads from the family, not from the id", () => {

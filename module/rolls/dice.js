@@ -188,55 +188,6 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 
     let calcPool = {poolType: pool.poolType, useMessage: pool.useMessage, skillPoolValue: eval(pool.skillPoolValue), updatePoolPath: pool.updatePoolPath, flexPoolValue: eval(pool.flexPoolValue), updateFlexPath: pool.updateFlexPath, poolUsageCount: pool.poolUsageCount}
 
-    // While jamming, offer the real body's stashed pools as an "own body" variant that spends from the
-    // backup flag. Integration Tests are the exception: they represent the real Ego struggling to
-    // integrate, so they always draw from the real body's stashed pool directly (no Remote/Own choice -
-    // the freshly-jammed body's own pool wouldn't make sense here).
-    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "vehicleSkill" && actorType !== "goon") {
-        const ownPools = actorModel.additionalSystems.jamming?.ownBodyPools ?? { vigor: 0, insight: 0, moxie: 0, flex: 0 };
-        let ownSkillPoolValue = 0;
-        let updateOwnPoolPath = "";
-        switch (pool.poolType) {
-            case "ep2e.skills.insightSkills.poolHeadline":
-                ownSkillPoolValue = ownPools.insight;
-                updateOwnPoolPath = "flags.eclipsephase.jamHealthBackup.insight";
-              break;
-            case "ep2e.skills.vigorSkills.poolHeadline":
-                ownSkillPoolValue = ownPools.vigor;
-                updateOwnPoolPath = "flags.eclipsephase.jamHealthBackup.vigor";
-              break;
-            case "ep2e.skills.moxieSkills.poolHeadline":
-                ownSkillPoolValue = ownPools.moxie;
-                updateOwnPoolPath = "flags.eclipsephase.jamHealthBackup.moxie";
-              break;
-            default:
-              break;
-        }
-        if (updateOwnPoolPath) {
-            // Flex spends draw the body's stashed share first; once that's gone they fall through to the
-            // live shared Ego Flex on the drone's side, so both perspectives spend the same points.
-            const bodyFlexRemaining = ownPools.bodyFlexRemaining ?? 0;
-            const updateOwnFlexPath = bodyFlexRemaining > 0
-                ? "flags.eclipsephase.jamHealthBackup.bodyFlexValue"
-                : "system.pools.flex.value";
-            const ownPool = {
-                poolType: pool.poolType,
-                useMessage: pool.useMessage,
-                skillPoolValue: ownSkillPoolValue,
-                updatePoolPath: updateOwnPoolPath,
-                flexPoolValue: ownPools.flex,
-                updateFlexPath: updateOwnFlexPath,
-                poolUsageCount: 0
-            };
-            if (rolledFrom === "integration") {
-                calcPool = ownPool;
-            }
-            else {
-                calcPool.own = ownPool;
-            }
-        }
-    }
-
     return calcPool
 }
 
@@ -244,7 +195,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
  * The fields a roll dialog's values are read from, by their form names: a field the form names
  * otherwise is never read.
  */
-export const DIALOG_FIELDS = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'timerValue', 'timerUnit', 'proximityRadius', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"];
+export const DIALOG_FIELDS = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'behindCover', 'fullDefense', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', 'preTargets', 'measuredRanges', 'placedArea', 'vacuum', 'trigger', 'timerValue', 'timerUnit', 'proximityRadius', 'blastRadius', 'blastReduction', 'willing', 'psiTouch', "exoticMorphology"];
 
 async function defineRoll(dataset, actorWhole, rolledFrom){
 
@@ -621,7 +572,7 @@ export class TaskRollModifier {
 
 
 // Reads the same base skill/aptitude value the sheet would set as data-rollvalue, but off an
-// arbitrary actorSystem/items pair - lets getOwnBodyEffectDelta diff the real actor vs. a clone.
+// arbitrary actorSystem/items pair.
 export function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
     const registered = getRollSource(rolledFrom)?.skillRoll?.(actorSystem, items, dataset);
     if (registered?.rollvalue !== undefined && registered?.rollvalue !== null) return registered.rollvalue;
@@ -653,35 +604,6 @@ export function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
     }
 
     return null;
-}
-
-// "Own body" jamming roll: skill values are baked from the persistent activeJam state, so a roll
-// representing the real body would otherwise still carry the drone's (un)suppressed effects.
-// Clones the actor with activeJam nulled (no DB write, prepareData runs sync) and diffs the value.
-function getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom) {
-    let ownClone;
-    try {
-        // keepId: false is deliberate - EPactor.prepareData() can write to the actor (the resleeving
-        // refill) and a same-_id clone would fire that straight through to the live actor. Nothing
-        // in the suppression/skill-calc chain reads the actor's own id, only its embedded items'
-        // (unaffected by keepId), so a fresh id just makes any such write target nothing.
-        ownClone = actorWhole.clone({
-            "system.activeJam": null,
-            "flags.eclipsephase.resleeving": false,
-            // Psi never works while jamming (see effects.js Case C) - nulling activeJam above would
-            // otherwise re-enable Psi effects on the clone, leaking Chi bonuses into this delta.
-            "flags.eclipsephase.psiJamSuppression": true
-        }, { keepId: false });
-    } catch (err) {
-        console.error("[EP2e] own-body effect delta: failed to clone actor for jamming roll", err);
-        return 0;
-    }
-
-    const liveValue = resolveSkillRollValue(actorWhole.system, actorWhole.items.contents, dataset, rolledFrom);
-    const ownValue = resolveSkillRollValue(ownClone.system, ownClone.items.contents, dataset, rolledFrom);
-
-    if (liveValue == null || ownValue == null) return 0;
-    return Number(ownValue) - Number(liveValue);
 }
 
 // A dialog holding several checks, and how wide each of its columns is.
@@ -815,8 +737,7 @@ async function prepareRollCheck(dataset, actorModel, actorWhole, weaponSelected,
 
     const pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
     rollContext.pool = pool
-    const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    return { dataset, actorModel, actorWhole, weaponSelected, rolledFrom, roll, rollContext, pool, specName, isJammingRoll }
+    return { dataset, actorModel, actorWhole, weaponSelected, rolledFrom, roll, rollContext, pool, specName }
 }
 
 /**
@@ -827,7 +748,7 @@ async function prepareRollCheck(dataset, actorModel, actorWhole, weaponSelected,
  * @returns {Promise<Object|undefined>} What posting the card returned, as RollCheck does
  */
 async function finishRollCheck(prepared, values, systemOptions) {
-    const { dataset, actorModel, actorWhole, weaponSelected, rolledFrom, roll, rollContext, pool, isJammingRoll } = prepared
+    const { dataset, actorModel, actorWhole, weaponSelected, rolledFrom, roll, rollContext, pool } = prepared
     let proceed
     let options = {}
 
@@ -850,11 +771,6 @@ async function finishRollCheck(prepared, values, systemOptions) {
 
     let numberOfTargets = 1
     if(options.numberOfTargets) numberOfTargets = parseInt(options.numberOfTargets);
-
-    // Computed once (not per target) - see getOwnBodyEffectDelta for why this is needed at all.
-    if (isJammingRoll && options.jammingRollTarget === "own") {
-        options.ownBodyEffectDelta = getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom);
-    }
 
     // Several melee targets are separate attacks (Core p.205): each is rolled on its own, at its own
     // target, and a pool point chosen before the roll is spent on each of them in turn - one per
@@ -882,11 +798,8 @@ async function finishRollCheck(prepared, values, systemOptions) {
             }
         }
 
-        // While jamming, the pool choice comes from the jam-aware dropdowns and "own body" spends from the backup flag
-        let activePoolChoice = isJammingRoll
-            ? (options.jammingRollTarget === "own" ? options.jammingUsePoolOwn : options.jammingUsePoolRemote)
-            : options.usePool;
-        const activePool = (isJammingRoll && options.jammingRollTarget === "own" && pool.own) ? pool.own : pool;
+        let activePoolChoice = options.usePool;
+        const activePool = pool;
 
         if (activePoolChoice && repitition > 1 && !poolLeft(activePoolChoice, activePool)) activePoolChoice = ""
 
@@ -1109,27 +1022,14 @@ export function readDialogValues(root, names) {
 }
 
 /**
- * Wires a roll dialog's fields that act on each other: the jamming pool switch, the targets picked
- * before the roll, suppressive fire and a throw's trigger.
+ * Wires a roll dialog's fields that act on each other: the targets picked before the roll,
+ * suppressive fire and a throw's trigger.
  * @param {HTMLElement} root - The dialog, or one column of it
  * @param {Object} dialog - The dialog
  * @param {Boolean} picking - Whether the attack picks its targets
  * @returns {void}
  */
 function wireOptionsDialog(root, dialog, picking) {
-    // Jamming: switch the pool dropdown between the remote body's live pools and the own body's stashed pools
-    const jamTargetSelect = root.querySelector('select[name="jammingRollTarget"]');
-    const remotePoolContainer = root.querySelector("#jamming-pool-remote");
-    const ownPoolContainer = root.querySelector("#jamming-pool-own");
-
-    if (jamTargetSelect && remotePoolContainer && ownPoolContainer) {
-        jamTargetSelect.addEventListener("change", e => {
-            const ownSelected = e.currentTarget.value === "own";
-            remotePoolContainer.style.display = ownSelected ? "none" : "";
-            ownPoolContainer.style.display = ownSelected ? "" : "none";
-        });
-    }
-
     wirePreRollTargets(root, dialog, picking);
     wireSuppressiveFields(root);
     wireTriggerFields(root);
@@ -1252,11 +1152,6 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
     let trauma = 10*(parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0))
 
-    // isJammingRoll is needed by several unrelated suppression checks below (wounds, armor malus) -
-    // computed once here so they all agree on the same definition.
-    const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    const isOwnBodyJammingRoll = isJammingRoll && options.jammingRollTarget === "own";
-
     if(options.rangedFray)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
 
@@ -1272,13 +1167,8 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     if(options.favorMod)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.favor', eval(options.favorMod)))
 
-    // Wounds are suppressed for an "Own Body" jamming roll - "wounds" reflects the currently
-    // jammed body (see EPactor.js's jammed _calculatePhysicalHealth branch), and the "Resleeving &
-    // Jamming" block further down already applies the real body's own stashed ownBodyWoundMod
-    // instead, so counting both here would double it up. Trauma is NOT suppressed - it's ego-level,
-    // not body-level, so it applies regardless of which body is rolling.
     const woundsFrom = task.modifiers.length
-    if(wounds > 0 && rolledFrom !== "vehicleSkill" && !isOwnBodyJammingRoll)
+    if(wounds > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
 
     if(trauma > 0 && rolledFrom !== "vehicleSkill")
@@ -1296,13 +1186,9 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Encumberance (Armor) Malus */
 
-    // Armor's share is suppressed for an "Own Body" jamming roll - that's the currently jammed
-    // body's malus, and the branch below already applies the real body's own stashed armor malus
-    // (ownBodyArmorMalus) instead, so counting both here would double it up.
-    const suppressArmorMalusHere = isOwnBodyJammingRoll;
-    const additionalArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.additionalArmorMalus;
-    const mainArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.mainArmorMalus;
-    const armorSomMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.armorSomMalus;
+    const additionalArmorMalusHere = actorModel.physical.additionalArmorMalus;
+    const mainArmorMalusHere = actorModel.physical.mainArmorMalus;
+    const armorSomMalusHere = actorModel.physical.armorSomMalus;
 
     // totalWeaponMalus/totalGearMalus are only ever set for characters (see EPactor.js's
     // _calculateHomebrewEncumberance, still character-only) - npc/goon leave them undefined,
@@ -1541,49 +1427,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Resleeving & Jamming */
 
-    if (isJammingRoll) {
-        if (options.jammingRollTarget === "own") {
-            modValue = -30;
-            announce = "ep2e.roll.announce.jamming.ownBodyPenalty";
-            task.addModifier(new TaskRollModifier(announce, modValue));
-
-            // Own-body Trait/Ware delta, see getOwnBodyEffectDelta.
-            if (options.ownBodyEffectDelta) {
-                announce = "ep2e.roll.announce.jamming.ownBodyTraits";
-                task.addModifier(new TaskRollModifier(announce, options.ownBodyEffectDelta));
-            }
-
-            // Rolling with the real body instead of the drone: its stashed wounds and its own
-            // worn-armor encumbrance apply again, since neither affects the drone while jamming.
-            if (actorModel?.additionalSystems?.jamming?.ownBodyWoundMod) {
-                modValue = actorModel.additionalSystems.jamming.ownBodyWoundMod;
-                announce = "ep2e.roll.announce.jamming.ownBodyWounds";
-                task.addModifier(new TaskRollModifier(announce, modValue));
-            }
-            if (scope === "body" && actorModel?.additionalSystems?.jamming?.ownBodyArmorMalus) {
-                modValue = actorModel.additionalSystems.jamming.ownBodyArmorMalus;
-                announce = "ep2e.roll.announce.jamming.ownBodyArmor";
-                task.addModifier(new TaskRollModifier(announce, modValue));
-            }
-
-            // The Homebrew weapon/gear/bulky/consumable encumbrance is suppressed on the drone's own
-            // rolls (see _calculateHomebrewEncumberance), so the real body's stashed values apply here instead.
-            if (scope === "body" && actorModel?.homebrew) {
-                const weapon = actorModel.additionalSystems?.jamming?.ownBodyWeaponMalus || 0;
-                const gear = actorModel.additionalSystems?.jamming?.ownBodyGearMalus || 0;
-                const homebrewEncumbrance = (weapon + gear) * -1;
-                if (homebrewEncumbrance) {
-                    modValue = homebrewEncumbrance;
-                    announce = "ep2e.roll.announce.jamming.ownBodyEncumbrance";
-                    task.addModifier(new TaskRollModifier(announce, modValue));
-                }
-            }
-        }
-        else if (!actorModel?.additionalSystems?.jamming?.ignorePenalty) {
-            modValue = -10;
-            announce = "ep2e.roll.announce.jamming.penalty";
-            task.addModifier(new TaskRollModifier(announce, modValue));
-        }
+    // A drone the ego jams rolls at -10, unless a Drone Rig takes that off; meanwhile whatever the
+    // ego does with its own body is at -30.
+    if (actorModel?.additionalSystems?.droneJam && !actorModel.additionalSystems.jamming?.ignorePenalty) {
+        task.addModifier(new TaskRollModifier("ep2e.roll.announce.jamming.penalty", -10));
+    }
+    if (actorWhole?.flags?.eclipsephase?.jammedDrone && rolledFrom !== "integration") {
+        task.addModifier(new TaskRollModifier("ep2e.roll.announce.jamming.ownBodyPenalty", -30));
     }
 
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined && rolledFrom !== "vehicleSkill"){
@@ -1608,9 +1458,9 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     if (rolledFrom === "integration"){
         // For a real resleeve, check the newly sleeved Morph. For a jam, check the body actually
-        // being jammed into instead - activeMorph never changes during a jam, so checking it here
-        // meant the aversion check silently never fired for jamming (Vehicle or Morph target alike).
-        const targetId = actorModel.activeJam || actorModel.activeMorph;
+        // being jammed instead - activeMorph never changes during a jam.
+        const jammedId = game.actors.get(actorWhole.flags?.eclipsephase?.jammedDrone)?.flags?.eclipsephase?.drone?.vehicle;
+        const targetId = jammedId || actorModel.activeMorph;
         const targetBody = actorWhole.items.get(targetId);
         const targetType = targetBody
             ? (targetBody.type === "vehicle"

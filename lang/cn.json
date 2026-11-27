@@ -653,6 +653,7 @@
       },
       "jamming": {
         "blocked": "处于{condition}状态时无法遥控。",
+        "busy": "已在遥控另一个身体。",
         "broken": "{body}：{condition}。遥控中断，自我回到{morph}。"
       },
       "currentMorph": {

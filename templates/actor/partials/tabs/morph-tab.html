@@ -15,19 +15,35 @@
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div class="state">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</div>
                         </a>
-                    {{else if (eq @root.actor.system.activeJam body.morphdetails.0.id)}}
+                    {{else if body.morphdetails.0.deployed}}
                         <a data-action="tab" data-group="morph" data-tab="{{body.morphdetails.0.id}}" class="item {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}">
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
-                            <!-- Jammed: state label and Unjam button share one slot so the tab doesn't resize when toggling active -->
+                            <!-- Out as a drone for a jam: state label and its buttons share one slot -->
                             <div class="jam-slot">
-                                <div class="state jammed-state">{{localize "ep2e.morph.jamming.jammed"}}</div>
-                                <button type="button"
-                                    class="resource-label button sheetButton unjammButton"
-                                    title="{{localize 'ep2e.actorSheet.button.unjamVehicle'}}"
-                                    data-item-id="{{body.morphdetails.0.id}}"
-                                    data-actorid="{{@root.actor.id}}">
-                                    {{localize "ep2e.actorSheet.button.unjamVehicle"}}
-                                </button>
+                                <div class="state jammed-state">{{#if body.morphdetails.0.droneJammed}}{{localize "ep2e.morph.jamming.jammed"}}{{else}}{{localize "ep2e.morph.drone.deployed"}}{{/if}}</div>
+                                <div class="droneButtons">
+                                    {{#if body.morphdetails.0.droneJammed}}
+                                        <button type="button" class="resource-label button sheetButton droneButton unjamDroneButton">
+                                            {{localize "ep2e.actorSheet.button.unjamVehicle"}}
+                                        </button>
+                                    {{else}}
+                                        {{#if body.morphdetails.0.droneJamBlock}}
+                                            <div class="wantToKnowMore droneButton" style="max-width: none;">
+                                                <button type="button" class="resource-label button sheetButton droneButton droneButtonDisabled" disabled style="width: 100%;">
+                                                    {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                                </button>
+                                                <span class="tooltipText">{{body.morphdetails.0.droneJamBlock}}</span>
+                                            </div>
+                                        {{else}}
+                                            <button type="button" class="resource-label button sheetButton droneButton jamDroneButton" data-item-id="{{body.morphdetails.0.id}}">
+                                                {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                            </button>
+                                        {{/if}}
+                                        <button type="button" class="resource-label button sheetButton droneButton recallDroneButton" data-item-id="{{body.morphdetails.0.id}}">
+                                            {{#if body.morphdetails.0.droneDown}}{{localize "ep2e.morph.drone.writeOff"}}{{else}}{{localize "ep2e.morph.drone.recall"}}{{/if}}
+                                        </button>
+                                    {{/if}}
+                                </div>
                             </div>
                         </a>
                     {{else}}
@@ -59,7 +75,7 @@
                                         <span class="tooltipText">{{localize "ep2e.actorSheet.popUp.needPuppetSockToJam"}}</span>
                                     </div>
                                 {{/if}}
-                                {{#unless @root.actor.system.activeJam}}
+                                {{#unless @root.actor.flags.eclipsephase.jammedDrone}}
                                     <button type="button"
                                         class="resource-label button sheetButton sleeveButton"
                                         title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}"
@@ -85,22 +101,30 @@
                             {{#if vehicle.deployed}}
                                 <!-- Out as a drone: state label and the button to bring it home share one slot -->
                                 <div class="jam-slot">
-                                    <div class="state jammed-state">{{localize "ep2e.morph.drone.deployed"}}</div>
-                                    <button type="button" class="resource-label button sheetButton droneButton recallDroneButton" data-item-id="{{vehicle.id}}">
-                                        {{#if vehicle.droneDown}}{{localize "ep2e.morph.drone.writeOff"}}{{else}}{{localize "ep2e.morph.drone.recall"}}{{/if}}
-                                    </button>
-                                </div>
-                            {{else if (eq @root.actor.system.activeJam vehicle.id)}}
-                                <!-- Jammed: state label and Unjam button share one slot so the tab doesn't resize when toggling active -->
-                                <div class="jam-slot">
-                                    <div class="state jammed-state">{{localize "ep2e.morph.jamming.jammed"}}</div>
-                                    <button type="button"
-                                        class="resource-label button sheetButton unjammButton"
-                                        title="{{localize 'ep2e.actorSheet.button.unjamVehicle'}}"
-                                        data-item-id="{{vehicle.id}}"
-                                        data-actorid="{{@root.actor.id}}">
-                                        {{localize "ep2e.actorSheet.button.unjamVehicle"}}
-                                    </button>
+                                    <div class="state jammed-state">{{#if vehicle.droneJammed}}{{localize "ep2e.morph.jamming.jammed"}}{{else}}{{localize "ep2e.morph.drone.deployed"}}{{/if}}</div>
+                                    <div class="droneButtons">
+                                        {{#if vehicle.droneJammed}}
+                                            <button type="button" class="resource-label button sheetButton droneButton unjamDroneButton">
+                                                {{localize "ep2e.actorSheet.button.unjamVehicle"}}
+                                            </button>
+                                        {{else}}
+                                            {{#if vehicle.droneJamBlock}}
+                                                <div class="wantToKnowMore droneButton" style="max-width: none;">
+                                                    <button type="button" class="resource-label button sheetButton droneButton droneButtonDisabled" disabled style="width: 100%;">
+                                                        {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                                    </button>
+                                                    <span class="tooltipText">{{vehicle.droneJamBlock}}</span>
+                                                </div>
+                                            {{else}}
+                                                <button type="button" class="resource-label button sheetButton droneButton jamDroneButton" data-item-id="{{vehicle.id}}">
+                                                    {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                                </button>
+                                            {{/if}}
+                                            <button type="button" class="resource-label button sheetButton droneButton recallDroneButton" data-item-id="{{vehicle.id}}">
+                                                {{#if vehicle.droneDown}}{{localize "ep2e.morph.drone.writeOff"}}{{else}}{{localize "ep2e.morph.drone.recall"}}{{/if}}
+                                            </button>
+                                        {{/if}}
+                                    </div>
                                 </div>
                             {{else}}
                                 <!-- Not jammed: Jam and Deploy buttons (CSS shows them only when the tab is active) -->
@@ -168,20 +192,20 @@
                                     <img src="{{body.morphdetails.0.img}}" class="body-portrait"/>
                                     <div style="display: flex;">
                                         <button type="button" class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
-                                        {{#if (and (ne @root.actor.system.activeMorph body.morphdetails.0.id) (ne @root.actor.system.activeJam body.morphdetails.0.id))}}
+                                        {{#if (ne @root.actor.system.activeMorph body.morphdetails.0.id)}}{{#unless body.morphdetails.0.deployed}}
                                             <button type="button" class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
-                                        {{/if}}
+                                        {{/unless}}{{/if}}
                                     </div>
                                 </div>
                                 <div style="flex: 0.7;">
                                     <div class="itemRowHeader">
                                         <div class="itemGroup ep-body-damage" data-body-id="{{body.morphdetails.0.id}}">
                                             <span class="wantToKnowMore"><i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i><label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.damageLabel"}}</label></span>
-                                            {{#if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="value" value="{{body.damage.value}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{body.damage.value}}</label>{{/if}}
+                                            {{#if body.damage.locked}}<label class="resource-value">{{body.damage.value}}</label>{{else if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="value" value="{{body.damage.value}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{body.damage.value}}</label>{{/if}}
                                             <label class="resource-value">/ {{body.damage.dur}} (</label>
-                                            {{#if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="wounds" value="{{body.damage.wounds}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{body.damage.wounds}}</label>{{/if}}
+                                            {{#if body.damage.locked}}<label class="resource-value">{{body.damage.wounds}}</label>{{else if @root.isGM}}<input class="input-xs ep-body-damage-input" type="number" data-part="wounds" value="{{body.damage.wounds}}" onFocus="this.select()"/>{{else}}<label class="resource-value">{{body.damage.wounds}}</label>{{/if}}
                                             <label class="resource-value">)</label>
-                                            {{#if @root.editable}}<span class="wantToKnowMore ep-body-heal-wrap"><span class="tooltipTextB">{{localize (concat "ep2e.morph.currentMorph.heal." body.damage.kind)}}</span><button type="button" class="ep-body-heal"><i class="fa-solid {{#if (eq body.damage.kind "bio")}}fa-heart-circle-plus{{else}}fa-wrench{{/if}}"></i></button></span>{{/if}}
+                                            {{#if @root.editable}}{{#unless body.damage.locked}}<span class="wantToKnowMore ep-body-heal-wrap"><span class="tooltipTextB">{{localize (concat "ep2e.morph.currentMorph.heal." body.damage.kind)}}</span><button type="button" class="ep-body-heal"><i class="fa-solid {{#if (eq body.damage.kind "bio")}}fa-heart-circle-plus{{else}}fa-wrench{{/if}}"></i></button></span>{{/unless}}{{/if}}
                                         </div>
                                         <div class="itemGroup wantToKnowMore">
                                             <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
@@ -261,7 +285,17 @@
                                 </div>
                             </div>
                             {{/if}}
-                            {{> systems/eclipsephase/templates/actor/partials/body-inventory.html body=body bodyKey=key}}
+                            {{#if body.morphdetails.0.deployed}}
+                                <!-- Out as a drone for a jam: what it carries is on the drone's own sheet -->
+                                <div class="contentBox">
+                                    <div class="itemBackground ep-drone-out">
+                                        <span><i class="fa-solid fa-satellite-dish awesomeIcon"></i> {{localize "ep2e.morph.drone.outNote"}}</span>
+                                        <button type="button" class="resource-label button sheetButton openDroneSheet" data-item-id="{{body.morphdetails.0.id}}">{{localize "ep2e.morph.drone.openSheet"}}</button>
+                                    </div>
+                                </div>
+                            {{else}}
+                                {{> systems/eclipsephase/templates/actor/partials/body-inventory.html body=body bodyKey=key}}
+                            {{/if}}
                         </div>
                     </div>
             {{/if}}
@@ -275,9 +309,9 @@
                                 <img src="{{vehicle.img}}" class="body-portrait"/>
                                 <div style="display: flex;">
                                     <button type="button" class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
-                                    {{#if (ne @root.actor.system.activeJam vehicle.id)}}{{#unless vehicle.deployed}}
+                                    {{#unless vehicle.deployed}}
                                         <button type="button" class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
-                                    {{/unless}}{{/if}}
+                                    {{/unless}}
                                 </div>
                             </div>
                             <div style="flex: 0.7;">
@@ -421,11 +455,6 @@
                                 <div class="itemBackground ep-drone-out">
                                     <span><i class="fa-solid fa-satellite-dish awesomeIcon"></i> {{localize "ep2e.morph.drone.outNote"}}</span>
                                     <button type="button" class="resource-label button sheetButton openDroneSheet" data-item-id="{{vehicle.id}}">{{localize "ep2e.morph.drone.openSheet"}}</button>
-                                </div>
-                            {{else if (eq @root.actor.system.activeJam vehicle.id)}}
-                                <div class="itemBackground" style="padding: 10px; text-align: center; color: var(--inactive);">
-                                    <i class="fa-solid fa-satellite-dish awesomeIcon"></i>
-                                    {{localize "ep2e.morph.jamming.noSkillsWhileJammed"}}
                                 </div>
                             {{else}}
                                 <div class="listBackground edgeAbler" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px;">

@@ -1,13 +1,12 @@
 import EPactorSheet, { isSectionOpen, setSectionOpen, toggleBodySection } from "../../module/actor/EPactorSheet.js";
 import {
-  resleeveMorph, jamBody, unjamBody, breakJam, registerJamBreaks, jamBlockReason, bodyDamage, bodyDamagePlace, setBodyDamage, bodyKind, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
+  resleeveMorph, bodyDamage, bodyDamagePlace, setBodyDamage, bodyKind, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
   stashItem, equipItemFromStash, announceKind, ANNOUNCE_KINDS, resolveItemsOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
   registerBodyTokens, locationOf, itemsOn, isUsable, moveItem, npcBodyKey, targetKinds
 } from "../../module/common/morp-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { calcEffects, sleevingTest } from "../../module/rolls/resleeving.js";
 import { healBody } from "../../module/rolls/health.js";
-import { inflictCondition, registerDamageConditions } from "../../module/common/conditions.js";
 import { registerStrikeChecks } from "../../module/rolls/damage.js";
 import { readDialogValues } from "../../module/rolls/dice.js";
 import { makeActor, makeItem, resetWorld, seedDialogs, seedRolls, setSetting } from "../setup/factories.js";
@@ -203,290 +202,6 @@ describe("resleeving", () => {
     expect(createdMessages).toHaveLength(0);
   });
 
-  test("an ego off jamming a remote body cannot resleeve", async () => {
-    const actor = twoBodies({ system: { activeJam: "drone1" } });
-    seedDialogs(true);
-
-    await resleeveMorph(actor, sleeveClick("morph2"), { tabGroups: {} });
-
-    expect(actor.system.activeMorph).toEqual("morph1");
-  });
-});
-
-describe("jamming a body", () => {
-  const SOCK = { name: "Puppet Sock", changes: [{ key: "flags.eclipsephase.grantsPuppetSock", type: "override", value: "1" }] };
-
-  /**
-   * A character sleeved in a hurt Splicer, with two puppet-socked drones: a robot with armour of its
-   * own and a vest bound to it, and an animal.
-   * @param {Object} [system] - Extra actor system fields
-   * @param {Object} [flags] - Actor flags
-   * @returns {Actor} The prepared actor
-   */
-  function jammer(system = {}, flags = {}) {
-    return makeActor({
-      type: "character",
-      flags,
-      system: foundry.utils.mergeObject({
-        activeMorph: "morph1",
-        ego: { egoFlex: 1 },
-        health: { physical: { value: 12 } },
-        physical: { wounds: 1 },
-        pools: { vigor: { value: 1 }, insight: { value: 0 }, moxie: { value: 2 }, flex: { value: 2 } }
-      }, system),
-      items: [
-        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30, flex: 1, vigor: 2, insight: 2, moxie: 2 } },
-        { _id: "drone1", name: "Guardian", type: "vehicle", system: { chassisType: "robot", dur: 40, flex: 2, vigor: 3, insight: 0, moxie: 0, armor: { energy: 4, kinetic: 6 } } },
-        { _id: "drone2", name: "Hound", type: "vehicle", system: { chassisType: "animal", dur: 25, flex: 0 } },
-        { _id: "sock1", name: "Puppet Sock", type: "ware", system: { boundTo: "drone1" }, effects: [SOCK] },
-        { _id: "sock2", name: "Puppet Sock", type: "ware", system: { boundTo: "drone2" }, effects: [SOCK] },
-        { _id: "plate", name: "Plate", type: "armor", system: { boundTo: "drone1", energy: 1, kinetic: 1 } }
-      ]
-    });
-  }
-
-  const click = itemId => ({ dataset: { itemId, name: "Guardian" } });
-  const settle = () => new Promise(resolve => setTimeout(resolve, 0));
-
-  test("jamming puts the real body's damage and pools aside and starts the drone with its own", async () => {
-    const actor = jammer();
-    const sheet = { tabGroups: {} };
-    seedDialogs(true);
-
-    await jamBody(actor, click("drone1"), sheet);
-    await settle();
-
-    expect(actor.system.activeJam).toBe("drone1");
-    expect(actor.getFlag("eclipsephase", "jamHealthBackup")).toEqual({ value: 12, wounds: 1, vigor: 1, insight: 0, moxie: 2, bodyFlexValue: 1 });
-    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([0, 0]);
-    expect(actor.system.pools.vigor.value).toBe(actor.system.pools.vigor.totalVigor);
-    expect(actor.system.pools.flex.value).toBe(3);
-    expect(sheet.tabGroups.morph).toBe("drone1");
-    expect(createdMessages).toHaveLength(1);
-  });
-
-  test("while jamming, durability, armour and pools come from the drone, the real body's pools stay on offer", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-
-    expect([actor.system.physical.activeMorphType, actor.system.health.physical.max]).toEqual(["synth", 40]);
-    expect([actor.system.physical.energyArmorTotal, actor.system.physical.kineticArmorTotal]).toEqual([5, 7]);
-    expect(actor.system.pools.vigor.totalVigor).toBeGreaterThanOrEqual(3);
-    expect(actor.system.additionalSystems.jamming.ownBodyPools).toMatchObject({ vigor: 1, insight: 0, moxie: 2, bodyFlexRemaining: 1 });
-  });
-
-  test("an animal counts as a biomorph while jammed", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone2"), { tabGroups: {} });
-
-    expect(actor.system.physical.activeMorphType).toBe("bio");
-  });
-
-  test("a body without a puppet sock, or the body already jammed, is not jammed", async () => {
-    const actor = jammer();
-    await actor.deleteEmbeddedDocuments("Item", ["sock2"]);
-    seedDialogs(true);
-    await jamBody(actor, click("drone2"), { tabGroups: {} });
-    expect(actor.system.activeJam).toBeFalsy();
-
-    await actor.update({ "system.activeJam": "drone1" });
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    expect(createdMessages).toHaveLength(0);
-  });
-
-  test("ending the jam brings back the real body's damage and pools, Ego Flex spent in the drone stays spent", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    await actor.update({ "system.health.physical.value": 9, "system.physical.wounds": 2, "system.pools.flex.value": 0 });
-    const sheet = { tabGroups: {} };
-
-    seedDialogs(true);
-    await unjamBody(actor, click("drone1"), sheet);
-
-    expect(actor.system.activeJam).toBeFalsy();
-    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([12, 1]);
-    expect([actor.system.pools.vigor.value, actor.system.pools.insight.value, actor.system.pools.moxie.value]).toEqual([1, 0, 2]);
-    expect(actor.system.pools.flex.value).toBe(1);
-    expect(actor.getFlag("eclipsephase", "jamHealthBackup")).toBeUndefined();
-    expect(sheet.tabGroups.morph).toBe("sleeved");
-  });
-
-  test("jamming another drone ends the first jam first, so the real body's values are the ones put aside", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    await actor.update({ "system.health.physical.value": 9 });
-
-    seedDialogs(true);
-    await jamBody(actor, click("drone2"), { tabGroups: {} });
-
-    expect(actor.system.activeJam).toBe("drone2");
-    expect(actor.getFlag("eclipsephase", "jamHealthBackup")).toMatchObject({ value: 12, wounds: 1 });
-  });
-
-  test("the damage a drone takes stays with it: kept when the jam ends, back when it is jammed again", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    await actor.update({ "system.health.physical.value": 15, "system.physical.wounds": 2 });
-
-    seedDialogs(true);
-    await unjamBody(actor, click("drone1"), { tabGroups: {} });
-    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toEqual({ value: 15, wounds: 2 });
-    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([12, 1]);
-
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([15, 2]);
-    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toBeUndefined();
-  });
-
-  test("switching to another drone keeps the first one's damage on it", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    await actor.update({ "system.health.physical.value": 7 });
-
-    seedDialogs(true);
-    await jamBody(actor, click("drone2"), { tabGroups: {} });
-
-    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toEqual({ value: 7, wounds: 0 });
-    expect(actor.system.health.physical.value).toBe(0);
-  });
-
-  test("a drone that comes back unhurt keeps nothing", async () => {
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-
-    seedDialogs(true);
-    await unjamBody(actor, click("drone1"), { tabGroups: {} });
-
-    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toBeUndefined();
-  });
-
-  const statusesOf = actor => actor.effects.flatMap(effect => Array.from(effect.statuses ?? [])).sort();
-  const condition = (id, extra = {}) => ({ name: id, statuses: [id], flags: { eclipsephase: { effectKey: "condition" } }, ...extra });
-
-  test("the body's conditions stay with it while jamming, the ego's go along, and come back when the jam ends", async () => {
-    const actor = jammer();
-    await actor.createEmbeddedDocuments("ActiveEffect", [condition("prone"), condition("dazed")]);
-    await actor.items.get("drone1").setFlag("eclipsephase", "bodyConditions", [condition("stunned")]);
-
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    expect(statusesOf(actor)).toEqual(["dazed", "stunned"]);
-    expect(actor.items.get("morph1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["prone"]]);
-
-    seedDialogs(true);
-    await unjamBody(actor, click("drone1"), { tabGroups: {} });
-    expect(statusesOf(actor)).toEqual(["dazed", "prone"]);
-    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["stunned"]]);
-    expect(actor.items.get("morph1").getFlag("eclipsephase", "bodyConditions")).toBeUndefined();
-  });
-
-  test("a sleight's or drug's effect stays with the ego when the body changes", async () => {
-    const actor = jammer();
-    await actor.createEmbeddedDocuments("ActiveEffect", [{ name: "Spasm", statuses: ["prone"], flags: { eclipsephase: { effectKey: "sleight" } } }]);
-
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-
-    expect(statusesOf(actor)).toEqual(["prone"]);
-  });
-
-  test("a jammed drone knocked out ends the jam at once and says so; it keeps its Unconscious", async () => {
-    registerJamBreaks();
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    createdMessages.length = 0;
-
-    await inflictCondition(actor, "unconscious");
-    await new Promise(resolve => setTimeout(resolve, 20));
-
-    expect(actor.system.activeJam).toBeFalsy();
-    expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([12, 1]);
-    expect(statusesOf(actor)).toEqual([]);
-    expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyConditions").map(data => data.statuses)).toEqual([["unconscious"]]);
-    expect(createdMessages).toHaveLength(1);
-    expect(createdMessages[0].content).toContain("ep2e.morph.jamming.broken");
-  });
-
-  test("coming back to a body that kept an Unconscious ends no jam a second time", async () => {
-    registerJamBreaks();
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    await actor.items.get("morph1").setFlag("eclipsephase", "bodyConditions", [condition("unconscious")]);
-    createdMessages.length = 0;
-
-    seedDialogs(true);
-    await unjamBody(actor, click("drone1"), { tabGroups: {} });
-    await new Promise(resolve => setTimeout(resolve, 20));
-
-    expect(actor.system.activeJam).toBeFalsy();
-    expect(statusesOf(actor)).toEqual(["unconscious"]);
-    expect(createdMessages).toHaveLength(0);
-  });
-
-  test("the real body reaching its Death Rating while jamming pulls the ego back, dead", async () => {
-    registerJamBreaks();
-    registerDamageConditions();
-    const actor = jammer();
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-
-    await setBodyDamage(actor, "morph1", { value: 45 });
-    await new Promise(resolve => setTimeout(resolve, 20));
-
-    expect(actor.system.activeJam).toBeFalsy();
-    expect(actor.system.health.physical.value).toBe(45);
-    expect(statusesOf(actor)).toContain("dead");
-  });
-
-  test("wounds a body has had all along ask for no check when the ego comes back to it", async () => {
-    registerStrikeChecks();
-    const actor = jammer({ physical: { wounds: 2 } });
-    seedDialogs(true);
-    await jamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-    seedDialogs(true);
-    await unjamBody(actor, click("drone1"), { tabGroups: {} });
-    await settle();
-
-    expect(actor.system.physical.wounds).toBe(2);
-    expect(createdMessages.filter(message => String(message.content).includes("ep2e.chat.strike"))).toHaveLength(0);
-  });
-
-  test("an incapacitated, unconscious or dead ego cannot start a jam", () => {
-    const actor = jammer();
-    expect(jamBlockReason(actor)).toBeNull();
-    actor.statuses = new Set(["incapacitated"]);
-    expect(jamBlockReason(actor)).toContain("ep2e.morph.jamming.blocked");
-  });
-
-  test("ending a jam with nothing put aside leaves damage and pools as they are", async () => {
-    const actor = jammer({ activeJam: "drone1", health: { physical: { value: 5 } } });
-    seedDialogs(true);
-
-    await unjamBody(actor, click("drone1"), { tabGroups: {} });
-
-    expect(actor.system.activeJam).toBeFalsy();
-    expect(actor.system.health.physical.value).toBe(5);
-  });
 });
 
 describe("a body's own damage", () => {
@@ -509,16 +224,10 @@ describe("a body's own damage", () => {
     });
   }
 
-  test("is the actor's health for the body acting, the put-aside values for the sleeved morph while jamming, its own otherwise", () => {
+  test("is the actor's health for the morph the ego is sleeved in, the body's own otherwise", () => {
     const actor = hurt();
-    expect([bodyDamagePlace(actor, "morph1"), bodyDamagePlace(actor, "drone1")]).toEqual(["live", "body"]);
+    expect([bodyDamagePlace(actor, "morph1"), bodyDamagePlace(actor, "morph2"), bodyDamagePlace(actor, "drone1")]).toEqual(["live", "body", "body"]);
     expect([bodyDamage(actor, "morph1"), bodyDamage(actor, "drone1")]).toEqual([{ value: 10, wounds: 1 }, { value: 8, wounds: 1 }]);
-
-    const jamming = hurt({ activeJam: "drone1", health: { physical: { value: 2 } }, physical: { wounds: 0 } });
-    jamming.flags.eclipsephase = { jamHealthBackup: { value: 10, wounds: 1 } };
-    expect([bodyDamagePlace(jamming, "morph1"), bodyDamagePlace(jamming, "drone1")]).toEqual(["backup", "live"]);
-    expect(bodyDamage(jamming, "morph1")).toEqual({ value: 10, wounds: 1 });
-    expect(bodyDamage(jamming, "drone1")).toEqual({ value: 2, wounds: 0 });
   });
 
   test("set by the GM lands where it is kept", async () => {
@@ -527,10 +236,6 @@ describe("a body's own damage", () => {
     await setBodyDamage(actor, "morph1", { value: 4 });
     expect(actor.items.get("drone1").getFlag("eclipsephase", "bodyDamage")).toEqual({ value: 8, wounds: 3 });
     expect([actor.system.health.physical.value, actor.system.physical.wounds]).toEqual([4, 1]);
-
-    await actor.update({ "system.activeJam": "drone1", "flags.eclipsephase.jamHealthBackup": { value: 4, wounds: 1 } });
-    await setBodyDamage(actor, "morph1", { value: 0 });
-    expect(actor.getFlag("eclipsephase", "jamHealthBackup")).toMatchObject({ value: 0, wounds: 1 });
   });
 
   test("healed fully from its panel, a body not in use heals on itself and the actor's health stays", async () => {
@@ -973,16 +678,6 @@ describe("the token follows the body it is sleeved in", () => {
     expect(actor.prototypeToken.texture.src).toBe("tokens/new-me.webp");
   });
 
-  test("jamming a body leaves the token as it is", async () => {
-    const actor = sleeved();
-    activeScene([]);
-
-    await actor.update({ "system.activeJam": "fury" });
-    await settle();
-
-    expect(actor.prototypeToken.texture.src).toBe("tokens/me.webp");
-  });
-
   test("a token image given to the sleeved morph shows at once, one given to a reserve morph does not", async () => {
     const actor = sleeved();
     activeScene([]);
@@ -1051,22 +746,6 @@ describe("carried weapons weigh on the body that carries them (homebrew encumbra
     expect(loaded().system.physical.totalWeaponMalus).toBe(20);
   });
 
-  test("while jamming they stay with the real body: the drone carries nothing, the own-body rolls keep the malus", () => {
-    const actor = loaded({ activeJam: "drone1" });
-
-    expect(actor.system.physical.totalWeaponMalus).toBe(0);
-    expect(actor.system.additionalSystems.jamming.ownBodyWeaponMalus).toBe(20);
-  });
-
-  test("what the jammed drone carries weighs on the drone's rolls, the morph's load on the own body's", async () => {
-    const actor = loaded({ activeJam: "drone1" });
-    await actor.items.get("r1").update({ "system.boundTo": "drone1" });
-    await actor.items.get("r2").update({ "system.boundTo": "drone1" });
-
-    expect(actor.system.physical.totalWeaponMalus).toBe(10);
-    expect(actor.system.additionalSystems.jamming.ownBodyWeaponMalus).toBe(0);
-  });
-
   test("what lies in the Stash weighs on no one", async () => {
     const actor = loaded();
     await actor.items.get("r3").update({ "system.boundTo": "stash" });
@@ -1113,15 +792,14 @@ describe("how the sheet sorts a character's items", () => {
 
 describe("where a character's carried items lie", () => {
   /**
-   * A character sleeved in one morph, jamming a drone, with a spare morph and carried items in
-   * every place.
+   * A character sleeved in one morph, with a drone, a spare morph and carried items in every place.
    * @param {Object[]} [items] - Further items
    * @returns {Actor} The actor
    */
   function owner(items = []) {
     return makeActor({
       type: "character",
-      system: { activeMorph: "morph1", activeJam: "drone1" },
+      system: { activeMorph: "morph1" },
       items: [
         { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio" } },
         { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio" } },
@@ -1145,12 +823,12 @@ describe("where a character's carried items lie", () => {
     expect(itemsOn(actor, "stash").map(item => item.id)).toEqual(["kept", "lost", "app"]);
   });
 
-  test("usable only on the sleeved morph and the jammed body; an NPC uses all it has", () => {
+  test("usable only on the sleeved morph, not on a drone or a spare body; an NPC uses all it has", () => {
     const actor = owner();
     const npc = makeActor({ type: "npc", items: [{ _id: "gun", name: "Pistol", type: "rangedWeapon", system: { boundTo: "stash" } }] });
     const usable = id => isUsable(actor, actor.items.get(id));
 
-    expect(["gun", "turret", "spare", "kept"].map(usable)).toEqual([true, true, false, false]);
+    expect(["gun", "turret", "spare", "kept"].map(usable)).toEqual([true, false, false, false]);
     expect(isUsable(npc, npc.items.get("gun"))).toBe(true);
   });
 
@@ -1228,21 +906,20 @@ describe("what a character can use, and what helps which body", () => {
     });
   }
 
-  test("at hand is what lies on the sleeved morph or the jammed body, never in the Stash or on a spare body", () => {
+  test("at hand is what lies on the sleeved morph, never in the Stash, on a drone or on a spare body", () => {
     const active = actor => ["rifle", "vest"].map(id => actor.items.get(id).system.active);
 
     expect(active(kitted())).toEqual([true, true]);
     expect(active(kitted({}, { rifle: "morph2", vest: "stash" }))).toEqual([false, false]);
-    expect(active(kitted({ activeJam: "drone1" }, { rifle: "drone1" }))).toEqual([true, false]);
+    expect(active(kitted({}, { rifle: "drone1" }))).toEqual([false, true]);
   });
 
-  test("an item's effect helps the body it lies on only while that body acts", () => {
+  test("an item's effect helps only the body it lies on, and only the one the ego is sleeved in", () => {
     const suppressed = actor => Array.from(actor.items.get("goggles").effects)[0].isSuppressed;
 
     expect(suppressed(kitted())).toBe(false);
     expect(suppressed(kitted({}, { goggles: "stash" }))).toBe(true);
-    expect(suppressed(kitted({ activeJam: "drone1" }))).toBe(true);
-    expect(suppressed(kitted({ activeJam: "drone1" }, { goggles: "drone1" }))).toBe(false);
+    expect(suppressed(kitted({}, { goggles: "drone1" }))).toBe(true);
   });
 
   test("putting part of a stack into the Stash asks how many packs, and moves that many", async () => {

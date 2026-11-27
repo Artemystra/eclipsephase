@@ -67,13 +67,12 @@ describe("the shared card and compendium helpers", () => {
 });
 
 describe("the shared body rule", () => {
-  test("ware works in the sleeved morph, in the jammed body while jamming, and in its own body if it keeps working while jamming", () => {
-    const actor = makeActor({ type: "character", system: { activeMorph: "morph1", activeJam: "drone1" } });
-    const ware = (boundTo, keepsJamming = false) => ({ system: { boundTo, additionalSystems: { staysActiveWhileJamming: keepsJamming } } });
+  test("ware works in the morph the ego is sleeved in, not in a drone or a spare body, and anywhere when bound to no body", () => {
+    const actor = makeActor({ type: "character", system: { activeMorph: "morph1" } });
+    const ware = boundTo => ({ system: { boundTo } });
 
-    expect(boundToActiveBody(actor, ware("drone1"))).toBe(true);
-    expect(boundToActiveBody(actor, ware("morph1"))).toBe(false);
-    expect(boundToActiveBody(actor, ware("morph1", true))).toBe(true);
+    expect(boundToActiveBody(actor, ware("morph1"))).toBe(true);
+    expect(boundToActiveBody(actor, ware("drone1"))).toBe(false);
     expect(boundToActiveBody(actor, ware(null))).toBe(true);
     expect(boundToActiveBody(makeActor({ type: "npc" }), ware("anything"))).toBe(true);
   });

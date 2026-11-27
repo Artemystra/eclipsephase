@@ -774,6 +774,7 @@
         "jammed": "Jammed",
         "noSkillsWhileJammed": "Jammed — Use your own skills instead",
         "blocked": "No jamming under {condition}.",
+        "busy": "Already jamming another body.",
         "broken": "{body}: {condition}. The jam breaks off and the ego is back in {morph}."
       }
     },

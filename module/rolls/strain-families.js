@@ -111,19 +111,14 @@ export function registerCoreStrainFamilies() {
     substrate(actor) {
       const { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } = game.eclipsephase.api.actors;
       const nervousSystem = sleevedNervousSystem(actor);
-      const jamBlocked = !!actor?.system?.activeJam ||
-        !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression");
       const drugBlocked = !!drugBlockingPsi(actor);
-      const blocked = jamBlocked || drugBlocked || nervousSystem === "info" || chainHasWareMarker(actor, CYBERBRAIN_MARKER);
-      const reasonKey = jamBlocked ? "ep2e.roll.announce.jamming.noPsi"
-        : drugBlocked ? "ep2e.roll.announce.psi.blockedByDrug"
-        : "ep2e.roll.announce.psi.noBioBrain";
-      const tooltipKey = jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip"
-        : drugBlocked ? "ep2e.roll.announce.psi.blockedByDrug"
-        : "ep2e.roll.announce.psi.substrateBlockedTooltip";
+      const blocked = drugBlocked || nervousSystem === "info" || chainHasWareMarker(actor, CYBERBRAIN_MARKER);
+      const reasonKey = drugBlocked ? "ep2e.roll.announce.psi.blockedByDrug" : "ep2e.roll.announce.psi.noBioBrain";
+      const tooltipKey = drugBlocked ? "ep2e.roll.announce.psi.blockedByDrug" : "ep2e.roll.announce.psi.substrateBlockedTooltip";
       return {
         blocked,
-        jamBlocked,
+        // Jamming no longer blocks Psi: the ego's own body, brain and all, stays on its sheet.
+        jamBlocked: false,
         penalised: !blocked && nervousSystem === "synth",
         reasonKey,
         tooltipKey

@@ -1,10 +1,13 @@
-import EPactorSheet from "../../module/actor/EPactorSheet.js";
+import EPactorSheet, { lockEgoFields } from "../../module/actor/EPactorSheet.js";
+import { JSDOM } from "jsdom";
 import {
   aiSkillSetup, droneActorData, freeSquareBeside, createDrone, deployDrone, recallDrone, bringDroneHome, recallChanges,
-  deployedDrone, isDrone, registerDrones
+  deployedDrone, isDrone, registerDrones, jamDrone, unjamDrone, endDroneJam, jammedDrone, jammingEgo, stripEgoOverlay, droneJamBlock, flexAfter
 } from "../../module/common/drones.js";
-import { getBodyBindingInfo, bodyIsDestroyed, setBodyDamage } from "../../module/common/morp-functions.js";
-import { makeActor, resetWorld } from "../setup/factories.js";
+import { RollCheck } from "../../module/rolls/dice.js";
+import { inflictCondition } from "../../module/common/conditions.js";
+import { getBodyBindingInfo, bodyIsDestroyed, setBodyDamage, jamBlockReason } from "../../module/common/morp-functions.js";
+import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
 
 const { createdMessages } = global.__ep;
 const DEAD = { name: "Dead", statuses: ["dead"], flags: { eclipsephase: { effectKey: "condition", fromDamage: true } } };
@@ -125,6 +128,17 @@ describe("what a drone goes out with", () => {
     expect(data.effects.map(effect => effect.statuses)).toEqual([["stunned"]]);
     expect(data.items.find(item => item.type === "vehicle").flags?.eclipsephase ?? {}).toEqual({});
   });
+
+  test("nothing in its data asks the actor to change itself before it exists; its pools are filled once it does", async () => {
+    const actor = owner();
+    expect(droneActorData(actor, actor.items.get("drone1")).flags.eclipsephase.resleeving).toBeUndefined();
+
+    const { drone } = await createDrone(actor, "drone1");
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect([drone.system.pools.vigor.value, drone.getFlag("eclipsephase", "resleeving")]).toEqual([drone.system.pools.vigor.totalVigor, false]);
+    expect(drone.system.pools.vigor.totalVigor).toBe(1);
+  });
 });
 
 describe("where a drone's token lands", () => {
@@ -170,14 +184,11 @@ describe("sending a drone out", () => {
     expect(scene.tokens.at(-1)).toMatchObject({ actorId: out.drone.id, x: 600, y: 500, elevation: 3 });
   });
 
-  test("a vehicle already out, jammed or destroyed does not go out", async () => {
+  test("a vehicle already out or destroyed does not go out, and a morph goes out only for a jam", async () => {
     const out = owner();
     await createDrone(out, "drone1");
     expect(await createDrone(out, "drone1")).toBeNull();
-
-    const jamming = owner({});
-    await jamming.update({ "system.activeJam": "drone1" });
-    expect(await createDrone(jamming, "drone1")).toBeNull();
+    expect(await createDrone(out, "morph1", { temporary: true })).toBeNull();
 
     const wrecked = owner({ flags: { eclipsephase: { bodyConditions: [DEAD] } } });
     expect(await createDrone(wrecked, "drone1")).toBeNull();
@@ -402,5 +413,450 @@ describe("a vehicle out as a drone on its owner's sheet", () => {
     const destroyed = await view({ bodyDamage: { value: 50, wounds: 0 }, bodyConditions: [DEAD] });
     expect(destroyed.block).toBe("ep2e.morph.drone.destroyed");
     expect(destroyed.html).not.toContain("vehicle-task-check");
+  });
+});
+
+describe("jamming a deployed drone", () => {
+  const SOCK = { name: "Puppet Sock", changes: [{ key: "flags.eclipsephase.grantsPuppetSock", type: "override", value: "1" }] };
+  const settle = () => new Promise(resolve => setTimeout(resolve, 20));
+
+  /**
+   * A character with an ego of her own - aptitudes, skills, a Field skill, Ego Flex and an ego trait -
+   * whose puppet-socked Guardian is out as a drone.
+   * @param {Object[]} [items] - Further items of hers
+   * @returns {Promise<{actor: Actor, drone: Actor}>} The character and the drone
+   */
+  async function operator(items = []) {
+    const actor = makeActor({
+      _id: "ana", name: "Ana", type: "character",
+      system: {
+        activeMorph: "morph1",
+        aptitudes: { ref: { value: 15 }, int: { value: 10 }, som: { value: 10 }, cog: { value: 10 }, sav: { value: 10 }, wil: { value: 10 } },
+        skillsVig: { guns: { value: 45, specname: "Rifles", spec: true }, fray: { value: 20 } },
+        ego: { egoFlex: 2 },
+        pools: { flex: { value: 3 } }
+      },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30, flex: 1 } },
+        { _id: "drone1", name: "Guardian", type: "vehicle", system: { chassisType: "robot", dur: 25, flex: 1,
+          skills: { 1: { name: "Guns", value: 30 }, 2: { name: "Fray", value: 30 }, 3: { name: "Pilot: Aerospace", value: 60 } } } },
+        { _id: "sock", name: "Puppet Sock", type: "ware", system: { boundTo: "drone1" }, effects: [SOCK] },
+        { _id: "pilot", name: "Pilot: Groundcraft", type: "specialSkill", system: { value: 30, aptitude: "ref" } },
+        { _id: "luck", name: "Bad Luck", type: "traits", system: {},
+          effects: [{ name: "Bad Luck", changes: [{ key: "system.additionalSystems.noFlipFlop", type: "override", value: "true" }] }] },
+        ...items
+      ]
+    });
+    const { drone } = await createDrone(actor, "drone1");
+    createdMessages.length = 0;
+    return { actor, drone };
+  }
+
+  test("the drone acts with the ego's aptitudes, skills and ego traits, its body stays its own, and nothing of it is saved on the drone", async () => {
+    const { actor, drone } = await operator();
+    expect(drone.system.skillsVig.guns.derived).toBe(30);
+
+    seedDialogs(true);
+    expect(await jamDrone(actor, "drone1")).toBe(true);
+
+    expect([jammedDrone(actor), jammingEgo(drone)]).toEqual([drone, actor]);
+    expect([drone.system.aptitudes.ref.value, drone.system.skillsVig.guns.derived, drone.system.skillsVig.fray.derived]).toEqual([15, 60, 50]);
+    expect([drone.system.skillsVig.guns.specname, drone.system.skillsVig.guns.spec]).toEqual(["Rifles", true]);
+    expect(drone.system.additionalSystems.noFlipFlop).toBeTruthy();
+    expect([drone.system.health.physical.max, drone.system.physical.activeMorphType]).toEqual([25, "synth"]);
+    expect(drone._source.system.skillsVig.guns.value).toBe(30);
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.sleeving.announce.title.jammed");
+  });
+
+  test("its sheet lists the ego's Field skills, rolled with the ego's aptitudes", async () => {
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    await EPactorSheet.prototype._prepareCharacterItems.call({ document: drone }, {});
+
+    expect(drone.specialSkill.map(row => [row.name, row.roll])).toEqual([["Pilot: Groundcraft", 45]]);
+    expect(drone.jammedBy).toBe("Ana");
+  });
+
+  test("a body spends its own Flex before the ego's, and what comes back fills the ego's first", () => {
+    expect(flexAfter(1, 2, -1, 2)).toEqual({ body: 0, ego: 2 });
+    expect(flexAfter(1, 2, -2, 2)).toEqual({ body: 0, ego: 1 });
+    expect(flexAfter(0, 1, -3, 2)).toEqual({ body: 0, ego: 0 });
+    expect(flexAfter(0, 1, 2, 2)).toEqual({ body: 1, ego: 2 });
+  });
+
+  test("Ego Flex is one pool for both bodies: the character keeps its Flex, the drone has its own plus the ego's", async () => {
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    expect([drone.system.pools.flex.value, drone.system.pools.flex.totalFlex, actor.system.pools.flex.value]).toEqual([3, 3, 3]);
+    expect(drone.getFlag("eclipsephase", "droneJam")).toEqual({ droneFlex: 1, ownFlex: 1, egoFlex: 2 });
+  });
+
+  test("Ego Flex spent through the drone is gone for the character at once, the drone's own Flex going first", async () => {
+    registerDrones();
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    await drone.update({ "system.pools.flex.value": 2 });
+    await settle();
+    expect([drone.system.pools.flex.value, actor.system.pools.flex.value]).toEqual([2, 3]);
+
+    await drone.update({ "system.pools.flex.value": 1 });
+    await settle();
+    expect([drone.system.pools.flex.value, actor.system.pools.flex.value]).toEqual([1, 2]);
+  });
+
+  test("Ego Flex the character spends with its own body is gone for the drone too, its own body's Flex going first", async () => {
+    registerDrones();
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    await actor.update({ "system.pools.flex.value": 2 });
+    await settle();
+    expect([actor.system.pools.flex.value, drone.system.pools.flex.value]).toEqual([2, 3]);
+
+    await actor.update({ "system.pools.flex.value": 0 });
+    await settle();
+    expect([actor.system.pools.flex.value, drone.system.pools.flex.value]).toEqual([0, 1]);
+  });
+
+  test("when the jam ends the drone keeps what is left of its own Flex and the character what is left of its own and the ego's", async () => {
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    await drone.update({ "system.pools.flex.value": 1 });
+
+    await endDroneJam(actor);
+
+    expect([drone.system.pools.flex.value, actor.system.pools.flex.value]).toEqual([0, 2]);
+    expect([jammedDrone(actor), jammingEgo(drone)]).toEqual([null, null]);
+    expect(drone.system.skillsVig.guns.derived).toBe(30);
+  });
+
+  test("the drone rolls at -10 unless the ego has a Drone Rig, and the ego's own body at -30", async () => {
+    const roll = async actor => {
+      createdMessages.length = 0;
+      seedDialogs({ rollMode: "public", usePool: "", globalMod: 0 });
+      seedRolls([42]);
+      await RollCheck({ name: "Guns", key: "guns", type: "skill", rollvalue: 60, pooltype: "Vigor" }, actor.system, actor, { askForOptions: false, optionsSettings: false }, null, "skill");
+      return createdMessages[0].content;
+    };
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    expect(await roll(drone)).toContain("ep2e.roll.announce.jamming.penalty");
+    expect(await roll(actor)).toContain("ep2e.roll.announce.jamming.ownBodyPenalty");
+
+    resetWorld();
+    game.actors.clear();
+    const rigged = await operator([{ _id: "rig", name: "Drone Rig", type: "ware", system: { boundTo: "morph1" },
+      effects: [{ name: "Drone Rig", changes: [{ key: "system.additionalSystems.jamming.ignorePenalty", type: "override", value: "true" }] }] }]);
+    seedDialogs(true);
+    await jamDrone(rigged.actor, "drone1");
+    expect(await roll(rigged.drone)).not.toContain("ep2e.roll.announce.jamming.penalty");
+  });
+
+  test("the status box shows what the jam costs before any roll: -10 on the drone, none with a Drone Rig, -30 on the ego's own body", async () => {
+    const costs = actor => actor.system.currentStatus.specialModifiers.filter(entry => entry.flag === "jamming").map(entry => [entry.label, entry.modifier]);
+    const { actor, drone } = await operator();
+    expect([costs(drone), costs(actor)]).toEqual([[], []]);
+
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    expect(costs(drone)).toEqual([["ep2e.roll.announce.jamming.penalty", -10]]);
+    expect(costs(actor)).toEqual([["ep2e.roll.announce.jamming.ownBodyPenalty", -30]]);
+    expect([drone.system.currentStatus.body, actor.system.currentStatus.body]).toEqual([-10, -30]);
+
+    resetWorld();
+    game.actors.clear();
+    const rigged = await operator([{ _id: "rig", name: "Drone Rig", type: "ware", system: { boundTo: "morph1" },
+      effects: [{ name: "Drone Rig", changes: [{ key: "system.additionalSystems.jamming.ignorePenalty", type: "override", value: "true" }] }] }]);
+    seedDialogs(true);
+    await jamDrone(rigged.actor, "drone1");
+    expect(costs(rigged.drone)).toEqual([]);
+  });
+
+  test("on the drone's sheet the ego's aptitudes, skills, Ego Flex and Field skills are locked, its own fields stay open", async () => {
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    const own = drone.items.find(item => item.type === "specialSkill");
+    const { document } = new JSDOM(`<div id="sheet">
+      <input name="system.aptitudes.ref.value"><input name="system.skillsVig.guns.value"><input name="system.skillsIns.perceive.specname">
+      <input name="system.ego.egoFlex"><input name="system.health.physical.value"><input name="name">
+      <div id="skillsPane">
+        <div class="item" data-item-id="pilot"><input class="sheet-inline-edit"><a class="item-delete"></a></div>
+        <div class="item" data-item-id="${own.id}"><input class="sheet-inline-edit"><a class="item-delete"></a></div>
+      </div></div>`).window;
+    const html = document.getElementById("sheet");
+
+    lockEgoFields(html, drone);
+
+    const locked = Array.from(html.querySelectorAll("input")).map(input => input.disabled);
+    expect(locked).toEqual([true, true, true, true, false, false, true, false]);
+    expect(Array.from(html.querySelectorAll(".item-delete")).map(control => control.style.display)).toEqual(["none", ""]);
+  });
+
+  test("the drone's sheet never saves the ego's values over its own", () => {
+    const data = { name: "Guardian", system: { aptitudes: { ref: { value: 15 } }, skillsVig: { guns: { value: 45 } }, skillsIns: {}, skillsMox: {},
+      ego: { egoFlex: 2, age: "3" }, health: { physical: { value: 4 } } } };
+    expect(stripEgoOverlay(data)).toEqual({ name: "Guardian", system: { ego: { age: "3" }, health: { physical: { value: 4 } } } });
+  });
+
+  test("backing out of the dialog, or jamming a drone already, starts no jam", async () => {
+    const { actor, drone } = await operator();
+    seedDialogs(false);
+    expect(await jamDrone(actor, "drone1")).toBe(false);
+    expect(jammingEgo(drone)).toBeNull();
+
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    createdMessages.length = 0;
+    seedDialogs(true);
+    expect(await jamDrone(actor, "drone1")).toBe(false);
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("unjamming on the player's word ends it, backing out keeps it", async () => {
+    const { actor } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    seedDialogs(false);
+    await unjamDrone(actor);
+    expect(jammedDrone(actor)).not.toBeNull();
+
+    seedDialogs(true);
+    await unjamDrone(actor);
+    expect(jammedDrone(actor)).toBeNull();
+  });
+
+  test("the jam breaks off when the drone is knocked out, and when the ego's own body is, and says so", async () => {
+    registerDrones();
+    const first = await operator();
+    seedDialogs(true);
+    await jamDrone(first.actor, "drone1");
+    createdMessages.length = 0;
+    await inflictCondition(first.drone, "unconscious");
+    await settle();
+    expect(jammedDrone(first.actor)).toBeNull();
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.jamming.broken");
+
+    seedDialogs(true);
+    await first.drone.deleteEmbeddedDocuments("ActiveEffect", first.drone.effects.map(effect => effect.id));
+    await jamDrone(first.actor, "drone1");
+    await inflictCondition(first.actor, "unconscious");
+    await settle();
+    expect(jammedDrone(first.actor)).toBeNull();
+  });
+
+  test("recalling a jammed drone ends the jam first, and so does deleting it by hand", async () => {
+    registerDrones();
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    await bringDroneHome(drone);
+    expect([actor.getFlag("eclipsephase", "jammedDrone"), actor.system.pools.flex.value]).toEqual([undefined, 3]);
+
+    const again = await createDrone(actor, "drone1");
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    await again.drone.delete();
+    await settle();
+    expect(actor.getFlag("eclipsephase", "jammedDrone")).toBeUndefined();
+  });
+
+  test("a change to the ego shows on the drone it jams", async () => {
+    registerDrones();
+    const { actor, drone } = await operator();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    await actor.update({ "system.skillsVig.guns.value": 60 });
+    await settle();
+
+    expect(drone.system.skillsVig.guns.derived).toBe(75);
+  });
+
+  test("a broken or knocked-out drone, one without a puppet sock, and a busy or downed ego cannot jam", async () => {
+    const { actor, drone } = await operator();
+    const vehicle = actor.items.get("drone1");
+    vehicle.hasPuppetSock = true;
+    expect(droneJamBlock(actor, vehicle, null)).toBeNull();
+    expect(droneJamBlock(actor, vehicle, "ego down")).toBe("ego down");
+
+    vehicle.hasPuppetSock = false;
+    expect(droneJamBlock(actor, vehicle, null)).toBe("ep2e.actorSheet.popUp.needPuppetSockToJam");
+    drone.statuses = new Set(["unconscious"]);
+    expect(droneJamBlock(actor, vehicle, null)).toContain("ep2e.morph.jamming.blocked");
+    drone.statuses = new Set(["dead"]);
+    expect(droneJamBlock(actor, vehicle, null)).toBe("ep2e.morph.drone.destroyed");
+
+    actor.flags.eclipsephase = { ...actor.flags.eclipsephase, jammedDrone: drone.id };
+    expect(jamBlockReason(actor)).toBe("ep2e.morph.jamming.busy");
+  });
+
+  test("its tab on the character offers Jam beside Recall, and Unjam while jammed", async () => {
+    const render = actor => foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
+      { actor, tabGroups: { morph: "sleeved" }, tabs: { primary: { morph: { active: true } } }, isGM: true, editable: true });
+    const { actor } = await operator();
+    await EPactorSheet.prototype._prepareCharacterItems.call({ document: actor }, {});
+    const out = await render(actor);
+    expect(out).toContain(" jamDroneButton");
+    expect(out).toContain("recallDroneButton");
+
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    await EPactorSheet.prototype._prepareCharacterItems.call({ document: actor }, {});
+    const jammed = await render(actor);
+    expect(jammed).toContain("unjamDroneButton");
+    expect(jammed).not.toContain(" jamDroneButton");
+    expect(jammed).not.toContain("sleeveButton");
+  });
+
+  /**
+   * The same character with her Guardian still at home and a spare Fury with a puppet sock.
+   * @returns {Actor} The character
+   */
+  function atHome() {
+    return makeActor({
+      _id: "bea", name: "Bea", type: "character",
+      system: { activeMorph: "morph1", aptitudes: { ref: { value: 15 } }, skillsVig: { guns: { value: 45 } }, ego: { egoFlex: 1 }, pools: { flex: { value: 2 } } },
+      items: [
+        { _id: "morph1", name: "Splicer", type: "morph", system: { type: "bio", dur: 30, flex: 1 } },
+        { _id: "morph2", name: "Fury", type: "morph", system: { type: "bio", dur: 50, flex: 2 }, flags: { eclipsephase: { bodyDamage: { value: 4, wounds: 0 } } } },
+        { _id: "drone1", name: "Guardian", type: "vehicle", system: { chassisType: "robot", dur: 25, skills: { 1: { name: "Guns", value: 30 } } } },
+        { _id: "sock1", name: "Puppet Sock", type: "ware", system: { boundTo: "drone1" }, effects: [SOCK] },
+        { _id: "sock2", name: "Puppet Sock", type: "ware", system: { boundTo: "morph2" }, effects: [SOCK] },
+        { _id: "claws", name: "Claws", type: "ccWeapon", system: { boundTo: "morph2" } }
+      ]
+    });
+  }
+
+  test("jamming a vehicle at home sends it out for the jam, without announcing a deployment, and unjamming collects it again", async () => {
+    const actor = atHome();
+    seedDialogs(true);
+
+    expect(await jamDrone(actor, "drone1")).toBe(true);
+    const drone = jammedDrone(actor);
+
+    expect(drone.flags.eclipsephase.drone.temporary).toBe(true);
+    expect(drone.system.skillsVig.guns.derived).toBe(60);
+    expect(createdMessages.map(message => message.content).join()).not.toContain("ep2e.morph.drone.announce.deployed");
+    expect(createdMessages.at(-1).content).toContain("ep2e.morph.sleeving.announce.title.jammed");
+
+    createdMessages.length = 0;
+    seedDialogs(true);
+    await unjamDrone(actor);
+
+    expect([jammedDrone(actor), game.actors.get(drone.id), deployedDrone(actor.items.get("drone1"))]).toEqual([null, undefined, null]);
+    expect(actor.system.pools.flex.value).toBe(2);
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("a body out only for a jam counts as jammed on its tab from the moment it is out", async () => {
+    const actor = atHome();
+    await createDrone(actor, "drone1", { temporary: true });
+    await EPactorSheet.prototype._prepareCharacterItems.call({ document: actor }, {});
+    const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
+      { actor, tabGroups: { morph: "sleeved" }, tabs: { primary: { morph: { active: true } } }, isGM: true, editable: true });
+
+    expect(actor.remoteVehicles[0].droneJammed).toBe(true);
+    expect(html).toContain("unjamDroneButton");
+    expect(html).not.toContain("recallDroneButton");
+  });
+
+  test("a drone that was out before the jam stays out when the jam ends", async () => {
+    const actor = atHome();
+    const { drone } = await createDrone(actor, "drone1");
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    seedDialogs(true);
+    await unjamDrone(actor);
+
+    expect([jammedDrone(actor), deployedDrone(actor.items.get("drone1"))]).toEqual([null, drone]);
+  });
+
+  test("a morph with a puppet sock is jammed the same way: out with what it carries and the damage it kept, collected at the end", async () => {
+    const actor = atHome();
+    expect(await createDrone(actor, "morph2")).toBeNull();
+    seedDialogs(true);
+    await jamDrone(actor, "morph2");
+    const puppet = jammedDrone(actor);
+
+    expect(puppet.items.get(puppet.system.activeMorph).type).toBe("morph");
+    expect([puppet.system.health.physical.max, puppet.system.health.physical.value, puppet.system.physical.activeMorphType]).toEqual([50, 4, "bio"]);
+    expect(puppet.items.some(item => item.name === "Claws")).toBe(true);
+    expect(puppet.system.skillsVig.guns.derived).toBe(60);
+    expect(getBodyBindingInfo(actor).bodies.map(body => body.id)).toEqual(["morph1", "drone1"]);
+
+    await puppet.update({ "system.health.physical.value": 9 });
+    seedDialogs(true);
+    await unjamDrone(actor);
+
+    expect(actor.items.get("morph2").getFlag("eclipsephase", "bodyDamage")).toEqual({ value: 9, wounds: 0 });
+    expect(game.actors.get(puppet.id)).toBeUndefined();
+  });
+
+  test("a body knocked out mid-jam stays where it fell, out like any drone", async () => {
+    registerDrones();
+    const actor = atHome();
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+    const drone = jammedDrone(actor);
+
+    await inflictCondition(drone, "unconscious");
+    await settle();
+
+    expect(jammedDrone(actor)).toBeNull();
+    expect([deployedDrone(actor.items.get("drone1")), drone.flags.eclipsephase.drone.temporary]).toEqual([drone, false]);
+  });
+
+  test("a player's jam of a body at home goes to the active GM, one of a drone already out does not", async () => {
+    const emit = jest.spyOn(game.socket, "emit");
+    const actor = atHome();
+    const { drone } = await createDrone(actor, "drone1");
+    game.user.isGM = false;
+
+    seedDialogs(true);
+    await jamDrone(actor, "morph2");
+    seedDialogs(true);
+    await jamDrone(actor, "drone1");
+
+    expect(emit.mock.calls.map(([, sent]) => sent)).toEqual([{ action: "jamBody", actorUuid: actor.uuid, bodyId: "morph2", userId: game.user.id }]);
+    expect(jammedDrone(actor)).toBe(drone);
+    emit.mockRestore();
+  });
+
+  test("an incapacitated, unconscious or dead ego cannot start a jam", () => {
+    const actor = atHome();
+    expect(jamBlockReason(actor)).toBeNull();
+    actor.statuses = new Set(["incapacitated"]);
+    expect(jamBlockReason(actor)).toContain("ep2e.morph.jamming.blocked");
+  });
+
+  test("a jammed morph's tab offers Unjam, and its panel opens the puppet's sheet instead of listing what it carries", async () => {
+    const render = actor => foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
+      { actor, tabGroups: { morph: "sleeved" }, tabs: { primary: { morph: { active: true } } }, isGM: true, editable: true });
+    const actor = atHome();
+    await EPactorSheet.prototype._prepareCharacterItems.call({ document: actor }, {});
+    const home = await render(actor);
+    expect(home.match(/jammButton"/g).length).toBeGreaterThanOrEqual(2);
+    expect(home).toContain("sleeveButton");
+
+    seedDialogs(true);
+    await jamDrone(actor, "morph2");
+    await EPactorSheet.prototype._prepareCharacterItems.call({ document: actor }, {});
+    const jammed = await render(actor);
+    expect(jammed).toContain("unjamDroneButton");
+    expect(jammed).toContain("openDroneSheet");
+    expect(jammed).not.toContain("sleeveButton");
+    expect(actor.bodies.morph2.damage.locked).toBe(true);
   });
 });
