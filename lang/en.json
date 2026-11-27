@@ -137,6 +137,7 @@
         "morphTab": "Morph",
         "bodiesTab": "Bodies",
         "inventoryTab": "Stash",
+        "bodyTab": "Body",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
         "effectsTab": "Effects",
@@ -164,6 +165,7 @@
       },
       "button": {
         "edit": "Edit",
+        "editBody": "Edit Body",
         "delete": "Delete",
         "endChiPush": "End Push",
         "pushChiSleight": "Push",

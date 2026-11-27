@@ -106,7 +106,11 @@ export default class EPactor extends Actor {
     if(activeMorph){
       morphData = actorWhole.items.get(actorModel.activeMorph);
     }
-    const morphValues = morphData?.system ?? EPactor.STANDARD_MORPH;
+    // An NPC's or goon's body may be a vehicle, whose make-up stands in for a morph's type.
+    const morphValues = morphData?.type === "vehicle"
+      ? { ...morphData.system, type: bodyKind(morphData) }
+      : morphData?.system ?? EPactor.STANDARD_MORPH;
+    const ownVehicle = morphData?.type === "vehicle" ? morphData : null;
 
     // Jamming: resolve jammed vehicle and flag it for pools & dice
     const activeJam = actorModel.activeJam;
@@ -185,7 +189,7 @@ export default class EPactor extends Actor {
         }
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
-    this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
+    this._calculateArmor(actorModel, actorWhole, jammedVehicleData, ownVehicle);
     this._calculateMentalArmor(actorModel);
     // Mirrors jammedHealthValues: when jamming, movement comes from the jammed body, not the sleeved
     // morph. Exposed on the actor (not just the item) so canvas/token code can read it directly
@@ -196,7 +200,7 @@ export default class EPactor extends Actor {
 
     // The SideCar (armor/weapon summaries) renders for every actor type, so its
     // "is anything equipped" flags have to be derived for npc/goon too.
-    this._calculateSideCart(actorModel, items, jammedVehicleData);
+    this._calculateSideCart(actorModel, items, jammedVehicleData ?? ownVehicle);
 
     if (this.type === "character"){
       this._calculateHomebrewEncumberance(actorModel);
@@ -583,7 +587,8 @@ export default class EPactor extends Actor {
     };
   }
 
-  _calculateSideCart(actorModel, items, jammedVehicleData) {
+  // vehicleBody: the jammed vehicle, or the vehicle an NPC or goon is, whose own armour counts.
+  _calculateSideCart(actorModel, items, vehicleBody) {
     //Checks for certain item types to be equipped to dynamically change the side cart content
     let rangedCount = 0;
     let ccCount = 0;
@@ -624,8 +629,8 @@ export default class EPactor extends Actor {
     if(ccCount>0){
       actorModel.additionalSystems.ccEquipped = true;
     }
-    // While jamming, armor comes from the drone's own rating instead of worn armor items - see _calculateArmor()
-    if(armorCount>0 || jammedVehicleData){
+    // A vehicle body has armour of its own, worn or not - see _calculateArmor()
+    if(armorCount>0 || vehicleBody){
       actorModel.additionalSystems.armorEquipped = true;
     }
     if(gearCount>0){
@@ -754,7 +759,7 @@ export default class EPactor extends Actor {
     actorModel.mental.armorTotal = psiArmor + (Number(actorModel.mods?.mentalArmorMod) || 0);
   }
 
-  _calculateArmor(actorModel, actorWhole, jammedVehicleData) {
+  _calculateArmor(actorModel, actorWhole, jammedVehicleData, ownVehicle = null) {
     // While jamming, armor comes from the drone's own rating instead of the character's worn armor
     if (jammedVehicleData) {
       // Ware bound to the drone boosts armor the same way worn armor's mods do on a Morph (see the
@@ -847,8 +852,9 @@ export default class EPactor extends Actor {
       return;
     }
 
-    let energyTotal = 0;
-    let kineticTotal = 0;
+    // A vehicle an NPC or goon is brings its own armour, under what it wears.
+    let energyTotal = Number(ownVehicle?.system?.armor?.energy) || 0;
+    let kineticTotal = Number(ownVehicle?.system?.armor?.kinetic) || 0;
     let mainArmorAmount = 0;
     let additionalArmorAmount = 0;
     let armorSomCheck = null;

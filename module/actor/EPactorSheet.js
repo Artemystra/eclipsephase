@@ -584,12 +584,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
       let migrationBridge = 0;
       for (let item of actor.items){
-        if (item.type === "morph"){
+        // An NPC's or goon's one body takes the "activeMorph" key, a vehicle it is included.
+        if (item.type === "morph" || (item.type === "vehicle" && actor.type !== "character" && item.id === actor.system.activeMorph)){
           let morphID
           migrationBridge += 1;
           if (actor.type === "character") morphID = item.id
           if (actor.type !== "character") morphID = "activeMorph"
-          bodies[morphID] = newBodyBucket("morph")
+          bodies[morphID] = newBodyBucket(item.type)
         }
         // Vehicles are bodies too (same bucket shape/key scheme), but get their own tab/card via
         // actor.remoteVehicles below, not the Morphs loop - bodyType lets morph-tab.html tell them apart.
@@ -626,6 +627,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           category.damage = bodyDamageView(actor, item);
         }
         else if (item.type === "morph" && actor.type !== "character"){
+          const category = bodies["activeMorph"];
+          category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
+        }
+        else if (item.type === "vehicle" && actor.type !== "character" && item.id === actorModel.activeMorph){
           const category = bodies["activeMorph"];
           category.morphdetails.push(item);
           category.hasMovement = hasAnyMovement(item);
@@ -1028,7 +1034,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.knowSkill = know;
       actor.specialSkill = special;
       actor.vehicle = vehicle;
-      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].map(v => {
+      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].filter(v => actor.type === "character" || v.id !== actorModel.activeMorph).map(v => {
         const bodyKey = actor.type === "character" ? v.id : "activeVehicle";
         const bucket = bodies[bodyKey] ?? newBodyBucket("vehicle");
         v.traitsCount = bucket.traitsCount;
@@ -1256,8 +1262,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const currentMorph = actorModel.activeMorph;
 
-    if (itemData.type === "morph" && actor.type !== "character") {
-      await MORPHFUNCTION.replaceMorph(actor, currentMorph, itemData);
+    // An NPC or goon has one body: a dropped morph or vehicle takes the place of the one it has.
+    if ((itemData.type === "morph" || itemData.type === "vehicle") && actor.type !== "character") {
+      if (!await MORPHFUNCTION.replaceMorph(actor, currentMorph, itemData)) return null;
       const created = await actor.createEmbeddedDocuments("Item", [itemData]);
       // Real resleeving refills Flex to full too (Ego Flex + the new morph's own Flex) - see morp-functions.js resleeveMorph
       const egoFlex = Number(actorModel.ego?.egoFlex) || 0;
@@ -1553,7 +1560,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           if (item?.type === "morph" || item?.type === "vehicle") {
             let bucketKey = itemId;
             if (actor.type !== "character") {
-              bucketKey = item.type === "vehicle" ? "activeVehicle" : "activeMorph";
+              bucketKey = MORPHFUNCTION.npcBodyKey(actor, item);
             }
             const carries = actor.type === "character"
               ? actor.items.some(i => MORPHFUNCTION.isCarried(i) && MORPHFUNCTION.locationOf(actor, i) === bucketKey)

@@ -67,6 +67,13 @@ export async function resleeveMorph(actor, currentTarget, sheet){
     }
 }
 
+/**
+ * Asks before an NPC's or goon's one body is replaced, and deletes the old one with all bound to it.
+ * @param {Actor} actor - The NPC or goon
+ * @param {String} activeMorph - The body it has now
+ * @param {Object} newMorph - The morph or vehicle taking its place
+ * @returns {Promise<Boolean>} True once confirmed, false when backed out of
+ */
 export async function replaceMorph(actor, activeMorph, newMorph){
     const oldMorph = actor.items.get(activeMorph)
     const oldName = oldMorph ? oldMorph.name : "no Morph"
@@ -77,15 +84,9 @@ export async function replaceMorph(actor, activeMorph, newMorph){
     const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
 
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
-
-    if(popUp.confirm === true){
-        if (!oldMorph) return;
-        await deleteBody(actor, activeMorph);
-        return;
-    }
-    else{
-        return;
-    }
+    if (popUp.confirm !== true) return false;
+    if (oldMorph) await deleteBody(actor, activeMorph);
+    return true;
 }
 
 // Jams a body (Vehicle or, since Puppet Sock support, a Morph) - identical rules for either type.
@@ -389,7 +390,7 @@ export function getBodyBindingInfo(actor) {
 
     const boundToFor = (body) => {
         if (actor.type === "character") return body.id;
-        return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
+        return npcBodyKey(actor, body);
     };
 
     // excludeBoundTo lets a caller (e.g. rebindItem) drop the currently-bound body from the list,
@@ -652,11 +653,11 @@ export async function resolveItemsOnBodyDelete(actor, bucketKey, bodyName) {
 export async function deleteBody(actor, bodyId){
     let bucketKey = bodyId;
     if (actor.type !== "character") {
-        // npc/goon share one fixed key per body type, not per item, so the type of the item
-        // actually being deleted decides which bucket to consolidate - otherwise deleting a
-        // Vehicle could sweep up an unrelated leftover Morph bound to the same "activeMorph" key.
+        // npc/goon bind to fixed keys, not to the item, so the body being deleted decides which
+        // key's items go with it - otherwise deleting a Vehicle beside the body could sweep up
+        // what is bound to the body itself.
         const bodyItem = actor.items.get(bodyId);
-        bucketKey = bodyItem?.type === "vehicle" ? "activeVehicle" : "activeMorph";
+        bucketKey = bodyItem ? npcBodyKey(actor, bodyItem) : "activeMorph";
     }
 
     const deletionList = actor.items.filter(i => i.id === bodyId || i.system?.boundTo === bucketKey).map(i => i.id);
@@ -748,7 +749,18 @@ export function bodyBindingKey(actor, bodyId){
   const body = actor?.items?.get(bodyId);
   if(!body) return null;
 
-  return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
+  return npcBodyKey(actor, body);
+}
+
+/**
+ * The fixed key an NPC's or goon's body binds its items under: the body it acts in is "activeMorph",
+ * a morph or a vehicle alike, a vehicle beside it "activeVehicle".
+ * @param {Actor} actor - The NPC or goon
+ * @param {Item} body - A morph or vehicle it owns
+ * @returns {String} "activeMorph" or "activeVehicle"
+ */
+export function npcBodyKey(actor, body) {
+  return body?.type === "vehicle" && body.id !== actor?.system?.activeMorph ? "activeVehicle" : "activeMorph";
 }
 
 /**
@@ -897,16 +909,16 @@ const CHASSIS_KINDS = { robot: "bot", vehicle: "vehicle", animal: "animal" };
 
 /**
  * What an actor counts as when it is picked as a target: the kind of the body it acts through - a
- * jammed bot, vehicle or animal, otherwise its morph - and "cyberbrain" when that body runs one.
+ * bot, vehicle or animal it jams or, as an NPC, is, otherwise its morph - and "cyberbrain" when that body runs one.
  * An attack names the kinds it cannot strike against these.
  * @param {Actor} actor - The target
  * @returns {String[]} e.g. ["synthmorph"] or ["biomorph", "cyberbrain"]
  */
 export function targetKinds(actor) {
-  const activeJam = actor?.system?.activeJam;
-  const jammed = activeJam ? actor?.items?.get?.(activeJam) : null;
-  const kinds = [jammed?.type === "vehicle"
-    ? CHASSIS_KINDS[jammed.system?.chassisType] ?? "vehicle"
+  const acting = actor?.system?.activeJam || actor?.system?.activeMorph;
+  const body = acting ? actor?.items?.get?.(acting) : null;
+  const kinds = [body?.type === "vehicle"
+    ? CHASSIS_KINDS[body.system?.chassisType] ?? "vehicle"
     : MORPH_KINDS[actor?.system?.physical?.activeMorphType] ?? "biomorph"];
   if (chainHasWareMarker(actor, CYBERBRAIN_MARKER)) kinds.push("cyberbrain");
   return kinds;

@@ -2,7 +2,7 @@ import EPactorSheet, { isSectionOpen, setSectionOpen, toggleBodySection } from "
 import {
   resleeveMorph, jamBody, unjamBody, breakJam, registerJamBreaks, jamBlockReason, bodyDamage, bodyDamagePlace, setBodyDamage, bodyKind, deleteBody, getBodyBindingInfo, resolveBodyForItem, rebindItem,
   stashItem, equipItemFromStash, announceKind, ANNOUNCE_KINDS, resolveItemsOnBodyDelete, tacnetChannel, seesThroughTacnet, sharedSightMode,
-  registerBodyTokens, locationOf, itemsOn, isUsable, moveItem
+  registerBodyTokens, locationOf, itemsOn, isUsable, moveItem, npcBodyKey, targetKinds
 } from "../../module/common/morp-functions.js";
 import { mergeOrCreateItem } from "../../module/common/general-sheet-functions.js";
 import { calcEffects, sleevingTest } from "../../module/rolls/resleeving.js";
@@ -1340,6 +1340,84 @@ describe("dropping a fresh item onto a character", () => {
     const item = await drop(actor, { name: "Rifle", type: "rangedWeapon" });
 
     expect(item.system.boundTo).toBe("stash");
+  });
+});
+
+describe("an NPC whose body is a vehicle", () => {
+  /**
+   * An NPC that is a guard robot, with a vest and a radar bound to its body, and a car beside it.
+   * @param {String} [type] - The actor type
+   * @returns {Actor} The prepared actor
+   */
+  function guardBot(type = "npc") {
+    return makeActor({
+      type,
+      system: { activeMorph: "bot" },
+      items: [
+        { _id: "bot", name: "Sentry", type: "vehicle", system: { chassisType: "robot", dur: 75, flex: 1, armor: { energy: 18, kinetic: 14 },
+          movement: { move1: { active: true, type: "tracked", base: 4, full: 12 } } } },
+        { _id: "car", name: "Car", type: "vehicle", system: { chassisType: "vehicle", dur: 100 } },
+        { _id: "vest", name: "Vest", type: "armor", system: { boundTo: "activeMorph", energy: 2, kinetic: 3 } },
+        { _id: "radar", name: "Radar", type: "ware", system: { boundTo: "activeMorph" } }
+      ]
+    });
+  }
+
+  test("binds what is on it under the body's key, a vehicle beside it under its own", () => {
+    const actor = guardBot();
+    expect([npcBodyKey(actor, actor.items.get("bot")), npcBodyKey(actor, actor.items.get("car"))]).toEqual(["activeMorph", "activeVehicle"]);
+  });
+
+  test("takes durability, armour, movement and its kind from the vehicle", () => {
+    for (const type of ["npc", "goon"]) {
+      const actor = guardBot(type);
+      expect([actor.system.health.physical.max, actor.system.physical.activeMorphType]).toEqual([75, "synth"]);
+      expect([actor.system.physical.energyArmorTotal, actor.system.physical.kineticArmorTotal]).toEqual([20, 17]);
+      expect(actor.system.additionalSystems.armorEquipped).toBe(true);
+      expect(actor.system.currentMovement).toEqual({ type: "tracked", base: 4, full: 12 });
+      expect(targetKinds(actor)).toEqual(["bot"]);
+    }
+  });
+
+  test("an animal body counts as bio", () => {
+    const actor = makeActor({ type: "npc", system: { activeMorph: "dog" }, items: [{ _id: "dog", name: "Dog", type: "vehicle", system: { chassisType: "animal", dur: 30 } }] });
+    expect([actor.system.physical.activeMorphType, targetKinds(actor)[0]]).toEqual(["bio", "animal"]);
+  });
+
+  test("the sheet shows the vehicle as the one body, with what is built in, and not as a remote body", async () => {
+    const actor = await sorted(guardBot());
+    expect(actor.bodies.activeMorph.morphdetails[0].id).toBe("bot");
+    expect(actor.bodies.activeMorph.morphgear.map(item => item.id)).toEqual(["radar"]);
+    expect(actor.bodies.migrationBody).toBeUndefined();
+    expect(actor.remoteVehicles.map(vehicle => vehicle.id)).toEqual(["car"]);
+
+    const html = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/actor/partials/tabs/npcgear.html", { actor });
+    expect(html).toContain("ep2e.item.vehicle.table.type.robot");
+    expect(html).toContain("ep2e.actorSheet.button.editBody");
+  });
+
+  test("a vehicle dropped on an NPC replaces its morph and what was bound to it", async () => {
+    const actor = makeActor({ type: "npc", system: { activeMorph: "m" }, items: [
+      { _id: "m", name: "Splicer", type: "morph", system: { type: "bio", dur: 30 } },
+      { _id: "w", name: "Neurachem", type: "ware", system: { boundTo: "activeMorph" } }
+    ] });
+    seedDialogs(true);
+
+    const created = await EPactorSheet.prototype._onDropItem.call({ actor }, {}, makeItem({ name: "Sentry", type: "vehicle", system: { chassisType: "robot", dur: 75 } }));
+
+    expect(actor.system.activeMorph).toBe(created.id);
+    expect(actor.items.map(item => item.name)).toEqual(["Sentry"]);
+    expect(actor.system.health.physical.max).toBe(75);
+  });
+
+  test("backing out of the replacement leaves the NPC as it was", async () => {
+    const actor = makeActor({ type: "npc", system: { activeMorph: "m" }, items: [{ _id: "m", name: "Splicer", type: "morph", system: { type: "bio", dur: 30 } }] });
+    seedDialogs(false);
+
+    const created = await EPactorSheet.prototype._onDropItem.call({ actor }, {}, makeItem({ name: "Sentry", type: "vehicle", system: { chassisType: "robot" } }));
+
+    expect(created).toBeNull();
+    expect([actor.system.activeMorph, actor.items.map(item => item.name)]).toEqual(["m", ["Splicer"]]);
   });
 });
 

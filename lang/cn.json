@@ -133,6 +133,7 @@
         "morphTab": "义体",
         "bodiesTab": "身体",
         "inventoryTab": "储藏",
+        "bodyTab": "身体",
         "peripheralsTab": "外设",
         "psiTab": "灵能",
         "effectsTab": "效果",
@@ -160,6 +161,7 @@
       },
       "button": {
         "edit": "编辑",
+        "editBody": "编辑身体",
         "delete": "删除",
         "endChiPush": "结束推送",
         "pushChiSleight": "推送",

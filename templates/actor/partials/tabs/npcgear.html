@@ -57,7 +57,7 @@
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter item" data-item-id="{{actor.bodies.activeMorph.morphdetails.0._id}}" data-item-name="{{actor.bodies.activeMorph.morphdetails.0.name}}">
-                    <a class="item-edit">{{localize "ep2e.actorSheet.button.edit"}} {{localize "TYPES.Item.morph"}} <i class="far fa-edit awesomeIcon"></i></a>
+                    <a class="item-edit">{{#if (eq actor.bodies.activeMorph.morphdetails.0.type "vehicle")}}{{localize "ep2e.actorSheet.button.editBody"}}{{else}}{{localize "ep2e.actorSheet.button.edit"}} {{localize "TYPES.Item.morph"}}{{/if}} <i class="far fa-edit awesomeIcon"></i></a>
                 </div>
             </div>
             <div class="listBackground" style="background-color: var(--accentBackground);">
@@ -67,7 +67,7 @@
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}:</label>
-                        <label class="resource-value">{{#if (eq actor.bodies.activeMorph.morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq actor.bodies.activeMorph.morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
+                        <label class="resource-value">{{#if (eq actor.bodies.activeMorph.morphdetails.0.type "vehicle")}}{{localize (concat "ep2e.item.vehicle.table.type." actor.bodies.activeMorph.morphdetails.0.system.chassisType)}}{{else if (eq actor.bodies.activeMorph.morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq actor.bodies.activeMorph.morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}:</label>

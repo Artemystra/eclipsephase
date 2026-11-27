@@ -133,6 +133,7 @@
         "morphTab": "Morfo",
         "bodiesTab": "Corpos",
         "inventoryTab": "Esconderijo",
+        "bodyTab": "Corpo",
         "peripheralsTab": "Periféricos",
         "psiTab": "Psi",
         "effectsTab": "Efeitos",
@@ -160,6 +161,7 @@
       },
       "button": {
         "edit": "Editar",
+        "editBody": "Editar corpo",
         "delete": "Excluir",
         "endChiPush": "Encerrar Empurrão",
         "pushChiSleight": "Empurrar",

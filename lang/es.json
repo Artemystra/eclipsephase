@@ -133,6 +133,7 @@
         "morphTab": "Morph",
         "bodiesTab": "Cuerpos",
         "inventoryTab": "Alijo",
+        "bodyTab": "Cuerpo",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
         "effectsTab": "Effects",
@@ -160,6 +161,7 @@
       },
       "button": {
         "edit": "Edit",
+        "editBody": "Editar cuerpo",
         "delete": "Delete",
         "endChiPush": "Terminar Empuje",
         "pushChiSleight": "Empujar",

@@ -67,7 +67,7 @@
                                 {{else}}
                                     {{#if (ne tab.id 'morph')}}
                                         <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                                            {{localize tab.label}}
+                                            {{#if (eq tab.id 'weapons')}}{{localize "ep2e.actorSheet.rightTabs.bodyTab"}}{{else}}{{localize tab.label}}{{/if}}
                                         </a>
                                     {{else}}
                                     {{/if}}
